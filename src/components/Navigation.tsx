@@ -3,12 +3,16 @@ import styled from 'styled-components';
 
 const NavContainer = styled.nav`
   width: 100%;
-  background: transparent;
-  padding: 0.5rem 0;
+  background: rgba(255, 255, 255, 0.35);
+  padding: 0.75rem 0;
   position: absolute;
   bottom: 5%;
   left: 0;
   z-index: 9999;
+  transition: all 0.2s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
 `;
 
 const NavList = styled.ul`
@@ -24,14 +28,16 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
   a {
-    color: white;
+    color: #1a365d;
     text-decoration: none;
-    font-weight: 400;
-    opacity: 0.8;
-    transition: opacity 0.2s;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
     &:hover {
-      opacity: 1;
-      color: white;
+      background: rgba(255, 255, 255, 0.3);
+      color: #1a365d;
     }
   }
 `;

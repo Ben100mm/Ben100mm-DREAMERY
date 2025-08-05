@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M16 2L28 10V22L16 30L4 22V10L16 2Z" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
-  <path d="M8 12V20L16 24L24 20V12L16 8L8 12Z" fill="white"/>
+<svg width="32" height="32" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M250 50L450 200V450H350V250C350 194.772 305.228 150 250 150C194.772 150 150 194.772 150 250V450H50V200L250 50Z" fill="#1a365d"/>
+  <path d="M150 250C150 194.772 194.772 150 250 150C305.228 150 350 194.772 350 250V450H150V250Z" fill="#1a365d"/>
 </svg>

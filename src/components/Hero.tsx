@@ -52,14 +52,16 @@ const Title = styled.h1`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 0.75rem;
   max-width: 600px;
   margin: 0 auto;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   &:hover {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -67,15 +69,15 @@ const StyledTextField = styled(TextField)`
   flex-grow: 1;
   .MuiInputBase-root {
     color: #1a365d;
-    font-weight: 500;
+    font-weight: 600;
     &::before, &::after {
       display: none;
     }
     input {
-      font-size: 1rem;
+      font-size: 1.1rem;
       &::placeholder {
         color: #1a365d;
-        opacity: 0.9;
+        opacity: 1;
         font-weight: 500;
       }
     }

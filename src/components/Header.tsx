@@ -74,7 +74,7 @@ const Header: React.FC = () => {
               width: 'auto',
               marginRight: '-20px',
               transform: 'translateY(-2px)',
-              filter: 'contrast(1.2) brightness(0.95)'
+              filter: 'brightness(0) invert(1)'
             }}
           />
           <Typography
@@ -83,10 +83,11 @@ const Header: React.FC = () => {
               color: '#FFFFFF',
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
-              letterSpacing: '-1.5px',
+              letterSpacing: '-1px',
               fontSize: '3.2rem',
               textTransform: 'uppercase',
-              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+              textShadow: '2px 2px 8px rgba(0, 0, 0, 0.4)',
+              filter: 'brightness(1.1)',
             }}
           >
             DREAMERY

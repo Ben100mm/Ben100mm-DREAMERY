@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32" height="32" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M250 50L450 200V450H350V250C350 194.772 305.228 150 250 150C194.772 150 150 194.772 150 250V450H50V200L250 50Z" fill="#FFFFFF"/>
-  <path d="M150 250C150 194.772 194.772 150 250 150C305.228 150 350 194.772 350 250V450H150V250Z" fill="#FFFFFF"/>
-  <path d="M250 50L450 200V450H350V250C350 194.772 305.228 150 250 150C194.772 150 150 194.772 150 250V450H50V200L250 50Z" stroke="#FFFFFF" stroke-width="2"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" 
+    d="M250 100
+       L400 220
+       L400 240
+       C400 320
+       L350 320
+       C350 250
+       C350 200 300 160 250 160
+       C200 160 150 200 150 250
+       C150 300 200 350 250 350
+       L250 400
+       C150 400 100 320 100 250
+       L100 220
+       L250 100Z" 
+    fill="#FFFFFF" 
+    stroke="#FFFFFF" 
+    stroke-width="20"
+    stroke-linejoin="round"/>
 </svg>

@@ -76,14 +76,13 @@ const Header: React.FC = () => {
           <Typography
             variant="h4"
             sx={{
-              color: '#1a365d',
+              color: '#FFFFFF',
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
               letterSpacing: '-1.5px',
               fontSize: '3.2rem',
               textTransform: 'uppercase',
-              WebkitTextStroke: '1px #1a365d',
-              textShadow: '0px 0px 1px #1a365d',
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
             }}
           >
             DREAMERY

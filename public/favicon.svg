@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32" height="32" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" clip-rule="evenodd" 
-    d="M250 100
-       L400 220
-       L400 240
-       C400 320
-       L350 320
-       C350 250
-       C350 200 300 160 250 160
-       C200 160 150 200 150 250
-       C150 300 200 350 250 350
-       L250 400
-       C150 400 100 320 100 250
-       L100 220
-       L250 100Z" 
+  <path d="M350 150L250 80L150 150V400H200V250C200 200 220 180 250 180C280 180 300 200 300 250V400H350V150Z" 
     fill="#FFFFFF" 
     stroke="#FFFFFF" 
-    stroke-width="20"
+    stroke-width="15"
     stroke-linejoin="round"/>
+  <path d="M200 250C200 200 220 180 250 180C280 180 300 200 300 250V400H200V250Z" 
+    fill="#FFFFFF"/>
+  <path d="M250 180C220 180 200 200 200 250C200 300 220 320 250 320C280 320 300 300 300 250C300 200 280 180 250 180Z" 
+    fill="#FFFFFF"/>
 </svg>

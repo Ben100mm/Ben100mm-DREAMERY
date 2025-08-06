@@ -14,7 +14,7 @@ import {
   Popper,
   Paper
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HistoryIcon from '@mui/icons-material/History';
 import CloseIcon from '@mui/icons-material/Close';
@@ -94,7 +94,7 @@ interface SearchHistory {
   type: SearchResult['type'];
 }
 
-const StyledAutocomplete = styled(Autocomplete)`
+const StyledAutocomplete = styled(Autocomplete<SearchResult | string>)`
   flex-grow: 1;
   .MuiInputBase-root {
     color: #1a365d;
@@ -249,8 +249,15 @@ const Hero: React.FC = () => {
             loading={loading}
             inputValue={searchValue}
             onInputChange={(event, value) => setSearchValue(value)}
+            onChange={(event, value) => {
+              if (value && typeof value !== 'string') {
+                addToHistory(value.description, value.type);
+              } else if (value) {
+                addToHistory(value, 'address');
+              }
+            }}
             filterOptions={(x) => x}
-            getOptionLabel={(option) => 
+            getOptionLabel={(option: SearchResult | string) => 
               typeof option === 'string' ? option : option.description
             }
             renderInput={(params) => (
@@ -270,17 +277,27 @@ const Hero: React.FC = () => {
                 }}
               />
             )}
-            renderOption={(props, option) => (
-              <Box component="li" {...props}>
-                <LocationOnIcon style={{ marginRight: 8 }} />
-                <Box>
-                  <Box component="span" sx={{ fontWeight: 600 }}>{option.mainText}</Box>
-                  <Box component="span" sx={{ ml: 1, color: 'text.secondary' }}>
-                    {option.secondaryText}
+            renderOption={(props, option: SearchResult | string) => {
+              if (typeof option === 'string') {
+                return (
+                  <Box component="li" {...props}>
+                    <LocationOnIcon style={{ marginRight: 8 }} />
+                    {option}
+                  </Box>
+                );
+              }
+              return (
+                <Box component="li" {...props}>
+                  <LocationOnIcon style={{ marginRight: 8 }} />
+                  <Box>
+                    <Box component="span" sx={{ fontWeight: 600 }}>{option.mainText}</Box>
+                    <Box component="span" sx={{ ml: 1, color: 'text.secondary' }}>
+                      {option.secondaryText}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
+              );
+            }}
             PopperComponent={(props) => (
               <Popper {...props} style={{ width: '100%' }} placement="bottom-start" />
             )}

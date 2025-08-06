@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Container, Paper, Box, Tab, Tabs } from '@mui/material';
+import { Container, Paper, Box, Tab, Tabs, Typography } from '@mui/material';
 import { TabContext, TabPanel } from '@mui/lab';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
@@ -12,6 +13,19 @@ const AuthContainer = styled(Container)`
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+`;
+
+const LogoContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const AuthCard = styled(Paper)`
@@ -50,15 +64,46 @@ const AuthCard = styled(Paper)`
 `;
 
 const AuthPage: React.FC = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState('signin');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <AuthContainer maxWidth={false}>
       <AuthCard elevation={0}>
+        <LogoContainer onClick={handleLogoClick}>
+          <Box
+            component="img"
+            src="/logo.png"
+            alt="Dreamery Logo"
+            sx={{ 
+              height: 80,
+              width: 'auto',
+              marginBottom: '-10px',
+              filter: 'brightness(0) saturate(100%) invert(13%) sepia(30%) saturate(2910%) hue-rotate(195deg) brightness(93%) contrast(96%)'
+            }}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              color: '#1a365d',
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 900,
+              letterSpacing: '-0.5px',
+              fontSize: '2rem',
+              textTransform: 'uppercase',
+            }}
+          >
+            DREAMERY
+          </Typography>
+        </LogoContainer>
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={tab}>
             <Box>

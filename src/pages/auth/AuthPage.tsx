@@ -30,9 +30,9 @@ const LogoContainer = styled(Box)`
 
 const AuthCard = styled(Paper)`
   width: 100%;
-  max-width: 420px;
+  max-width: 380px;
   min-height: auto;
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -42,15 +42,15 @@ const AuthCard = styled(Paper)`
   overflow-y: auto;
   
   .MuiTabs-root {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .MuiTab-root {
     font-weight: 600;
-    font-size: 1.125rem;
+    font-size: 1rem;
     text-transform: none;
-    min-height: 48px;
-    padding: 12px 16px;
+    min-height: 40px;
+    padding: 8px 12px;
     color: #666;
     
     &.Mui-selected {
@@ -62,8 +62,8 @@ const AuthCard = styled(Paper)`
     padding: 0;
     display: flex;
     flex-direction: column;
-    min-height: 300px;
-    max-height: calc(100vh - 200px);
+    min-height: 250px;
+    max-height: calc(100vh - 250px);
     overflow-y: auto;
 
     &::-webkit-scrollbar {
@@ -107,9 +107,9 @@ const AuthPage: React.FC = () => {
             src="/logo.png"
             alt="Dreamery Logo"
             sx={{ 
-              height: 60,
+              height: 45,
               width: 'auto',
-              marginBottom: '-5px',
+              marginBottom: '-3px',
               filter: 'brightness(0) saturate(100%) invert(13%) sepia(30%) saturate(2910%) hue-rotate(195deg) brightness(93%) contrast(96%)'
             }}
           />
@@ -120,7 +120,7 @@ const AuthPage: React.FC = () => {
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
               letterSpacing: '-0.5px',
-              fontSize: '1.75rem',
+              fontSize: '1.5rem',
               textTransform: 'uppercase',
             }}
           >

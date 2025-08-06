@@ -10,8 +10,8 @@ import { ReactComponent as TwitterLogo } from '../../assets/social-logos/twitter
 const SocialButton = styled(Button)`
   width: 100%;
   justify-content: flex-start;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
   text-transform: none;
   font-weight: 500;
   border-radius: 8px;
@@ -20,8 +20,8 @@ const SocialButton = styled(Button)`
   
   .logo {
     margin-right: 1rem;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   &:hover {

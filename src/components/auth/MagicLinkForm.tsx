@@ -13,8 +13,8 @@ import EmailIcon from '@mui/icons-material/Email';
 const InfoBox = styled(Box)`
   background-color: rgba(26, 54, 93, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -81,8 +81,8 @@ const MagicLinkForm: React.FC = () => {
 
   if (emailSent) {
     return (
-      <Box sx={{ textAlign: 'center', py: 3 }}>
-        <EmailIcon sx={{ fontSize: 48, color: '#1a365d', mb: 2 }} />
+      <Box sx={{ textAlign: 'center', py: 2 }}>
+        <EmailIcon sx={{ fontSize: 40, color: '#1a365d', mb: 1.5 }} />
         <Typography variant="h6" gutterBottom>
           Check your email
         </Typography>

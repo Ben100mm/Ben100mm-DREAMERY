@@ -8,9 +8,10 @@ import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
 
 const AuthContainer = styled(Container)`
-  height: 100vh;
-  width: 100vw;
-  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
 `;
 
@@ -18,30 +19,27 @@ const LogoContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 2rem;
   cursor: pointer;
   transition: transform 0.2s ease;
-  position: absolute;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
 
   &:hover {
-    transform: translateX(-50%) scale(1.02);
+    transform: scale(1.02);
   }
 `;
 
 const AuthCard = styled(Paper)`
   width: 100%;
   max-width: 380px;
+  min-height: auto;
   padding: 1.25rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 1rem;
+  max-height: none;
+  overflow: visible;
   
   .MuiTabs-root {
     margin-bottom: 1rem;
@@ -64,6 +62,26 @@ const AuthCard = styled(Paper)`
     padding: 0;
     display: flex;
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 3px;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.25);
+      }
+    }
   }
 `;
 

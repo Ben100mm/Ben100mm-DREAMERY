@@ -4,6 +4,7 @@ import {
   Grid, 
   Card, 
   CardContent, 
+  CardMedia,
   Typography, 
   Button, 
   TextField,
@@ -582,7 +583,7 @@ const AdvertisePage: React.FC = () => {
                   </Typography>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                    <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
                     <Typography variant="body2" color="text.secondary">
                       {['Social Media', 'Google Ads', 'Facebook Ads', 'Instagram Ads', 'LinkedIn Ads', 'YouTube Ads', 'Display Ads', 'Search Ads', 'Retargeting', 'Email Marketing'][index]}
                     </Typography>

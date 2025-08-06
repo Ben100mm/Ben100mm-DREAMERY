@@ -17,6 +17,12 @@ import AnalyzePage from './pages/AnalyzePage';
 import UnderwritePage from './pages/UnderwritePage';
 import ClosePage from './pages/ClosePage';
 import ManagePage from './pages/ManagePage';
+import InvestPage from './pages/InvestPage';
+import FundPage from './pages/FundPage';
+import OperatePage from './pages/OperatePage';
+import PartnerPage from './pages/PartnerPage';
+import LearnPage from './pages/LearnPage';
+import AdvertisePage from './pages/AdvertisePage';
 
 const theme = createTheme({
   palette: {
@@ -54,6 +60,12 @@ function App() {
             <Route path="/underwrite" element={<UnderwritePage />} />
             <Route path="/close" element={<ClosePage />} />
             <Route path="/manage" element={<ManagePage />} />
+            <Route path="/invest" element={<InvestPage />} />
+            <Route path="/fund" element={<FundPage />} />
+            <Route path="/operate" element={<OperatePage />} />
+            <Route path="/partner" element={<PartnerPage />} />
+            <Route path="/learn" element={<LearnPage />} />
+            <Route path="/advertise" element={<AdvertisePage />} />
             <Route path="/" element={
               <AppContainer>
                 <Header />

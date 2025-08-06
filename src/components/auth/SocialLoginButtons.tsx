@@ -10,8 +10,8 @@ import { ReactComponent as TwitterLogo } from '../../assets/social-logos/twitter
 const SocialButton = styled(Button)`
   width: 100%;
   justify-content: flex-start;
-  padding: 0.5rem;
-  margin-bottom: 0.25rem;
+  padding: 0.4rem 0.5rem;
+  margin-bottom: 0.2rem;
   text-transform: none;
   font-weight: 500;
   border-radius: 8px;
@@ -20,8 +20,8 @@ const SocialButton = styled(Button)`
   
   .logo {
     margin-right: 1rem;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   &:hover {
@@ -38,7 +38,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ mode }) => {
   const actionText = mode === 'signin' ? 'Continue with' : 'Sign up with';
   
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={0.5}>
       <Grid item xs={12} component="div">
         <SocialButton variant="outlined" fullWidth>
           <GoogleLogo className="logo" />

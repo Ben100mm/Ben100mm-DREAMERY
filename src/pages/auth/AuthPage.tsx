@@ -30,16 +30,14 @@ const LogoContainer = styled(Box)`
 
 const AuthCard = styled(Paper)`
   width: 100%;
-  max-width: 380px;
-  min-height: auto;
+  width: 360px;
+  height: auto;
   padding: 1.25rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   margin: 1rem;
-  max-height: calc(100vh - 2rem);
-  overflow-y: auto;
   
   .MuiTabs-root {
     margin-bottom: 1rem;
@@ -62,27 +60,6 @@ const AuthCard = styled(Paper)`
     padding: 0;
     display: flex;
     flex-direction: column;
-    min-height: 250px;
-    max-height: calc(100vh - 250px);
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.15);
-      border-radius: 3px;
-      
-      &:hover {
-        background: rgba(0, 0, 0, 0.25);
-      }
-    }
   }
 `;
 

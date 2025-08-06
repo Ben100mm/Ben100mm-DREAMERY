@@ -484,6 +484,78 @@ const UnderwritePage: React.FC = () => {
             </Grid>
           </Grid>
         </Box>
+
+        {/* Placeholder Underwriting Cards */}
+        <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
+          Featured Underwriting Applications
+        </Typography>
+        <Grid container spacing={3}>
+          {Array.from({ length: 10 }, (_, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={`underwrite-placeholder-${index}`}>
+              <Card sx={{ 
+                height: '100%', 
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                '&:hover': { 
+                  transform: 'translateY(-4px)', 
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+                }
+              }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Application+${index + 1}`}
+                  alt={`Application ${index + 1}`}
+                  sx={{ objectFit: 'cover' }}
+                />
+                <CardContent>
+                  <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                    Application #{index + 1}
+                  </Typography>
+                  
+                  <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
+                    ${(350000 + index * 45000).toLocaleString()}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {(720 + index * 15)} credit score
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {(25 + index * 2)}% DTI
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {(15 + index)}% down
+                      </Typography>
+                    </Box>
+                  </Box>
+                  
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      backgroundColor: '#1a365d',
+                      '&:hover': { backgroundColor: '#0d2340' }
+                    }}
+                  >
+                    Review Application
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
     </PageTemplate>
   );

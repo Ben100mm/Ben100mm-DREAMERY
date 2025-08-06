@@ -483,14 +483,18 @@ const ProfessionalSignupPage: React.FC = () => {
                 }}
               />
               
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={3}>
+              <Box sx={{ mb: 3 }}>
+                <Typography sx={{ color: '#666666', fontWeight: 600, mb: 1, fontSize: '14px' }}>
+                  Phone number
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
-                    fullWidth
+                    size="small"
                     placeholder="555"
                     value={phoneArea}
                     onChange={(e) => setPhoneArea(e.target.value)}
                     sx={{
+                      width: '80px',
                       '& .MuiOutlinedInput-root': {
                         color: '#333333',
                         '& fieldset': {
@@ -505,14 +509,13 @@ const ProfessionalSignupPage: React.FC = () => {
                       },
                     }}
                   />
-                </Grid>
-                <Grid item xs={3}>
                   <TextField
-                    fullWidth
+                    size="small"
                     placeholder="555"
                     value={phonePrefix}
                     onChange={(e) => setPhonePrefix(e.target.value)}
                     sx={{
+                      width: '80px',
                       '& .MuiOutlinedInput-root': {
                         color: '#333333',
                         '& fieldset': {
@@ -527,14 +530,13 @@ const ProfessionalSignupPage: React.FC = () => {
                       },
                     }}
                   />
-                </Grid>
-                <Grid item xs={3}>
                   <TextField
-                    fullWidth
+                    size="small"
                     placeholder="5555"
                     value={phoneLine}
                     onChange={(e) => setPhoneLine(e.target.value)}
                     sx={{
+                      width: '80px',
                       '& .MuiOutlinedInput-root': {
                         color: '#333333',
                         '& fieldset': {
@@ -549,18 +551,17 @@ const ProfessionalSignupPage: React.FC = () => {
                       },
                     }}
                   />
-                </Grid>
-                <Grid item xs={3}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                    <Typography sx={{ color: '#666666', fontWeight: 600, mr: 1, fontSize: '14px' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Typography sx={{ color: '#666666', fontWeight: 600, fontSize: '14px' }}>
                       Ext
                     </Typography>
                     <TextField
-                      fullWidth
+                      size="small"
                       placeholder="55555"
                       value={extension}
                       onChange={(e) => setExtension(e.target.value)}
                       sx={{
+                        width: '80px',
                         '& .MuiOutlinedInput-root': {
                           color: '#333333',
                           '& fieldset': {
@@ -576,8 +577,8 @@ const ProfessionalSignupPage: React.FC = () => {
                       }}
                     />
                   </Box>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
 
               {/* Consent Checkbox */}
               <FormControlLabel

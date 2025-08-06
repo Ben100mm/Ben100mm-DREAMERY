@@ -10,23 +10,9 @@ import {
   Link,
 } from '@mui/material';
 import styled from 'styled-components';
-import GoogleIcon from '@mui/icons-material/Google';
-import AppleIcon from '@mui/icons-material/Apple';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import SocialLoginButtons from './SocialLoginButtons';
 
-const SocialButton = styled(Button)`
-  width: 100%;
-  justify-content: flex-start;
-  padding: 0.75rem 1.5rem;
-  margin-bottom: 1rem;
-  text-transform: none;
-  font-weight: 500;
-  border-radius: 8px;
-  
-  .MuiButton-startIcon {
-    margin-right: 2rem;
-  }
-`;
+
 
 const OrDivider = styled(Box)`
   display: flex;
@@ -46,27 +32,7 @@ const OrDivider = styled(Box)`
 const SignInForm: React.FC = () => {
   return (
     <Box>
-      <SocialButton
-        variant="outlined"
-        startIcon={<GoogleIcon />}
-        fullWidth
-      >
-        Continue with Google
-      </SocialButton>
-      <SocialButton
-        variant="outlined"
-        startIcon={<AppleIcon />}
-        fullWidth
-      >
-        Continue with Apple
-      </SocialButton>
-      <SocialButton
-        variant="outlined"
-        startIcon={<FacebookIcon />}
-        fullWidth
-      >
-        Continue with Facebook
-      </SocialButton>
+      <SocialLoginButtons mode="signin" />
 
       <OrDivider>
         <Divider />

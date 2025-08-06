@@ -9,23 +9,9 @@ import {
   Checkbox,
 } from '@mui/material';
 import styled from 'styled-components';
-import GoogleIcon from '@mui/icons-material/Google';
-import AppleIcon from '@mui/icons-material/Apple';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import SocialLoginButtons from './SocialLoginButtons';
 
-const SocialButton = styled(Button)`
-  width: 100%;
-  justify-content: flex-start;
-  padding: 0.75rem 1.5rem;
-  margin-bottom: 1rem;
-  text-transform: none;
-  font-weight: 500;
-  border-radius: 8px;
-  
-  .MuiButton-startIcon {
-    margin-right: 2rem;
-  }
-`;
+
 
 const OrDivider = styled(Box)`
   display: flex;
@@ -45,27 +31,7 @@ const OrDivider = styled(Box)`
 const SignUpForm: React.FC = () => {
   return (
     <Box>
-      <SocialButton
-        variant="outlined"
-        startIcon={<GoogleIcon />}
-        fullWidth
-      >
-        Sign up with Google
-      </SocialButton>
-      <SocialButton
-        variant="outlined"
-        startIcon={<AppleIcon />}
-        fullWidth
-      >
-        Sign up with Apple
-      </SocialButton>
-      <SocialButton
-        variant="outlined"
-        startIcon={<FacebookIcon />}
-        fullWidth
-      >
-        Sign up with Facebook
-      </SocialButton>
+      <SocialLoginButtons mode="signup" />
 
       <OrDivider>
         <Divider />

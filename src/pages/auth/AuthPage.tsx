@@ -7,6 +7,7 @@ import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
 
+
 const AuthContainer = styled(Container)`
   min-height: 100vh;
   display: flex;
@@ -97,6 +98,12 @@ const AuthPage: React.FC = () => {
     navigate('/');
   };
 
+  const handleAuthSuccess = () => {
+    // Handle successful authentication
+    console.log('Authentication successful');
+    navigate('/');
+  };
+
   return (
     <AuthContainer maxWidth={false}>
       <AuthCard elevation={0}>
@@ -132,7 +139,8 @@ const AuthPage: React.FC = () => {
               <Tabs
                 value={tab}
                 onChange={handleTabChange}
-                variant="fullWidth"
+                variant="scrollable"
+                scrollButtons="auto"
                 TabIndicatorProps={{
                   style: {
                     height: 3,
@@ -146,13 +154,13 @@ const AuthPage: React.FC = () => {
               </Tabs>
             </Box>
             <TabPanel value="signin">
-              <SignInForm />
+              <SignInForm onSuccess={handleAuthSuccess} />
             </TabPanel>
             <TabPanel value="signup">
-              <SignUpForm />
+              <SignUpForm onSuccess={handleAuthSuccess} />
             </TabPanel>
             <TabPanel value="magic">
-              <MagicLinkForm />
+              <MagicLinkForm onSuccess={handleAuthSuccess} />
             </TabPanel>
           </TabContext>
         </Box>

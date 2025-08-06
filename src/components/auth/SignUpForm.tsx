@@ -28,7 +28,11 @@ const OrDivider = styled(Box)`
   }
 `;
 
-const SignUpForm: React.FC = () => {
+interface SignUpFormProps {
+  onSuccess?: () => void;
+}
+
+const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
   return (
     <Box sx={{ 
         maxHeight: '60vh',

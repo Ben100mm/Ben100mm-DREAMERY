@@ -33,33 +33,55 @@ const Header: React.FC = () => {
           px: 3,
         }}
       >
-                  <Button
-          variant="text"
-          onClick={() => navigate('/auth', { replace: true })}
-          sx={{
-            color: '#0d2340',
-            fontWeight: 700,
-            textTransform: 'none',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '0.95rem',
-            letterSpacing: '0.3px',
-            textShadow: '0 1px 1px rgba(255, 255, 255, 0.5)',
-            position: 'absolute',
-            right: 32,
-            top: -8,
-            backgroundColor: 'rgba(255, 255, 255, 0.75)',
-            padding: '8px 20px',
-            borderRadius: '6px',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
-            },
-          }}
-        >
-          Sign Up / Sign In
-        </Button>
+                  <Box sx={{ position: 'absolute', right: 32, top: -8, display: 'flex', gap: 1 }}>
+                    <Button
+                      variant="text"
+                      onClick={() => navigate('/security')}
+                      sx={{
+                        color: '#0d2340',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        fontFamily: 'Inter, sans-serif',
+                        fontSize: '0.9rem',
+                        letterSpacing: '0.3px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                        padding: '6px 16px',
+                        borderRadius: '6px',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                        },
+                      }}
+                    >
+                      Security
+                    </Button>
+                    <Button
+                      variant="text"
+                      onClick={() => navigate('/auth', { replace: true })}
+                      sx={{
+                        color: '#0d2340',
+                        fontWeight: 700,
+                        textTransform: 'none',
+                        fontFamily: 'Inter, sans-serif',
+                        fontSize: '0.95rem',
+                        letterSpacing: '0.3px',
+                        textShadow: '0 1px 1px rgba(255, 255, 255, 0.5)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                        padding: '8px 20px',
+                        borderRadius: '6px',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                        },
+                      }}
+                    >
+                      Sign Up / Sign In
+                    </Button>
+                  </Box>
         <Box 
           sx={{ 
             display: 'flex', 

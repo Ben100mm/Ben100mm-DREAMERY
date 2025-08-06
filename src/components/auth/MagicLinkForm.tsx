@@ -27,7 +27,11 @@ interface FormState {
   validationError: string | null;
 }
 
-const MagicLinkForm: React.FC = () => {
+interface MagicLinkFormProps {
+  onSuccess?: () => void;
+}
+
+const MagicLinkForm: React.FC<MagicLinkFormProps> = ({ onSuccess }) => {
   const [emailSent, setEmailSent] = useState(false);
   const [formState, setFormState] = useState<FormState>({
     email: '',

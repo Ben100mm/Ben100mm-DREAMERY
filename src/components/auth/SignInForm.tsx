@@ -29,7 +29,11 @@ const OrDivider = styled(Box)`
   }
 `;
 
-const SignInForm: React.FC = () => {
+interface SignInFormProps {
+  onSuccess?: () => void;
+}
+
+const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
   return (
     <Box>
       <SocialLoginButtons mode="signin" />

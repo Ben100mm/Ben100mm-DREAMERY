@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Navigation from './components/Navigation';
 import AuthPage from './pages/auth/AuthPage';
+import SecuritySettings from './pages/SecuritySettings';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/security" element={<SecuritySettings />} />
           <Route path="/" element={
             <AppContainer>
               <Header />

@@ -5,21 +5,20 @@ interface User {
   email: string;
   name: string;
   isEmailVerified: boolean;
-  createdAt: string;
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  isEmailVerified: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
-  verifyEmail: (token: string) => Promise<void>;
+  verifyEmail: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
 }
 
@@ -41,87 +40,93 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
-    isEmailVerified: false,
     isLoading: true,
+    error: null,
   });
 
-  // Check for existing auth on mount
   useEffect(() => {
-    const checkAuth = () => {
-      const savedUser = localStorage.getItem('dreamery_user');
-      if (savedUser) {
+    // Check for existing user in localStorage
+    const savedUser = localStorage.getItem('dreamery_user');
+    if (savedUser) {
+      try {
         const user = JSON.parse(savedUser);
         setAuthState({
           user,
           isAuthenticated: true,
-          isEmailVerified: user.isEmailVerified,
           isLoading: false,
+          error: null,
         });
-      } else {
-        setAuthState(prev => ({ ...prev, isLoading: false }));
+      } catch (error) {
+        localStorage.removeItem('dreamery_user');
+        setAuthState({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          error: null,
+        });
       }
-    };
-
-    checkAuth();
+    } else {
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
-    setAuthState(prev => ({ ...prev, isLoading: true }));
+    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simulate login success
       const user: User = {
         id: '1',
         email,
         name: email.split('@')[0],
-        isEmailVerified: false, // Will be verified later
-        createdAt: new Date().toISOString(),
+        isEmailVerified: false,
       };
-
-      localStorage.setItem('dreamery_user', JSON.stringify(user));
       
+      localStorage.setItem('dreamery_user', JSON.stringify(user));
       setAuthState({
         user,
         isAuthenticated: true,
-        isEmailVerified: false,
         isLoading: false,
+        error: null,
       });
     } catch (error) {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-      throw new Error('Login failed');
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Login failed. Please try again.',
+      }));
     }
   };
 
   const signup = async (email: string, password: string, name: string) => {
-    setAuthState(prev => ({ ...prev, isLoading: true }));
+    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simulate signup success
       const user: User = {
         id: '1',
         email,
         name,
         isEmailVerified: false,
-        createdAt: new Date().toISOString(),
       };
-
-      localStorage.setItem('dreamery_user', JSON.stringify(user));
       
+      localStorage.setItem('dreamery_user', JSON.stringify(user));
       setAuthState({
         user,
         isAuthenticated: true,
-        isEmailVerified: false,
         isLoading: false,
+        error: null,
       });
     } catch (error) {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-      throw new Error('Signup failed');
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Signup failed. Please try again.',
+      }));
     }
   };
 
@@ -130,44 +135,50 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthState({
       user: null,
       isAuthenticated: false,
-      isEmailVerified: false,
       isLoading: false,
+      error: null,
     });
   };
 
-  const verifyEmail = async (token: string) => {
+  const verifyEmail = async () => {
+    if (!authState.user) return;
+    
     setAuthState(prev => ({ ...prev, isLoading: true }));
     
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (authState.user) {
-        const updatedUser = { ...authState.user, isEmailVerified: true };
-        localStorage.setItem('dreamery_user', JSON.stringify(updatedUser));
-        
-        setAuthState({
-          user: updatedUser,
-          isAuthenticated: true,
-          isEmailVerified: true,
-          isLoading: false,
-        });
-      }
+      const updatedUser = { ...authState.user, isEmailVerified: true };
+      localStorage.setItem('dreamery_user', JSON.stringify(updatedUser));
+      
+      setAuthState(prev => ({
+        ...prev,
+        user: updatedUser,
+        isLoading: false,
+      }));
     } catch (error) {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-      throw new Error('Email verification failed');
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Email verification failed.',
+      }));
     }
   };
 
   const sendVerificationEmail = async () => {
-    if (!authState.user) return;
+    setAuthState(prev => ({ ...prev, isLoading: true }));
     
     try {
-      // Simulate sending verification email
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Verification email sent to:', authState.user.email);
+      setAuthState(prev => ({ ...prev, isLoading: false }));
     } catch (error) {
-      throw new Error('Failed to send verification email');
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Failed to send verification email.',
+      }));
     }
   };
 

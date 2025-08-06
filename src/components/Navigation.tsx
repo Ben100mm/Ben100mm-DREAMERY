@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const NavContainer = styled.nav`
   width: 100%;
@@ -47,9 +48,20 @@ const NavItem = styled.li`
 
 const Navigation: React.FC = () => {
   const navItems = [
-    'Buy', 'Rent', 'Sell', 'Mortgage', 'Underwrite', 'Analyze',
-    'Close', 'Manage', 'Invest', 'Fund', 'Operate', 'Partner',
-    'Learn', 'Advertise'
+    { name: 'Buy', path: '/buy' },
+    { name: 'Rent', path: '/rent' },
+    { name: 'Sell', path: '/sell' },
+    { name: 'Mortgage', path: '/mortgage' },
+    { name: 'Underwrite', path: '/underwrite' },
+    { name: 'Analyze', path: '/analyze' },
+    { name: 'Close', path: '/close' },
+    { name: 'Manage', path: '/manage' },
+    { name: 'Invest', path: '/invest' },
+    { name: 'Fund', path: '/fund' },
+    { name: 'Operate', path: '/operate' },
+    { name: 'Partner', path: '/partner' },
+    { name: 'Learn', path: '/learn' },
+    { name: 'Advertise', path: '/advertise' }
   ];
 
   return (
@@ -57,7 +69,7 @@ const Navigation: React.FC = () => {
       <NavList>
         {navItems.map((item, index) => (
           <NavItem key={index}>
-            <a href={`#${item.toLowerCase()}`}>{item}</a>
+            <Link to={item.path}>{item.name}</Link>
           </NavItem>
         ))}
       </NavList>
@@ -65,4 +77,4 @@ const Navigation: React.FC = () => {
   );
 };
 
-export default Navigation;
+export default Navigation; 

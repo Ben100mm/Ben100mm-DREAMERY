@@ -1,448 +1,608 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { 
-  Grid, 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Typography, 
-  Button, 
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
   TextField,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Slider,
   Chip,
-  Box,
   Rating,
   IconButton,
   Tabs,
   Tab,
+  Paper,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Snackbar,
+  Alert
 } from '@mui/material';
-import { 
-  Search as SearchIcon,
-  FilterList as FilterIcon,
-  Favorite as FavoriteIcon,
-  FavoriteBorder as FavoriteBorderIcon,
-  LocationOn as LocationIcon,
-  Bed as BedIcon,
-  Bathtub as BathIcon,
-  SquareFoot as SquareFootIcon,
-  Pets as PetsIcon,
-  LocalParking as ParkingIcon,
-  FitnessCenter as GymIcon,
-  Pool as PoolIcon
+import {
+  Favorite,
+  FavoriteBorder,
+  LocationOn,
+  Bed,
+  Bathtub,
+  SquareFoot,
+  Search,
+  Apply,
+  CalendarToday,
+  Pets,
+  SmokingRooms,
+  Wifi,
+  Pool,
+  FitnessCenter
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
 
-const SearchSection = styled.div`
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
+interface RentalProperty {
+  id: number;
+  title: string;
+  rent: number;
+  location: string;
+  beds: number;
+  baths: number;
+  sqft: number;
+  type: string;
+  image: string;
+  rating: number;
+  description: string;
+  amenities: string[];
+  leaseTerm: string;
+  availableDate: string;
+  isFavorite: boolean;
+  petsAllowed: boolean;
+  smokingAllowed: boolean;
+}
 
-const PropertyCard = styled(Card)`
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const PropertyImage = styled(CardMedia)`
-  height: 200px;
-  position: relative;
-`;
-
-const FavoriteButton = styled(IconButton)`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  
-  &:hover {
-    background: rgba(255, 255, 255, 1);
-  }
-`;
-
-const RentTag = styled.div`
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  background: rgba(26, 54, 93, 0.9);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.9rem;
-`;
-
-const PropertyStats = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  color: #666;
-  font-size: 0.9rem;
-`;
-
-const StatItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-`;
-
-const AmenitiesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-`;
-
-const mockRentals = [
+const mockRentals: RentalProperty[] = [
   {
     id: 1,
     title: "Modern Downtown Apartment",
-    rent: "$2,200/month",
+    rent: 2200,
     location: "Downtown, City Center",
     beds: 1,
     baths: 1,
     sqft: 850,
+    type: "Apartment",
+    image: "https://images.unsplash.com/photo-1560448204-e02f8c8d7b8b?w=400",
     rating: 4.5,
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop",
-    available: true,
-    amenities: ['Pets Allowed', 'Parking', 'Gym', 'Pool'],
-    leaseTerm: "12 months"
+    description: "Luxurious downtown apartment with city views and modern amenities.",
+    amenities: ["Gym", "Pool", "Parking", "Concierge"],
+    leaseTerm: "12 months",
+    availableDate: "2024-02-01",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
   },
   {
     id: 2,
     title: "Family Townhouse",
-    rent: "$3,500/month",
+    rent: 3200,
     location: "Suburban Heights",
     beds: 3,
     baths: 2.5,
     sqft: 1800,
+    type: "Townhouse",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
     rating: 4.8,
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop",
-    available: true,
-    amenities: ['Pets Allowed', 'Parking', 'Garden'],
-    leaseTerm: "12 months"
+    description: "Spacious family townhouse with backyard and excellent schools.",
+    amenities: ["Backyard", "Garage", "Fireplace", "Updated Kitchen"],
+    leaseTerm: "12 months",
+    availableDate: "2024-01-15",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
   },
   {
     id: 3,
-    title: "Luxury Penthouse Rental",
-    rent: "$5,800/month",
-    location: "Waterfront District",
-    beds: 2,
-    baths: 2,
-    sqft: 1500,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop",
-    available: true,
-    amenities: ['Pets Allowed', 'Parking', 'Gym', 'Pool', 'Concierge'],
-    leaseTerm: "6-12 months"
+    title: "Waterfront Studio",
+    rent: 1800,
+    location: "Harbor District",
+    beds: 0,
+    baths: 1,
+    sqft: 600,
+    type: "Studio",
+    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400",
+    rating: 4.7,
+    description: "Beautiful waterfront studio with marina access.",
+    amenities: ["Waterfront", "Marina Access", "Deck", "Modern Design"],
+    leaseTerm: "6 months",
+    availableDate: "2024-02-15",
+    isFavorite: false,
+    petsAllowed: false,
+    smokingAllowed: false
   },
   {
     id: 4,
-    title: "Cozy Studio Apartment",
-    rent: "$1,400/month",
-    location: "University District",
+    title: "Historic Loft",
+    rent: 2800,
+    location: "Historic District",
+    beds: 2,
+    baths: 1,
+    sqft: 1200,
+    type: "Loft",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400",
+    rating: 4.6,
+    description: "Restored historic loft with original character and modern updates.",
+    amenities: ["Historic", "Fireplace", "Hardwood Floors", "High Ceilings"],
+    leaseTerm: "12 months",
+    availableDate: "2024-01-30",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
+  },
+  {
+    id: 5,
+    title: "Luxury Penthouse",
+    rent: 8500,
+    location: "Uptown Luxury",
+    beds: 3,
+    baths: 3.5,
+    sqft: 2800,
+    type: "Penthouse",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400",
+    rating: 4.9,
+    description: "Ultra-luxurious penthouse with panoramic city views.",
+    amenities: ["Panoramic Views", "Concierge", "Private Elevator", "Wine Cellar"],
+    leaseTerm: "24 months",
+    availableDate: "2024-03-01",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
+  },
+  {
+    id: 6,
+    title: "Cozy Studio",
+    rent: 1200,
+    location: "First Time Renter Area",
     beds: 0,
     baths: 1,
-    sqft: 550,
+    sqft: 500,
+    type: "Studio",
+    image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400",
+    rating: 4.3,
+    description: "Perfect starter rental with great location and amenities.",
+    amenities: ["Affordable", "Good Location", "Updated", "Laundry"],
+    leaseTerm: "6 months",
+    availableDate: "2024-01-20",
+    isFavorite: false,
+    petsAllowed: false,
+    smokingAllowed: false
+  },
+  {
+    id: 7,
+    title: "Student Housing",
+    rent: 900,
+    location: "University District",
+    beds: 1,
+    baths: 1,
+    sqft: 400,
+    type: "Student",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400",
+    rating: 4.4,
+    description: "Affordable student housing near university campus.",
+    amenities: ["Student Discount", "Study Room", "WiFi", "Security"],
+    leaseTerm: "9 months",
+    availableDate: "2024-02-01",
+    isFavorite: false,
+    petsAllowed: false,
+    smokingAllowed: false
+  },
+  {
+    id: 8,
+    title: "Mountain Cabin",
+    rent: 3500,
+    location: "Mountain View",
+    beds: 2,
+    baths: 2,
+    sqft: 1200,
+    type: "Cabin",
+    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400",
+    rating: 4.8,
+    description: "Stunning mountain cabin with breathtaking views.",
+    amenities: ["Mountain Views", "Fireplace", "Deck", "Privacy"],
+    leaseTerm: "12 months",
+    availableDate: "2024-02-15",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
+  },
+  {
+    id: 9,
+    title: "Modern Loft",
+    rent: 2400,
+    location: "Arts District",
+    beds: 1,
+    baths: 1,
+    sqft: 900,
+    type: "Loft",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400",
     rating: 4.2,
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop",
-    available: true,
-    amenities: ['Pets Allowed'],
-    leaseTerm: "12 months"
+    description: "Industrial-chic loft in the heart of the arts district.",
+    amenities: ["High Ceilings", "Exposed Brick", "Arts District", "Modern"],
+    leaseTerm: "12 months",
+    availableDate: "2024-01-25",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
+  },
+  {
+    id: 10,
+    title: "Golf Course Villa",
+    rent: 6500,
+    location: "Country Club",
+    beds: 4,
+    baths: 3.5,
+    sqft: 2800,
+    type: "Villa",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
+    rating: 4.9,
+    description: "Magnificent villa on the golf course with luxury amenities.",
+    amenities: ["Golf Course", "Pool", "Tennis Court", "Wine Cellar"],
+    leaseTerm: "24 months",
+    availableDate: "2024-03-15",
+    isFavorite: false,
+    petsAllowed: true,
+    smokingAllowed: false
   }
 ];
 
 const RentPage: React.FC = () => {
+  const [rentals, setRentals] = useState<RentalProperty[]>(mockRentals);
   const [searchTerm, setSearchTerm] = useState('');
-  const [rentRange, setRentRange] = useState('');
-  const [propertyType, setPropertyType] = useState('');
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [activeTab, setActiveTab] = useState(0);
+  const [rentRange, setRentRange] = useState<number[]>([0, 10000]);
+  const [propertyType, setPropertyType] = useState('all');
+  const [beds, setBeds] = useState('all');
+  const [sortBy, setSortBy] = useState('rent');
+  const [tabValue, setTabValue] = useState(0);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as any });
   const [applicationDialog, setApplicationDialog] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [selectedProperty, setSelectedProperty] = useState<RentalProperty | null>(null);
+  const [applicationStep, setApplicationStep] = useState(0);
 
-  const handleFavoriteToggle = (propertyId: number) => {
-    setFavorites(prev => 
-      prev.includes(propertyId) 
-        ? prev.filter(id => id !== propertyId)
-        : [...prev, propertyId]
-    );
+  const handleFavorite = (propertyId: number) => {
+    setRentals(rentals.map(prop => 
+      prop.id === propertyId 
+        ? { ...prop, isFavorite: !prop.isFavorite }
+        : prop
+    ));
+    setSnackbar({ open: true, message: 'Property added to favorites!', severity: 'success' });
   };
 
-  const handleApplyNow = (property: any) => {
+  const handleApplyNow = (property: RentalProperty) => {
     setSelectedProperty(property);
     setApplicationDialog(true);
+    setApplicationStep(0);
   };
 
-  const filteredRentals = mockRentals.filter(property =>
-    property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    property.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleApplicationSubmit = () => {
+    setSnackbar({ open: true, message: 'Application submitted successfully!', severity: 'success' });
+    setApplicationDialog(false);
+  };
+
+  const filteredRentals = rentals.filter(property => {
+    const matchesSearch = property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         property.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRent = property.rent >= rentRange[0] && property.rent <= rentRange[1];
+    const matchesType = propertyType === 'all' || property.type === propertyType;
+    const matchesBeds = beds === 'all' || property.beds >= parseInt(beds);
+    
+    return matchesSearch && matchesRent && matchesType && matchesBeds;
+  });
+
+  const sortedRentals = [...filteredRentals].sort((a, b) => {
+    switch (sortBy) {
+      case 'rent':
+        return a.rent - b.rent;
+      case 'rent-desc':
+        return b.rent - a.rent;
+      case 'rating':
+        return b.rating - a.rating;
+      case 'beds':
+        return b.beds - a.beds;
+      default:
+        return 0;
+    }
+  });
+
+  const formatRent = (rent: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(rent);
+  };
+
+  const applicationSteps = [
+    'Personal Information',
+    'Employment Details',
+    'Rental History',
+    'References',
+    'Review & Submit'
+  ];
 
   return (
-    <PageTemplate 
-      title="Find Your Perfect Rental" 
-      subtitle="Discover rental properties that fit your lifestyle and budget"
-    >
-      {/* Search Section */}
-      <SearchSection>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Search rentals"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <FormControl fullWidth>
-              <InputLabel>Rent Range</InputLabel>
-              <Select
-                value={rentRange}
-                label="Rent Range"
-                onChange={(e) => setRentRange(e.target.value)}
-              >
-                <MenuItem value="">Any Rent</MenuItem>
-                <MenuItem value="0-1500">Under $1,500</MenuItem>
-                <MenuItem value="1500-2500">$1,500 - $2,500</MenuItem>
-                <MenuItem value="2500-3500">$2,500 - $3,500</MenuItem>
-                <MenuItem value="3500+">Over $3,500</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <FormControl fullWidth>
-              <InputLabel>Property Type</InputLabel>
-              <Select
-                value={propertyType}
-                label="Property Type"
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                <MenuItem value="">Any Type</MenuItem>
-                <MenuItem value="apartment">Apartment</MenuItem>
-                <MenuItem value="house">House</MenuItem>
-                <MenuItem value="townhouse">Townhouse</MenuItem>
-                <MenuItem value="studio">Studio</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <Button
-              fullWidth
-              variant="contained"
-              startIcon={<FilterIcon />}
-              sx={{ height: '56px' }}
-            >
-              Filter
-            </Button>
-          </Grid>
-        </Grid>
-      </SearchSection>
-
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+    <PageTemplate title="Find Your Perfect Rental" subtitle="Discover rental properties that fit your lifestyle and budget">
+      <Box>
+        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)} sx={{ mb: 3 }}>
           <Tab label="Available Rentals" />
           <Tab label="My Applications" />
           <Tab label="Saved Properties" />
         </Tabs>
-      </Box>
 
-      {/* Results Section */}
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          {filteredRentals.length} rentals available
-        </Typography>
-      </Box>
-
-      {/* Rental Grid */}
-      <Grid container spacing={3}>
-        {filteredRentals.map((property) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={property.id}>
-            <PropertyCard>
-              <PropertyImage image={property.image}>
-                <FavoriteButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleFavoriteToggle(property.id);
-                  }}
-                >
-                  {favorites.includes(property.id) ? (
-                    <FavoriteIcon color="error" />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </FavoriteButton>
-                <RentTag>{property.rent}</RentTag>
-                {property.available && (
-                  <Chip
-                    label="Available"
-                    color="success"
-                    size="small"
-                    sx={{
-                      position: 'absolute',
-                      top: 8,
-                      left: 8,
-                      backgroundColor: '#4caf50'
-                    }}
+        {tabValue === 0 && (
+          <>
+            {/* Search and Filters */}
+            <Paper sx={{ p: 3, mb: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#1a365d', mb: 2 }}>
+                <Search sx={{ mr: 1, verticalAlign: 'middle' }} />
+                Search & Filters
+              </Typography>
+              
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Search by location or property name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    variant="outlined"
                   />
-                )}
-              </PropertyImage>
-              <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom>
-                  {property.title}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <LocationIcon sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
-                  <Typography variant="body2" color="text.secondary">
-                    {property.location}
-                  </Typography>
-                </Box>
-                <PropertyStats>
-                  <StatItem>
-                    <BedIcon sx={{ fontSize: 16 }} />
-                    {property.beds}
-                  </StatItem>
-                  <StatItem>
-                    <BathIcon sx={{ fontSize: 16 }} />
-                    {property.baths}
-                  </StatItem>
-                  <StatItem>
-                    <SquareFootIcon sx={{ fontSize: 16 }} />
-                    {property.sqft.toLocaleString()}
-                  </StatItem>
-                </PropertyStats>
-                <AmenitiesContainer>
-                  {property.amenities.map((amenity, index) => (
-                    <Chip
-                      key={index}
-                      label={amenity}
-                      size="small"
-                      variant="outlined"
-                      sx={{ fontSize: '0.7rem' }}
+                </Grid>
+                
+                <Grid item xs={12} md={2}>
+                  <FormControl fullWidth>
+                    <InputLabel>Property Type</InputLabel>
+                    <Select
+                      value={propertyType}
+                      onChange={(e) => setPropertyType(e.target.value)}
+                      label="Property Type"
+                    >
+                      <MenuItem value="all">All Types</MenuItem>
+                      <MenuItem value="Apartment">Apartment</MenuItem>
+                      <MenuItem value="Townhouse">Townhouse</MenuItem>
+                      <MenuItem value="Studio">Studio</MenuItem>
+                      <MenuItem value="Loft">Loft</MenuItem>
+                      <MenuItem value="Penthouse">Penthouse</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} md={2}>
+                  <FormControl fullWidth>
+                    <InputLabel>Bedrooms</InputLabel>
+                    <Select
+                      value={beds}
+                      onChange={(e) => setBeds(e.target.value)}
+                      label="Bedrooms"
+                    >
+                      <MenuItem value="all">Any</MenuItem>
+                      <MenuItem value="0">Studio</MenuItem>
+                      <MenuItem value="1">1+</MenuItem>
+                      <MenuItem value="2">2+</MenuItem>
+                      <MenuItem value="3">3+</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} md={2}>
+                  <FormControl fullWidth>
+                    <InputLabel>Sort By</InputLabel>
+                    <Select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      label="Sort By"
+                    >
+                      <MenuItem value="rent">Rent (Low to High)</MenuItem>
+                      <MenuItem value="rent-desc">Rent (High to Low)</MenuItem>
+                      <MenuItem value="rating">Rating</MenuItem>
+                      <MenuItem value="beds">Bedrooms</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              
+              <Box sx={{ mt: 2 }}>
+                <Typography gutterBottom>Rent Range: {formatRent(rentRange[0])} - {formatRent(rentRange[1])}</Typography>
+                <Slider
+                  value={rentRange}
+                  onChange={(_, newValue) => setRentRange(newValue as number[])}
+                  valueLabelDisplay="auto"
+                  min={0}
+                  max={10000}
+                  step={100}
+                />
+              </Box>
+            </Paper>
+
+            {/* Results Summary */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ color: '#1a365d' }}>
+                {sortedRentals.length} rental properties found
+              </Typography>
+            </Box>
+
+            {/* Rental Property Grid */}
+            <Grid container spacing={3}>
+              {sortedRentals.map((property) => (
+                <Grid item xs={12} sm={6} md={4} key={property.id}>
+                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={property.image}
+                      alt={property.title}
                     />
-                  ))}
-                </AmenitiesContainer>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                  <Rating value={property.rating} readOnly size="small" />
-                  <Typography variant="body2" sx={{ ml: 0.5 }}>
-                    ({property.rating})
-                  </Typography>
-                </Box>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  Lease: {property.leaseTerm}
-                </Typography>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{ mt: 1 }}
-                  onClick={() => handleApplyNow(property)}
-                >
-                  Apply Now
-                </Button>
-              </CardContent>
-            </PropertyCard>
-          </Grid>
-        ))}
-      </Grid>
+                    
+                    <IconButton
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' }
+                      }}
+                      onClick={() => handleFavorite(property.id)}
+                    >
+                      {property.isFavorite ? <Favorite color="error" /> : <FavoriteBorder />}
+                    </IconButton>
+                    
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography variant="h6" gutterBottom sx={{ color: '#1a365d', fontWeight: 600 }}>
+                        {property.title}
+                      </Typography>
+                      
+                      <Typography variant="h5" sx={{ color: '#1a365d', fontWeight: 700, mb: 1 }}>
+                        {formatRent(property.rent)}/month
+                      </Typography>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <LocationOn sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <Typography variant="body2" color="text.secondary">
+                          {property.location}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Rating value={property.rating} precision={0.1} size="small" readOnly />
+                        <Typography variant="body2" sx={{ ml: 1 }}>
+                          ({property.rating})
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Bed sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <Typography variant="body2" sx={{ mr: 2 }}>
+                          {property.beds === 0 ? 'Studio' : `${property.beds} beds`}
+                        </Typography>
+                        <Bathtub sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <Typography variant="body2" sx={{ mr: 2 }}>
+                          {property.baths} baths
+                        </Typography>
+                        <SquareFoot sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <Typography variant="body2">
+                          {property.sqft.toLocaleString()} sqft
+                        </Typography>
+                      </Box>
+                      
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {property.description}
+                      </Typography>
+                      
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                        {property.amenities.slice(0, 3).map((amenity, index) => (
+                          <Chip
+                            key={index}
+                            label={amenity}
+                            size="small"
+                            variant="outlined"
+                            sx={{ fontSize: '0.75rem' }}
+                          />
+                        ))}
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          startIcon={<Apply />}
+                          onClick={() => handleApplyNow(property)}
+                          sx={{
+                            backgroundColor: '#1a365d',
+                            '&:hover': { backgroundColor: '#0d2340' }
+                          }}
+                        >
+                          Apply Now
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        )}
+
+        {tabValue === 1 && (
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" sx={{ color: '#1a365d', mb: 2 }}>
+              My Applications
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              No applications submitted yet. Apply to properties to see them here.
+            </Typography>
+          </Paper>
+        )}
+
+        {tabValue === 2 && (
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" sx={{ color: '#1a365d', mb: 2 }}>
+              Saved Properties
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              No saved properties yet. Click the heart icon to save properties.
+            </Typography>
+          </Paper>
+        )}
+      </Box>
 
       {/* Application Dialog */}
-      <Dialog 
-        open={applicationDialog} 
-        onClose={() => setApplicationDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={applicationDialog} onClose={() => setApplicationDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           Rental Application - {selectedProperty?.title}
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Please fill out the application form below. We'll review your application and contact you within 2-3 business days.
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="First Name"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                type="email"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Phone"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Current Address"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Annual Income"
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Employer"
-                margin="normal"
-              />
-            </Grid>
-          </Grid>
+          <Stepper activeStep={applicationStep} orientation="vertical">
+            {applicationSteps.map((step, index) => (
+              <Step key={step}>
+                <StepLabel>{step}</StepLabel>
+                <StepContent>
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Step {index + 1} content will be implemented here.
+                    </Typography>
+                  </Box>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setApplicationDialog(false)}>
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={() => setApplicationDialog(false)}>
+          <Button onClick={() => setApplicationDialog(false)}>Cancel</Button>
+          <Button 
+            onClick={handleApplicationSubmit}
+            variant="contained"
+            sx={{ backgroundColor: '#1a365d' }}
+          >
             Submit Application
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ open: false, message: '', severity: 'success' })}
+      >
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ open: false, message: '', severity: 'success' })}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </PageTemplate>
   );
 };

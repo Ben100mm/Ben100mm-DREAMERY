@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { 
-  Grid, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button, 
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+import {
   Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  TextField,
   Slider,
-  Alert,
+  Paper,
   Tabs,
   Tab,
   Table,
@@ -22,449 +17,344 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Alert,
+  Snackbar
 } from '@mui/material';
-import { 
+import {
   Calculate as CalculateIcon,
-  AccountBalance as BankIcon,
-  TrendingUp as RateIcon,
-  Description as ApplicationIcon,
-  Compare as CompareIcon,
-  CheckCircle as CheckIcon
+  TrendingUp as TrendingUpIcon,
+  Assignment as AssignmentIcon,
+  History as HistoryIcon
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
 
-const CalculatorCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
-  color: white;
-  height: 100%;
-`;
-
-const ResultCard = styled(Card)`
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const RateCard = styled(Card)`
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const mockRates = [
-  {
-    lender: "Dreamery Bank",
-    rate: "3.25%",
-    apr: "3.45%",
-    monthlyPayment: "$1,234",
-    points: 0,
-    featured: true
-  },
-  {
-    lender: "City National",
-    rate: "3.35%",
-    apr: "3.52%",
-    monthlyPayment: "$1,245",
-    points: 0,
-    featured: false
-  },
-  {
-    lender: "Metro Credit Union",
-    rate: "3.15%",
-    apr: "3.38%",
-    monthlyPayment: "$1,220",
-    points: 0.5,
-    featured: false
-  },
-  {
-    lender: "Premier Mortgage",
-    rate: "3.45%",
-    apr: "3.58%",
-    monthlyPayment: "$1,260",
-    points: 0,
-    featured: false
-  }
-];
-
 const MortgagePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [tabValue, setTabValue] = useState(0);
   const [loanAmount, setLoanAmount] = useState(300000);
   const [downPayment, setDownPayment] = useState(60000);
-  const [interestRate, setInterestRate] = useState(3.25);
+  const [interestRate, setInterestRate] = useState(4.5);
   const [loanTerm, setLoanTerm] = useState(30);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
-  const propertyValue = loanAmount + downPayment;
-  const loanToValue = (loanAmount / propertyValue) * 100;
-  const monthlyPayment = calculateMonthlyPayment(loanAmount, interestRate, loanTerm);
-  const totalPayment = monthlyPayment * (loanTerm * 12);
-  const totalInterest = totalPayment - loanAmount;
-
-  function calculateMonthlyPayment(principal: number, rate: number, years: number) {
-    const monthlyRate = rate / 100 / 12;
-    const numberOfPayments = years * 12;
-    return principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / 
-           (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-  }
-
-  const handleLoanAmountChange = (event: Event, newValue: number | number[]) => {
-    setLoanAmount(newValue as number);
+  const calculateMonthlyPayment = () => {
+    const principal = loanAmount - downPayment;
+    const monthlyRate = interestRate / 100 / 12;
+    const numberOfPayments = loanTerm * 12;
+    
+    if (monthlyRate === 0) return principal / numberOfPayments;
+    
+    const monthlyPayment = principal * 
+      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / 
+      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+    
+    return monthlyPayment;
   };
 
-  const handleDownPaymentChange = (event: Event, newValue: number | number[]) => {
-    setDownPayment(newValue as number);
+  const monthlyPayment = calculateMonthlyPayment();
+  const totalPayment = monthlyPayment * loanTerm * 12;
+  const totalInterest = totalPayment - (loanAmount - downPayment);
+
+  const mockRates = [
+    { lender: 'Dreamery Bank', rate: 4.25, apr: 4.35, points: 0, monthly: 1234 },
+    { lender: 'City Mortgage', rate: 4.50, apr: 4.60, points: 0, monthly: 1268 },
+    { lender: 'Home Finance', rate: 4.75, apr: 4.85, points: 0.5, monthly: 1302 },
+    { lender: 'National Lending', rate: 4.00, apr: 4.10, points: 1, monthly: 1200 },
+    { lender: 'Community Bank', rate: 4.35, apr: 4.45, points: 0, monthly: 1245 }
+  ];
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
-  const handleInterestRateChange = (event: Event, newValue: number | number[]) => {
-    setInterestRate(newValue as number);
-  };
-
-  const handleLoanTermChange = (event: Event, newValue: number | number[]) => {
-    setLoanTerm(newValue as number);
+  const handleApply = () => {
+    setSnackbar({ open: true, message: 'Mortgage application submitted successfully!' });
   };
 
   return (
-    <PageTemplate 
-      title="Mortgage Solutions" 
-      subtitle="Find the perfect mortgage for your dream home"
-    >
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+    <PageTemplate title="Mortgage Solutions" subtitle="Find the perfect mortgage for your dream home">
+      <Box>
+        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)} sx={{ mb: 3 }}>
           <Tab label="Loan Calculator" />
           <Tab label="Current Rates" />
           <Tab label="Apply Now" />
           <Tab label="My Applications" />
         </Tabs>
-      </Box>
 
-      {/* Loan Calculator Tab */}
-      {activeTab === 0 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <CalculatorCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Mortgage Calculator
-                </Typography>
-                <Typography variant="body2" paragraph>
-                  Adjust the sliders to see how different factors affect your monthly payment.
-                </Typography>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Property Value: ${propertyValue.toLocaleString()}
+        {tabValue === 0 && (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                    <CalculateIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Loan Calculator
                   </Typography>
-                  <Slider
-                    value={propertyValue}
-                    onChange={(e, newValue) => {
-                      const newPropertyValue = newValue as number;
-                      setLoanAmount(newPropertyValue - downPayment);
-                    }}
-                    min={100000}
-                    max={1000000}
-                    step={10000}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `$${value.toLocaleString()}`}
-                  />
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Down Payment: ${downPayment.toLocaleString()} ({((downPayment / propertyValue) * 100).toFixed(1)}%)
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography gutterBottom>Loan Amount: {formatCurrency(loanAmount)}</Typography>
+                    <Slider
+                      value={loanAmount}
+                      onChange={(_, value) => setLoanAmount(value as number)}
+                      min={50000}
+                      max={1000000}
+                      step={10000}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={formatCurrency}
+                    />
+                  </Box>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography gutterBottom>Down Payment: {formatCurrency(downPayment)}</Typography>
+                    <Slider
+                      value={downPayment}
+                      onChange={(_, value) => setDownPayment(value as number)}
+                      min={0}
+                      max={loanAmount}
+                      step={5000}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={formatCurrency}
+                    />
+                  </Box>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography gutterBottom>Interest Rate: {interestRate}%</Typography>
+                    <Slider
+                      value={interestRate}
+                      onChange={(_, value) => setInterestRate(value as number)}
+                      min={2}
+                      max={8}
+                      step={0.1}
+                      valueLabelDisplay="auto"
+                    />
+                  </Box>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography gutterBottom>Loan Term: {loanTerm} years</Typography>
+                    <Slider
+                      value={loanTerm}
+                      onChange={(_, value) => setLoanTerm(value as number)}
+                      min={15}
+                      max={30}
+                      step={5}
+                      valueLabelDisplay="auto"
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                    Payment Summary
                   </Typography>
-                  <Slider
-                    value={downPayment}
-                    onChange={handleDownPaymentChange}
-                    min={0}
-                    max={propertyValue}
-                    step={5000}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `$${value.toLocaleString()}`}
-                  />
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Interest Rate: {interestRate}%
-                  </Typography>
-                  <Slider
-                    value={interestRate}
-                    onChange={handleInterestRateChange}
-                    min={2.5}
-                    max={6.0}
-                    step={0.05}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `${value}%`}
-                  />
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Loan Term: {loanTerm} years
-                  </Typography>
-                  <Slider
-                    value={loanTerm}
-                    onChange={handleLoanTermChange}
-                    min={15}
-                    max={30}
-                    step={5}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `${value} years`}
-                  />
-                </Box>
-              </CardContent>
-            </CalculatorCard>
+                  
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700 }}>
+                      {formatCurrency(monthlyPayment)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Monthly Payment
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography>Principal & Interest:</Typography>
+                    <Typography>{formatCurrency(monthlyPayment)}</Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography>Property Tax (est.):</Typography>
+                    <Typography>{formatCurrency(monthlyPayment * 0.2)}</Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography>Insurance (est.):</Typography>
+                    <Typography>{formatCurrency(monthlyPayment * 0.1)}</Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                    <Typography variant="h6">Total Monthly:</Typography>
+                    <Typography variant="h6">{formatCurrency(monthlyPayment * 1.3)}</Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography>Total Interest:</Typography>
+                    <Typography>{formatCurrency(totalInterest)}</Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography>Total Payment:</Typography>
+                    <Typography>{formatCurrency(totalPayment)}</Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
+        )}
 
-          <Grid item xs={12} md={6}>
-            <ResultCard>
-              <Typography variant="h6" gutterBottom>
-                Payment Breakdown
+        {tabValue === 1 && (
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                <TrendingUpIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                Current Mortgage Rates
               </Typography>
               
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Monthly Payment
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: '#1a365d', fontWeight: 'bold' }}>
-                    ${monthlyPayment.toFixed(0)}
-                  </Typography>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Lender</TableCell>
+                      <TableCell align="right">Rate</TableCell>
+                      <TableCell align="right">APR</TableCell>
+                      <TableCell align="right">Points</TableCell>
+                      <TableCell align="right">Monthly Payment</TableCell>
+                      <TableCell align="center">Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {mockRates.map((rate, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{rate.lender}</TableCell>
+                        <TableCell align="right">{rate.rate}%</TableCell>
+                        <TableCell align="right">{rate.apr}%</TableCell>
+                        <TableCell align="right">{rate.points}</TableCell>
+                        <TableCell align="right">{formatCurrency(rate.monthly)}</TableCell>
+                        <TableCell align="center">
+                          <Button
+                            variant="contained"
+                            size="small"
+                            onClick={handleApply}
+                            sx={{ backgroundColor: '#1a365d' }}
+                          >
+                            Apply
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        )}
+
+        {tabValue === 2 && (
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                <AssignmentIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                Mortgage Application
+              </Typography>
+              
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    type="email"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Phone"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Loan Amount
-                  </Typography>
-                  <Typography variant="h6">
-                    ${loanAmount.toLocaleString()}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Interest
-                  </Typography>
-                  <Typography variant="h6">
-                    ${totalInterest.toFixed(0)}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Payment
-                  </Typography>
-                  <Typography variant="h6">
-                    ${totalPayment.toFixed(0)}
-                  </Typography>
+                
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Annual Income"
+                    type="number"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Down Payment Amount"
+                    type="number"
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                  />
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Loan Type</InputLabel>
+                    <Select label="Loan Type">
+                      <MenuItem value="conventional">Conventional</MenuItem>
+                      <MenuItem value="fha">FHA</MenuItem>
+                      <MenuItem value="va">VA</MenuItem>
+                      <MenuItem value="usda">USDA</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Property Type</InputLabel>
+                    <Select label="Property Type">
+                      <MenuItem value="primary">Primary Residence</MenuItem>
+                      <MenuItem value="secondary">Secondary Home</MenuItem>
+                      <MenuItem value="investment">Investment Property</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
-
+              
               <Box sx={{ mt: 3 }}>
-                <Alert severity="info">
-                  Loan-to-Value Ratio: {loanToValue.toFixed(1)}%
-                  {loanToValue > 80 && (
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Note: You may need Private Mortgage Insurance (PMI) for LTV > 80%
-                    </Typography>
-                  )}
-                </Alert>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleApply}
+                  sx={{ backgroundColor: '#1a365d' }}
+                >
+                  Submit Application
+                </Button>
               </Box>
-            </ResultCard>
-          </Grid>
-        </Grid>
-      )}
+            </CardContent>
+          </Card>
+        )}
 
-      {/* Current Rates Tab */}
-      {activeTab === 1 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Today's Best Mortgage Rates
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Rates are updated daily. All rates assume excellent credit (740+) and 20% down payment.
-          </Typography>
+        {tabValue === 3 && (
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ color: '#1a365d', mb: 2 }}>
+              <HistoryIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+              My Applications
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              No applications submitted yet. Apply for a mortgage to see them here.
+            </Typography>
+          </Paper>
+        )}
+      </Box>
 
-          <Grid container spacing={3}>
-            {mockRates.map((rate, index) => (
-              <Grid item xs={12} md={6} lg={3} key={index}>
-                <RateCard>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="h6">
-                        {rate.lender}
-                      </Typography>
-                      {rate.featured && (
-                        <Typography variant="caption" sx={{ color: '#1a365d', fontWeight: 'bold' }}>
-                          FEATURED
-                        </Typography>
-                      )}
-                    </Box>
-                    
-                    <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 'bold', mb: 1 }}>
-                      {rate.rate}
-                    </Typography>
-                    
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      APR: {rate.apr}
-                    </Typography>
-                    
-                    <Typography variant="h6" gutterBottom>
-                      ${rate.monthlyPayment}/month
-                    </Typography>
-                    
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Points: {rate.points}
-                    </Typography>
-                    
-                    <Button 
-                      variant="contained" 
-                      fullWidth 
-                      sx={{ mt: 2 }}
-                      startIcon={<CompareIcon />}
-                    >
-                      Compare
-                    </Button>
-                  </CardContent>
-                </RateCard>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
-
-      {/* Apply Now Tab */}
-      {activeTab === 2 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Start Your Mortgage Application
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Complete this form to begin your mortgage application process. We'll guide you through each step.
-          </Typography>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Personal Information
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="First Name"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Last Name"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Email"
-                        type="email"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Phone"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Social Security Number"
-                        margin="normal"
-                      />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Property Information
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Property Address"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Purchase Price"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Down Payment"
-                        margin="normal"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControl fullWidth margin="normal">
-                        <InputLabel>Loan Type</InputLabel>
-                        <Select label="Loan Type">
-                          <MenuItem value="conventional">Conventional</MenuItem>
-                          <MenuItem value="fha">FHA</MenuItem>
-                          <MenuItem value="va">VA</MenuItem>
-                          <MenuItem value="usda">USDA</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
-            <Button 
-              variant="contained" 
-              size="large"
-              startIcon={<ApplicationIcon />}
-            >
-              Submit Application
-            </Button>
-          </Box>
-        </Box>
-      )}
-
-      {/* My Applications Tab */}
-      {activeTab === 3 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            My Mortgage Applications
-          </Typography>
-          <Alert severity="info">
-            You don't have any mortgage applications yet. Start your first application above!
-          </Alert>
-        </Box>
-      )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ open: false, message: '' })}
+        message={snackbar.message}
+      />
     </PageTemplate>
   );
 };

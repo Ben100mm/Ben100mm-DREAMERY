@@ -1,379 +1,276 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { 
-  TextField, 
-  IconButton, 
-  Autocomplete, 
+import {
+  Box,
+  TextField,
+  Button,
+  Autocomplete,
   CircularProgress,
   Snackbar,
   Alert,
   useMediaQuery,
   useTheme,
-  Box,
   Chip,
   Popper,
-  Paper
+  Paper,
+  Typography,
+  IconButton
 } from '@mui/material';
-
-import MapIcon from '@mui/icons-material/Map';
-import HistoryIcon from '@mui/icons-material/History';
-import CloseIcon from '@mui/icons-material/Close';
-import { Button } from '@mui/material';
+import {
+  Search as SearchIcon,
+  Map as MapIcon,
+  History as HistoryIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
 
 const HeroContainer = styled.div`
-  height: 100vh;
-  width: 100vw;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/hero-background.jpg');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  padding: 0 2rem;
-  z-index: 1;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-`;
-
-const Content = styled.div`
   position: relative;
-  z-index: 1;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+              url('/hero-background.jpg') center/cover;
+  color: white;
+`;
+
+const HeroContent = styled.div`
   text-align: center;
   max-width: 800px;
-  width: 100%;
-`;
-
-const Title = styled.h1`
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  margin-top: -5%;
+  padding: 2rem;
+  z-index: 2;
 `;
 
 const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 8px;
-  padding: 0.75rem;
-  max-width: 700px;
-  min-width: 500px;
-  margin: 0 auto;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  &:hover {
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
-interface SearchResult {
-  id: string;
-  description: string;
-  type: 'address' | 'neighborhood' | 'city' | 'zip';
-  mainText: string;
-  secondaryText: string;
-}
-
-interface SearchHistory {
-  timestamp: number;
-  query: string;
-  type: SearchResult['type'];
-}
-
-const StyledAutocomplete = styled(Autocomplete<SearchResult | string, false, false, true, "div">)`
-  flex-grow: 1;
-  min-width: 300px;
-  .MuiInputBase-root {
-    color: #1a365d;
-    font-weight: 600;
-    padding-right: 65px !important;
-    &::before, &::after {
-      display: none;
-    }
-    input {
-      font-size: 1.1rem;
-      &::placeholder {
-        color: #1a365d;
-        opacity: 1;
-        font-weight: 500;
-      }
-    }
-  }
-`;
-
-const LocationButton = styled(IconButton)`
-  color: #1a365d;
-  opacity: 0.9;
-  &:hover {
-    opacity: 1;
-    background-color: rgba(26, 54, 93, 0.1);
+const StyledAutocomplete = styled(Autocomplete)`
+  .MuiOutlinedInput-root {
+    background: white;
+    border-radius: 8px;
   }
 `;
 
 const SearchButton = styled(Button)`
   background-color: #1a365d !important;
   color: white !important;
-  text-transform: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
   font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 6px !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  
   &:hover {
-    background-color: #0f2444 !important;
+    background-color: #0d2340 !important;
   }
 `;
 
-const SearchHistoryContainer = styled(Paper)`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 8px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-`;
+interface SearchResult {
+  id: string;
+  title: string;
+  type: 'property' | 'location' | 'recent';
+}
 
-const HistoryChip = styled(Chip)`
-  margin: 4px;
-  background: rgba(26, 54, 93, 0.1);
-  &:hover {
-    background: rgba(26, 54, 93, 0.2);
-  }
-`;
-
-// Mock data for demonstration
 const mockSearchResults: SearchResult[] = [
-  { id: '1', description: 'New York, NY', type: 'city', mainText: 'New York', secondaryText: 'NY' },
-  { id: '2', description: 'Los Angeles, CA', type: 'city', mainText: 'Los Angeles', secondaryText: 'CA' },
-  { id: '3', description: 'Chicago, IL', type: 'city', mainText: 'Chicago', secondaryText: 'IL' },
-  { id: '4', description: '90210, Beverly Hills', type: 'zip', mainText: '90210', secondaryText: 'Beverly Hills' },
-  { id: '5', description: 'Manhattan, New York', type: 'neighborhood', mainText: 'Manhattan', secondaryText: 'New York' },
+  { id: '1', title: 'Downtown Condos', type: 'property' },
+  { id: '2', title: 'Suburban Homes', type: 'property' },
+  { id: '3', title: 'Waterfront Properties', type: 'property' },
+  { id: '4', title: 'Downtown, City Center', type: 'location' },
+  { id: '5', title: 'Suburban Heights', type: 'location' },
+  { id: '6', title: 'Harbor District', type: 'location' },
+  { id: '7', title: 'Historic District', type: 'location' },
+  { id: '8', title: 'Uptown Luxury', type: 'location' },
 ];
 
 const Hero: React.FC = () => {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [searchValue, setSearchValue] = useState('');
-  const [options, setOptions] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>(() => {
-    const saved = localStorage.getItem('searchHistory');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [geoLocationError, setGeoLocationError] = useState<string | null>(null);
 
   useEffect(() => {
-    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-  }, [searchHistory]);
+    const savedHistory = localStorage.getItem('dreamery_search_history');
+    if (savedHistory) {
+      setSearchHistory(JSON.parse(savedHistory));
+    }
+  }, []);
 
-  const handleSearch = async (value: string) => {
+  const handleSearch = async (searchTerm: string) => {
+    if (!searchTerm.trim()) return;
+    
     setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const filtered = mockSearchResults.filter(result =>
-        result.description.toLowerCase().includes(value.toLowerCase())
-      );
-      setOptions(filtered);
-    } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchValue(value);
-    if (value.length >= 2) {
-      handleSearch(value);
-    } else {
-      setOptions([]);
-    }
-  };
-
-  const handleLocationClick = () => {
-    if (!navigator.geolocation) {
-      setGeoLocationError('Geolocation is not supported by your browser');
-      return;
-    }
-
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          // Simulate reverse geocoding API call
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          setSearchValue('Current Location');
-          setGeoLocationError(null);
-        } catch (error) {
-          setGeoLocationError('Failed to get location details');
-        } finally {
-          setLoading(false);
-        }
-      },
-      (error) => {
-        setGeoLocationError('Failed to get your location');
-        setLoading(false);
-      }
-    );
-  };
-
-  const addToHistory = (query: string, type: SearchResult['type']) => {
-    const newHistory = [{
-      timestamp: Date.now(),
-      query,
-      type
-    }, ...searchHistory.slice(0, 4)];
+    
+    // Simulate search delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Add to search history
+    const newHistory = [searchTerm, ...searchHistory.filter(item => item !== searchTerm)].slice(0, 5);
     setSearchHistory(newHistory);
+    localStorage.setItem('dreamery_search_history', JSON.stringify(newHistory));
+    
+    setLoading(false);
+    setSnackbar({ open: true, message: `Searching for: ${searchTerm}` });
   };
 
-  const clearHistory = () => {
-    setSearchHistory([]);
-    localStorage.removeItem('searchHistory');
+  const handleSearchSubmit = () => {
+    handleSearch(searchValue);
   };
+
+  const handleHistoryClick = (item: string) => {
+    setSearchValue(item);
+    handleSearch(item);
+  };
+
+  const handleRemoveHistory = (itemToRemove: string) => {
+    const newHistory = searchHistory.filter(item => item !== itemToRemove);
+    setSearchHistory(newHistory);
+    localStorage.setItem('dreamery_search_history', JSON.stringify(newHistory));
+  };
+
+  const allSearchResults = [
+    ...searchHistory.map(item => ({ id: `history-${item}`, title: item, type: 'recent' as const })),
+    ...mockSearchResults
+  ];
 
   return (
     <HeroContainer>
-      <Overlay />
-      <Content>
-        <Title>It Starts with a Home.</Title>
-        <SearchContainer style={{ position: 'relative' }}>
-          <StyledAutocomplete
-            freeSolo
-            options={options}
-            loading={loading}
-            inputValue={searchValue}
-            onInputChange={(event, value) => setSearchValue(value)}
-            onChange={(event, newValue: SearchResult | string | null) => {
-              if (newValue) {
+      <HeroContent>
+        <h1 style={{ fontSize: isMobile ? '2.5rem' : '4rem', margin: '0 0 1rem 0', fontWeight: 700 }}>
+          Find Your Dream Home
+        </h1>
+        <p style={{ fontSize: isMobile ? '1.1rem' : '1.5rem', margin: '0 0 2rem 0', opacity: 0.9 }}>
+          Discover properties that match your lifestyle and budget
+        </p>
+        
+        <SearchContainer>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <StyledAutocomplete
+              freeSolo
+              options={allSearchResults}
+              getOptionLabel={(option) => 
+                typeof option === 'string' ? option : option.title
+              }
+              value={searchValue}
+              onChange={(_, newValue) => {
                 if (typeof newValue === 'string') {
-                  addToHistory(newValue, 'address');
-                } else {
-                  addToHistory(newValue.description, newValue.type);
+                  setSearchValue(newValue);
+                } else if (newValue) {
+                  setSearchValue(newValue.title);
+                  if (newValue.type === 'recent') {
+                    handleHistoryClick(newValue.title);
+                  }
                 }
-              }
-            }}
-            filterOptions={(x) => x}
-            getOptionLabel={(option: SearchResult | string) => 
-              typeof option === 'string' ? option : option.description
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                placeholder={isMobile ? "Search location..." : "Enter an address, neighborhood, city, or ZIP code"}
-                onChange={handleInputChange}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </React.Fragment>
-                  ),
-                }}
-              />
-            )}
-            renderOption={(props, option: SearchResult | string) => {
-              if (typeof option === 'string') {
-                return (
-                  <Box component="li" {...props}>
-                    <MapIcon style={{ marginRight: 8 }} />
-                    {option}
-                  </Box>
-                );
-              }
-              return (
+              }}
+              onInputChange={(_, newInputValue) => {
+                setSearchValue(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Enter an address, neighborhood, city, or ZIP code"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <MapIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    ),
+                    endAdornment: (
+                      <>
+                        {loading && <CircularProgress size={20} />}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+              renderOption={(props, option) => (
                 <Box component="li" {...props}>
-                  <MapIcon style={{ marginRight: 8 }} />
-                  <Box>
-                    <Box component="span" sx={{ fontWeight: 600 }}>{option.mainText}</Box>
-                    <Box component="span" sx={{ ml: 1, color: 'text.secondary' }}>
-                      {option.secondaryText}
-                    </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    {option.type === 'recent' && <HistoryIcon sx={{ mr: 1, fontSize: 16 }} />}
+                    <Box sx={{ flexGrow: 1 }}>{option.title}</Box>
+                    {option.type === 'recent' && (
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveHistory(option.title);
+                        }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    )}
                   </Box>
                 </Box>
-              );
-            }}
-            PopperComponent={(props) => (
-              <Popper {...props} style={{ width: '100%' }} placement="bottom-start" />
-            )}
-          />
-          <LocationButton 
-            onClick={handleLocationClick}
-            disabled={loading}
-          >
-            <MapIcon />
-          </LocationButton>
-          <SearchButton 
-            onClick={() => {
-              if (searchValue.trim()) {
-                addToHistory(searchValue.trim(), 'address');
-                // Here you would typically trigger the search
-                console.log('Searching for:', searchValue.trim());
-              }
-            }}
-            disabled={!searchValue.trim()}
-          >
-            Search
-          </SearchButton>
-          {showHistory && searchHistory.length > 0 && (
-            <SearchHistoryContainer>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Box component="span" sx={{ fontWeight: 600 }}>Recent Searches</Box>
-                <IconButton size="small" onClick={clearHistory}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {searchHistory.map((item, index) => (
-                  <HistoryChip
-                    key={index}
-                    label={item.query}
-                    onClick={() => setSearchValue(item.query)}
-                    icon={<HistoryIcon />}
-                  />
-                ))}
-              </Box>
-            </SearchHistoryContainer>
+              )}
+              PopperComponent={(props) => (
+                <Popper
+                  {...props}
+                  placement="bottom-start"
+                  modifiers={[
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, 8],
+                      },
+                    },
+                  ]}
+                />
+              )}
+            />
+            
+            <SearchButton
+              variant="contained"
+              onClick={handleSearchSubmit}
+              disabled={loading || !searchValue.trim()}
+              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
+            >
+              Search
+            </SearchButton>
+          </Box>
+          
+          {searchHistory.length > 0 && (
+            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ width: '100%', mb: 1 }}>
+                Recent searches:
+              </Typography>
+              {searchHistory.slice(0, 3).map((item, index) => (
+                <Chip
+                  key={index}
+                  label={item}
+                  size="small"
+                  onClick={() => handleHistoryClick(item)}
+                  onDelete={() => handleRemoveHistory(item)}
+                  variant="outlined"
+                  sx={{ fontSize: '0.75rem' }}
+                />
+              ))}
+            </Box>
           )}
         </SearchContainer>
-      </Content>
+      </HeroContent>
+      
       <Snackbar
-        open={!!geoLocationError}
-        autoHideDuration={6000}
-        onClose={() => setGeoLocationError(null)}
-      >
-        <Alert 
-          onClose={() => setGeoLocationError(null)} 
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          {geoLocationError}
-        </Alert>
-      </Snackbar>
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ open: false, message: '' })}
+        message={snackbar.message}
+      />
     </HeroContainer>
   );
 };
 
-export default Hero;
+export default Hero; 

@@ -7,6 +7,7 @@ import Hero from './components/Hero';
 import Navigation from './components/Navigation';
 import AuthPage from './pages/AuthPage';
 import ProfessionalSignupPage from './pages/ProfessionalSignupPage';
+import BusinessSignupPage from './pages/BusinessSignupPage';
 
 const theme = createTheme({
   palette: {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
+          <Route path="/business-signup" element={<BusinessSignupPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { TextField, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MapIcon from '@mui/icons-material/Map';
 
 const HeroContainer = styled.div`
   height: 100vh;
@@ -84,12 +84,27 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-const LocationButton = styled(IconButton)`
+const MapButton = styled(IconButton)`
   color: #1a365d;
   opacity: 0.9;
   &:hover {
     opacity: 1;
     background-color: rgba(26, 54, 93, 0.1);
+  }
+`;
+
+const SearchButton = styled.button`
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover {
+    background: #1d4ed8;
   }
 `;
 
@@ -105,12 +120,12 @@ const Hero: React.FC = () => {
             placeholder="Enter an address, neighborhood, city, or ZIP code"
             fullWidth
           />
-          <LocationButton>
-            <LocationOnIcon />
-          </LocationButton>
-          <IconButton color="primary">
-            <SearchIcon />
-          </IconButton>
+          <MapButton>
+            <MapIcon />
+          </MapButton>
+          <SearchButton>
+            Search
+          </SearchButton>
         </SearchContainer>
       </Content>
     </HeroContainer>

@@ -58,7 +58,7 @@ const BusinessSignupPage: React.FC = () => {
     setError('');
     setSuccess('');
     
-    if (!email || !password || !businessType || !firstName || !lastName || !zipPostal || !phoneArea || !phonePrefix || !phoneLine) {
+    if (!email || !password || !businessType || !firstName || !zipPostal || !phoneArea || !phonePrefix || !phoneLine) {
       setError('Please fill in all required fields');
       return;
     }
@@ -316,68 +316,35 @@ const BusinessSignupPage: React.FC = () => {
                 </Select>
               </FormControl>
               
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="First name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="First name"
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#333333',
-                        '& fieldset': {
-                          borderColor: '#e0e0e0',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#c0c0c0',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#1e3a8a',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#666666',
-                        fontWeight: 600,
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': {
-                        color: '#1e3a8a',
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="Last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Last name"
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#333333',
-                        '& fieldset': {
-                          borderColor: '#e0e0e0',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#c0c0c0',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#1e3a8a',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#666666',
-                        fontWeight: 600,
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': {
-                        color: '#1e3a8a',
-                      },
-                    }}
-                  />
-                </Grid>
-              </Grid>
+              <TextField
+                fullWidth
+                label="Business name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Business name"
+                sx={{
+                  mb: 2,
+                  '& .MuiOutlinedInput-root': {
+                    color: '#333333',
+                    '& fieldset': {
+                      borderColor: '#e0e0e0',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#c0c0c0',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#1e3a8a',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#666666',
+                    fontWeight: 600,
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: '#1e3a8a',
+                  },
+                }}
+              />
               
               <TextField
                 fullWidth

@@ -224,7 +224,7 @@ const AuthPage: React.FC = () => {
                   {isSignUp ? 'Sign in' : 'Create account'}
                 </Link>
               </Typography>
-              {!isSignUp && (
+              {isSignUp && (
                 <Typography sx={{ color: '#666666', fontSize: '14px', mt: 1 }}>
                   I am a{' '}
                   <Link

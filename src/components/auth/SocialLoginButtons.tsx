@@ -38,32 +38,32 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ mode }) => {
   const actionText = mode === 'signin' ? 'Continue with' : 'Sign up with';
   
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
+    <Grid container spacing={1} component="div">
+      <Grid item xs={12} component="div">
         <SocialButton variant="outlined" fullWidth>
           <GoogleLogo className="logo" />
           {actionText} Google
         </SocialButton>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} component="div">
         <SocialButton variant="outlined" fullWidth>
           <AppleLogo className="logo" />
           {actionText} Apple
         </SocialButton>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} component="div">
         <SocialButton variant="outlined" fullWidth>
           <MicrosoftLogo className="logo" />
           {actionText} Microsoft
         </SocialButton>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} component="div">
         <SocialButton variant="outlined" fullWidth>
           <FacebookLogo className="logo" />
           Facebook
         </SocialButton>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} component="div">
         <SocialButton variant="outlined" fullWidth>
           <TwitterLogo className="logo" />
           Twitter

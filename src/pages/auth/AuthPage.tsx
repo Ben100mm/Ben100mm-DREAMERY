@@ -23,6 +23,30 @@ const AuthCard = styled(Paper)`
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  
+  .MuiTabs-root {
+    margin-bottom: 2rem;
+  }
+
+  .MuiTab-root {
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-transform: none;
+    min-height: 48px;
+    padding: 12px 16px;
+    color: #666;
+    
+    &.Mui-selected {
+      color: #1a365d;
+    }
+  }
+
+  .MuiTabPanel-root {
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const AuthPage: React.FC = () => {
@@ -37,17 +61,16 @@ const AuthPage: React.FC = () => {
       <AuthCard elevation={0}>
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={tab}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+            <Box>
               <Tabs
                 value={tab}
                 onChange={handleTabChange}
                 variant="fullWidth"
-                sx={{
-                  '& .MuiTab-root': {
-                    fontWeight: 600,
-                    fontSize: '1rem',
-                    textTransform: 'none',
-                  },
+                TabIndicatorProps={{
+                  style: {
+                    height: 3,
+                    borderRadius: '3px 3px 0 0'
+                  }
                 }}
               >
                 <Tab label="Sign In" value="signin" />
@@ -55,13 +78,13 @@ const AuthPage: React.FC = () => {
                 <Tab label="Magic Link" value="magic" />
               </Tabs>
             </Box>
-            <TabPanel value="signin" sx={{ p: 0, minHeight: '500px' }}>
+            <TabPanel value="signin">
               <SignInForm />
             </TabPanel>
-            <TabPanel value="signup" sx={{ p: 0, minHeight: '500px' }}>
+            <TabPanel value="signup">
               <SignUpForm />
             </TabPanel>
-            <TabPanel value="magic" sx={{ p: 0, minHeight: '500px' }}>
+            <TabPanel value="magic">
               <MagicLinkForm />
             </TabPanel>
           </TabContext>

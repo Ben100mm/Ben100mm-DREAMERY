@@ -10,8 +10,8 @@ import { ReactComponent as TwitterLogo } from '../../assets/social-logos/twitter
 const SocialButton = styled(Button)`
   width: 100%;
   justify-content: flex-start;
-  padding: 0.35rem 0.5rem;
-  margin-bottom: 0.15rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
   text-transform: none;
   font-weight: 500;
   border-radius: 8px;
@@ -19,9 +19,9 @@ const SocialButton = styled(Button)`
   border-color: rgba(0, 0, 0, 0.12);
   
   .logo {
-    margin-right: 0.75rem;
-    width: 12px;
-    height: 12px;
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
   }
 
   &:hover {
@@ -38,36 +38,38 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ mode }) => {
   const actionText = mode === 'signin' ? 'Continue with' : 'Sign up with';
   
   return (
-    <Grid container spacing={0.5}>
-      <Grid item xs={12} component="div">
+    <Grid container spacing={1}>
+      <Grid item xs={4} component="div">
         <SocialButton variant="outlined" fullWidth>
           <GoogleLogo className="logo" />
           {actionText} Google
         </SocialButton>
       </Grid>
-      <Grid item xs={12} component="div">
+      <Grid item xs={4} component="div">
         <SocialButton variant="outlined" fullWidth>
           <AppleLogo className="logo" />
           {actionText} Apple
         </SocialButton>
       </Grid>
-      <Grid item xs={12} component="div">
+      <Grid item xs={4} component="div">
         <SocialButton variant="outlined" fullWidth>
           <MicrosoftLogo className="logo" />
           {actionText} Microsoft
         </SocialButton>
       </Grid>
-      <Grid item xs={6} component="div">
-        <SocialButton variant="outlined" fullWidth>
-          <FacebookLogo className="logo" />
-          Facebook
-        </SocialButton>
-      </Grid>
-      <Grid item xs={6} component="div">
-        <SocialButton variant="outlined" fullWidth>
-          <TwitterLogo className="logo" />
-          Twitter
-        </SocialButton>
+      <Grid container item xs={12} spacing={1}>
+        <Grid item xs={6} component="div">
+          <SocialButton variant="outlined" fullWidth>
+            <FacebookLogo className="logo" />
+            Facebook
+          </SocialButton>
+        </Grid>
+        <Grid item xs={6} component="div">
+          <SocialButton variant="outlined" fullWidth>
+            <TwitterLogo className="logo" />
+            Twitter
+          </SocialButton>
+        </Grid>
       </Grid>
     </Grid>
   );

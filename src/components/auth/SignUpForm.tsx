@@ -16,7 +16,7 @@ import SocialLoginButtons from './SocialLoginButtons';
 const OrDivider = styled(Box)`
   display: flex;
   align-items: center;
-  margin: 1rem 0;
+  margin: 2rem 0;
   
   .MuiDivider-root {
     flex-grow: 1;
@@ -40,7 +40,7 @@ const SignUpForm: React.FC = () => {
       </OrDivider>
 
       <Box component="form" sx={{ mt: 1 }}>
-        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2 }}>
           <TextField
             required
             fullWidth
@@ -57,30 +57,25 @@ const SignUpForm: React.FC = () => {
             name="lastName"
             autoComplete="family-name"
           />
+          <TextField
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+          />
+          <TextField
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+          />
         </Box>
         <TextField
-          margin="dense"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          sx={{ mb: 1.5 }}
-        />
-        <TextField
-          margin="dense"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="new-password"
-          sx={{ mb: 1.5 }}
-        />
-        <TextField
-          margin="dense"
           required
           fullWidth
           name="confirmPassword"
@@ -88,7 +83,7 @@ const SignUpForm: React.FC = () => {
           type="password"
           id="confirmPassword"
           autoComplete="new-password"
-          sx={{ mb: 1.5 }}
+          sx={{ mb: 2 }}
         />
         <FormControlLabel
           control={<Checkbox value="terms" color="primary" />}
@@ -104,9 +99,9 @@ const SignUpForm: React.FC = () => {
           fullWidth
           variant="contained"
           sx={{
-            mt: 1,
-            mb: 1,
-            py: 1,
+            mt: 2,
+            mb: 2,
+            py: 1.5,
             textTransform: 'none',
             fontSize: '1rem',
             fontWeight: 600,

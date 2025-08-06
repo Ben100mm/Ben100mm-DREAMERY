@@ -36,7 +36,7 @@ import {
   AttachMoney as MoneyIcon,
   Person as PersonIcon,
   Visibility as VisibilityIcon,
-  Click as ClickIcon,
+  Mouse as ClickIcon,
   Star as StarIcon,
   CheckCircle as CheckIcon,
   Warning as WarningIcon,

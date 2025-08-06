@@ -1,134 +1,158 @@
 import React from 'react';
-import styled from 'styled-components';
-import { AppBar, Toolbar, Typography, Button, Box, Avatar } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useAuth } from '../contexts/AuthContext';
 
-const StyledAppBar = styled(AppBar)`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  
-  img {
-    height: 40px;
-    margin-right: 12px;
-  }
-  
-  h1 {
-    color: #1a365d;
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin: 0;
-  }
-`;
-
 const Header: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
-  const handleAuthClick = () => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  const handleSecurityClick = () => {
-    navigate('/security');
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
+  const { isAuthenticated, isEmailVerified } = useAuth();
+  
   return (
-    <StyledAppBar position="static">
-      <Toolbar>
-        <Logo onClick={handleLogoClick}>
-          <img src="/logo.png" alt="Dreamery" />
-          <Typography variant="h4" component="h1">
+    <AppBar
+      position="fixed"
+      color="transparent"
+      elevation={0}
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        pt: 3,
+        pb: 2,
+        zIndex: 9999,
+      }}
+    >
+      <Toolbar
+        sx={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          px: 3,
+        }}
+      >
+                  <Box sx={{ position: 'absolute', right: 32, top: -8, display: 'flex', gap: 1 }}>
+                    {isAuthenticated && isEmailVerified && (
+                      <Button
+                        variant="text"
+                        onClick={() => navigate('/security')}
+                        sx={{
+                          color: '#0d2340',
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '0.9rem',
+                          letterSpacing: '0.3px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                          padding: '6px 16px',
+                          borderRadius: '6px',
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                          },
+                        }}
+                      >
+                        Security
+                      </Button>
+                    )}
+                    {isAuthenticated ? (
+                      <Button
+                        variant="text"
+                        onClick={() => navigate('/dashboard')}
+                        sx={{
+                          color: '#0d2340',
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '0.95rem',
+                          letterSpacing: '0.3px',
+                          textShadow: '0 1px 1px rgba(255, 255, 255, 0.5)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                          padding: '8px 20px',
+                          borderRadius: '6px',
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                          },
+                        }}
+                      >
+                        Dashboard
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="text"
+                        onClick={() => navigate('/auth', { replace: true })}
+                        sx={{
+                          color: '#0d2340',
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '0.95rem',
+                          letterSpacing: '0.3px',
+                          textShadow: '0 1px 1px rgba(255, 255, 255, 0.5)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                          padding: '8px 20px',
+                          borderRadius: '6px',
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                          },
+                        }}
+                      >
+                        Sign Up / Sign In
+                      </Button>
+                    )}
+                  </Box>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 0,
+            margin: '0 auto',
+          }}
+        >
+          <Box
+            component="img"
+            src="/logo.png"
+            alt="Dreamery Logo"
+            sx={{ 
+              height: 110,
+              width: 'auto',
+              marginRight: '-20px',
+              transform: 'translateY(-2px)',
+              filter: 'brightness(0) invert(1)'
+            }}
+          />
+          <Typography
+            variant="h4"
+            sx={{
+              color: '#FFFFFF',
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 900,
+              letterSpacing: '-1px',
+              fontSize: '3.2rem',
+              textTransform: 'uppercase',
+              textShadow: '2px 2px 8px rgba(0, 0, 0, 0.4)',
+              filter: 'brightness(1.1)',
+            }}
+          >
             DREAMERY
           </Typography>
-        </Logo>
-        
-        <Box sx={{ flexGrow: 1 }} />
-        
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {isAuthenticated && user?.isEmailVerified && (
-            <Button
-              variant="outlined"
-              onClick={handleSecurityClick}
-              sx={{
-                color: '#1a365d',
-                borderColor: '#1a365d',
-                '&:hover': {
-                  borderColor: '#0d2340',
-                  backgroundColor: 'rgba(26, 54, 93, 0.04)',
-                },
-              }}
-            >
-              Security
-            </Button>
-          )}
-          
-          {isAuthenticated ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Avatar sx={{ bgcolor: '#1a365d', width: 32, height: 32 }}>
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-              </Avatar>
-              <Button
-                variant="contained"
-                onClick={handleAuthClick}
-                sx={{
-                  backgroundColor: '#1a365d',
-                  '&:hover': { backgroundColor: '#0d2340' },
-                }}
-              >
-                Dashboard
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={handleLogout}
-                sx={{
-                  color: '#1a365d',
-                  borderColor: '#1a365d',
-                  '&:hover': {
-                    borderColor: '#0d2340',
-                    backgroundColor: 'rgba(26, 54, 93, 0.04)',
-                  },
-                }}
-              >
-                Logout
-              </Button>
-            </Box>
-          ) : (
-            <Button
-              variant="contained"
-              onClick={handleAuthClick}
-              sx={{
-                backgroundColor: '#1a365d',
-                '&:hover': { backgroundColor: '#0d2340' },
-              }}
-            >
-              Sign Up / Sign In
-            </Button>
-          )}
         </Box>
       </Toolbar>
-    </StyledAppBar>
+    </AppBar>
   );
 };
 
-export default Header; 
+export default Header;

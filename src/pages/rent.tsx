@@ -38,7 +38,7 @@ import {
   Bathtub,
   SquareFoot,
   Search,
-  Apply,
+  Send,
   CalendarToday,
   Pets,
   SmokingRooms,
@@ -520,7 +520,7 @@ const RentPage: React.FC = () => {
                         <Button
                           variant="contained"
                           fullWidth
-                          startIcon={<Apply />}
+                          startIcon={<Send />}
                           onClick={() => handleApplyNow(property)}
                           sx={{
                             backgroundColor: '#1a365d',

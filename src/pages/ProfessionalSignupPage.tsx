@@ -77,14 +77,16 @@ const ProfessionalSignupPage: React.FC = () => {
         minHeight: '100vh',
         background: '#ffffff',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         padding: 2,
+        overflowY: 'auto',
+        py: 4,
       }}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ my: 2 }}>
         <StyledCard>
-          <CardContent sx={{ padding: 4 }}>
+          <CardContent sx={{ padding: 4, maxHeight: '80vh', overflowY: 'auto' }}>
             {/* Header */}
             <Box sx={{ textAlign: 'center', mb: 4 }}>
               <Typography variant="h4" component="h1" sx={{ 

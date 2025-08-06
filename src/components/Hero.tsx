@@ -94,7 +94,7 @@ interface SearchHistory {
   type: SearchResult['type'];
 }
 
-const StyledAutocomplete = styled(Autocomplete<SearchResult | string, true, true, false>)`
+const StyledAutocomplete = styled(Autocomplete<SearchResult | string, boolean, false, false>)`
   flex-grow: 1;
   .MuiInputBase-root {
     color: #1a365d;
@@ -250,10 +250,12 @@ const Hero: React.FC = () => {
             inputValue={searchValue}
             onInputChange={(event, value) => setSearchValue(value)}
             onChange={(event, newValue) => {
-              if (newValue && typeof newValue === 'object') {
-                addToHistory(newValue.description, newValue.type);
-              } else if (newValue && typeof newValue === 'string') {
-                addToHistory(newValue, 'address');
+              if (newValue) {
+                if (typeof newValue === 'string') {
+                  addToHistory(newValue, 'address');
+                } else {
+                  addToHistory(newValue.description, newValue.type);
+                }
               }
             }}
             filterOptions={(x) => x}

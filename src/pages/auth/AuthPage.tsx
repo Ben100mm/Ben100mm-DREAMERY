@@ -30,9 +30,9 @@ const LogoContainer = styled(Box)`
 
 const AuthCard = styled(Paper)`
   width: 100%;
-  width: 360px;
-  height: auto;
-  padding: 1.25rem;
+  width: 340px;
+  height: 440px;
+  padding: 1rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -84,9 +84,9 @@ const AuthPage: React.FC = () => {
             src="/logo.png"
             alt="Dreamery Logo"
             sx={{ 
-              height: 45,
+              height: 35,
               width: 'auto',
-              marginBottom: '-3px',
+              marginBottom: '-2px',
               filter: 'brightness(0) saturate(100%) invert(13%) sepia(30%) saturate(2910%) hue-rotate(195deg) brightness(93%) contrast(96%)'
             }}
           />
@@ -97,7 +97,7 @@ const AuthPage: React.FC = () => {
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
               letterSpacing: '-0.5px',
-              fontSize: '1.5rem',
+              fontSize: '1.25rem',
               textTransform: 'uppercase',
             }}
           >

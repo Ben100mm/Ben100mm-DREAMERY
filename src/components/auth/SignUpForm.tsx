@@ -16,7 +16,7 @@ import SocialLoginButtons from './SocialLoginButtons';
 const OrDivider = styled(Box)`
   display: flex;
   align-items: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   
   .MuiDivider-root {
     flex-grow: 1;
@@ -59,17 +59,17 @@ const SignUpForm: React.FC = () => {
           />
         </Box>
         <TextField
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           id="email"
           label="Email Address"
           name="email"
           autoComplete="email"
-          sx={{ mb: 2 }}
+          sx={{ mb: 1.5 }}
         />
         <TextField
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           name="password"
@@ -77,10 +77,10 @@ const SignUpForm: React.FC = () => {
           type="password"
           id="password"
           autoComplete="new-password"
-          sx={{ mb: 2 }}
+          sx={{ mb: 1.5 }}
         />
         <TextField
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           name="confirmPassword"
@@ -88,7 +88,7 @@ const SignUpForm: React.FC = () => {
           type="password"
           id="confirmPassword"
           autoComplete="new-password"
-          sx={{ mb: 2 }}
+          sx={{ mb: 1.5 }}
         />
         <FormControlLabel
           control={<Checkbox value="terms" color="primary" />}
@@ -104,9 +104,9 @@ const SignUpForm: React.FC = () => {
           fullWidth
           variant="contained"
           sx={{
-            mt: 2,
-            mb: 2,
-            py: 1.5,
+            mt: 1,
+            mb: 1,
+            py: 1,
             textTransform: 'none',
             fontSize: '1rem',
             fontWeight: 600,

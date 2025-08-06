@@ -16,7 +16,7 @@ import SocialLoginButtons from './SocialLoginButtons';
 const OrDivider = styled(Box)`
   display: flex;
   align-items: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   
   .MuiDivider-root {
     flex-grow: 1;
@@ -30,7 +30,25 @@ const OrDivider = styled(Box)`
 
 const SignUpForm: React.FC = () => {
   return (
-    <Box>
+    <Box sx={{ 
+        maxHeight: '60vh',
+        overflowY: 'auto',
+        pr: 1,
+        '&::-webkit-scrollbar': {
+          width: '6px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: 'rgba(0, 0, 0, 0.05)',
+          borderRadius: '3px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'rgba(0, 0, 0, 0.15)',
+          borderRadius: '3px',
+          '&:hover': {
+            background: 'rgba(0, 0, 0, 0.25)',
+          },
+        },
+      }}>
       <SocialLoginButtons mode="signup" />
 
       <OrDivider>
@@ -39,8 +57,8 @@ const SignUpForm: React.FC = () => {
         <Divider />
       </OrDivider>
 
-      <Box component="form" sx={{ mt: 1 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2 }}>
+      <Box component="form" sx={{ mt: 0.5 }}>
+        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TextField
             required
             fullWidth
@@ -57,25 +75,30 @@ const SignUpForm: React.FC = () => {
             name="lastName"
             autoComplete="family-name"
           />
-          <TextField
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-          />
         </Box>
         <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          sx={{ mb: 1.5 }}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="new-password"
+          sx={{ mb: 1.5 }}
+        />
+        <TextField
+          margin="normal"
           required
           fullWidth
           name="confirmPassword"
@@ -83,7 +106,7 @@ const SignUpForm: React.FC = () => {
           type="password"
           id="confirmPassword"
           autoComplete="new-password"
-          sx={{ mb: 2 }}
+          sx={{ mb: 1.5 }}
         />
         <FormControlLabel
           control={<Checkbox value="terms" color="primary" />}
@@ -92,15 +115,15 @@ const SignUpForm: React.FC = () => {
               I agree to the Terms of Service and Privacy Policy
             </Typography>
           }
-          sx={{ mb: 2 }}
+          sx={{ mb: 1.5 }}
         />
         <Button
           type="submit"
           fullWidth
           variant="contained"
           sx={{
-            mt: 2,
-            mb: 2,
+            mt: 1,
+            mb: 1,
             py: 1.5,
             textTransform: 'none',
             fontSize: '1rem',

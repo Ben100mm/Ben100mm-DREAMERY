@@ -1,25 +1,32 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Dreamery",
+  "name": "Dreamery - Real Estate Platform",
+  "description": "Your comprehensive real estate platform for buying, selling, and managing properties",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
     },
     {
-      "src": "logo192.png",
+      "src": "favicon-32x32.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "32x32"
     },
     {
-      "src": "logo512.png",
+      "src": "favicon-16x16.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "16x16"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#1a365d",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary"
 }

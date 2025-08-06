@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -7,9 +7,12 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
+import { useAuth } from '../../contexts/AuthContext';
 
 
 
@@ -33,6 +36,43 @@ interface SignUpFormProps {
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
+  const { signup } = useAuth();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const fullName = `${formData.firstName} ${formData.lastName}`;
+      await signup(formData.email, formData.password, fullName);
+      onSuccess?.();
+    } catch (error) {
+      setError('Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+  };
+
   return (
     <Box sx={{ 
         maxHeight: '60vh',
@@ -61,7 +101,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
         <Divider />
       </OrDivider>
 
-      <Box component="form" sx={{ mt: 0.5 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 0.5 }}>
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TextField
             required
@@ -70,6 +110,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             label="First Name"
             name="firstName"
             autoComplete="given-name"
+            value={formData.firstName}
+            onChange={handleChange('firstName')}
           />
           <TextField
             required
@@ -78,6 +120,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             label="Last Name"
             name="lastName"
             autoComplete="family-name"
+            value={formData.lastName}
+            onChange={handleChange('lastName')}
           />
         </Box>
         <TextField
@@ -88,6 +132,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           label="Email Address"
           name="email"
           autoComplete="email"
+          value={formData.email}
+          onChange={handleChange('email')}
           sx={{ mb: 1.5 }}
         />
         <TextField
@@ -99,6 +145,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           type="password"
           id="password"
           autoComplete="new-password"
+          value={formData.password}
+          onChange={handleChange('password')}
           sx={{ mb: 1.5 }}
         />
         <TextField
@@ -110,6 +158,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           type="password"
           id="confirmPassword"
           autoComplete="new-password"
+          value={formData.confirmPassword}
+          onChange={handleChange('confirmPassword')}
           sx={{ mb: 1.5 }}
         />
         <FormControlLabel
@@ -121,10 +171,18 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           }
           sx={{ mb: 1.5 }}
         />
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Button
           type="submit"
           fullWidth
           variant="contained"
+          disabled={isLoading}
           sx={{
             mt: 1,
             mb: 1,
@@ -139,7 +197,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             },
           }}
         >
-          Create Account
+          {isLoading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            'Create Account'
+          )}
         </Button>
       </Box>
     </Box>

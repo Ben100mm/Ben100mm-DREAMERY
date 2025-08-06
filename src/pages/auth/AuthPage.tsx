@@ -3,6 +3,7 @@ import { Container, Paper, Box, Tab, Tabs, Typography } from '@mui/material';
 import { TabContext, TabPanel } from '@mui/lab';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
@@ -88,7 +89,15 @@ const AuthCard = styled(Paper)`
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [tab, setTab] = useState('signin');
+
+  // Redirect to dashboard if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -101,7 +110,7 @@ const AuthPage: React.FC = () => {
   const handleAuthSuccess = () => {
     // Handle successful authentication
     console.log('Authentication successful');
-    navigate('/');
+    navigate('/dashboard');
   };
 
   return (

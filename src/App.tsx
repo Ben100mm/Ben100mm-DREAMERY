@@ -2,10 +2,12 @@ import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Navigation from './components/Navigation';
 import AuthPage from './pages/auth/AuthPage';
+import Dashboard from './pages/Dashboard';
 import SecuritySettings from './pages/SecuritySettings';
 
 const theme = createTheme({
@@ -30,19 +32,22 @@ const AppContainer = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/security" element={<SecuritySettings />} />
-          <Route path="/" element={
-            <AppContainer>
-              <Header />
-              <Hero />
-              <Navigation />
-            </AppContainer>
-          } />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/security" element={<SecuritySettings />} />
+            <Route path="/" element={
+              <AppContainer>
+                <Header />
+                <Hero />
+                <Navigation />
+              </AppContainer>
+            } />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

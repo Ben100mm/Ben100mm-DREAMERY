@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,9 +8,12 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
+import { useAuth } from '../../contexts/AuthContext';
 
 
 
@@ -34,6 +37,27 @@ interface SignInFormProps {
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await login(email, password);
+      onSuccess?.();
+    } catch (error) {
+      setError('Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Box>
       <SocialLoginButtons mode="signin" />
@@ -44,7 +68,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
         <Divider />
       </OrDivider>
 
-      <Box component="form" sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <TextField
           margin="normal"
           required
@@ -54,6 +78,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
           name="email"
           autoComplete="email"
           autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -65,6 +91,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
           type="password"
           id="password"
           autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           sx={{ mb: 2 }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -76,10 +104,18 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
             Forgot password?
           </Link>
         </Box>
+        
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Button
           type="submit"
           fullWidth
           variant="contained"
+          disabled={isLoading}
           sx={{
             mt: 2,
             mb: 2,
@@ -94,7 +130,11 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
             },
           }}
         >
-          Sign In
+          {isLoading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            'Sign In'
+          )}
         </Button>
       </Box>
     </Box>

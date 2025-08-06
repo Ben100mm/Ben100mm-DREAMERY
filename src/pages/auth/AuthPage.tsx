@@ -8,10 +8,9 @@ import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
 
 const AuthContainer = styled(Container)`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
 `;
 
@@ -19,25 +18,30 @@ const LogoContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
   cursor: pointer;
   transition: transform 0.2s ease;
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
 
   &:hover {
-    transform: scale(1.02);
+    transform: translateX(-50%) scale(1.02);
   }
 `;
 
 const AuthCard = styled(Paper)`
   width: 100%;
-  max-width: 1200px;
-  min-height: 500px;
-  padding: 2rem;
+  max-width: 380px;
+  padding: 1.25rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   
   .MuiTabs-root {
     margin-bottom: 1rem;
@@ -60,15 +64,6 @@ const AuthCard = styled(Paper)`
     padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-  }
-
-  .MuiTabs-root {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .MuiBox-root {
-    height: 100%;
   }
 `;
 
@@ -93,9 +88,9 @@ const AuthPage: React.FC = () => {
             src="/logo.png"
             alt="Dreamery Logo"
             sx={{ 
-              height: 35,
+              height: 45,
               width: 'auto',
-              marginBottom: '-2px',
+              marginBottom: '-3px',
               filter: 'brightness(0) saturate(100%) invert(13%) sepia(30%) saturate(2910%) hue-rotate(195deg) brightness(93%) contrast(96%)'
             }}
           />
@@ -106,16 +101,16 @@ const AuthPage: React.FC = () => {
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
               letterSpacing: '-0.5px',
-              fontSize: '1.25rem',
+              fontSize: '1.5rem',
               textTransform: 'uppercase',
             }}
           >
             DREAMERY
           </Typography>
         </LogoContainer>
-        <Box sx={{ width: '100%', typography: 'body1', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={tab}>
-            <Box sx={{ width: '100%', mb: 4 }}>
+            <Box>
               <Tabs
                 value={tab}
                 onChange={handleTabChange}
@@ -132,23 +127,15 @@ const AuthPage: React.FC = () => {
                 <Tab label="Magic Link" value="magic" />
               </Tabs>
             </Box>
-            <Box sx={{ display: 'flex', gap: 4, width: '100%', justifyContent: 'center' }}>
-              <Box sx={{ flex: 1, maxWidth: 360 }}>
-                <TabPanel value="signin">
-                  <SignInForm />
-                </TabPanel>
-              </Box>
-              <Box sx={{ flex: 1, maxWidth: 360 }}>
-                <TabPanel value="signup">
-                  <SignUpForm />
-                </TabPanel>
-              </Box>
-              <Box sx={{ flex: 1, maxWidth: 360 }}>
-                <TabPanel value="magic">
-                  <MagicLinkForm />
-                </TabPanel>
-              </Box>
-            </Box>
+            <TabPanel value="signin">
+              <SignInForm />
+            </TabPanel>
+            <TabPanel value="signup">
+              <SignUpForm />
+            </TabPanel>
+            <TabPanel value="magic">
+              <MagicLinkForm />
+            </TabPanel>
           </TabContext>
         </Box>
       </AuthCard>

@@ -20,7 +20,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 // Provider icons (you would import actual logos in production)
 import GoogleIcon from '@mui/icons-material/Google';
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
-import GitHubIcon from '@mui/icons-material/GitHub';
+
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import WorkIcon from '@mui/icons-material/Work';
 
@@ -97,14 +97,7 @@ const SSOForm: React.FC<SSOFormProps> = ({ onSuccess }) => {
       icon: <MicrosoftIcon />,
       type: 'oauth'
     },
-    {
-      id: 'github',
-      name: 'GitHub',
-      description: 'Sign in with your GitHub account',
-      color: '#333',
-      icon: <GitHubIcon />,
-      type: 'oauth'
-    },
+
     {
       id: 'linkedin',
       name: 'LinkedIn',

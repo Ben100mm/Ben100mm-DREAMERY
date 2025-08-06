@@ -94,7 +94,7 @@ interface SearchHistory {
   type: SearchResult['type'];
 }
 
-const StyledAutocomplete = styled(Autocomplete<SearchResult | string, boolean, true, false>)`
+const StyledAutocomplete = styled(Autocomplete<SearchResult | string>)`
   flex-grow: 1;
   .MuiInputBase-root {
     color: #1a365d;

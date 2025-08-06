@@ -35,11 +35,11 @@ interface PageTemplateProps {
   showAuthContent?: boolean;
 }
 
-const PageTemplate: React.FC<PageTemplateProps> = ({ 
-  title, 
-  subtitle, 
-  children, 
-  showAuthContent = false 
+const PageTemplate: React.FC<PageTemplateProps> = ({
+  title,
+  subtitle,
+  children,
+  showAuthContent = false
 }) => {
   const { isAuthenticated, isEmailVerified } = useAuth();
   const location = useLocation();

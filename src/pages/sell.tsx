@@ -26,7 +26,11 @@ import {
   Add as AddIcon,
   Analytics as AnalyticsIcon,
   Settings as SettingsIcon,
-  List as ListIcon
+  List as ListIcon,
+  LocationOn as LocationOnIcon,
+  Bed as BedIcon,
+  Bathtub as BathtubIcon,
+  SquareFoot as SquareFootIcon
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
 
@@ -264,7 +268,7 @@ const SellPage: React.FC = () => {
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                  <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
                   <Typography variant="body2" color="text.secondary">
                     {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                   </Typography>
@@ -272,19 +276,19 @@ const SellPage: React.FC = () => {
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <Bed sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {3 + (index % 3)} beds
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <Bathtub sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {2 + (index % 2)} baths
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <SquareFoot sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {(1800 + index * 150).toLocaleString()} sqft
                     </Typography>

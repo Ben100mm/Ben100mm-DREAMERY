@@ -33,10 +33,10 @@ import {
 import {
   Favorite,
   FavoriteBorder,
-  LocationOn,
-  Bed,
-  Bathtub,
-  SquareFoot,
+  LocationOn as LocationOnIcon,
+  Bed as BedIcon,
+  Bathtub as BathtubIcon,
+  SquareFoot as SquareFootIcon,
   Search,
   Send,
   CalendarToday,
@@ -472,7 +472,7 @@ const RentPage: React.FC = () => {
                       </Typography>
                       
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <LocationOn sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <LocationOnIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                         <Typography variant="body2" color="text.secondary">
                           {property.location}
                         </Typography>
@@ -486,15 +486,15 @@ const RentPage: React.FC = () => {
                       </Box>
                       
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Bed sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <BedIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                         <Typography variant="body2" sx={{ mr: 2 }}>
                           {property.beds === 0 ? 'Studio' : `${property.beds} beds`}
                         </Typography>
-                        <Bathtub sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <BathtubIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                         <Typography variant="body2" sx={{ mr: 2 }}>
                           {property.baths} baths
                         </Typography>
-                        <SquareFoot sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                        <SquareFootIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                         <Typography variant="body2">
                           {property.sqft.toLocaleString()} sqft
                         </Typography>
@@ -636,7 +636,7 @@ const RentPage: React.FC = () => {
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                  <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
                   <Typography variant="body2" color="text.secondary">
                     {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                   </Typography>
@@ -644,19 +644,19 @@ const RentPage: React.FC = () => {
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <Bed sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {2 + (index % 2)} beds
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <Bathtub sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {1 + (index % 2)} baths
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <SquareFoot sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                    <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                     <Typography variant="body2" color="text.secondary">
                       {(800 + index * 50).toLocaleString()} sqft
                     </Typography>

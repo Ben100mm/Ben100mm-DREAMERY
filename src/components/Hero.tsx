@@ -15,9 +15,10 @@ import {
   Paper
 } from '@mui/material';
 
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MapIcon from '@mui/icons-material/Map';
 import HistoryIcon from '@mui/icons-material/History';
 import CloseIcon from '@mui/icons-material/Close';
+import { Button } from '@mui/material';
 
 const HeroContainer = styled.div`
   height: 100vh;
@@ -70,7 +71,8 @@ const SearchContainer = styled.div`
   background: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
   padding: 0.75rem;
-  max-width: 600px;
+  max-width: 700px;
+  min-width: 500px;
   margin: 0 auto;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -94,8 +96,9 @@ interface SearchHistory {
   type: SearchResult['type'];
 }
 
-const StyledAutocomplete = styled(Autocomplete<SearchResult | string>)`
+const StyledAutocomplete = styled(Autocomplete<SearchResult | string, false, false, true, "div">)`
   flex-grow: 1;
+  min-width: 300px;
   .MuiInputBase-root {
     color: #1a365d;
     font-weight: 600;
@@ -120,6 +123,18 @@ const LocationButton = styled(IconButton)`
   &:hover {
     opacity: 1;
     background-color: rgba(26, 54, 93, 0.1);
+  }
+`;
+
+const SearchButton = styled(Button)`
+  background-color: #1a365d !important;
+  color: white !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  &:hover {
+    background-color: #0f2444 !important;
   }
 `;
 
@@ -283,14 +298,14 @@ const Hero: React.FC = () => {
               if (typeof option === 'string') {
                 return (
                   <Box component="li" {...props}>
-                    <LocationOnIcon style={{ marginRight: 8 }} />
+                    <MapIcon style={{ marginRight: 8 }} />
                     {option}
                   </Box>
                 );
               }
               return (
                 <Box component="li" {...props}>
-                  <LocationOnIcon style={{ marginRight: 8 }} />
+                  <MapIcon style={{ marginRight: 8 }} />
                   <Box>
                     <Box component="span" sx={{ fontWeight: 600 }}>{option.mainText}</Box>
                     <Box component="span" sx={{ ml: 1, color: 'text.secondary' }}>
@@ -308,14 +323,20 @@ const Hero: React.FC = () => {
             onClick={handleLocationClick}
             disabled={loading}
           >
-            <LocationOnIcon />
+            <MapIcon />
           </LocationButton>
-          <IconButton 
-            color="primary"
-            onClick={() => setShowHistory(!showHistory)}
+          <SearchButton 
+            onClick={() => {
+              if (searchValue.trim()) {
+                addToHistory(searchValue.trim(), 'address');
+                // Here you would typically trigger the search
+                console.log('Searching for:', searchValue.trim());
+              }
+            }}
+            disabled={!searchValue.trim()}
           >
-            {showHistory ? <CloseIcon /> : <HistoryIcon />}
-          </IconButton>
+            Search
+          </SearchButton>
           {showHistory && searchHistory.length > 0 && (
             <SearchHistoryContainer>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -6,6 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <AppBar
       position="fixed"
@@ -31,8 +33,9 @@ const Header: React.FC = () => {
           px: 3,
         }}
       >
-        <Button
+                  <Button
           variant="text"
+          onClick={() => navigate('/auth', { replace: true })}
           sx={{
             color: '#0d2340',
             fontWeight: 700,

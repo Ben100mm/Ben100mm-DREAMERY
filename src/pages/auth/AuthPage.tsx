@@ -30,9 +30,9 @@ const LogoContainer = styled(Box)`
 
 const AuthCard = styled(Paper)`
   width: 100%;
-  width: 340px;
-  height: 440px;
-  padding: 1rem;
+  max-width: 1200px;
+  min-height: 500px;
+  padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -60,6 +60,15 @@ const AuthCard = styled(Paper)`
     padding: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
+  }
+
+  .MuiTabs-root {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiBox-root {
+    height: 100%;
   }
 `;
 
@@ -104,9 +113,9 @@ const AuthPage: React.FC = () => {
             DREAMERY
           </Typography>
         </LogoContainer>
-        <Box sx={{ width: '100%', typography: 'body1' }}>
+        <Box sx={{ width: '100%', typography: 'body1', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <TabContext value={tab}>
-            <Box>
+            <Box sx={{ width: '100%', mb: 4 }}>
               <Tabs
                 value={tab}
                 onChange={handleTabChange}
@@ -123,15 +132,23 @@ const AuthPage: React.FC = () => {
                 <Tab label="Magic Link" value="magic" />
               </Tabs>
             </Box>
-            <TabPanel value="signin">
-              <SignInForm />
-            </TabPanel>
-            <TabPanel value="signup">
-              <SignUpForm />
-            </TabPanel>
-            <TabPanel value="magic">
-              <MagicLinkForm />
-            </TabPanel>
+            <Box sx={{ display: 'flex', gap: 4, width: '100%', justifyContent: 'center' }}>
+              <Box sx={{ flex: 1, maxWidth: 360 }}>
+                <TabPanel value="signin">
+                  <SignInForm />
+                </TabPanel>
+              </Box>
+              <Box sx={{ flex: 1, maxWidth: 360 }}>
+                <TabPanel value="signup">
+                  <SignUpForm />
+                </TabPanel>
+              </Box>
+              <Box sx={{ flex: 1, maxWidth: 360 }}>
+                <TabPanel value="magic">
+                  <MagicLinkForm />
+                </TabPanel>
+              </Box>
+            </Box>
           </TabContext>
         </Box>
       </AuthCard>

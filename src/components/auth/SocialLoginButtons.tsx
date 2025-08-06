@@ -38,7 +38,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ mode }) => {
   const actionText = mode === 'signin' ? 'Continue with' : 'Sign up with';
   
   return (
-    <Grid container spacing={1} component="div">
+    <Grid container spacing={1}>
       <Grid item xs={12} component="div">
         <SocialButton variant="outlined" fullWidth>
           <GoogleLogo className="logo" />

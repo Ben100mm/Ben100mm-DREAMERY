@@ -565,11 +565,7 @@ const BuyPage: React.FC = () => {
               {[
                 { value: 'owner-posted', label: 'Owner posted' },
                 { value: 'agent-listed', label: 'Agent listed' },
-                { value: 'new-construction', label: 'New construction' },
-                { value: 'foreclosures', label: 'Foreclosures' },
-                { value: 'auctions', label: 'Auctions' },
-                { value: 'foreclosed', label: 'Foreclosed' },
-                { value: 'pre-foreclosures', label: 'Pre-foreclosures' }
+                { value: 'new-construction', label: 'New construction' }
               ].map((type) => (
                 <FormControlLabel
                   key={type.value}

@@ -55,7 +55,7 @@ const Navigation: React.FC = () => {
   const navItems = [
     { name: 'Buy', path: '/buy' },
     { name: 'Rent', path: '/rent' },
-    { name: 'Sell', path: '/sell' },
+    { name: 'Sell / List', path: '/sell' },
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Analyze', path: '/analyze' },

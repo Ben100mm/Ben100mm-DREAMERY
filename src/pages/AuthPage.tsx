@@ -61,8 +61,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   margin: '0 auto',
 }));
 
-
-
 const AuthPage: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -288,7 +286,7 @@ const AuthPage: React.FC = () => {
             <Box sx={{ my: 3, display: 'flex', alignItems: 'center' }}>
               <Divider sx={{ flex: 1, borderColor: '#e0e0e0' }} />
               <Typography sx={{ px: 2, color: '#666666', fontSize: '14px' }}>
-                                            Or Continue with
+                Or Continue with
               </Typography>
               <Divider sx={{ flex: 1, borderColor: '#e0e0e0' }} />
             </Box>
@@ -361,22 +359,22 @@ const AuthPage: React.FC = () => {
                 <Facebook />
               </IconButton>
               
-                                        <IconButton
-                            onClick={() => handleSocialLogin('X')}
-                            sx={{
-                              width: 48,
-                              height: 48,
-                              border: '1px solid #e0e0e0',
-                              background: '#ffffff',
-                              color: '#000000',
-                              '&:hover': {
-                                background: '#f8f9fa',
-                                borderColor: '#c0c0c0',
-                              },
-                            }}
-                          >
-                            <XIcon />
-                          </IconButton>
+              <IconButton
+                onClick={() => handleSocialLogin('X')}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  border: '1px solid #e0e0e0',
+                  background: '#ffffff',
+                  color: '#000000',
+                  '&:hover': {
+                    background: '#f8f9fa',
+                    borderColor: '#c0c0c0',
+                  },
+                }}
+              >
+                <XIcon />
+              </IconButton>
             </Box>
 
             {/* Terms of Use */}
@@ -411,7 +409,7 @@ const AuthPage: React.FC = () => {
                   },
                 }}
               >
-                                            Go Back
+                Go Back
               </Button>
             </Box>
           </CardContent>
@@ -421,4 +419,4 @@ const AuthPage: React.FC = () => {
   );
 };
 
-export default AuthPage; 
+export default AuthPage;

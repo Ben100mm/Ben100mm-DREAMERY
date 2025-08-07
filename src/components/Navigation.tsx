@@ -72,6 +72,8 @@ const Navigation: React.FC = () => {
   const handleNavClick = (path: string) => {
     if (path === '/buy') {
       navigate('/buy');
+    } else if (path === '/rent') {
+      navigate('/rent');
     } else {
       // For other navigation items, you can add routes later
       console.log(`Navigating to ${path}`);

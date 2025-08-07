@@ -98,58 +98,39 @@ const PropertiesContainer = styled.div`
 `;
 
 const PropertyCard = styled(Card)`
-  height: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
   transition: all 0.2s ease;
   &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const PropertyImage = styled.div`
-  height: 200px;
-  background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
-              linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
-              linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
-              linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-size: 0.9rem;
-`;
-
-const BuyPage: React.FC = () => {
+const RentPage: React.FC = () => {
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   // Filter states
-  const [propertyStatus, setPropertyStatus] = useState('for-sale');
-  const [priceType, setPriceType] = useState('list-price');
+  const [propertyStatus, setPropertyStatus] = useState('for-rent');
+  const [priceType, setPriceType] = useState('monthly-rent');
   const [minPrice, setMinPrice] = useState('no-min');
   const [maxPrice, setMaxPrice] = useState('no-max');
   const [minBeds, setMinBeds] = useState('any');
   const [minBaths, setMinBaths] = useState('any');
-  const [homeTypes, setHomeTypes] = useState(['houses', 'townhomes', 'multi-family', 'condos', 'lots', 'apartments', 'manufactured']);
-  const [listingTypes, setListingTypes] = useState(['owner-posted', 'agent-listed', 'new-construction', 'foreclosures', 'auctions']);
+  const [homeTypes, setHomeTypes] = useState(['apartments', 'houses', 'townhomes', 'condos', 'multi-family', 'duplexes', 'studios', 'lofts']);
+  const [listingTypes, setListingTypes] = useState(['owner-posted', 'property-manager', 'agent-listed', 'corporate-housing', 'short-term']);
   const [maxHoa, setMaxHoa] = useState('any');
-  const [propertyStatuses, setPropertyStatuses] = useState(['coming-soon']);
   const [parkingSpots, setParkingSpots] = useState('any');
   const [minSqft, setMinSqft] = useState('no-min');
   const [maxSqft, setMaxSqft] = useState('no-max');
-  const [minLotSize, setMinLotSize] = useState('no-min');
-  const [maxLotSize, setMaxLotSize] = useState('no-max');
-  const [yearBuiltMin, setYearBuiltMin] = useState('');
-  const [yearBuiltMax, setYearBuiltMax] = useState('');
-  const [hasBasement, setHasBasement] = useState(false);
-  const [singleStoryOnly, setSingleStoryOnly] = useState(false);
+  const [petPolicy, setPetPolicy] = useState('any');
+  const [leaseTerms, setLeaseTerms] = useState('any');
+  const [utilitiesIncluded, setUtilitiesIncluded] = useState('any');
+  const [furnished, setFurnished] = useState('any');
   const [fiftyFivePlus, setFiftyFivePlus] = useState('include');
-  const [hasAC, setHasAC] = useState(false);
-  const [hasPool, setHasPool] = useState(false);
-  const [waterfront, setWaterfront] = useState(false);
   const [daysOnZillow, setDaysOnZillow] = useState('any');
   const [keywords, setKeywords] = useState('');
 
@@ -176,182 +157,170 @@ const BuyPage: React.FC = () => {
   const properties = [
     {
       id: 1,
-      price: '$649,900',
+      price: '$2,400/month',
       address: '153 Silliman St, San Francisco, CA 94134',
-      beds: 5,
-      baths: 3,
-      sqft: 1850,
-      type: 'Foreclosure',
-      daysOnMarket: 49,
+      beds: 2,
+      baths: 1,
+      sqft: 850,
+      type: 'Apartment for rent',
+      daysOnMarket: 5,
       image: 'Property 1'
     },
     {
       id: 2,
-      price: '$799,000',
+      price: '$3,200/month',
       address: '275 Teddy Ave, San Francisco, CA 94134',
       beds: 3,
       baths: 2,
       sqft: 1168,
-      type: 'House for sale',
-      priceCut: '$50,000',
+      type: 'House for rent',
+      priceCut: '$200/month',
       image: 'Property 2'
     },
     {
       id: 3,
-      price: '$899,000',
+      price: '$1,800/month',
       address: '76 Bay View St, San Francisco, CA 94124',
-      beds: 2,
+      beds: 1,
       baths: 1,
-      sqft: 1515,
-      type: 'House for sale',
+      sqft: 650,
+      type: 'Studio for rent',
       openHouse: 'Sat 2-4pm',
       image: 'Property 3'
     },
     {
       id: 4,
-      price: '$698,000',
+      price: '$2,800/month',
       address: '444 Ellington Ave, San Francisco, CA 94112',
       beds: 2,
       baths: 1,
-      sqft: 1275,
-      type: 'House for sale',
+      sqft: 950,
+      type: 'Townhouse for rent',
       flexible: true,
       image: 'Property 4'
     },
     {
       id: 5,
-      price: '$925,000',
-      address: '123 Marina Blvd, San Francisco, CA 94123',
+      price: '$4,500/month',
+      address: '789 Ocean Blvd, San Francisco, CA 94121',
       beds: 3,
       baths: 2,
-      sqft: 1650,
-      type: 'Condo for sale',
-      daysOnMarket: 12,
+      sqft: 1400,
+      type: 'House for rent',
       image: 'Property 5'
     },
     {
       id: 6,
-      price: '$1,250,000',
-      address: '456 Pacific Heights, San Francisco, CA 94115',
-      beds: 4,
-      baths: 3,
-      sqft: 2200,
-      type: 'House for sale',
-      priceCut: '$75,000',
+      price: '$1,600/month',
+      address: '321 Market St, San Francisco, CA 94105',
+      beds: 1,
+      baths: 1,
+      sqft: 750,
+      type: 'Apartment for rent',
       image: 'Property 6'
     },
     {
       id: 7,
-      price: '$550,000',
-      address: '789 Mission Bay, San Francisco, CA 94158',
+      price: '$3,800/month',
+      address: '456 Castro St, San Francisco, CA 94114',
       beds: 2,
       baths: 2,
       sqft: 1100,
-      type: 'Condo for sale',
-      daysOnMarket: 8,
+      type: 'Condo for rent',
       image: 'Property 7'
     },
     {
       id: 8,
-      price: '$1,450,000',
-      address: '321 Presidio Heights, San Francisco, CA 94118',
-      beds: 5,
-      baths: 4,
-      sqft: 2800,
-      type: 'House for sale',
-      openHouse: 'Sun 1-3pm',
+      price: '$2,200/month',
+      address: '654 Mission St, San Francisco, CA 94105',
+      beds: 2,
+      baths: 1,
+      sqft: 900,
+      type: 'Apartment for rent',
       image: 'Property 8'
     },
     {
       id: 9,
-      price: '$750,000',
-      address: '654 Noe Valley, San Francisco, CA 94114',
+      price: '$5,200/month',
+      address: '987 Pacific Ave, San Francisco, CA 94133',
       beds: 3,
       baths: 2,
-      sqft: 1400,
-      type: 'House for sale',
-      daysOnMarket: 23,
+      sqft: 1600,
+      type: 'House for rent',
       image: 'Property 9'
     },
     {
       id: 10,
-      price: '$850,000',
-      address: '987 Castro District, San Francisco, CA 94114',
-      beds: 2,
-      baths: 2,
-      sqft: 1200,
-      type: 'Condo for sale',
-      priceCut: '$25,000',
+      price: '$1,900/month',
+      address: '123 Valencia St, San Francisco, CA 94103',
+      beds: 1,
+      baths: 1,
+      sqft: 800,
+      type: 'Loft for rent',
       image: 'Property 10'
     },
     {
       id: 11,
-      price: '$1,100,000',
-      address: '147 Russian Hill, San Francisco, CA 94109',
-      beds: 3,
+      price: '$3,500/month',
+      address: '456 Hayes St, San Francisco, CA 94102',
+      beds: 2,
       baths: 2,
-      sqft: 1800,
-      type: 'House for sale',
-      daysOnMarket: 15,
+      sqft: 1200,
+      type: 'Townhouse for rent',
       image: 'Property 11'
     },
     {
       id: 12,
-      price: '$650,000',
-      address: '258 Hayes Valley, San Francisco, CA 94102',
+      price: '$2,600/month',
+      address: '789 Haight St, San Francisco, CA 94117',
       beds: 2,
       baths: 1,
-      sqft: 950,
-      type: 'Condo for sale',
-      flexible: true,
+      sqft: 1000,
+      type: 'Apartment for rent',
       image: 'Property 12'
     },
     {
       id: 13,
-      price: '$1,350,000',
-      address: '369 Nob Hill, San Francisco, CA 94108',
-      beds: 4,
-      baths: 3,
-      sqft: 2400,
-      type: 'House for sale',
-      openHouse: 'Sat 11am-1pm',
+      price: '$4,800/month',
+      address: '321 Divisadero St, San Francisco, CA 94117',
+      beds: 3,
+      baths: 2,
+      sqft: 1500,
+      type: 'House for rent',
       image: 'Property 13'
     },
     {
       id: 14,
-      price: '$720,000',
-      address: '741 Potrero Hill, San Francisco, CA 94110',
-      beds: 3,
-      baths: 2,
-      sqft: 1350,
-      type: 'House for sale',
-      daysOnMarket: 31,
+      price: '$1,700/month',
+      address: '654 Fillmore St, San Francisco, CA 94117',
+      beds: 1,
+      baths: 1,
+      sqft: 700,
+      type: 'Studio for rent',
       image: 'Property 14'
     },
     {
       id: 15,
-      price: '$980,000',
-      address: '852 Bernal Heights, San Francisco, CA 94110',
-      beds: 3,
+      price: '$3,300/month',
+      address: '987 Church St, San Francisco, CA 94114',
+      beds: 2,
       baths: 2,
-      sqft: 1600,
-      type: 'House for sale',
-      priceCut: '$40,000',
+      sqft: 1100,
+      type: 'Condo for rent',
       image: 'Property 15'
     }
   ];
 
   const renderFilterContent = () => {
     switch (activeFilter) {
-      case 'for-sale':
+      case 'for-rent':
         return (
           <Box>
             <Typography variant="h6" sx={{ mb: 2 }}>Property Status</Typography>
             <RadioGroup value={propertyStatus} onChange={(e) => setPropertyStatus(e.target.value)}>
-              <FormControlLabel value="for-sale" control={<Radio />} label="For Sale" />
               <FormControlLabel value="for-rent" control={<Radio />} label="For Rent" />
-              <FormControlLabel value="sold" control={<Radio />} label="Sold" />
-              <FormControlLabel value="coming-soon" control={<Radio />} label="Coming soon" />
+              <FormControlLabel value="coming-soon" control={<Radio />} label="Coming Soon" />
+              <FormControlLabel value="recently-rented" control={<Radio />} label="Recently Rented" />
             </RadioGroup>
             <Box sx={{ mt: 2 }}>
               <Button variant="contained" fullWidth onClick={handleCloseFilter}>
@@ -364,13 +333,7 @@ const BuyPage: React.FC = () => {
       case 'price':
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Price Range</Typography>
-            <Box sx={{ mb: 2 }}>
-              <RadioGroup value={priceType} onChange={(e) => setPriceType(e.target.value)}>
-                <FormControlLabel value="list-price" control={<Radio />} label="List Price" />
-                <FormControlLabel value="monthly-payment" control={<Radio />} label="Monthly Payment" />
-              </RadioGroup>
-            </Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>Monthly Rent</Typography>
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Minimum</InputLabel>
@@ -387,24 +350,20 @@ const BuyPage: React.FC = () => {
                   }}
                 >
                   <MenuItem value="no-min">No Min</MenuItem>
-                  <MenuItem value="50000">$50,000</MenuItem>
-                  <MenuItem value="100000">$100,000</MenuItem>
-                  <MenuItem value="150000">$150,000</MenuItem>
-                  <MenuItem value="200000">$200,000</MenuItem>
-                  <MenuItem value="250000">$250,000</MenuItem>
-                  <MenuItem value="300000">$300,000</MenuItem>
-                  <MenuItem value="400000">$400,000</MenuItem>
-                  <MenuItem value="500000">$500,000</MenuItem>
-                  <MenuItem value="600000">$600,000</MenuItem>
-                  <MenuItem value="700000">$700,000</MenuItem>
-                  <MenuItem value="800000">$800,000</MenuItem>
-                  <MenuItem value="900000">$900,000</MenuItem>
-                  <MenuItem value="1000000">$1,000,000</MenuItem>
-                  <MenuItem value="14000000">$14M</MenuItem>
-                  <MenuItem value="15000000">$15M</MenuItem>
-                  <MenuItem value="16000000">$16M</MenuItem>
-                  <MenuItem value="17000000">$17M</MenuItem>
-                  <MenuItem value="18000000">$18M</MenuItem>
+                  <MenuItem value="500">$500/month</MenuItem>
+                  <MenuItem value="750">$750/month</MenuItem>
+                  <MenuItem value="1000">$1,000/month</MenuItem>
+                  <MenuItem value="1250">$1,250/month</MenuItem>
+                  <MenuItem value="1500">$1,500/month</MenuItem>
+                  <MenuItem value="1750">$1,750/month</MenuItem>
+                  <MenuItem value="2000">$2,000/month</MenuItem>
+                  <MenuItem value="2500">$2,500/month</MenuItem>
+                  <MenuItem value="3000">$3,000/month</MenuItem>
+                  <MenuItem value="3500">$3,500/month</MenuItem>
+                  <MenuItem value="4000">$4,000/month</MenuItem>
+                  <MenuItem value="5000">$5,000/month</MenuItem>
+                  <MenuItem value="7500">$7,500/month</MenuItem>
+                  <MenuItem value="10000">$10,000/month</MenuItem>
                 </Select>
               </FormControl>
               <Typography sx={{ alignSelf: 'center' }}>-</Typography>
@@ -423,66 +382,23 @@ const BuyPage: React.FC = () => {
                   }}
                 >
                   <MenuItem value="no-max">No Max</MenuItem>
-                  <MenuItem value="50000">$50,000</MenuItem>
-                  <MenuItem value="100000">$100,000</MenuItem>
-                  <MenuItem value="150000">$150,000</MenuItem>
-                  <MenuItem value="200000">$200,000</MenuItem>
-                  <MenuItem value="250000">$250,000</MenuItem>
-                  <MenuItem value="300000">$300,000</MenuItem>
-                  <MenuItem value="400000">$400,000</MenuItem>
-                  <MenuItem value="500000">$500,000</MenuItem>
-                  <MenuItem value="600000">$600,000</MenuItem>
-                  <MenuItem value="700000">$700,000</MenuItem>
-                  <MenuItem value="800000">$800,000</MenuItem>
-                  <MenuItem value="900000">$900,000</MenuItem>
-                  <MenuItem value="1000000">$1,000,000</MenuItem>
+                  <MenuItem value="500">$500/month</MenuItem>
+                  <MenuItem value="750">$750/month</MenuItem>
+                  <MenuItem value="1000">$1,000/month</MenuItem>
+                  <MenuItem value="1250">$1,250/month</MenuItem>
+                  <MenuItem value="1500">$1,500/month</MenuItem>
+                  <MenuItem value="1750">$1,750/month</MenuItem>
+                  <MenuItem value="2000">$2,000/month</MenuItem>
+                  <MenuItem value="2500">$2,500/month</MenuItem>
+                  <MenuItem value="3000">$3,000/month</MenuItem>
+                  <MenuItem value="3500">$3,500/month</MenuItem>
+                  <MenuItem value="4000">$4,000/month</MenuItem>
+                  <MenuItem value="5000">$5,000/month</MenuItem>
+                  <MenuItem value="7500">$7,500/month</MenuItem>
+                  <MenuItem value="10000">$10,000/month</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-            {priceType === 'monthly-payment' && (
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                  Includes estimated principal and interest, mortgage insurance, property taxes, home insurance and HOA fees.
-                </Typography>
-                <FormControl fullWidth size="small" sx={{ mb: 1 }}>
-                  <InputLabel>Down Payment</InputLabel>
-                  <Select value="no-down" label="Down Payment">
-                    <MenuItem value="no-down">No Down Payment</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Credit Score</InputLabel>
-                  <Select value="no-selection" label="Credit Score">
-                    <MenuItem value="no-selection">No Selection</MenuItem>
-                  </Select>
-                </FormControl>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    Save this monthly payment info to your Dreamery account. (See our{' '}
-                    <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>
-                      privacy policy
-                    </Link>
-                    )
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      borderColor: '#1a365d',
-                      color: '#1a365d',
-                      textTransform: 'none',
-                      fontWeight: 600,
-                      '&:hover': {
-                        borderColor: '#1a365d',
-                        backgroundColor: 'rgba(26, 54, 93, 0.04)',
-                      },
-                    }}
-                  >
-                    Save
-                  </Button>
-                </Box>
-              </Box>
-            )}
             <Box sx={{ mt: 2 }}>
               <Button variant="contained" fullWidth onClick={handleCloseFilter}>
                 Apply
@@ -543,13 +459,14 @@ const BuyPage: React.FC = () => {
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {[
+                  { value: 'apartments', label: 'Apartments' },
                   { value: 'houses', label: 'Houses' },
                   { value: 'townhomes', label: 'Townhomes' },
-                  { value: 'multi-family', label: 'Multi-family' },
                   { value: 'condos', label: 'Condos/Co-ops' },
-                  { value: 'lots', label: 'Lots/Land' },
-                  { value: 'apartments', label: 'Apartments' },
-                  { value: 'manufactured', label: 'Manufactured' }
+                  { value: 'multi-family', label: 'Multi-family' },
+                  { value: 'duplexes', label: 'Duplexes' },
+                  { value: 'studios', label: 'Studios' },
+                  { value: 'lofts', label: 'Lofts' }
                 ].map((type) => (
                   <FormControlLabel
                     key={type.value}
@@ -586,8 +503,10 @@ const BuyPage: React.FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {[
                 { value: 'owner-posted', label: 'Owner posted' },
+                { value: 'property-manager', label: 'Property manager listed' },
                 { value: 'agent-listed', label: 'Agent listed' },
-                { value: 'new-construction', label: 'New construction' }
+                { value: 'corporate-housing', label: 'Corporate housing' },
+                { value: 'short-term', label: 'Short-term rentals' }
               ].map((type) => (
                 <FormControlLabel
                   key={type.value}
@@ -744,91 +663,98 @@ const BuyPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Lot size</Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <FormControl fullWidth size="small">
-                  <Select 
-                    value={minLotSize} 
-                    onChange={(e) => setMinLotSize(e.target.value)}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 300
-                        }
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Pet Policy</Typography>
+              <FormControl fullWidth size="small">
+                <Select 
+                  value={petPolicy} 
+                  onChange={(e) => setPetPolicy(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
                       }
-                    }}
-                  >
-                    <MenuItem value="no-min">No Min</MenuItem>
-                    <MenuItem value="1000">1,000 sqft</MenuItem>
-                    <MenuItem value="2000">2,000 sqft</MenuItem>
-                    <MenuItem value="3000">3,000 sqft</MenuItem>
-                    <MenuItem value="4000">4,000 sqft</MenuItem>
-                    <MenuItem value="5000">5,000 sqft</MenuItem>
-                    <MenuItem value="7500">7,500 sqft</MenuItem>
-                    <MenuItem value="10890">1/4 acre/10,890 sqft</MenuItem>
-                    <MenuItem value="21780">1/2 acre</MenuItem>
-                    <MenuItem value="43560">1 acre</MenuItem>
-                    <MenuItem value="87120">2 acres</MenuItem>
-                    <MenuItem value="217800">5 acres</MenuItem>
-                    <MenuItem value="435600">10 acres</MenuItem>
-                    <MenuItem value="871200">20 acres</MenuItem>
-                    <MenuItem value="2178000">50 acres</MenuItem>
-                    <MenuItem value="4356000">100 acres</MenuItem>
-                  </Select>
-                </FormControl>
-                <Typography sx={{ alignSelf: 'center' }}>-</Typography>
-                <FormControl fullWidth size="small">
-                  <Select 
-                    value={maxLotSize} 
-                    onChange={(e) => setMaxLotSize(e.target.value)}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 300
-                        }
-                      }
-                    }}
-                  >
-                    <MenuItem value="no-max">No Max</MenuItem>
-                    <MenuItem value="1000">1,000 sqft</MenuItem>
-                    <MenuItem value="2000">2,000 sqft</MenuItem>
-                    <MenuItem value="3000">3,000 sqft</MenuItem>
-                    <MenuItem value="4000">4,000 sqft</MenuItem>
-                    <MenuItem value="5000">5,000 sqft</MenuItem>
-                    <MenuItem value="7500">7,500 sqft</MenuItem>
-                    <MenuItem value="10890">1/4 acre/10,890 sqft</MenuItem>
-                    <MenuItem value="21780">1/2 acre</MenuItem>
-                    <MenuItem value="43560">1 acre</MenuItem>
-                    <MenuItem value="87120">2 acres</MenuItem>
-                    <MenuItem value="217800">5 acres</MenuItem>
-                    <MenuItem value="435600">10 acres</MenuItem>
-                    <MenuItem value="871200">20 acres</MenuItem>
-                    <MenuItem value="2178000">50 acres</MenuItem>
-                    <MenuItem value="4356000">100 acres</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+                    }
+                  }}
+                >
+                  <MenuItem value="any">Any</MenuItem>
+                  <MenuItem value="cats-allowed">Cats allowed</MenuItem>
+                  <MenuItem value="dogs-allowed">Dogs allowed</MenuItem>
+                  <MenuItem value="no-pets">No pets</MenuItem>
+                  <MenuItem value="pet-deposit">Pet deposit required</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Year built</Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <TextField
-                  size="small"
-                  placeholder="No Min"
-                  value={yearBuiltMin}
-                  onChange={(e) => setYearBuiltMin(e.target.value)}
-                  fullWidth
-                />
-                <Typography sx={{ alignSelf: 'center' }}>-</Typography>
-                <TextField
-                  size="small"
-                  placeholder="No Max"
-                  value={yearBuiltMax}
-                  onChange={(e) => setYearBuiltMax(e.target.value)}
-                  fullWidth
-                />
-              </Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Lease Terms</Typography>
+              <FormControl fullWidth size="small">
+                <Select 
+                  value={leaseTerms} 
+                  onChange={(e) => setLeaseTerms(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
+                  <MenuItem value="any">Any</MenuItem>
+                  <MenuItem value="month-to-month">Month-to-month</MenuItem>
+                  <MenuItem value="6-months">6 months</MenuItem>
+                  <MenuItem value="12-months">12 months</MenuItem>
+                  <MenuItem value="18-months">18 months</MenuItem>
+                  <MenuItem value="24-months">24 months</MenuItem>
+                  <MenuItem value="flexible">Flexible</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Utilities Included</Typography>
+              <FormControl fullWidth size="small">
+                <Select 
+                  value={utilitiesIncluded} 
+                  onChange={(e) => setUtilitiesIncluded(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
+                  <MenuItem value="any">Any</MenuItem>
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="water">Water</MenuItem>
+                  <MenuItem value="electricity">Electricity</MenuItem>
+                  <MenuItem value="gas">Gas</MenuItem>
+                  <MenuItem value="internet">Internet</MenuItem>
+                  <MenuItem value="all">All utilities</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Furnished</Typography>
+              <FormControl fullWidth size="small">
+                <Select 
+                  value={furnished} 
+                  onChange={(e) => setFurnished(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
+                  <MenuItem value="any">Any</MenuItem>
+                  <MenuItem value="furnished">Furnished</MenuItem>
+                  <MenuItem value="unfurnished">Unfurnished</MenuItem>
+                  <MenuItem value="partially">Partially furnished</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{ mb: 2 }}>
@@ -887,7 +813,7 @@ const BuyPage: React.FC = () => {
               <TextField
                 fullWidth
                 size="small"
-                placeholder="MLS #, yard, etc."
+                placeholder="MLS #, amenities, etc."
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />
@@ -911,7 +837,11 @@ const BuyPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <HeaderSection>
+      {/* Top Search Section */}
+      <Box sx={{ 
+        background: 'white', 
+        py: 2
+      }}>
         <Container maxWidth="xl">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Button
@@ -922,33 +852,57 @@ const BuyPage: React.FC = () => {
               Back
             </Button>
             <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a365d' }}>
-              San Francisco, CA Real Estate & Homes For Sale
+              San Francisco, CA Real Estate & Homes For Rent
             </Typography>
           </Box>
           
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-            <TextField
-              placeholder="San Francisco, CA"
-              size="small"
-              sx={{ flexGrow: 1 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton size="small">
-                      <Clear />
-                    </IconButton>
-                  </InputAdornment>
-                ),
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ flex: 1, position: 'relative' }}>
+              <TextField
+                fullWidth
+                placeholder="San Francisco, CA"
+                variant="outlined"
+                size="small"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search sx={{ color: '#666' }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton size="small">
+                        <Clear sx={{ color: '#666' }} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                  }
+                }}
+              />
+            </Box>
+            
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#1a365d',
+                color: 'white',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                px: 3,
+                py: 1,
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: '#0d2340',
+                }
               }}
-            />
-            <Button variant="contained" sx={{ bgcolor: '#1a365d' }}>
-              Save search
+            >
+              Save Search
             </Button>
+            
             <Box sx={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -969,15 +923,20 @@ const BuyPage: React.FC = () => {
               <Favorite sx={{ color: '#e31c25', fontSize: 20 }} />
             </Box>
           </Box>
+        </Container>
+      </Box>
 
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+      <HeaderSection>
+        <Container maxWidth="xl">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
             <FilterButton
-              onClick={(e) => handleFilterClick('for-sale', e)}
-              className={activeFilter === 'for-sale' ? 'active' : ''}
-              endIcon={activeFilter === 'for-sale' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick('for-rent', e)}
+              className={activeFilter === 'for-rent' ? 'active' : ''}
+              endIcon={activeFilter === 'for-rent' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             >
-              Property Status
+              For Rent
             </FilterButton>
+            
             <FilterButton
               onClick={(e) => handleFilterClick('price', e)}
               className={activeFilter === 'price' ? 'active' : ''}
@@ -985,6 +944,7 @@ const BuyPage: React.FC = () => {
             >
               Price
             </FilterButton>
+            
             <FilterButton
               onClick={(e) => handleFilterClick('beds-baths', e)}
               className={activeFilter === 'beds-baths' ? 'active' : ''}
@@ -992,6 +952,7 @@ const BuyPage: React.FC = () => {
             >
               Beds & Baths
             </FilterButton>
+            
             <FilterButton
               onClick={(e) => handleFilterClick('home-type', e)}
               className={activeFilter === 'home-type' ? 'active' : ''}
@@ -999,6 +960,7 @@ const BuyPage: React.FC = () => {
             >
               Home Type
             </FilterButton>
+            
             <FilterButton
               onClick={(e) => handleFilterClick('listing-type', e)}
               className={activeFilter === 'listing-type' ? 'active' : ''}
@@ -1006,6 +968,7 @@ const BuyPage: React.FC = () => {
             >
               Listing Type
             </FilterButton>
+            
             <FilterButton
               onClick={(e) => handleFilterClick('more', e)}
               className={activeFilter === 'more' ? 'active' : ''}
@@ -1037,7 +1000,7 @@ const BuyPage: React.FC = () => {
 
       <Box sx={{ display: 'flex', height: 'calc(100vh - 200px)' }}>
         <Box sx={{ flex: '2', position: 'relative', p: 2 }}>
-          <Box sx={{ 
+          <Box sx={{
             height: '100%',
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             display: 'flex',
@@ -1059,7 +1022,7 @@ const BuyPage: React.FC = () => {
               color: '#333',
               fontWeight: 600
             }}>
-              500 of 1,095 homes
+              500 of 1,095 rentals
             </Box>
             <Typography variant="h6">
               Interactive Map View
@@ -1076,7 +1039,7 @@ const BuyPage: React.FC = () => {
               <FormControl size="small" sx={{ minWidth: 150 }}>
                 <InputLabel>Sort</InputLabel>
                 <Select value="homes-for-you" label="Sort">
-                  <MenuItem value="homes-for-you">Homes for You</MenuItem>
+                  <MenuItem value="homes-for-you">Rentals for You</MenuItem>
                   <MenuItem value="price-low-high">Price: Low to High</MenuItem>
                   <MenuItem value="price-high-low">Price: High to Low</MenuItem>
                   <MenuItem value="newest">Newest</MenuItem>
@@ -1125,7 +1088,7 @@ const BuyPage: React.FC = () => {
                           <Chip label={`Open: ${property.openHouse}`} size="small" color="success" />
                         )}
                         {property.flexible && (
-                          <Chip label="Flexible layout" size="small" color="info" />
+                          <Chip label="Flexible lease" size="small" color="info" />
                         )}
                       </Box>
 
@@ -1148,4 +1111,4 @@ const BuyPage: React.FC = () => {
   );
 };
 
-export default BuyPage; 
+export default RentPage; 

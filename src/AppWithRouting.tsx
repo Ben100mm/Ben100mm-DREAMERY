@@ -9,6 +9,7 @@ import AuthPage from './pages/AuthPage';
 import ProfessionalSignupPage from './pages/ProfessionalSignupPage';
 import BusinessSignupPage from './pages/BusinessSignupPage';
 import BuyPage from './pages/BuyPage';
+import RentPage from './pages/RentPage';
 
 const theme = createTheme({
   palette: {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
           <Route path="/business-signup" element={<BusinessSignupPage />} />
           <Route path="/buy" element={<BuyPage />} />
+          <Route path="/rent" element={<RentPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

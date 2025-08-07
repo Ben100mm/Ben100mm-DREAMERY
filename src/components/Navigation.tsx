@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const NavContainer = styled.nav`
   width: 100%;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.25);
   padding: 0.75rem 0;
   position: absolute;
   bottom: 5%;
@@ -12,7 +12,7 @@ const NavContainer = styled.nav`
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   &:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.35);
   }
 `;
 
@@ -29,18 +29,20 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
   a {
-    color: #1a365d;
+    color: #0d2340;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 800;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
     transition: all 0.2s ease;
     font-size: 1rem;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
     &:hover {
-      background: rgba(255, 255, 255, 0.4);
-      color: #0d2340;
-      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.6);
+      color: #000000;
+      text-shadow: 0 2px 4px rgba(255, 255, 255, 1);
+      font-weight: 900;
     }
   }
 `;

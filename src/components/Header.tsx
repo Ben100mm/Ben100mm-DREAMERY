@@ -44,13 +44,13 @@ const Header: React.FC = () => {
             position: 'absolute',
             right: 32,
             top: -8,
-            backgroundColor: 'rgba(255, 255, 255, 0.75)',
+            backgroundColor: 'rgba(255, 255, 255, 0.4)',
             padding: '8px 20px',
             borderRadius: '6px',
             transition: 'all 0.2s ease',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backgroundColor: 'rgba(255, 255, 255, 0.6)',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
             },
           }}

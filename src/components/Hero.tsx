@@ -55,7 +55,8 @@ const SearchContainer = styled.div`
   background: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
   padding: 0.75rem;
-  max-width: 600px;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -84,12 +85,37 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-const MapButton = styled(IconButton)`
+const SparkleButton = styled(IconButton)`
   color: #1a365d;
-  opacity: 0.9;
+  opacity: 1;
+  margin-right: 0.25rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
   &:hover {
     opacity: 1;
-    background-color: rgba(26, 54, 93, 0.1);
+    background-color: rgba(26, 54, 93, 1);
+    color: white;
+  }
+`;
+
+const MapButton = styled(IconButton)`
+  color: #1a365d;
+  opacity: 1;
+  margin-right: 0.25rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  &:hover {
+    opacity: 1;
+    background-color: rgba(26, 54, 93, 1);
+    color: white;
   }
 `;
 
@@ -108,6 +134,10 @@ const SearchButton = styled.button`
   }
 `;
 
+const SparkleIcon = () => (
+  <span style={{ fontSize: '1.6rem', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', filter: 'contrast(1.5)' }}>✨</span>
+);
+
 const Hero: React.FC = () => {
   return (
     <HeroContainer>
@@ -120,6 +150,9 @@ const Hero: React.FC = () => {
             placeholder="Enter an address, neighborhood, city, or ZIP code"
             fullWidth
           />
+          <SparkleButton>
+            <SparkleIcon />
+          </SparkleButton>
           <MapButton>
             <MapIcon />
           </MapButton>

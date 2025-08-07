@@ -22,11 +22,17 @@ import {
   Google,
   Apple,
   Microsoft,
-  Twitter,
   Phone,
   ArrowBack,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+
+// Custom X (Twitter) Icon Component
+const XIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+);
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%)',
@@ -454,17 +460,17 @@ const AuthPage: React.FC = () => {
               </SocialButton>
               
               <SocialButton
-                onClick={() => handleSocialLogin('X (Twitter)')}
-                startIcon={<Twitter />}
+                onClick={() => handleSocialLogin('X')}
+                startIcon={<XIcon />}
                 sx={{
                   color: '#fff',
-                  background: 'linear-gradient(135deg, #1da1f2 0%, #14171a 100%)',
+                  background: 'linear-gradient(135deg, #000000 0%, #333333 100%)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #1a8cd8 0%, #0f1215 100%)',
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #404040 100%)',
                   },
                 }}
               >
-                Continue with X (Twitter)
+                Continue with X
               </SocialButton>
             </Box>
 

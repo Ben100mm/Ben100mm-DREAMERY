@@ -374,7 +374,18 @@ const BuyPage: React.FC = () => {
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Minimum</InputLabel>
-                <Select value={minPrice} onChange={(e) => setMinPrice(e.target.value)} label="Minimum">
+                <Select 
+                  value={minPrice} 
+                  onChange={(e) => setMinPrice(e.target.value)} 
+                  label="Minimum"
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="no-min">No Min</MenuItem>
                   <MenuItem value="50000">$50,000</MenuItem>
                   <MenuItem value="100000">$100,000</MenuItem>
@@ -399,7 +410,18 @@ const BuyPage: React.FC = () => {
               <Typography sx={{ alignSelf: 'center' }}>-</Typography>
               <FormControl fullWidth size="small">
                 <InputLabel>Maximum</InputLabel>
-                <Select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} label="Maximum">
+                <Select 
+                  value={maxPrice} 
+                  onChange={(e) => setMaxPrice(e.target.value)} 
+                  label="Maximum"
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="no-max">No Max</MenuItem>
                   <MenuItem value="50000">$50,000</MenuItem>
                   <MenuItem value="100000">$100,000</MenuItem>
@@ -601,7 +623,17 @@ const BuyPage: React.FC = () => {
             <Box sx={{ mb: 2 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Max HOA</Typography>
               <FormControl fullWidth size="small">
-                <Select value={maxHoa} onChange={(e) => setMaxHoa(e.target.value)}>
+                <Select 
+                  value={maxHoa} 
+                  onChange={(e) => setMaxHoa(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="any">Any</MenuItem>
                   <MenuItem value="no-hoa">No HOA Fee</MenuItem>
                   <MenuItem value="50">$50/month</MenuItem>
@@ -624,7 +656,17 @@ const BuyPage: React.FC = () => {
             <Box sx={{ mb: 2 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Parking spots</Typography>
               <FormControl fullWidth size="small">
-                <Select value={parkingSpots} onChange={(e) => setParkingSpots(e.target.value)}>
+                <Select 
+                  value={parkingSpots} 
+                  onChange={(e) => setParkingSpots(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="any">Any</MenuItem>
                   <MenuItem value="1">1+</MenuItem>
                   <MenuItem value="2">2+</MenuItem>
@@ -638,7 +680,17 @@ const BuyPage: React.FC = () => {
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Square feet</Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <FormControl fullWidth size="small">
-                  <Select value={minSqft} onChange={(e) => setMinSqft(e.target.value)}>
+                  <Select 
+                    value={minSqft} 
+                    onChange={(e) => setMinSqft(e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
+                  >
                     <MenuItem value="no-min">No Min</MenuItem>
                     <MenuItem value="500">500</MenuItem>
                     <MenuItem value="750">750</MenuItem>
@@ -659,7 +711,17 @@ const BuyPage: React.FC = () => {
                 </FormControl>
                 <Typography sx={{ alignSelf: 'center' }}>-</Typography>
                 <FormControl fullWidth size="small">
-                  <Select value={maxSqft} onChange={(e) => setMaxSqft(e.target.value)}>
+                  <Select 
+                    value={maxSqft} 
+                    onChange={(e) => setMaxSqft(e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
+                  >
                     <MenuItem value="no-max">No Max</MenuItem>
                     <MenuItem value="500">500</MenuItem>
                     <MenuItem value="750">750</MenuItem>
@@ -685,7 +747,17 @@ const BuyPage: React.FC = () => {
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Lot size</Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <FormControl fullWidth size="small">
-                  <Select value={minLotSize} onChange={(e) => setMinLotSize(e.target.value)}>
+                  <Select 
+                    value={minLotSize} 
+                    onChange={(e) => setMinLotSize(e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
+                  >
                     <MenuItem value="no-min">No Min</MenuItem>
                     <MenuItem value="1000">1,000 sqft</MenuItem>
                     <MenuItem value="2000">2,000 sqft</MenuItem>
@@ -706,7 +778,17 @@ const BuyPage: React.FC = () => {
                 </FormControl>
                 <Typography sx={{ alignSelf: 'center' }}>-</Typography>
                 <FormControl fullWidth size="small">
-                  <Select value={maxLotSize} onChange={(e) => setMaxLotSize(e.target.value)}>
+                  <Select 
+                    value={maxLotSize} 
+                    onChange={(e) => setMaxLotSize(e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
+                  >
                     <MenuItem value="no-max">No Max</MenuItem>
                     <MenuItem value="1000">1,000 sqft</MenuItem>
                     <MenuItem value="2000">2,000 sqft</MenuItem>
@@ -751,10 +833,20 @@ const BuyPage: React.FC = () => {
 
             <Box sx={{ mb: 2 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                55+ Communities <Chip label="NEW" size="small" color="primary" />
+                55+ Communities
               </Typography>
               <FormControl fullWidth size="small">
-                <Select value={fiftyFivePlus} onChange={(e) => setFiftyFivePlus(e.target.value)}>
+                <Select 
+                  value={fiftyFivePlus} 
+                  onChange={(e) => setFiftyFivePlus(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="include">Include</MenuItem>
                   <MenuItem value="dont-show">Don't show</MenuItem>
                   <MenuItem value="only-show">Only show</MenuItem>
@@ -765,7 +857,17 @@ const BuyPage: React.FC = () => {
             <Box sx={{ mb: 2 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Days on Dreamery</Typography>
               <FormControl fullWidth size="small">
-                <Select value={daysOnZillow} onChange={(e) => setDaysOnZillow(e.target.value)}>
+                <Select 
+                  value={daysOnZillow} 
+                  onChange={(e) => setDaysOnZillow(e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300
+                      }
+                    }
+                  }}
+                >
                   <MenuItem value="any">Any</MenuItem>
                   <MenuItem value="1">1 day</MenuItem>
                   <MenuItem value="7">7 days</MenuItem>

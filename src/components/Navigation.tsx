@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavContainer = styled.nav`
@@ -38,6 +39,7 @@ const NavItem = styled.li`
     font-size: 1rem;
     text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
     letter-spacing: 0.5px;
+    cursor: pointer;
     &:hover {
       background: rgba(255, 255, 255, 0.6);
       color: #000000;
@@ -48,18 +50,42 @@ const NavItem = styled.li`
 `;
 
 const Navigation: React.FC = () => {
+  const navigate = useNavigate();
+
   const navItems = [
-    'Buy', 'Rent', 'Sell', 'Mortgage', 'Underwrite', 'Analyze',
-    'Close', 'Manage', 'Invest', 'Fund', 'Operate', 'Partner',
-    'Learn', 'Advertise'
+    { name: 'Buy', path: '/buy' },
+    { name: 'Rent', path: '/rent' },
+    { name: 'Sell', path: '/sell' },
+    { name: 'Mortgage', path: '/mortgage' },
+    { name: 'Underwrite', path: '/underwrite' },
+    { name: 'Analyze', path: '/analyze' },
+    { name: 'Close', path: '/close' },
+    { name: 'Manage', path: '/manage' },
+    { name: 'Invest', path: '/invest' },
+    { name: 'Fund', path: '/fund' },
+    { name: 'Operate', path: '/operate' },
+    { name: 'Partner', path: '/partner' },
+    { name: 'Learn', path: '/learn' },
+    { name: 'Advertise', path: '/advertise' }
   ];
+
+  const handleNavClick = (path: string) => {
+    if (path === '/buy') {
+      navigate('/buy');
+    } else {
+      // For other navigation items, you can add routes later
+      console.log(`Navigating to ${path}`);
+    }
+  };
 
   return (
     <NavContainer>
       <NavList>
         {navItems.map((item, index) => (
           <NavItem key={index}>
-            <a href={`#${item.toLowerCase()}`}>{item}</a>
+            <a onClick={() => handleNavClick(item.path)}>
+              {item.name}
+            </a>
           </NavItem>
         ))}
       </NavList>

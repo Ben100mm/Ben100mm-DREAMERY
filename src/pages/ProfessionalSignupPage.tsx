@@ -8,7 +8,6 @@ import {
   Typography,
   Link,
   Container,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -220,7 +219,7 @@ const ProfessionalSignupPage: React.FC = () => {
                 <Select
                   value={professionalType}
                   onChange={(e) => setProfessionalType(e.target.value)}
-                  placeholder="Select your category"
+
                   IconComponent={KeyboardArrowDown}
                   sx={{
                     '& .MuiOutlinedInput-notchedOutline': {
@@ -390,8 +389,8 @@ const ProfessionalSignupPage: React.FC = () => {
                 </Select>
               </FormControl>
               
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid item xs={6}>
+              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                <Box sx={{ flex: 1 }}>
                   <TextField
                     fullWidth
                     label="First name"
@@ -420,8 +419,8 @@ const ProfessionalSignupPage: React.FC = () => {
                       },
                     }}
                   />
-                </Grid>
-                <Grid item xs={6}>
+                </Box>
+                <Box sx={{ flex: 1 }}>
                   <TextField
                     fullWidth
                     label="Last name"
@@ -450,8 +449,8 @@ const ProfessionalSignupPage: React.FC = () => {
                       },
                     }}
                   />
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
               
               <TextField
                 fullWidth

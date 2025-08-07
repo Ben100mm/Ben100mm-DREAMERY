@@ -1,9 +1,14 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import styled from 'styled-components';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Navigation from './components/Navigation';
+import AuthPage from './pages/AuthPage';
+import ProfessionalSignupPage from './pages/ProfessionalSignupPage';
+import BusinessSignupPage from './pages/BusinessSignupPage';
+import BuyPage from './pages/BuyPage';
 
 const theme = createTheme({
   palette: {
@@ -24,14 +29,28 @@ const AppContainer = styled.div`
   position: relative;
 `;
 
+const HomePage = () => (
+  <>
+    <Header />
+    <Hero />
+    <Navigation />
+  </>
+);
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppContainer>
-        <Header />
-        <Hero />
-        <Navigation />
-      </AppContainer>
+      <Router>
+        <AppContainer>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
+            <Route path="/business-signup" element={<BusinessSignupPage />} />
+            <Route path="/buy" element={<BuyPage />} />
+          </Routes>
+        </AppContainer>
+      </Router>
     </ThemeProvider>
   );
 }

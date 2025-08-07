@@ -8,7 +8,6 @@ import {
   Typography,
   Link,
   Container,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -43,7 +42,7 @@ const BusinessSignupPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [businessType, setBusinessType] = useState('');
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+
   const [zipPostal, setZipPostal] = useState('');
   const [phoneArea, setPhoneArea] = useState('');
   const [phonePrefix, setPhonePrefix] = useState('');
@@ -220,7 +219,7 @@ const BusinessSignupPage: React.FC = () => {
                 <Select
                   value={businessType}
                   onChange={(e) => setBusinessType(e.target.value)}
-                  placeholder="Select your category"
+
                   IconComponent={KeyboardArrowDown}
                   sx={{
                     '& .MuiOutlinedInput-notchedOutline': {

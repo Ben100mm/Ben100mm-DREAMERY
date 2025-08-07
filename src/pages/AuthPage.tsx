@@ -288,7 +288,7 @@ const AuthPage: React.FC = () => {
             <Box sx={{ my: 3, display: 'flex', alignItems: 'center' }}>
               <Divider sx={{ flex: 1, borderColor: '#e0e0e0' }} />
               <Typography sx={{ px: 2, color: '#666666', fontSize: '14px' }}>
-                Or Continue With
+                                            Or Continue with
               </Typography>
               <Divider sx={{ flex: 1, borderColor: '#e0e0e0' }} />
             </Box>

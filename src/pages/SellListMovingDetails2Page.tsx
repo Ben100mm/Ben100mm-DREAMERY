@@ -75,16 +75,27 @@ const SellListMovingDetails2Page: React.FC = () => {
   const { address, sellChecked, listChecked, movingDetails } = location.state || {};
 
   const handleSellTimingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSellTiming(event.target.value);
+    const value = event.target.value;
+    setSellTiming(value);
+    // If both are selected, update list timing to match
+    if (sellChecked && listChecked) {
+      setListTiming(value);
+    }
   };
 
   const handleListTimingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setListTiming(event.target.value);
+    const value = event.target.value;
+    setListTiming(value);
+    // If both are selected, update sell timing to match
+    if (sellChecked && listChecked) {
+      setSellTiming(value);
+    }
   };
 
   const handleNext = () => {
-    const isSellSelected = sellChecked && sellTiming;
-    const isListSelected = listChecked && listTiming;
+    // When both are selected, use the same timing for both
+    const finalSellTiming = sellChecked ? sellTiming : '';
+    const finalListTiming = listChecked ? (sellChecked && listChecked ? sellTiming : listTiming) : '';
     
     if ((sellChecked && !sellTiming) || (listChecked && !listTiming)) {
       return; // Don't proceed if required selections aren't made
@@ -96,8 +107,8 @@ const SellListMovingDetails2Page: React.FC = () => {
         sellChecked,
         listChecked,
         movingDetails,
-        sellTiming,
-        listTiming
+        sellTiming: finalSellTiming,
+        listTiming: finalListTiming
       } 
     });
   };
@@ -167,7 +178,7 @@ const SellListMovingDetails2Page: React.FC = () => {
       <MainContent>
         <ContentWrapper>
           {sellChecked && listChecked ? (
-            // Both Sell and List selected
+            // Both Sell and List selected - show single question
             <>
               <Typography 
                 variant="h4" 
@@ -177,48 +188,13 @@ const SellListMovingDetails2Page: React.FC = () => {
                   mb: 3
                 }}
               >
-                How soon would you like to sell?
-              </Typography>
-              
-              <FormControl component="fieldset" sx={{ width: '100%', mb: 4 }}>
-                <RadioGroup
-                  value={sellTiming}
-                  onChange={handleSellTimingChange}
-                  sx={{ gap: 2 }}
-                >
-                  {timingOptions.map((option) => (
-                    <FormControlLabel
-                      key={option.value}
-                      value={option.value}
-                      control={<Radio sx={{ color: '#1a365d', '&.Mui-checked': { color: '#1a365d' } }} />}
-                      label={option.label}
-                      sx={{
-                        '& .MuiFormControlLabel-label': {
-                          fontSize: '16px',
-                          color: '#333333',
-                          fontWeight: 500
-                        }
-                      }}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontWeight: 700, 
-                  color: '#1a365d', 
-                  mb: 3
-                }}
-              >
-                How soon would you like to list?
+                How soon would you like to sell or list?
               </Typography>
               
               <FormControl component="fieldset" sx={{ width: '100%' }}>
                 <RadioGroup
-                  value={listTiming}
-                  onChange={handleListTimingChange}
+                  value={sellTiming}
+                  onChange={handleSellTimingChange}
                   sx={{ gap: 2 }}
                 >
                   {timingOptions.map((option) => (

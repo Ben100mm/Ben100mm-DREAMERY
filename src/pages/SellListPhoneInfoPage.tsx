@@ -43,7 +43,7 @@ const SellListPhoneInfoPage: React.FC = () => {
 
   const handleNext = () => {
     if (!phoneNumber.trim()) return;
-    navigate('/sell-services', { 
+    navigate('/sell-summary', { 
       state: { 
         ...prevState, 
         phoneNumber: phoneNumber.trim()

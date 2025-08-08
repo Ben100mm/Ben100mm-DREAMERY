@@ -25,6 +25,7 @@ import SellListAdditionalInfo2Page from './pages/SellListAdditionalInfo2Page';
 import SellListAdditionalInfo3Page from './pages/SellListAdditionalInfo3Page';
 import SellListContactInfoPage from './pages/SellListContactInfoPage';
 import SellListPhoneInfoPage from './pages/SellListPhoneInfoPage';
+import SellListSummaryPage from './pages/SellListSummaryPage';
 import SellListServicesPage from './pages/SellListServicesPage';
 import SellListPage from './pages/SellListPage';
 
@@ -81,6 +82,7 @@ function App() {
           <Route path="/sell-additional-info-3" element={<SellListAdditionalInfo3Page />} />
           <Route path="/sell-contact-info" element={<SellListContactInfoPage />} />
           <Route path="/sell-phone-info" element={<SellListPhoneInfoPage />} />
+          <Route path="/sell-summary" element={<SellListSummaryPage />} />
           <Route path="/sell-services" element={<SellListServicesPage />} />
         </Routes>
       </Router>

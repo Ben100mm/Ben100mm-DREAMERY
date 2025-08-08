@@ -36,7 +36,7 @@ const MainContent = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  gap: 4rem;
+  gap: 0;
   
   @media (max-width: 900px) {
     flex-direction: column;

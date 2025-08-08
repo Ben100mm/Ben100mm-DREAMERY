@@ -56,7 +56,7 @@ const SellListServicesPage: React.FC = () => {
   const formData = location.state || {};
 
   const handleBack = () => {
-    navigate('/sell-phone-info', { state: formData });
+    navigate('/sell-summary', { state: formData });
   };
   const handleExit = () => navigate('/');
 

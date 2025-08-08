@@ -76,6 +76,8 @@ const Navigation: React.FC = () => {
       navigate('/rent');
     } else if (path === '/sell') {
       navigate('/sell');
+    } else if (path === '/mortgage') {
+      navigate('/mortgage');
     } else {
       // For other navigation items, you can add routes later
       console.log(`Navigating to ${path}`);

@@ -28,6 +28,7 @@ import SellListPhoneInfoPage from './pages/SellListPhoneInfoPage';
 import SellListSummaryPage from './pages/SellListSummaryPage';
 import SellListServicesPage from './pages/SellListServicesPage';
 import SellListPage from './pages/SellListPage';
+import MortgagePage from './pages/MortgagePage';
 
 const theme = createTheme({
   palette: {
@@ -84,6 +85,7 @@ function App() {
           <Route path="/sell-phone-info" element={<SellListPhoneInfoPage />} />
           <Route path="/sell-summary" element={<SellListSummaryPage />} />
           <Route path="/sell-services" element={<SellListServicesPage />} />
+          <Route path="/mortgage" element={<MortgagePage />} />
         </Routes>
       </Router>
     </ThemeProvider>

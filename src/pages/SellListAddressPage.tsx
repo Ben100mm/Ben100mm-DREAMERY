@@ -99,9 +99,12 @@ const SellListAddressPage: React.FC = () => {
       <HeaderSection>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ width: 200 }}>
+            <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
+              Progress
+            </Typography>
             <LinearProgress 
               variant="determinate" 
-              value={25} 
+              value={7} 
               sx={{ 
                 height: 8, 
                 borderRadius: 4,
@@ -112,9 +115,6 @@ const SellListAddressPage: React.FC = () => {
                 }
               }} 
             />
-            <Typography variant="caption" sx={{ color: '#666', mt: 0.5 }}>
-              Step 1 of 4
-            </Typography>
           </Box>
           
           <Button

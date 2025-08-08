@@ -62,11 +62,11 @@ const SellListContactInfoPage: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ width: 260 }}>
             <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-              Add contact info
+              Progress
             </Typography>
             <LinearProgress
               variant="determinate"
-              value={100}
+              value={93}
               sx={{ height: 8, borderRadius: 4, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: '#1a365d', borderRadius: 4 } }}
             />
           </Box>

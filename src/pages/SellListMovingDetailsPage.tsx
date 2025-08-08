@@ -112,12 +112,12 @@ const SellListMovingDetailsPage: React.FC = () => {
       <HeaderSection>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ width: 200 }}>
-            <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-              Moving details
+                        <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
+              Progress
             </Typography>
-            <LinearProgress 
-              variant="determinate" 
-              value={50} 
+            <LinearProgress
+              variant="determinate"
+              value={13} 
               sx={{ 
                 height: 8, 
                 borderRadius: 4,

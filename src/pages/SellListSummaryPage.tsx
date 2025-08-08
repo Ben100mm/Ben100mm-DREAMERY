@@ -29,7 +29,9 @@ const PageContainer = styled.div`
   background: white;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  padding-bottom: 96px; /* reserve space for fixed footer */
+  overflow-y: auto; /* force page-level scrolling */
+  -webkit-overflow-scrolling: touch;
 `;
 
 const HeaderSection = styled.div`
@@ -42,7 +44,6 @@ const MainContent = styled.div`
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
-  min-height: 120vh;
 `;
 
 const SummarySection = styled.div`
@@ -74,19 +75,9 @@ const SellListSummaryPage: React.FC = () => {
     movingDetails = '',
     sellTiming = '',
     listTiming = '',
-    homeType = '',
-    squareFootage = '',
-    yearBuilt = '',
-    bedrooms = '',
-    bathrooms = '',
-    floors = '',
-    poolType = '',
-    coveredParking = '',
-    hasBasement = '',
-    basementUse = '',
-    knowsSqft = '',
-    finishedSqft = '',
-    unfinishedSqft = '',
+    homeDetails = {},
+    homeDetails2 = {},
+    homeDetails3 = {},
     homeQuality = '',
     homeQuality2 = '',
     homeQuality3 = '',
@@ -104,6 +95,28 @@ const SellListSummaryPage: React.FC = () => {
 
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [editedData, setEditedData] = useState(formData);
+
+  // Helpers to safely read/update nested values using dot-paths
+  const getValueByPath = (obj: any, path: string) => {
+    try {
+      return path.split('.').reduce((o: any, k: string) => (o ? o[k] : undefined), obj);
+    } catch {
+      return undefined;
+    }
+  };
+
+  const setValueByPath = (obj: any, path: string, value: any) => {
+    const keys = path.split('.');
+    const newObj: any = { ...obj };
+    let curr: any = newObj;
+    for (let i = 0; i < keys.length - 1; i += 1) {
+      const key = keys[i];
+      curr[key] = { ...(curr[key] || {}) };
+      curr = curr[key];
+    }
+    curr[keys[keys.length - 1]] = value;
+    return newObj;
+  };
 
   const handleEdit = (section: string) => {
     setEditingSection(section);
@@ -136,8 +149,8 @@ const SellListSummaryPage: React.FC = () => {
     return String(value);
   };
 
-  const renderEditableField = (label: string, value: any, field: string, type: 'text' | 'select' | 'radio' | 'checkbox' = 'text', options?: any[]) => {
-    const isEditing = editingSection === field;
+  const renderEditableField = (label: string, value: any, fieldPath: string, type: 'text' | 'select' | 'radio' | 'checkbox' = 'text', options?: any[]) => {
+    const isEditing = editingSection === fieldPath;
     
     return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
@@ -150,16 +163,16 @@ const SellListSummaryPage: React.FC = () => {
               {type === 'text' && (
                 <TextField
                   size="small"
-                  value={editedData[field] || ''}
-                  onChange={(e) => setEditedData({ ...editedData, [field]: e.target.value })}
+                  value={getValueByPath(editedData, fieldPath) || ''}
+                  onChange={(e) => setEditedData(setValueByPath(editedData, fieldPath, e.target.value))}
                   sx={{ minWidth: 200 }}
                 />
               )}
               {type === 'select' && options && (
                 <FormControl size="small" sx={{ minWidth: 200 }}>
                   <Select
-                    value={editedData[field] || ''}
-                    onChange={(e) => setEditedData({ ...editedData, [field]: e.target.value })}
+                    value={getValueByPath(editedData, fieldPath) || ''}
+                    onChange={(e) => setEditedData(setValueByPath(editedData, fieldPath, e.target.value))}
                   >
                     {options.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -169,7 +182,7 @@ const SellListSummaryPage: React.FC = () => {
                   </Select>
                 </FormControl>
               )}
-              <IconButton size="small" onClick={() => handleSave(field)} sx={{ color: '#22c55e' }}>
+              <IconButton size="small" onClick={() => handleSave(fieldPath)} sx={{ color: '#22c55e' }}>
                 <CheckIcon />
               </IconButton>
               <Button size="small" onClick={handleCancel} sx={{ color: '#666666' }}>
@@ -179,9 +192,9 @@ const SellListSummaryPage: React.FC = () => {
           ) : (
             <>
               <Typography variant="body2" sx={{ color: '#6b7280', mr: 2 }}>
-                {formatValue(value)}
+                {formatValue(getValueByPath(editedData, fieldPath) ?? value)}
               </Typography>
-              <EditButton size="small" onClick={() => handleEdit(field)}>
+              <EditButton size="small" onClick={() => handleEdit(fieldPath)}>
                 <EditIcon />
               </EditButton>
             </>
@@ -278,33 +291,40 @@ const SellListSummaryPage: React.FC = () => {
           </Typography>
           <SummaryCard>
             <CardContent>
-              {renderEditableField('Home Type', homeType, 'homeType')}
-              {renderEditableField('Square Footage', squareFootage, 'squareFootage')}
-              {renderEditableField('Year Built', yearBuilt, 'yearBuilt')}
-              {renderEditableField('Bedrooms', bedrooms, 'bedrooms')}
-              {renderEditableField('Bathrooms', bathrooms, 'bathrooms')}
-              {renderEditableField('Floors', floors, 'floors')}
-              {renderEditableField('Pool Type', poolType, 'poolType')}
-              {renderEditableField('Covered Parking Spaces', coveredParking, 'coveredParking')}
-              {renderEditableField('Has Basement', hasBasement, 'hasBasement', 'radio', [
+              {renderEditableField('Home Type', getValueByPath(formData, 'homeDetails.homeType'), 'homeDetails.homeType')}
+              {renderEditableField('Square Footage', getValueByPath(formData, 'homeDetails.squareFeet'), 'homeDetails.squareFeet')}
+              {renderEditableField('Year Built', getValueByPath(formData, 'homeDetails.yearBuilt'), 'homeDetails.yearBuilt')}
+              {renderEditableField('Bedrooms', getValueByPath(formData, 'homeDetails.bedrooms'), 'homeDetails.bedrooms')}
+              {renderEditableField('Full Bathrooms', getValueByPath(formData, 'homeDetails.fullBaths'), 'homeDetails.fullBaths')}
+              {renderEditableField('Floors', getValueByPath(formData, 'homeDetails.floors'), 'homeDetails.floors')}
+              {renderEditableField('Pool Type', getValueByPath(formData, 'homeDetails2.poolType'), 'homeDetails2.poolType', 'select', [
+                { value: '', label: '' },
+                { value: 'No', label: 'No' },
+                { value: 'In-ground', label: 'In-ground' },
+                { value: 'Above ground', label: 'Above ground' },
+                { value: 'Community Pool', label: 'Community Pool' }
+              ])}
+              {renderEditableField('Garage Spaces', getValueByPath(formData, 'homeDetails2.garageSpaces'), 'homeDetails2.garageSpaces')}
+              {renderEditableField('Carport Spaces', getValueByPath(formData, 'homeDetails2.carportSpaces'), 'homeDetails2.carportSpaces')}
+              {renderEditableField('Has Basement', getValueByPath(formData, 'homeDetails3.hasBasement'), 'homeDetails3.hasBasement', 'radio', [
                 { value: 'yes', label: 'Yes' },
                 { value: 'no', label: 'No' }
               ])}
-              {hasBasement === 'yes' && (
+              {getValueByPath(formData, 'homeDetails3.hasBasement') === 'yes' && (
                 <>
-                  {renderEditableField('Basement Use', basementUse, 'basementUse', 'select', [
+                  {renderEditableField('Basement Use', getValueByPath(formData, 'homeDetails3.basementUse'), 'homeDetails3.basementUse', 'select', [
                     { value: 'Not Functional', label: 'Not Functional' },
                     { value: 'For Storage', label: 'For Storage' },
                     { value: 'Fully Functional and Furnishable', label: 'Fully Functional and Furnishable' }
                   ])}
-                  {renderEditableField('Knows Square Footage', knowsSqft, 'knowsSqft', 'radio', [
+                  {renderEditableField('Knows Square Footage', getValueByPath(formData, 'homeDetails3.knowsSqft'), 'homeDetails3.knowsSqft', 'radio', [
                     { value: 'yes', label: 'Yes' },
                     { value: 'no', label: 'No' }
                   ])}
-                  {knowsSqft === 'yes' && (
+                  {getValueByPath(formData, 'homeDetails3.knowsSqft') === 'yes' && (
                     <>
-                      {renderEditableField('Finished Area (sqft)', finishedSqft, 'finishedSqft')}
-                      {renderEditableField('Unfinished Area (sqft)', unfinishedSqft, 'unfinishedSqft')}
+                      {renderEditableField('Finished Area (sqft)', getValueByPath(formData, 'homeDetails3.finishedSqft'), 'homeDetails3.finishedSqft')}
+                      {renderEditableField('Unfinished Area (sqft)', getValueByPath(formData, 'homeDetails3.unfinishedSqft'), 'homeDetails3.unfinishedSqft')}
                     </>
                   )}
                 </>
@@ -405,13 +425,19 @@ const SellListSummaryPage: React.FC = () => {
         </SummarySection>
       </MainContent>
 
-      {/* Footer with Navigation Buttons */}
+      {/* Footer fixed to viewport bottom; content spacing handled by PageContainer padding-bottom */}
       <Box sx={{ 
+        position: 'fixed',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'white',
         px: { xs: '1rem', md: '2rem' },
-        py: { xs: '1rem', md: '2rem' },
+        py: { xs: '0.75rem', md: '1rem' },
         display: 'flex', 
         justifyContent: 'space-between',
-        borderTop: '1px solid #e0e0e0'
+        borderTop: '1px solid #e0e0e0',
+        zIndex: 10
       }}>
         <Button
           onClick={handleBack}

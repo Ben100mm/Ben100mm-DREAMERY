@@ -135,9 +135,9 @@ const SellListAdditionalInfo3Page: React.FC = () => {
             <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
               Additional info
             </Typography>
-            <LinearProgress
-              variant="determinate"
-              value={100}
+                        <LinearProgress 
+              variant="determinate" 
+              value={87} 
               sx={{ height: 8, borderRadius: 4, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: '#1a365d', borderRadius: 4 } }}
             />
           </Box>

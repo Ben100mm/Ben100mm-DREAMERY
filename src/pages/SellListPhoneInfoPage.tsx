@@ -61,7 +61,7 @@ const SellListPhoneInfoPage: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ width: 260 }}>
             <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-              Add contact info
+              Progress
             </Typography>
             <LinearProgress
               variant="determinate"

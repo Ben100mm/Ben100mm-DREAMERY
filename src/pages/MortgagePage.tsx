@@ -22,7 +22,8 @@ import {
   Flag as FlagIcon,
   AttachMoney as MoneyIcon,
   Home as HomeIcon,
-  School as SchoolIcon
+  School as SchoolIcon,
+  Percent as PercentIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -431,53 +432,92 @@ const MortgagePage: React.FC = () => {
           </LeftCol>
           <RightCol>
             <BuyAbilityCard>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#1a365d', fontWeight: 700 }}>
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h5" sx={{ mb: 3, textAlign: 'center', color: '#1a365d', fontWeight: 700, fontSize: '1.25rem' }}>
                   Your DreamAbility™ today
                 </Typography>
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
-                      $--
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
-                      Target price
-                    </Typography>
+                
+                {/* Primary metrics row */}
+                <Box sx={{ mb: 3 }}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                          $--
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                          Target price
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                          $--
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                          DreamAbility™
+                        </Typography>
+                      </Box>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
-                      $--
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
-                      DreamAbility™
-                    </Typography>
+                </Box>
+                
+                {/* Secondary metrics row */}
+                <Box sx={{ mb: 4 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <MoneyIcon sx={{ color: '#1a365d', mb: 0.5 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                          $--
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                          Mo. payment
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <PercentIcon sx={{ color: '#1a365d', mb: 0.5 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                          --%
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                          Rate
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <PercentIcon sx={{ color: '#1a365d', mb: 0.5 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                          --%
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                          APR
+                        </Typography>
+                      </Box>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d' }}>
-                      $--
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#666' }}>
-                      Mo. payment
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d' }}>
-                      --%
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#666' }}>
-                      Rate
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d' }}>
-                      --%
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#666' }}>
-                      APR
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Button fullWidth variant="contained" sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}>
+                </Box>
+                
+                <Button 
+                  fullWidth 
+                  variant="contained" 
+                  sx={{ 
+                    backgroundColor: '#1a365d', 
+                    color: 'white', 
+                    textTransform: 'none', 
+                    fontWeight: 600,
+                    py: 1.5,
+                    fontSize: '1rem',
+                    borderRadius: 2,
+                    '&:hover': {
+                      backgroundColor: '#0d2340',
+                    }
+                  }}
+                >
                   Get your DreamAbility
                 </Button>
               </CardContent>

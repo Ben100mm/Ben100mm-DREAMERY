@@ -71,8 +71,9 @@ const HeroSection = styled.div`
 
 const BuyAbilityCard = styled(Card)`
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid #e6eaf2;
+  box-shadow: 0 4px 16px rgba(26, 54, 93, 0.08);
   margin: 0;
   max-width: 400px;
   position: relative;
@@ -433,29 +434,29 @@ const MortgagePage: React.FC = () => {
           <RightCol>
             <BuyAbilityCard>
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" sx={{ mb: 3, textAlign: 'center', color: '#1a365d', fontWeight: 700, fontSize: '1.25rem' }}>
+                <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#1a365d', fontWeight: 700 }}>
                   Your DreamAbility™ today
                 </Typography>
                 
                 {/* Primary metrics row */}
-                <Box sx={{ mb: 3 }}>
-                  <Grid container spacing={3}>
+                <Box sx={{ mb: 2 }}>
+                  <Grid container spacing={2}>
                     <Grid item xs={6}>
-                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                      <Box sx={{ textAlign: 'center', p: 1.25, backgroundColor: '#f9fbff', borderRadius: 1, border: '1px solid #edf1f7' }}>
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
                           $--
                         </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Typography variant="caption" sx={{ color: '#6b778c', fontWeight: 500, letterSpacing: 0.2 }}>
                           Target price
                         </Typography>
                       </Box>
                     </Grid>
                     <Grid item xs={6}>
-                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                      <Box sx={{ textAlign: 'center', p: 1.25, backgroundColor: '#f9fbff', borderRadius: 1, border: '1px solid #edf1f7' }}>
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
                           $--
                         </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Typography variant="caption" sx={{ color: '#6b778c', fontWeight: 500, letterSpacing: 0.2 }}>
                           DreamAbility™
                         </Typography>
                       </Box>
@@ -464,37 +465,37 @@ const MortgagePage: React.FC = () => {
                 </Box>
                 
                 {/* Secondary metrics row */}
-                <Box sx={{ mb: 4 }}>
-                  <Grid container spacing={2}>
+                <Box sx={{ mb: 3 }}>
+                  <Grid container spacing={1.5}>
                     <Grid item xs={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                        <MoneyIcon sx={{ color: '#1a365d', mb: 0.5 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                      <Box sx={{ textAlign: 'center', p: 1, backgroundColor: '#f9fbff', borderRadius: 1, border: '1px solid #edf1f7' }}>
+                        <MoneyIcon sx={{ color: '#1a365d', mb: 0.25, fontSize: 18 }} />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d', mb: 0 }}>
                           $--
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Typography variant="caption" sx={{ color: '#6b778c', fontWeight: 500 }}>
                           Mo. payment
                         </Typography>
                       </Box>
                     </Grid>
                     <Grid item xs={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                        <PercentIcon sx={{ color: '#1a365d', mb: 0.5 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                      <Box sx={{ textAlign: 'center', p: 1, backgroundColor: '#f9fbff', borderRadius: 1, border: '1px solid #edf1f7' }}>
+                        <PercentIcon sx={{ color: '#1a365d', mb: 0.25, fontSize: 18 }} />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d', mb: 0 }}>
                           --%
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Typography variant="caption" sx={{ color: '#6b778c', fontWeight: 500 }}>
                           Rate
                         </Typography>
                       </Box>
                     </Grid>
                     <Grid item xs={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                        <PercentIcon sx={{ color: '#1a365d', mb: 0.5 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.25 }}>
+                      <Box sx={{ textAlign: 'center', p: 1, backgroundColor: '#f9fbff', borderRadius: 1, border: '1px solid #edf1f7' }}>
+                        <PercentIcon sx={{ color: '#1a365d', mb: 0.25, fontSize: 18 }} />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a365d', mb: 0 }}>
                           --%
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Typography variant="caption" sx={{ color: '#6b778c', fontWeight: 500 }}>
                           APR
                         </Typography>
                       </Box>
@@ -510,9 +511,9 @@ const MortgagePage: React.FC = () => {
                     color: 'white', 
                     textTransform: 'none', 
                     fontWeight: 600,
-                    py: 1.5,
-                    fontSize: '1rem',
-                    borderRadius: 2,
+                    py: 1.25,
+                    fontSize: '0.95rem',
+                    borderRadius: 1.5,
                     '&:hover': {
                       backgroundColor: '#0d2340',
                     }

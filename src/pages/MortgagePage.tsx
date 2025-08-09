@@ -348,7 +348,7 @@ const MortgagePage: React.FC = () => {
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Mortgage Calculator (DSCR, LTV, ARV)</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Mortgage Calculator</Typography>
           <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
             <TextField fullWidth label="Property address" value={address} onChange={(e)=>setAddress(e.target.value)} />
             <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' } }}>

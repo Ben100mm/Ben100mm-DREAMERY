@@ -281,6 +281,10 @@ const MortgagePage: React.FC = () => {
     navigate('/');
   };
 
+  const handleNavigateToPreApproval = () => {
+    navigate('/pre-approval');
+  };
+
   // CSV helpers for Airtable shared views (read-only; no secrets)
   const parseCsv = (text: string) => {
     const lines = text.trim().split(/\r?\n/);
@@ -517,7 +521,7 @@ const MortgagePage: React.FC = () => {
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Apply for Pre-Approval</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Apply for Pre-Approval with our Partners</Typography>
           <LinearProgress variant="determinate" value={(step+1)*33.33} sx={{ mb: 2, height: 8, borderRadius: 1 }} />
           {step===0 && (
             <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
@@ -560,58 +564,6 @@ const MortgagePage: React.FC = () => {
       </Card>
     );
   };
-
-  const CreativeFinancingSection: React.FC = () => {
-    const [tab, setTab] = useState(0);
-    // Simple calculator state mirroring Mortgage Calculator fields
-    const [purchase, setPurchase] = useState(500000);
-    const [rehab, setRehab] = useState(40000);
-    const [closing, setClosing] = useState(15000);
-    const [downPct, setDownPct] = useState(20);
-    const [rate, setRate] = useState(9.5);
-    const [term, setTerm] = useState(30);
-
-    const loanAmount = Math.max(0, (purchase + rehab + closing) - (purchase * (downPct / 100)));
-    const monthly = calculateMonthlyPayment(loanAmount, rate, term);
-
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Creative Financing</Typography>
-          <Tabs value={tab} onChange={(_, v)=>setTab(v)} sx={{ mb: 2 }}>
-            <Tab label="Calculator" />
-            <Tab label="Financing Options" />
-          </Tabs>
-          {tab===0 && (
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' } }}>
-              <TextField fullWidth label="Purchase" type="number" value={purchase} onChange={(e)=>setPurchase(Number(e.target.value))} />
-              <TextField fullWidth label="Rehab" type="number" value={rehab} onChange={(e)=>setRehab(Number(e.target.value))} />
-              <TextField fullWidth label="Closing" type="number" value={closing} onChange={(e)=>setClosing(Number(e.target.value))} />
-              <TextField fullWidth label="Down %" type="number" value={downPct} onChange={(e)=>setDownPct(Number(e.target.value))} />
-              <TextField fullWidth label="Rate %" type="number" value={rate} onChange={(e)=>setRate(Number(e.target.value))} />
-              <TextField fullWidth label="Term (yrs)" type="number" value={term} onChange={(e)=>setTerm(Number(e.target.value))} />
-              <Box sx={{ gridColumn: '1 / -1', p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
-                <Typography>Loan amount: ${loanAmount.toLocaleString()}</Typography>
-                <Typography>Estimated monthly: ${Math.round(monthly).toLocaleString()}</Typography>
-              </Box>
-            </Box>
-          )}
-          {tab===1 && (
-            <Box>
-              <Tabs value={0} sx={{ mb: 2 }} TabIndicatorProps={{ style: { display: 'none' } }}>
-                <Tab label="Seller financing" />
-                <Tab label="Subject-To Existing Mortgage" />
-                <Tab label="Co-buying" />
-              </Tabs>
-              <Typography>Seller financing templates and guides.</Typography>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    );
-  };
-
-  // RateTrackerSection removed per request
 
   const handleNextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % Math.ceil(learningArticles.length / 3));
@@ -892,20 +844,6 @@ const MortgagePage: React.FC = () => {
             >
               Back to Home
             </Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#1a365d',
-                color: 'white',
-                textTransform: 'none',
-                fontWeight: 600,
-                '&:hover': {
-                  backgroundColor: '#0d2340',
-                }
-              }}
-            >
-              Get pre-approved
-            </Button>
           </Box>
         </Box>
       </HeaderSection>
@@ -920,20 +858,6 @@ const MortgagePage: React.FC = () => {
             <Typography variant="h6" sx={{ mb: 3, color: '#666' }}>
               Competitive rates, clear fees, and guidance at every step. Get your DreamAbility™ to see what you can afford in real time.
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}
-              >
-                Start DreamAbility
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600 }}
-              >
-                Talk to a loan officer
-              </Button>
-            </Box>
             <Typography variant="body1" sx={{ mt: 2 }}>
               Already working with us? <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>Access your dashboard</Link>
             </Typography>
@@ -999,7 +923,7 @@ const MortgagePage: React.FC = () => {
                   fullWidth 
                   variant="contained" 
                   onClick={handleOpenDreamAbilityModal}
-                  sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}
+                  sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600, mt: 3 }}
                 >
                   Get your DreamAbility
                 </Button>
@@ -1017,9 +941,17 @@ const MortgagePage: React.FC = () => {
         <Typography variant="body1" sx={{ textAlign: 'center', color: '#666', mb: 4 }}>
           Explore programs and compare rates. Get pre-approved with confidence.
         </Typography>
-        <Box sx={{ display: 'grid', gap: 4, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: 'repeat(3,1fr)' } }}>
+        <Box sx={{ 
+          display: 'grid', 
+          gap: 4, 
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: 'repeat(3,1fr)' },
+          gridTemplateRows: { lg: 'auto auto' }
+        }}>
           {mortgageOptions.map((option, index) => (
-            <Box key={index}>
+            <Box key={index} sx={{
+              gridColumn: { lg: index < 3 ? `${index + 1}` : index === 3 ? '1' : '2' },
+              gridRow: { lg: index < 3 ? '1' : '2' }
+            }}>
               <MortgageOptionCard>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -1044,7 +976,12 @@ const MortgagePage: React.FC = () => {
                       <Typography key={idx} variant="body2" sx={{ color: '#666' }}>• {feature}</Typography>
                     ))}
                   </Box>
-                  <Button fullWidth variant="outlined" sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600, mb: 1 }}>
+                  <Button 
+                    fullWidth 
+                    variant="outlined" 
+                    onClick={handleNavigateToPreApproval}
+                    sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600, mb: 1 }}
+                  >
                     Get pre-approved
                   </Button>
                   <Link 
@@ -1065,6 +1002,29 @@ const MortgagePage: React.FC = () => {
               </MortgageOptionCard>
             </Box>
           ))}
+          {/* Talk to a loan officer button positioned below 30-Year VA and to the right of 15-Year Fixed */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            gridColumn: { lg: '3' },
+            gridRow: { lg: '2' }
+          }}>
+            <Button
+              variant="outlined"
+              sx={{ 
+                borderColor: '#1a365d', 
+                color: '#1a365d', 
+                textTransform: 'none', 
+                fontWeight: 600,
+                py: 2,
+                px: 4,
+                fontSize: '1.1rem'
+              }}
+            >
+              Talk to a loan officer
+            </Button>
+          </Box>
         </Box>
       </Container>
 
@@ -1120,7 +1080,6 @@ const MortgagePage: React.FC = () => {
         <Box sx={{ my: 4 }} />
         <PreApprovalSection />
         <Box sx={{ my: 4 }} />
-        <CreativeFinancingSection />
       </Container>
 
       {/* Learning Center Carousel */}
@@ -1135,7 +1094,8 @@ const MortgagePage: React.FC = () => {
             <Box sx={{
               width: `${SLIDE_WIDTH_PX}px`,
               mx: 'auto',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              padding: '8px' // Increased padding to prevent border cutoff
             }}>
               <Box sx={{ 
                 display: 'flex', 
@@ -1146,27 +1106,29 @@ const MortgagePage: React.FC = () => {
                 transition: 'transform 0.3s ease-in-out'
               }}>
               {learningArticles.map((article, index) => (
-                <LearningCard key={index}>
-                  <Box sx={{ 
-                    height: 160, 
-                    backgroundColor: '#f5f5f5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Typography variant="h6" sx={{ color: '#666' }}>
-                      [Article Image]
-                    </Typography>
-                  </Box>
-                  <CardContent sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '0.9rem' }}>
-                      {article.title}
-                    </Typography>
-                    <Link href={article.link} sx={{ color: '#1a365d', textDecoration: 'none', fontSize: '0.875rem' }}>
-                      Read article
-                    </Link>
-                  </CardContent>
-                </LearningCard>
+                <Box key={index} sx={{ margin: '4px' }}>
+                  <LearningCard>
+                    <Box sx={{ 
+                      height: 160, 
+                      backgroundColor: '#f5f5f5',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Typography variant="h6" sx={{ color: '#666' }}>
+                        [Article Image]
+                      </Typography>
+                    </Box>
+                    <CardContent sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '0.9rem' }}>
+                        {article.title}
+                      </Typography>
+                      <Link href={article.link} sx={{ color: '#1a365d', textDecoration: 'none', fontSize: '0.875rem' }}>
+                        Read article
+                      </Link>
+                    </CardContent>
+                  </LearningCard>
+                </Box>
               ))}
               </Box>
             </Box>
@@ -1401,6 +1363,7 @@ const MortgagePage: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"
+                onClick={handleNavigateToPreApproval}
                 sx={{
                   backgroundColor: '#1a365d',
                   color: 'white',

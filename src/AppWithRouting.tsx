@@ -29,6 +29,15 @@ import SellListSummaryPage from './pages/SellListSummaryPage';
 import SellListServicesPage from './pages/SellListServicesPage';
 import SellListPage from './pages/SellListPage';
 import MortgagePage from './pages/MortgagePage';
+import PreApprovalPage from './pages/PreApprovalPage';
+import PreApprovalBasicInfoPage from './pages/PreApprovalBasicInfoPage';
+import PreApprovalQuestionsPage from './pages/PreApprovalQuestionsPage';
+import PreApprovalHomePreferencesPage from './pages/PreApprovalHomePreferencesPage';
+import PreApprovalFinancialPage from './pages/PreApprovalFinancialPage';
+import PreApprovalPropertyFinancialPage from './pages/PreApprovalPropertyFinancialPage';
+import PreApprovalAdditionalQuestionsPage from './pages/PreApprovalAdditionalQuestionsPage';
+import PreApprovalSummaryPage from './pages/PreApprovalSummaryPage';
+import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
 
 const theme = createTheme({
   palette: {
@@ -86,6 +95,15 @@ function App() {
           <Route path="/sell-summary" element={<SellListSummaryPage />} />
           <Route path="/sell-services" element={<SellListServicesPage />} />
           <Route path="/mortgage" element={<MortgagePage />} />
+          <Route path="/pre-approval" element={<PreApprovalPage />} />
+          <Route path="/pre-approval-basic-info" element={<PreApprovalBasicInfoPage />} />
+          <Route path="/pre-approval-questions" element={<PreApprovalQuestionsPage />} />
+          <Route path="/pre-approval-home-preferences" element={<PreApprovalHomePreferencesPage />} />
+          <Route path="/pre-approval-financial" element={<PreApprovalFinancialPage />} />
+          <Route path="/pre-approval-property-financial" element={<PreApprovalPropertyFinancialPage />} />
+          <Route path="/pre-approval-additional-questions" element={<PreApprovalAdditionalQuestionsPage />} />
+          <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
+          <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

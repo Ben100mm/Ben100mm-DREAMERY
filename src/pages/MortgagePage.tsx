@@ -1048,9 +1048,9 @@ const MortgagePage: React.FC = () => {
 
       {/* Investment Tools Sections */}
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <MortgageCalculatorSection />
-        <Box sx={{ my: 4 }} />
         <LenderComparisonSection />
+        <Box sx={{ my: 4 }} />
+        <MortgageCalculatorSection />
         <Box sx={{ my: 4 }} />
         <PreApprovalSection />
         <Box sx={{ my: 4 }} />

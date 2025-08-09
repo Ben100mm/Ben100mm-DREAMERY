@@ -878,59 +878,57 @@ const MortgagePage: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#1a365d', fontWeight: 700 }}>
                   Your DreamAbility™ today
                 </Typography>
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                  <Grid item xs={6} sx={{ textAlign: 'center' }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2 }}>
+                  <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
                       ${LOAN_AMOUNT.toLocaleString()}
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#666' }}>
                       Target price
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} sx={{ textAlign: 'center' }}>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
                       ${LOAN_AMOUNT.toLocaleString()}
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#666' }}>
                       DreamAbility™
                     </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box sx={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
-                      columnGap: 4,
-                      alignItems: 'center',
-                      mt: 2,
-                      width: '100%'
-                    }}>
-                      <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
-                          ${Math.round(mortgageOptions[0].monthlyPayment).toLocaleString()}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
-                          Mo. payment
-                        </Typography>
-                      </Box>
-                      <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
-                          {mortgageOptions[0].rate.toFixed(3)}%
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
-                          Rate
-                        </Typography>
-                      </Box>
-                      <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
-                          {mortgageOptions[0].apr.toFixed(3)}%
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
-                          APR
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  columnGap: 4,
+                  alignItems: 'center',
+                  mt: 2,
+                  width: '100%'
+                }}>
+                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                      ${Math.round(mortgageOptions[0].monthlyPayment).toLocaleString()}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                      Mo. payment
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                      {mortgageOptions[0].rate.toFixed(3)}%
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                      Rate
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                      {mortgageOptions[0].apr.toFixed(3)}%
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                      APR
+                    </Typography>
+                  </Box>
+                </Box>
                 <Button 
                   fullWidth 
                   variant="contained" 
@@ -953,9 +951,9 @@ const MortgagePage: React.FC = () => {
         <Typography variant="body1" sx={{ textAlign: 'center', color: '#666', mb: 4 }}>
           Explore programs and compare rates. Get pre-approved with confidence.
         </Typography>
-        <Grid container spacing={4}>
+        <Box sx={{ display: 'grid', gap: 4, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: 'repeat(3,1fr)' } }}>
           {mortgageOptions.map((option, index) => (
-            <Grid item xs={12} md={6} lg={4} key={index}>
+            <Box key={index}>
               <MortgageOptionCard>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -999,9 +997,9 @@ const MortgagePage: React.FC = () => {
                   </Link>
                 </CardContent>
               </MortgageOptionCard>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Container>
 
       {/* Why Choose Us Section removed per request */}
@@ -1030,8 +1028,8 @@ const MortgagePage: React.FC = () => {
 
       {/* Personalized CTA */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Box sx={{ display: 'grid', gap: 6, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, alignItems: 'center' }}>
+          <Box>
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
               Get a personalized rate in minutes
             </Typography>
@@ -1041,11 +1039,11 @@ const MortgagePage: React.FC = () => {
             <Button variant="contained" sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}>
               Get your personalized rate
             </Button>
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Box>
+          <Box>
             <Box sx={{ width: '100%', height: 260, borderRadius: 2, backgroundColor: '#f5f5f5' }} />
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
 
       {/* Investment Tools Sections */}
@@ -1173,8 +1171,8 @@ const MortgagePage: React.FC = () => {
       {/* Footer */}
       <Box sx={{ backgroundColor: '#f5f5f5', py: 3, minHeight: '160px' }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
+          <Box sx={{ display: 'grid', gap: 4, gridTemplateColumns: { xs: '1fr', md: 'repeat(3,1fr)' } }}>
+            <Box>
               <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
                 <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>
                   Terms of use
@@ -1185,8 +1183,8 @@ const MortgagePage: React.FC = () => {
                   Privacy policy
                 </Link>
               </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
+            </Box>
+            <Box>
               <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
                 Dreamery Home Loans
               </Typography>
@@ -1199,8 +1197,8 @@ const MortgagePage: React.FC = () => {
               <Typography variant="body2" sx={{ color: '#666' }}>
                 855-372-6337
               </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
+            </Box>
+            <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <HomeIcon sx={{ mr: 1, color: '#1a365d' }} />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -1219,8 +1217,8 @@ const MortgagePage: React.FC = () => {
               <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none', fontSize: '0.875rem' }}>
                 www.nmlsconsumeraccess.org
               </Link>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
           
           <Divider sx={{ my: 3 }} />
           
@@ -1407,9 +1405,9 @@ const MortgagePage: React.FC = () => {
             </Typography>
 
             {/* Form */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, mb: 4 }}>
               {/* Left Column */}
-              <Grid item xs={12} md={6}>
+              <Box>
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
                     Location
@@ -1560,10 +1558,10 @@ const MortgagePage: React.FC = () => {
                     At least $1,500
                   </Typography>
                 </Box>
-              </Grid>
+              </Box>
 
               {/* Right Column */}
-              <Grid item xs={12} md={6}>
+              <Box>
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
                     Credit score
@@ -1633,8 +1631,8 @@ const MortgagePage: React.FC = () => {
                     Loans, credit cards, alimony
                   </Typography>
                 </Box>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
             {/* Action Button */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>

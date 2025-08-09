@@ -545,7 +545,6 @@ const MortgagePage: React.FC = () => {
                 <Tab label="Seller financing" />
                 <Tab label="Subject-To Existing Mortgage" />
                 <Tab label="Co-buying" />
-                <Tab label="Bridge-to-Perm" />
               </Tabs>
               <Typography>Seller financing templates and guides.</Typography>
             </Box>

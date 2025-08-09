@@ -506,20 +506,50 @@ const MortgagePage: React.FC = () => {
 
   const CreativeFinancingSection: React.FC = () => {
     const [tab, setTab] = useState(0);
+    // Simple calculator state mirroring Mortgage Calculator fields
+    const [purchase, setPurchase] = useState(500000);
+    const [rehab, setRehab] = useState(40000);
+    const [closing, setClosing] = useState(15000);
+    const [downPct, setDownPct] = useState(20);
+    const [rate, setRate] = useState(9.5);
+    const [term, setTerm] = useState(30);
+
+    const loanAmount = Math.max(0, (purchase + rehab + closing) - (purchase * (downPct / 100)));
+    const monthly = calculateMonthlyPayment(loanAmount, rate, term);
+
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Creative Financing Options</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Creative Financing</Typography>
           <Tabs value={tab} onChange={(_, v)=>setTab(v)} sx={{ mb: 2 }}>
-            <Tab label="Seller financing" />
-            <Tab label="Sub2" />
-            <Tab label="JV Capital" />
-            <Tab label="Bridge-to-Perm" />
+            <Tab label="Calculator" />
+            <Tab label="Financing Options" />
           </Tabs>
-          {tab===0 && <Typography>Seller financing templates and guides.</Typography>}
-          {tab===1 && <Typography>Subject-to lender directory and how-to.</Typography>}
-          {tab===2 && <Typography>Matchmaking for JV equity partners.</Typography>}
-          {tab===3 && <Typography>Bridge-to-perm programs and pathways.</Typography>}
+          {tab===0 && (
+            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' } }}>
+              <TextField fullWidth label="Purchase" type="number" value={purchase} onChange={(e)=>setPurchase(Number(e.target.value))} />
+              <TextField fullWidth label="Rehab" type="number" value={rehab} onChange={(e)=>setRehab(Number(e.target.value))} />
+              <TextField fullWidth label="Closing" type="number" value={closing} onChange={(e)=>setClosing(Number(e.target.value))} />
+              <TextField fullWidth label="Down %" type="number" value={downPct} onChange={(e)=>setDownPct(Number(e.target.value))} />
+              <TextField fullWidth label="Rate %" type="number" value={rate} onChange={(e)=>setRate(Number(e.target.value))} />
+              <TextField fullWidth label="Term (yrs)" type="number" value={term} onChange={(e)=>setTerm(Number(e.target.value))} />
+              <Box sx={{ gridColumn: '1 / -1', p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+                <Typography>Loan amount: ${loanAmount.toLocaleString()}</Typography>
+                <Typography>Estimated monthly: ${Math.round(monthly).toLocaleString()}</Typography>
+              </Box>
+            </Box>
+          )}
+          {tab===1 && (
+            <Box>
+              <Tabs value={0} sx={{ mb: 2 }} TabIndicatorProps={{ style: { display: 'none' } }}>
+                <Tab label="Seller financing" />
+                <Tab label="Sub2" />
+                <Tab label="JV Capital" />
+                <Tab label="Bridge-to-Perm" />
+              </Tabs>
+              <Typography>Seller financing templates and guides.</Typography>
+            </Box>
+          )}
         </CardContent>
       </Card>
     );

@@ -525,27 +525,7 @@ const MortgagePage: React.FC = () => {
     );
   };
 
-  const RateTrackerSection: React.FC = () => {
-    const raw = useCsvPoll<any>(process.env.REACT_APP_AT_RATES_CSV, 60000, []);
-    const rates = raw.map((r:any) => ({ date: r.date, dscr: Number(r.dscr), bridge: Number(r.bridge) }));
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Rate Tracker</Typography>
-          <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>Daily mortgage rate feed (DSCR & Bridge)</Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {rates.map((r:any, i:number) => (
-              <Box key={i} sx={{ p: 1.5, border: '1px solid #e0e0e0', borderRadius: 1, minWidth: 120 }}>
-                <Typography sx={{ fontWeight: 600 }}>{r.date}</Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>DSCR {isNaN(r.dscr)?'-':r.dscr.toFixed(2)}%</Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>Bridge {isNaN(r.bridge)?'-':r.bridge.toFixed(2)}%</Typography>
-              </Box>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-    );
-  };
+  // RateTrackerSection removed per request
 
   const handleNextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % Math.ceil(learningArticles.length / 3));
@@ -1055,8 +1035,6 @@ const MortgagePage: React.FC = () => {
         <PreApprovalSection />
         <Box sx={{ my: 4 }} />
         <CreativeFinancingSection />
-        <Box sx={{ my: 4 }} />
-        <RateTrackerSection />
       </Container>
 
       {/* Learning Center Carousel */}

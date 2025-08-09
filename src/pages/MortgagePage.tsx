@@ -543,7 +543,7 @@ const MortgagePage: React.FC = () => {
             <Box>
               <Tabs value={0} sx={{ mb: 2 }} TabIndicatorProps={{ style: { display: 'none' } }}>
                 <Tab label="Seller financing" />
-                <Tab label="Sub2" />
+                <Tab label="Subject-To Existing Mortgage" />
                 <Tab label="JV Capital" />
                 <Tab label="Bridge-to-Perm" />
               </Tabs>

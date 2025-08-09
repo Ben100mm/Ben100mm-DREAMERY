@@ -407,7 +407,7 @@ const MortgagePage: React.FC = () => {
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Compare Lenders</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Compare Other Lenders</Typography>
           <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, mb: 2 }}>
             <Select fullWidth value={type} onChange={(e)=>setType(e.target.value as any)}>
               <MenuItem value="dscr">DSCR</MenuItem>

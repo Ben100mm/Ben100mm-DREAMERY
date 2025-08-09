@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -391,6 +391,8 @@ const MortgagePage: React.FC = () => {
     const [type, setType] = useState<'dscr'|'fixflip'|'bridge'|'conventional'|'hard'>('dscr');
     const [maxRate, setMaxRate] = useState<number>(12);
     const [maxPoints, setMaxPoints] = useState<number>(4);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [uploadedRows, setUploadedRows] = useState<LenderRow[] | null>(null);
     const raw = useCsvPoll<any>(process.env.REACT_APP_AT_LENDERS_CSV, 60000, []);
     const lenders: LenderRow[] = raw.map((r: any) => {
       const m: Record<string, string> = Object.entries(r).reduce((acc: Record<string,string>, [k, v]) => {
@@ -411,7 +413,42 @@ const MortgagePage: React.FC = () => {
         applyUrl: m['applyurl'] || get('applyurl')
       };
     });
-    const filtered = lenders.filter(l => (!type || l.type === type) && (isNaN(maxRate) || l.rate <= maxRate) && (isNaN(maxPoints) || l.points <= maxPoints));
+    const source = uploadedRows ?? lenders;
+    const filtered = source.filter(l => (!type || l.type === type) && (isNaN(maxRate) || l.rate <= maxRate) && (isNaN(maxPoints) || l.points <= maxPoints));
+
+    const handleUploadCsv = (text: string) => {
+      try {
+        const rows = parseCsv(text);
+        const mapped: LenderRow[] = rows.map((r: any) => {
+          const m: Record<string, string> = Object.entries(r).reduce((acc: Record<string,string>, [k, v]) => {
+            const key = String(k).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            acc[key] = String(v);
+            return acc;
+          }, {});
+          const get = (key: string) => m[key] ?? '';
+          const num = (key: string) => Number(get(key));
+          return {
+            name: get('name'),
+            type: (get('type') || '').toLowerCase(),
+            rate: num('rate'),
+            term: num('term'),
+            points: num('points'),
+            dscrReq: m['dscrrequirement'] ? Number(m['dscrrequirement']) : undefined,
+            prepay: get('prepay'),
+            applyUrl: m['applyurl'] || get('applyurl')
+          };
+        });
+        setUploadedRows(mapped);
+      } catch {}
+    };
+
+    const onChooseFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      handleUploadCsv(text);
+      e.target.value = '';
+    };
 
     return (
       <Card>
@@ -427,6 +464,17 @@ const MortgagePage: React.FC = () => {
             </Select>
             <TextField fullWidth label="Max rate %" type="number" value={maxRate} onChange={(e)=>setMaxRate(Number(e.target.value))} />
             <TextField fullWidth label="Max points" type="number" value={maxPoints} onChange={(e)=>setMaxPoints(Number(e.target.value))} />
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+            <Button variant="outlined" onClick={() => fileInputRef.current?.click()} sx={{ borderColor: '#1a365d', color: '#1a365d' }}>
+              Upload lenders CSV
+            </Button>
+            {uploadedRows && (
+              <Typography variant="caption" sx={{ color: '#666' }}>
+                Loaded {uploadedRows.length} rows from CSV (overrides live feed until refresh)
+              </Typography>
+            )}
+            <input ref={fileInputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={onChooseFile} />
           </Box>
           <Table size="small">
             <TableHead>

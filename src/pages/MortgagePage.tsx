@@ -392,16 +392,25 @@ const MortgagePage: React.FC = () => {
     const [maxRate, setMaxRate] = useState<number>(12);
     const [maxPoints, setMaxPoints] = useState<number>(4);
     const raw = useCsvPoll<any>(process.env.REACT_APP_AT_LENDERS_CSV, 60000, []);
-    const lenders: LenderRow[] = raw.map((r: any) => ({
-      name: r.name,
-      type: (r.type || '').toLowerCase(),
-      rate: Number(r.rate),
-      term: Number(r.term),
-      points: Number(r.points),
-      dscrReq: r.dscrReq ? Number(r.dscrReq) : undefined,
-      prepay: r.prepay,
-      applyUrl: r.applyUrl
-    }));
+    const lenders: LenderRow[] = raw.map((r: any) => {
+      const m: Record<string, string> = Object.entries(r).reduce((acc: Record<string,string>, [k, v]) => {
+        const key = k.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        acc[key] = String(v);
+        return acc;
+      }, {});
+      const get = (key: string) => m[key] ?? '';
+      const num = (key: string) => Number(get(key));
+      return {
+        name: get('name'),
+        type: (get('type') || '').toLowerCase(),
+        rate: num('rate'),
+        term: num('term'),
+        points: num('points'),
+        dscrReq: m['dscrrequirement'] ? Number(m['dscrrequirement']) : undefined,
+        prepay: get('prepay'),
+        applyUrl: m['applyurl'] || get('applyurl')
+      };
+    });
     const filtered = lenders.filter(l => (!type || l.type === type) && (isNaN(maxRate) || l.rate <= maxRate) && (isNaN(maxPoints) || l.points <= maxPoints));
 
     return (

@@ -38,6 +38,7 @@ import PreApprovalPropertyFinancialPage from './pages/PreApprovalPropertyFinanci
 import PreApprovalAdditionalQuestionsPage from './pages/PreApprovalAdditionalQuestionsPage';
 import PreApprovalSummaryPage from './pages/PreApprovalSummaryPage';
 import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
+import UnderwritePage from './pages/UnderwritePage';
 
 const theme = createTheme({
   palette: {
@@ -104,6 +105,7 @@ function App() {
           <Route path="/pre-approval-additional-questions" element={<PreApprovalAdditionalQuestionsPage />} />
           <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
           <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
+          <Route path="/underwrite" element={<UnderwritePage />} />
         </Routes>
       </Router>
     </ThemeProvider>

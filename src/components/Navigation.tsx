@@ -70,17 +70,18 @@ const Navigation: React.FC = () => {
   ];
 
   const handleNavClick = (path: string) => {
-    if (path === '/buy') {
-      navigate('/buy');
-    } else if (path === '/rent') {
-      navigate('/rent');
-    } else if (path === '/sell') {
-      navigate('/sell');
-    } else if (path === '/mortgage') {
-      navigate('/mortgage');
-    } else {
-      // For other navigation items, you can add routes later
-      console.log(`Navigating to ${path}`);
+    // Navigate to any declared route; non-declared paths will log for now
+    switch (path) {
+      case '/buy':
+      case '/rent':
+      case '/sell':
+      case '/mortgage':
+      case '/underwrite':
+        navigate(path);
+        break;
+      default:
+        console.log(`Route not implemented yet: ${path}`);
+        break;
     }
   };
 

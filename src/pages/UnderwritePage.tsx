@@ -939,8 +939,7 @@ const UnderwritePage: React.FC = () => {
               transition: 'all 0.3s ease-in-out',
               minHeight: 'fit-content',
               gridAutoRows: 'min-content',
-              alignContent: 'start',
-              order: 3
+              alignContent: 'start'
             }}>
               <FormControl fullWidth sx={{ minHeight: '56px' }}>
                 <InputLabel>Property Type</InputLabel>

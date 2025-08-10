@@ -80,7 +80,7 @@ const Navigation: React.FC = () => {
         navigate(path);
         break;
       default:
-        console.log(`Route not implemented yet: ${path}`);
+        // Route not implemented yet
         break;
     }
   };
@@ -90,7 +90,7 @@ const Navigation: React.FC = () => {
       <NavList>
         {navItems.map((item, index) => (
           <NavItem key={index}>
-            <a onClick={() => handleNavClick(item.path)}>
+            <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick(item.path); }}>
               {item.name}
             </a>
           </NavItem>

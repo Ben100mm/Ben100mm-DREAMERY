@@ -29,3 +29,22 @@ body {
   height: 100%;
   position: relative;
 }
+
+/* Smooth transitions for layout stability */
+.MuiAccordion-root {
+  transition: all 0.3s ease-in-out !important;
+}
+
+.MuiAccordionDetails-root {
+  transition: all 0.3s ease-in-out !important;
+}
+
+/* Prevent layout shifts */
+.MuiBox-root {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Smooth opacity and transform transitions */
+[data-transition="true"] {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+}

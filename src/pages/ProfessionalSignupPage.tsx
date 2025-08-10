@@ -489,7 +489,7 @@ const ProfessionalSignupPage: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <TextField
                     size="small"
-                    placeholder="XXX"
+                    placeholder="Area"
                     value={phoneArea}
                     onChange={(e) => setPhoneArea(e.target.value)}
                     sx={{
@@ -510,7 +510,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   />
                   <TextField
                     size="small"
-                    placeholder="XXX"
+                    placeholder="Prefix"
                     value={phonePrefix}
                     onChange={(e) => setPhonePrefix(e.target.value)}
                     sx={{
@@ -531,7 +531,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   />
                   <TextField
                     size="small"
-                    placeholder="XXXX"
+                    placeholder="Line"
                     value={phoneLine}
                     onChange={(e) => setPhoneLine(e.target.value)}
                     sx={{
@@ -556,7 +556,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     </Typography>
                     <TextField
                       size="small"
-                      placeholder="XXXXX"
+                      placeholder="Ext"
                       value={extension}
                       onChange={(e) => setExtension(e.target.value)}
                       sx={{

@@ -5,15 +5,11 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
   Container,
-  Chip,
-  Avatar,
   Divider,
   Link,
   IconButton,
-  Tabs,
-  Tab,
+  Chip,
   TextField,
   Select,
   MenuItem,
@@ -27,16 +23,11 @@ import {
   LinearProgress
 } from '@mui/material';
 import {
-  Phone as PhoneIcon,
-  Star as StarIcon,
-  ArrowForward as ArrowForwardIcon,
-  CheckCircle as CheckCircleIcon,
   Calculate as CalculateIcon,
   Description as DescriptionIcon,
   Flag as FlagIcon,
   AttachMoney as MoneyIcon,
   Home as HomeIcon,
-  School as SchoolIcon,
   Close as CloseIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -76,13 +67,6 @@ const HeaderSection = styled.div`
   z-index: 100;
 `;
 
-const HeroSection = styled.div`
-  background: white;
-  color: #1a365d;
-  padding: 3rem 1.5rem;
-  text-align: center;
-`;
-
 const BuyAbilityCard = styled(Card)`
   background: white;
   border-radius: 16px;
@@ -91,31 +75,6 @@ const BuyAbilityCard = styled(Card)`
   max-width: 400px;
   position: relative;
   z-index: 10;
-`;
-
-const FeatureCard = styled(Card)`
-  height: 100%;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-4px);
-  }
-`;
-
-const ProcessSection = styled.div`
-  background: white;
-  color: #1a365d;
-  padding: 3rem 1.5rem;
-`;
-
-const ProcessCard = styled(Card)`
-  background: white;
-  color: #333;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  border-left: 4px solid #1a365d;
 `;
 
 const MortgageOptionCard = styled(Card)`
@@ -129,16 +88,7 @@ const MortgageOptionCard = styled(Card)`
   }
 `;
 
-const TestimonialCard = styled(Card)`
-  background: ${props => props.color || '#1a365d'};
-  color: white;
-  border-radius: 12px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-`;
+
 
 const LearningCard = styled(Card)`
   width: 320px;
@@ -179,34 +129,7 @@ const RightCol = styled.div`
   top: 88px; /* below sticky header */
 `;
 
-const TimelineWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-`;
 
-const TimelineDot = styled.div`
-  width: 36px;
-  height: 36px;
-  background: #1a365d;
-  color: white;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  flex: 0 0 auto;
-`;
-
-const TimelineCard = styled(Card)`
-  width: 100%;
-  height: 80px;
-  display: flex;
-  align-items: center;
-`;
 
 const MortgagePage: React.FC = () => {
   const navigate = useNavigate();
@@ -236,9 +159,6 @@ const MortgagePage: React.FC = () => {
   // Mortgage calculation constants
   const LOAN_AMOUNT = 1000000; // $1,000,000
   const CLOSING_COSTS = 15000; // $15,000 in closing costs
-  const PROPERTY_TAX_RATE = 0.012; // 1.2% annual property tax
-  const INSURANCE_RATE = 0.005; // 0.5% annual insurance
-  const PMI_RATE = 0.008; // 0.8% annual PMI (for FHA)
 
   // Mortgage payment calculation function
   const calculateMonthlyPayment = (principal: number, annualRate: number, years: number) => {
@@ -250,7 +170,6 @@ const MortgagePage: React.FC = () => {
 
   // APR calculation function
   const calculateAPR = (rate: number, points: number, years: number, loanAmount: number) => {
-    const monthlyRate = rate / 12 / 100;
     const totalPayments = years * 12;
     const pointsCost = (points / 100) * loanAmount;
     const totalCost = pointsCost + CLOSING_COSTS;
@@ -336,7 +255,7 @@ const MortgagePage: React.FC = () => {
     const [rate, setRate] = useState(6.25);
     const [term, setTerm] = useState(30);
 
-    const prefills = useCsvPoll<any>(process.env.REACT_APP_AT_RATES_CSV, 60000, []);
+
     const monthlyInsurance = (purchase * 0.003) / 12;
     const monthlyTaxes = (purchase * 0.012) / 12;
     const rent = 3800; // placeholder until RentCast is wired
@@ -350,34 +269,186 @@ const MortgagePage: React.FC = () => {
     const ltc = (purchase + rehab + closing) ? loanAmount / (purchase + rehab + closing) : 0;
 
     return (
-      <Card>
-        <CardContent>
+      <Card sx={{ 
+        minHeight: 'fit-content', 
+        overflow: 'hidden',
+        transition: 'all 0.2s ease-in-out'
+      }}>
+        <CardContent sx={{ 
+          minHeight: 'fit-content',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Mortgage Calculator</Typography>
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
-            <TextField fullWidth label="Property address" value={address} onChange={(e)=>setAddress(e.target.value)} />
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' } }}>
-              <TextField fullWidth label="Purchase" type="number" value={purchase} onChange={(e)=>setPurchase(Number(e.target.value))} />
-              <TextField fullWidth label="Rehab" type="number" value={rehab} onChange={(e)=>setRehab(Number(e.target.value))} />
-              <TextField fullWidth label="Closing" type="number" value={closing} onChange={(e)=>setClosing(Number(e.target.value))} />
-              <TextField fullWidth label="Down %" type="number" value={downPct} onChange={(e)=>setDownPct(Number(e.target.value))} />
-              <TextField fullWidth label="Rate %" type="number" value={rate} onChange={(e)=>setRate(Number(e.target.value))} />
-              <TextField fullWidth label="Term (yrs)" type="number" value={term} onChange={(e)=>setTerm(Number(e.target.value))} />
+          <Box sx={{ 
+            display: 'grid', 
+            gap: 2, 
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+            minHeight: 'fit-content',
+            gridAutoRows: 'min-content',
+            alignContent: 'start'
+          }}>
+                          <TextField 
+                fullWidth 
+                label="Property address" 
+                value={address} 
+                onChange={(e)=>setAddress(e.target.value)}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+            <Box sx={{ 
+              display: 'grid', 
+              gap: 2, 
+              gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
+              minHeight: 'fit-content',
+              gridAutoRows: 'min-content',
+              alignContent: 'start'
+            }}>
+              <TextField 
+                fullWidth 
+                label="Purchase" 
+                type="number" 
+                value={purchase} 
+                onChange={(e)=>setPurchase(Number(e.target.value))}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+              <TextField 
+                fullWidth 
+                label="Rehab" 
+                type="number" 
+                value={rehab} 
+                onChange={(e)=>setRehab(Number(e.target.value))}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+              <TextField 
+                fullWidth 
+                label="Closing" 
+                type="number" 
+                value={closing} 
+                onChange={(e)=>setClosing(Number(e.target.value))}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+              <TextField 
+                fullWidth 
+                label="Down %" 
+                type="number" 
+                value={downPct} 
+                onChange={(e)=>setDownPct(Number(e.target.value))}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+              <TextField 
+                fullWidth 
+                label="Rate %" 
+                type="number" 
+                value={rate} 
+                onChange={(e)=>setRate(Number(e.target.value))}
+                sx={{ 
+                  minHeight: '56px',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
+              <TextField 
+                fullWidth 
+                label="Term (yrs)" 
+                type="number" 
+                value={term} 
+                onChange={(e)=>setTerm(Number(e.target.value))}
+                sx={{ 
+                  minHeight: 'fit-content',
+                  '& .MuiInputBase-root': {
+                    minHeight: '56px'
+                  }
+                }}
+              />
             </Box>
 
-            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1, minHeight: 'fit-content' }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Auto data</Typography>
-              <Box sx={{ display: 'grid', gap: 1, gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr' } }}>
-                <TextField fullWidth label="Monthly rent" type="number" value={rent} />
-                <TextField fullWidth label="Monthly expenses" type="number" value={expenses} />
+              <Box sx={{ 
+                display: 'grid', 
+                gap: 1, 
+                gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr' }, 
+                minHeight: 'fit-content',
+                gridAutoRows: 'min-content',
+                alignContent: 'start'
+              }}>
+                <TextField 
+                  fullWidth 
+                  label="Monthly rent" 
+                  type="number" 
+                  value={rent}
+                  sx={{ 
+                    minHeight: '56px',
+                    '& .MuiInputBase-root': {
+                      minHeight: '56px'
+                    }
+                  }}
+                />
+                <TextField 
+                  fullWidth 
+                  label="Monthly expenses" 
+                  type="number" 
+                  value={expenses}
+                  sx={{ 
+                    minHeight: '56px',
+                    '& .MuiInputBase-root': {
+                      minHeight: '56px'
+                    }
+                  }}
+                />
                 <Box sx={{ gridColumn: '1 / -1' }}>
-                  <TextField fullWidth label="ARV (from comps)" type="number" value={arv} />
+                  <TextField 
+                    fullWidth 
+                    label="ARV (from comps)" 
+                    type="number" 
+                    value={arv}
+                    sx={{ 
+                      minHeight: '56px',
+                      '& .MuiInputBase-root': {
+                        minHeight: '56px'
+                      }
+                    }}
+                  />
                 </Box>
               </Box>
             </Box>
 
-            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1, minHeight: 'fit-content' }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Results</Typography>
-              <Box sx={{ display: 'grid', gap: 1, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' } }}>
+              <Box sx={{ 
+                display: 'grid', 
+                gap: 1, 
+                gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
+                minHeight: 'fit-content',
+                gridAutoRows: 'min-content',
+                alignContent: 'start'
+              }}>
                 <Typography>Loan: ${loanAmount.toLocaleString()}</Typography>
                 <Typography>Debt svc: ${Math.round(debtService).toLocaleString()}/mo</Typography>
                 <Typography>DSCR: {dscr.toFixed(2)}</Typography>
@@ -662,7 +733,6 @@ const MortgagePage: React.FC = () => {
   const handleCalculateDreamAbility = () => {
     // Calculate DreamAbility based on form inputs
     // This would typically involve complex mortgage calculations
-    console.log('Calculating DreamAbility with:', dreamAbilityForm);
     // Close the form modal and show results
     setShowDreamAbilityModal(false);
     setShowDreamAbilityResults(true);
@@ -759,20 +829,7 @@ const MortgagePage: React.FC = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "As a first time home buyer, my loan officer made me feel at ease and welcomed all questions I had with so much patience.",
-      author: "Michelle",
-      location: "Arizona",
-      color: "#9c27b0"
-    },
-    {
-      quote: "My loan officer was incredibly professional, knowledgeable, and genuinely committed to helping me find the best financial solution.",
-      author: "Ruslan",
-      location: "New Jersey",
-      color: "#4caf50"
-    }
-  ];
+
 
   const learningArticles = [
     {
@@ -1031,26 +1088,7 @@ const MortgagePage: React.FC = () => {
       {/* Why Choose Us Section removed per request */}
 
       {/* Vertical Timeline */}
-      <Container maxWidth="lg" sx={{ mb: 6 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 4, color: '#1a365d', textAlign: 'center' }}>
-          Your path to homeownership
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {processSteps.map((s, i) => (
-            <TimelineCard key={i}>
-              <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 3, width: '100%', py: 2 }}>
-                <TimelineDot>{s.step}</TimelineDot>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>{s.title}</Typography>
-                  <Typography variant="body2" sx={{ color: '#666' }}>{s.description}</Typography>
-                </Box>
-              </CardContent>
-            </TimelineCard>
-          ))}
-        </Box>
-      </Container>
 
-      {/* Process Steps Section removed - duplicate of horizontal timeline */}
 
       {/* Personalized CTA */}
       <Container maxWidth="lg" sx={{ py: 6 }}>

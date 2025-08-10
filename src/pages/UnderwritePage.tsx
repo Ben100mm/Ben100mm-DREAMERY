@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -23,27 +23,34 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
-  Tooltip,
   ToggleButton,
   ToggleButtonGroup,
+  InputAdornment,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { styled } from '@mui/material/styles';
+import {
+  pmt,
+  totalMonthlyDebtService,
+  computeFixedMonthlyOps,
+  computeVariableMonthlyOpsPct,
+  breakEvenOccupancy as financeBreakEvenOccupancy,
+  remainingPrincipalAfterPayments,
+  brrrrAnnualCashFlowPostRefi,
+} from '../utils/finance';
 
 // Updated type definitions
 type PropertyType = 'Single Family' | 'Multi Family / Hospitality' | 'Hotel';
 type OperationType = 'Buy & Hold' | 'Fix & Flip' | 'Short Term Rental' | 'Rental Arbitrage' | 'BRRRR';
 type OfferType =
   | 'Cash'
+  | 'FHA'
   | 'Seller Finance'
   | 'Conventional'
   | 'SBA'
   | 'DSCR'
   | 'Hard Money'
   | 'Private'
+  | 'Line of Credit'
   | 'Subject To Existing Mortgage'
   | 'Hybrid';
 
@@ -57,6 +64,8 @@ interface LoanTerms {
   balloonDue: number;
   amortizationAmount: number;
   amortizationYears: number;
+  closingCosts?: number;
+  rehabCosts?: number;
 }
 
 interface SubjectToLoan {
@@ -86,6 +95,7 @@ interface HybridInputs {
   totalLoanBalance: number;
   totalMonthlyPayment: number;
   totalAnnualPayment: number;
+  loanBalance?: number;
 }
 
 interface FixFlipInputs {
@@ -174,6 +184,7 @@ interface OperatingInputsCommon {
   management: number;
   capEx: number;
   opEx: number;
+  utilitiesPct?: number;
   expensesWithoutMortgage: number;
   monthlyExpenses: number;
   monthlyExpensesPercent: number;
@@ -213,6 +224,7 @@ interface DealState {
   reservesMonths: number;
   reservesFixedAmount: number;
   includeVariableExpensesInBreakEven: boolean;
+  includeVariablePctInBreakeven?: boolean;
 }
 
 function parseCurrency(input: string): number {
@@ -224,6 +236,15 @@ function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
     Number.isFinite(value) ? value : 0,
   );
+}
+
+// Returns today's date formatted for an HTML input[type="date"] (YYYY-MM-DD) using local time
+function currentDateInputValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function monthlyPayment(loanAmount: number, annualRatePct: number, years: number, interestOnly: boolean): number {
@@ -360,22 +381,48 @@ function computeBRRRRCalculations(state: DealState): {
   const refinanceLtv = state.brrrr?.refinanceLtv ?? 0;
   const originalCashInvested = state.brrrr?.originalCashInvested ?? 0;
   const newMonthlyPayment = state.brrrr?.newMonthlyPayment ?? 0;
-  
-  // Calculate Cash-Out Amount
+
+  // Cash-out amount based on LTV (simplified). Payoff logic can be extended with remaining principal if needed.
   const refinanceLoan = arv * (refinanceLtv / 100);
   const cashOutAmount = Math.max(0, refinanceLoan - originalCashInvested);
-  
-  // Calculate Remaining Cash in Deal
+
+  // Remaining cash in deal after refi proceeds
   const remainingCashInDeal = Math.max(0, originalCashInvested - cashOutAmount);
-  
-  // Calculate New Cash-on-Cash Return
-  const annualCashFlow = (state.ops.expensesWithoutMortgage ?? 0) * 12 - (newMonthlyPayment * 12);
+
+  // Compute post-refi annual cash flow using current operating assumptions
+  const monthlyRevenue = computeIncome(state);
+  const fixedMonthlyOps = computeFixedMonthlyOps({
+    taxes: state.ops.taxes,
+    insurance: state.ops.insurance,
+    hoa: state.ops.hoa,
+    gasElectric: state.ops.gasElectric,
+    internet: state.ops.internet,
+    waterSewer: state.ops.waterSewer,
+    heat: state.ops.heat,
+    lawnSnow: state.ops.lawnSnow,
+    phone: state.ops.phoneBill,
+    cleaner: state.ops.cleaner,
+    extras: state.ops.extra,
+  });
+  const variablePct = computeVariableMonthlyOpsPct({
+    mgmtPct: (state.ops.management || 0) / 100,
+    repairsPct: (state.ops.maintenance || 0) / 100,
+    utilitiesPct: (state.ops.utilitiesPct || 0) / 100,
+    capExPct: (state.ops.capEx || 0) / 100,
+    opExPct: (state.ops.opEx || 0) / 100,
+  });
+  const annualCashFlow = brrrrAnnualCashFlowPostRefi({
+    monthlyRevenue,
+    fixedMonthlyOps,
+    variablePct,
+    newLoanMonthly: newMonthlyPayment,
+  });
   const newCashOnCashReturn = remainingCashInDeal > 0 ? (annualCashFlow / remainingCashInDeal) * 100 : 0;
-  
+
   return {
     cashOutAmount,
     remainingCashInDeal,
-    newCashOnCashReturn
+    newCashOnCashReturn,
   };
 }
 
@@ -387,7 +434,7 @@ const defaultState: DealState = {
   agentOwner: '',
   call: '',
   email: '',
-  analysisDate: '',
+  analysisDate: currentDateInputValue(),
   listedPrice: 160000,
   purchasePrice: 160000,
   percentageDifference: 0,
@@ -401,6 +448,8 @@ const defaultState: DealState = {
     balloonDue: 0,
     amortizationAmount: 128000,
     amortizationYears: 50,
+    closingCosts: 0,
+    rehabCosts: 0,
   },
   subjectTo: {
     paymentToSeller: 0,
@@ -423,7 +472,7 @@ const defaultState: DealState = {
     totalMonthlyPayment: 0,
     totalAnnualPayment: 0,
   },
-          fixFlip: {
+  fixFlip: {
           arv: 0,
           holdingPeriodMonths: 0,
           holdingCosts: 0,
@@ -465,6 +514,7 @@ const defaultState: DealState = {
     management: 0,
     capEx: 0,
     opEx: 0,
+    utilitiesPct: 0,
     expensesWithoutMortgage: 0,
     monthlyExpenses: 0,
     monthlyExpensesPercent: 0,
@@ -495,31 +545,58 @@ const defaultState: DealState = {
   reservesMonths: 3,
   reservesFixedAmount: 0,
   includeVariableExpensesInBreakEven: false,
+  includeVariablePctInBreakeven: false,
 };
 
 const UnderwritePage: React.FC = () => {
   const [state, setState] = useState<DealState>(() => {
     try {
       const fromLocal = localStorage.getItem('underwrite:last');
-      if (fromLocal) return JSON.parse(fromLocal) as DealState;
+      if (fromLocal) {
+        const parsed = JSON.parse(fromLocal) as DealState;
+        return { ...parsed, analysisDate: parsed.analysisDate || currentDateInputValue() };
+      }
     } catch {}
     return defaultState;
   });
 
   const loanAmount = computeLoanAmount(state);
-  const monthlyPmt = monthlyPayment(
-    loanAmount,
-    state.loan.annualInterestRate,
-    state.loan.amortizationYears,
-    state.loan.interestOnly,
-  );
+  const amortMonths = Math.max(1, Math.round((state.loan.amortizationYears || 0) * 12));
+  const annualRateDecimal = (state.loan.annualInterestRate || 0) / 100;
+  const newLoanMonthlyPmt = state.loan.interestOnly
+    ? loanAmount * (annualRateDecimal / 12)
+    : pmt(annualRateDecimal, amortMonths, loanAmount);
   const monthlyIncome = computeIncome(state);
-  const monthlyOps = computeOperatingExpenses(state, monthlyIncome);
-  const monthlyPiti = monthlyPmt + state.ops.taxes + state.ops.insurance + state.ops.hoa;
+  const fixedMonthlyOps = computeFixedMonthlyOps({
+    taxes: state.ops.taxes,
+    insurance: state.ops.insurance,
+    hoa: state.ops.hoa,
+    gasElectric: state.ops.gasElectric,
+    internet: state.ops.internet,
+    waterSewer: state.ops.waterSewer,
+    heat: state.ops.heat,
+    lawnSnow: state.ops.lawnSnow,
+    phone: state.ops.phoneBill,
+    cleaner: state.ops.cleaner,
+    extras: state.ops.extra,
+    baseRentForArbitrage: state.operationType === 'Rental Arbitrage' ? (state.arbitrage?.monthlyRentToLandlord ?? 0) : 0,
+  }) ?? 0;
+  const variablePct = computeVariableMonthlyOpsPct({
+    mgmtPct: (state.ops.management || 0) / 100,
+    repairsPct: (state.ops.maintenance || 0) / 100,
+    utilitiesPct: (state.ops.utilitiesPct || 0) / 100,
+    capExPct: (state.ops.capEx || 0) / 100,
+    opExPct: (state.ops.opEx || 0) / 100,
+  });
+  const monthlyOps = fixedMonthlyOps + (variablePct * monthlyIncome);
+  const monthlyPiti = newLoanMonthlyPmt + state.ops.taxes + state.ops.insurance + state.ops.hoa;
   const monthlyNoi = Math.max(0, monthlyIncome - monthlyOps);
   const annualNoi = monthlyNoi * 12;
   const capRate = state.purchasePrice > 0 ? (annualNoi / state.purchasePrice) * 100 : 0;
-  const annualDebtService = monthlyPmt * 12;
+  const subjectToMonthly = (state.subjectTo?.totalMonthlyPayment ?? 0);
+  const hybridMonthly = (state.hybrid?.monthlyPayment ?? 0);
+  const totalMonthlyDS = totalMonthlyDebtService({ newLoanMonthly: newLoanMonthlyPmt, subjectToMonthlyTotal: subjectToMonthly, hybridMonthly });
+  const annualDebtService = totalMonthlyDS * 12;
   const annualCashFlow = Math.max(0, annualNoi - annualDebtService);
   const coc = computeCocAnnual(state, annualCashFlow);
   const rentToPrice = state.purchasePrice > 0 ? (monthlyIncome / state.purchasePrice) * 100 : 0;
@@ -544,7 +621,7 @@ const UnderwritePage: React.FC = () => {
              (state.arbitrage?.furnitureCost ?? 0) + 
              (state.arbitrage?.otherStartupCosts ?? 0);
     }
-    let entry = state.loan.downPayment + state.loan.amortizationAmount + state.loan.balloonDue;
+    let entry = (state.loan.downPayment || 0) + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
     if (state.offerType === 'Subject To Existing Mortgage' && state.subjectTo) {
       entry += state.subjectTo.paymentToSeller;
     }
@@ -585,12 +662,16 @@ const UnderwritePage: React.FC = () => {
   
   const breakEvenOccupancy = (() => {
     if (state.operationType !== 'Short Term Rental' || !state.str?.unitDailyRents?.[0] || state.str.unitDailyRents[0] <= 0) return 0;
-    const fixedExpenses = monthlyOps;
-    const variableExpenses = state.includeVariableExpensesInBreakEven ? 
-      (monthlyIncome * (state.ops.maintenance + state.ops.vacancy + state.ops.management) / 100) : 0;
-    const totalExpenses = fixedExpenses + variableExpenses;
     const dailyRate = state.str.unitDailyRents[0];
-    return totalExpenses / dailyRate;
+    const nightsModel = state.str.avgNightsPerMonth && state.str.avgNightsPerMonth > 0 ? state.str.avgNightsPerMonth : 30;
+    const monthlyRevenueAt100 = dailyRate * nightsModel;
+    const occFrac = financeBreakEvenOccupancy({
+      monthlyRevenueAt100,
+      fixedMonthlyOps,
+      variablePct,
+      includeVariablePct: state.includeVariablePctInBreakeven ?? state.includeVariableExpensesInBreakEven,
+    });
+    return occFrac * nightsModel;
   })();
   
   const breakEvenOccupancyPercent = (() => {
@@ -601,7 +682,15 @@ const UnderwritePage: React.FC = () => {
   // Appreciation calculations
   const futurePropertyValue = state.purchasePrice * Math.pow(1 + state.appreciation.appreciationPercentPerYear / 100, state.appreciation.yearsOfAppreciation);
   const refinancePotential = futurePropertyValue * (state.appreciation.refinanceLtv || 70) / 100;
-  const remainingBalanceAfterRefi = Math.max(0, loanAmount - (state.appreciation.yearsOfAppreciation * 12 * monthlyPmt));
+  const remainingBalanceAfterRefi = (() => {
+    const paymentsMade = Math.max(0, Math.round(state.appreciation.yearsOfAppreciation * 12));
+    return remainingPrincipalAfterPayments({
+      principal: loanAmount,
+      annualRate: annualRateDecimal,
+      termMonths: amortMonths,
+      interestOnly: state.loan.interestOnly,
+    }, paymentsMade);
+  })();
 
   const schedule = React.useMemo(() => {
     if (state.operationType === 'Rental Arbitrage' || loanAmount <= 0) return [] as ReturnType<typeof buildAmortization>;
@@ -613,10 +702,25 @@ const UnderwritePage: React.FC = () => {
     );
   }, [state.operationType, loanAmount, state.loan.annualInterestRate, state.loan.amortizationYears, state.loan.interestOnly]);
 
+  function getOperationTypeOptions(propertyType: PropertyType): OperationType[] {
+    if (propertyType === 'Hotel') {
+      return ['Buy & Hold', 'Rental Arbitrage'];
+    }
+    return ['Buy & Hold', 'Fix & Flip', 'Short Term Rental', 'Rental Arbitrage', 'BRRRR'];
+  }
+
   function getOfferTypeOptions(propertyType: PropertyType, operationType: OperationType): OfferType[] {
-    if (operationType === 'Rental Arbitrage') return [];
+    if (operationType === 'Rental Arbitrage') {
+      if (propertyType === 'Single Family' || propertyType === 'Multi Family / Hospitality') {
+        return ['Private', 'Line of Credit', 'SBA'];
+      }
+      return [];
+    }
     if (operationType === 'Fix & Flip' || operationType === 'BRRRR') {
       return ['Seller Finance', 'SBA', 'Hard Money', 'Private'];
+    }
+    if (operationType === 'Buy & Hold' && (propertyType === 'Single Family' || propertyType === 'Multi Family / Hospitality')) {
+      return ['FHA', 'Cash', 'Seller Finance', 'Conventional', 'SBA', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid'];
     }
     return ['Cash', 'Seller Finance', 'Conventional', 'SBA', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid'];
   }
@@ -625,6 +729,16 @@ const UnderwritePage: React.FC = () => {
     const allowed = getOfferTypeOptions(state.propertyType, state.operationType);
     if (allowed.length > 0 && !allowed.includes(state.offerType)) {
       setState((prev) => ({ ...prev, offerType: allowed[0] }));
+    }
+  }, [state.propertyType, state.operationType, state.offerType]);
+
+  // Update operation type when property type changes to Hotel
+  React.useEffect(() => {
+    if (state.propertyType === 'Hotel') {
+      const allowedOperationTypes = getOperationTypeOptions('Hotel');
+      if (!allowedOperationTypes.includes(state.operationType)) {
+        setState((prev) => ({ ...prev, operationType: 'Buy & Hold' }));
+      }
     }
   }, [state.propertyType, state.operationType]);
 
@@ -641,6 +755,49 @@ const UnderwritePage: React.FC = () => {
     }));
   }, [futurePropertyValue, refinancePotential, remainingBalanceAfterRefi]);
 
+  // Persist Subject-To totals
+  React.useEffect(() => {
+    if (state.subjectTo) {
+      const totalLoanBalance = (state.subjectTo.loans?.reduce((sum, l) => sum + (l.amount || 0), 0)) || 0;
+      const totalMonthlyPayment = (state.subjectTo.loans?.reduce((sum, l) => sum + (l.monthlyPayment || 0), 0)) || 0;
+      const totalAnnualPayment = totalMonthlyPayment * 12;
+      if (
+        totalLoanBalance !== state.subjectTo.totalLoanBalance ||
+        totalMonthlyPayment !== state.subjectTo.totalMonthlyPayment ||
+        totalAnnualPayment !== state.subjectTo.totalAnnualPayment
+      ) {
+        setState(prev => ({
+          ...prev,
+          subjectTo: {
+            ...(prev.subjectTo ?? { paymentToSeller: 0, loans: [] }),
+            totalLoanBalance,
+            totalMonthlyPayment,
+            totalAnnualPayment,
+          }
+        }));
+      }
+    }
+  }, [state.subjectTo?.loans]);
+
+  // Keep loan monthly/annual payment fresh in state
+  React.useEffect(() => {
+    const monthly = Math.max(0, newLoanMonthlyPmt || 0);
+    const annual = monthly * 12;
+    if (monthly !== state.loan.monthlyPayment || annual !== state.loan.annualPayment) {
+      setState(prev => ({ ...prev, loan: { ...prev.loan, monthlyPayment: monthly, annualPayment: annual } }));
+    }
+  }, [newLoanMonthlyPmt]);
+
+  // Hybrid annual payment mirror
+  React.useEffect(() => {
+    if (state.hybrid) {
+      const annual = (state.hybrid.monthlyPayment || 0) * 12;
+      if (annual !== state.hybrid.annualPayment) {
+        setState(prev => ({ ...prev, hybrid: { ...(prev.hybrid ?? { monthlyPayment: 0 } as any), annualPayment: annual } }));
+      }
+    }
+  }, [state.hybrid?.monthlyPayment]);
+
   // Update Fix & Flip calculations when inputs change
   React.useEffect(() => {
     if (state.operationType === 'Fix & Flip' && state.fixFlip) {
@@ -653,7 +810,7 @@ const UnderwritePage: React.FC = () => {
         }
       }));
     }
-  }, [state.operationType, state.fixFlip?.arv, state.fixFlip?.holdingPeriodMonths, state.fixFlip?.holdingCosts, state.fixFlip?.sellingCostsPercent, state.fixFlip?.targetPercent, state.fixFlip?.rehabCost]);
+  }, [state.operationType, state.fixFlip?.arv, state.fixFlip?.holdingPeriodMonths, state.fixFlip?.holdingCosts, state.fixFlip?.sellingCostsPercent, state.fixFlip?.targetPercent, state.fixFlip?.rehabCost, state]);
 
   // Update BRRRR calculations when inputs change
   React.useEffect(() => {
@@ -667,7 +824,7 @@ const UnderwritePage: React.FC = () => {
         }
       }));
     }
-  }, [state.operationType, state.brrrr?.arv, state.brrrr?.refinanceLtv, state.brrrr?.originalCashInvested, state.brrrr?.newMonthlyPayment, state.ops.expensesWithoutMortgage]);
+  }, [state.operationType, state.brrrr?.arv, state.brrrr?.refinanceLtv, state.brrrr?.originalCashInvested, state.brrrr?.newMonthlyPayment, state.ops.expensesWithoutMortgage, state]);
 
   function saveDeal() {
     localStorage.setItem('underwrite:last', JSON.stringify(state));
@@ -743,20 +900,49 @@ const UnderwritePage: React.FC = () => {
   // no-op
 
   return (
-    <Box sx={{ minHeight: '100vh', background: '#ffffff' }}>
-      <Container maxWidth="lg" sx={{ py: 2 }}>
-        <Card sx={{ borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <CardContent>
+    <Box sx={{ 
+      minHeight: '100vh', 
+      background: '#ffffff',
+      transition: 'all 0.3s ease-in-out'
+    }}>
+      <Container maxWidth="lg" sx={{ 
+        py: 2,
+        minHeight: '100vh',
+        transition: 'all 0.3s ease-in-out'
+      }}>
+        <Card sx={{ 
+          borderRadius: 2, 
+          border: '1px solid #e0e0e0',
+          transition: 'all 0.3s ease-in-out',
+          minHeight: 'fit-content',
+          overflow: 'hidden'
+        }}>
+          <CardContent sx={{ 
+            transition: 'all 0.3s ease-in-out',
+            minHeight: 'fit-content',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
             <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 1 }}>
               Dreamery Calculator
             </Typography>
             <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-              Fill the red inputs. Sections expand based on your Property Type and Offer Type selections. Amortization
+              Fill the red inputs. Sections expand based on your Property Type and Finance Type selections. Amortization
               schedule supports up to 50 years.
             </Typography>
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 2 }}>
-              <FormControl fullWidth>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+              gap: 2, 
+              mb: 2,
+              transition: 'all 0.3s ease-in-out',
+              minHeight: 'fit-content',
+              gridAutoRows: 'min-content',
+              alignContent: 'start',
+              order: 3
+            }}>
+              <FormControl fullWidth sx={{ minHeight: '56px' }}>
                 <InputLabel>Property Type</InputLabel>
                 <Select label="Property Type" value={state.propertyType} onChange={(e) => update('propertyType', e.target.value as PropertyType)}>
                   <MenuItem value="Single Family">Single</MenuItem>
@@ -765,26 +951,403 @@ const UnderwritePage: React.FC = () => {
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ minHeight: '56px' }}>
                 <InputLabel>Operation Type</InputLabel>
                 <Select label="Operation Type" value={state.operationType} onChange={(e) => update('operationType', e.target.value as OperationType)}>
-                  <MenuItem value="Buy & Hold">Buy & Hold</MenuItem>
-                  <MenuItem value="Fix & Flip">Fix & Flip</MenuItem>
-                  <MenuItem value="Short Term Rental">Short Term Rental</MenuItem>
-                  <MenuItem value="Rental Arbitrage">Rental Arbitrage</MenuItem>
-                  <MenuItem value="BRRRR">BRRRR</MenuItem>
+                  {getOperationTypeOptions(state.propertyType).map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth>
-                <InputLabel>Offer Type</InputLabel>
-                <Select label="Offer Type" value={state.offerType} onChange={(e) => update('offerType', e.target.value as OfferType)}>
+              <FormControl fullWidth sx={{ minHeight: '56px' }}>
+                <InputLabel>Finance Type</InputLabel>
+                <Select label="Finance Type" value={state.offerType} onChange={(e) => update('offerType', e.target.value as OfferType)}>
                   {getOfferTypeOptions(state.propertyType, state.operationType).map((option) => (
                     <MenuItem key={option} value={option}>{option}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Box>
+
+            {/* Income Section */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Income</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ 
+                  minHeight: '200px', 
+                  transition: 'all 0.3s ease-in-out',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}>
+                  {/* Single Family Income */}
+                  {state.propertyType === 'Single Family' && (
+                    <Box sx={{ mb: 3, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>Single Family Income</Typography>
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+                        gap: 2,
+                        minHeight: 'fit-content',
+                        gridAutoRows: 'min-content',
+                        alignContent: 'start'
+                      }}>
+                        <TextField
+                          label="Monthly Rent"
+                          value={state.sfr?.monthlyRent ?? 0}
+                          onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), monthlyRent: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ 
+                            '& input': { color: '#b71c1c' },
+                            minHeight: '56px',
+                            '& .MuiInputBase-root': {
+                              minHeight: '56px'
+                            }
+                          }}
+                        />
+                        <TextField
+                          label="Extra Monthly Income"
+                          value={state.sfr?.grossMonthlyIncome ?? 0}
+                          onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ 
+                            '& input': { color: '#b71c1c' },
+                            minHeight: '56px',
+                            '& .MuiInputBase-root': {
+                              minHeight: '56px'
+                            }
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Multi-Family Income */}
+                  {state.propertyType === 'Multi Family / Hospitality' && (
+                    <Box sx={{ mb: 3, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>Multi-Family Income</Typography>
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+                        gap: 2, 
+                        mb: 2,
+                        minHeight: 'fit-content',
+                        gridAutoRows: 'min-content',
+                        alignContent: 'start'
+                      }}>
+                        <TextField
+                          label="Number of Units"
+                          type="number"
+                          value={state.multi?.unitRents?.length ?? 2}
+                          onChange={(e) => {
+                            const units = parseInt(e.target.value) || 2;
+                            const rents = Array.from({ length: units }, (_, i) => state.multi?.unitRents?.[i] ?? 0);
+                            update('multi', { unitRents: rents, grossMonthlyIncome: state.multi?.grossMonthlyIncome ?? 0, grossYearlyIncome: state.multi?.grossYearlyIncome ?? 0 });
+                          }}
+                          InputProps={{ inputProps: { min: 1, max: 10 } }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Extra Monthly Income"
+                          value={state.multi?.grossMonthlyIncome ?? 0}
+                          onChange={(e) => update('multi', { ...(state.multi ?? { unitRents: [1300, 1300], grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' }, 
+                        gap: 2,
+                        minHeight: 'fit-content',
+                        gridAutoRows: 'min-content',
+                        alignContent: 'start'
+                      }}>
+                        {Array.from({ length: state.multi?.unitRents?.length ?? 0 }).map((_, idx) => (
+                          <TextField
+                            key={idx}
+                            label={`Unit ${idx + 1} Monthly Rent`}
+                            value={state.multi?.unitRents?.[idx] ?? 0}
+                            onChange={(e) => {
+                              const rents = [...(state.multi?.unitRents ?? [])];
+                              rents[idx] = parseCurrency(e.target.value);
+                              update('multi', { unitRents: rents, grossMonthlyIncome: state.multi?.grossMonthlyIncome ?? 0, grossYearlyIncome: state.multi?.grossYearlyIncome ?? 0 });
+                            }}
+                            InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                            sx={{ '& input': { color: '#b71c1c' } }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Hotel Rental Income */}
+                  {state.propertyType === 'Hotel' && (
+                    <Box sx={{ mb: 3, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>Hotel Rental Income</Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4, mb: 4 }}>
+                        <TextField
+                          label="Number of Units"
+                          type="number"
+                          value={state.str?.unitDailyRents?.length ?? 1}
+                          onChange={(e) => {
+                            const units = parseInt(e.target.value) || 1;
+                            const dailyRents = Array.from({ length: units }, (_, i) => state.str?.unitDailyRents?.[i] ?? 0);
+                            const monthlyRents = Array.from({ length: units }, (_, i) => state.str?.unitMonthlyRents?.[i] ?? 0);
+                            update('str', { ...(state.str ?? { unitDailyRents: [0], unitMonthlyRents: [0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), unitDailyRents: dailyRents, unitMonthlyRents: monthlyRents });
+                          }}
+                          InputProps={{ inputProps: { min: 1, max: 20 } }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Daily Rate"
+                          value={state.str?.unitDailyRents?.[0] ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0], unitMonthlyRents: [0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), unitDailyRents: [parseCurrency(e.target.value), ...(state.str?.unitDailyRents?.slice(1) ?? [])] })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Avg Nights Per Month"
+                          value={state.str?.avgNightsPerMonth ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0], unitMonthlyRents: [0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), avgNightsPerMonth: parseCurrency(e.target.value) })}
+                          InputProps={{ inputProps: { min: 0, max: 31 } }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4, mb: 4 }}>
+                        <TextField
+                          label="Daily Cleaning Fee"
+                          value={state.str?.dailyCleaningFee ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), dailyCleaningFee: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Laundry"
+                          value={state.str?.laundry ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), laundry: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Activities"
+                          value={state.str?.activities ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), activities: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                      <TextField
+                        label="Extra Monthly Income"
+                        value={state.str?.grossMonthlyIncome ?? 0}
+                        onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0], unitMonthlyRents: [0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                        InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                        sx={{ '& input': { color: '#b71c1c' }, mb: 3 }}
+                      />
+                      
+                      {/* Individual Unit Daily Rates */}
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' }, 
+                        gap: 4,
+                        minHeight: 'fit-content',
+                        gridAutoRows: 'min-content',
+                        alignContent: 'start'
+                      }}>
+                        {Array.from({ length: state.str?.unitDailyRents?.length ?? 0 }).map((_, idx) => (
+                          <TextField
+                            key={idx}
+                            label={`Unit ${idx + 1} Daily Rate`}
+                            value={state.str?.unitDailyRents?.[idx] ?? 0}
+                            onChange={(e) => {
+                              const dailyRents = [...(state.str?.unitDailyRents ?? [])];
+                              dailyRents[idx] = parseCurrency(e.target.value);
+                              update('str', { ...(state.str ?? { unitDailyRents: [0], unitMonthlyRents: [0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), unitDailyRents: dailyRents });
+                            }}
+                            InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                            sx={{ '& input': { color: '#b71c1c' } }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Rental Arbitrage Income */}
+                  {state.operationType === 'Rental Arbitrage' && (
+                    <Box sx={{ mb: 3, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>Rental Arbitrage Income</Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2, mb: 2 }}>
+                        <TextField
+                          label="Deposit"
+                          value={state.arbitrage?.deposit ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), deposit: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Monthly Rent to Landlord"
+                          value={state.arbitrage?.monthlyRentToLandlord ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), monthlyRentToLandlord: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                        <TextField
+                          label="Estimate Cost of Repairs"
+                          value={state.arbitrage?.estimateCostOfRepairs ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), estimateCostOfRepairs: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Furniture Cost"
+                          value={state.arbitrage?.furnitureCost ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), furnitureCost: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Other Startup Costs"
+                          value={state.arbitrage?.otherStartupCosts ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), otherStartupCosts: parseCurrency(e.target.value) })}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+
+            {/* Operating Expenses Section */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Operating Expenses</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 3 }}>
+                  <TextField
+                    label="Monthly Taxes"
+                    value={state.ops.taxes}
+                    onChange={(e) => updateOps('taxes', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Monthly Insurance"
+                    value={state.ops.insurance}
+                    onChange={(e) => updateOps('insurance', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Monthly HOA"
+                    value={state.ops.hoa}
+                    onChange={(e) => updateOps('hoa', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Gas & Electric"
+                    value={state.ops.gasElectric}
+                    onChange={(e) => updateOps('gasElectric', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Internet"
+                    value={state.ops.internet}
+                    onChange={(e) => updateOps('internet', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Water & Sewer"
+                    value={state.ops.waterSewer}
+                    onChange={(e) => updateOps('waterSewer', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Heat"
+                    value={state.ops.heat}
+                    onChange={(e) => updateOps('heat', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Lawn & Snow"
+                    value={state.ops.lawnSnow}
+                    onChange={(e) => updateOps('lawnSnow', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Phone Bill"
+                    value={state.ops.phoneBill}
+                    onChange={(e) => updateOps('phoneBill', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Cleaner"
+                    value={state.ops.cleaner}
+                    onChange={(e) => updateOps('cleaner', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Extra Expenses"
+                    value={state.ops.extra}
+                    onChange={(e) => updateOps('extra', parseCurrency(e.target.value))}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                </Box>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                  <TextField
+                    label="Maintenance (% of Income)"
+                    value={state.ops.maintenance}
+                    onChange={(e) => updateOps('maintenance', parseCurrency(e.target.value))}
+                    InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Vacancy (% of Income)"
+                    value={state.ops.vacancy}
+                    onChange={(e) => updateOps('vacancy', parseCurrency(e.target.value))}
+                    InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Management (% of Income)"
+                    value={state.ops.management}
+                    onChange={(e) => updateOps('management', parseCurrency(e.target.value))}
+                    InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="CapEx (% of Income)"
+                    value={state.ops.capEx}
+                    onChange={(e) => updateOps('capEx', parseCurrency(e.target.value))}
+                    InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="OpEx (% of Income)"
+                    value={state.ops.opEx}
+                    onChange={(e) => updateOps('opEx', parseCurrency(e.target.value))}
+                    InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
 
             {/* Pro Forma Presets */}
             <Box sx={{ mb: 2, p: 2, bgcolor: '#f8f9fa', borderRadius: 1, border: '1px solid #e9ecef' }}>
@@ -818,7 +1381,7 @@ const UnderwritePage: React.FC = () => {
                     color: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? 'white' : '#1a365d',
                     borderColor: '#1a365d',
                     '&:hover': {
-                      bgcolor: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? '#f0f0f0'
+                      bgcolor: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? '#f0f0f0' : '#e0e0e0'
                     }
                   }}
                 >
@@ -830,11 +1393,11 @@ const UnderwritePage: React.FC = () => {
                   onClick={() => applyPreset('aggressive')}
                   sx={{ 
                     textTransform: 'none',
-                    bgcolor: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? '#1a365d' : 'transparent',
-                    color: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? 'white' : '#1a365d',
+                    bgcolor: state.ops.vacancy === 3 && state.ops.maintenance === 5 ? '#1a365d' : 'transparent',
+                    color: state.ops.vacancy === 3 && state.ops.maintenance === 5 ? 'white' : '#1a365d',
                     borderColor: '#1a365d',
                     '&:hover': {
-                      bgcolor: state.ops.vacancy === 5 && state.ops.maintenance === 8 ? '#f0f0f0'
+                      bgcolor: state.ops.vacancy === 3 && state.ops.maintenance === 5 ? '#1a365d' : '#f0f0f0'
                     }
                   }}
                 >
@@ -846,107 +1409,143 @@ const UnderwritePage: React.FC = () => {
               </Typography>
             </Box>
 
-              {state.operationType !== 'Rental Arbitrage' && (
-                <FormControl fullWidth>
-                  <InputLabel>Offer Type</InputLabel>
-                  <Select label="Offer Type" value={state.offerType} onChange={(e) => update('offerType', e.target.value as OfferType)}>
-                    {getOfferTypeOptions(state.propertyType, state.operationType).map((opt) => (
-                      <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-
-              {state.operationType !== 'Rental Arbitrage' && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <FormControlLabel
-                    control={<Switch checked={state.loan.interestOnly} onChange={(e) => updateLoan('interestOnly', e.target.checked)} />}
-                    label="Interest Only"
+            {/* Basic Property Info Section */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Basic Property Info</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 2 }}>
+                  <TextField
+                    label="Property Address"
+                    value={state.propertyAddress}
+                    onChange={(e) => update('propertyAddress', e.target.value)}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Agent/Owner"
+                    value={state.agentOwner}
+                    onChange={(e) => update('agentOwner', e.target.value)}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Analysis Date"
+                    type="date"
+                    value={state.analysisDate}
+                    onChange={(e) => update('analysisDate', e.target.value)}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Listed Price ($)"
+                    value={state.listedPrice}
+                    onChange={(e) => update('listedPrice', parseCurrency(e.target.value))}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="Purchase Price ($)"
+                    value={state.purchasePrice}
+                    onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
+                    sx={{ '& input': { color: '#b71c1c' } }}
+                  />
+                  <TextField
+                    label="% Difference"
+                    value={state.percentageDifference}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                    }}
+                    sx={{ '& input': { color: '#666' } }}
                   />
                 </Box>
-              )}
-            </Box>
+              </AccordionDetails>
+            </Accordion>
 
             <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>{state.operationType === 'Rental Arbitrage' ? 'Startup Costs' : 'Loan & Costs'}</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {state.operationType === 'Rental Arbitrage' ? (
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
-                    <TextField
-                      label="Damage Deposit ($)"
-                      value={state.arbitrage?.deposit ?? 0}
-                      onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), deposit: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Furniture Cost ($)"
-                      value={state.loan.amortizationAmount}
-                      onChange={(e) => updateLoan('amortizationAmount', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Repairs / Setup ($)"
-                      value={state.loan.balloonDue}
-                      onChange={(e) => updateLoan('balloonDue', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Other Startup Costs ($)"
-                      value={state.arbitrage?.otherStartupCosts ?? 0}
-                      onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), otherStartupCosts: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                  </Box>
-                ) : (
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
-                    <TextField
-                      label="Purchase Price"
-                      value={state.purchasePrice}
-                      onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Down Payment ($)"
-                      value={state.loan.downPayment}
-                      onChange={(e) => updateLoan('downPayment', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Interest Rate (%)"
-                      value={state.loan.annualInterestRate}
-                      onChange={(e) => updateLoan('annualInterestRate', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Amortization (years)"
-                      value={state.loan.amortizationYears}
-                      onChange={(e) => updateLoan('amortizationYears', Math.min(50, parseCurrency(e.target.value)))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Closing Costs ($)"
-                      value={state.loan.balloonDue}
-                      onChange={(e) => updateLoan('balloonDue', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Rehab Costs ($)"
-                      value={state.loan.balloonDue}
-                      onChange={(e) => updateLoan('balloonDue', parseCurrency(e.target.value))}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    {(state.operationType === 'Short Term Rental') && (
-                      <TextField
-                        label="Furniture Cost ($)"
-                        value={state.loan.amortizationAmount}
-                        onChange={(e) => updateLoan('amortizationAmount', parseCurrency(e.target.value))}
-                        sx={{ '& input': { color: '#b71c1c' } }}
-                      />
-                    )}
-                  </Box>
-                )}
+                <Box sx={{ minHeight: '150px', transition: 'all 0.3s ease-in-out' }}>
+                  {state.operationType === 'Rental Arbitrage' ? (
+                    <Box sx={{ opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                        <TextField
+                          label="Damage Deposit ($)"
+                          value={state.arbitrage?.deposit ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), deposit: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Furniture Cost ($)"
+                          value={state.arbitrage?.furnitureCost ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), furnitureCost: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Repairs / Setup ($)"
+                          value={state.arbitrage?.estimateCostOfRepairs ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), estimateCostOfRepairs: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Other Startup Costs ($)"
+                          value={state.arbitrage?.otherStartupCosts ?? 0}
+                          onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), otherStartupCosts: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box sx={{ opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                        <TextField
+                          label="Purchase Price"
+                          value={state.purchasePrice}
+                          onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Down Payment ($)"
+                          value={state.loan.downPayment}
+                          onChange={(e) => updateLoan('downPayment', parseCurrency(e.target.value))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Interest Rate (%)"
+                          value={state.loan.annualInterestRate}
+                          onChange={(e) => updateLoan('annualInterestRate', parseCurrency(e.target.value))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Amortization (years)"
+                          value={state.loan.amortizationYears}
+                          onChange={(e) => updateLoan('amortizationYears', Math.min(50, parseCurrency(e.target.value)))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Closing Costs ($)"
+                          value={state.loan.closingCosts ?? 0}
+                          onChange={(e) => updateLoan('closingCosts', parseCurrency(e.target.value))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Rehab Costs ($)"
+                          value={state.loan.rehabCosts ?? 0}
+                          onChange={(e) => updateLoan('rehabCosts', parseCurrency(e.target.value))}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        {(state.operationType === 'Short Term Rental') && (
+                          <TextField
+                            label="Furniture Cost ($)"
+                            value={state.loan.amortizationAmount}
+                            onChange={(e) => updateLoan('amortizationAmount', parseCurrency(e.target.value))}
+                            sx={{ '& input': { color: '#b71c1c' } }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
               </AccordionDetails>
             </Accordion>
 
@@ -955,158 +1554,164 @@ const UnderwritePage: React.FC = () => {
                 <Typography sx={{ fontWeight: 700 }}>Income & Operating</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {/* Income, gated by property type */}
-                {state.propertyType === 'Single Family' && (
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 2 }}>
-                    <TextField
-                      label="Monthly Rent"
-                      value={state.sfr?.monthlyRent ?? 0}
-                      onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), monthlyRent: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Extra Monthly Income"
-                      value={state.sfr?.grossMonthlyIncome ?? 0}
-                      onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                  </Box>
-                )}
-
-                {state.propertyType === 'Multi Family / Hospitality' && (
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
-                      <TextField
-                        label="Units"
-                        value={state.multi?.unitRents?.[0] ?? 2}
-                        onChange={(e) => {
-                          const units = Math.max(1, Math.min(50, parseCurrency(e.target.value)));
-                          const rents = Array.from({ length: units }, (_, i) => state.multi?.unitRents?.[i] ?? 0);
-                          update('multi', { unitRents: rents, grossMonthlyIncome: state.multi?.grossMonthlyIncome ?? 0, grossYearlyIncome: state.multi?.grossYearlyIncome ?? 0 });
-                        }}
-                        sx={{ '& input': { color: '#b71c1c' } }}
-                      />
-                      <TextField
-                        label="Extra Monthly Income"
-                        value={state.multi?.grossMonthlyIncome ?? 0}
-                        onChange={(e) => update('multi', { ...(state.multi ?? { unitRents: [1300, 1300], grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
-                        sx={{ '& input': { color: '#b71c1c' } }}
-                      />
-                    </Box>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(5, 1fr)' }, gap: 1 }}>
-                      {Array.from({ length: state.multi?.unitRents?.length ?? 0 }).map((_, idx) => (
+                <Box sx={{ minHeight: '300px', transition: 'all 0.3s ease-in-out' }}>
+                  {/* Income, gated by property type */}
+                  {state.propertyType === 'Single Family' && (
+                    <Box sx={{ mb: 2, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 2 }}>
                         <TextField
-                          key={idx}
-                          label={`Unit ${idx + 1} Rent`}
-                          value={state.multi?.unitRents?.[idx] ?? 0}
+                          label="Monthly Rent"
+                          value={state.sfr?.monthlyRent ?? 0}
+                          onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), monthlyRent: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Extra Monthly Income"
+                          value={state.sfr?.grossMonthlyIncome ?? 0}
+                          onChange={(e) => update('sfr', { ...(state.sfr ?? { monthlyRent: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
+                  {state.propertyType === 'Multi Family / Hospitality' && (
+                    <Box sx={{ mb: 2, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
+                        <TextField
+                          label="Units"
+                          value={state.multi?.unitRents?.length ?? 2}
                           onChange={(e) => {
-                            const rents = [...(state.multi?.unitRents ?? [])];
-                            rents[idx] = parseCurrency(e.target.value);
+                            const units = Math.max(1, Math.min(50, parseCurrency(e.target.value)));
+                            const rents = Array.from({ length: units }, (_, i) => state.multi?.unitRents?.[i] ?? 0);
                             update('multi', { unitRents: rents, grossMonthlyIncome: state.multi?.grossMonthlyIncome ?? 0, grossYearlyIncome: state.multi?.grossYearlyIncome ?? 0 });
                           }}
                           sx={{ '& input': { color: '#b71c1c' } }}
                         />
-                      ))}
+                        <TextField
+                          label="Extra Monthly Income"
+                          value={state.multi?.grossMonthlyIncome ?? 0}
+                          onChange={(e) => update('multi', { ...(state.multi ?? { unitRents: [1300, 1300], grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                      </Box>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(5, 1fr)' }, gap: 1 }}>
+                        {Array.from({ length: state.multi?.unitRents?.length ?? 0 }).map((_, idx) => (
+                          <TextField
+                            key={idx}
+                            label={`Unit ${idx + 1} Rent`}
+                            value={state.multi?.unitRents?.[idx] ?? 0}
+                            onChange={(e) => {
+                              const rents = [...(state.multi?.unitRents ?? [])];
+                              rents[idx] = parseCurrency(e.target.value);
+                              update('multi', { unitRents: rents, grossMonthlyIncome: state.multi?.grossMonthlyIncome ?? 0, grossYearlyIncome: state.multi?.grossYearlyIncome ?? 0 });
+                            }}
+                            sx={{ '& input': { color: '#b71c1c' } }}
+                          />
+                        ))}
+                      </Box>
                     </Box>
-                  </Box>
-                )}
+                  )}
 
-                {(state.operationType === 'Short Term Rental' || state.operationType === 'Rental Arbitrage') && (
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 2 }}>
-                    <TextField
-                      label="Nightly Rate"
-                      value={state.str?.unitDailyRents?.[0] ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), unitDailyRents: [parseCurrency(e.target.value), 0] })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Avg Nights per Month"
-                      value={state.str?.avgNightsPerMonth ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), avgNightsPerMonth: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Daily Cleaning Fee"
-                      value={state.str?.dailyCleaningFee ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), dailyCleaningFee: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Additional Guest Fee (Monthly)"
-                      value={state.str?.laundry ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), laundry: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Experiences (Monthly)"
-                      value={state.str?.activities ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), activities: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    <TextField
-                      label="Extra Monthly Income"
-                      value={state.str?.grossMonthlyIncome ?? 0}
-                      onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
-                      sx={{ '& input': { color: '#b71c1c' } }}
-                    />
-                    {state.operationType === 'Rental Arbitrage' && (
-                      <TextField
-                        label="Monthly Rent to Landlord"
-                        value={state.arbitrage?.monthlyRentToLandlord ?? 0}
-                        onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), monthlyRentToLandlord: parseCurrency(e.target.value) })}
-                        sx={{ '& input': { color: '#b71c1c' } }}
-                      />
-                    )}
-                  </Box>
-                )}
+                  {(state.operationType === 'Short Term Rental' || state.operationType === 'Rental Arbitrage') && (
+                    <Box sx={{ mb: 2, opacity: 1, transform: 'translateY(0)', transition: 'all 0.3s ease-in-out' }}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mb: 2 }}>
+                        <TextField
+                          label="Nightly Rate"
+                          value={state.str?.unitDailyRents?.[0] ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), unitDailyRents: [parseCurrency(e.target.value), 0] })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Avg Nights per Month"
+                          value={state.str?.avgNightsPerMonth ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), avgNightsPerMonth: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Daily Cleaning Fee"
+                          value={state.str?.dailyCleaningFee ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), dailyCleaningFee: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Additional Guest Fee (Monthly)"
+                          value={state.str?.laundry ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), laundry: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Experiences (Monthly)"
+                          value={state.str?.activities ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), activities: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        <TextField
+                          label="Extra Monthly Income"
+                          value={state.str?.grossMonthlyIncome ?? 0}
+                          onChange={(e) => update('str', { ...(state.str ?? { unitDailyRents: [0, 0], unitMonthlyRents: [0, 0], dailyCleaningFee: 0, laundry: 0, activities: 0, avgNightsPerMonth: 0, grossDailyIncome: 0, grossMonthlyIncome: 0, grossYearlyIncome: 0 }), grossMonthlyIncome: parseCurrency(e.target.value) })}
+                          sx={{ '& input': { color: '#b71c1c' } }}
+                        />
+                        {state.operationType === 'Rental Arbitrage' && (
+                          <TextField
+                            label="Monthly Rent to Landlord"
+                            value={state.arbitrage?.monthlyRentToLandlord ?? 0}
+                            onChange={(e) => update('arbitrage', { ...(state.arbitrage ?? { deposit: 0, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 }), monthlyRentToLandlord: parseCurrency(e.target.value) })}
+                            sx={{ '& input': { color: '#b71c1c' } }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
+                  )}
 
-                {/* Operating inputs common */}
-                <Divider sx={{ my: 1 }} />
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>
-                  Operating inputs
-                </Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
-                  <TextField
-                    label="Monthly Taxes"
-                    value={state.ops.taxes}
-                    onChange={(e) => updateOps('taxes', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
-                  <TextField
-                    label="Monthly Insurance"
-                    value={state.ops.insurance}
-                    onChange={(e) => updateOps('insurance', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
-                  <TextField
-                    label="Monthly HOA"
-                    value={state.ops.hoa}
-                    onChange={(e) => updateOps('hoa', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
-                  <TextField
-                    label="Maintenance (% of Income)"
-                    value={state.ops.maintenance}
-                    onChange={(e) => updateOps('maintenance', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
-                  <TextField
-                    label="Vacancy (% of Income)"
-                    value={state.ops.vacancy}
-                    onChange={(e) => updateOps('vacancy', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
-                  <TextField
-                    label="Management (% of Income)"
-                    value={state.ops.management}
-                    onChange={(e) => updateOps('management', parseCurrency(e.target.value))}
-                    sx={{ '& input': { color: '#b71c1c' } }}
-                  />
+                  {/* Operating inputs common */}
+                  <Divider sx={{ my: 1 }} />
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>
+                    Operating inputs
+                  </Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                    <TextField
+                      label="Monthly Taxes"
+                      value={state.ops.taxes}
+                      onChange={(e) => updateOps('taxes', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                    <TextField
+                      label="Monthly Insurance"
+                      value={state.ops.insurance}
+                      onChange={(e) => updateOps('insurance', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                    <TextField
+                      label="Monthly HOA"
+                      value={state.ops.hoa}
+                      onChange={(e) => updateOps('hoa', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                    <TextField
+                      label="Maintenance (% of Income)"
+                      value={state.ops.maintenance}
+                      onChange={(e) => updateOps('maintenance', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                    <TextField
+                      label="Vacancy (% of Income)"
+                      value={state.ops.vacancy}
+                      onChange={(e) => updateOps('vacancy', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                    <TextField
+                      label="Management (% of Income)"
+                      value={state.ops.management}
+                      onChange={(e) => updateOps('management', parseCurrency(e.target.value))}
+                      sx={{ '& input': { color: '#b71c1c' } }}
+                    />
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
 
-            {/* Subject-To section, shown only when not Rental Arbitrage and Offer Type matches */}
+            {/* Subject-To section, shown only when not Rental Arbitrage and Finance Type matches */}
             {state.operationType !== 'Rental Arbitrage' &&
               (state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && (
               <Accordion defaultExpanded>
@@ -1255,7 +1860,7 @@ const UnderwritePage: React.FC = () => {
               </Accordion>
             )}
 
-            {/* Hybrid section, shown only when not Rental Arbitrage and Offer Type is Hybrid */}
+            {/* Hybrid section, shown only when not Rental Arbitrage and Finance Type is Hybrid */}
             {state.operationType !== 'Rental Arbitrage' && state.offerType === 'Hybrid' && (
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -1521,7 +2126,7 @@ const UnderwritePage: React.FC = () => {
             {/* KPIs */}
             <Box sx={{ mt: 2, display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(5, 1fr)' }, gap: 1.5 }}>
               <Kpi label="Loan Amount" value={formatCurrency(loanAmount)} />
-              <Kpi label="Monthly Payment" value={formatCurrency(monthlyPmt)} />
+              <Kpi label="Monthly Payment" value={formatCurrency(newLoanMonthlyPmt)} />
               <Kpi label="Monthly NOI" value={formatCurrency(monthlyNoi)} />
               <Kpi label="Cap Rate" value={`${capRate.toFixed(2)}%`} />
               <Kpi label="Cash on Cash" value={`${coc.toFixed(2)}%`} />

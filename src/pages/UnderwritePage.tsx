@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -27,8 +27,14 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   InputAdornment,
+  Tabs,
+  Tab,
+  IconButton,
+  Chip,
+  Slider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   pmt,
   totalMonthlyDebtService,
@@ -200,6 +206,54 @@ interface OperatingInputsCommon {
   yearlyExpensesWithMortgage: number;
 }
 
+interface CustomProFormaPreset {
+  id: string;
+  name: string;
+  description?: string;
+  maintenance: number;
+  vacancy: number;
+  management: number;
+  capEx: number;
+  opEx: number;
+  propertyType: PropertyType;
+  operationType: OperationType;
+  createdAt: Date;
+}
+
+interface SensitivityAnalysis {
+  showSensitivity: boolean;
+  sensitivityRange: number; // e.g., ±20%
+  sensitivitySteps: number; // e.g., 5 steps
+}
+
+interface BenchmarkComparison {
+  showBenchmarks: boolean;
+  selectedMarket?: string;
+  includeBenchmarks: boolean;
+}
+
+interface RevenueInputs {
+  totalRooms: number;
+  averageDailyRate: number;
+  occupancyRate: number;
+  seasonalVariations: {
+    q1: number; // Q1 occupancy multiplier
+    q2: number; // Q2 occupancy multiplier
+    q3: number; // Q3 occupancy multiplier
+    q4: number; // Q4 occupancy multiplier
+  };
+  fixedAnnualCosts: number;
+  fixedMonthlyCosts: number;
+}
+
+interface BreakEvenAnalysis {
+  showBreakEven: boolean;
+  breakEvenOccupancy: number;
+  breakEvenADR: number;
+  breakEvenRevenue: number;
+  marginOfSafety: number;
+}
+
 interface DealState {
   propertyType: PropertyType;
   operationType: OperationType;
@@ -223,16 +277,23 @@ interface DealState {
   str?: IncomeInputsStr;
   arbitrage?: ArbitrageInputs;
   appreciation: AppreciationInputs;
-      // Settings
-    showBothPaybackMethods: boolean;
-    paybackCalculationMethod: 'initial' | 'remaining';
-    reservesCalculationMethod: 'months' | 'fixed';
-    reservesMonths: number;
-    reservesFixedAmount: number;
-    includeVariableExpensesInBreakEven: boolean;
-    includeVariablePctInBreakeven?: boolean;
-    proFormaPreset: 'conservative' | 'moderate' | 'aggressive';
-};
+  // Settings
+  showBothPaybackMethods: boolean;
+  paybackCalculationMethod: 'initial' | 'remaining';
+  reservesCalculationMethod: 'months' | 'fixed';
+  reservesMonths: number;
+  reservesFixedAmount: number;
+  includeVariableExpensesInBreakEven: boolean;
+  includeVariablePctInBreakeven?: boolean;
+  proFormaPreset: 'conservative' | 'moderate' | 'aggressive' | 'custom';
+  customProFormaPresets: CustomProFormaPreset[];
+  selectedCustomPreset?: string;
+  sensitivityAnalysis: SensitivityAnalysis;
+  benchmarkComparison: BenchmarkComparison;
+  revenueInputs: RevenueInputs;
+  breakEvenAnalysis: BreakEvenAnalysis;
+  activeProFormaTab: 'presets' | 'custom' | 'sensitivity' | 'benchmarks' | 'revenue' | 'breakEven';
+}
 
 function parseCurrency(input: string): number {
   const numeric = Number(String(input).replace(/[^0-9.-]/g, ''));
@@ -663,6 +724,26 @@ const defaultState: DealState = {
   includeVariableExpensesInBreakEven: false,
   includeVariablePctInBreakeven: false,
   proFormaPreset: 'moderate',
+  customProFormaPresets: [],
+  selectedCustomPreset: undefined,
+      sensitivityAnalysis: { showSensitivity: false, sensitivityRange: 20, sensitivitySteps: 5 },
+    benchmarkComparison: { showBenchmarks: false, includeBenchmarks: true },
+    revenueInputs: { 
+      totalRooms: 1, 
+      averageDailyRate: 150, 
+      occupancyRate: 75, 
+      seasonalVariations: { q1: 0.8, q2: 1.0, q3: 1.2, q4: 0.9 },
+      fixedAnnualCosts: 50000,
+      fixedMonthlyCosts: 4167
+    },
+    breakEvenAnalysis: { 
+      showBreakEven: false, 
+      breakEvenOccupancy: 0, 
+      breakEvenADR: 0, 
+      breakEvenRevenue: 0, 
+      marginOfSafety: 0 
+    },
+    activeProFormaTab: 'presets',
 };
 
 const UnderwritePage: React.FC = () => {
@@ -688,20 +769,23 @@ const UnderwritePage: React.FC = () => {
       
       // Auto-update Pro Forma values when property type or operation type changes
       if (key === 'propertyType' || key === 'operationType') {
-        const newValues = getProFormaValues(
-          key === 'propertyType' ? value as PropertyType : prev.propertyType,
-          key === 'operationType' ? value as OperationType : prev.operationType,
-          prev.proFormaPreset
-        );
-        
-        newState.ops = {
-          ...newState.ops,
-          maintenance: newValues.maintenance,
-          vacancy: newValues.vacancy,
-          management: newValues.management,
-          capEx: newValues.capEx,
-          opEx: newValues.opEx
-        };
+        // Only auto-update if not using a custom preset
+        if (prev.proFormaPreset !== 'custom') {
+          const newValues = getProFormaValues(
+            key === 'propertyType' ? value as PropertyType : prev.propertyType,
+            key === 'operationType' ? value as OperationType : prev.operationType,
+            prev.proFormaPreset as 'conservative' | 'moderate' | 'aggressive'
+          );
+          
+          newState.ops = {
+            ...newState.ops,
+            maintenance: newValues.maintenance,
+            vacancy: newValues.vacancy,
+            management: newValues.management,
+            capEx: newValues.capEx,
+            opEx: newValues.opEx
+          };
+        }
       }
       
       return newState;
@@ -716,7 +800,7 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => ({ ...prev, ops: { ...prev.ops, [key]: value } }));
   }
 
-  function updateProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive') {
+  function updateProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive' | 'custom') {
     setState((prev) => ({ ...prev, proFormaPreset: preset }));
   }
 
@@ -774,6 +858,275 @@ const UnderwritePage: React.FC = () => {
     updateOps('capEx', values.capEx);
     updateOps('opEx', values.opEx);
     updateProFormaPreset(preset);
+    setState(prev => ({ ...prev, selectedCustomPreset: undefined }));
+  }
+
+  // Custom Preset Management
+  function saveCustomPreset(name: string, description?: string) {
+    const newPreset: CustomProFormaPreset = {
+      id: Date.now().toString(),
+      name,
+      description,
+      maintenance: state.ops.maintenance,
+      vacancy: state.ops.vacancy,
+      management: state.ops.management,
+      capEx: state.ops.capEx,
+      opEx: state.ops.opEx,
+      propertyType: state.propertyType,
+      operationType: state.operationType,
+      createdAt: new Date()
+    };
+    
+    const updatedPresets = [...state.customProFormaPresets, newPreset];
+    
+    console.log('Saving custom preset:', newPreset);
+    console.log('Updated presets array:', updatedPresets);
+    
+    setState(prev => ({
+      ...prev,
+      customProFormaPresets: updatedPresets,
+      selectedCustomPreset: newPreset.id
+    }));
+    
+    // Save to localStorage
+    localStorage.setItem('dreameryCustomProFormaPresets', JSON.stringify(updatedPresets));
+    
+    // Verify localStorage was updated
+    const saved = localStorage.getItem('dreameryCustomProFormaPresets');
+    console.log('localStorage after save:', saved);
+  }
+
+  function deleteCustomPreset(id: string) {
+    const updatedPresets = state.customProFormaPresets.filter(p => p.id !== id);
+    setState(prev => ({
+      ...prev,
+      customProFormaPresets: updatedPresets,
+      selectedCustomPreset: prev.selectedCustomPreset === id ? undefined : prev.selectedCustomPreset
+    }));
+    
+    // Update localStorage
+    localStorage.setItem('dreameryCustomProFormaPresets', JSON.stringify(updatedPresets));
+  }
+
+  function applyCustomPreset(id: string) {
+    const preset = state.customProFormaPresets.find(p => p.id === id);
+    if (preset) {
+      updateOps('maintenance', preset.maintenance);
+      updateOps('vacancy', preset.vacancy);
+      updateOps('management', preset.management);
+      updateOps('capEx', preset.capEx);
+      updateOps('opEx', preset.opEx);
+      setState(prev => ({ 
+        ...prev, 
+        selectedCustomPreset: id,
+        proFormaPreset: 'custom'
+      }));
+    }
+  }
+
+  // Sensitivity Analysis
+  function calculateSensitivityAnalysis() {
+    const baseState = { ...state };
+    const range = state.sensitivityAnalysis.sensitivityRange / 100;
+    const steps = state.sensitivityAnalysis.sensitivitySteps;
+    const stepSize = (range * 2) / (steps - 1);
+    
+    const results = [];
+    
+    for (let i = 0; i < steps; i++) {
+      const multiplier = 1 - range + (i * stepSize);
+      const testState = {
+        ...baseState,
+        ops: {
+          ...baseState.ops,
+          maintenance: Math.round(baseState.ops.maintenance * multiplier),
+          vacancy: Math.round(baseState.ops.vacancy * multiplier),
+          management: Math.round(baseState.ops.management * multiplier),
+          capEx: Math.round(baseState.ops.capEx * multiplier),
+          opEx: Math.round(baseState.ops.opEx * multiplier)
+        }
+      };
+      
+      // Calculate revenue-based income if available
+      let monthlyIncome = computeIncome(testState);
+      
+      // If we have revenue inputs, use them for more accurate calculations
+      if (state.revenueInputs.totalRooms > 0 && state.revenueInputs.averageDailyRate > 0) {
+        const annualRevenue = state.revenueInputs.totalRooms * state.revenueInputs.averageDailyRate * 
+          (state.revenueInputs.occupancyRate / 100) * 365;
+        monthlyIncome = annualRevenue / 12;
+      }
+      
+      const monthlyExpenses = computeFixedMonthlyOps(testState.ops) + 
+        (monthlyIncome * computeVariableMonthlyOpsPct(testState.ops)) / 100;
+      const monthlyCashFlow = monthlyIncome - monthlyExpenses - 
+        totalMonthlyDebtService({
+          newLoanMonthly: testState.loan.monthlyPayment || 0,
+          subjectToMonthlyTotal: testState.subjectTo?.totalMonthlyPayment,
+          hybridMonthly: testState.hybrid?.monthlyPayment
+        });
+      
+      results.push({
+        multiplier: (multiplier * 100).toFixed(0) + '%',
+        maintenance: testState.ops.maintenance,
+        vacancy: testState.ops.vacancy,
+        management: testState.ops.management,
+        capEx: testState.ops.capEx,
+        opEx: testState.ops.opEx,
+        monthlyCashFlow: Math.round(monthlyCashFlow),
+        annualCashFlow: Math.round(monthlyCashFlow * 12),
+        cashOnCash: monthlyCashFlow > 0 ? 
+          ((monthlyCashFlow * 12) / (testState.purchasePrice * (testState.loan.downPayment || 0) / 100) * 100).toFixed(1) + '%' : 'N/A'
+      });
+    }
+    
+    return results;
+  }
+
+  function toggleSensitivityAnalysis() {
+    setState(prev => ({
+      ...prev,
+      sensitivityAnalysis: {
+        ...prev.sensitivityAnalysis,
+        showSensitivity: !prev.sensitivityAnalysis.showSensitivity
+      }
+    }));
+  }
+
+  // Benchmark Comparison
+  function getIndustryBenchmarks() {
+    const benchmarks = {
+      'Single Family': {
+        'Buy & Hold': { maintenance: 8, vacancy: 5, management: 10, capEx: 5, opEx: 4 },
+        'Fix & Flip': { maintenance: 20, vacancy: 0, management: 6, capEx: 30, opEx: 4 },
+        'Short Term Rental': { maintenance: 12, vacancy: 25, management: 20, capEx: 8, opEx: 10 },
+        'Rental Arbitrage': { maintenance: 15, vacancy: 30, management: 25, capEx: 12, opEx: 15 },
+        'BRRRR': { maintenance: 10, vacancy: 6, management: 10, capEx: 7, opEx: 5 }
+      },
+      'Multi Family': {
+        'Buy & Hold': { maintenance: 12, vacancy: 7, management: 8, capEx: 7, opEx: 5 },
+        'Fix & Flip': { maintenance: 18, vacancy: 0, management: 5, capEx: 25, opEx: 3 },
+        'Short Term Rental': { maintenance: 15, vacancy: 28, management: 22, capEx: 10, opEx: 12 },
+        'Rental Arbitrage': { maintenance: 18, vacancy: 32, management: 25, capEx: 15, opEx: 18 },
+        'BRRRR': { maintenance: 11, vacancy: 7, management: 9, capEx: 8, opEx: 6 }
+      },
+      'Hotel': {
+        'Buy & Hold': { maintenance: 18, vacancy: 22, management: 12, capEx: 12, opEx: 10 },
+        'Fix & Flip': { maintenance: 25, vacancy: 0, management: 8, capEx: 35, opEx: 6 },
+        'Short Term Rental': { maintenance: 20, vacancy: 35, management: 25, capEx: 15, opEx: 18 },
+        'Rental Arbitrage': { maintenance: 22, vacancy: 40, management: 28, capEx: 18, opEx: 20 },
+        'BRRRR': { maintenance: 15, vacancy: 18, management: 10, capEx: 10, opEx: 8 }
+      }
+    };
+    
+    const propertyBenchmarks = benchmarks[state.propertyType];
+    if (!propertyBenchmarks) {
+      return benchmarks['Single Family']['Buy & Hold'];
+    }
+    
+    const operationBenchmarks = propertyBenchmarks[state.operationType];
+    if (!operationBenchmarks) {
+      return benchmarks['Single Family']['Buy & Hold'];
+    }
+    
+    return operationBenchmarks;
+  }
+
+  function compareToBenchmarks() {
+    const benchmarks = getIndustryBenchmarks();
+    const current = state.ops;
+    
+    return {
+      maintenance: {
+        current: current.maintenance,
+        benchmark: benchmarks.maintenance,
+        variance: current.maintenance - benchmarks.maintenance,
+        variancePct: ((current.maintenance - benchmarks.maintenance) / benchmarks.maintenance * 100).toFixed(1)
+      },
+      vacancy: {
+        current: current.vacancy,
+        benchmark: benchmarks.vacancy,
+        variance: current.vacancy - benchmarks.vacancy,
+        variancePct: ((current.vacancy - benchmarks.vacancy) / benchmarks.vacancy * 100).toFixed(1)
+      },
+      management: {
+        current: current.management,
+        benchmark: benchmarks.management,
+        variance: current.management - benchmarks.management,
+        variancePct: ((current.management - benchmarks.management) / benchmarks.management * 100).toFixed(1)
+      },
+      capEx: {
+        current: current.capEx,
+        benchmark: benchmarks.capEx,
+        variance: current.capEx - benchmarks.capEx,
+        variancePct: ((current.capEx - benchmarks.capEx) / benchmarks.capEx * 100).toFixed(1)
+      },
+      opEx: {
+        current: current.opEx,
+        benchmark: benchmarks.opEx,
+        variance: current.opEx - benchmarks.opEx,
+        variancePct: ((current.opEx - benchmarks.opEx) / benchmarks.opEx * 100).toFixed(1)
+      }
+    };
+  }
+
+  function toggleBenchmarkComparison() {
+    setState(prev => ({
+      ...prev,
+      benchmarkComparison: {
+        ...prev.benchmarkComparison,
+        showBenchmarks: !prev.benchmarkComparison.showBenchmarks
+      }
+    }));
+  }
+
+  // Break-Even Analysis Functions
+  function calculateBreakEvenOccupancy(): number {
+    const totalProFormaPct = state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx;
+    const fixedCosts = state.revenueInputs.fixedAnnualCosts;
+    const adr = state.revenueInputs.averageDailyRate;
+    const rooms = state.revenueInputs.totalRooms;
+    
+    if (adr === 0 || rooms === 0) return 0;
+    
+    const dailyRevenuePerRoom = adr;
+    const variableCostPerRoom = (dailyRevenuePerRoom * totalProFormaPct) / 100;
+    const netRevenuePerRoom = dailyRevenuePerRoom - variableCostPerRoom;
+    
+    if (netRevenuePerRoom <= 0) return 100; // Can't break even if variable costs exceed revenue
+    
+    const totalDailyFixedCosts = fixedCosts / 365;
+    const breakEvenOccupancy = (totalDailyFixedCosts / (netRevenuePerRoom * rooms)) * 100;
+    
+    return Math.max(0, Math.min(100, breakEvenOccupancy));
+  }
+
+  function calculateBreakEvenADR(): number {
+    const totalProFormaPct = state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx;
+    const fixedCosts = state.revenueInputs.fixedAnnualCosts;
+    const occupancy = state.revenueInputs.occupancyRate;
+    const rooms = state.revenueInputs.totalRooms;
+    
+    if (occupancy === 0 || rooms === 0) return 0;
+    
+    const dailyFixedCosts = fixedCosts / 365;
+    const occupiedRooms = (rooms * occupancy) / 100;
+    
+    if (occupiedRooms === 0) return 0;
+    
+    const breakEvenADR = dailyFixedCosts / occupiedRooms;
+    const variableCostMultiplier = 1 + (totalProFormaPct / 100);
+    
+    return breakEvenADR * variableCostMultiplier;
+  }
+
+  function calculateMarginOfSafety(): number {
+    const breakEvenOccupancy = calculateBreakEvenOccupancy();
+    const currentOccupancy = state.revenueInputs.occupancyRate;
+    
+    if (breakEvenOccupancy >= currentOccupancy) return 0;
+    
+    return ((currentOccupancy - breakEvenOccupancy) / breakEvenOccupancy) * 100;
   }
 
   function updateAppreciation<K extends keyof AppreciationInputs>(key: K, value: AppreciationInputs[K]) {
@@ -990,13 +1343,70 @@ const UnderwritePage: React.FC = () => {
 
   function exportToPDF() {
     // TODO: Implement PDF export with jsPDF
-    alert('PDF export coming soon! This will include your deal analysis with Dreamery branding.');
+    const proFormaData = {
+      currentPreset: state.proFormaPreset,
+      currentValues: {
+        maintenance: state.ops.maintenance,
+        vacancy: state.ops.vacancy,
+        management: state.ops.management,
+        capEx: state.ops.capEx,
+        opEx: state.ops.opEx
+      },
+      customPresets: state.customProFormaPresets,
+      sensitivityAnalysis: state.sensitivityAnalysis.showSensitivity ? calculateSensitivityAnalysis() : null,
+      benchmarkComparison: state.benchmarkComparison.showBenchmarks ? compareToBenchmarks() : null
+    };
+    
+    console.log('Pro Forma data for PDF export:', proFormaData);
+    alert('PDF export coming soon! This will include your deal analysis with Pro Forma data and Dreamery branding.');
   }
 
   function exportToExcel() {
     // TODO: Implement Excel export with xlsx
-    alert('Excel export coming soon! This will include your deal analysis in an editable spreadsheet format.');
+    const proFormaData = {
+      currentPreset: state.proFormaPreset,
+      currentValues: {
+        maintenance: state.ops.maintenance,
+        vacancy: state.ops.vacancy,
+        management: state.ops.management,
+        capEx: state.ops.capEx,
+        opEx: state.ops.opEx
+      },
+      customPresets: state.customProFormaPresets,
+      sensitivityAnalysis: state.sensitivityAnalysis.showSensitivity ? calculateSensitivityAnalysis() : null,
+      benchmarkComparison: state.benchmarkComparison.showBenchmarks ? compareToBenchmarks() : null
+    };
+    
+    console.log('Pro Forma data for Excel export:', proFormaData);
+    alert('Excel export coming soon! This will include your deal analysis with Pro Forma data in an editable spreadsheet format.');
   }
+
+  useEffect(() => {
+    // Load custom presets from localStorage
+    console.log('Loading custom presets from localStorage...');
+    const savedPresets = localStorage.getItem('dreameryCustomProFormaPresets');
+    console.log('Raw localStorage data:', savedPresets);
+    
+    if (savedPresets) {
+      try {
+        const parsedPresets = JSON.parse(savedPresets);
+        console.log('Parsed presets:', parsedPresets);
+        
+        // Convert string dates back to Date objects
+        const presetsWithDates = parsedPresets.map((preset: any) => ({
+          ...preset,
+          createdAt: new Date(preset.createdAt)
+        }));
+        
+        console.log('Presets with dates:', presetsWithDates);
+        setState(prev => ({ ...prev, customProFormaPresets: presetsWithDates }));
+      } catch (error) {
+        console.error('Error loading custom presets:', error);
+      }
+    } else {
+      console.log('No custom presets found in localStorage');
+    }
+  }, []);
 
   return (
     <Box sx={{ minHeight: '100vh', background: '#ffffff', transition: 'all 0.3s ease-in-out' }}>
@@ -1775,7 +2185,7 @@ const UnderwritePage: React.FC = () => {
                   ))}
 
                   {/* Hybrid Loan 3 */}
-                  {state.hybrid?.loan3Amount > 0 && state.hybrid?.annualInterestRate > 0 && (state.hybrid?.loanBalance || 30) > 0 && (
+                  {state.hybrid?.loan3Amount && state.hybrid.loan3Amount > 0 && state.hybrid?.annualInterestRate && state.hybrid.annualInterestRate > 0 && (state.hybrid?.loanBalance || 30) > 0 && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <Typography variant="h6" sx={{ fontWeight: 600, color: '#666' }}>
                         Hybrid Loan 3 Amortization Schedule
@@ -2549,61 +2959,655 @@ const UnderwritePage: React.FC = () => {
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={{ fontWeight: 700 }}>Pro Forma Presets</Typography>
+              <Typography sx={{ fontWeight: 700 }}>Pro Forma Analysis</Typography>
             </AccordionSummary>
-                        <AccordionDetails>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {/* Preset Selection */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                  <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
-                    Pro Forma:
-                  </Typography>
-                  
-                  {['conservative', 'moderate', 'aggressive'].map((preset) => (
-                    <Button
-                      key={preset}
-                      size="small"
-                      variant={state.proFormaPreset === preset ? 'contained' : 'outlined'}
-                      onClick={() => applyProFormaPreset(preset as 'conservative' | 'moderate' | 'aggressive')}
-                      sx={{ minWidth: 'auto', px: 1.5, py: 0.5, fontSize: '0.75rem' }}
-                    >
-                      {preset === 'moderate' ? 'Moderate' : preset}
-                    </Button>
-                  ))}
-                  
-                  <Button size="small" variant="outlined" sx={{ fontSize: '0.75rem', ml: 'auto' }}>
-                    Pro
-                  </Button>
+            <AccordionDetails>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {/* Tab Navigation */}
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs 
+                    value={state.activeProFormaTab} 
+                    onChange={(_, newValue) => {
+                      setState(prev => ({ ...prev, activeProFormaTab: newValue }));
+                      // If switching to presets tab, apply moderate preset
+                      if (newValue === 'presets') {
+                        applyProFormaPreset('moderate');
+                      }
+                    }}
+                    sx={{ minHeight: 'auto' }}
+                  >
+                    <Tab label="Presets" value="presets" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Custom" value="custom" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Sensitivity" value="sensitivity" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Benchmarks" value="benchmarks" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Revenue" value="revenue" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Break-Even" value="breakEven" sx={{ minHeight: 'auto', py: 1 }} />
+                  </Tabs>
                 </Box>
 
-                {/* Current Values Display */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: '0.8rem', color: '#666' }}>
-                  <Typography>
-                    <strong>M:</strong> {state.ops.maintenance}% | 
-                    <strong> V:</strong> {state.ops.vacancy}% | 
-                    <strong> Mgmt:</strong> {state.ops.management}% | 
-                    <strong> CapEx:</strong> {state.ops.capEx}% | 
-                    <strong> OpEx:</strong> {state.ops.opEx}%
-                  </Typography>
-                </Box>
+                {/* Presets Tab */}
+                {state.activeProFormaTab === 'presets' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Pro Forma:
+                      </Typography>
+                      
+                      {['conservative', 'moderate', 'aggressive'].map((preset) => (
+                        <Button
+                          key={preset}
+                          size="small"
+                          variant={state.proFormaPreset === preset ? 'contained' : 'outlined'}
+                          onClick={() => applyProFormaPreset(preset as 'conservative' | 'moderate' | 'aggressive')}
+                          sx={{ minWidth: 'auto', px: 1.5, py: 0.5, fontSize: '0.75rem' }}
+                        >
+                          {preset === 'moderate' ? 'Moderate' : preset}
+                        </Button>
+                      ))}
+                    </Box>
 
-                {/* Property Type & Operation Type Info */}
-                <Box sx={{ fontSize: '0.75rem', color: '#888', fontStyle: 'italic' }}>
-                  Based on {state.propertyType} + {state.operationType} | 
-                  {state.proFormaPreset === 'conservative' ? ' Conservative' : 
-                   state.proFormaPreset === 'moderate' ? ' Moderate' : ' Aggressive'} preset applied
-                </Box>
+                    {/* Current Values Display */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: '0.8rem', color: '#666' }}>
+                      <Typography>
+                        <strong>M:</strong> {state.ops.maintenance}% | 
+                        <strong> V:</strong> {state.ops.vacancy}% | 
+                        <strong> Mgmt:</strong> {state.ops.management}% | 
+                        <strong> CapEx:</strong> {state.ops.capEx}% | 
+                        <strong> OpEx:</strong> {state.ops.opEx}%
+                      </Typography>
+                    </Box>
+
+                    {/* Property Type & Operation Type Info */}
+                    <Box sx={{ fontSize: '0.75rem', color: '#888', fontStyle: 'italic' }}>
+                      Based on {state.propertyType} + {state.operationType} | 
+                      {state.proFormaPreset === 'conservative' ? ' Conservative' : 
+                       state.proFormaPreset === 'moderate' ? ' Moderate' : ' Aggressive'} preset applied
+                    </Box>
+                  </Box>
+                )}
+
+                {/* Custom Tab */}
+                {state.activeProFormaTab === 'custom' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Custom Pro Forma Values:
+                      </Typography>
+                      <Button size="small" variant="outlined" onClick={() => {
+                        const name = prompt('Enter preset name:');
+                        if (name && name.trim()) {
+                          const description = prompt('Enter description (optional):');
+                          saveCustomPreset(name.trim(), description || undefined);
+                          // Show success message
+                          alert(`Preset "${name.trim()}" saved successfully!`);
+                        }
+                      }}>
+                        Save Current
+                      </Button>
+                    </Box>
+
+                    {/* Pro Forma Input Fields */}
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' }, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Maintenance %"
+                        type="number"
+                        value={state.ops.maintenance}
+                        onChange={(e) => updateOps('maintenance', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Vacancy %"
+                        type="number"
+                        value={state.ops.vacancy}
+                        onChange={(e) => updateOps('vacancy', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Management %"
+                        type="number"
+                        value={state.ops.management}
+                        onChange={(e) => updateOps('management', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="CapEx %"
+                        type="number"
+                        value={state.ops.capEx}
+                        onChange={(e) => updateOps('capEx', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="OpEx %"
+                        type="number"
+                        value={state.ops.opEx}
+                        onChange={(e) => updateOps('opEx', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                    </Box>
+
+                    {/* Current Values Summary */}
+                    <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1, mb: 3 }}>
+                      <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                        <strong>Current Pro Forma Values:</strong>
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#888' }}>
+                        M: {state.ops.maintenance}% | V: {state.ops.vacancy}% | Mgmt: {state.ops.management}% | 
+                        CapEx: {state.ops.capEx}% | OpEx: {state.ops.opEx}%
+                      </Typography>
+                    </Box>
+
+                    {/* Custom Presets List */}
+                    {state.customProFormaPresets.length > 0 && (
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+                          Saved Custom Presets:
+                        </Typography>
+                        <Box sx={{ display: 'grid', gap: 1, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(250px, 1fr))' } }}>
+                          {state.customProFormaPresets.map((preset) => (
+                            <Card key={preset.id} variant="outlined" sx={{ p: 2, position: 'relative' }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{preset.name}</Typography>
+                                <IconButton 
+                                  size="small" 
+                                  onClick={() => deleteCustomPreset(preset.id)}
+                                  sx={{ color: '#d32f2f' }}
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </Box>
+                              {preset.description && (
+                                <Typography variant="caption" sx={{ color: '#666', mb: 1, display: 'block' }}>
+                                  {preset.description}
+                                </Typography>
+                              )}
+                              <Typography variant="caption" sx={{ color: '#888' }}>
+                                M: {preset.maintenance}% | V: {preset.vacancy}% | Mgmt: {preset.management}% | 
+                                CapEx: {preset.capEx}% | OpEx: {preset.opEx}%
+                              </Typography>
+                              <Button 
+                                size="small" 
+                                variant={state.selectedCustomPreset === preset.id ? 'contained' : 'outlined'}
+                                onClick={() => applyCustomPreset(preset.id)}
+                                sx={{ mt: 1, fontSize: '0.7rem' }}
+                              >
+                                {state.selectedCustomPreset === preset.id ? 'Applied' : 'Apply'}
+                              </Button>
+                            </Card>
+                          ))}
+                        </Box>
+                      </Box>
+                    )}
+
+                    {state.customProFormaPresets.length === 0 && (
+                      <Box>
+                        <Typography variant="body2" sx={{ color: '#666', fontStyle: 'italic' }}>
+                          No custom presets saved yet. Adjust the values above and use the "Save Current" button to save your custom Pro Forma settings.
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#999', mt: 1, display: 'block' }}>
+                          Debug: {state.customProFormaPresets.length} presets in state
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                )}
+
+                {/* Sensitivity Analysis Tab */}
+                {state.activeProFormaTab === 'sensitivity' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Sensitivity Analysis:
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                          <Typography variant="body2">Range: ±{state.sensitivityAnalysis.sensitivityRange}%</Typography>
+                          <Slider
+                            value={state.sensitivityAnalysis.sensitivityRange}
+                            onChange={(_, value) => setState(prev => ({
+                              ...prev,
+                              sensitivityAnalysis: { ...prev.sensitivityAnalysis, sensitivityRange: value as number }
+                            }))}
+                            min={10}
+                            max={50}
+                            step={5}
+                            sx={{ width: 100 }}
+                          />
+                          <Typography variant="body2">Steps: {state.sensitivityAnalysis.sensitivitySteps}</Typography>
+                          <Slider
+                            value={state.sensitivityAnalysis.sensitivitySteps}
+                            onChange={(_, value) => setState(prev => ({
+                              ...prev,
+                              sensitivityAnalysis: { ...prev.sensitivityAnalysis, sensitivitySteps: value as number }
+                            }))}
+                            min={3}
+                            max={9}
+                            step={1}
+                            sx={{ width: 100 }}
+                          />
+                        </Box>
+
+                        <Table size="small" sx={{ border: 1, borderColor: '#e0e0e0' }}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Scenario</TableCell>
+                              <TableCell>Maintenance</TableCell>
+                              <TableCell>Vacancy</TableCell>
+                              <TableCell>Management</TableCell>
+                              <TableCell>CapEx</TableCell>
+                              <TableCell>OpEx</TableCell>
+                              <TableCell>Monthly CF</TableCell>
+                              <TableCell>Annual CF</TableCell>
+                              <TableCell>CoC Return</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {calculateSensitivityAnalysis().map((row, i) => (
+                              <TableRow key={i} sx={{ 
+                                backgroundColor: row.multiplier === '100%' ? '#f5f5f5' : 'inherit',
+                                fontWeight: row.multiplier === '100%' ? 'bold' : 'normal'
+                              }}>
+                                <TableCell>{row.multiplier}</TableCell>
+                                <TableCell>{row.maintenance}%</TableCell>
+                                <TableCell>{row.vacancy}%</TableCell>
+                                <TableCell>{row.management}%</TableCell>
+                                <TableCell>{row.capEx}%</TableCell>
+                                <TableCell>{row.opEx}%</TableCell>
+                                <TableCell>{formatCurrency(row.monthlyCashFlow)}</TableCell>
+                                <TableCell>{formatCurrency(row.annualCashFlow)}</TableCell>
+                                <TableCell>{row.cashOnCash}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                  </Box>
+                )}
+
+                {/* Benchmark Comparison Tab */}
+                {state.activeProFormaTab === 'benchmarks' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Industry Benchmarks:
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                        <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                          Comparing your assumptions to industry averages for {state.propertyType} + {state.operationType}
+                        </Typography>
+
+                        <Table size="small" sx={{ border: 1, borderColor: '#e0e0e0' }}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Category</TableCell>
+                              <TableCell>Your %</TableCell>
+                              <TableCell>Industry Avg</TableCell>
+                              <TableCell>Variance</TableCell>
+                              <TableCell>Status</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {Object.entries(compareToBenchmarks()).map(([category, data]) => (
+                              <TableRow key={category}>
+                                <TableCell sx={{ textTransform: 'capitalize' }}>{category}</TableCell>
+                                <TableCell>{data.current}%</TableCell>
+                                <TableCell>{data.benchmark}%</TableCell>
+                                <TableCell sx={{ 
+                                  color: data.variance > 0 ? '#d32f2f' : '#2e7d32',
+                                  fontWeight: 'bold'
+                                }}>
+                                  {data.variance > 0 ? '+' : ''}{data.variancePct}%
+                                </TableCell>
+                                <TableCell>
+                                  <Chip 
+                                    label={data.variance > 0 ? 'Above Avg' : 'Below Avg'} 
+                                    size="small"
+                                    color={data.variance > 0 ? 'warning' : 'success'}
+                                    variant="outlined"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+
+                        <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+                          <Typography variant="body2" sx={{ color: '#666' }}>
+                            <strong>Note:</strong> Industry benchmarks are based on aggregated data from real estate professionals. 
+                            Your specific market conditions may vary significantly.
+                          </Typography>
+                        </Box>
+                      </Box>
+                  </Box>
+                )}
+
+                {/* Revenue Analysis Tab */}
+                {state.activeProFormaTab === 'revenue' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Revenue Projections:
+                      </Typography>
+                    </Box>
+
+                    {/* Revenue Input Fields */}
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' }, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Total Rooms"
+                        type="number"
+                        value={state.revenueInputs.totalRooms}
+                        onChange={(e) => setState(prev => ({
+                          ...prev,
+                          revenueInputs: { ...prev.revenueInputs, totalRooms: parseInt(e.target.value) || 1 }
+                        }))}
+                        inputProps={{ min: 1, max: 1000 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Average Daily Rate ($)"
+                        type="number"
+                        value={state.revenueInputs.averageDailyRate}
+                        onChange={(e) => setState(prev => ({
+                          ...prev,
+                          revenueInputs: { ...prev.revenueInputs, averageDailyRate: parseFloat(e.target.value) || 0 }
+                        }))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, step: 1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Base Occupancy Rate (%)"
+                        type="number"
+                        value={state.revenueInputs.occupancyRate}
+                        onChange={(e) => setState(prev => ({
+                          ...prev,
+                          revenueInputs: { ...prev.revenueInputs, occupancyRate: parseFloat(e.target.value) || 0 }
+                        }))}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Fixed Annual Costs ($)"
+                        type="number"
+                        value={state.revenueInputs.fixedAnnualCosts}
+                        onChange={(e) => setState(prev => ({
+                          ...prev,
+                          revenueInputs: { 
+                            ...prev.revenueInputs, 
+                            fixedAnnualCosts: parseFloat(e.target.value) || 0,
+                            fixedMonthlyCosts: (parseFloat(e.target.value) || 0) / 12
+                          }
+                        }))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        inputProps={{ min: 0, step: 1000 }}
+                      />
+                    </Box>
+
+                    {/* Seasonal Variations */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+                        Seasonal Occupancy Multipliers:
+                      </Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(150px, 1fr))' } }}>
+                        <TextField
+                          fullWidth
+                          label="Q1 (Winter)"
+                          type="number"
+                          value={state.revenueInputs.seasonalVariations.q1}
+                          onChange={(e) => setState(prev => ({
+                            ...prev,
+                            revenueInputs: {
+                              ...prev.revenueInputs,
+                              seasonalVariations: { ...prev.revenueInputs.seasonalVariations, q1: parseFloat(e.target.value) || 1 }
+                            }
+                          }))}
+                          inputProps={{ min: 0, max: 3, step: 0.1 }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Q2 (Spring)"
+                          type="number"
+                          value={state.revenueInputs.seasonalVariations.q2}
+                          onChange={(e) => setState(prev => ({
+                            ...prev,
+                            revenueInputs: {
+                              ...prev.revenueInputs,
+                              seasonalVariations: { ...prev.revenueInputs.seasonalVariations, q2: parseFloat(e.target.value) || 1 }
+                            }
+                          }))}
+                          inputProps={{ min: 0, max: 3, step: 0.1 }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Q3 (Summer)"
+                          type="number"
+                          value={state.revenueInputs.seasonalVariations.q3}
+                          onChange={(e) => setState(prev => ({
+                            ...prev,
+                            revenueInputs: {
+                              ...prev.revenueInputs,
+                              seasonalVariations: { ...prev.revenueInputs.seasonalVariations, q3: parseFloat(e.target.value) || 1 }
+                            }
+                          }))}
+                          inputProps={{ min: 0, max: 3, step: 0.1 }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Q4 (Fall)"
+                          type="number"
+                          value={state.revenueInputs.seasonalVariations.q4}
+                          onChange={(e) => setState(prev => ({
+                            ...prev,
+                            revenueInputs: {
+                              ...prev.revenueInputs,
+                              seasonalVariations: { ...prev.revenueInputs.seasonalVariations, q4: parseFloat(e.target.value) || 1 }
+                            }
+                          }))}
+                          inputProps={{ min: 0, max: 3, step: 0.1 }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Revenue Projections Table */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+                        Revenue Projections (33 Rooms):
+                      </Typography>
+                      <Table size="small" sx={{ border: 1, borderColor: '#e0e0e0' }}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Occupancy</TableCell>
+                            <TableCell>ADR $50</TableCell>
+                            <TableCell>ADR $100</TableCell>
+                            <TableCell>ADR $150</TableCell>
+                            <TableCell>ADR $200</TableCell>
+                            <TableCell>ADR $250</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {[10, 20, 30, 40, 50, 60, 70, 75, 80, 85, 90, 95, 100].map((occupancy) => (
+                            <TableRow key={occupancy}>
+                              <TableCell sx={{ fontWeight: 'bold' }}>{occupancy}%</TableCell>
+                              {[50, 100, 150, 200, 250].map((adr) => {
+                                const annualRevenue = (state.revenueInputs.totalRooms * adr * occupancy / 100 * 365);
+                                const monthlyRevenue = annualRevenue / 12;
+                                return (
+                                  <TableCell key={adr}>
+                                    <Box>
+                                      <Typography variant="caption" sx={{ display: 'block', fontWeight: 'bold' }}>
+                                        ${annualRevenue.toLocaleString()}
+                                      </Typography>
+                                      <Typography variant="caption" sx={{ color: '#666' }}>
+                                        ${monthlyRevenue.toLocaleString()}/mo
+                                      </Typography>
+                                    </Box>
+                                  </TableCell>
+                                );
+                              })}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Box>
+
+                    {/* Fixed Costs Summary */}
+                    <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+                      <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                        <strong>Fixed Costs Summary:</strong>
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#888' }}>
+                        Annual: ${state.revenueInputs.fixedAnnualCosts.toLocaleString()} | 
+                        Monthly: ${(state.revenueInputs.fixedAnnualCosts / 12).toLocaleString()}
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+
+                {/* Break-Even Analysis Tab */}
+                {state.activeProFormaTab === 'breakEven' && (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                        Break-Even Analysis:
+                      </Typography>
+                    </Box>
+
+                    {/* Break-Even Calculations */}
+                    <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(250px, 1fr))' }, mb: 3 }}>
+                      <Card sx={{ p: 2, backgroundColor: '#e3f2fd' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1976d2', mb: 1 }}>
+                          Break-Even Occupancy
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: '#1976d2' }}>
+                          {calculateBreakEvenOccupancy().toFixed(1)}%
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666' }}>
+                          Minimum occupancy needed to cover costs
+                        </Typography>
+                      </Card>
+
+                      <Card sx={{ p: 2, backgroundColor: '#f3e5f5' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#7b1fa2', mb: 1 }}>
+                          Break-Even ADR
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: '#7b1fa2' }}>
+                          ${calculateBreakEvenADR().toFixed(0)}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666' }}>
+                          Minimum daily rate needed to cover costs
+                        </Typography>
+                      </Card>
+
+                      <Card sx={{ p: 2, backgroundColor: '#e8f5e8' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#388e3c', mb: 1 }}>
+                          Margin of Safety
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: '#388e3c' }}>
+                          {calculateMarginOfSafety().toFixed(1)}%
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666' }}>
+                          Current occupancy above break-even
+                        </Typography>
+                      </Card>
+                    </Box>
+
+                    {/* Break-Even Table */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+                        Break-Even Analysis by Occupancy:
+                      </Typography>
+                      <Table size="small" sx={{ border: 1, borderColor: '#e0e0e0' }}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Occupancy</TableCell>
+                            <TableCell>Revenue</TableCell>
+                            <TableCell>Fixed Costs</TableCell>
+                            <TableCell>Variable Costs</TableCell>
+                            <TableCell>Net Income</TableCell>
+                            <TableCell>Status</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {[10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((occupancy) => {
+                            const revenue = (state.revenueInputs.totalRooms * state.revenueInputs.averageDailyRate * occupancy / 100 * 365);
+                            const fixedCosts = state.revenueInputs.fixedAnnualCosts;
+                            const variableCosts = revenue * (state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx) / 100;
+                            const netIncome = revenue - fixedCosts - variableCosts;
+                            const isProfitable = netIncome > 0;
+                            
+                            return (
+                              <TableRow key={occupancy} sx={{ backgroundColor: isProfitable ? '#f1f8e9' : '#ffebee' }}>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{occupancy}%</TableCell>
+                                <TableCell>${revenue.toLocaleString()}</TableCell>
+                                <TableCell>${fixedCosts.toLocaleString()}</TableCell>
+                                <TableCell>${variableCosts.toLocaleString()}</TableCell>
+                                <TableCell sx={{ color: isProfitable ? '#2e7d32' : '#d32f2f', fontWeight: 'bold' }}>
+                                  ${netIncome.toLocaleString()}
+                                </TableCell>
+                                <TableCell>
+                                  <Chip 
+                                    label={isProfitable ? 'Profitable' : 'Loss'} 
+                                    size="small"
+                                    color={isProfitable ? 'success' : 'error'}
+                                    variant="outlined"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Box>
+
+                    {/* Pro Forma Integration */}
+                    <Box sx={{ p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
+                      <Typography variant="body2" sx={{ color: '#e65100', mb: 1 }}>
+                        <strong>Pro Forma Integration:</strong>
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#e65100' }}>
+                        Break-even calculations include your current Pro Forma percentages: 
+                        M: {state.ops.maintenance}% | V: {state.ops.vacancy}% | Mgmt: {state.ops.management}% | 
+                        CapEx: {state.ops.capEx}% | OpEx: {state.ops.opEx}%
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
               </Box>
             </AccordionDetails>
           </Accordion>
         </Card>
         )}
-
-        
-
-
-
-
 
         {/* Fix & Flip Section */}
             {state.operationType === 'Fix & Flip' && (

@@ -72,6 +72,10 @@ interface SubjectToLoan {
   amount: number;
   annualInterestRate: number;
   monthlyPayment: number;
+  originalTermYears: number;
+  startDate: string;
+  currentBalance: number;
+  paymentNumber: number;
 }
 
 interface SubjectToInputs {
@@ -239,6 +243,28 @@ function formatCurrency(value: number): string {
   );
 }
 
+function formatDateToMMDDYY(dateInput: string | undefined): string {
+  if (!dateInput) return '';
+
+  // Check if the input string already matches MM / DD / YY format
+  const regex = /^\d{2} \/ \d{2} \/ \d{2}$/;
+  if (regex.test(dateInput)) {
+    return dateInput; // If already in desired format, return as is
+  }
+
+  // Attempt to parse other date formats (e.g., YYYY-MM-DD from previous state)
+  const date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) {
+    return dateInput; // If parsing failed, return original input (e.g., if user typed something invalid)
+  }
+
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const year = date.getFullYear().toString().slice(-2);
+  return `${month} / ${day} / ${year}`;
+}
+
 // Returns today's date formatted for an HTML input[type="date"] (YYYY-MM-DD) using local time
 function currentDateInputValue(): string {
   const now = new Date();
@@ -276,6 +302,52 @@ function buildAmortization(
     balance = Math.max(0, interestOnly ? balance : balance - principal);
     schedule.push({ index: i, payment: pmt, interest, principal, balance });
   }
+  return schedule;
+}
+
+function buildSubjectToAmortization(
+  loan: SubjectToLoan,
+  currentPaymentNumber: number
+): Array<{ index: number; payment: number; interest: number; principal: number; balance: number; paymentDate: string }> {
+  const monthlyRate = loan.annualInterestRate / 100 / 12;
+  const totalPayments = loan.originalTermYears * 12;
+  const remainingPayments = totalPayments - currentPaymentNumber + 1;
+  
+  // Calculate the remaining balance at current payment number
+  const originalMonthlyPayment = (loan.amount * monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
+  let balance = loan.amount;
+  
+  // Calculate balance up to current payment number
+  for (let i = 0; i < currentPaymentNumber - 1; i++) {
+    const interest = balance * monthlyRate;
+    const principal = originalMonthlyPayment - interest;
+    balance -= principal;
+  }
+  
+  const schedule: Array<{ index: number; payment: number; interest: number; principal: number; balance: number; paymentDate: string }> = [];
+  
+  // Generate remaining payments
+  for (let i = 0; i < remainingPayments; i++) {
+    const paymentIndex = currentPaymentNumber + i;
+    const interest = balance * monthlyRate;
+    const principal = originalMonthlyPayment - interest;
+    balance -= principal;
+    
+    // Calculate payment date based on start date
+    const startDate = new Date(loan.startDate);
+    const paymentDate = new Date(startDate);
+    paymentDate.setMonth(startDate.getMonth() + paymentIndex - 1);
+    
+    schedule.push({
+      index: paymentIndex,
+      payment: originalMonthlyPayment,
+      interest,
+      principal,
+      balance: Math.max(0, balance),
+      paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    });
+  }
+  
   return schedule;
 }
 
@@ -765,7 +837,15 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => {
       const newLoans = [...(prev.subjectTo?.loans ?? [])];
       if (!newLoans[index]) {
-        newLoans[index] = { amount: 0, annualInterestRate: 0, monthlyPayment: 0 };
+        newLoans[index] = { 
+          amount: 0, 
+          annualInterestRate: 0, 
+          monthlyPayment: 0, 
+          originalTermYears: 30, 
+          startDate: currentDateInputValue(), 
+          currentBalance: 0, 
+          paymentNumber: 1 
+        };
       }
       newLoans[index] = { ...newLoans[index], [key]: value };
       return {
@@ -788,7 +868,15 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => {
       const newLoans = [...(prev.hybrid?.subjectToLoans ?? [])];
       if (!newLoans[index]) {
-        newLoans[index] = { amount: 0, annualInterestRate: 0, monthlyPayment: 0 };
+        newLoans[index] = { 
+          amount: 0, 
+          annualInterestRate: 0, 
+          monthlyPayment: 0, 
+          originalTermYears: 30, 
+          startDate: currentDateInputValue(), 
+          currentBalance: 0, 
+          paymentNumber: 1 
+        };
       }
       newLoans[index] = { ...newLoans[index], [key]: value };
       return {
@@ -848,50 +936,66 @@ const UnderwritePage: React.FC = () => {
               <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                         <TextField
                   fullWidth
-                  label="Property Address"
-                  value={state.propertyAddress}
-                  onChange={(e) => update('propertyAddress', e.target.value)}
-                        />
-                        <TextField
-                  fullWidth
                   label="Agent/Owner"
                   value={state.agentOwner}
                   onChange={(e) => update('agentOwner', e.target.value)}
                 />
                         <TextField
                   fullWidth
-                  type="date"
-                  label="Analysis Date"
-                  value={state.analysisDate}
-                  onChange={(e) => update('analysisDate', e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                  fullWidth
-                  label="Listed Price"
-                  value={state.listedPrice}
-                  onChange={(e) => update('listedPrice', parseCurrency(e.target.value))}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
+                  label="Property Address"
+                  value={state.propertyAddress}
+                  onChange={(e) => update('propertyAddress', e.target.value)}
                         />
-                        <TextField
-                  fullWidth
-                  label="Purchase Price"
-                  value={state.purchasePrice}
-                  onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                  }}
-                />
+                        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr' } }}>
                           <TextField
-                  fullWidth
-                  label="% Difference"
-                  value={((state.purchasePrice - state.listedPrice) / state.listedPrice * 100).toFixed(1) + '%'}
-                  InputProps={{
-                    readOnly: true,
-                          }}
-                        />
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            value={state.email}
+                            onChange={(e) => update('email', e.target.value)}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Phone Number"
+                            value={state.call}
+                            onChange={(e) => update('call', e.target.value)}
+                          />
+                        </Box>
+                        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '3fr 4fr 4fr 2fr' } }}>
+                  <TextField
+                    fullWidth
+                    label="Analysis Date"
+                    placeholder="MM / DD / YY"
+                    value={formatDateToMMDDYY(state.analysisDate)}
+                    onChange={(e) => update('analysisDate', e.target.value)}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Listed Price"
+                    value={state.listedPrice ? state.listedPrice.toLocaleString('en-US') : ''}
+                    onChange={(e) => update('listedPrice', parseCurrency(e.target.value))}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Purchase Price"
+                    value={state.purchasePrice ? state.purchasePrice.toLocaleString('en-US') : ''}
+                    onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="% Difference"
+                    value={((state.purchasePrice - state.listedPrice) / state.listedPrice * 100).toFixed(1) + '%'}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Box>
                       </Box>
 
               <Box sx={{ mt: 3, display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
@@ -938,30 +1042,897 @@ const UnderwritePage: React.FC = () => {
           </Accordion>
         </Card>
 
-        {/* Loan & Costs Section */}
+        {/* Subject-To Existing Mortgage Section - Moved to appear after Basic Info */}
+        {(state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Subject-To Existing Mortgage</Typography>
+              </AccordionSummary>
+                              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <TextField
+                    fullWidth
+                    label="Payment to Seller (one-time)"
+                    value={state.subjectTo?.paymentToSeller}
+                    onChange={(e) => updateSubjectTo('paymentToSeller', parseCurrency(e.target.value))}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: '#666' }}>Existing Loans</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Loan 1</Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                    <TextField
+                          fullWidth
+                          label="Loan Amount"
+                          value={state.subjectTo?.loans[0]?.amount}
+                          onChange={(e) => updateSubjectToLoan(0, 'amount', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                    />
+                    <TextField
+                          fullWidth
+                          label="Interest Rate"
+                          value={state.subjectTo?.loans[0]?.annualInterestRate}
+                          onChange={(e) => updateSubjectToLoan(0, 'annualInterestRate', parseCurrency(e.target.value))}
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                          }}
+                        />
+                    <TextField
+                      fullWidth
+                          label="Monthly Payment"
+                          value={state.subjectTo?.loans[0]?.monthlyPayment}
+                          onChange={(e) => updateSubjectToLoan(0, 'monthlyPayment', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                    />
+                    <TextField
+                      fullWidth
+                          label="Original Term (Years)"
+                          type="number"
+                          value={state.subjectTo?.loans[0]?.originalTermYears || 30}
+                          onChange={(e) => updateSubjectToLoan(0, 'originalTermYears', parseInt(e.target.value) || 30)}
+                    />
+                    <TextField
+                      fullWidth
+                          label="Start Date"
+                          type="date"
+                          value={state.subjectTo?.loans[0]?.startDate || currentDateInputValue()}
+                          onChange={(e) => {
+                            const newLoans = [...(state.subjectTo?.loans || [])];
+                            if (!newLoans[0]) {
+                              newLoans[0] = { 
+                                amount: 0, 
+                                annualInterestRate: 0, 
+                                monthlyPayment: 0, 
+                                originalTermYears: 30, 
+                                startDate: currentDateInputValue(), 
+                                currentBalance: 0, 
+                                paymentNumber: 1 
+                              };
+                            }
+                            newLoans[0] = { ...newLoans[0], startDate: e.target.value };
+                            setState(prev => ({
+                              ...prev,
+                              subjectTo: {
+                                ...(prev.subjectTo || {
+                                  paymentToSeller: 0,
+                                  loans: [],
+                                  totalLoanBalance: 0,
+                                  totalMonthlyPayment: 0,
+                                  totalAnnualPayment: 0,
+                                }),
+                                loans: newLoans,
+                              },
+                            }));
+                          }}
+                    />
+                    <TextField
+                      fullWidth
+                          label="Current Payment Number"
+                          type="number"
+                          value={state.subjectTo?.loans[0]?.paymentNumber || 1}
+                          onChange={(e) => updateSubjectToLoan(0, 'paymentNumber', parseInt(e.target.value) || 1)}
+                    />
+                  </Box>
+
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 2 }}>Loan 2</Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                          fullWidth
+                        label="Loan Amount"
+                          value={state.subjectTo?.loans[1]?.amount}
+                          onChange={(e) => updateSubjectToLoan(1, 'amount', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                      />
+                      <TextField
+                          fullWidth
+                          label="Interest Rate"
+                          value={state.subjectTo?.loans[1]?.annualInterestRate}
+                          onChange={(e) => updateSubjectToLoan(1, 'annualInterestRate', parseCurrency(e.target.value))}
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                          }}
+                      />
+                      <TextField
+                          fullWidth
+                        label="Monthly Payment"
+                          value={state.subjectTo?.loans[1]?.monthlyPayment}
+                          onChange={(e) => updateSubjectToLoan(1, 'monthlyPayment', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                      />
+                      <TextField
+                        fullWidth
+                            label="Original Term (Years)"
+                            type="number"
+                            value={state.subjectTo?.loans[1]?.originalTermYears || 30}
+                            onChange={(e) => updateSubjectToLoan(1, 'originalTermYears', parseInt(e.target.value) || 30)}
+                      />
+                      <TextField
+                        fullWidth
+                            label="Start Date"
+                            type="date"
+                            value={state.subjectTo?.loans[1]?.startDate || currentDateInputValue()}
+                            onChange={(e) => {
+                              const newLoans = [...(state.subjectTo?.loans || [])];
+                              if (!newLoans[1]) {
+                                newLoans[1] = { 
+                                  amount: 0, 
+                                  annualInterestRate: 0, 
+                                  monthlyPayment: 0, 
+                                  originalTermYears: 30, 
+                                  startDate: currentDateInputValue(), 
+                                  currentBalance: 0, 
+                                  paymentNumber: 1 
+                                };
+                              }
+                              newLoans[1] = { ...newLoans[1], startDate: e.target.value };
+                              setState(prev => ({
+                                ...prev,
+                                subjectTo: {
+                                  ...(prev.subjectTo || {
+                                    paymentToSeller: 0,
+                                    loans: [],
+                                    totalLoanBalance: 0,
+                                    totalMonthlyPayment: 0,
+                                    totalAnnualPayment: 0,
+                                  }),
+                                  loans: newLoans,
+                                },
+                              }));
+                            }}
+                      />
+                      <TextField
+                        fullWidth
+                            label="Current Payment Number"
+                            type="number"
+                            value={state.subjectTo?.loans[1]?.paymentNumber || 1}
+                            onChange={(e) => updateSubjectToLoan(1, 'paymentNumber', parseInt(e.target.value) || 1)}
+                      />
+                    </Box>
+                  </Box>
+
+                    <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Auto-calculated Totals</Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+                    <TextField
+                          fullWidth
+                          label="Total Loan Balance"
+                          value={formatCurrency(state.subjectTo?.totalLoanBalance || 0)}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                    />
+                    <TextField
+                          fullWidth
+                          label="Total Monthly Payment"
+                          value={formatCurrency(state.subjectTo?.totalMonthlyPayment || 0)}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                    />
+                    <TextField
+                          fullWidth
+                          label="Total Annual Payment"
+                          value={formatCurrency(state.subjectTo?.totalAnnualPayment || 0)}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    </Box>
+                  </Box>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+            </Accordion>
+          </Card>
+            )}
+
+        {/* Subject-To Amortization Schedule Section */}
+        {state.offerType === 'Subject To Existing Mortgage' && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Subject-To Amortization Schedule</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {state.subjectTo?.loans?.map((loan, loanIndex) => (
+                    <Box key={loanIndex} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#666' }}>
+                        Loan {loanIndex + 1} Amortization Schedule
+                      </Typography>
+                      {loan.amount > 0 && loan.annualInterestRate > 0 && loan.originalTermYears > 0 && (
+                        <>
+                          <Box sx={{ width: '100%' }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={Math.min(100, (loan.originalTermYears * 12) / 600 * 100)}
+                              sx={{ height: 10, borderRadius: 5 }}
+                            />
+                          </Box>
+                          <Box sx={{ overflowX: 'auto' }}>
+                            <Table>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Payment #</TableCell>
+                                  <TableCell>Date</TableCell>
+                                  <TableCell>Payment</TableCell>
+                                  <TableCell>Interest</TableCell>
+                                  <TableCell>Principal</TableCell>
+                                  <TableCell>Balance</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {buildSubjectToAmortization(loan, loan.paymentNumber || 1).slice(0, 60).map((row) => (
+                                  <TableRow key={row.index}>
+                                    <TableCell>{row.index}</TableCell>
+                                    <TableCell>{row.paymentDate}</TableCell>
+                                    <TableCell>{formatCurrency(row.payment)}</TableCell>
+                                    <TableCell>{formatCurrency(row.interest)}</TableCell>
+                                    <TableCell>{formatCurrency(row.principal)}</TableCell>
+                                    <TableCell>{formatCurrency(row.balance)}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                          <Typography variant="caption" align="center" sx={{ color: '#666' }}>
+                            Showing next 60 payments (5 years) of {loan.originalTermYears * 12 - (loan.paymentNumber || 1) + 1} remaining payments
+                          </Typography>
+                        </>
+                      )}
+                    </Box>
+                  ))}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Seller Finance Section - Moved to appear after Subject-To */}
+        {state.offerType === 'Seller Finance' && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="Payment to Seller (one-time)"
+                    value={state.loan.downPayment || 0}
+                    onChange={(e) => updateLoan('downPayment', parseCurrency(e.target.value))}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: '#666' }}>Seller Finance Loan</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Loan Amount"
+                        value={state.loan.loanAmount || 0}
+                        onChange={(e) => updateLoan('loanAmount', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Interest Rate"
+                        value={state.loan.annualInterestRate || 0}
+                        onChange={(e) => updateLoan('annualInterestRate', parseFloat(e.target.value) || 0)}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Payment"
+                        value={state.loan.monthlyPayment || 0}
+                        onChange={(e) => updateLoan('monthlyPayment', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Term (Years)"
+                        type="number"
+                        value={state.loan.amortizationYears || 30}
+                        onChange={(e) => updateLoan('amortizationYears', parseInt(e.target.value) || 30)}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Start Date"
+                        type="date"
+                        value={currentDateInputValue()}
+                        onChange={(e) => {
+                          // Update the analysis date to use as start date for seller finance
+                          update('analysisDate', e.target.value);
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={state.loan.interestOnly || false}
+                            onChange={(e) => updateLoan('interestOnly', e.target.checked)}
+                          />
+                        }
+                        label="Interest Only"
+                      />
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Auto-calculated Results</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Total Monthly Payment"
+                        value={formatCurrency(state.loan.monthlyPayment || 0)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Annual Payment"
+                        value={formatCurrency((state.loan.monthlyPayment || 0) * 12)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Loan Amount"
+                        value={formatCurrency(state.loan.loanAmount || 0)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Seller Finance Amortization Schedule Section */}
+        {state.offerType === 'Seller Finance' && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Seller Finance Amortization Schedule</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {state.loan.loanAmount > 0 && state.loan.annualInterestRate > 0 && state.loan.amortizationYears > 0 && (
+                    <>
+                      <Box sx={{ width: '100%' }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={Math.min(100, (state.loan.amortizationYears * 12) / 600 * 100)}
+                          sx={{ height: 10, borderRadius: 5 }}
+                        />
+                      </Box>
+                      <Box sx={{ overflowX: 'auto' }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Payment #</TableCell>
+                              <TableCell>Date</TableCell>
+                              <TableCell>Payment</TableCell>
+                              <TableCell>Interest</TableCell>
+                              <TableCell>Principal</TableCell>
+                              <TableCell>Balance</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {buildAmortization(
+                              state.loan.loanAmount,
+                              state.loan.annualInterestRate,
+                              state.loan.amortizationYears,
+                              state.loan.interestOnly || false
+                            ).slice(0, 60).map((row) => (
+                              <TableRow key={row.index}>
+                                <TableCell>{row.index}</TableCell>
+                                <TableCell>
+                                  {(() => {
+                                    const startDate = new Date(state.analysisDate);
+                                    const paymentDate = new Date(startDate);
+                                    paymentDate.setMonth(startDate.getMonth() + row.index - 1);
+                                    return paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                                  })()}
+                                </TableCell>
+                                <TableCell>{formatCurrency(row.payment)}</TableCell>
+                                <TableCell>{formatCurrency(row.interest)}</TableCell>
+                                <TableCell>{formatCurrency(row.principal)}</TableCell>
+                                <TableCell>{formatCurrency(row.balance)}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                      <Typography variant="caption" align="center" sx={{ color: '#666' }}>
+                        Showing next 60 payments (5 years) of {state.loan.amortizationYears * 12} total payments
+                      </Typography>
+                    </>
+                  )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Hybrid Financing Section - Moved to appear after Seller Finance */}
+        {state.offerType === 'Hybrid' && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>Hybrid Financing</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: '#666' }}>New Note (Loan 3)</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                        <TextField
+                        fullWidth
+                        label="Down Payment"
+                        value={state.hybrid?.downPayment}
+                        onChange={(e) => updateHybrid('downPayment', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        />
+                        <TextField
+                        fullWidth
+                        label="Loan Amount"
+                        value={state.hybrid?.loan3Amount}
+                        onChange={(e) => updateHybrid('loan3Amount', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        />
+                        <TextField
+                        fullWidth
+                        label="Interest Rate"
+                        value={state.hybrid?.annualInterestRate}
+                        onChange={(e) => updateHybrid('annualInterestRate', parseCurrency(e.target.value))}
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        }}
+                        />
+                        <TextField
+                        fullWidth
+                        label="Monthly Payment"
+                        value={state.hybrid?.monthlyPayment}
+                        onChange={(e) => updateHybrid('monthlyPayment', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Term (Years)"
+                        type="number"
+                        value={state.hybrid?.loanBalance || 30}
+                        onChange={(e) => updateHybrid('loanBalance', parseInt(e.target.value) || 30)}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Start Date"
+                        type="date"
+                        value={currentDateInputValue()}
+                        onChange={(e) => {
+                          // Update the analysis date to use as start date for hybrid loan 3
+                          update('analysisDate', e.target.value);
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={state.hybrid?.interestOnly}
+                            onChange={(e) => updateHybrid('interestOnly', e.target.checked)}
+                          />
+                        }
+                        label="Interest Only"
+                        />
+                        <TextField
+                        fullWidth
+                        label="Balloon Due (years)"
+                        type="number"
+                        value={state.hybrid?.balloonDue}
+                        onChange={(e) => updateHybrid('balloonDue', parseInt(e.target.value) || 0)}
+                      />
+                    </Box>
+                  </Box>
+
+                        <TextField
+                      fullWidth
+                    label="Payment to Seller"
+                    value={state.hybrid?.paymentToSeller}
+                    onChange={(e) => updateHybrid('paymentToSeller', parseCurrency(e.target.value))}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+
+                  <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Combined Financing Summary</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+                        <TextField
+                        fullWidth
+                        label="Total Loan Balance"
+                        value={formatCurrency(state.hybrid?.totalLoanBalance || 0)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                        <TextField
+                        fullWidth
+                        label="Total Monthly Payment"
+                        value={formatCurrency(state.hybrid?.totalMonthlyPayment || 0)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                          <TextField
+                        fullWidth
+                        label="Total Annual Payment"
+                        value={formatCurrency(state.hybrid?.totalAnnualPayment || 0)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      </Box>
+                    </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Hybrid Amortization Schedule Section - Combined Schedule for All Loans */}
+        {state.offerType === 'Hybrid' && state.operationType !== 'Rental Arbitrage' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Hybrid Amortization Schedule - Combined All Loans</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Subject-To Loans (Loan 1 & 2) */}
+                  {state.hybrid?.subjectToLoans?.map((loan, loanIndex) => (
+                    <Box key={`subto-${loanIndex}`} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#666' }}>
+                        Subject-To Loan {loanIndex + 1} Amortization Schedule
+                      </Typography>
+                      {loan.amount > 0 && loan.annualInterestRate > 0 && loan.originalTermYears > 0 && (
+                        <>
+                          <Box sx={{ width: '100%' }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={Math.min(100, (loan.originalTermYears * 12) / 600 * 100)}
+                              sx={{ height: 10, borderRadius: 5 }}
+                            />
+                          </Box>
+                          <Box sx={{ overflowX: 'auto' }}>
+                            <Table>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Payment #</TableCell>
+                                  <TableCell>Date</TableCell>
+                                  <TableCell>Payment</TableCell>
+                                  <TableCell>Interest</TableCell>
+                                  <TableCell>Principal</TableCell>
+                                  <TableCell>Balance</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {buildSubjectToAmortization(loan, loan.paymentNumber || 1).slice(0, 60).map((row) => (
+                                  <TableRow key={row.index}>
+                                    <TableCell>{row.index}</TableCell>
+                                    <TableCell>{row.paymentDate}</TableCell>
+                                    <TableCell>{formatCurrency(row.payment)}</TableCell>
+                                    <TableCell>{formatCurrency(row.interest)}</TableCell>
+                                    <TableCell>{formatCurrency(row.principal)}</TableCell>
+                                    <TableCell>{formatCurrency(row.balance)}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                          <Typography variant="caption" align="center" sx={{ color: '#666' }}>
+                            Showing next 60 payments (5 years) of {loan.originalTermYears * 12 - (loan.paymentNumber || 1) + 1} remaining payments
+                          </Typography>
+                        </>
+                      )}
+                    </Box>
+                  ))}
+
+                  {/* Hybrid Loan 3 */}
+                  {state.hybrid?.loan3Amount > 0 && state.hybrid?.annualInterestRate > 0 && (state.hybrid?.loanBalance || 30) > 0 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#666' }}>
+                        Hybrid Loan 3 Amortization Schedule
+                      </Typography>
+                      <Box sx={{ width: '100%' }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={Math.min(100, ((state.hybrid?.loanBalance || 30) * 12) / 600 * 100)}
+                          sx={{ height: 10, borderRadius: 5 }}
+                        />
+                      </Box>
+                      <Box sx={{ overflowX: 'auto' }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Payment #</TableCell>
+                              <TableCell>Date</TableCell>
+                              <TableCell>Payment</TableCell>
+                              <TableCell>Interest</TableCell>
+                              <TableCell>Principal</TableCell>
+                              <TableCell>Balance</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {buildAmortization(
+                              state.hybrid?.loan3Amount || 0,
+                              state.hybrid?.annualInterestRate || 0,
+                              state.hybrid?.loanBalance || 30,
+                              state.hybrid?.interestOnly || false
+                            ).slice(0, 60).map((row) => (
+                              <TableRow key={row.index}>
+                                <TableCell>{row.index}</TableCell>
+                                <TableCell>
+                                  {(() => {
+                                    const startDate = new Date(state.analysisDate);
+                                    const paymentDate = new Date(startDate);
+                                    paymentDate.setMonth(startDate.getMonth() + row.index - 1);
+                                    return paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                                  })()}
+                                </TableCell>
+                                <TableCell>{formatCurrency(row.payment)}</TableCell>
+                                <TableCell>{formatCurrency(row.interest)}</TableCell>
+                                <TableCell>{formatCurrency(row.principal)}</TableCell>
+                                <TableCell>{formatCurrency(row.balance)}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                      <Typography variant="caption" align="center" sx={{ color: '#666' }}>
+                        Showing next 60 payments (5 years) of {(state.hybrid?.loanBalance || 30) * 12} total payments
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Costs Section - For Cash financing only */}
+        {state.offerType === 'Cash' && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Basic Costs - Always visible for Cash */}
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Basic Costs</Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Closing Costs"
+                        value={state.loan.closingCosts || 0}
+                        onChange={(e) => updateLoan('closingCosts', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Rehab Costs"
+                        value={state.loan.rehabCosts || 0}
+                        onChange={(e) => updateLoan('rehabCosts', parseCurrency(e.target.value))}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* STR/Rental Arbitrage Specific Costs */}
+                  {(state.operationType === 'Short Term Rental' || state.operationType === 'Rental Arbitrage') && (
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Property Preparation Costs</Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                        <TextField
+                          fullWidth
+                          label="Repairs"
+                          value={state.arbitrage?.estimateCostOfRepairs || 0}
+                          onChange={(e) => updateArbitrage('estimateCostOfRepairs', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Renovation"
+                          value={state.loan.rehabCosts || 0}
+                          onChange={(e) => updateLoan('rehabCosts', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Furniture"
+                          value={state.arbitrage?.furnitureCost || 0}
+                          onChange={(e) => updateArbitrage('furnitureCost', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Bedding"
+                          value={state.arbitrage?.otherStartupCosts || 0}
+                          onChange={(e) => updateArbitrage('otherStartupCosts', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Improvements"
+                          value={0}
+                          onChange={(e) => {
+                            // This could be added to the state if needed
+                          }}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Rental Arbitrage Specific - Deposit */}
+                  {state.operationType === 'Rental Arbitrage' && (
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Rental Arbitrage Costs</Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                        <TextField
+                          fullWidth
+                          label="Deposit"
+                          value={state.arbitrage?.deposit || 0}
+                          onChange={(e) => updateArbitrage('deposit', parseCurrency(e.target.value))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+                
+                <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Total Cash Required</Typography>
+                  <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+                    <TextField
+                      fullWidth
+                      label="Purchase Price"
+                      value={formatCurrency(state.purchasePrice || 0)}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Total Additional Costs"
+                      value={formatCurrency(
+                        (state.loan.closingCosts || 0) + 
+                        (state.loan.rehabCosts || 0) + 
+                        (state.arbitrage?.estimateCostOfRepairs || 0) + 
+                        (state.arbitrage?.furnitureCost || 0) + 
+                        (state.arbitrage?.otherStartupCosts || 0) + 
+                        (state.arbitrage?.deposit || 0)
+                      )}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Total Cash Required"
+                      value={formatCurrency(
+                        (state.purchasePrice || 0) + 
+                        (state.loan.closingCosts || 0) + 
+                        (state.loan.rehabCosts || 0) + 
+                        (state.arbitrage?.estimateCostOfRepairs || 0) + 
+                        (state.arbitrage?.furnitureCost || 0) + 
+                        (state.arbitrage?.otherStartupCosts || 0) + 
+                        (state.arbitrage?.deposit || 0)
+                      )}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* Loan & Costs Section - Hidden for Subject To Existing Mortgage, Seller Finance, Hybrid, and Cash */}
+        {state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Seller Finance' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <Accordion defaultExpanded>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>
                 {state.operationType === 'Rental Arbitrage' ? 'Startup Costs' : 'Loan & Costs'}
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
+              </AccordionSummary>
+              <AccordionDetails>
               {state.operationType === 'Rental Arbitrage' ? (
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                         <TextField
                     fullWidth
                     label="Deposit"
-                    value={state.arbitrage?.deposit}
+                    value={state.arbitrage?.deposit ? state.arbitrage.deposit.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('deposit', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
+                          }}
                         />
                         <TextField
                     fullWidth
                     label="Estimate Cost of Repairs"
-                    value={state.arbitrage?.estimateCostOfRepairs}
+                    value={state.arbitrage?.estimateCostOfRepairs ? state.arbitrage.estimateCostOfRepairs.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('estimateCostOfRepairs', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -970,7 +1941,7 @@ const UnderwritePage: React.FC = () => {
                         <TextField
                     fullWidth
                     label="Furniture Cost"
-                    value={state.arbitrage?.furnitureCost}
+                    value={state.arbitrage?.furnitureCost ? state.arbitrage.furnitureCost.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('furnitureCost', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -979,11 +1950,11 @@ const UnderwritePage: React.FC = () => {
                         <TextField
                     fullWidth
                     label="Other Startup Costs"
-                    value={state.arbitrage?.otherStartupCosts}
+                    value={state.arbitrage?.otherStartupCosts ? state.arbitrage.otherStartupCosts.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('otherStartupCosts', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
+                          }}
                         />
                       </Box>
               ) : (
@@ -991,7 +1962,7 @@ const UnderwritePage: React.FC = () => {
                       <TextField
                     fullWidth
                     label="Down Payment"
-                    value={state.loan.downPayment}
+                    value={state.loan.downPayment ? state.loan.downPayment.toLocaleString('en-US') : ''}
                     onChange={(e) => updateLoan('downPayment', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1016,20 +1987,21 @@ const UnderwritePage: React.FC = () => {
                         <TextField
                     fullWidth
                     label="Closing Costs"
-                    value={state.loan.closingCosts}
+                    value={state.loan.closingCosts ? state.loan.closingCosts.toLocaleString('en-US') : ''}
                     onChange={(e) => updateLoan('closingCosts', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}
                         />
-                      </Box>
-              )}
+                    </Box>
+                  )}
             </AccordionDetails>
           </Accordion>
         </Card>
+        )}
 
-        {/* Amortization Schedule Section */}
-            {state.operationType !== 'Rental Arbitrage' && (
+        {/* Amortization Schedule Section - Hidden for Subject To Existing Mortgage, Hybrid, and Cash */}
+            {state.operationType !== 'Rental Arbitrage' && state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -1114,7 +2086,7 @@ const UnderwritePage: React.FC = () => {
               <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
                 <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Auto-calculated Results</Typography>
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                        <TextField
+                          <TextField
                     fullWidth
                     label="Future Value"
                     value={formatCurrency(state.appreciation?.futurePropertyValue || 0)}
@@ -1131,7 +2103,7 @@ const UnderwritePage: React.FC = () => {
                     }}
                         />
                       </Box>
-                  </Box>
+                    </Box>
                 </AccordionDetails>
               </Accordion>
         </Card>
@@ -1149,12 +2121,12 @@ const UnderwritePage: React.FC = () => {
                 {/* Property Configuration */}
                 {(state.propertyType === 'Multi Family' || state.propertyType === 'Hotel') && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <TextField
+                        <TextField
                       sx={{ width: '200px' }}
-                      label="Number of Units"
-                      type="number"
+                          label="Number of Units"
+                          type="number"
                       value={state.propertyType === 'Hotel' ? state.str?.unitDailyRents.length : state.multi?.unitRents.length}
-                      onChange={(e) => {
+                          onChange={(e) => {
                         const count = Math.max(1, parseInt(e.target.value) || 1);
                         if (state.propertyType === 'Hotel') {
                           const newRents = Array(count).fill(0).map((_, i) => state.str?.unitDailyRents[i] || 0);
@@ -1167,7 +2139,7 @@ const UnderwritePage: React.FC = () => {
                     />
                     <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' }}>
                       {(state.propertyType === 'Hotel' ? state.str?.unitDailyRents : state.multi?.unitRents)?.map((rent, index) => (
-                          <TextField
+                        <TextField
                           key={index}
                           fullWidth
                           label={`Unit ${index + 1} ${state.propertyType === 'Hotel' || state.operationType === 'Short Term Rental' ? 'Nightly Rate' : 'Monthly Rent'}`}
@@ -1225,7 +2197,7 @@ const UnderwritePage: React.FC = () => {
                       />
                       <TextField
                         fullWidth
-                        label="Daily Cleaning Fee"
+                          label="Daily Cleaning Fee"
                         value={state.str?.dailyCleaningFee}
                         onChange={(e) => updateStr('dailyCleaningFee', parseCurrency(e.target.value))}
                         InputProps={{
@@ -1251,10 +2223,10 @@ const UnderwritePage: React.FC = () => {
                         InputProps={{
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
-                      />
-                    </Box>
+                        />
+                      </Box>
                     <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                        <TextField
+                      <TextField
                         fullWidth
                         label="Experiences (Monthly)"
                         value={state.str?.activities}
@@ -1263,7 +2235,7 @@ const UnderwritePage: React.FC = () => {
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
                       />
-                      <TextField
+                          <TextField
                         fullWidth
                         label="Extra Monthly Income"
                         value={state.str?.grossMonthlyIncome}
@@ -1279,15 +2251,15 @@ const UnderwritePage: React.FC = () => {
                 {/* Extra Income - Always shown at bottom */}
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr' } }}>
                   {state.propertyType === 'Single Family' ? (
-                    <TextField
+                        <TextField
                       fullWidth
                       label="Monthly Rent"
                       value={state.sfr?.monthlyRent}
                       onChange={(e) => updateSfr('monthlyRent', parseCurrency(e.target.value))}
-                      InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
-                    />
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                        />
                   ) : (
-                    <TextField
+                        <TextField
                       fullWidth
                       label="Extra Monthly Income"
                       value={
@@ -1303,7 +2275,7 @@ const UnderwritePage: React.FC = () => {
                           updateStr('grossMonthlyIncome', value);
                         }
                       }}
-                      InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
                     />
                   )}
                 </Box>
@@ -1325,7 +2297,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                   label="Taxes"
-                    value={state.ops.taxes}
+                    value={state.ops.taxes ? state.ops.taxes.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('taxes', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1334,7 +2306,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                   label="Insurance"
-                    value={state.ops.insurance}
+                    value={state.ops.insurance ? state.ops.insurance.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('insurance', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1343,7 +2315,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                   label="HOA"
-                    value={state.ops.hoa}
+                    value={state.ops.hoa ? state.ops.hoa.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('hoa', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1352,7 +2324,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                     label="Gas & Electric"
-                    value={state.ops.gasElectric}
+                    value={state.ops.gasElectric ? state.ops.gasElectric.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('gasElectric', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1361,7 +2333,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                     label="Internet"
-                    value={state.ops.internet}
+                    value={state.ops.internet ? state.ops.internet.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('internet', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1370,7 +2342,7 @@ const UnderwritePage: React.FC = () => {
                   <TextField
                   fullWidth
                     label="Water & Sewer"
-                    value={state.ops.waterSewer}
+                    value={state.ops.waterSewer ? state.ops.waterSewer.toLocaleString('en-US') : ''}
                     onChange={(e) => updateOps('waterSewer', parseCurrency(e.target.value))}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1413,7 +2385,7 @@ const UnderwritePage: React.FC = () => {
                   }}
                   />
                   {state.operationType === 'Rental Arbitrage' && (
-                    <TextField
+                  <TextField
                       fullWidth
                       label="Monthly Rent to Landlord"
                       value={state.ops.monthlyRentToLandlord}
@@ -1486,7 +2458,8 @@ const UnderwritePage: React.FC = () => {
             </Accordion>
         </Card>
 
-            {/* Pro Forma Presets */}
+            {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
+        {state.operationType !== 'Fix & Flip' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -1580,241 +2553,13 @@ const UnderwritePage: React.FC = () => {
                 </AccordionDetails>
             </Accordion>
         </Card>
+        )}
 
         
 
-        {/* Subject-To Existing Mortgage Section */}
-        {(state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && state.operationType !== 'Rental Arbitrage' && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ fontWeight: 700 }}>Subject-To Existing Mortgage</Typography>
-              </AccordionSummary>
-                              <AccordionDetails>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <TextField
-                    fullWidth
-                    label="Payment to Seller (one-time)"
-                    value={state.subjectTo?.paymentToSeller}
-                    onChange={(e) => updateSubjectTo('paymentToSeller', parseCurrency(e.target.value))}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                  />
 
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <Typography variant="subtitle2" sx={{ color: '#666' }}>Existing Loans</Typography>
-                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Loan 1</Typography>
-                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                    <TextField
-                          fullWidth
-                          label="Loan Amount"
-                          value={state.subjectTo?.loans[0]?.amount}
-                          onChange={(e) => updateSubjectToLoan(0, 'amount', parseCurrency(e.target.value))}
-                          InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
-                    />
-                    <TextField
-                          fullWidth
-                          label="Interest Rate"
-                          value={state.subjectTo?.loans[0]?.annualInterestRate}
-                          onChange={(e) => updateSubjectToLoan(0, 'annualInterestRate', parseCurrency(e.target.value))}
-                          InputProps={{
-                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                          }}
-                        />
-                    <TextField
-                      fullWidth
-                          label="Monthly Payment"
-                          value={state.subjectTo?.loans[0]?.monthlyPayment}
-                          onChange={(e) => updateSubjectToLoan(0, 'monthlyPayment', parseCurrency(e.target.value))}
-                          InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
-                    />
-                  </Box>
 
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 2 }}>Loan 2</Typography>
-                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                      <TextField
-                          fullWidth
-                        label="Loan Amount"
-                          value={state.subjectTo?.loans[1]?.amount}
-                          onChange={(e) => updateSubjectToLoan(1, 'amount', parseCurrency(e.target.value))}
-                          InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
-                      />
-                      <TextField
-                          fullWidth
-                          label="Interest Rate"
-                          value={state.subjectTo?.loans[1]?.annualInterestRate}
-                          onChange={(e) => updateSubjectToLoan(1, 'annualInterestRate', parseCurrency(e.target.value))}
-                          InputProps={{
-                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                          }}
-                      />
-                      <TextField
-                          fullWidth
-                        label="Monthly Payment"
-                          value={state.subjectTo?.loans[1]?.monthlyPayment}
-                          onChange={(e) => updateSubjectToLoan(1, 'monthlyPayment', parseCurrency(e.target.value))}
-                          InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
-                      />
-                    </Box>
-                  </Box>
 
-                    <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-                      <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Auto-calculated Totals</Typography>
-                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
-                    <TextField
-                          fullWidth
-                          label="Total Loan Balance"
-                          value={formatCurrency(state.subjectTo?.totalLoanBalance || 0)}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                    />
-                    <TextField
-                          fullWidth
-                          label="Total Monthly Payment"
-                          value={formatCurrency(state.subjectTo?.totalMonthlyPayment || 0)}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                    />
-                    <TextField
-                          fullWidth
-                          label="Total Annual Payment"
-                          value={formatCurrency(state.subjectTo?.totalAnnualPayment || 0)}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    </Box>
-                  </Box>
-                    </Box>
-                  </Box>
-                </AccordionDetails>
-            </Accordion>
-          </Card>
-            )}
-
-        {/* Hybrid Financing Section */}
-        {state.offerType === 'Hybrid' && state.operationType !== 'Rental Arbitrage' && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography sx={{ fontWeight: 700 }}>Hybrid Financing</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <Typography variant="subtitle2" sx={{ color: '#666' }}>New Note (Loan 3)</Typography>
-                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                        <TextField
-                        fullWidth
-                        label="Down Payment"
-                        value={state.hybrid?.downPayment}
-                        onChange={(e) => updateHybrid('downPayment', parseCurrency(e.target.value))}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        />
-                        <TextField
-                        fullWidth
-                        label="Loan Amount"
-                        value={state.hybrid?.loan3Amount}
-                        onChange={(e) => updateHybrid('loan3Amount', parseCurrency(e.target.value))}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        />
-                        <TextField
-                        fullWidth
-                        label="Interest Rate"
-                        value={state.hybrid?.annualInterestRate}
-                        onChange={(e) => updateHybrid('annualInterestRate', parseCurrency(e.target.value))}
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                        }}
-                        />
-                        <TextField
-                        fullWidth
-                        label="Monthly Payment"
-                        value={state.hybrid?.monthlyPayment}
-                        onChange={(e) => updateHybrid('monthlyPayment', parseCurrency(e.target.value))}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={state.hybrid?.interestOnly}
-                            onChange={(e) => updateHybrid('interestOnly', e.target.checked)}
-                          />
-                        }
-                        label="Interest Only"
-                        />
-                        <TextField
-                        fullWidth
-                        label="Balloon Due (years)"
-                        type="number"
-                        value={state.hybrid?.balloonDue}
-                        onChange={(e) => updateHybrid('balloonDue', parseInt(e.target.value) || 0)}
-                      />
-                    </Box>
-                  </Box>
-
-                        <TextField
-                      fullWidth
-                    label="Payment to Seller"
-                    value={state.hybrid?.paymentToSeller}
-                    onChange={(e) => updateHybrid('paymentToSeller', parseCurrency(e.target.value))}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                  />
-
-                  <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-                    <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Combined Financing Summary</Typography>
-                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
-                        <TextField
-                        fullWidth
-                        label="Total Loan Balance"
-                        value={formatCurrency(state.hybrid?.totalLoanBalance || 0)}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        />
-                        <TextField
-                        fullWidth
-                        label="Total Monthly Payment"
-                        value={formatCurrency(state.hybrid?.totalMonthlyPayment || 0)}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                          <TextField
-                        fullWidth
-                        label="Total Annual Payment"
-                        value={formatCurrency(state.hybrid?.totalAnnualPayment || 0)}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                      </Box>
-                    </Box>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-            )}
 
         {/* Fix & Flip Section */}
             {state.operationType === 'Fix & Flip' && (
@@ -2018,61 +2763,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
 
-        {/* Amortization Schedule Section */}
-            {state.operationType !== 'Rental Arbitrage' && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ fontWeight: 700 }}>Amortization Schedule</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={Math.min(100, (state.loan.amortizationYears * 12) / 600 * 100)}
-                      sx={{ height: 10, borderRadius: 5 }}
-                    />
-                      </Box>
 
-                  <Box sx={{ overflowX: 'auto' }}>
-                    <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>#</TableCell>
-                          <TableCell>Payment</TableCell>
-                          <TableCell>Interest</TableCell>
-                          <TableCell>Principal</TableCell>
-                          <TableCell>Balance</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                        {buildAmortization(
-                          state.loan.loanAmount,
-                          state.loan.annualInterestRate,
-                          state.loan.amortizationYears,
-                          state.loan.interestOnly,
-                        ).map((row) => (
-                      <TableRow key={row.index}>
-                        <TableCell>{row.index}</TableCell>
-                            <TableCell>{formatCurrency(row.payment)}</TableCell>
-                            <TableCell>{formatCurrency(row.interest)}</TableCell>
-                            <TableCell>{formatCurrency(row.principal)}</TableCell>
-                            <TableCell>{formatCurrency(row.balance)}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                      </Box>
-
-                  <Typography variant="caption" align="center" sx={{ color: '#666' }}>
-                    Showing {state.loan.amortizationYears * 12} payments over {state.loan.amortizationYears} years
-                        </Typography>
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-          </Card>
-        )}
 
 
 
@@ -2087,44 +2778,44 @@ const UnderwritePage: React.FC = () => {
                 <AccordionDetails>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                    <TextField
+                      <TextField
                       fullWidth
                     label="Property Address"
                     value={state.propertyAddress}
                     InputProps={{ readOnly: true }}
-                    />
-                    <TextField
+                      />
+                      <TextField
                       fullWidth
                     label="Agent/Owner"
                     value={state.agentOwner}
                     InputProps={{ readOnly: true }}
-                    />
-                    <TextField
+                      />
+                      <TextField
                       fullWidth
                     label="Analysis Date"
                     value={state.analysisDate}
                     InputProps={{ readOnly: true }}
                   />
-                    <TextField
+                      <TextField
                     fullWidth
                     label="Property Type"
                     value={state.propertyType}
                     InputProps={{ readOnly: true }}
-                    />
-                    <TextField
+                      />
+                      <TextField
                     fullWidth
                     label="Operation Type"
                     value={state.operationType}
                     InputProps={{ readOnly: true }}
                     />
                     <TextField
-                    fullWidth
+                      fullWidth
                     label="Finance Type"
                     value={state.offerType}
                     InputProps={{ readOnly: true }}
                     />
                   </Box>
-                  
+
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                     <TextField
                     fullWidth
@@ -2163,15 +2854,15 @@ const UnderwritePage: React.FC = () => {
                     InputProps={{ readOnly: true }}
                     />
                   </Box>
-
+                  
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                  <TextField
+                    <TextField
                     fullWidth
                     label="Monthly Income"
                     value={formatCurrency(computeIncome(state))}
                     InputProps={{ readOnly: true }}
-                  />
-                  <TextField
+                    />
+                    <TextField
                     fullWidth
                     label="Monthly Operating Expenses"
                     value={formatCurrency(
@@ -2179,8 +2870,8 @@ const UnderwritePage: React.FC = () => {
                       (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100
                     )}
                     InputProps={{ readOnly: true }}
-                  />
-                  <TextField
+                    />
+                    <TextField
                     fullWidth
                     label="Monthly Debt Service"
                     value={formatCurrency(totalMonthlyDebtService({
@@ -2189,8 +2880,8 @@ const UnderwritePage: React.FC = () => {
                       hybridMonthly: state.hybrid?.monthlyPayment
                     }))}
                     InputProps={{ readOnly: true }}
-                  />
-                  <TextField
+                    />
+                    <TextField
                     fullWidth
                     label="Monthly Cash Flow"
                     value={formatCurrency(computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
@@ -2199,8 +2890,8 @@ const UnderwritePage: React.FC = () => {
                       hybridMonthly: state.hybrid?.monthlyPayment
                     }))}
                     InputProps={{ readOnly: true }}
-                  />
-                  <TextField
+                    />
+                    <TextField
                     fullWidth
                     label="Annual Cash Flow"
                     value={formatCurrency((computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
@@ -2209,8 +2900,8 @@ const UnderwritePage: React.FC = () => {
                       hybridMonthly: state.hybrid?.monthlyPayment
                     })) * 12)}
                     InputProps={{ readOnly: true }}
-                  />
-                  <TextField
+                    />
+                    <TextField
                     fullWidth
                     label="Cash on Cash Return"
                     value={(computeCocAnnual(state, (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
@@ -2230,9 +2921,9 @@ const UnderwritePage: React.FC = () => {
                       includeVariablePct: state.includeVariablePctInBreakeven || false
                     }).toFixed(1) + '%'}
                     InputProps={{ readOnly: true }}
-                    />
-                  </Box>
-                  
+                      />
+                    </Box>
+                    
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                       <TextField
                     fullWidth
@@ -2258,13 +2949,13 @@ const UnderwritePage: React.FC = () => {
                     value={formatCurrency(computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
                     InputProps={{ readOnly: true }}
                   />
-                  <TextField
+                      <TextField
                     fullWidth
                     label="Total Monthly Expenses"
                     value={formatCurrency(computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
                     InputProps={{ readOnly: true }}
                   />
-                  <TextField
+                    <TextField
                     fullWidth
                     label="Total Annual Expenses"
                     value={formatCurrency((computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100) * 12)}

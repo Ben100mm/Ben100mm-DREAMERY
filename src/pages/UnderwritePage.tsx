@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -222,14 +223,15 @@ interface DealState {
   str?: IncomeInputsStr;
   arbitrage?: ArbitrageInputs;
   appreciation: AppreciationInputs;
-  // Settings
-  showBothPaybackMethods: boolean;
-  paybackCalculationMethod: 'initial' | 'remaining';
-  reservesCalculationMethod: 'months' | 'fixed';
-  reservesMonths: number;
-  reservesFixedAmount: number;
-  includeVariableExpensesInBreakEven: boolean;
-  includeVariablePctInBreakeven?: boolean;
+      // Settings
+    showBothPaybackMethods: boolean;
+    paybackCalculationMethod: 'initial' | 'remaining';
+    reservesCalculationMethod: 'months' | 'fixed';
+    reservesMonths: number;
+    reservesFixedAmount: number;
+    includeVariableExpensesInBreakEven: boolean;
+    includeVariablePctInBreakeven?: boolean;
+    proFormaPreset: 'conservative' | 'moderate' | 'aggressive';
 };
 
 function parseCurrency(input: string): number {
@@ -660,9 +662,11 @@ const defaultState: DealState = {
   reservesFixedAmount: 0,
   includeVariableExpensesInBreakEven: false,
   includeVariablePctInBreakeven: false,
+  proFormaPreset: 'moderate',
 };
 
 const UnderwritePage: React.FC = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState<DealState>(() => {
     try {
       const fromLocal = localStorage.getItem('underwrite:last');
@@ -679,7 +683,29 @@ const UnderwritePage: React.FC = () => {
   }
 
   function update<K extends keyof DealState>(key: K, value: DealState[K]) {
-    setState((prev) => ({ ...prev, [key]: value }));
+    setState((prev) => {
+      const newState = { ...prev, [key]: value };
+      
+      // Auto-update Pro Forma values when property type or operation type changes
+      if (key === 'propertyType' || key === 'operationType') {
+        const newValues = getProFormaValues(
+          key === 'propertyType' ? value as PropertyType : prev.propertyType,
+          key === 'operationType' ? value as OperationType : prev.operationType,
+          prev.proFormaPreset
+        );
+        
+        newState.ops = {
+          ...newState.ops,
+          maintenance: newValues.maintenance,
+          vacancy: newValues.vacancy,
+          management: newValues.management,
+          capEx: newValues.capEx,
+          opEx: newValues.opEx
+        };
+      }
+      
+      return newState;
+    });
   }
 
   function updateLoan<K extends keyof LoanTerms>(key: K, value: LoanTerms[K]) {
@@ -688,6 +714,66 @@ const UnderwritePage: React.FC = () => {
 
   function updateOps<K extends keyof OperatingInputsCommon>(key: K, value: OperatingInputsCommon[K]) {
     setState((prev) => ({ ...prev, ops: { ...prev.ops, [key]: value } }));
+  }
+
+  function updateProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive') {
+    setState((prev) => ({ ...prev, proFormaPreset: preset }));
+  }
+
+  // Dynamic Pro Forma calculations based on property type and operation type
+  function getProFormaValues(propertyType: PropertyType, operationType: OperationType, preset: 'conservative' | 'moderate' | 'aggressive') {
+    const baseValues = {
+      'Single Family': {
+        'Buy & Hold': { maintenance: 6, vacancy: 4, management: 9, capEx: 4, opEx: 3 },
+        'Fix & Flip': { maintenance: 20, vacancy: 0, management: 6, capEx: 30, opEx: 4 },
+        'Short Term Rental': { maintenance: 10, vacancy: 30, management: 20, capEx: 8, opEx: 10 },
+        'Rental Arbitrage': { maintenance: 12, vacancy: 35, management: 25, capEx: 12, opEx: 15 },
+        'BRRRR': { maintenance: 8, vacancy: 5, management: 8, capEx: 6, opEx: 4 }
+      },
+      'Multi Family': {
+        'Buy & Hold': { maintenance: 10, vacancy: 6, management: 6, capEx: 6, opEx: 4 },
+        'Fix & Flip': { maintenance: 18, vacancy: 0, management: 5, capEx: 25, opEx: 3 },
+        'Short Term Rental': { maintenance: 12, vacancy: 25, management: 18, capEx: 10, opEx: 12 },
+        'Rental Arbitrage': { maintenance: 15, vacancy: 30, management: 22, capEx: 15, opEx: 18 },
+        'BRRRR': { maintenance: 9, vacancy: 6, management: 7, capEx: 7, opEx: 5 }
+      },
+      'Hotel': {
+        'Buy & Hold': { maintenance: 15, vacancy: 20, management: 10, capEx: 10, opEx: 8 },
+        'Fix & Flip': { maintenance: 25, vacancy: 0, management: 8, capEx: 35, opEx: 6 },
+        'Short Term Rental': { maintenance: 18, vacancy: 35, management: 25, capEx: 12, opEx: 15 },
+        'Rental Arbitrage': { maintenance: 20, vacancy: 40, management: 28, capEx: 18, opEx: 20 },
+        'BRRRR': { maintenance: 12, vacancy: 15, management: 8, capEx: 8, opEx: 6 }
+      }
+    };
+
+    const base = baseValues[propertyType]?.[operationType] || baseValues['Single Family']['Buy & Hold'];
+    
+    // Apply preset multipliers
+    const multipliers = {
+      'conservative': { maintenance: 0.8, vacancy: 0.8, management: 0.9, capEx: 0.8, opEx: 0.8 },
+      'moderate': { maintenance: 1.0, vacancy: 1.0, management: 1.0, capEx: 1.0, opEx: 1.0 },
+      'aggressive': { maintenance: 1.3, vacancy: 1.2, management: 1.1, capEx: 1.3, opEx: 1.2 }
+    };
+
+    const multiplier = multipliers[preset];
+    
+    return {
+      maintenance: Math.round(base.maintenance * multiplier.maintenance),
+      vacancy: Math.round(base.vacancy * multiplier.vacancy),
+      management: Math.round(base.management * multiplier.management),
+      capEx: Math.round(base.capEx * multiplier.capEx),
+      opEx: Math.round(base.opEx * multiplier.opEx)
+    };
+  }
+
+  function applyProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive') {
+    const values = getProFormaValues(state.propertyType, state.operationType, preset);
+    updateOps('maintenance', values.maintenance);
+    updateOps('vacancy', values.vacancy);
+    updateOps('management', values.management);
+    updateOps('capEx', values.capEx);
+    updateOps('opEx', values.opEx);
+    updateProFormaPreset(preset);
   }
 
   function updateAppreciation<K extends keyof AppreciationInputs>(key: K, value: AppreciationInputs[K]) {
@@ -2465,93 +2551,51 @@ const UnderwritePage: React.FC = () => {
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>Pro Forma Presets</Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-                <Button
-                    variant="outlined"
-                    onClick={() => {
-                      updateOps('maintenance', 5);
-                      updateOps('vacancy', 5);
-                      updateOps('management', 5);
-                      updateOps('capEx', 5);
-                      updateOps('opEx', 5);
-                  }}
-                >
-                  Conservative
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => {
-                      updateOps('maintenance', 8);
-                      updateOps('vacancy', 8);
-                      updateOps('management', 8);
-                      updateOps('capEx', 8);
-                      updateOps('opEx', 8);
-                    }}
-                  >
-                    Moderate (Default)
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={() => {
-                      updateOps('maintenance', 10);
-                      updateOps('vacancy', 10);
-                      updateOps('management', 10);
-                      updateOps('capEx', 10);
-                      updateOps('opEx', 10);
-                  }}
-                >
-                  Aggressive
-                </Button>
-              </Box>
-
-                <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
-                  <Card variant="outlined" sx={{ p: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Conservative</Typography>
-                    <Typography variant="body2">
-                      • Maintenance: 5%<br />
-                      • Vacancy: 5%<br />
-                      • Management: 5%<br />
-                      • CapEx: 5%<br />
-                      • OpEx: 5%
-              </Typography>
-                  </Card>
-
-                  <Card variant="outlined" sx={{ p: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Moderate (Default)</Typography>
-                    <Typography variant="body2">
-                      • Maintenance: 8%<br />
-                      • Vacancy: 8%<br />
-                      • Management: 8%<br />
-                      • CapEx: 8%<br />
-                      • OpEx: 8%
-                    </Typography>
-                  </Card>
-
-                  <Card variant="outlined" sx={{ p: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Aggressive</Typography>
-                    <Typography variant="body2">
-                      • Maintenance: 10%<br />
-                      • Vacancy: 10%<br />
-                      • Management: 10%<br />
-                      • CapEx: 10%<br />
-                      • OpEx: 10%
-                    </Typography>
-                  </Card>
-            </Box>
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    Want to save your own presets? Upgrade to Pro!
+                        <AccordionDetails>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Preset Selection */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                  <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
+                    Pro Forma:
                   </Typography>
-                  <Button variant="contained" color="primary">
-                    Upgrade Now
+                  
+                  {['conservative', 'moderate', 'aggressive'].map((preset) => (
+                    <Button
+                      key={preset}
+                      size="small"
+                      variant={state.proFormaPreset === preset ? 'contained' : 'outlined'}
+                      onClick={() => applyProFormaPreset(preset as 'conservative' | 'moderate' | 'aggressive')}
+                      sx={{ minWidth: 'auto', px: 1.5, py: 0.5, fontSize: '0.75rem' }}
+                    >
+                      {preset === 'moderate' ? 'Moderate' : preset}
+                    </Button>
+                  ))}
+                  
+                  <Button size="small" variant="outlined" sx={{ fontSize: '0.75rem', ml: 'auto' }}>
+                    Pro
                   </Button>
                 </Box>
-                  </Box>
-                </AccordionDetails>
-            </Accordion>
+
+                {/* Current Values Display */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: '0.8rem', color: '#666' }}>
+                  <Typography>
+                    <strong>M:</strong> {state.ops.maintenance}% | 
+                    <strong> V:</strong> {state.ops.vacancy}% | 
+                    <strong> Mgmt:</strong> {state.ops.management}% | 
+                    <strong> CapEx:</strong> {state.ops.capEx}% | 
+                    <strong> OpEx:</strong> {state.ops.opEx}%
+                  </Typography>
+                </Box>
+
+                {/* Property Type & Operation Type Info */}
+                <Box sx={{ fontSize: '0.75rem', color: '#888', fontStyle: 'italic' }}>
+                  Based on {state.propertyType} + {state.operationType} | 
+                  {state.proFormaPreset === 'conservative' ? ' Conservative' : 
+                   state.proFormaPreset === 'moderate' ? ' Moderate' : ' Aggressive'} preset applied
+                </Box>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
         </Card>
         )}
 
@@ -2776,235 +2820,272 @@ const UnderwritePage: React.FC = () => {
               <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Property & Deal Info */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Property & Deal Info
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                       <TextField
-                      fullWidth
-                    label="Property Address"
-                    value={state.propertyAddress}
-                    InputProps={{ readOnly: true }}
+                        fullWidth
+                        label="Property Address"
+                        value={state.propertyAddress}
+                        InputProps={{ readOnly: true }}
                       />
                       <TextField
-                      fullWidth
-                    label="Agent/Owner"
-                    value={state.agentOwner}
-                    InputProps={{ readOnly: true }}
+                        fullWidth
+                        label="Agent/Owner"
+                        value={state.agentOwner}
+                        InputProps={{ readOnly: true }}
                       />
                       <TextField
-                      fullWidth
-                    label="Analysis Date"
-                    value={state.analysisDate}
-                    InputProps={{ readOnly: true }}
-                  />
-                      <TextField
-                    fullWidth
-                    label="Property Type"
-                    value={state.propertyType}
-                    InputProps={{ readOnly: true }}
+                        fullWidth
+                        label="Analysis Date"
+                        value={state.analysisDate}
+                        InputProps={{ readOnly: true }}
                       />
                       <TextField
-                    fullWidth
-                    label="Operation Type"
-                    value={state.operationType}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                      fullWidth
-                    label="Finance Type"
-                    value={state.offerType}
-                    InputProps={{ readOnly: true }}
-                    />
-                  </Box>
-
-                <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                    <TextField
-                    fullWidth
-                    label="Listed Price"
-                    value={formatCurrency(state.listedPrice)}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Purchase Price"
-                    value={formatCurrency(state.purchasePrice)}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Down Payment"
-                    value={formatCurrency(state.loan.downPayment || 0)}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Loan Amount"
-                    value={formatCurrency(computeLoanAmount(state))}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Interest Rate"
-                    value={(state.loan.annualInterestRate || 0).toFixed(2) + '%'}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Monthly Payment"
-                    value={formatCurrency(state.loan.monthlyPayment || 0)}
-                    InputProps={{ readOnly: true }}
-                    />
-                  </Box>
-                  
-                <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                    <TextField
-                    fullWidth
-                    label="Monthly Income"
-                    value={formatCurrency(computeIncome(state))}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Monthly Operating Expenses"
-                    value={formatCurrency(
-                      computeFixedMonthlyOps(state.ops) +
-                      (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100
-                    )}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Monthly Debt Service"
-                    value={formatCurrency(totalMonthlyDebtService({
-                      newLoanMonthly: state.loan.monthlyPayment || 0,
-                      subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-                      hybridMonthly: state.hybrid?.monthlyPayment
-                    }))}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Monthly Cash Flow"
-                    value={formatCurrency(computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
-                      newLoanMonthly: state.loan.monthlyPayment || 0,
-                      subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-                      hybridMonthly: state.hybrid?.monthlyPayment
-                    }))}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Annual Cash Flow"
-                    value={formatCurrency((computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
-                      newLoanMonthly: state.loan.monthlyPayment || 0,
-                      subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-                      hybridMonthly: state.hybrid?.monthlyPayment
-                    })) * 12)}
-                    InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                    fullWidth
-                    label="Cash on Cash Return"
-                    value={(computeCocAnnual(state, (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
-                      newLoanMonthly: state.loan.monthlyPayment || 0,
-                      subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-                      hybridMonthly: state.hybrid?.monthlyPayment
-                    })) * 12)).toFixed(1) + '%'}
-                    InputProps={{ readOnly: true }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Break Even Occupancy"
-                    value={financeBreakEvenOccupancy({
-                      monthlyRevenueAt100: computeIncome(state),
-                      fixedMonthlyOps: computeFixedMonthlyOps(state.ops),
-                      variablePct: computeVariableMonthlyOpsPct(state.ops),
-                      includeVariablePct: state.includeVariablePctInBreakeven || false
-                    }).toFixed(1) + '%'}
-                    InputProps={{ readOnly: true }}
+                        fullWidth
+                        label="Property Type"
+                        value={state.propertyType}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Operation Type"
+                        value={state.operationType}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Finance Type"
+                        value={state.offerType}
+                        InputProps={{ readOnly: true }}
                       />
                     </Box>
-                    
-                <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                  </Box>
+
+                  {/* Financial Terms */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Financial Terms
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                       <TextField
-                    fullWidth
-                    label="Total Project Cost"
-                    value={formatCurrency(state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0) + (state.arbitrage?.furnitureCost || 0))}
-                    InputProps={{ readOnly: true }}
-                  />
-                    <TextField
-                    fullWidth
-                    label="Closing Costs"
-                    value={formatCurrency(state.loan.closingCosts || 0)}
-                    InputProps={{ readOnly: true }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Rehab Costs"
-                    value={formatCurrency(state.loan.rehabCosts || 0)}
-                    InputProps={{ readOnly: true }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Variable Monthly Expenses"
-                    value={formatCurrency(computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
-                    InputProps={{ readOnly: true }}
-                  />
+                        fullWidth
+                        label="Listed Price"
+                        value={formatCurrency(state.listedPrice)}
+                        InputProps={{ readOnly: true }}
+                      />
                       <TextField
-                    fullWidth
-                    label="Total Monthly Expenses"
-                    value={formatCurrency(computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
-                    InputProps={{ readOnly: true }}
-                  />
-                    <TextField
-                    fullWidth
-                    label="Total Annual Expenses"
-                    value={formatCurrency((computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100) * 12)}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Box>
+                        fullWidth
+                        label="Purchase Price"
+                        value={formatCurrency(state.purchasePrice)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Down Payment"
+                        value={formatCurrency(state.loan.downPayment || 0)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Amount"
+                        value={formatCurrency(computeLoanAmount(state))}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Interest Rate"
+                        value={(state.loan.annualInterestRate || 0).toFixed(2) + '%'}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Payment"
+                        value={formatCurrency(state.loan.monthlyPayment || 0)}
+                        InputProps={{ readOnly: true }}
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* Income & Performance */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Income & Performance
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Monthly Income"
+                        value={formatCurrency(computeIncome(state))}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Operating Expenses"
+                        value={formatCurrency(
+                          computeFixedMonthlyOps(state.ops) +
+                          (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100
+                        )}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Debt Service"
+                        value={formatCurrency(totalMonthlyDebtService({
+                          newLoanMonthly: state.loan.monthlyPayment || 0,
+                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                          hybridMonthly: state.hybrid?.monthlyPayment
+                        }))}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Cash Flow"
+                        value={formatCurrency(computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                          newLoanMonthly: state.loan.monthlyPayment || 0,
+                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                          hybridMonthly: state.hybrid?.monthlyPayment
+                        }))}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Annual Cash Flow"
+                        value={formatCurrency((computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                          newLoanMonthly: state.loan.monthlyPayment || 0,
+                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                          hybridMonthly: state.hybrid?.monthlyPayment
+                        })) * 12)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Cash on Cash Return"
+                        value={(computeCocAnnual(state, (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                          newLoanMonthly: state.loan.monthlyPayment || 0,
+                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                          hybridMonthly: state.hybrid?.monthlyPayment
+                        })) * 12)).toFixed(1) + '%'}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Break Even Occupancy"
+                        value={financeBreakEvenOccupancy({
+                          monthlyRevenueAt100: computeIncome(state),
+                          fixedMonthlyOps: computeFixedMonthlyOps(state.ops),
+                          variablePct: computeVariableMonthlyOpsPct(state.ops),
+                          includeVariablePct: state.includeVariablePctInBreakeven || false
+                        }).toFixed(1) + '%'}
+                        InputProps={{ readOnly: true }}
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* Costs & Expenses */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Costs & Expenses
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Total Project Cost"
+                        value={formatCurrency(state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0) + (state.arbitrage?.furnitureCost || 0))}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Closing Costs"
+                        value={formatCurrency(state.loan.closingCosts || 0)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Rehab Costs"
+                        value={formatCurrency(state.loan.rehabCosts || 0)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Variable Monthly Expenses"
+                        value={formatCurrency(computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Monthly Expenses"
+                        value={formatCurrency(computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Annual Expenses"
+                        value={formatCurrency((computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100) * 12)}
+                        InputProps={{ readOnly: true }}
+                      />
+                    </Box>
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
         </Card>
 
-        {/* Export & Reports Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ fontWeight: 700 }}>Export & Reports</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-                  <Button 
-                    variant="outlined" 
-                  onClick={exportToPDF}
-                  >
-                    Export to PDF
-                  </Button>
-                  <Button 
-                    variant="outlined" 
-                  onClick={exportToExcel}
-                  >
-                    Export to Excel
-                  </Button>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-        </Card>
 
-        {/* Save Locally + Reset Buttons */}
-        <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center' }}>
+
+        {/* Action Buttons */}
+        <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <Button 
+                    variant="outlined" 
+                    onClick={() => navigate('/')}
+                    sx={{ borderColor: '#1a365d', color: '#1a365d' }}
+                  >
+                    Back to Home
+                  </Button>
+                  <Button 
+                    variant="outlined" 
+                    onClick={exportToPDF}
+                    sx={{ borderColor: '#1a365d', color: '#1a365d' }}
+                  >
+                    Export PDF
+                  </Button>
+                  <Button 
+                    variant="outlined" 
+                    onClick={exportToExcel}
+                    sx={{ borderColor: '#1a365d', color: '#1a365d' }}
+                  >
+                    Email PDF
+                  </Button>
                   <Button 
                     variant="contained" 
-            onClick={saveDeal}
-          >
-            Save Locally
-                  </Button>
-                  <Button 
-                    variant="outlined" 
-            onClick={() => setState(defaultState)}
-          >
-            Reset
+                    onClick={() => setState(defaultState)}
+                    sx={{ bgcolor: '#1a365d', color: 'white' }}
+                  >
+                    Reset
                   </Button>
                 </Box>
       </Container>

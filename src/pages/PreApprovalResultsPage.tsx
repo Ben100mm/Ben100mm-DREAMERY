@@ -271,13 +271,13 @@ const PreApprovalResultsPage: React.FC = () => {
                   What to Expect:
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                  • Your pre-approval letter will include your maximum loan amount and estimated monthly payment
+                  - Your pre-approval letter will include your maximum loan amount and estimated monthly payment
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                  • You'll receive personalized rate quotes based on your financial profile
+                  - You'll receive personalized rate quotes based on your financial profile
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  • Our loan officers are available to answer questions and guide you through the process
+                  - Our loan officers are available to answer questions and guide you through the process
                 </Typography>
               </Box>
 

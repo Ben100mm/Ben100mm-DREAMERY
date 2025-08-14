@@ -32,9 +32,12 @@ import {
   IconButton,
   Chip,
   Slider,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import {
   pmt,
   totalMonthlyDebtService,
@@ -43,10 +46,34 @@ import {
   breakEvenOccupancy as financeBreakEvenOccupancy,
   remainingPrincipalAfterPayments,
   brrrrAnnualCashFlowPostRefi,
+  monthlyRate,
+  type LoanSpec,
 } from '../utils/finance';
+import {
+  calculateSeasonalAdjustments,
+  defaultSeasonalFactors,
+  calculateMarketAdjustments,
+  defaultMarketConditions,
+  calculateExitStrategies,
+  calculateRefinanceScenarios,
+  calculateTaxImplications,
+  calculateRiskScore,
+  calculateConfidenceIntervals,
+  calculateStressTest,
+  calculateInflationAdjustments,
+  defaultLocationFactors,
+  type SeasonalFactors,
+  type MarketConditions,
+  type ExitStrategy,
+  type RefinanceScenario,
+  type TaxImplications,
+  type RiskFactors,
+  type PropertyAgeFactors,
+  type LocationFactors,
+} from '../utils/advancedCalculations';
 
 // Updated type definitions
-type PropertyType = 'Single Family' | 'Multi Family' | 'Hotel';
+type PropertyType = 'Single Family' | 'Multi Family' | 'Hotel' | 'Land' | 'Office' | 'Retail';
 type OperationType = 'Buy & Hold' | 'Fix & Flip' | 'Short Term Rental' | 'Rental Arbitrage' | 'BRRRR';
 type OfferType =
   | 'Cash'
@@ -99,6 +126,7 @@ interface HybridInputs {
   annualInterestRate: number;
   monthlyPayment: number;
   annualPayment: number;
+  loanTerm: number;
   interestOnly: boolean;
   balloonDue: number;
   paymentToSeller: number;
@@ -120,6 +148,13 @@ interface FixFlipInputs {
   projectedProfit: number;
   roiDuringHold: number;
   annualizedRoi: number;
+  exitStrategies?: Array<{
+    timeframe: number;
+    projectedValue: number;
+    netProceeds: number;
+    roi: number;
+    annualizedRoi: number;
+  }>;
 }
 
 interface BRRRRInputs {
@@ -132,6 +167,16 @@ interface BRRRRInputs {
   cashOutAmount: number;
   remainingCashInDeal: number;
   newCashOnCashReturn: number;
+  refinanceClosingCosts: number;
+  effectiveCashOut: number;
+  ltvConstraint: boolean;
+  exitStrategies?: Array<{
+    timeframe: number;
+    projectedValue: number;
+    netProceeds: number;
+    roi: number;
+    annualizedRoi: number;
+  }>;
 }
 
 interface AppreciationInputs {
@@ -165,6 +210,21 @@ interface IncomeInputsStr {
   grossDailyIncome: number;
   grossMonthlyIncome: number;
   grossYearlyIncome: number;
+}
+
+// New inputs for Office/Retail properties
+interface OfficeRetailInputs {
+  squareFootage: number;
+  rentPerSFMonthly: number; // monthly base rent per square foot
+  occupancyRatePct: number; // 0-100
+  extraMonthlyIncome: number; // other income (parking, signage, etc.)
+}
+
+// New inputs for Land properties
+interface LandInputs {
+  acreage: number;
+  zoning?: 'Residential' | 'Commercial' | 'Agricultural' | 'Mixed';
+  extraMonthlyIncome: number; // e.g., grazing, storage, temporary uses
 }
 
 interface ArbitrageInputs {
@@ -267,14 +327,16 @@ interface DealState {
   purchasePrice: number;
   percentageDifference: number;
   loan: LoanTerms;
-  subjectTo?: SubjectToInputs;
-  hybrid?: HybridInputs;
+  subjectTo: SubjectToInputs;
+  hybrid: HybridInputs;
   fixFlip?: FixFlipInputs;
   brrrr?: BRRRRInputs;
   ops: OperatingInputsCommon;
   sfr?: IncomeInputsSfr;
   multi?: IncomeInputsMulti;
   str?: IncomeInputsStr;
+  officeRetail?: OfficeRetailInputs;
+  land?: LandInputs;
   arbitrage?: ArbitrageInputs;
   appreciation: AppreciationInputs;
   // Settings
@@ -293,11 +355,113 @@ interface DealState {
   revenueInputs: RevenueInputs;
   breakEvenAnalysis: BreakEvenAnalysis;
   activeProFormaTab: 'presets' | 'custom' | 'sensitivity' | 'benchmarks' | 'revenue' | 'breakEven';
+  // Market conditions for enhanced sensitivity analysis
+  marketType: 'hot' | 'stable' | 'slow';
+  // Advanced Analysis Configuration
+  marketConditions: MarketConditions;
+  exitStrategies: ExitStrategy[];
+  seasonalFactors: SeasonalFactors;
+  propertyAge: PropertyAgeFactors;
+  locationFactors: LocationFactors;
+  riskFactors: RiskFactors;
+  taxImplications: TaxImplications;
+  // Advanced Analysis Results
+  exitStrategyResults?: Array<{
+    timeframe: number;
+    projectedValue: number;
+    netProceeds: number;
+    roi: number;
+    annualizedRoi: number;
+  }>;
+  refinanceScenarioResults?: Array<{
+    timing: number;
+    newMonthlyPayment: number;
+    monthlySavings: number;
+    totalSavings: number;
+    breakEvenMonths: number;
+    cashOutAmount: number;
+  }>;
+  taxImplicationResults?: {
+    taxableIncome: number;
+    taxSavings: number;
+    effectiveTaxRate: number;
+    netIncome: number;
+  };
+  riskScoreResults?: {
+    overallRiskScore: number;
+    riskBreakdown: {
+      marketRisk: number;
+      propertyRisk: number;
+      tenantRisk: number;
+      financingRisk: number;
+    };
+    riskCategory: 'Low' | 'Medium' | 'High' | 'Very High';
+    recommendations: string[];
+  };
+  confidenceIntervalResults?: {
+    lowerBound: number;
+    upperBound: number;
+    confidenceLevel: number;
+  };
+  inflationProjections?: {
+    [years: number]: {
+      adjustedRent: number;
+      adjustedExpenses: number;
+      adjustedPropertyValue: number;
+    };
+  };
+  // UX/logic helpers
+  proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
+  validationMessages: string[];
+  showAmortizationOverride?: boolean;
+  snackbarOpen?: boolean;
+}
+
+// Helper: should show ADR/rooms tabs (Revenue/Break-Even)
+function shouldShowAdrTabs(state: DealState): boolean {
+  const isNotLand = state.propertyType !== 'Land';
+  const isSTR = state.operationType === 'Short Term Rental';
+  const isHotel = state.propertyType === 'Hotel';
+  const isSfrOrMfArb = (state.propertyType === 'Single Family' || state.propertyType === 'Multi Family') && state.operationType === 'Rental Arbitrage';
+  
+  // Check if the operation type supports ADR-based calculations
+  const supportsADR = isSTR || isHotel || isSfrOrMfArb;
+  
+  // Check if revenue inputs have valid values for meaningful calculations
+  const hasValidInputs = state.revenueInputs.totalRooms > 0 && state.revenueInputs.averageDailyRate > 0;
+  
+  // Only show tabs when both conditions are met:
+  // 1. Property type and operation type support ADR calculations
+  // 2. Revenue inputs have valid values for meaningful analysis
+  return isNotLand && supportsADR && hasValidInputs;
 }
 
 function parseCurrency(input: string): number {
   const numeric = Number(String(input).replace(/[^0-9.-]/g, ''));
   return Number.isFinite(numeric) ? numeric : 0;
+}
+
+// Enhanced currency parser with validation feedback
+function parseCurrencyWithValidation(input: string, fieldName: string, setState: React.Dispatch<React.SetStateAction<DealState>>): number {
+  const numeric = Number(String(input).replace(/[^0-9.-]/g, ''));
+  
+  if (!Number.isFinite(numeric)) {
+    return 0;
+  }
+  
+  if (numeric < 0) {
+    setState(prev => ({
+      ...prev,
+      validationMessages: [
+        ...(prev.validationMessages || []),
+        `${fieldName} cannot be negative. Value has been reset to 0.`
+      ],
+      snackbarOpen: true
+    }));
+    return 0;
+  }
+  
+  return numeric;
 }
 
 function formatCurrency(value: number): string {
@@ -372,29 +536,33 @@ function buildSubjectToAmortization(
   loan: SubjectToLoan,
   currentPaymentNumber: number
 ): Array<{ index: number; payment: number; interest: number; principal: number; balance: number; paymentDate: string }> {
-  const monthlyRate = loan.annualInterestRate / 100 / 12;
-  const totalPayments = loan.originalTermYears * 12;
-  const remainingPayments = totalPayments - currentPaymentNumber + 1;
+          // Create LoanSpec for finance.ts functions
+  const spec: LoanSpec = {
+    principal: loan.amount,
+    annualRate: loan.annualInterestRate / 100,
+    termMonths: loan.originalTermYears * 12,
+    interestOnly: false
+  };
   
-  // Calculate the remaining balance at current payment number
-  const originalMonthlyPayment = (loan.amount * monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
-  let balance = loan.amount;
+          // Use standard finance functions for consistency
+  const monthlyRateValue = monthlyRate(spec.annualRate);
+  const expectedPayment = pmt(spec.annualRate, spec.termMonths, spec.principal);
   
-  // Calculate balance up to current payment number
-  for (let i = 0; i < currentPaymentNumber - 1; i++) {
-    const interest = balance * monthlyRate;
-    const principal = originalMonthlyPayment - interest;
-    balance -= principal;
-  }
+  // ✅ Validate user-provided payment against calculated payment
+  const paymentToUse = Math.abs(loan.monthlyPayment - expectedPayment) < 0.01 ? loan.monthlyPayment : expectedPayment;
+  
+  // ✅ Use remainingPrincipalAfterPayments for accurate balance calculation
+  let balance = remainingPrincipalAfterPayments(spec, currentPaymentNumber - 1);
   
   const schedule: Array<{ index: number; payment: number; interest: number; principal: number; balance: number; paymentDate: string }> = [];
+  const remainingPayments = spec.termMonths - currentPaymentNumber + 1;
   
-  // Generate remaining payments
+  // ✅ Generate remaining payments using standard finance calculations
   for (let i = 0; i < remainingPayments; i++) {
     const paymentIndex = currentPaymentNumber + i;
-    const interest = balance * monthlyRate;
-    const principal = originalMonthlyPayment - interest;
-    balance -= principal;
+    const interest = balance * monthlyRateValue;
+    const principal = paymentToUse - interest;
+    balance = Math.max(0, balance - principal);
     
     // Calculate payment date based on start date
     const startDate = new Date(loan.startDate);
@@ -403,10 +571,10 @@ function buildSubjectToAmortization(
     
     schedule.push({
       index: paymentIndex,
-      payment: originalMonthlyPayment,
+      payment: paymentToUse,
       interest,
       principal,
-      balance: Math.max(0, balance),
+      balance,
       paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
     });
   }
@@ -416,36 +584,127 @@ function buildSubjectToAmortization(
 
 function computeIncome(state: DealState): number {
   const { propertyType, operationType } = state;
-  if (operationType === 'Short Term Rental' || operationType === 'Rental Arbitrage') {
-    const nights = state.str?.avgNightsPerMonth ?? 0;
-    const nightly = state.str?.unitDailyRents?.[0] ?? 0; // Assuming first unit for nightly rate
-    const rent = nights * nightly;
-    const fees = (state.str?.dailyCleaningFee ?? 0) * (nights > 0 ? Math.ceil(nights) : 0);
-    const extra =
-      (state.str?.laundry ?? 0) + (state.str?.activities ?? 0) + (state.str?.grossMonthlyIncome ?? 0);
-    return rent + fees + extra;
+  
+  // Fix & Flip has no rental income during hold period in this calculator
+  if (operationType === 'Fix & Flip') {
+    return 0;
   }
+  
+  // Office/Retail: always use per-SF model, including for Rental Arbitrage
+  if (propertyType === 'Office' || propertyType === 'Retail') {
+    const sf = state.officeRetail?.squareFootage ?? 0;
+    const rentPerSF = state.officeRetail?.rentPerSFMonthly ?? 0;
+    const occ = (state.officeRetail?.occupancyRatePct ?? 0) / 100;
+    const other = state.officeRetail?.extraMonthlyIncome ?? 0;
+    const base = sf * rentPerSF;
+    return base * occ + other;
+  }
+  
+  // STR/Arbitrage nightly model for SFR/Multi/Hotel only
+  if ((operationType === 'Short Term Rental' || operationType === 'Rental Arbitrage') && propertyType !== 'Land') {
+    // Hotel properties use revenueInputs for more accurate calculations
+    if (propertyType === 'Hotel') {
+      const { totalRooms, averageDailyRate, occupancyRate, seasonalVariations } = state.revenueInputs;
+      if (totalRooms > 0 && averageDailyRate > 0) {
+        // ✅ Apply seasonal adjustments for Hotel properties
+        if (shouldShowAdrTabs(state)) {
+          const seasonalFactors: SeasonalFactors = {
+            summerVacancyRate: seasonalVariations.q2 / 100,
+            winterVacancyRate: seasonalVariations.q4 / 100,
+            springVacancyRate: seasonalVariations.q1 / 100,
+            fallVacancyRate: seasonalVariations.q3 / 100,
+            seasonalMaintenanceMultiplier: 1 // Default, adjust if needed
+          };
+          const month = new Date().getMonth() + 1;
+          const { adjustedVacancyRate } = calculateSeasonalAdjustments(state.ops.vacancy / 100, seasonalFactors, month);
+          
+          // Apply seasonal vacancy adjustment to occupancy rate
+          const adjustedOccupancyRate = Math.max(0, Math.min(100, occupancyRate * (1 - adjustedVacancyRate)));
+          const annualRevenue = totalRooms * averageDailyRate * (adjustedOccupancyRate / 100) * 365;
+          return annualRevenue / 12; // Convert to monthly
+        } else {
+          // Fallback to average seasonal variation if ADR tabs not applicable
+          const avgOccupancy = (seasonalVariations.q1 + seasonalVariations.q2 + seasonalVariations.q3 + seasonalVariations.q4) / 4;
+          const annualRevenue = totalRooms * averageDailyRate * (occupancyRate / 100) * 365 * avgOccupancy;
+          return annualRevenue / 12; // Convert to monthly
+        }
+      }
+    }
+    
+    // ✅ Apply seasonal adjustments for STR properties
+    if (shouldShowAdrTabs(state)) {
+      const { seasonalVariations } = state.revenueInputs;
+      const seasonalFactors: SeasonalFactors = {
+        summerVacancyRate: seasonalVariations.q2 / 100,
+        winterVacancyRate: seasonalVariations.q4 / 100,
+        springVacancyRate: seasonalVariations.q1 / 100,
+        fallVacancyRate: seasonalVariations.q3 / 100,
+        seasonalMaintenanceMultiplier: 1 // Default, adjust if needed
+      };
+      const month = new Date().getMonth() + 1;
+      const { adjustedVacancyRate } = calculateSeasonalAdjustments(state.ops.vacancy / 100, seasonalFactors, month);
+      
+      // Apply seasonal vacancy adjustment to STR calculations
+      const nights = state.str?.avgNightsPerMonth ?? 0;
+      const nightly = state.str?.unitDailyRents?.[0] ?? 0;
+      const adjustedNights = Math.max(0, nights * (1 - adjustedVacancyRate));
+      const rent = adjustedNights * nightly;
+      const fees = (state.str?.dailyCleaningFee ?? 0) * (adjustedNights > 0 ? Math.ceil(adjustedNights) : 0);
+      const extra = (state.str?.laundry ?? 0) + (state.str?.activities ?? 0) + (state.str?.grossMonthlyIncome ?? 0);
+      return rent + fees + extra;
+    } else {
+      // Fallback to STR model for non-Hotel properties without seasonal adjustments
+      const nights = state.str?.avgNightsPerMonth ?? 0;
+      const nightly = state.str?.unitDailyRents?.[0] ?? 0;
+      const rent = nights * nightly;
+      const fees = (state.str?.dailyCleaningFee ?? 0) * (nights > 0 ? Math.ceil(nights) : 0);
+      const extra = (state.str?.laundry ?? 0) + (state.str?.activities ?? 0) + (state.str?.grossMonthlyIncome ?? 0);
+      return rent + fees + extra;
+    }
+  }
+  
   if (propertyType === 'Single Family') {
-    return (state.sfr?.monthlyRent ?? 0) + (state.sfr?.grossMonthlyIncome ?? 0);
+    const baseIncome = (state.sfr?.monthlyRent ?? 0) + (state.sfr?.grossMonthlyIncome ?? 0);
+    // Apply seasonal variations if ADR tabs are applicable
+    if (shouldShowAdrTabs(state)) {
+      const { seasonalVariations } = state.revenueInputs;
+      const avgMultiplier = (seasonalVariations.q1 + seasonalVariations.q2 + seasonalVariations.q3 + seasonalVariations.q4) / 4;
+      return baseIncome * avgMultiplier;
+    }
+    return baseIncome;
   }
+  
   if (propertyType === 'Multi Family') {
     const rents = state.multi?.unitRents ?? [];
     const rentTotal = rents.reduce((a, b) => a + b, 0);
-    return rentTotal + (state.multi?.grossMonthlyIncome ?? 0);
+    const baseIncome = rentTotal + (state.multi?.grossMonthlyIncome ?? 0);
+    // Apply seasonal variations if ADR tabs are applicable
+    if (shouldShowAdrTabs(state)) {
+      const { seasonalVariations } = state.revenueInputs;
+      const avgMultiplier = (seasonalVariations.q1 + seasonalVariations.q2 + seasonalVariations.q3 + seasonalVariations.q4) / 4;
+      return baseIncome * avgMultiplier;
+    }
+    return baseIncome;
   }
-  // Fix & Flip / Arbitrage / BRRRR default monthly income 0 for calculator primary tab
+  
+  if (propertyType === 'Land') {
+    // Land typically has no rent; allow optional extra income (e.g., grazing)
+    return state.land?.extraMonthlyIncome ?? 0;
+  }
+  
+  // BRRRR/Seller Finance/etc. fall through to 0 if no property-type income
   return 0;
 }
 
 function computeLoanAmount(state: DealState): number {
   if (state.operationType === 'Rental Arbitrage') return 0;
-  const base = Math.max(0, state.purchasePrice - state.loan.downPayment);
   if (state.offerType === 'Subject To Existing Mortgage') {
-    const existing = state.subjectTo?.totalLoanBalance ?? 0;
-    // In Subject-To, buyer may assume existing balance and add new financing only if purchase price exceeds down payment + existing
-    const delta = Math.max(0, base - existing);
-    return delta;
+    const existing = state.subjectTo.totalLoanBalance;
+    const sellerPayment = state.subjectTo.paymentToSeller;
+    const need = Math.max(0, state.purchasePrice - sellerPayment - existing);
+    return need;
   }
+  const base = Math.max(0, state.purchasePrice - state.loan.downPayment);
   return base;
 }
 
@@ -459,14 +718,53 @@ function computeCocAnnual(state: DealState, annualCashFlow: number): number {
           (state.loan.closingCosts || 0) +
           (state.loan.rehabCosts || 0) +
           (state.operationType === 'Short Term Rental' ? (state.arbitrage?.furnitureCost || 0) : 0) +
-          (state.subjectTo?.paymentToSeller || 0) +
+          (state.subjectTo.paymentToSeller) +
           // reserves modeled as months or fixed (optional flags exist in state)
           (state.reservesCalculationMethod === 'months'
             ? ((computeFixedMonthlyOps(state.ops) + (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100) * (state.reservesMonths || 0))
             : (state.reservesFixedAmount || 0))
         );
-  if (invested <= 0) return 0;
+  
+  // Handle invalid invested amounts
+  if (invested <= 0) {
+    // Return 0 for invalid cases - validation messages will be handled by input validation
+    return 0;
+  }
+  
   return (annualCashFlow / invested) * 100;
+}
+
+// Helper function to check if cash-on-cash calculation is valid
+function isCashOnCashValid(state: DealState): boolean {
+  const invested =
+    state.operationType === 'Rental Arbitrage'
+      ? (state.arbitrage?.deposit ?? 0) + (state.arbitrage?.estimateCostOfRepairs ?? 0) + (state.arbitrage?.furnitureCost ?? 0) + (state.arbitrage?.otherStartupCosts ?? 0)
+      : (
+          (state.loan.downPayment || 0) +
+          (state.loan.closingCosts || 0) +
+          (state.loan.rehabCosts || 0) +
+          (state.operationType === 'Short Term Rental' ? (state.arbitrage?.furnitureCost || 0) : 0) +
+          (state.subjectTo.paymentToSeller) +
+          (state.reservesCalculationMethod === 'months'
+            ? ((computeFixedMonthlyOps(state.ops) + (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100) * (state.reservesMonths || 0))
+            : (state.reservesFixedAmount || 0))
+        );
+  
+  return invested > 0;
+}
+
+// Helper function to check if break-even calculation is valid
+function isBreakEvenValid(state: DealState): boolean {
+  const monthlyRevenueAt100 = (state.propertyType === 'Office' || state.propertyType === 'Retail')
+    ? ((state.officeRetail?.squareFootage || 0) * (state.officeRetail?.rentPerSFMonthly || 0)) + (state.officeRetail?.extraMonthlyIncome || 0)
+    : computeIncome(state);
+  
+  if (monthlyRevenueAt100 <= 0) return false;
+  
+  const variablePct = computeVariableMonthlyOpsPct(state.ops);
+  const netRevenuePerRoom = monthlyRevenueAt100 - (monthlyRevenueAt100 * variablePct / 100);
+  
+  return netRevenuePerRoom > 0;
 }
 
 function computeFixFlipCalculations(state: DealState): {
@@ -474,6 +772,13 @@ function computeFixFlipCalculations(state: DealState): {
   projectedProfit: number;
   roiDuringHold: number;
   annualizedRoi: number;
+  exitStrategies: Array<{
+    timeframe: number;
+    projectedValue: number;
+    netProceeds: number;
+    roi: number;
+    annualizedRoi: number;
+  }>;
 } {
   const arv = state.fixFlip?.arv ?? 0;
   const targetPercent = state.fixFlip?.targetPercent ?? 70;
@@ -488,22 +793,87 @@ function computeFixFlipCalculations(state: DealState): {
   const totalHoldingCosts = holdingCosts * holdingPeriodMonths;
   const maximumAllowableOffer = Math.max(0, targetPrice - rehabCost - totalHoldingCosts - sellingCosts);
   
-  // Calculate Projected Profit
-  const totalCosts = maximumAllowableOffer + rehabCost + totalHoldingCosts + sellingCosts;
+  // Calculate financing costs during holding period
+  let financingCosts = 0;
+  if (state.offerType !== 'Cash' && holdingPeriodMonths > 0) {
+    // For financed deals, calculate interest payments during holding period
+    if (state.offerType === 'Hard Money') {
+      // Hard Money typically has higher rates and interest-only payments
+      const loanAmount = state.loan.loanAmount || 0;
+      const annualRate = state.loan.annualInterestRate || 0;
+      if (loanAmount > 0 && annualRate > 0) {
+        // Interest-only payment for the holding period
+        financingCosts = (loanAmount * (annualRate / 100) * holdingPeriodMonths) / 12;
+      }
+    } else if (state.offerType === 'Private' || state.offerType === 'Line of Credit') {
+      // Private money and LOC may have different terms
+      const loanAmount = state.loan.loanAmount || 0;
+      const annualRate = state.loan.annualInterestRate || 0;
+      if (loanAmount > 0 && annualRate > 0) {
+        // Calculate monthly payment and extract interest portion
+        const monthlyPmt = monthlyPayment(loanAmount, annualRate, 30, false); // Assume 30-year term for calculation
+        const monthlyRate = annualRate / 100 / 12;
+        let balance = loanAmount;
+        let totalInterest = 0;
+        
+        // Calculate interest paid during holding period
+        for (let month = 1; month <= holdingPeriodMonths; month++) {
+          const interest = balance * monthlyRate;
+          totalInterest += interest;
+          const principal = monthlyPmt - interest;
+          balance = Math.max(0, balance - principal);
+        }
+        financingCosts = totalInterest;
+      }
+    } else if (state.offerType === 'Seller Finance' || state.offerType === 'Subject To Existing Mortgage') {
+      // For seller financing and subject-to, use existing loan terms
+      const loanAmount = state.loan.loanAmount || 0;
+      const annualRate = state.loan.annualInterestRate || 0;
+      if (loanAmount > 0 && annualRate > 0) {
+        // Calculate interest paid during holding period
+        const monthlyPmt = monthlyPayment(loanAmount, annualRate, 30, false); // Assume 30-year term
+        const monthlyRate = annualRate / 100 / 12;
+        let balance = loanAmount;
+        let totalInterest = 0;
+        
+        for (let month = 1; month <= holdingPeriodMonths; month++) {
+          const interest = balance * monthlyRate;
+          totalInterest += interest;
+          const principal = monthlyPmt - interest;
+          balance = Math.max(0, balance - principal);
+        }
+        financingCosts = totalInterest;
+      }
+    }
+  }
+  
+  // Calculate Projected Profit with financing costs included
+  const totalCosts = maximumAllowableOffer + rehabCost + totalHoldingCosts + sellingCosts + financingCosts;
   const projectedProfit = Math.max(0, arv - totalCosts);
   
-  // Calculate ROI During Hold
+  // Calculate ROI During Hold (cash invested + financing costs)
   const totalCashInvested = maximumAllowableOffer + rehabCost;
   const roiDuringHold = totalCashInvested > 0 ? (projectedProfit / totalCashInvested) * 100 : 0;
   
   // Calculate Annualized ROI
   const annualizedRoi = holdingPeriodMonths > 0 ? (roiDuringHold / holdingPeriodMonths) * 12 : 0;
   
+  // ✅ Calculate Exit Strategies for long-term ROI analysis
+  const exitStrategies = [
+    { timeframe: 1, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 3, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 5, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 10, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate }
+  ];
+  
+  const exitResults = calculateExitStrategies(state.purchasePrice, exitStrategies, state.purchasePrice);
+  
   return {
     maximumAllowableOffer,
     projectedProfit,
     roiDuringHold,
-    annualizedRoi
+    annualizedRoi,
+    exitStrategies: exitResults
   };
 }
 
@@ -511,67 +881,154 @@ function computeBRRRRCalculations(state: DealState): {
   cashOutAmount: number;
   remainingCashInDeal: number;
   newCashOnCashReturn: number;
+  refinanceClosingCosts: number;
+  effectiveCashOut: number;
+  ltvConstraint: boolean;
+  exitStrategies: Array<{
+    timeframe: number;
+    projectedValue: number;
+    netProceeds: number;
+    roi: number;
+    annualizedRoi: number;
+  }>;
 } {
   const arv = state.brrrr?.arv ?? 0;
   const refinanceLtv = state.brrrr?.refinanceLtv ?? 0;
   const originalCashInvested = state.brrrr?.originalCashInvested ?? 0;
-  const newMonthlyPayment = state.brrrr?.newMonthlyPayment ?? 0;
+  const refinanceInterestRate = state.brrrr?.refinanceInterestRate ?? 0;
+  const loanTerm = state.brrrr?.loanTerm ?? 30;
 
-  // Cash-out amount based on LTV (simplified). Payoff logic can be extended with remaining principal if needed.
+  // ✅ Calculate refinance loan amount based on ARV and LTV
   const refinanceLoan = arv * (refinanceLtv / 100);
-  const cashOutAmount = Math.max(0, refinanceLoan - originalCashInvested);
+  
+  // ✅ Calculate new monthly payment using pmt function for consistency
+  const newLoanMonthly = pmt(
+    refinanceInterestRate / 100, // Convert percentage to decimal
+    loanTerm * 12,               // Convert years to months
+    refinanceLoan
+  );
+  
+  // ✅ Include refinance closing costs (typically 2-3% of loan amount)
+  const refinanceClosingCosts = refinanceLoan * 0.02; // 2% closing costs
+  
+  // ✅ Calculate effective cash-out amount after accounting for closing costs
+  const effectiveCashOut = Math.max(0, refinanceLoan - originalCashInvested - refinanceClosingCosts);
+  
+  // ✅ Check if LTV constraint allows for the desired cash-out
+  const ltvConstraint = refinanceLoan <= arv * 0.75; // Standard 75% LTV limit for investment properties
+  
+  // ✅ Remaining cash in deal after refi proceeds and closing costs
+  const remainingCashInDeal = Math.max(0, originalCashInvested - effectiveCashOut);
 
-  // Remaining cash in deal after refi proceeds
-  const remainingCashInDeal = Math.max(0, originalCashInvested - cashOutAmount);
-
-  // Compute post-refi annual cash flow using current operating assumptions
+  // ✅ Compute post-refi annual cash flow using finance.ts function for consistency
   const monthlyRevenue = computeIncome(state);
-  const fixedMonthlyOps = computeFixedMonthlyOps({
-    taxes: state.ops.taxes || 0,
-    insurance: state.ops.insurance || 0,
-    hoa: state.ops.hoa || 0,
-    gasElectric: state.ops.gasElectric || 0,
-    internet: state.ops.internet || 0,
-    waterSewer: state.ops.waterSewer || 0,
-    heat: state.ops.heat || 0,
-    lawnSnow: state.ops.lawnSnow || 0,
-    phone: state.ops.phoneBill || 0,
-    cleaner: state.ops.cleaner || 0,
-    extras: state.ops.extra || 0,
-  });
-  const variablePct = computeVariableMonthlyOpsPct({
-    mgmtPct: (state.ops.management || 0) / 100,
-    repairsPct: (state.ops.maintenance || 0) / 100,
-    utilitiesPct: (state.ops.utilitiesPct || 0) / 100,
-    capExPct: (state.ops.capEx || 0) / 100,
-    opExPct: (state.ops.opEx || 0) / 100,
-  });
+  const fixedMonthlyOps = computeFixedMonthlyOps(state.ops);
+  const variablePct = computeVariableMonthlyOpsPct(state.ops) / 100;
+  
   const annualCashFlow = brrrrAnnualCashFlowPostRefi({
     monthlyRevenue,
     fixedMonthlyOps,
     variablePct,
-    newLoanMonthly: newMonthlyPayment,
+    newLoanMonthly
   });
+  
   const newCashOnCashReturn = remainingCashInDeal > 0 ? (annualCashFlow / remainingCashInDeal) * 100 : 0;
 
+  // ✅ Calculate Exit Strategies for long-term ROI analysis
+  const exitStrategies = [
+    { timeframe: 3, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 5, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 10, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate },
+    { timeframe: 15, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: state.marketConditions.appreciationRate }
+  ];
+  
+  const exitResults = calculateExitStrategies(state.purchasePrice, exitStrategies, state.purchasePrice);
+
   return {
-    cashOutAmount,
+    cashOutAmount: effectiveCashOut, // Return effective cash-out (after closing costs)
     remainingCashInDeal,
     newCashOnCashReturn,
+    refinanceClosingCosts,
+    effectiveCashOut,
+    ltvConstraint,
+    exitStrategies: exitResults
   };
+}
+
+// ✅ Inflation-adjusted long-term projections
+function computeLongTermProjections(state: DealState, years: number) {
+  const baseAmounts = {
+    rent: computeIncome(state),
+    expenses: computeFixedMonthlyOps(state.ops) + (computeVariableMonthlyOpsPct(state.ops) / 100 * computeIncome(state)),
+    propertyValue: state.purchasePrice
+  };
+  
+  // Use market-specific inflation rate or default to 2%
+  const inflationRate = state.marketConditions?.inflationRate || 0.02;
+  
+  return calculateInflationAdjustments(baseAmounts, inflationRate, years);
+}
+
+// ✅ Calculate inflation projections for multiple timeframes
+function computeInflationProjections(state: DealState) {
+  const timeframes = [1, 3, 5, 10, 15, 20, 30];
+  const projections: { [years: number]: { adjustedRent: number; adjustedExpenses: number; adjustedPropertyValue: number; } } = {};
+  
+  timeframes.forEach(years => {
+    projections[years] = computeLongTermProjections(state, years);
+  });
+  
+  return projections;
+}
+
+// ✅ Update inflation projections in state
+function updateInflationProjections(state: DealState, setState: React.Dispatch<React.SetStateAction<DealState>>) {
+  try {
+    const projections = computeInflationProjections(state);
+    setState(prev => ({
+      ...prev,
+      inflationProjections: projections
+    }));
+    return projections;
+  } catch (error) {
+    console.error('Error calculating inflation projections:', error);
+    setState(prev => ({
+      ...prev,
+      validationMessages: [...(prev.validationMessages || []), 'Error calculating inflation projections.'],
+      snackbarOpen: true
+    }));
+    return null;
+  }
 }
 
 function getOperationTypeOptions(propertyType: PropertyType): OperationType[] {
   if (propertyType === 'Hotel') {
     return ['Short Term Rental', 'Rental Arbitrage'];
   }
+  if (propertyType === 'Land') {
+    // Land logic is intentionally non-additive for operations: raw land is modeled as hold/improve/exit scenarios only
+    return ['Buy & Hold', 'Fix & Flip', 'BRRRR'];
+  }
+  if (propertyType === 'Office' || propertyType === 'Retail') {
+    // Commercial: allow B&H, F&F, Arbitrage, BRRRR. Remove STR for Office/Retail.
+    return ['Buy & Hold', 'Fix & Flip', 'Rental Arbitrage', 'BRRRR'];
+  }
   return ['Buy & Hold', 'Fix & Flip', 'Short Term Rental', 'Rental Arbitrage', 'BRRRR'];
 }
 
 function getOfferTypeOptions(propertyType: PropertyType, operationType: OperationType): OfferType[] {
-  // Rental Arbitrage: only Cash / Private / Line of Credit
+  // First handle Land so that subsequent operation-based narrowing does not affect logic
+  if (propertyType === 'Land') {
+    if (operationType === 'Fix & Flip' || operationType === 'BRRRR') {
+      // Allow Hard Money for improvement/refi paths
+      return ['Cash', 'Hard Money', 'Private', 'Seller Finance', 'Line of Credit'];
+    }
+    // Buy & Hold raw land: conventional/DSCR/FHA/SBA typically not applicable in this model
+    return ['Cash', 'Seller Finance', 'Private', 'Line of Credit'];
+  }
+  // Rental Arbitrage: only Cash / Private / Line of Credit (plus optional Seller Finance)
   if (operationType === 'Rental Arbitrage') {
-    return ['Cash', 'Private', 'Line of Credit'];
+    return ['Cash', 'Private', 'Line of Credit', 'Seller Finance'];
   }
   // Fix & Flip: include Subject-To, Hybrid, Line of Credit; remove SBA
   if (operationType === 'Fix & Flip') {
@@ -585,8 +1042,23 @@ function getOfferTypeOptions(propertyType: PropertyType, operationType: Operatio
   if (operationType === 'Buy & Hold' && (propertyType === 'Single Family' || propertyType === 'Multi Family')) {
     return ['FHA', 'Cash', 'Seller Finance', 'Conventional', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid', 'Line of Credit'];
   }
+  // Commercial (Office/Retail): allow conventional, DSCR, SBA in addition to existing options
+  if (operationType === 'Buy & Hold' && (propertyType === 'Office' || propertyType === 'Retail')) {
+    return ['Cash', 'Seller Finance', 'Conventional', 'DSCR', 'SBA', 'Subject To Existing Mortgage', 'Hybrid', 'Line of Credit'];
+  }
   // Default for Hotel STR etc.
   return ['Cash', 'Seller Finance', 'Conventional', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid', 'Line of Credit'];
+}
+
+// Wrapper to compute variable monthly expenses (% of income) from state.ops
+function variableMonthlyFromPercentages(currentIncome: number, ops: OperatingInputsCommon): number {
+  const mgmt = (ops.management || 0) / 100;
+  const repairs = (ops.maintenance || 0) / 100;
+  const utilities = (ops.utilitiesPct || 0) / 100;
+  const capex = (ops.capEx || 0) / 100;
+  const opex = (ops.opEx || 0) / 100;
+  const pct = mgmt + repairs + utilities + capex + opex;
+  return currentIncome * pct;
 }
 
 function Kpi(props: { label: string; value: string }) {
@@ -604,7 +1076,7 @@ function Kpi(props: { label: string; value: string }) {
 
 const defaultState: DealState = {
   propertyType: 'Single Family',
-  operationType: 'Short Term Rental',
+  operationType: 'Buy & Hold',
   offerType: 'Conventional',
   propertyAddress: '',
   agentOwner: '',
@@ -640,6 +1112,7 @@ const defaultState: DealState = {
     annualInterestRate: 0,
     monthlyPayment: 0,
     annualPayment: 0,
+    loanTerm: 30,
     interestOnly: false,
     balloonDue: 0,
     paymentToSeller: 0,
@@ -648,7 +1121,7 @@ const defaultState: DealState = {
     totalMonthlyPayment: 0,
     totalAnnualPayment: 0,
   },
-  fixFlip: {
+          fixFlip: {
           arv: 0,
           holdingPeriodMonths: 0,
           holdingCosts: 0,
@@ -659,6 +1132,7 @@ const defaultState: DealState = {
           projectedProfit: 0,
           roiDuringHold: 0,
           annualizedRoi: 0,
+          exitStrategies: [],
         },
   brrrr: {
     arv: 0,
@@ -670,6 +1144,10 @@ const defaultState: DealState = {
     cashOutAmount: 0,
     remainingCashInDeal: 0,
     newCashOnCashReturn: 0,
+    refinanceClosingCosts: 0,
+    effectiveCashOut: 0,
+    ltvConstraint: true,
+    exitStrategies: [],
   },
   ops: {
     principalAndInterest: 800,
@@ -713,6 +1191,17 @@ const defaultState: DealState = {
     grossMonthlyIncome: 0,
     grossYearlyIncome: 0,
   },
+  officeRetail: {
+    squareFootage: 5000,
+    rentPerSFMonthly: 2.5,
+    occupancyRatePct: 90,
+    extraMonthlyIncome: 0,
+  },
+  land: {
+    acreage: 1,
+    zoning: 'Residential',
+    extraMonthlyIncome: 0,
+  },
   arbitrage: { deposit: 2000, monthlyRentToLandlord: 0, estimateCostOfRepairs: 0, furnitureCost: 0, otherStartupCosts: 0, startupCostsTotal: 0 },
   appreciation: { appreciationPercentPerYear: 3, yearsOfAppreciation: 3, futurePropertyValue: 0, refinanceLtv: 70, refinancePotential: 0, remainingBalanceAfterRefi: 0 },
   // Settings
@@ -744,20 +1233,74 @@ const defaultState: DealState = {
       marginOfSafety: 0 
     },
     activeProFormaTab: 'presets',
+    // Market conditions for enhanced sensitivity analysis
+    marketType: 'stable' as const,
+    // Advanced Analysis Configuration
+    marketConditions: defaultMarketConditions.stable,
+    exitStrategies: [
+      { timeframe: 5, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: 0.04 },
+      { timeframe: 10, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: 0.04 },
+      { timeframe: 15, sellingCosts: 6, capitalGainsTax: 20, depreciationRecapture: 25, marketAppreciation: 0.04 }
+    ],
+    seasonalFactors: defaultSeasonalFactors,
+    propertyAge: { age: 15, maintenanceCostMultiplier: 1.2, utilityEfficiencyMultiplier: 0.9, insuranceCostMultiplier: 1.1, expectedLifespan: 50 },
+    locationFactors: defaultLocationFactors.suburban,
+    riskFactors: { marketVolatility: 5, tenantQuality: 7, propertyCondition: 6, locationStability: 8, financingRisk: 4 },
+    taxImplications: { propertyTaxDeduction: true, mortgageInterestDeduction: true, depreciationDeduction: true, repairExpenseDeduction: true, taxBracket: 24 },
+    // Advanced Analysis Results - initialized as undefined
+    exitStrategyResults: undefined,
+    refinanceScenarioResults: undefined,
+    taxImplicationResults: undefined,
+    riskScoreResults: undefined,
+    confidenceIntervalResults: undefined,
+    inflationProjections: undefined,
+  proFormaAuto: true,
+  validationMessages: [],
+  showAmortizationOverride: false,
+  snackbarOpen: false,
 };
 
 const UnderwritePage: React.FC = () => {
   const navigate = useNavigate();
+  function validateAndNormalizeState(input: DealState): { next: DealState; messages: string[] } {
+    const messages: string[] = [];
+    // Ensure operation type valid for property type
+    const allowedOps = getOperationTypeOptions(input.propertyType);
+    let operationType = input.operationType;
+    if (!allowedOps.includes(operationType)) {
+      operationType = allowedOps[0];
+      messages.push(`Operation Type reset to ${operationType} for ${input.propertyType}.`);
+    }
+    // Ensure offer type valid for combination
+    const allowedOffers = getOfferTypeOptions(input.propertyType, operationType);
+    let offerType = input.offerType;
+    if (!allowedOffers.includes(offerType)) {
+      offerType = allowedOffers[0];
+      messages.push(`Finance Type reset to ${offerType} for ${input.propertyType} + ${operationType}.`);
+    }
+    const next: DealState = { ...input, operationType, offerType, validationMessages: messages, snackbarOpen: messages.length > 0 };
+    return { next, messages };
+  }
+
   const [state, setState] = useState<DealState>(() => {
     try {
       const fromLocal = localStorage.getItem('underwrite:last');
       if (fromLocal) {
         const parsed = JSON.parse(fromLocal) as DealState;
-        return { ...parsed, analysisDate: parsed.analysisDate || currentDateInputValue() };
+        const normalized = validateAndNormalizeState({
+          ...parsed,
+          analysisDate: parsed.analysisDate || currentDateInputValue(),
+          proFormaAuto: parsed.proFormaAuto ?? true,
+          validationMessages: [],
+        });
+        return normalized.next;
       }
     } catch {}
     return defaultState;
   });
+
+  // Debug effect to track tab changes
+  // Remove debug effect in production
 
   function saveDeal() {
     localStorage.setItem('underwrite:last', JSON.stringify(state));
@@ -765,47 +1308,210 @@ const UnderwritePage: React.FC = () => {
 
   function update<K extends keyof DealState>(key: K, value: DealState[K]) {
     setState((prev) => {
-      const newState = { ...prev, [key]: value };
-      
-      // Auto-update Pro Forma values when property type or operation type changes
-      if (key === 'propertyType' || key === 'operationType') {
-        // Only auto-update if not using a custom preset
-        if (prev.proFormaPreset !== 'custom') {
-          const newValues = getProFormaValues(
-            key === 'propertyType' ? value as PropertyType : prev.propertyType,
-            key === 'operationType' ? value as OperationType : prev.operationType,
-            prev.proFormaPreset as 'conservative' | 'moderate' | 'aggressive'
-          );
-          
-          newState.ops = {
-            ...newState.ops,
-            maintenance: newValues.maintenance,
-            vacancy: newValues.vacancy,
-            management: newValues.management,
-            capEx: newValues.capEx,
-            opEx: newValues.opEx
-          };
-        }
+      let candidate: DealState = { ...prev, [key]: value } as DealState;
+
+      // Validate cash investment fields to prevent negative values that could cause division by zero in ROI calculations
+      if (key === 'reservesMonths' && (value as number) < 0) {
+        candidate.validationMessages = [
+          ...(candidate.validationMessages || []),
+          'Reserves Months cannot be negative. This could cause invalid ROI calculations.'
+        ];
+        candidate.snackbarOpen = true;
       }
       
-      return newState;
+      if (key === 'reservesFixedAmount' && (value as number) < 0) {
+        candidate.validationMessages = [
+          ...(candidate.validationMessages || []),
+          'Reserves Fixed Amount cannot be negative. This could cause invalid ROI calculations.'
+        ];
+        candidate.snackbarOpen = true;
+      }
+
+      // Validate combinations when PT/OT change and potentially auto-apply Pro Forma
+      if (key === 'propertyType' || key === 'operationType') {
+        const currentProperty = key === 'propertyType' ? (value as PropertyType) : prev.propertyType;
+        const currentOperation = key === 'operationType' ? (value as OperationType) : prev.operationType;
+
+        // Validate operation type for property changes
+        if (key === 'propertyType') {
+          const allowedOps = getOperationTypeOptions(currentProperty);
+          if (!allowedOps.includes(currentOperation)) {
+            candidate.operationType = allowedOps[0];
+            candidate.validationMessages = [
+              ...(candidate.validationMessages || []),
+              `Operation Type reset to ${candidate.operationType} for ${currentProperty}.`,
+            ];
+          }
+        }
+
+        // Validate offer type for the combination
+        const offers = getOfferTypeOptions(
+          currentProperty,
+          candidate.operationType as OperationType,
+        );
+        if (!offers.includes(candidate.offerType)) {
+          candidate.offerType = offers[0];
+          candidate.validationMessages = [
+            ...(candidate.validationMessages || []),
+            `Finance Type reset to ${candidate.offerType} for ${currentProperty} + ${candidate.operationType}.`,
+          ];
+          candidate.snackbarOpen = true;
+        }
+
+        // Auto-apply Pro Forma only if not custom and auto flag is on
+        if (prev.proFormaPreset !== 'custom' && prev.proFormaAuto) {
+          // Get holding period for Fix & Flip operations to calculate appropriate vacancy rates
+          const holdingPeriodMonths = candidate.operationType === 'Fix & Flip' && candidate.fixFlip?.holdingPeriodMonths 
+            ? candidate.fixFlip.holdingPeriodMonths 
+            : undefined;
+          
+          const newValues = getProFormaValues(
+            currentProperty,
+            candidate.operationType as OperationType,
+            prev.proFormaPreset as 'conservative' | 'moderate' | 'aggressive',
+            holdingPeriodMonths
+          );
+          
+          // Check if current pro forma values differ from what would be applied (indicating manual edits)
+          const hasManualEdits = 
+            prev.ops.maintenance !== newValues.maintenance ||
+            prev.ops.vacancy !== newValues.vacancy ||
+            prev.ops.management !== newValues.management ||
+            prev.ops.capEx !== newValues.capEx ||
+            prev.ops.opEx !== newValues.opEx;
+          
+          if (hasManualEdits) {
+            // Warn user that manual edits will be overwritten
+            candidate.validationMessages = [
+              ...(candidate.validationMessages || []),
+              `Pro Forma Auto-Apply disabled: Changing ${key === 'propertyType' ? 'property type' : 'operation type'} would overwrite your manual Pro Forma edits. Auto-apply has been disabled to protect your custom values. You can re-enable it in the Pro Forma settings if desired.`,
+            ];
+            candidate.snackbarOpen = true;
+            
+            // Disable auto-apply to prevent overwriting without user awareness
+            candidate.proFormaAuto = false;
+          } else {
+            // No manual edits detected, safe to apply new values
+            candidate.ops = {
+              ...candidate.ops,
+              maintenance: newValues.maintenance,
+              vacancy: newValues.vacancy,
+              management: newValues.management,
+              capEx: newValues.capEx,
+              opEx: newValues.opEx,
+            };
+          }
+        }
+      }
+
+      return candidate;
     });
   }
 
   function updateLoan<K extends keyof LoanTerms>(key: K, value: LoanTerms[K]) {
-    setState((prev) => ({ ...prev, loan: { ...prev.loan, [key]: value } }));
+    setState((prev) => {
+      // ✅ Validate cash investment fields to prevent negative values that could cause division by zero in ROI calculations
+      const cashInvestmentFields: Array<keyof LoanTerms> = ['downPayment', 'closingCosts', 'rehabCosts'];
+      const hasNegativeValue = cashInvestmentFields.includes(key) && (value as number) < 0;
+      
+      // ✅ Validate finance calculation fields to prevent invalid inputs to finance.ts functions
+      const financeCalculationFields: Array<keyof LoanTerms> = ['loanAmount', 'amortizationYears', 'annualInterestRate'];
+      const hasInvalidFinanceValue = financeCalculationFields.includes(key) && (
+        (key === 'loanAmount' && (value as number) < 0) ||
+        (key === 'amortizationYears' && (value as number) <= 0) ||
+        (key === 'annualInterestRate' && (value as number) < 0)
+      );
+      
+      // Return single state update with all computed values
+      return {
+        ...prev,
+        loan: { ...prev.loan, [key]: value },
+        ...(hasNegativeValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            `${key === 'downPayment' ? 'Down Payment' : key === 'closingCosts' ? 'Closing Costs' : 'Rehab Costs'} cannot be negative. This could cause invalid ROI calculations.`
+          ],
+          snackbarOpen: true
+        }),
+        ...(hasInvalidFinanceValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            `${key === 'loanAmount' ? 'Loan Amount' : key === 'amortizationYears' ? 'Loan Term' : 'Interest Rate'} has an invalid value. ${key === 'loanAmount' ? 'Amount cannot be negative.' : key === 'amortizationYears' ? 'Term must be positive.' : 'Rate cannot be negative.'}`
+          ],
+          snackbarOpen: true
+        })
+      };
+    });
   }
 
   function updateOps<K extends keyof OperatingInputsCommon>(key: K, value: OperatingInputsCommon[K]) {
-    setState((prev) => ({ ...prev, ops: { ...prev.ops, [key]: value } }));
+    setState((prev) => {
+      // ✅ Validate operating expense fields to prevent negative values that could cause invalid finance calculations
+      const expenseFields: Array<keyof OperatingInputsCommon> = ['taxes', 'insurance', 'hoa', 'gasElectric', 'internet', 'waterSewer', 'heat', 'lawnSnow', 'phoneBill', 'cleaner', 'extra', 'maintenance', 'vacancy', 'management', 'capEx', 'opEx'];
+      const hasNegativeValue = expenseFields.includes(key) && (value as number) < 0;
+      
+      // ✅ Validate percentage fields to ensure they don't exceed 100%
+      const percentageFields: Array<keyof OperatingInputsCommon> = ['maintenance', 'vacancy', 'management', 'capEx', 'opEx', 'utilitiesPct'];
+      const hasInvalidPercentage = percentageFields.includes(key) && (value as number) > 100;
+      
+      // If user manually adjusts any of the pro forma percentages, disable auto-apply
+      const proFormaKeys: Array<keyof OperatingInputsCommon> = ['maintenance', 'vacancy', 'management', 'capEx', 'opEx'];
+      const shouldDisableAuto = proFormaKeys.includes(key);
+      
+      // Return single state update with all computed values
+      return {
+        ...prev,
+        ops: { ...prev.ops, [key]: value },
+        ...(shouldDisableAuto && { proFormaAuto: false }),
+        ...(hasNegativeValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            `${key === 'phoneBill' ? 'Phone Bill' : key === 'gasElectric' ? 'Gas/Electric' : key === 'waterSewer' ? 'Water/Sewer' : key === 'lawnSnow' ? 'Lawn/Snow' : key} cannot be negative.`
+          ],
+          snackbarOpen: true
+        }),
+        ...(hasInvalidPercentage && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            `${key === 'utilitiesPct' ? 'Utilities Percentage' : key} cannot exceed 100%.`
+          ],
+          snackbarOpen: true
+        })
+      };
+    });
   }
 
   function updateProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive' | 'custom') {
     setState((prev) => ({ ...prev, proFormaPreset: preset }));
   }
 
+  function toggleProFormaAuto() {
+    setState((prev) => {
+      const newAutoState = !prev.proFormaAuto;
+      let messages = [...(prev.validationMessages || [])];
+      
+      if (newAutoState) {
+        messages.push('Pro Forma Auto-Apply re-enabled. Property/operation type changes will now automatically update Pro Forma values.');
+      } else {
+        messages.push('Pro Forma Auto-Apply disabled. Your manual Pro Forma edits will be preserved.');
+      }
+      
+      return {
+        ...prev,
+        proFormaAuto: newAutoState,
+        validationMessages: messages,
+        snackbarOpen: true
+      };
+    });
+  }
+
   // Dynamic Pro Forma calculations based on property type and operation type
-  function getProFormaValues(propertyType: PropertyType, operationType: OperationType, preset: 'conservative' | 'moderate' | 'aggressive') {
+  function getProFormaValues(
+    propertyType: PropertyType, 
+    operationType: OperationType, 
+    preset: 'conservative' | 'moderate' | 'aggressive',
+    holdingPeriodMonths?: number
+  ) {
     const baseValues = {
       'Single Family': {
         'Buy & Hold': { maintenance: 6, vacancy: 4, management: 9, capEx: 4, opEx: 3 },
@@ -827,10 +1533,31 @@ const UnderwritePage: React.FC = () => {
         'Short Term Rental': { maintenance: 18, vacancy: 35, management: 25, capEx: 12, opEx: 15 },
         'Rental Arbitrage': { maintenance: 20, vacancy: 40, management: 28, capEx: 18, opEx: 20 },
         'BRRRR': { maintenance: 12, vacancy: 15, management: 8, capEx: 8, opEx: 6 }
+      },
+      'Office': {
+        'Buy & Hold': { maintenance: 10, vacancy: 12, management: 4, capEx: 8, opEx: 6 },
+        'Fix & Flip': { maintenance: 15, vacancy: 0, management: 4, capEx: 20, opEx: 5 },
+        'Short Term Rental': { maintenance: 12, vacancy: 18, management: 5, capEx: 10, opEx: 8 },
+        'Rental Arbitrage': { maintenance: 12, vacancy: 20, management: 6, capEx: 10, opEx: 10 },
+        'BRRRR': { maintenance: 10, vacancy: 12, management: 4, capEx: 8, opEx: 6 }
+      },
+      'Retail': {
+        'Buy & Hold': { maintenance: 9, vacancy: 10, management: 5, capEx: 7, opEx: 6 },
+        'Fix & Flip': { maintenance: 14, vacancy: 0, management: 4, capEx: 18, opEx: 5 },
+        'Short Term Rental': { maintenance: 10, vacancy: 16, management: 5, capEx: 9, opEx: 7 },
+        'Rental Arbitrage': { maintenance: 10, vacancy: 18, management: 6, capEx: 9, opEx: 9 },
+        'BRRRR': { maintenance: 9, vacancy: 10, management: 5, capEx: 7, opEx: 6 }
+      },
+      'Land': {
+        // Land modeled as hold/development; STR/Arbitrage not applicable. Vacancy kept minimal.
+        'Buy & Hold': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 },
+        'Fix & Flip': { maintenance: 3, vacancy: 0, management: 2, capEx: 8, opEx: 2 },
+        'BRRRR': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 }
       }
     };
 
-    const base = baseValues[propertyType]?.[operationType] || baseValues['Single Family']['Buy & Hold'];
+    // Safe access: some property types (e.g., Land) intentionally omit certain operations
+    const base = (baseValues as any)[propertyType]?.[operationType] || baseValues['Single Family']['Buy & Hold'];
     
     // Apply preset multipliers
     const multipliers = {
@@ -841,24 +1568,38 @@ const UnderwritePage: React.FC = () => {
 
     const multiplier = multipliers[preset];
     
-    return {
+    // Calculate base values with multipliers
+    let calculatedValues = {
       maintenance: Math.round(base.maintenance * multiplier.maintenance),
       vacancy: Math.round(base.vacancy * multiplier.vacancy),
       management: Math.round(base.management * multiplier.management),
       capEx: Math.round(base.capEx * multiplier.capEx),
       opEx: Math.round(base.opEx * multiplier.opEx)
     };
+    
+    // Apply Fix & Flip vacancy rate adjustment based on holding period
+    if (operationType === 'Fix & Flip' && holdingPeriodMonths && holdingPeriodMonths > 0) {
+      // Use helper function to calculate appropriate vacancy rate based on holding period
+      calculatedValues.vacancy = calculateFixFlipVacancyRate(holdingPeriodMonths);
+    }
+    
+    return calculatedValues;
   }
 
   function applyProFormaPreset(preset: 'conservative' | 'moderate' | 'aggressive') {
-    const values = getProFormaValues(state.propertyType, state.operationType, preset);
+    // Get holding period for Fix & Flip operations to calculate appropriate vacancy rates
+    const holdingPeriodMonths = state.operationType === 'Fix & Flip' && state.fixFlip?.holdingPeriodMonths 
+      ? state.fixFlip.holdingPeriodMonths 
+      : undefined;
+    
+    const values = getProFormaValues(state.propertyType, state.operationType, preset, holdingPeriodMonths);
     updateOps('maintenance', values.maintenance);
     updateOps('vacancy', values.vacancy);
     updateOps('management', values.management);
     updateOps('capEx', values.capEx);
     updateOps('opEx', values.opEx);
     updateProFormaPreset(preset);
-    setState(prev => ({ ...prev, selectedCustomPreset: undefined }));
+    setState(prev => ({ ...prev, selectedCustomPreset: undefined, proFormaAuto: true }));
   }
 
   // Custom Preset Management
@@ -908,6 +1649,33 @@ const UnderwritePage: React.FC = () => {
     localStorage.setItem('dreameryCustomProFormaPresets', JSON.stringify(updatedPresets));
   }
 
+
+
+  // Helper: get reason why ADR tabs are not showing (for user guidance)
+  function getAdrTabsVisibilityReason(): string | null {
+    if (state.propertyType === 'Land') {
+      return 'ADR tabs are not available for Land properties.';
+    }
+    
+    const isSTR = state.operationType === 'Short Term Rental';
+    const isHotel = state.propertyType === 'Hotel';
+    const isSfrOrMfArb = (state.propertyType === 'Single Family' || state.propertyType === 'Multi Family') && state.operationType === 'Rental Arbitrage';
+    
+    if (!isSTR && !isHotel && !isSfrOrMfArb) {
+      return 'ADR tabs are only available for Short Term Rental, Hotel properties, or Rental Arbitrage on Single Family/Multi Family properties.';
+    }
+    
+    if (state.revenueInputs.totalRooms <= 0) {
+      return 'Please enter a valid number of rooms (greater than 0) to see ADR analysis tabs.';
+    }
+    
+    if (state.revenueInputs.averageDailyRate <= 0) {
+      return 'Please enter a valid Average Daily Rate (greater than 0) to see ADR analysis tabs.';
+    }
+    
+    return null; // Tabs should be visible
+  }
+
   function applyCustomPreset(id: string) {
     const preset = state.customProFormaPresets.find(p => p.id === id);
     if (preset) {
@@ -924,60 +1692,125 @@ const UnderwritePage: React.FC = () => {
     }
   }
 
-  // Sensitivity Analysis
+  // Risk Score Calculation Function
+  function computeRiskScore(state: DealState) {
+    try {
+      const results = calculateRiskScore(state.riskFactors, state.marketConditions, state.propertyAge);
+      setState(prev => ({ ...prev, riskScoreResults: results }));
+      return results;
+    } catch (error) {
+      console.error('Error calculating risk score:', error);
+      setState(prev => ({
+        ...prev,
+        validationMessages: [...(prev.validationMessages || []), 'Error calculating risk score.'],
+        snackbarOpen: true
+      }));
+      return null;
+    }
+  }
+
+  // Enhanced Sensitivity Analysis with Seasonal Variations and Market Adjustments
   function calculateSensitivityAnalysis() {
     const baseState = { ...state };
     const range = state.sensitivityAnalysis.sensitivityRange / 100;
     const steps = state.sensitivityAnalysis.sensitivitySteps;
     const stepSize = (range * 2) / (steps - 1);
     
+    // ✅ Get market conditions for enhanced sensitivity analysis
+    const marketConditions = defaultMarketConditions[state.marketType || 'stable'];
+    const baseMetrics = {
+      vacancyRate: state.ops.vacancy / 100,
+      rentGrowth: 0.03, // Default 3% annual rent growth
+      appreciation: 0.04, // Default 4% annual appreciation
+      capRate: 0.06 // Default 6% cap rate
+    };
+    const adjustedMetrics = calculateMarketAdjustments(baseMetrics, marketConditions);
+    
     const results = [];
+    
+    // ✅ Add seasonal variation scenarios if ADR tabs are applicable
+    const seasonalScenarios = shouldShowAdrTabs(state) ? [
+      { name: 'Q1 (Winter)', multiplier: state.revenueInputs.seasonalVariations.q1 },
+      { name: 'Q2 (Spring)', multiplier: state.revenueInputs.seasonalVariations.q2 },
+      { name: 'Q3 (Summer)', multiplier: state.revenueInputs.seasonalVariations.q3 },
+      { name: 'Q4 (Fall)', multiplier: state.revenueInputs.seasonalVariations.q4 },
+      { name: 'Annual Avg', multiplier: (state.revenueInputs.seasonalVariations.q1 + state.revenueInputs.seasonalVariations.q2 + state.revenueInputs.seasonalVariations.q3 + state.revenueInputs.seasonalVariations.q4) / 4 }
+    ] : [{ name: 'Base', multiplier: 1 }];
+    
+    // ✅ Add market-adjusted scenarios for comprehensive analysis
+    const marketScenarios = [
+      { name: 'Market Adjusted', rentChange: adjustedMetrics.adjustedRentGrowth * 100, expenseChange: 0, valueChange: adjustedMetrics.adjustedAppreciation * 100 },
+      { name: 'Conservative', rentChange: -10, expenseChange: 10, valueChange: -10 },
+      { name: 'Optimistic', rentChange: 10, expenseChange: -10, valueChange: 10 }
+    ];
     
     for (let i = 0; i < steps; i++) {
       const multiplier = 1 - range + (i * stepSize);
-      const testState = {
-        ...baseState,
-        ops: {
-          ...baseState.ops,
-          maintenance: Math.round(baseState.ops.maintenance * multiplier),
-          vacancy: Math.round(baseState.ops.vacancy * multiplier),
-          management: Math.round(baseState.ops.management * multiplier),
-          capEx: Math.round(baseState.ops.capEx * multiplier),
-          opEx: Math.round(baseState.ops.opEx * multiplier)
+      
+      for (const seasonalScenario of seasonalScenarios) {
+        for (const marketScenario of marketScenarios) {
+          const testState = {
+            ...baseState,
+            ops: {
+              ...baseState.ops,
+              maintenance: Math.round(baseState.ops.maintenance * multiplier),
+              vacancy: Math.round(baseState.ops.vacancy * multiplier),
+              management: Math.round(baseState.ops.management * multiplier),
+              capEx: Math.round(baseState.ops.capEx * multiplier),
+              opEx: Math.round(baseState.ops.opEx * multiplier)
+            }
+          };
+          
+          // ✅ Calculate revenue-based income with seasonal variations
+          let monthlyIncome = computeIncome(testState);
+          
+          // ✅ Apply seasonal multiplier to income if ADR tabs are applicable
+          if (shouldShowAdrTabs(testState) && testState.revenueInputs.totalRooms > 0 && testState.revenueInputs.averageDailyRate > 0) {
+            // Use seasonal variation multiplier for more accurate projections
+            monthlyIncome = monthlyIncome * seasonalScenario.multiplier;
+          }
+          
+          // ✅ Apply market-adjusted rent growth to income
+          monthlyIncome *= (1 + marketScenario.rentChange / 100);
+          
+          const monthlyExpenses = computeFixedMonthlyOps(testState.ops) + 
+            (monthlyIncome * computeVariableMonthlyOpsPct(testState.ops)) / 100;
+          
+          // ✅ Apply market-adjusted expense changes
+          const adjustedMonthlyExpenses = monthlyExpenses * (1 + marketScenario.expenseChange / 100);
+          
+          const monthlyCashFlow = monthlyIncome - adjustedMonthlyExpenses - 
+            totalMonthlyDebtService({
+              newLoanMonthly: testState.loan.monthlyPayment || 0,
+              subjectToMonthlyTotal: testState.subjectTo?.totalMonthlyPayment,
+              hybridMonthly: testState.hybrid?.monthlyPayment
+            });
+          
+          // ✅ Calculate market-adjusted property value
+          const adjustedPropertyValue = testState.purchasePrice * (1 + marketScenario.valueChange / 100);
+          
+          results.push({
+            multiplier: (multiplier * 100).toFixed(0) + '%',
+            seasonalScenario: seasonalScenario.name,
+            seasonalMultiplier: seasonalScenario.multiplier.toFixed(2),
+            marketScenario: marketScenario.name,
+            rentChange: marketScenario.rentChange.toFixed(1) + '%',
+            expenseChange: marketScenario.expenseChange.toFixed(1) + '%',
+            valueChange: marketScenario.valueChange.toFixed(1) + '%',
+            maintenance: testState.ops.maintenance,
+            vacancy: testState.ops.vacancy,
+            management: testState.ops.management,
+            capEx: testState.ops.capEx,
+            opEx: testState.ops.opEx,
+            monthlyIncome: Math.round(monthlyIncome),
+            monthlyCashFlow: Math.round(monthlyCashFlow),
+            annualCashFlow: Math.round(monthlyCashFlow * 12),
+            adjustedPropertyValue: Math.round(adjustedPropertyValue),
+            cashOnCash: monthlyCashFlow > 0 ? 
+              ((monthlyCashFlow * 12) / (adjustedPropertyValue * (testState.loan.downPayment || 0) / 100) * 100).toFixed(1) + '%' : 'N/A'
+          });
         }
-      };
-      
-      // Calculate revenue-based income if available
-      let monthlyIncome = computeIncome(testState);
-      
-      // If we have revenue inputs, use them for more accurate calculations
-      if (state.revenueInputs.totalRooms > 0 && state.revenueInputs.averageDailyRate > 0) {
-        const annualRevenue = state.revenueInputs.totalRooms * state.revenueInputs.averageDailyRate * 
-          (state.revenueInputs.occupancyRate / 100) * 365;
-        monthlyIncome = annualRevenue / 12;
       }
-      
-      const monthlyExpenses = computeFixedMonthlyOps(testState.ops) + 
-        (monthlyIncome * computeVariableMonthlyOpsPct(testState.ops)) / 100;
-      const monthlyCashFlow = monthlyIncome - monthlyExpenses - 
-        totalMonthlyDebtService({
-          newLoanMonthly: testState.loan.monthlyPayment || 0,
-          subjectToMonthlyTotal: testState.subjectTo?.totalMonthlyPayment,
-          hybridMonthly: testState.hybrid?.monthlyPayment
-        });
-      
-      results.push({
-        multiplier: (multiplier * 100).toFixed(0) + '%',
-        maintenance: testState.ops.maintenance,
-        vacancy: testState.ops.vacancy,
-        management: testState.ops.management,
-        capEx: testState.ops.capEx,
-        opEx: testState.ops.opEx,
-        monthlyCashFlow: Math.round(monthlyCashFlow),
-        annualCashFlow: Math.round(monthlyCashFlow * 12),
-        cashOnCash: monthlyCashFlow > 0 ? 
-          ((monthlyCashFlow * 12) / (testState.purchasePrice * (testState.loan.downPayment || 0) / 100) * 100).toFixed(1) + '%' : 'N/A'
-      });
     }
     
     return results;
@@ -1016,6 +1849,27 @@ const UnderwritePage: React.FC = () => {
         'Short Term Rental': { maintenance: 20, vacancy: 35, management: 25, capEx: 15, opEx: 18 },
         'Rental Arbitrage': { maintenance: 22, vacancy: 40, management: 28, capEx: 18, opEx: 20 },
         'BRRRR': { maintenance: 15, vacancy: 18, management: 10, capEx: 10, opEx: 8 }
+      },
+      'Office': {
+        'Buy & Hold': { maintenance: 10, vacancy: 12, management: 5, capEx: 8, opEx: 6 },
+        'Fix & Flip': { maintenance: 15, vacancy: 0, management: 5, capEx: 20, opEx: 5 },
+        'Short Term Rental': { maintenance: 12, vacancy: 18, management: 6, capEx: 10, opEx: 8 },
+        'Rental Arbitrage': { maintenance: 12, vacancy: 20, management: 6, capEx: 10, opEx: 10 },
+        'BRRRR': { maintenance: 10, vacancy: 12, management: 5, capEx: 8, opEx: 6 }
+      },
+      'Retail': {
+        'Buy & Hold': { maintenance: 9, vacancy: 10, management: 6, capEx: 7, opEx: 6 },
+        'Fix & Flip': { maintenance: 14, vacancy: 0, management: 5, capEx: 18, opEx: 5 },
+        'Short Term Rental': { maintenance: 10, vacancy: 16, management: 6, capEx: 9, opEx: 7 },
+        'Rental Arbitrage': { maintenance: 10, vacancy: 18, management: 6, capEx: 9, opEx: 9 },
+        'BRRRR': { maintenance: 9, vacancy: 10, management: 6, capEx: 7, opEx: 6 }
+      },
+      'Land': {
+        'Buy & Hold': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 },
+        'Fix & Flip': { maintenance: 3, vacancy: 0, management: 2, capEx: 8, opEx: 2 },
+        'Short Term Rental': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 },
+        'Rental Arbitrage': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 },
+        'BRRRR': { maintenance: 2, vacancy: 0, management: 2, capEx: 3, opEx: 1 }
       }
     };
     
@@ -1082,51 +1936,147 @@ const UnderwritePage: React.FC = () => {
 
   // Break-Even Analysis Functions
   function calculateBreakEvenOccupancy(): number {
-    const totalProFormaPct = state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx;
-    const fixedCosts = state.revenueInputs.fixedAnnualCosts;
-    const adr = state.revenueInputs.averageDailyRate;
-    const rooms = state.revenueInputs.totalRooms;
+    // ✅ Don't calculate break-even for Land properties or when ADR tabs shouldn't be shown
+    if (!shouldShowAdrTabs(state)) {
+      return 0;
+    }
     
-    if (adr === 0 || rooms === 0) return 0;
-    
-    const dailyRevenuePerRoom = adr;
-    const variableCostPerRoom = (dailyRevenuePerRoom * totalProFormaPct) / 100;
-    const netRevenuePerRoom = dailyRevenuePerRoom - variableCostPerRoom;
-    
-    if (netRevenuePerRoom <= 0) return 100; // Can't break even if variable costs exceed revenue
-    
-    const totalDailyFixedCosts = fixedCosts / 365;
-    const breakEvenOccupancy = (totalDailyFixedCosts / (netRevenuePerRoom * rooms)) * 100;
-    
-    return Math.max(0, Math.min(100, breakEvenOccupancy));
+    try {
+      const { averageDailyRate, totalRooms, occupancyRate, seasonalVariations } = state.revenueInputs;
+      
+      // ✅ Validate inputs before calculation
+      if (averageDailyRate <= 0 || totalRooms <= 0) {
+        setState(prev => ({
+          ...prev,
+          validationMessages: [...(prev.validationMessages || []), 'Invalid ADR or rooms for break-even calculation.'],
+          snackbarOpen: true
+        }));
+        return 0;
+      }
+      
+      // ✅ Apply seasonal adjustments if ADR tabs are applicable
+      let adjustedMonthlyRevenueAt100 = averageDailyRate * totalRooms * 30.42; // Average days per month
+      
+      if (shouldShowAdrTabs(state)) {
+        const seasonalFactors: SeasonalFactors = {
+          summerVacancyRate: seasonalVariations.q2 / 100,
+          winterVacancyRate: seasonalVariations.q4 / 100,
+          springVacancyRate: seasonalVariations.q1 / 100,
+          fallVacancyRate: seasonalVariations.q3 / 100,
+          seasonalMaintenanceMultiplier: 1 // Default, adjust if needed
+        };
+        const month = new Date().getMonth() + 1;
+        const { adjustedVacancyRate } = calculateSeasonalAdjustments(state.ops.vacancy / 100, seasonalFactors, month);
+        
+        // ✅ Apply seasonal vacancy adjustment to revenue calculation
+        adjustedMonthlyRevenueAt100 *= (1 - adjustedVacancyRate);
+      }
+      
+      // ✅ Use finance.ts functions for consistent calculations
+      const fixedMonthlyOps = computeFixedMonthlyOps(state.ops);
+      const variablePct = computeVariableMonthlyOpsPct(state.ops) / 100;
+      
+      // ✅ Call finance.ts breakEvenOccupancy with proper error handling
+      const breakEvenRatio = financeBreakEvenOccupancy({
+        monthlyRevenueAt100: adjustedMonthlyRevenueAt100,
+        fixedMonthlyOps,
+        variablePct,
+        includeVariablePct: true
+      });
+      
+      // ✅ Convert ratio to percentage
+      return breakEvenRatio * 100;
+      
+    } catch (error) {
+      // ✅ Enhanced error handling with specific messages
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setState(prev => ({
+        ...prev,
+        validationMessages: [...(prev.validationMessages || []), 'Error in break-even occupancy calculation: ' + errorMessage],
+        snackbarOpen: true
+      }));
+      return 0;
+    }
   }
 
   function calculateBreakEvenADR(): number {
-    const totalProFormaPct = state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx;
-    const fixedCosts = state.revenueInputs.fixedAnnualCosts;
-    const occupancy = state.revenueInputs.occupancyRate;
-    const rooms = state.revenueInputs.totalRooms;
+    // ✅ Don't calculate break-even ADR for Land properties or when ADR tabs shouldn't be shown
+    if (!shouldShowAdrTabs(state)) {
+      return 0;
+    }
     
-    if (occupancy === 0 || rooms === 0) return 0;
-    
-    const dailyFixedCosts = fixedCosts / 365;
-    const occupiedRooms = (rooms * occupancy) / 100;
-    
-    if (occupiedRooms === 0) return 0;
-    
-    const breakEvenADR = dailyFixedCosts / occupiedRooms;
-    const variableCostMultiplier = 1 + (totalProFormaPct / 100);
-    
-    return breakEvenADR * variableCostMultiplier;
+    try {
+      // ✅ Use centralized utility functions to eliminate redundant calculations
+      const variablePct = computeVariableMonthlyOpsPct(state.ops);
+      const fixedCosts = state.revenueInputs.fixedAnnualCosts;
+      const occupancy = state.revenueInputs.occupancyRate;
+      const rooms = state.revenueInputs.totalRooms;
+      
+      if (occupancy === 0 || rooms === 0) {
+        setState(prev => ({
+          ...prev,
+          validationMessages: [...(prev.validationMessages || []), 'Invalid occupancy rate or rooms for break-even ADR calculation.'],
+          snackbarOpen: true
+        }));
+        return 0;
+      }
+      
+      const dailyFixedCosts = fixedCosts / 365;
+      const occupiedRooms = (rooms * occupancy) / 100;
+      
+      if (occupiedRooms === 0) {
+        setState(prev => ({
+          ...prev,
+          validationMessages: [...(prev.validationMessages || []), 'No occupied rooms for break-even ADR calculation.'],
+          snackbarOpen: true
+        }));
+        return 0;
+      }
+      
+      const breakEvenADR = dailyFixedCosts / occupiedRooms;
+      const variableCostMultiplier = 1 + (variablePct / 100);
+      
+      return breakEvenADR * variableCostMultiplier;
+    } catch (error) {
+      console.error('Error calculating break-even ADR:', error);
+      setState(prev => ({
+        ...prev,
+        validationMessages: [...(prev.validationMessages || []), 'Error in break-even ADR calculation.'],
+        snackbarOpen: true
+      }));
+      return 0;
+    }
   }
 
   function calculateMarginOfSafety(): number {
-    const breakEvenOccupancy = calculateBreakEvenOccupancy();
-    const currentOccupancy = state.revenueInputs.occupancyRate;
+    // ✅ Don't calculate margin of safety for Land properties or when ADR tabs shouldn't be shown
+    if (!shouldShowAdrTabs(state)) {
+      return 0;
+    }
     
-    if (breakEvenOccupancy >= currentOccupancy) return 0;
-    
-    return ((currentOccupancy - breakEvenOccupancy) / breakEvenOccupancy) * 100;
+    try {
+      const breakEvenOccupancy = calculateBreakEvenOccupancy();
+      const currentOccupancy = state.revenueInputs.occupancyRate;
+      
+      if (breakEvenOccupancy >= currentOccupancy) {
+        setState(prev => ({
+          ...prev,
+          validationMessages: [...(prev.validationMessages || []), 'Current occupancy is at or below break-even; no margin of safety.'],
+          snackbarOpen: true
+        }));
+        return 0;
+      }
+      
+      return ((currentOccupancy - breakEvenOccupancy) / breakEvenOccupancy) * 100;
+    } catch (error) {
+      console.error('Error calculating margin of safety:', error);
+      setState(prev => ({
+        ...prev,
+        validationMessages: [...(prev.validationMessages || []), 'Error in margin of safety calculation.'],
+        snackbarOpen: true
+      }));
+      return 0;
+    }
   }
 
   function updateAppreciation<K extends keyof AppreciationInputs>(key: K, value: AppreciationInputs[K]) {
@@ -1137,9 +2087,10 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => ({ 
       ...prev, 
       sfr: { 
-        monthlyRent: 0,
-        grossMonthlyIncome: 0,
-        grossYearlyIncome: 0,
+        // Preserve other fields unless explicitly set
+        monthlyRent: prev.sfr?.monthlyRent || 0,
+        grossMonthlyIncome: prev.sfr?.grossMonthlyIncome || 0,
+        grossYearlyIncome: prev.sfr?.grossYearlyIncome || 0,
         [key]: value 
       } 
     }));
@@ -1149,9 +2100,9 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => ({ 
       ...prev, 
       multi: { 
-        unitRents: [],
-        grossMonthlyIncome: 0,
-        grossYearlyIncome: 0,
+        unitRents: prev.multi?.unitRents || [],
+        grossMonthlyIncome: prev.multi?.grossMonthlyIncome || 0,
+        grossYearlyIncome: prev.multi?.grossYearlyIncome || 0,
         [key]: value 
       } 
     }));
@@ -1161,63 +2112,122 @@ const UnderwritePage: React.FC = () => {
     setState((prev) => ({ 
       ...prev, 
       str: { 
-        unitDailyRents: [],
-        unitMonthlyRents: [],
-        dailyCleaningFee: 0,
-        laundry: 0,
-        activities: 0,
-        avgNightsPerMonth: 0,
-        grossDailyIncome: 0,
-        grossMonthlyIncome: 0,
-        grossYearlyIncome: 0,
+        unitDailyRents: prev.str?.unitDailyRents || [],
+        unitMonthlyRents: prev.str?.unitMonthlyRents || [],
+        dailyCleaningFee: prev.str?.dailyCleaningFee || 0,
+        laundry: prev.str?.laundry || 0,
+        activities: prev.str?.activities || 0,
+        avgNightsPerMonth: prev.str?.avgNightsPerMonth || 0,
+        grossDailyIncome: prev.str?.grossDailyIncome || 0,
+        grossMonthlyIncome: prev.str?.grossMonthlyIncome || 0,
+        grossYearlyIncome: prev.str?.grossYearlyIncome || 0,
         [key]: value 
       } 
     }));
   }
 
-  function updateArbitrage<K extends keyof ArbitrageInputs>(key: K, value: ArbitrageInputs[K]) {
+  function updateOfficeRetail<K extends keyof OfficeRetailInputs>(key: K, value: OfficeRetailInputs[K]) {
     setState((prev) => ({
       ...prev,
-      arbitrage: {
-        ...(prev.arbitrage ?? {
-          deposit: 0,
-          monthlyRentToLandlord: 0,
-          estimateCostOfRepairs: 0,
-          furnitureCost: 0,
-          otherStartupCosts: 0,
-          startupCostsTotal: 0,
+      officeRetail: {
+        ...(prev.officeRetail ?? {
+          squareFootage: 0,
+          rentPerSFMonthly: 0,
+          occupancyRatePct: 0,
+          extraMonthlyIncome: 0,
         }),
         [key]: value,
       },
     }));
   }
 
-  function updateSubjectTo<K extends keyof SubjectToInputs>(key: K, value: SubjectToInputs[K]) {
+  function updateLand<K extends keyof LandInputs>(key: K, value: LandInputs[K]) {
     setState((prev) => ({
-          ...prev,
-          subjectTo: {
-        ...(prev.subjectTo ?? {
-          paymentToSeller: 0,
-          loans: [],
-          totalLoanBalance: 0,
-          totalMonthlyPayment: 0,
-          totalAnnualPayment: 0,
+      ...prev,
+      land: {
+        ...(prev.land ?? {
+          acreage: 0,
+          zoning: 'Residential',
+          extraMonthlyIncome: 0,
         }),
         [key]: value,
       },
-        }));
-      }
+    }));
+  }
+
+  function updateArbitrage<K extends keyof ArbitrageInputs>(key: K, value: ArbitrageInputs[K]) {
+    setState((prev) => {
+      // Validate cash investment fields to prevent negative values that could cause division by zero in ROI calculations
+      const cashInvestmentFields: Array<keyof ArbitrageInputs> = ['deposit', 'estimateCostOfRepairs', 'furnitureCost', 'otherStartupCosts'];
+      const hasNegativeValue = cashInvestmentFields.includes(key) && (value as number) < 0;
+      
+      // Return single state update with all computed values
+      return {
+        ...prev,
+        arbitrage: {
+          ...(prev.arbitrage ?? {
+            deposit: 0,
+            monthlyRentToLandlord: 0,
+            estimateCostOfRepairs: 0,
+            furnitureCost: 0,
+            otherStartupCosts: 0,
+            startupCostsTotal: 0,
+          }),
+          [key]: value,
+        },
+        ...(hasNegativeValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            `${key === 'deposit' ? 'Deposit' : key === 'estimateCostOfRepairs' ? 'Cost of Repairs' : key === 'furnitureCost' ? 'Furniture Cost' : 'Other Startup Costs'} cannot be negative. This could cause invalid ROI calculations.`
+          ],
+          snackbarOpen: true
+        })
+      };
+    });
+  }
+
+  function updateSubjectTo<K extends keyof SubjectToInputs>(key: K, value: SubjectToInputs[K]) {
+    setState((prev) => {
+      // Validate cash investment fields to prevent negative values that could cause division by zero in ROI calculations
+      const hasNegativeValue = key === 'paymentToSeller' && (value as number) < 0;
+      
+      // Return single state update with all computed values
+      return {
+        ...prev,
+        subjectTo: {
+          ...(prev.subjectTo ?? {
+            paymentToSeller: 0,
+            loans: [],
+            totalLoanBalance: 0,
+            totalMonthlyPayment: 0,
+            totalAnnualPayment: 0,
+          }),
+          [key]: value,
+        },
+        ...(hasNegativeValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            'Subject-To Payment to Seller cannot be negative. This could cause invalid ROI calculations.'
+          ],
+          snackbarOpen: true
+        })
+      };
+    });
+  }
 
   function updateHybrid<K extends keyof HybridInputs>(key: K, value: HybridInputs[K]) {
-    setState((prev) => ({
-      ...prev,
-      hybrid: {
+    setState((prev) => {
+      // Validate cash investment fields to prevent negative values that could cause division by zero in ROI calculations
+      const hasNegativeValue = key === 'downPayment' && (value as number) < 0;
+      
+      const updatedHybrid = {
         ...(prev.hybrid ?? {
           downPayment: 0,
           loan3Amount: 0,
           annualInterestRate: 0,
           monthlyPayment: 0,
           annualPayment: 0,
+          loanTerm: 30,
           interestOnly: false,
           balloonDue: 0,
           paymentToSeller: 0,
@@ -1227,14 +2237,39 @@ const UnderwritePage: React.FC = () => {
           totalAnnualPayment: 0,
         }),
         [key]: value,
-      },
-    }));
+      };
+      
+      // Auto-calculate monthly payment when loan terms change
+      if (['loan3Amount', 'annualInterestRate', 'loanTerm'].includes(key)) {
+        const { loan3Amount, annualInterestRate, loanTerm } = updatedHybrid;
+        if (loan3Amount > 0 && annualInterestRate > 0 && loanTerm > 0) {
+          // Convert loan term from years to months for finance calculations
+          const termMonths = loanTerm * 12;
+          // Calculate monthly payment using finance.ts pmt function
+          const calculatedMonthlyPayment = pmt(annualInterestRate / 100, termMonths, loan3Amount);
+          updatedHybrid.monthlyPayment = Math.round(calculatedMonthlyPayment);
+          updatedHybrid.annualPayment = Math.round(calculatedMonthlyPayment * 12);
+        }
+      }
+      
+      // Return single state update with all computed values
+      return {
+        ...prev,
+        hybrid: updatedHybrid,
+        ...(hasNegativeValue && {
+          validationMessages: [
+            ...(prev.validationMessages || []),
+            'Hybrid Down Payment cannot be negative. This could cause invalid ROI calculations.'
+          ],
+          snackbarOpen: true
+        })
+      };
+    });
   }
 
   function updateFixFlip<K extends keyof FixFlipInputs>(key: K, value: FixFlipInputs[K]) {
-    setState((prev) => ({
-        ...prev,
-        fixFlip: {
+    setState((prev) => {
+      const updatedFixFlip = {
         ...(prev.fixFlip ?? {
           arv: 0,
           holdingPeriodMonths: 0,
@@ -1248,14 +2283,53 @@ const UnderwritePage: React.FC = () => {
           annualizedRoi: 0,
         }),
         [key]: value,
-      },
-      }));
-    }
+      };
+      
+      // If holding period changed and pro forma auto is enabled, update vacancy rate
+      if (key === 'holdingPeriodMonths' && prev.proFormaAuto && prev.proFormaPreset !== 'custom') {
+        const newHoldingPeriod = value as number;
+        const newVacancyRate = calculateFixFlipVacancyRate(newHoldingPeriod);
+        
+        return {
+          ...prev,
+          fixFlip: updatedFixFlip,
+          ops: {
+            ...prev.ops,
+            vacancy: newVacancyRate
+          }
+        };
+      }
+      
+      // Auto-calculate Fix & Flip results including exit strategies when key inputs change
+      if (['arv', 'targetPercent', 'rehabCost', 'holdingCosts', 'holdingPeriodMonths', 'sellingCostsPercent'].includes(key)) {
+        const calculations = computeFixFlipCalculations({
+          ...prev,
+          fixFlip: updatedFixFlip
+        });
+        
+        return {
+          ...prev,
+          fixFlip: {
+            ...updatedFixFlip,
+            maximumAllowableOffer: calculations.maximumAllowableOffer,
+            projectedProfit: calculations.projectedProfit,
+            roiDuringHold: calculations.roiDuringHold,
+            annualizedRoi: calculations.annualizedRoi,
+            exitStrategies: calculations.exitStrategies,
+          }
+        };
+      }
+      
+      return {
+        ...prev,
+        fixFlip: updatedFixFlip
+      };
+    });
+  }
 
   function updateBRRRR<K extends keyof BRRRRInputs>(key: K, value: BRRRRInputs[K]) {
-    setState((prev) => ({
-        ...prev,
-        brrrr: {
+    setState((prev) => {
+      const updatedBRRRR = {
         ...(prev.brrrr ?? {
           arv: 0,
           refinanceLtv: 0,
@@ -1266,15 +2340,85 @@ const UnderwritePage: React.FC = () => {
           cashOutAmount: 0,
           remainingCashInDeal: 0,
           newCashOnCashReturn: 0,
+          refinanceClosingCosts: 0,
+          effectiveCashOut: 0,
+          ltvConstraint: true,
         }),
         [key]: value,
-      },
-      }));
-    }
+      };
+      
+      // Auto-calculate BRRRR results when key inputs change
+      if (['arv', 'refinanceLtv', 'originalCashInvested', 'newMonthlyPayment'].includes(key)) {
+        const calculations = computeBRRRRCalculations({
+          ...prev,
+          brrrr: updatedBRRRR
+        });
+        
+        return {
+          ...prev,
+          brrrr: {
+            ...updatedBRRRR,
+            cashOutAmount: calculations.cashOutAmount,
+            remainingCashInDeal: calculations.remainingCashInDeal,
+            newCashOnCashReturn: calculations.newCashOnCashReturn,
+            refinanceClosingCosts: calculations.refinanceClosingCosts,
+            effectiveCashOut: calculations.effectiveCashOut,
+            ltvConstraint: calculations.ltvConstraint,
+            exitStrategies: calculations.exitStrategies,
+          }
+        };
+      }
+      
+      return {
+        ...prev,
+        brrrr: updatedBRRRR
+      };
+    });
+  }
+
+  // Helper function to calculate appropriate vacancy rate for Fix & Flip operations
+  function calculateFixFlipVacancyRate(holdingPeriodMonths: number): number {
+    if (holdingPeriodMonths <= 0) return 0;
+    
+    // Apply holding period delay factor (10% of holding period) to model vacancy-like costs
+    // This accounts for potential delays in selling and market conditions
+    const baseVacancyRate = Math.round(holdingPeriodMonths * 0.1);
+    
+    // Ensure minimum vacancy rate of 1% for meaningful impact
+    return Math.max(1, baseVacancyRate);
+  }
+
+  function recalcSubjectToTotals(loans: SubjectToLoan[] | undefined) {
+    const arr = loans || [];
+    const totalBalance = arr.reduce((sum, l) => sum + (l.currentBalance || l.amount || 0), 0);
+    const totalMonthly = arr.reduce((sum, l) => sum + (l.monthlyPayment || 0), 0);
+    setState(prev => ({
+      ...prev,
+      subjectTo: {
+        ...(prev.subjectTo || { paymentToSeller: 0, loans: [] as SubjectToLoan[], totalLoanBalance: 0, totalMonthlyPayment: 0, totalAnnualPayment: 0 }),
+        totalLoanBalance: totalBalance,
+        totalMonthlyPayment: totalMonthly,
+        totalAnnualPayment: totalMonthly * 12,
+      }
+    }));
+  }
 
   function updateSubjectToLoan(index: number, key: keyof SubjectToLoan, value: number) {
     setState((prev) => {
-      const newLoans = [...(prev.subjectTo?.loans ?? [])];
+      // Ensure subjectTo exists and is properly initialized
+      if (!prev.subjectTo) {
+        prev.subjectTo = {
+          paymentToSeller: 0,
+          loans: [],
+          totalLoanBalance: 0,
+          totalMonthlyPayment: 0,
+          totalAnnualPayment: 0,
+        };
+      }
+      
+      const newLoans = [...prev.subjectTo.loans];
+      
+      // Validate loan index and initialize if needed
       if (!newLoans[index]) {
         newLoans[index] = { 
           amount: 0, 
@@ -1286,26 +2430,51 @@ const UnderwritePage: React.FC = () => {
           paymentNumber: 1 
         };
       }
+      
       newLoans[index] = { ...newLoans[index], [key]: value };
+      
+      // Compute all totals in a single pass
+      const totalBalance = newLoans.reduce((sum, l) => sum + (l.currentBalance || l.amount || 0), 0);
+      const totalMonthly = newLoans.reduce((sum, l) => sum + (l.monthlyPayment || 0), 0);
+      
+      // Return single state update with all computed values
       return {
         ...prev,
         subjectTo: {
-          ...(prev.subjectTo ?? {
-            paymentToSeller: 0,
-            loans: [],
-            totalLoanBalance: 0,
-            totalMonthlyPayment: 0,
-            totalAnnualPayment: 0,
-          }),
+          ...prev.subjectTo,
           loans: newLoans,
-        },
+          totalLoanBalance: totalBalance,
+          totalMonthlyPayment: totalMonthly,
+          totalAnnualPayment: totalMonthly * 12
+        }
       };
     });
   }
 
   function updateHybridSubjectToLoan(index: number, key: keyof SubjectToLoan, value: number) {
     setState((prev) => {
-      const newLoans = [...(prev.hybrid?.subjectToLoans ?? [])];
+      // Ensure hybrid exists and is properly initialized
+      if (!prev.hybrid) {
+        prev.hybrid = {
+          downPayment: 0,
+          loan3Amount: 0,
+          annualInterestRate: 0,
+          monthlyPayment: 0,
+          annualPayment: 0,
+          loanTerm: 30,
+          interestOnly: false,
+          balloonDue: 0,
+          paymentToSeller: 0,
+          subjectToLoans: [],
+          totalLoanBalance: 0,
+          totalMonthlyPayment: 0,
+          totalAnnualPayment: 0,
+        };
+      }
+      
+      const newLoans = [...prev.hybrid.subjectToLoans];
+      
+      // Validate loan index and initialize if needed
       if (!newLoans[index]) {
         newLoans[index] = { 
           amount: 0, 
@@ -1317,28 +2486,41 @@ const UnderwritePage: React.FC = () => {
           paymentNumber: 1 
         };
       }
+      
       newLoans[index] = { ...newLoans[index], [key]: value };
+      
+      // Compute all totals in a single pass
+      const totalBalance = newLoans.reduce((sum, l) => sum + (l.currentBalance || l.amount || 0), 0);
+      const totalMonthly = newLoans.reduce((sum, l) => sum + (l.monthlyPayment || 0), 0);
+      
+      // Return single state update with all computed values
       return {
         ...prev,
         hybrid: {
-          ...(prev.hybrid ?? {
-            downPayment: 0,
-            loan3Amount: 0,
-            annualInterestRate: 0,
-            monthlyPayment: 0,
-            annualPayment: 0,
-            interestOnly: false,
-            balloonDue: 0,
-            paymentToSeller: 0,
-            subjectToLoans: [],
-            totalLoanBalance: 0,
-            totalMonthlyPayment: 0,
-            totalAnnualPayment: 0,
-          }),
+          ...prev.hybrid,
           subjectToLoans: newLoans,
-        },
-      };
+          totalLoanBalance: totalBalance,
+          totalMonthlyPayment: totalMonthly,
+          totalAnnualPayment: totalMonthly * 12
+        }
+      } as DealState;
     });
+  }
+
+  // Helper function to safely access loan data with validation
+  function getSubjectToLoan(state: DealState, index: number): SubjectToLoan | null {
+    if (!state.subjectTo || !state.subjectTo.loans[index]) {
+      return null;
+    }
+    return state.subjectTo.loans[index];
+  }
+
+  // Helper function to safely access hybrid loan data with validation
+  function getHybridSubjectToLoan(state: DealState, index: number): SubjectToLoan | null {
+    if (!state.hybrid || !state.hybrid.subjectToLoans[index]) {
+      return null;
+    }
+    return state.hybrid.subjectToLoans[index];
   }
 
   function exportToPDF() {
@@ -1408,6 +2590,20 @@ const UnderwritePage: React.FC = () => {
     }
   }, []);
 
+  // Auto-calculate risk score when risk factors or market conditions change
+  useEffect(() => {
+    if (state.riskFactors && state.marketConditions && state.propertyAge) {
+      computeRiskScore(state);
+    }
+  }, [state.riskFactors, state.marketConditions, state.propertyAge]);
+
+  // ✅ Auto-update inflation projections when key inputs change
+  useEffect(() => {
+    if (state.purchasePrice > 0 && state.ops && state.marketConditions) {
+      updateInflationProjections(state, setState);
+    }
+  }, [state.purchasePrice, state.ops.maintenance, state.ops.vacancy, state.ops.management, state.ops.capEx, state.ops.opEx, state.marketConditions]);
+
   return (
     <Box sx={{ minHeight: '100vh', background: '#ffffff', transition: 'all 0.3s ease-in-out' }}>
       <Container maxWidth="lg" sx={{ py: 2, minHeight: '100vh', transition: 'all 0.3s ease-in-out' }}>
@@ -1421,6 +2617,21 @@ const UnderwritePage: React.FC = () => {
             </Typography>
           </CardContent>
         </Card>
+
+        {/* Validation messages */}
+        {state.validationMessages && state.validationMessages.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            {state.validationMessages.map((msg, idx) => (
+              <Alert key={idx} severity="info" sx={{ mb: 1 }}>{msg}</Alert>
+            ))}
+          </Box>
+        )}
+        <Snackbar
+          open={!!state.validationMessages?.length && !!state.snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setState(prev => ({ ...prev, snackbarOpen: false }))}
+          message={state.validationMessages?.[0]}
+        />
 
         {/* Basic Info Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
@@ -1469,7 +2680,7 @@ const UnderwritePage: React.FC = () => {
                     fullWidth
                     label="Listed Price"
                     value={state.listedPrice ? state.listedPrice.toLocaleString('en-US') : ''}
-                    onChange={(e) => update('listedPrice', parseCurrency(e.target.value))}
+                    onChange={(e) => update('listedPrice', parseCurrencyWithValidation(e.target.value, 'Listed Price', setState))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}
@@ -1478,7 +2689,7 @@ const UnderwritePage: React.FC = () => {
                     fullWidth
                     label="Purchase Price"
                     value={state.purchasePrice ? state.purchasePrice.toLocaleString('en-US') : ''}
-                    onChange={(e) => update('purchasePrice', parseCurrency(e.target.value))}
+                    onChange={(e) => update('purchasePrice', parseCurrencyWithValidation(e.target.value, 'Purchase Price', setState))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}
@@ -1505,6 +2716,9 @@ const UnderwritePage: React.FC = () => {
                     <MenuItem value="Single Family">Single Family</MenuItem>
                     <MenuItem value="Multi Family">Multi Family</MenuItem>
                     <MenuItem value="Hotel">Hotel</MenuItem>
+                    <MenuItem value="Land">Land</MenuItem>
+                    <MenuItem value="Office">Office</MenuItem>
+                    <MenuItem value="Retail">Retail</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -1538,7 +2752,7 @@ const UnderwritePage: React.FC = () => {
           </Accordion>
         </Card>
 
-        {/* Subject-To Existing Mortgage Section - Moved to appear after Basic Info */}
+        {/* Subject-To Existing Mortgage Section - shown for Subject-To or as part of Hybrid when not arbitrage */}
         {(state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && state.operationType !== 'Rental Arbitrage' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
             <Accordion defaultExpanded>
@@ -1550,7 +2764,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                     fullWidth
                     label="Payment to Seller (one-time)"
-                    value={state.subjectTo?.paymentToSeller}
+                    value={state.subjectTo.paymentToSeller}
                     onChange={(e) => updateSubjectTo('paymentToSeller', parseCurrency(e.target.value))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1565,7 +2779,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                           fullWidth
                           label="Loan Amount"
-                          value={state.subjectTo?.loans[0]?.amount}
+                          value={state.subjectTo.loans[0]?.amount || 0}
                           onChange={(e) => updateSubjectToLoan(0, 'amount', parseCurrency(e.target.value))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1574,7 +2788,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                           fullWidth
                           label="Interest Rate"
-                          value={state.subjectTo?.loans[0]?.annualInterestRate}
+                          value={state.subjectTo.loans[0]?.annualInterestRate || 0}
                           onChange={(e) => updateSubjectToLoan(0, 'annualInterestRate', parseCurrency(e.target.value))}
                           InputProps={{
                             endAdornment: <InputAdornment position="end">%</InputAdornment>,
@@ -1583,7 +2797,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                       fullWidth
                           label="Monthly Payment"
-                          value={state.subjectTo?.loans[0]?.monthlyPayment}
+                          value={state.subjectTo.loans[0]?.monthlyPayment || 0}
                           onChange={(e) => updateSubjectToLoan(0, 'monthlyPayment', parseCurrency(e.target.value))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1644,7 +2858,7 @@ const UnderwritePage: React.FC = () => {
                       <TextField
                           fullWidth
                         label="Loan Amount"
-                          value={state.subjectTo?.loans[1]?.amount}
+                          value={state.subjectTo.loans[1]?.amount || 0}
                           onChange={(e) => updateSubjectToLoan(1, 'amount', parseCurrency(e.target.value))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1653,7 +2867,7 @@ const UnderwritePage: React.FC = () => {
                       <TextField
                           fullWidth
                           label="Interest Rate"
-                          value={state.subjectTo?.loans[1]?.annualInterestRate}
+                          value={state.subjectTo.loans[1]?.annualInterestRate || 0}
                           onChange={(e) => updateSubjectToLoan(1, 'annualInterestRate', parseCurrency(e.target.value))}
                           InputProps={{
                             endAdornment: <InputAdornment position="end">%</InputAdornment>,
@@ -1662,7 +2876,7 @@ const UnderwritePage: React.FC = () => {
                       <TextField
                           fullWidth
                         label="Monthly Payment"
-                          value={state.subjectTo?.loans[1]?.monthlyPayment}
+                          value={state.subjectTo.loans[1]?.monthlyPayment || 0}
                           onChange={(e) => updateSubjectToLoan(1, 'monthlyPayment', parseCurrency(e.target.value))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -1725,7 +2939,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                           fullWidth
                           label="Total Loan Balance"
-                          value={formatCurrency(state.subjectTo?.totalLoanBalance || 0)}
+                          value={formatCurrency(state.subjectTo.totalLoanBalance)}
                           InputProps={{
                             readOnly: true,
                           }}
@@ -1733,7 +2947,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                           fullWidth
                           label="Total Monthly Payment"
-                          value={formatCurrency(state.subjectTo?.totalMonthlyPayment || 0)}
+                          value={formatCurrency(state.subjectTo.totalMonthlyPayment)}
                           InputProps={{
                             readOnly: true,
                           }}
@@ -1741,7 +2955,7 @@ const UnderwritePage: React.FC = () => {
                     <TextField
                           fullWidth
                           label="Total Annual Payment"
-                          value={formatCurrency(state.subjectTo?.totalAnnualPayment || 0)}
+                          value={formatCurrency(state.subjectTo.totalAnnualPayment)}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -1817,8 +3031,8 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
 
-        {/* Seller Finance Section - Moved to appear after Subject-To */}
-        {state.offerType === 'Seller Finance' && state.operationType !== 'Rental Arbitrage' && (
+        {/* Seller Finance Section - available even for arbitrage if selected */}
+        {state.offerType === 'Seller Finance' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
             <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -1830,7 +3044,7 @@ const UnderwritePage: React.FC = () => {
                     fullWidth
                     label="Payment to Seller (one-time)"
                     value={state.loan.downPayment || 0}
-                    onChange={(e) => updateLoan('downPayment', parseCurrency(e.target.value))}
+                    onChange={(e) => updateLoan('downPayment', parseCurrencyWithValidation(e.target.value, 'Payment to Seller', setState))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}
@@ -1843,7 +3057,7 @@ const UnderwritePage: React.FC = () => {
                         fullWidth
                         label="Loan Amount"
                         value={state.loan.loanAmount || 0}
-                        onChange={(e) => updateLoan('loanAmount', parseCurrency(e.target.value))}
+                        onChange={(e) => updateLoan('loanAmount', parseCurrencyWithValidation(e.target.value, 'Loan Amount', setState))}
                         InputProps={{
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
@@ -1861,7 +3075,7 @@ const UnderwritePage: React.FC = () => {
                         fullWidth
                         label="Monthly Payment"
                         value={state.loan.monthlyPayment || 0}
-                        onChange={(e) => updateLoan('monthlyPayment', parseCurrency(e.target.value))}
+                        onChange={(e) => updateLoan('monthlyPayment', parseCurrencyWithValidation(e.target.value, 'Monthly Payment', setState))}
                         InputProps={{
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
@@ -2038,19 +3252,20 @@ const UnderwritePage: React.FC = () => {
                         />
                         <TextField
                         fullWidth
-                        label="Monthly Payment"
+                        label="Monthly Payment (Auto-calculated)"
                         value={state.hybrid?.monthlyPayment}
-                        onChange={(e) => updateHybrid('monthlyPayment', parseCurrency(e.target.value))}
                         InputProps={{
+                          readOnly: true,
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
+                        helperText="Calculated from loan amount, interest rate, and term"
                       />
                       <TextField
                         fullWidth
                         label="Loan Term (Years)"
                         type="number"
-                        value={state.hybrid?.loanBalance || 30}
-                        onChange={(e) => updateHybrid('loanBalance', parseInt(e.target.value) || 30)}
+                        value={state.hybrid?.loanTerm || 30}
+                        onChange={(e) => updateHybrid('loanTerm', parseInt(e.target.value) || 30)}
                       />
                       <TextField
                         fullWidth
@@ -2185,7 +3400,7 @@ const UnderwritePage: React.FC = () => {
                   ))}
 
                   {/* Hybrid Loan 3 */}
-                  {state.hybrid?.loan3Amount && state.hybrid.loan3Amount > 0 && state.hybrid?.annualInterestRate && state.hybrid.annualInterestRate > 0 && (state.hybrid?.loanBalance || 30) > 0 && (
+                  {state.hybrid?.loan3Amount && state.hybrid.loan3Amount > 0 && state.hybrid?.annualInterestRate && state.hybrid.annualInterestRate > 0 && (state.hybrid?.loanTerm || 30) > 0 && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <Typography variant="h6" sx={{ fontWeight: 600, color: '#666' }}>
                         Hybrid Loan 3 Amortization Schedule
@@ -2193,7 +3408,7 @@ const UnderwritePage: React.FC = () => {
                       <Box sx={{ width: '100%' }}>
                         <LinearProgress
                           variant="determinate"
-                          value={Math.min(100, ((state.hybrid?.loanBalance || 30) * 12) / 600 * 100)}
+                          value={Math.min(100, ((state.hybrid?.loanTerm || 30) * 12) / 600 * 100)}
                           sx={{ height: 10, borderRadius: 5 }}
                         />
                       </Box>
@@ -2213,7 +3428,7 @@ const UnderwritePage: React.FC = () => {
                             {buildAmortization(
                               state.hybrid?.loan3Amount || 0,
                               state.hybrid?.annualInterestRate || 0,
-                              state.hybrid?.loanBalance || 30,
+                              state.hybrid?.loanTerm || 30,
                               state.hybrid?.interestOnly || false
                             ).slice(0, 60).map((row) => (
                               <TableRow key={row.index}>
@@ -2236,7 +3451,7 @@ const UnderwritePage: React.FC = () => {
                         </Table>
                       </Box>
                       <Typography variant="caption" align="center" sx={{ color: '#666' }}>
-                        Showing next 60 payments (5 years) of {(state.hybrid?.loanBalance || 30) * 12} total payments
+                        Showing next 60 payments (5 years) of {(state.hybrid?.loanTerm || 30) * 12} total payments
                       </Typography>
                     </Box>
                   )}
@@ -2255,24 +3470,27 @@ const UnderwritePage: React.FC = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  {/* Basic Costs - Always visible for Cash */}
+                  {/* Basic Costs - For Cash */}
                   <Box>
                     <Typography variant="subtitle2" sx={{ mb: 2, color: '#666' }}>Basic Costs</Typography>
                     <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      {/* Hide Closing Costs for Office/Retail Arbitrage (no acquisition) */}
+                      {!(state.operationType === 'Rental Arbitrage' && (state.propertyType === 'Office' || state.propertyType === 'Retail')) && (
+                        <TextField
+                          fullWidth
+                          label="Closing Costs"
+                          value={state.loan.closingCosts || 0}
+                          onChange={(e) => updateLoan('closingCosts', parseCurrencyWithValidation(e.target.value, 'Closing Costs', setState))}
+                          InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                        />
+                      )}
                       <TextField
                         fullWidth
-                        label="Closing Costs"
-                        value={state.loan.closingCosts || 0}
-                        onChange={(e) => updateLoan('closingCosts', parseCurrency(e.target.value))}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Rehab Costs"
+                        label={(state.operationType === 'Rental Arbitrage' && (state.propertyType === 'Office' || state.propertyType === 'Retail')) ? 'Tenant Improvements (TI) / Build-out' : 'Rehab Costs'}
                         value={state.loan.rehabCosts || 0}
-                        onChange={(e) => updateLoan('rehabCosts', parseCurrency(e.target.value))}
+                        onChange={(e) => updateLoan('rehabCosts', parseCurrencyWithValidation(e.target.value, 'Rehab Costs', setState))}
                         InputProps={{
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
@@ -2287,51 +3505,41 @@ const UnderwritePage: React.FC = () => {
                       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                         <TextField
                           fullWidth
-                          label="Repairs"
+                          label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'FF&E' : 'Repairs'}
                           value={state.arbitrage?.estimateCostOfRepairs || 0}
-                          onChange={(e) => updateArbitrage('estimateCostOfRepairs', parseCurrency(e.target.value))}
+                          onChange={(e) => updateArbitrage('estimateCostOfRepairs', parseCurrencyWithValidation(e.target.value, 'Repairs/FF&E', setState))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                           }}
                         />
                         <TextField
                           fullWidth
-                          label="Renovation"
+                          label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'Tenant Improvements (TI) / Build-out' : 'Renovation'}
                           value={state.loan.rehabCosts || 0}
-                          onChange={(e) => updateLoan('rehabCosts', parseCurrency(e.target.value))}
+                          onChange={(e) => updateLoan('rehabCosts', parseCurrencyWithValidation(e.target.value, 'Rehab Costs', setState))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                           }}
                         />
                         <TextField
                           fullWidth
-                          label="Furniture"
+                          label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'Signage / Permits' : 'Furniture'}
                           value={state.arbitrage?.furnitureCost || 0}
-                          onChange={(e) => updateArbitrage('furnitureCost', parseCurrency(e.target.value))}
+                          onChange={(e) => updateArbitrage('furnitureCost', parseCurrencyWithValidation(e.target.value, 'Furniture/Signage', setState))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                           }}
                         />
                         <TextField
                           fullWidth
-                          label="Bedding"
+                          label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'Misc. Startup Costs' : 'Bedding'}
                           value={state.arbitrage?.otherStartupCosts || 0}
-                          onChange={(e) => updateArbitrage('otherStartupCosts', parseCurrency(e.target.value))}
+                          onChange={(e) => updateArbitrage('otherStartupCosts', parseCurrencyWithValidation(e.target.value, 'Other Startup Costs', setState))}
                           InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                           }}
                         />
-                        <TextField
-                          fullWidth
-                          label="Improvements"
-                          value={0}
-                          onChange={(e) => {
-                            // This could be added to the state if needed
-                          }}
-                          InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                          }}
-                        />
+                        {/* Remove placeholder Improvements for Office/Retail; keep hidden always */}
                       </Box>
                     </Box>
                   )}
@@ -2370,11 +3578,11 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Total Additional Costs"
                       value={formatCurrency(
-                        (state.loan.closingCosts || 0) + 
-                        (state.loan.rehabCosts || 0) + 
-                        (state.arbitrage?.estimateCostOfRepairs || 0) + 
-                        (state.arbitrage?.furnitureCost || 0) + 
-                        (state.arbitrage?.otherStartupCosts || 0) + 
+                        ((state.operationType === 'Rental Arbitrage' && (state.propertyType === 'Office' || state.propertyType === 'Retail')) ? 0 : (state.loan.closingCosts || 0)) +
+                        (state.loan.rehabCosts || 0) +
+                        (state.arbitrage?.estimateCostOfRepairs || 0) +
+                        (state.arbitrage?.furnitureCost || 0) +
+                        (state.arbitrage?.otherStartupCosts || 0) +
                         (state.arbitrage?.deposit || 0)
                       )}
                       InputProps={{
@@ -2385,12 +3593,12 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Total Cash Required"
                       value={formatCurrency(
-                        (state.purchasePrice || 0) + 
-                        (state.loan.closingCosts || 0) + 
-                        (state.loan.rehabCosts || 0) + 
-                        (state.arbitrage?.estimateCostOfRepairs || 0) + 
-                        (state.arbitrage?.furnitureCost || 0) + 
-                        (state.arbitrage?.otherStartupCosts || 0) + 
+                        (state.purchasePrice || 0) +
+                        ((state.operationType === 'Rental Arbitrage' && (state.propertyType === 'Office' || state.propertyType === 'Retail')) ? 0 : (state.loan.closingCosts || 0)) +
+                        (state.loan.rehabCosts || 0) +
+                        (state.arbitrage?.estimateCostOfRepairs || 0) +
+                        (state.arbitrage?.furnitureCost || 0) +
+                        (state.arbitrage?.otherStartupCosts || 0) +
                         (state.arbitrage?.deposit || 0)
                       )}
                       InputProps={{
@@ -2404,8 +3612,8 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
 
-        {/* Loan & Costs Section - Hidden for Subject To Existing Mortgage, Seller Finance, Hybrid, and Cash */}
-        {state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Seller Finance' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
+        {/* Loan & Costs Section - Hidden for Subject To Existing Mortgage, Hybrid, and Cash */}
+        {state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
             <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -2427,7 +3635,7 @@ const UnderwritePage: React.FC = () => {
                         />
                         <TextField
                     fullWidth
-                    label="Estimate Cost of Repairs"
+                    label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'Tenant Improvements (TI) / Build-out' : 'Estimate Cost of Repairs'}
                     value={state.arbitrage?.estimateCostOfRepairs ? state.arbitrage.estimateCostOfRepairs.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('estimateCostOfRepairs', parseCurrency(e.target.value))}
                     InputProps={{
@@ -2436,7 +3644,7 @@ const UnderwritePage: React.FC = () => {
                   />
                         <TextField
                     fullWidth
-                    label="Furniture Cost"
+                    label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'FF&E' : 'Furniture Cost'}
                     value={state.arbitrage?.furnitureCost ? state.arbitrage.furnitureCost.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('furnitureCost', parseCurrency(e.target.value))}
                     InputProps={{
@@ -2445,7 +3653,7 @@ const UnderwritePage: React.FC = () => {
                         />
                         <TextField
                     fullWidth
-                    label="Other Startup Costs"
+                    label={(state.propertyType === 'Office' || state.propertyType === 'Retail') ? 'Signage/Permits/Misc' : 'Other Startup Costs'}
                     value={state.arbitrage?.otherStartupCosts ? state.arbitrage.otherStartupCosts.toLocaleString('en-US') : ''}
                     onChange={(e) => updateArbitrage('otherStartupCosts', parseCurrency(e.target.value))}
                     InputProps={{
@@ -2453,6 +3661,11 @@ const UnderwritePage: React.FC = () => {
                           }}
                         />
                       </Box>
+              ) : state.offerType === 'Seller Finance' ? (
+                // For seller finance, the dedicated section above handles loan fields
+                <Box sx={{ color: '#666' }}>
+                  Seller Finance terms are configured in the Seller Finance section above.
+                </Box>
               ) : (
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
                       <TextField
@@ -2496,14 +3709,20 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
 
-        {/* Amortization Schedule Section - Hidden for Subject To Existing Mortgage, Hybrid, and Cash */}
-            {state.operationType !== 'Rental Arbitrage' && state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
+        {/* Amortization Schedule Section - Hidden by finance types unless override enabled */}
+            {(state.operationType !== 'Rental Arbitrage') && (state.showAmortizationOverride || (state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash')) && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Amortization Schedule</Typography>
               </AccordionSummary>
               <AccordionDetails>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                  <FormControlLabel
+                    control={<Switch checked={!!state.showAmortizationOverride} onChange={(e) => setState(prev => ({ ...prev, showAmortizationOverride: e.target.checked }))} />}
+                    label="Show regardless of Finance Type"
+                  />
+                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <Box sx={{ width: '100%' }}>
                     <LinearProgress
@@ -2614,7 +3833,7 @@ const UnderwritePage: React.FC = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                {/* Property Configuration */}
+                {/* Property Configuration (Units) */}
                 {(state.propertyType === 'Multi Family' || state.propertyType === 'Hotel') && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <TextField
@@ -2660,8 +3879,8 @@ const UnderwritePage: React.FC = () => {
                     </Box>
                   )}
 
-                {/* Short Term Income Fields (STR, Arbitrage, Hotel) */}
-                {(state.propertyType === 'Hotel' || state.operationType === 'Short Term Rental' || state.operationType === 'Rental Arbitrage') && (
+                  {/* Short Term Income Fields (STR, Arbitrage, Hotel) - hidden for Land and for Office/Retail */}
+                  {(state.propertyType !== 'Land' && state.propertyType !== 'Office' && state.propertyType !== 'Retail') && (state.propertyType === 'Hotel' || state.operationType === 'Short Term Rental' || state.operationType === 'Rental Arbitrage') && (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {/* Single Family Nightly Rate */}
                     {state.propertyType === 'Single Family' && (
@@ -2744,6 +3963,83 @@ const UnderwritePage: React.FC = () => {
                     </Box>
                   )}
 
+                  {/* Office/Retail Income Fields */}
+                  {(state.propertyType === 'Office' || state.propertyType === 'Retail') && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="subtitle2" sx={{ color: '#666' }}>
+                        {state.propertyType} Income Inputs
+                      </Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' } }}>
+                        <TextField
+                          fullWidth
+                          label="Square Footage"
+                          type="number"
+                          value={state.officeRetail?.squareFootage ?? 0}
+                          onChange={(e) => updateOfficeRetail('squareFootage', parseInt(e.target.value) || 0)}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Rent per SF (Monthly)"
+                          value={state.officeRetail?.rentPerSFMonthly ?? 0}
+                          onChange={(e) => updateOfficeRetail('rentPerSFMonthly', parseFloat(e.target.value) || 0)}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Occupancy Rate"
+                          value={state.officeRetail?.occupancyRatePct ?? 0}
+                          onChange={(e) => updateOfficeRetail('occupancyRatePct', parseFloat(e.target.value) || 0)}
+                          InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Other Monthly Income"
+                          value={state.officeRetail?.extraMonthlyIncome ?? 0}
+                          onChange={(e) => updateOfficeRetail('extraMonthlyIncome', parseCurrency(e.target.value))}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Land Income Fields */}
+                  {state.propertyType === 'Land' && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="subtitle2" sx={{ color: '#666' }}>
+                        Land Inputs
+                      </Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' } }}>
+                        <TextField
+                          fullWidth
+                          label="Acreage"
+                          type="number"
+                          value={state.land?.acreage ?? 0}
+                          onChange={(e) => updateLand('acreage', parseFloat(e.target.value) || 0)}
+                        />
+                        <FormControl fullWidth>
+                          <InputLabel>Zoning</InputLabel>
+                          <Select
+                            value={state.land?.zoning ?? 'Residential'}
+                            label="Zoning"
+                            onChange={(e) => updateLand('zoning', e.target.value as LandInputs['zoning'])}
+                          >
+                            <MenuItem value="Residential">Residential</MenuItem>
+                            <MenuItem value="Commercial">Commercial</MenuItem>
+                            <MenuItem value="Agricultural">Agricultural</MenuItem>
+                            <MenuItem value="Mixed">Mixed</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          fullWidth
+                          label="Other Monthly Income"
+                          value={state.land?.extraMonthlyIncome ?? 0}
+                          onChange={(e) => updateLand('extraMonthlyIncome', parseCurrency(e.target.value))}
+                          InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
                 {/* Extra Income - Always shown at bottom */}
                 <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr' } }}>
                   {state.propertyType === 'Single Family' ? (
@@ -2759,14 +4055,19 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Extra Monthly Income"
                       value={
-                        state.propertyType === 'Multi Family'
-                          ? state.multi?.grossMonthlyIncome
-                          : state.str?.grossMonthlyIncome
+                        state.propertyType === 'Multi Family' ? state.multi?.grossMonthlyIncome
+                        : state.propertyType === 'Office' || state.propertyType === 'Retail' ? state.officeRetail?.extraMonthlyIncome
+                        : state.propertyType === 'Land' ? state.land?.extraMonthlyIncome
+                        : state.str?.grossMonthlyIncome
                       }
                       onChange={(e) => {
                         const value = parseCurrency(e.target.value);
                         if (state.propertyType === 'Multi Family') {
                           updateMulti('grossMonthlyIncome', value);
+                        } else if (state.propertyType === 'Office' || state.propertyType === 'Retail') {
+                          updateOfficeRetail('extraMonthlyIncome', value);
+                        } else if (state.propertyType === 'Land') {
+                          updateLand('extraMonthlyIncome', value);
                         } else {
                           updateStr('grossMonthlyIncome', value);
                         }
@@ -2918,6 +4219,11 @@ const UnderwritePage: React.FC = () => {
                   label="Vacancy %"
                     value={state.ops.vacancy}
                     onChange={(e) => updateOps('vacancy', parseCurrency(e.target.value))}
+                    helperText={
+                      state.operationType === 'Fix & Flip' && state.fixFlip?.holdingPeriodMonths 
+                        ? `Auto-calculated based on ${state.fixFlip.holdingPeriodMonths} month holding period (${calculateFixFlipVacancyRate(state.fixFlip.holdingPeriodMonths)}%)`
+                        : "Percentage of income lost due to vacancy"
+                    }
                   InputProps={{
                     endAdornment: <InputAdornment position="end">%</InputAdornment>,
                   }}
@@ -2954,7 +4260,7 @@ const UnderwritePage: React.FC = () => {
             </Accordion>
         </Card>
 
-            {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
+                {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
         {state.operationType !== 'Fix & Flip' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Accordion>
@@ -2963,26 +4269,98 @@ const UnderwritePage: React.FC = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {/* Debug Info - Remove this after fixing */}
+                <Box sx={{ 
+                  p: 1, 
+                  backgroundColor: '#f5f5f5', 
+                  borderRadius: 1, 
+                  fontSize: '0.75rem',
+                  border: '1px solid #ddd'
+                }}>
+                  {/* Production: removed debug text */}
+                </Box>
+
                 {/* Tab Navigation */}
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs 
                     value={state.activeProFormaTab} 
                     onChange={(_, newValue) => {
+                      console.log('Tab changed to:', newValue); // Debug logging
                       setState(prev => ({ ...prev, activeProFormaTab: newValue }));
                       // If switching to presets tab, apply moderate preset
                       if (newValue === 'presets') {
                         applyProFormaPreset('moderate');
                       }
                     }}
-                    sx={{ minHeight: 'auto' }}
+                    sx={{ 
+                      minHeight: 'auto',
+                      '& .MuiTab-root': {
+                        minWidth: 'auto',
+                        px: 2,
+                        py: 1,
+                        fontSize: '0.875rem',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        color: '#666',
+                        '&.Mui-selected': {
+                          color: '#1a365d',
+                          fontWeight: 700,
+                          backgroundColor: '#f0f4ff',
+                          borderRadius: '4px 4px 0 0'
+                        },
+                        '&:hover': {
+                          backgroundColor: '#f8f9fa',
+                          color: '#1a365d'
+                        }
+                      },
+                      '& .MuiTabs-indicator': {
+                        backgroundColor: '#1a365d',
+                        height: 3
+                      }
+                    }}
+                    variant="scrollable"
+                    scrollButtons="auto"
                   >
-                    <Tab label="Presets" value="presets" sx={{ minHeight: 'auto', py: 1 }} />
-                    <Tab label="Custom" value="custom" sx={{ minHeight: 'auto', py: 1 }} />
-                    <Tab label="Sensitivity" value="sensitivity" sx={{ minHeight: 'auto', py: 1 }} />
-                    <Tab label="Benchmarks" value="benchmarks" sx={{ minHeight: 'auto', py: 1 }} />
-                    <Tab label="Revenue" value="revenue" sx={{ minHeight: 'auto', py: 1 }} />
-                    <Tab label="Break-Even" value="breakEven" sx={{ minHeight: 'auto', py: 1 }} />
+                    <Tab label="Presets" value="presets" />
+                    <Tab label="Custom" value="custom" />
+                    <Tab label="Sensitivity" value="sensitivity" />
+                    <Tab label="Benchmarks" value="benchmarks" />
+                    {shouldShowAdrTabs(state) && (
+                      <>
+                        <Tab 
+                          label="Revenue" 
+                          value="revenue" 
+                          onClick={() => {
+                            setState(prev => ({ ...prev, activeProFormaTab: 'revenue' }));
+                          }}
+                        />
+                        <Tab 
+                          label="Break-Even" 
+                          value="breakEven" 
+                          onClick={() => {
+                            setState(prev => ({ ...prev, activeProFormaTab: 'breakEven' }));
+                          }}
+                        />
+                      </>
+                    )}
                   </Tabs>
+                  
+                  {/* Guidance message when ADR tabs are not visible */}
+                  {!shouldShowAdrTabs(state) && getAdrTabsVisibilityReason() && (
+                    <Box sx={{ 
+                      mt: 1, 
+                      p: 2, 
+                      backgroundColor: '#f8f9fa', 
+                      borderRadius: 1, 
+                      border: '1px solid #e0e0e0',
+                      fontSize: '0.875rem',
+                      color: '#666'
+                    }}>
+                      <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                        {getAdrTabsVisibilityReason()}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
 
                 {/* Presets Tab */}
@@ -3111,8 +4489,7 @@ const UnderwritePage: React.FC = () => {
                         <strong>Current Pro Forma Values:</strong>
                       </Typography>
                       <Typography variant="caption" sx={{ color: '#888' }}>
-                        M: {state.ops.maintenance}% | V: {state.ops.vacancy}% | Mgmt: {state.ops.management}% | 
-                        CapEx: {state.ops.capEx}% | OpEx: {state.ops.opEx}%
+                        Total Variable: {computeVariableMonthlyOpsPct(state.ops)}% | Fixed: ${computeFixedMonthlyOps(state.ops).toLocaleString()}/month
                       </Typography>
                     </Box>
 
@@ -3304,8 +4681,8 @@ const UnderwritePage: React.FC = () => {
                   </Box>
                 )}
 
-                {/* Revenue Analysis Tab */}
-                {state.activeProFormaTab === 'revenue' && (
+                {/* Revenue Analysis Tab - gated by ADR predicate */}
+                {shouldShowAdrTabs(state) && state.activeProFormaTab === 'revenue' && (
                   <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                       <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
@@ -3494,8 +4871,8 @@ const UnderwritePage: React.FC = () => {
                   </Box>
                 )}
 
-                {/* Break-Even Analysis Tab */}
-                {state.activeProFormaTab === 'breakEven' && (
+                {/* Break-Even Analysis Tab - gated by ADR predicate */}
+                {shouldShowAdrTabs(state) && state.activeProFormaTab === 'breakEven' && (
                   <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                       <Typography sx={{ fontWeight: 600, color: '#1a365d' }}>
@@ -3562,7 +4939,8 @@ const UnderwritePage: React.FC = () => {
                           {[10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((occupancy) => {
                             const revenue = (state.revenueInputs.totalRooms * state.revenueInputs.averageDailyRate * occupancy / 100 * 365);
                             const fixedCosts = state.revenueInputs.fixedAnnualCosts;
-                            const variableCosts = revenue * (state.ops.maintenance + state.ops.vacancy + state.ops.management + state.ops.capEx + state.ops.opEx) / 100;
+                            // ✅ Use centralized utility function to eliminate redundant calculation
+                            const variableCosts = revenue * computeVariableMonthlyOpsPct(state.ops) / 100;
                             const netIncome = revenue - fixedCosts - variableCosts;
                             const isProfitable = netIncome > 0;
                             
@@ -3597,8 +4975,7 @@ const UnderwritePage: React.FC = () => {
                       </Typography>
                       <Typography variant="caption" sx={{ color: '#e65100' }}>
                         Break-even calculations include your current Pro Forma percentages: 
-                        M: {state.ops.maintenance}% | V: {state.ops.vacancy}% | Mgmt: {state.ops.management}% | 
-                        CapEx: {state.ops.capEx}% | OpEx: {state.ops.opEx}%
+                        Total Variable: {computeVariableMonthlyOpsPct(state.ops)}% | Fixed: ${computeFixedMonthlyOps(state.ops).toLocaleString()}/month
                       </Typography>
                     </Box>
                   </Box>
@@ -3608,6 +4985,220 @@ const UnderwritePage: React.FC = () => {
           </Accordion>
         </Card>
         )}
+
+        {/* Risk Assessment Section */}
+        <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontWeight: 700 }}>Risk Assessment</Typography>
+                <Chip 
+                  label="Premium Feature"
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Overall Risk Score:
+                  </Typography>
+                  {state.riskScoreResults ? (
+                    <>
+                      <Chip 
+                        label={`${state.riskScoreResults.overallRiskScore}/10`}
+                        color={
+                          state.riskScoreResults.overallRiskScore <= 3 ? 'success' :
+                          state.riskScoreResults.overallRiskScore <= 5 ? 'warning' :
+                          state.riskScoreResults.overallRiskScore <= 7 ? 'error' : 'error'
+                        }
+                        variant="filled"
+                        sx={{ fontSize: '1.1rem', fontWeight: 600 }}
+                      />
+                      <Typography variant="body1" sx={{ color: '#666', fontWeight: 500 }}>
+                        {state.riskScoreResults.riskCategory}
+                      </Typography>
+                    </>
+                  ) : (
+                    <Chip 
+                      label="Not Calculated"
+                      color="default"
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
+                
+                {state.riskScoreResults && (
+                  <>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 3 }}>
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ color: '#1a365d', mb: 1 }}>
+                          Market Risk
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 600, color: '#e65100' }}>
+                          {state.riskScoreResults.riskBreakdown.marketRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ color: '#1a365d', mb: 1 }}>
+                          Property Risk
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 600, color: '#e65100' }}>
+                          {state.riskScoreResults.riskBreakdown.propertyRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ color: '#1a365d', mb: 1 }}>
+                          Tenant Risk
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 600, color: '#e65100' }}>
+                          {state.riskScoreResults.riskBreakdown.tenantRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ color: '#1a365d', mb: 1 }}>
+                          Financing Risk
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 600, color: '#e65100' }}>
+                          {state.riskScoreResults.riskBreakdown.financingRisk}/10
+                        </Typography>
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ p: 2, backgroundColor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#e65100', mb: 1 }}>
+                        Key Recommendations:
+                      </Typography>
+                      {state.riskScoreResults.recommendations.slice(0, 3).map((rec, index) => (
+                        <Typography key={index} variant="body2" sx={{ mb: 0.5, color: '#bf360c' }}>
+                          - {rec}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </>
+                )}
+                
+                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                  <Button 
+                    variant="contained" 
+                    onClick={() => {
+                      const marketConditions = state.marketConditions;
+                      const results = calculateRiskScore(state.riskFactors, state.marketConditions, state.propertyAge);
+                      setState(prev => ({ ...prev, riskScoreResults: results }));
+                    }}
+                    sx={{ 
+                      backgroundColor: '#1a365d',
+                      '&:hover': { backgroundColor: '#2d3748' }
+                    }}
+                  >
+                    {state.riskScoreResults ? 'Recalculate Risk Score' : 'Calculate Risk Score'}
+                  </Button>
+                </Box>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+
+        {/* Advanced Analysis Section */}
+        {/* Advanced Analysis Summary + CTA */}
+        <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontWeight: 700 }}>Advanced Analysis</Typography>
+                <Chip 
+                  label="Premium Feature"
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 3 }}>
+                {/* Risk Score Summary */}
+                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
+                    Risk Score
+                  </Typography>
+                  {state.riskScoreResults ? (
+                    <Chip 
+                      label={`${state.riskScoreResults.overallRiskScore}/10`}
+                      color={
+                        state.riskScoreResults.overallRiskScore <= 3 ? 'success' :
+                        state.riskScoreResults.overallRiskScore <= 5 ? 'warning' : 'error'
+                      }
+                      variant="filled"
+                      sx={{ fontSize: '1.1rem', fontWeight: 600 }}
+                    />
+                  ) : (
+                    <Typography variant="body2" sx={{ color: '#999' }}>
+                      Not calculated
+                    </Typography>
+                  )}
+                </Box>
+                
+                {/* Market Conditions Summary */}
+                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
+                    Market Type
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', textTransform: 'capitalize' }}>
+                    {state.marketType}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
+                    {state.marketType === 'hot' ? 'Higher inflation' : 
+                     state.marketType === 'stable' ? 'Moderate inflation' : 'Lower inflation'}
+                  </Typography>
+                </Box>
+                
+                {/* Inflation Rate Summary */}
+                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
+                    Inflation Rate
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                    {(state.marketConditions?.inflationRate * 100).toFixed(1)}%
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
+                    Annual rate
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Box sx={{ p: 2, backgroundColor: '#e3f2fd', borderRadius: 1, border: '1px solid #2196f3', mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1565c0', mb: 1 }}>
+                  Unlock Full Advanced Analysis Suite
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                  Access comprehensive tools including exit strategies, tax implications, confidence intervals, 
+                  inflation projections, seasonal adjustments, market analysis, and stress testing.
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  onClick={() => {
+                    // Save current deal state to sessionStorage
+                    sessionStorage.setItem('advancedDeal', JSON.stringify(state));
+                    // Navigate to advanced analysis page
+                    navigate('/advanced-calculations');
+                  }}
+                  sx={{ 
+                    backgroundColor: '#1a365d',
+                    '&:hover': { backgroundColor: '#2d3748' }
+                  }}
+                  startIcon={<TrendingUpIcon />}
+                >
+                  Open Advanced Analysis
+                </Button>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+
+        {/* Fix & Flip Section */}
 
         {/* Fix & Flip Section */}
             {state.operationType === 'Fix & Flip' && (
@@ -3708,6 +5299,34 @@ const UnderwritePage: React.FC = () => {
                       }}
                     />
                   </Box>
+                  
+                  {/* Exit Strategy Results */}
+                  <Box sx={{ mt: 3, p: 2, bgcolor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
+                    <Typography variant="subtitle2" sx={{ mb: 2, color: '#e65100', fontWeight: 600 }}>
+                      Exit Strategy Analysis
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' } }}>
+                      {state.fixFlip?.exitStrategies?.map((strategy, index) => (
+                        <Box key={index} sx={{ p: 2, bgcolor: '#fff', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                          <Typography variant="subtitle2" sx={{ color: '#1a365d', mb: 1, fontWeight: 600 }}>
+                            {strategy.timeframe} Year Exit
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                            Projected Value: {formatCurrency(strategy.projectedValue)}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                            Net Proceeds: {formatCurrency(strategy.netProceeds)}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                            ROI: {strategy.roi.toFixed(1)}%
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
+                            Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
@@ -3804,6 +5423,58 @@ const UnderwritePage: React.FC = () => {
                         readOnly: true,
                       }}
                       />
+                      <TextField
+                      fullWidth
+                      label="Refinance Closing Costs"
+                      value={formatCurrency(state.brrrr?.refinanceClosingCosts || 0)}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      />
+                      <TextField
+                      fullWidth
+                      label="Effective Cash-Out (After Costs)"
+                      value={formatCurrency(state.brrrr?.effectiveCashOut || 0)}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      />
+                      <TextField
+                      fullWidth
+                      label="LTV Constraint Met"
+                      value={state.brrrr?.ltvConstraint ? "Yes" : "No"}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      />
+                    </Box>
+                    
+                    {/* Exit Strategy Results */}
+                    <Box sx={{ mt: 3, p: 2, bgcolor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
+                      <Typography variant="subtitle2" sx={{ mb: 2, color: '#e65100', fontWeight: 600 }}>
+                        Exit Strategy Analysis
+                      </Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(auto-fit, minmax(200px, 1fr))' } }}>
+                        {state.brrrr?.exitStrategies?.map((strategy, index) => (
+                          <Box key={index} sx={{ p: 2, bgcolor: '#fff', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                            <Typography variant="subtitle2" sx={{ color: '#1a365d', mb: 1, fontWeight: 600 }}>
+                              {strategy.timeframe} Year Exit
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                              Projected Value: {formatCurrency(strategy.projectedValue)}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                              Net Proceeds: {formatCurrency(strategy.projectedValue)}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                              ROI: {strategy.roi.toFixed(1)}%
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
+                              Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
                     </Box>
                   </Box>
               </AccordionDetails>
@@ -3947,7 +5618,7 @@ const UnderwritePage: React.FC = () => {
                         label="Monthly Operating Expenses"
                         value={formatCurrency(
                           computeFixedMonthlyOps(state.ops) +
-                          (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) / 100
+                          variableMonthlyFromPercentages(computeIncome(state), state.ops)
                         )}
                         InputProps={{ readOnly: true }}
                       />
@@ -3991,17 +5662,54 @@ const UnderwritePage: React.FC = () => {
                         })) * 12)).toFixed(1) + '%'}
                         InputProps={{ readOnly: true }}
                       />
-                      <TextField
-                        fullWidth
-                        label="Break Even Occupancy"
-                        value={financeBreakEvenOccupancy({
-                          monthlyRevenueAt100: computeIncome(state),
-                          fixedMonthlyOps: computeFixedMonthlyOps(state.ops),
-                          variablePct: computeVariableMonthlyOpsPct(state.ops),
-                          includeVariablePct: state.includeVariablePctInBreakeven || false
-                        }).toFixed(1) + '%'}
-                        InputProps={{ readOnly: true }}
-                      />
+                      {!isCashOnCashValid(state) && (
+                        <Typography variant="caption" sx={{ color: '#d32f2f', fontStyle: 'italic' }}>
+                          Cash-on-Cash Return calculation is invalid. Please check that all cash investment amounts are positive.
+                        </Typography>
+                      )}
+                      {/* Break Even Occupancy - Only show for non-Land properties */}
+                      {state.propertyType !== 'Land' ? (
+                        <>
+                          <TextField
+                            fullWidth
+                            label="Break Even Occupancy"
+                            value={(() => {
+                              try {
+                                const monthlyRevenue = (state.propertyType === 'Office' || state.propertyType === 'Retail')
+                                  ? ((state.officeRetail?.squareFootage || 0) * (state.officeRetail?.rentPerSFMonthly || 0)) + (state.officeRetail?.extraMonthlyIncome || 0)
+                                  : computeIncome(state);
+                                
+                                // Only calculate if we have positive revenue
+                                if (monthlyRevenue > 0) {
+                                  return financeBreakEvenOccupancy({
+                                    monthlyRevenueAt100: monthlyRevenue,
+                                    fixedMonthlyOps: computeFixedMonthlyOps(state.ops),
+                                    variablePct: computeVariableMonthlyOpsPct(state.ops),
+                                    includeVariablePct: state.includeVariablePctInBreakeven || false
+                                  }).toFixed(1) + '%';
+                                } else {
+                                  return '0.0%';
+                                }
+                              } catch (error) {
+                                return '0.0%';
+                              }
+                            })()}
+                            InputProps={{ readOnly: true }}
+                          />
+                          {!isBreakEvenValid(state) && (
+                            <Typography variant="caption" sx={{ color: '#d32f2f', fontStyle: 'italic' }}>
+                              Break-even calculation is invalid. Variable costs may exceed revenue or revenue is zero.
+                            </Typography>
+                          )}
+                        </>
+                      ) : (
+                        <TextField
+                          fullWidth
+                          label="Break Even Occupancy"
+                          value="Not applicable for Land"
+                          InputProps={{ readOnly: true }}
+                        />
+                      )}
                     </Box>
                   </Box>
 
@@ -4037,19 +5745,19 @@ const UnderwritePage: React.FC = () => {
                       <TextField
                         fullWidth
                         label="Variable Monthly Expenses"
-                        value={formatCurrency(computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
+                        value={formatCurrency(variableMonthlyFromPercentages(computeIncome(state), state.ops))}
                         InputProps={{ readOnly: true }}
                       />
                       <TextField
                         fullWidth
                         label="Total Monthly Expenses"
-                        value={formatCurrency(computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100)}
+                        value={formatCurrency(computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(computeIncome(state), state.ops))}
                         InputProps={{ readOnly: true }}
                       />
                       <TextField
                         fullWidth
                         label="Total Annual Expenses"
-                        value={formatCurrency((computeFixedMonthlyOps(state.ops) + computeIncome(state) * computeVariableMonthlyOpsPct(state.ops) / 100) * 12)}
+                        value={formatCurrency((computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12)}
                         InputProps={{ readOnly: true }}
                       />
                     </Box>
@@ -4070,6 +5778,7 @@ const UnderwritePage: React.FC = () => {
                   >
                     Back to Home
                   </Button>
+
                   <Button 
                     variant="outlined" 
                     onClick={exportToPDF}

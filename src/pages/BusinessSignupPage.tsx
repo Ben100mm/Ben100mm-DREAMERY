@@ -196,16 +196,16 @@ const BusinessSignupPage: React.FC = () => {
               {/* Password Requirements */}
               <Box sx={{ mb: 3, pl: 2 }}>
                 <Typography sx={{ color: '#666666', fontSize: '12px', mb: 0.5 }}>
-                  • At least 8 characters
+                  - At least 8 characters
                 </Typography>
                 <Typography sx={{ color: '#666666', fontSize: '12px', mb: 0.5 }}>
-                  • Mix of letters and numbers
+                  - Mix of letters and numbers
                 </Typography>
                 <Typography sx={{ color: '#666666', fontSize: '12px', mb: 0.5 }}>
-                  • At least 1 special character
+                  - At least 1 special character
                 </Typography>
                 <Typography sx={{ color: '#666666', fontSize: '12px' }}>
-                  • At least 1 lowercase letter and 1 uppercase letter
+                  - At least 1 lowercase letter and 1 uppercase letter
                 </Typography>
               </Box>
 

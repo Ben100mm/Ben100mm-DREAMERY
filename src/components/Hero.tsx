@@ -135,7 +135,7 @@ const SearchButton = styled.button`
 `;
 
 const SparkleIcon = () => (
-  <span style={{ fontSize: '1.6rem', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', filter: 'contrast(1.5)' }}>✨</span>
+  <span style={{ fontSize: '1.6rem', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', filter: 'contrast(1.5)' }}>*</span>
 );
 
 const Hero: React.FC = () => {

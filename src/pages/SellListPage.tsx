@@ -481,7 +481,7 @@ const SellListPage: React.FC = () => {
                     <Box sx={{ mt: 1 }}>
                       {service.features.map((feature, index) => (
                         <Typography key={index} variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                          • {feature}
+                          - {feature}
                         </Typography>
                       ))}
                     </Box>

@@ -184,13 +184,13 @@ const SellListServicesPage: React.FC = () => {
 
             <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-                • Get prime exposure on Dreamery resulting in 75% more views.
+                - Get prime exposure on Dreamery resulting in 75% more views.
               </Typography>
               <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-                • Helps maximize your sale price by reaching more buyers on Dreamery.
+                - Helps maximize your sale price by reaching more buyers on Dreamery.
               </Typography>
               <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
-                • Sell for 2% more when using a premium Showcase listing.
+                - Sell for 2% more when using a premium Showcase listing.
               </Typography>
             </Box>
 
@@ -426,16 +426,16 @@ const SellListServicesPage: React.FC = () => {
           
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography variant="body2" sx={{ color: '#666666' }}>
-              • Trusted by millions of homeowners nationwide
+                              - Trusted by millions of homeowners nationwide
             </Typography>
             <Typography variant="body2" sx={{ color: '#666666' }}>
-              • Local expertise with national reach
+                              - Local expertise with national reach
             </Typography>
             <Typography variant="body2" sx={{ color: '#666666' }}>
-              • Transparent pricing and no hidden fees
+                              - Transparent pricing and no hidden fees
             </Typography>
             <Typography variant="body2" sx={{ color: '#666666' }}>
-              • Dedicated support throughout your selling journey
+                              - Dedicated support throughout your selling journey
             </Typography>
           </Box>
         </Box>
@@ -473,16 +473,16 @@ const SellListServicesPage: React.FC = () => {
           
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography variant="body2" sx={{ color: '#92400e' }}>
-              • Higher search ranking in results
+                              - Higher search ranking in results
             </Typography>
             <Typography variant="body2" sx={{ color: '#92400e' }}>
-              • High resolution professional photos
+                              - High resolution professional photos
             </Typography>
             <Typography variant="body2" sx={{ color: '#92400e' }}>
-              • Interactive floor plan
+                              - Interactive floor plan
             </Typography>
             <Typography variant="body2" sx={{ color: '#92400e' }}>
-              • AI-powered virtual tours
+                              - AI-powered virtual tours
             </Typography>
           </Box>
         </Box>

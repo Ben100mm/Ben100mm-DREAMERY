@@ -23,6 +23,19 @@ import {
   LinearProgress
 } from '@mui/material';
 import {
+  LoadingSpinner,
+  LoadingOverlayComponent,
+  SuccessMessage,
+  ErrorMessage,
+  EnhancedTextFieldWithValidation,
+  EnhancedNumberInput,
+  FormSection,
+  useFormValidation,
+  CompletionProgress,
+  HelpTooltip,
+  RequiredFieldIndicator,
+} from '../components';
+import {
   Calculate as CalculateIcon,
   Description as DescriptionIcon,
   Flag as FlagIcon,
@@ -143,6 +156,9 @@ const MortgagePage: React.FC = () => {
   const [showDownPaymentDetails, setShowDownPaymentDetails] = useState(false);
   const [showInterestRateDetails, setShowInterestRateDetails] = useState(false);
   const [showAprDetails, setShowAprDetails] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [dreamAbilityForm, setDreamAbilityForm] = useState({
     location: '',
     annualIncome: '',
@@ -279,7 +295,20 @@ const MortgagePage: React.FC = () => {
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Mortgage Calculator</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+              Mortgage Calculator
+            </Typography>
+            <HelpTooltip title="Calculate your monthly mortgage payment and total costs" />
+          </Box>
+          
+          {/* Progress indicator */}
+          <CompletionProgress
+            completed={[address, purchase, rehab, closing, downPct, rate, term].filter(Boolean).length}
+            total={7}
+            label="Calculator Completion"
+          />
+          
           <Box sx={{ 
             display: 'grid', 
             gap: 2, 
@@ -288,18 +317,17 @@ const MortgagePage: React.FC = () => {
             gridAutoRows: 'min-content',
             alignContent: 'start'
           }}>
-                          <TextField 
-                fullWidth 
-                label="Property address" 
-                value={address} 
-                onChange={(e)=>setAddress(e.target.value)}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
-              />
+            <EnhancedTextFieldWithValidation
+              label="Property Address"
+              value={address} 
+              onChange={setAddress}
+              required
+              hint="Enter the property's full street address"
+              tooltip="This should include street number, name, city, state, and ZIP code"
+              placeholder="123 Main St, City, State 12345"
+              multiline
+              rows={2}
+            />
             <Box sx={{ 
               display: 'grid', 
               gap: 2, 
@@ -308,83 +336,65 @@ const MortgagePage: React.FC = () => {
               gridAutoRows: 'min-content',
               alignContent: 'start'
             }}>
-              <TextField 
-                fullWidth 
-                label="Purchase" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Purchase Price"
                 value={purchase} 
-                onChange={(e)=>setPurchase(Number(e.target.value))}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setPurchase}
+                format="currency"
+                required
+                hint="Enter the purchase price in dollars"
+                min={0}
+                max={10000000}
               />
-              <TextField 
-                fullWidth 
-                label="Rehab" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Rehab Costs"
                 value={rehab} 
-                onChange={(e)=>setRehab(Number(e.target.value))}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setRehab}
+                format="currency"
+                hint="Enter estimated rehabilitation costs"
+                min={0}
+                max={1000000}
               />
-              <TextField 
-                fullWidth 
-                label="Closing" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Closing Costs"
                 value={closing} 
-                onChange={(e)=>setClosing(Number(e.target.value))}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setClosing}
+                format="currency"
+                hint="Enter estimated closing costs"
+                min={0}
+                max={50000}
               />
-              <TextField 
-                fullWidth 
-                label="Down %" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Down Payment %"
                 value={downPct} 
-                onChange={(e)=>setDownPct(Number(e.target.value))}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setDownPct}
+                format="percentage"
+                required
+                hint="Enter down payment percentage"
+                min={0}
+                max={100}
+                step={0.1}
               />
-              <TextField 
-                fullWidth 
-                label="Rate %" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Interest Rate %"
                 value={rate} 
-                onChange={(e)=>setRate(Number(e.target.value))}
-                sx={{ 
-                  minHeight: '56px',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setRate}
+                format="percentage"
+                required
+                hint="Enter annual interest rate"
+                min={0}
+                max={20}
+                step={0.01}
               />
-              <TextField 
-                fullWidth 
-                label="Term (yrs)" 
-                type="number" 
+              <EnhancedNumberInput
+                label="Loan Term (years)"
                 value={term} 
-                onChange={(e)=>setTerm(Number(e.target.value))}
-                sx={{ 
-                  minHeight: 'fit-content',
-                  '& .MuiInputBase-root': {
-                    minHeight: '56px'
-                  }
-                }}
+                onChange={setTerm}
+                required
+                hint="Enter loan term in years"
+                min={1}
+                max={50}
+                step={1}
               />
             </Box>
 
@@ -441,19 +451,68 @@ const MortgagePage: React.FC = () => {
 
             <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1, minHeight: 'fit-content' }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>Results</Typography>
-              <Box sx={{ 
-                display: 'grid', 
-                gap: 1, 
-                gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
-                minHeight: 'fit-content',
-                gridAutoRows: 'min-content',
-                alignContent: 'start'
-              }}>
-                <Typography>Loan: ${loanAmount.toLocaleString()}</Typography>
-                <Typography>Debt svc: ${Math.round(debtService).toLocaleString()}/mo</Typography>
-                <Typography>DSCR: {dscr.toFixed(2)}</Typography>
-                <Typography>LTV: {(ltv*100).toFixed(1)}%</Typography>
-                <Typography>LTC: {(ltc*100).toFixed(1)}%</Typography>
+              
+              <LoadingOverlayComponent loading={isCalculating} message="Calculating mortgage...">
+                <Box sx={{ 
+                  display: 'grid', 
+                  gap: 1, 
+                  gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
+                  minHeight: 'fit-content',
+                  gridAutoRows: 'min-content',
+                  alignContent: 'start'
+                }}>
+                  <Typography>Loan: ${loanAmount.toLocaleString()}</Typography>
+                  <Typography>Debt svc: ${Math.round(debtService).toLocaleString()}/mo</Typography>
+                  <Typography>DSCR: {dscr.toFixed(2)}</Typography>
+                  <Typography>LTV: {(ltv*100).toFixed(1)}%</Typography>
+                  <Typography>LTC: {(ltc*100).toFixed(1)}%</Typography>
+                </Box>
+              </LoadingOverlayComponent>
+              
+              <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setIsCalculating(true);
+                    // Simulate calculation
+                    setTimeout(() => {
+                      setIsCalculating(false);
+                      setShowSuccess(true);
+                    }, 2000);
+                  }}
+                  disabled={isCalculating}
+                  startIcon={<CalculateIcon />}
+                  sx={{ 
+                    backgroundColor: '#1a365d',
+                    textTransform: 'none',
+                    fontWeight: 600
+                  }}
+                >
+                  {isCalculating ? 'Calculating...' : 'Calculate Payment'}
+                </Button>
+                
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    // Reset form
+                    setAddress('');
+                    setPurchase(0);
+                    setRehab(0);
+                    setClosing(0);
+                    setDownPct(0);
+                    setRate(0);
+                    setTerm(0);
+                  }}
+                  sx={{ 
+                    borderColor: '#1a365d',
+                    color: '#1a365d',
+                    textTransform: 'none',
+                    fontWeight: 600
+                  }}
+                >
+                  Reset
+                </Button>
               </Box>
             </Box>
           </Box>
@@ -1030,7 +1089,7 @@ const MortgagePage: React.FC = () => {
                   </Typography>
                   <Box sx={{ mb: 2 }}>
                     {option.features.map((feature, idx) => (
-                      <Typography key={idx} variant="body2" sx={{ color: '#666' }}>• {feature}</Typography>
+                      <Typography key={idx} variant="body2" sx={{ color: '#666' }}>- {feature}</Typography>
                     ))}
                   </Box>
                   <Button 
@@ -2458,6 +2517,20 @@ const MortgagePage: React.FC = () => {
             </Typography>
           </Box>
         </Box>
+      )}
+
+      {/* Success/Error Messages */}
+      {showSuccess && (
+        <SuccessMessage
+          message="Mortgage calculation completed successfully!"
+          onClose={() => setShowSuccess(false)}
+        />
+      )}
+      {showError && (
+        <ErrorMessage
+          message="Please check your input values and try again"
+          onClose={() => setShowError(false)}
+        />
       )}
     </PageContainer>
   );

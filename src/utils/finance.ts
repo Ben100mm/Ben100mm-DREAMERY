@@ -6,11 +6,17 @@ export type LoanSpec = {
 };
 
 export function monthlyRate(annualRate: number) {
+  if (annualRate < 0) {
+    throw new Error('Annual interest rate cannot be negative.');
+  }
   return annualRate / 12;
 }
 
 // Standard PMT (negative cashflow convention avoided; return positive number)
 export function pmt(annualRate: number, nper: number, pv: number) {
+  if (pv < 0 || nper <= 0 || annualRate < 0) {
+    throw new Error('Invalid inputs: principal, term, and rate must be non-negative, term must be positive.');
+  }
   const r = monthlyRate(annualRate);
   if (r === 0) return pv / nper;
   return (pv * r) / (1 - Math.pow(1 + r, -nper));
@@ -19,6 +25,16 @@ export function pmt(annualRate: number, nper: number, pv: number) {
 // Remaining principal after k payments on a fully-amortizing loan
 // Formula: B_k = PV*(1+r)^k - PMT*[(1+r)^k - 1]/r
 export function remainingPrincipalAfterPayments(spec: LoanSpec, paymentsMade: number) {
+  if (spec.principal < 0 || spec.termMonths <= 0 || spec.annualRate < 0) {
+    throw new Error('Invalid loan specification: principal, term, and rate must be non-negative, term must be positive.');
+  }
+  if (paymentsMade < 0) {
+    throw new Error('Payments made cannot be negative.');
+  }
+  if (paymentsMade > spec.termMonths) {
+    throw new Error('Payments made cannot exceed loan term.');
+  }
+  
   const { principal: pv, annualRate, termMonths, interestOnly } = spec;
   if (interestOnly) {
     // IO: principal doesn't change until IO period ends; if paymentsMade <= termMonths, balance == pv
@@ -41,6 +57,10 @@ export function totalMonthlyDebtService(params: {
   subjectToMonthlyTotal?: number; // sum of all subj‑to payments
   hybridMonthly?: number;         // "loan 3" monthly pmt
 }) {
+  if (params.newLoanMonthly < 0 || (params.subjectToMonthlyTotal && params.subjectToMonthlyTotal < 0) || (params.hybridMonthly && params.hybridMonthly < 0)) {
+    throw new Error('Monthly debt service payments cannot be negative.');
+  }
+  
   return (params.newLoanMonthly || 0)
     + (params.subjectToMonthlyTotal || 0)
     + (params.hybridMonthly || 0);
@@ -75,15 +95,37 @@ export function computeFixedMonthlyOps(i: OperatingInputs): number {
     i.taxes || 0, i.insurance || 0, i.hoa || 0, i.gasElectric || 0, i.internet || 0, i.waterSewer || 0,
     i.heat || 0, i.lawnSnow || 0, i.phone || 0, i.cleaner || 0, i.extras || 0, i.baseRentForArbitrage || 0
   ];
+  
+  // Validate that all values are non-negative
+  for (const value of values) {
+    if (value < 0) {
+      throw new Error('Fixed monthly operating expenses cannot be negative.');
+    }
+  }
+  
   return values.reduce((a, b) => a + b, 0);
 }
 
 export function computeVariableMonthlyOpsPct(i: OperatingInputs): number {
-  const pct = (i.mgmtPct || 0)
-    + (i.repairsPct || 0)
-    + (i.utilitiesPct || 0)
-    + (i.capExPct || 0)
-    + (i.opExPct || 0);
+  const values = [
+    i.mgmtPct || 0,
+    i.repairsPct || 0,
+    i.utilitiesPct || 0,
+    i.capExPct || 0,
+    i.opExPct || 0
+  ];
+  
+  // Validate that all values are non-negative and within reasonable bounds
+  for (const value of values) {
+    if (value < 0) {
+      throw new Error('Variable operating expense percentages cannot be negative.');
+    }
+    if (value > 1) {
+      throw new Error('Variable operating expense percentages cannot exceed 100%.');
+    }
+  }
+  
+  const pct = values.reduce((a, b) => a + b, 0);
   return pct; // applied to revenue later
 }
 
@@ -99,9 +141,12 @@ export function breakEvenOccupancy({
   variablePct: number;
   includeVariablePct: boolean;
 }) {
-  if (monthlyRevenueAt100 <= 0) return 0;
+  if (monthlyRevenueAt100 <= 0) {
+    throw new Error('Monthly revenue must be positive for break-even calculation.');
+  }
   const varCost = includeVariablePct ? variablePct * monthlyRevenueAt100 : 0;
-  return (fixedMonthlyOps + varCost) / monthlyRevenueAt100;
+  const breakEven = (fixedMonthlyOps + varCost) / monthlyRevenueAt100;
+  return Math.max(0, Math.min(1, breakEven));
 }
 
 // BRRRR new CoC = (Annual CF post‑refi) / (Remaining cash in deal)
@@ -117,6 +162,13 @@ export function brrrrAnnualCashFlowPostRefi({
   variablePct: number;
   newLoanMonthly: number;
 }) {
+  if (monthlyRevenue < 0 || fixedMonthlyOps < 0 || variablePct < 0 || newLoanMonthly < 0) {
+    throw new Error('Invalid inputs: all parameters must be non-negative.');
+  }
+  if (variablePct > 1) {
+    throw new Error('Variable percentage cannot exceed 100%.');
+  }
+  
   const monthlyNOI = monthlyRevenue - fixedMonthlyOps - (variablePct * monthlyRevenue);
   return (monthlyNOI * 12) - (newLoanMonthly * 12);
 }

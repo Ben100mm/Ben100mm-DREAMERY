@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -12,59 +12,59 @@ import {
   FormHelperText,
   InputAdornment,
   // Icons are imported from @mui/icons-material below
-} from '@mui/material';
+} from "@mui/material";
 import {
   Help as HelpIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
   Info as InfoIcon,
   Warning as WarningIcon,
-} from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
 
 // Styled components for enhanced visual feedback
 const LoadingOverlay = styled(Box)(({ theme }) => ({
-  position: 'absolute',
+  position: "absolute",
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   zIndex: 1000,
   borderRadius: theme.shape.borderRadius,
 }));
 
 const ProgressContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
+  width: "100%",
   marginBottom: theme.spacing(2),
 }));
 
 const SectionStatus = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   gap: theme.spacing(1),
   marginBottom: theme.spacing(1),
 }));
 
-const RequiredField = styled('span')(({ theme }) => ({
+const RequiredField = styled("span")(({ theme }) => ({
   color: theme.palette.error.main,
   marginLeft: theme.spacing(0.5),
 }));
 
 const FieldHint = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
-  fontSize: '0.75rem',
+  fontSize: "0.75rem",
   marginTop: theme.spacing(0.5),
-  fontStyle: 'italic',
+  fontStyle: "italic",
 }));
 
 // Loading States
-export const LoadingSpinner: React.FC<{ size?: number; message?: string }> = ({ 
-  size = 40, 
-  message = 'Loading...' 
+export const LoadingSpinner: React.FC<{ size?: number; message?: string }> = ({
+  size = 40,
+  message = "Loading...",
 }) => (
   <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
     <CircularProgress size={size} />
@@ -74,8 +74,8 @@ export const LoadingSpinner: React.FC<{ size?: number; message?: string }> = ({
   </Box>
 );
 
-export const LoadingOverlayComponent: React.FC<{ 
-  loading: boolean; 
+export const LoadingOverlayComponent: React.FC<{
+  loading: boolean;
   children: React.ReactNode;
   message?: string;
 }> = ({ loading, children, message }) => (
@@ -89,14 +89,19 @@ export const LoadingOverlayComponent: React.FC<{
   </Box>
 );
 
-export const LinearProgressWithLabel: React.FC<{ 
-  value: number; 
+export const LinearProgressWithLabel: React.FC<{
+  value: number;
   label?: string;
   showPercentage?: boolean;
 }> = ({ value, label, showPercentage = true }) => (
   <ProgressContainer>
     {label && (
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={1}
+      >
         <Typography variant="body2" color="text.secondary">
           {label}
         </Typography>
@@ -107,17 +112,17 @@ export const LinearProgressWithLabel: React.FC<{
         )}
       </Box>
     )}
-    <LinearProgress 
-      variant="determinate" 
-      value={value} 
+    <LinearProgress
+      variant="determinate"
+      value={value}
       sx={{ height: 8, borderRadius: 4 }}
     />
   </ProgressContainer>
 );
 
 // Success/Error Messages
-export const SuccessMessage: React.FC<{ 
-  message: string; 
+export const SuccessMessage: React.FC<{
+  message: string;
   onClose?: () => void;
   autoHideDuration?: number;
 }> = ({ message, onClose, autoHideDuration = 6000 }) => (
@@ -125,12 +130,12 @@ export const SuccessMessage: React.FC<{
     open={true}
     autoHideDuration={autoHideDuration}
     onClose={onClose}
-    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >
-    <Alert 
-      onClose={onClose} 
-      severity="success" 
-      sx={{ width: '100%' }}
+    <Alert
+      onClose={onClose}
+      severity="success"
+      sx={{ width: "100%" }}
       icon={<CheckCircleIcon />}
     >
       {message}
@@ -138,8 +143,8 @@ export const SuccessMessage: React.FC<{
   </Snackbar>
 );
 
-export const ErrorMessage: React.FC<{ 
-  message: string; 
+export const ErrorMessage: React.FC<{
+  message: string;
   onClose?: () => void;
   autoHideDuration?: number;
 }> = ({ message, onClose, autoHideDuration = 6000 }) => (
@@ -147,12 +152,12 @@ export const ErrorMessage: React.FC<{
     open={true}
     autoHideDuration={autoHideDuration}
     onClose={onClose}
-    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >
-    <Alert 
-      onClose={onClose} 
-      severity="error" 
-      sx={{ width: '100%' }}
+    <Alert
+      onClose={onClose}
+      severity="error"
+      sx={{ width: "100%" }}
       icon={<ErrorIcon />}
     >
       {message}
@@ -160,8 +165,8 @@ export const ErrorMessage: React.FC<{
   </Snackbar>
 );
 
-export const InfoMessage: React.FC<{ 
-  message: string; 
+export const InfoMessage: React.FC<{
+  message: string;
   onClose?: () => void;
   autoHideDuration?: number;
 }> = ({ message, onClose, autoHideDuration = 6000 }) => (
@@ -169,12 +174,12 @@ export const InfoMessage: React.FC<{
     open={true}
     autoHideDuration={autoHideDuration}
     onClose={onClose}
-    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >
-    <Alert 
-      onClose={onClose} 
-      severity="info" 
-      sx={{ width: '100%' }}
+    <Alert
+      onClose={onClose}
+      severity="info"
+      sx={{ width: "100%" }}
       icon={<InfoIcon />}
     >
       {message}
@@ -183,13 +188,13 @@ export const InfoMessage: React.FC<{
 );
 
 // Hover Tooltips
-export const HelpTooltip: React.FC<{ 
-  title: string; 
+export const HelpTooltip: React.FC<{
+  title: string;
   children?: React.ReactNode;
-  placement?: 'top' | 'bottom' | 'left' | 'right';
-}> = ({ title, children, placement = 'top' }) => (
-  <Tooltip 
-    title={title} 
+  placement?: "top" | "bottom" | "left" | "right";
+}> = ({ title, children, placement = "top" }) => (
+  <Tooltip
+    title={title}
     placement={placement}
     arrow
     enterDelay={500}
@@ -211,31 +216,34 @@ export const FieldHintText: React.FC<{ hint: string }> = ({ hint }) => (
 );
 
 export const ValidationError: React.FC<{ error: string }> = ({ error }) => (
-  <FormHelperText error sx={{ mt: 0.5, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+  <FormHelperText
+    error
+    sx={{ mt: 0.5, display: "flex", alignItems: "center", gap: 0.5 }}
+  >
     <ErrorIcon fontSize="small" />
     {error}
   </FormHelperText>
 );
 
 // Section Completion Status
-export const SectionStatusIndicator: React.FC<{ 
-  completed: boolean; 
+export const SectionStatusIndicator: React.FC<{
+  completed: boolean;
   label: string;
   onClick?: () => void;
 }> = ({ completed, label, onClick }) => (
-  <SectionStatus 
+  <SectionStatus
     onClick={onClick}
-    sx={{ cursor: onClick ? 'pointer' : 'default' }}
+    sx={{ cursor: onClick ? "pointer" : "default" }}
   >
     {completed ? (
       <CheckCircleIcon color="success" fontSize="small" />
     ) : (
       <ErrorIcon color="disabled" fontSize="small" />
     )}
-    <Typography 
-      variant="body2" 
-      color={completed ? 'success.main' : 'text.disabled'}
-      sx={{ textDecoration: onClick ? 'underline' : 'none' }}
+    <Typography
+      variant="body2"
+      color={completed ? "success.main" : "text.disabled"}
+      sx={{ textDecoration: onClick ? "underline" : "none" }}
     >
       {label}
     </Typography>
@@ -243,13 +251,13 @@ export const SectionStatusIndicator: React.FC<{
 );
 
 // Progress Indicators
-export const CompletionProgress: React.FC<{ 
-  completed: number; 
+export const CompletionProgress: React.FC<{
+  completed: number;
   total: number;
   label?: string;
 }> = ({ completed, total, label }) => {
   const percentage = total > 0 ? (completed / total) * 100 : 0;
-  
+
   return (
     <Box>
       {label && (
@@ -257,10 +265,7 @@ export const CompletionProgress: React.FC<{
           {label}
         </Typography>
       )}
-      <LinearProgressWithLabel 
-        value={percentage} 
-        showPercentage={true}
-      />
+      <LinearProgressWithLabel value={percentage} showPercentage={true} />
       <Typography variant="caption" color="text.secondary">
         {completed} of {total} sections completed
       </Typography>
@@ -269,18 +274,23 @@ export const CompletionProgress: React.FC<{
 };
 
 // Status Chips
-export const StatusChip: React.FC<{ 
-  status: 'success' | 'error' | 'warning' | 'info' | 'default';
+export const StatusChip: React.FC<{
+  status: "success" | "error" | "warning" | "info" | "default";
   label: string;
-  size?: 'small' | 'medium';
-}> = ({ status, label, size = 'small' }) => {
+  size?: "small" | "medium";
+}> = ({ status, label, size = "small" }) => {
   const getColor = () => {
     switch (status) {
-      case 'success': return 'success';
-      case 'error': return 'error';
-      case 'warning': return 'warning';
-      case 'info': return 'info';
-      default: return 'default';
+      case "success":
+        return "success";
+      case "error":
+        return "error";
+      case "warning":
+        return "warning";
+      case "info":
+        return "info";
+      default:
+        return "default";
     }
   };
 
@@ -290,39 +300,39 @@ export const StatusChip: React.FC<{
       size={size}
       color={getColor()}
       variant="outlined"
-      sx={{ fontWeight: 'medium' }}
+      sx={{ fontWeight: "medium" }}
     />
   );
 };
 
 // Auto-formatting utilities
 export const formatCurrency = (value: string): string => {
-  const numericValue = value.replace(/[^0-9.]/g, '');
-  if (!numericValue) return '';
-  
+  const numericValue = value.replace(/[^0-9.]/g, "");
+  if (!numericValue) return "";
+
   const number = parseFloat(numericValue);
-  if (isNaN(number)) return '';
-  
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  if (isNaN(number)) return "";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(number);
 };
 
 export const formatPercentage = (value: string): string => {
-  const numericValue = value.replace(/[^0-9.]/g, '');
-  if (!numericValue) return '';
-  
+  const numericValue = value.replace(/[^0-9.]/g, "");
+  if (!numericValue) return "";
+
   const number = parseFloat(numericValue);
-  if (isNaN(number)) return '';
-  
+  if (isNaN(number)) return "";
+
   return `${number.toFixed(2)}%`;
 };
 
 export const formatPhoneNumber = (value: string): string => {
-  const cleaned = value.replace(/\D/g, '');
+  const cleaned = value.replace(/\D/g, "");
   const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
   if (match) {
     return `(${match[1]}) ${match[2]}-${match[3]}`;
@@ -331,7 +341,7 @@ export const formatPhoneNumber = (value: string): string => {
 };
 
 // Breadcrumb component
-export const Breadcrumbs: React.FC<{ 
+export const Breadcrumbs: React.FC<{
   items: Array<{ label: string; onClick?: () => void; active?: boolean }>;
 }> = ({ items }) => (
   <Box display="flex" alignItems="center" gap={1} mb={2} flexWrap="wrap">
@@ -339,11 +349,11 @@ export const Breadcrumbs: React.FC<{
       <Box key={index} display="flex" alignItems="center">
         <Typography
           variant="body2"
-          color={item.active ? 'primary.main' : 'text.secondary'}
+          color={item.active ? "primary.main" : "text.secondary"}
           sx={{
-            cursor: item.onClick ? 'pointer' : 'default',
-            textDecoration: item.onClick ? 'underline' : 'none',
-            fontWeight: item.active ? 'medium' : 'normal',
+            cursor: item.onClick ? "pointer" : "default",
+            textDecoration: item.onClick ? "underline" : "none",
+            fontWeight: item.active ? "medium" : "normal",
           }}
           onClick={item.onClick}
         >
@@ -360,7 +370,7 @@ export const Breadcrumbs: React.FC<{
 );
 
 // Quick Jump Menu
-export const QuickJumpMenu: React.FC<{ 
+export const QuickJumpMenu: React.FC<{
   sections: Array<{ id: string; label: string; completed?: boolean }>;
   onJumpTo: (id: string) => void;
 }> = ({ sections, onJumpTo }) => (
@@ -375,9 +385,9 @@ export const QuickJumpMenu: React.FC<{
           label={section.label}
           size="small"
           variant="outlined"
-          color={section.completed ? 'success' : 'default'}
+          color={section.completed ? "success" : "default"}
           onClick={() => onJumpTo(section.id)}
-          sx={{ cursor: 'pointer' }}
+          sx={{ cursor: "pointer" }}
         />
       ))}
     </Box>
@@ -385,15 +395,15 @@ export const QuickJumpMenu: React.FC<{
 );
 
 // Save Progress Indicator
-export const SaveProgressIndicator: React.FC<{ 
-  saved: boolean; 
+export const SaveProgressIndicator: React.FC<{
+  saved: boolean;
   lastSaved?: Date;
   onSave?: () => void;
 }> = ({ saved, lastSaved, onSave }) => (
   <Box display="flex" alignItems="center" gap={1}>
     <StatusChip
-      status={saved ? 'success' : 'warning'}
-      label={saved ? 'Saved' : 'Unsaved Changes'}
+      status={saved ? "success" : "warning"}
+      label={saved ? "Saved" : "Unsaved Changes"}
     />
     {lastSaved && (
       <Typography variant="caption" color="text.secondary">
@@ -401,10 +411,10 @@ export const SaveProgressIndicator: React.FC<{
       </Typography>
     )}
     {!saved && onSave && (
-      <Typography 
-        variant="caption" 
-        color="primary.main" 
-        sx={{ cursor: 'pointer', textDecoration: 'underline' }}
+      <Typography
+        variant="caption"
+        color="primary.main"
+        sx={{ cursor: "pointer", textDecoration: "underline" }}
         onClick={onSave}
       >
         Save now

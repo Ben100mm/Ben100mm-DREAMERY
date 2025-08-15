@@ -1,16 +1,23 @@
-import React from 'react';
-import { Box, Alert, Typography } from '@mui/material';
-import { DealState } from '../types/deal';
-import { ConfigCards } from './ConfigCards';
+import React from "react";
+import { Box, Alert, Typography } from "@mui/material";
+import { DealState } from "../types/deal";
+import { ConfigCards } from "./ConfigCards";
 
 interface GlobalConfigTabProps {
   dealState: DealState | null;
   updateDealState: (updates: Partial<DealState>) => void;
-  handleResultsChange: <K extends keyof any>(calculatorType: K, results: any) => void;
+  handleResultsChange: <K extends keyof any>(
+    calculatorType: K,
+    results: any,
+  ) => void;
   scenarios: any[];
   setScenarios: React.Dispatch<React.SetStateAction<any[]>>;
   allResults: any;
-  setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' | 'info' }) => void;
+  setSnackbar: (snackbar: {
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "warning" | "info";
+  }) => void;
 }
 
 export const GlobalConfigTab: React.FC<GlobalConfigTabProps> = ({
@@ -26,7 +33,8 @@ export const GlobalConfigTab: React.FC<GlobalConfigTabProps> = ({
     return (
       <Alert severity="warning" sx={{ mb: 2 }}>
         <Typography variant="body2">
-          No deal data found. Please go back to the Underwrite page and click "Open Advanced Analysis" to load your deal data.
+          No deal data found. Please go back to the Underwrite page and click
+          "Open Advanced Analysis" to load your deal data.
         </Typography>
       </Alert>
     );
@@ -34,16 +42,20 @@ export const GlobalConfigTab: React.FC<GlobalConfigTabProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+      >
         Global Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
-        Configure market conditions, exit strategies, risk factors, and manage scenarios
+      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+        Configure market conditions, exit strategies, risk factors, and manage
+        scenarios
       </Typography>
-      
-      <ConfigCards 
-        dealState={dealState} 
-        updateDealState={updateDealState} 
+
+      <ConfigCards
+        dealState={dealState}
+        updateDealState={updateDealState}
         scenarios={scenarios}
         setScenarios={setScenarios}
         allResults={allResults}

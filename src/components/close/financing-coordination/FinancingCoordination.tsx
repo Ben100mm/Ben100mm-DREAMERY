@@ -27,4 +27,4 @@ const FinancingCoordination: React.FC = () => {
   );
 };
 
-export { FinancingCoordination };
+export default FinancingCoordination;

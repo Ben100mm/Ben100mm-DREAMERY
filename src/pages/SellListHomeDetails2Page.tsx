@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -8,11 +8,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  IconButton
-} from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+  IconButton,
+} from "@mui/material";
+import { Add, Remove } from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -33,7 +33,7 @@ const MainContent = styled.div`
   justify-content: center;
   padding: 2rem;
   gap: 4rem;
-  
+
   @media (max-width: 900px) {
     flex-direction: column;
     gap: 2rem;
@@ -55,33 +55,69 @@ const ImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   img {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
-  
+
   @media (max-width: 900px) {
     width: 360px;
     height: 360px;
   }
 `;
 
-const CounterRow = ({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void; }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-    <Typography sx={{ color: '#333333', fontWeight: 600 }}>{label}</Typography>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+const CounterRow = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+}) => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      mb: 2,
+    }}
+  >
+    <Typography sx={{ color: "#333333", fontWeight: 600 }}>{label}</Typography>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
       <IconButton
         onClick={() => onChange(Math.max(0, value - 1))}
-        sx={{ width: 36, height: 36, border: '1px solid #cbd5e1', borderRadius: '50%', color: '#1a365d' }}
+        sx={{
+          width: 36,
+          height: 36,
+          border: "1px solid #cbd5e1",
+          borderRadius: "50%",
+          color: "#1a365d",
+        }}
       >
         <Remove />
       </IconButton>
-      <Box sx={{ width: 36, textAlign: 'center', fontWeight: 700, color: '#1a365d' }}>{value}</Box>
+      <Box
+        sx={{
+          width: 36,
+          textAlign: "center",
+          fontWeight: 700,
+          color: "#1a365d",
+        }}
+      >
+        {value}
+      </Box>
       <IconButton
         onClick={() => onChange(value + 1)}
-        sx={{ width: 36, height: 36, border: '1px solid #cbd5e1', borderRadius: '50%', color: '#1a365d' }}
+        sx={{
+          width: 36,
+          height: 36,
+          border: "1px solid #cbd5e1",
+          borderRadius: "50%",
+          color: "#1a365d",
+        }}
       >
         <Add />
       </IconButton>
@@ -99,15 +135,15 @@ const SellListHomeDetails2Page: React.FC = () => {
     movingDetails,
     sellTiming,
     listTiming,
-    homeDetails
+    homeDetails,
   } = location.state || {};
 
-  const [poolType, setPoolType] = useState('');
+  const [poolType, setPoolType] = useState("");
   const [garageSpaces, setGarageSpaces] = useState(0);
   const [carportSpaces, setCarportSpaces] = useState(0);
 
   const handleNext = () => {
-    navigate('/sell-home-details-3', {
+    navigate("/sell-home-details-3", {
       state: {
         address,
         sellChecked,
@@ -126,7 +162,7 @@ const SellListHomeDetails2Page: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigate('/sell-home-details', {
+    navigate("/sell-home-details", {
       state: {
         address,
         sellChecked,
@@ -139,15 +175,21 @@ const SellListHomeDetails2Page: React.FC = () => {
     });
   };
 
-  const handleExit = () => navigate('/');
+  const handleExit = () => navigate("/");
 
   return (
     <PageContainer>
       {/* Header with Progress Bar and Exit Button */}
       <HeaderSection>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
+            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -156,15 +198,18 @@ const SellListHomeDetails2Page: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: '#e0e0e0',
-                '& .MuiLinearProgress-bar': {
-                  backgroundColor: '#1a365d',
+                backgroundColor: "#e0e0e0",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#1a365d",
                   borderRadius: 4,
                 },
               }}
             />
           </Box>
-          <Button onClick={handleExit} sx={{ color: '#666666', textTransform: 'none' }}>
+          <Button
+            onClick={handleExit}
+            sx={{ color: "#666666", textTransform: "none" }}
+          >
             Exit
           </Button>
         </Box>
@@ -172,7 +217,10 @@ const SellListHomeDetails2Page: React.FC = () => {
 
       <MainContent>
         <ContentWrapper>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: '#1a365d', mb: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 800, color: "#1a365d", mb: 3 }}
+          >
             Does your home have a pool?
           </Typography>
 
@@ -184,41 +232,60 @@ const SellListHomeDetails2Page: React.FC = () => {
               label="Pool"
               onChange={(e) => setPoolType(e.target.value)}
             >
-              <MenuItem value={''}></MenuItem>
-              <MenuItem value={'No'}>No</MenuItem>
-              <MenuItem value={'In-ground'}>In-ground</MenuItem>
-              <MenuItem value={'Above ground'}>Above ground</MenuItem>
-              <MenuItem value={'Community Pool'}>Community Pool</MenuItem>
+              <MenuItem value={""}></MenuItem>
+              <MenuItem value={"No"}>No</MenuItem>
+              <MenuItem value={"In-ground"}>In-ground</MenuItem>
+              <MenuItem value={"Above ground"}>Above ground</MenuItem>
+              <MenuItem value={"Community Pool"}>Community Pool</MenuItem>
             </Select>
           </FormControl>
 
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937', mb: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, color: "#1f2937", mb: 2 }}
+          >
             How many covered parking spaces does your home have?
           </Typography>
 
-          <CounterRow label="Garage" value={garageSpaces} onChange={setGarageSpaces} />
-          <CounterRow label="Carport" value={carportSpaces} onChange={setCarportSpaces} />
+          <CounterRow
+            label="Garage"
+            value={garageSpaces}
+            onChange={setGarageSpaces}
+          />
+          <CounterRow
+            label="Carport"
+            value={carportSpaces}
+            onChange={setCarportSpaces}
+          />
         </ContentWrapper>
 
         <ImageContainer>
-          <img src={process.env.PUBLIC_URL + '/home-details-2.png'} alt="Home details 2" />
+          <img
+            src={process.env.PUBLIC_URL + "/home-details-2.png"}
+            alt="Home details 2"
+          />
         </ImageContainer>
       </MainContent>
 
       {/* Footer with Navigation Buttons */}
       <Box
         sx={{
-          px: { xs: '1rem', md: '2rem' },
-          py: { xs: '1rem', md: '2rem' },
-          display: 'flex',
-          justifyContent: 'space-between',
-          borderTop: '1px solid #e0e0e0',
+          px: { xs: "1rem", md: "2rem" },
+          py: { xs: "1rem", md: "2rem" },
+          display: "flex",
+          justifyContent: "space-between",
+          borderTop: "1px solid #e0e0e0",
         }}
       >
         <Button
           onClick={handleBack}
           variant="outlined"
-          sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600 }}
+          sx={{
+            borderColor: "#1a365d",
+            color: "#1a365d",
+            textTransform: "none",
+            fontWeight: 600,
+          }}
         >
           Back
         </Button>
@@ -226,7 +293,12 @@ const SellListHomeDetails2Page: React.FC = () => {
         <Button
           onClick={handleNext}
           variant="contained"
-          sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}
+          sx={{
+            backgroundColor: "#1a365d",
+            color: "white",
+            textTransform: "none",
+            fontWeight: 600,
+          }}
         >
           Next
         </Button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Typography,
@@ -11,15 +11,26 @@ import {
   TableRow,
   InputAdornment,
   CircularProgress,
-} from '@mui/material';
-import { LineChart, LineSeriesType, BarChart, BarSeriesType } from '@mui/x-charts';
-import { DealState } from '../types/deal';
-import { defaultExitStrategies, calculateConfidenceIntervals } from '../utils/advancedCalculations';
+} from "@mui/material";
+import {
+  LineChart,
+  LineSeriesType,
+  BarChart,
+  BarSeriesType,
+} from "@mui/x-charts";
+import { DealState } from "../types/deal";
+import {
+  defaultExitStrategies,
+  calculateConfidenceIntervals,
+} from "../utils/advancedCalculations";
 
 interface ExitStrategiesTabProps {
   dealState: DealState | null;
   updateDealState: (updates: Partial<DealState>) => void;
-  handleResultsChange: <K extends keyof any>(calculatorType: K, results: any) => void;
+  handleResultsChange: <K extends keyof any>(
+    calculatorType: K,
+    results: any,
+  ) => void;
   isCalculating: boolean;
   setIsCalculating: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -34,8 +45,9 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: '#666' }}>
-          No deal data found. Please go back to the Underwrite page and click "Open Advanced Analysis" to load your deal data.
+        <Typography variant="body2" sx={{ color: "#666" }}>
+          No deal data found. Please go back to the Underwrite page and click
+          "Open Advanced Analysis" to load your deal data.
         </Typography>
       </Box>
     );
@@ -43,69 +55,103 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+      >
         Exit Strategy Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
-        Configure exit strategy parameters and view projected returns over different timeframes
+      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+        Configure exit strategy parameters and view projected returns over
+        different timeframes
       </Typography>
-      
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 3 }}>
+
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mb: 3 }}
+      >
         <TextField
           fullWidth
           label="Market Appreciation (%)"
           type="number"
-          value={dealState.exitStrategies[0]?.marketAppreciation ? (dealState.exitStrategies[0].marketAppreciation * 100).toFixed(1) : '4.0'}
+          value={
+            dealState.exitStrategies[0]?.marketAppreciation
+              ? (dealState.exitStrategies[0].marketAppreciation * 100).toFixed(
+                  1,
+                )
+              : "4.0"
+          }
           onChange={(e) => {
             const rawValue = e.target.value;
-            if (rawValue === '') return; // Allow empty for reset
+            if (rawValue === "") return; // Allow empty for reset
             const value = Math.max(0, parseFloat(rawValue) || 0) / 100;
             updateDealState({
-              exitStrategies: (dealState?.exitStrategies || defaultExitStrategies).map(strategy => ({
+              exitStrategies: (
+                dealState?.exitStrategies || defaultExitStrategies
+              ).map((strategy) => ({
                 ...strategy,
-                marketAppreciation: value
-              }))
+                marketAppreciation: value,
+              })),
             });
           }}
           InputProps={{
             endAdornment: <InputAdornment position="end">%</InputAdornment>,
           }}
-          helperText={parseFloat(dealState.exitStrategies[0]?.marketAppreciation ? (dealState.exitStrategies[0].marketAppreciation * 100).toFixed(1) : '4.0') < 0 ? 'Must be 0 or greater' : ''}
+          helperText={
+            parseFloat(
+              dealState.exitStrategies[0]?.marketAppreciation
+                ? (
+                    dealState.exitStrategies[0].marketAppreciation * 100
+                  ).toFixed(1)
+                : "4.0",
+            ) < 0
+              ? "Must be 0 or greater"
+              : ""
+          }
         />
         <TextField
           fullWidth
           label="Selling Costs (%)"
           type="number"
-          inputProps={{ 'data-testid': 'selling-costs-input' }}
-          value={dealState.exitStrategies[0]?.sellingCosts || defaultExitStrategies[0].sellingCosts}
+          inputProps={{ "data-testid": "selling-costs-input" }}
+          value={
+            dealState.exitStrategies[0]?.sellingCosts ||
+            defaultExitStrategies[0].sellingCosts
+          }
           onChange={(e) => {
             const rawValue = e.target.value;
-            if (rawValue === '') return; // Allow empty for reset
+            if (rawValue === "") return; // Allow empty for reset
             const value = Math.max(0, parseFloat(rawValue) || 0);
             updateDealState({
-              exitStrategies: (dealState?.exitStrategies || defaultExitStrategies).map(strategy => ({
+              exitStrategies: (
+                dealState?.exitStrategies || defaultExitStrategies
+              ).map((strategy) => ({
                 ...strategy,
-                sellingCosts: value
-              }))
+                sellingCosts: value,
+              })),
             });
           }}
           InputProps={{
             endAdornment: <InputAdornment position="end">%</InputAdornment>,
           }}
-          helperText={(dealState.exitStrategies[0]?.sellingCosts || defaultExitStrategies[0].sellingCosts) < 0 ? 'Must be 0 or greater' : ''}
+          helperText={
+            (dealState.exitStrategies[0]?.sellingCosts ||
+              defaultExitStrategies[0].sellingCosts) < 0
+              ? "Must be 0 or greater"
+              : ""
+          }
         />
       </Box>
-      
-      <Button 
-        variant="contained" 
+
+      <Button
+        variant="contained"
         disabled={isCalculating}
         onClick={async () => {
           if (dealState) {
             setIsCalculating(true);
             try {
               // Trigger recalculation by updating a dependency
-              updateDealState({ 
-                exitStrategies: [...(dealState?.exitStrategies || [])] 
+              updateDealState({
+                exitStrategies: [...(dealState?.exitStrategies || [])],
               });
             } finally {
               setIsCalculating(false);
@@ -116,16 +162,20 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
         data-testid="recalculate-exit-strategies-button"
         sx={{ mt: 2 }}
       >
-        {isCalculating ? <CircularProgress size={24} /> : 'Recalculate Exit Strategies'}
+        {isCalculating ? (
+          <CircularProgress size={24} />
+        ) : (
+          "Recalculate Exit Strategies"
+        )}
       </Button>
-      
+
       {dealState.exitStrategyResults && (
         <>
-          <Table 
-            size="small" 
+          <Table
+            size="small"
             aria-label="Exit Strategies Results"
             data-testid="exit-strategies-results-table"
-            sx={{ mt: 2, border: 1, borderColor: '#e0e0e0' }}
+            sx={{ mt: 2, border: 1, borderColor: "#e0e0e0" }}
           >
             <TableHead>
               <TableRow>
@@ -141,44 +191,78 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                 <TableRow key={index}>
                   <TableCell>{result.timeframe}</TableCell>
                   <TableCell>
-                    ${result.projectedValue.toLocaleString()} 
+                    ${result.projectedValue.toLocaleString()}
                     <br />
-                    <Typography variant="caption" sx={{ color: '#666' }}>
-                      ±${((calculateConfidenceIntervals(result.projectedValue, dealState?.riskFactors?.marketVolatility || 5, 0.95).upperBound - result.projectedValue)).toLocaleString()}
+                    <Typography variant="caption" sx={{ color: "#666" }}>
+                      ±$
+                      {(
+                        calculateConfidenceIntervals(
+                          result.projectedValue,
+                          dealState?.riskFactors?.marketVolatility || 5,
+                          0.95,
+                        ).upperBound - result.projectedValue
+                      ).toLocaleString()}
                     </Typography>
                   </TableCell>
                   <TableCell>${result.netProceeds.toLocaleString()}</TableCell>
-                  <TableCell sx={{ color: result.roi > 0 ? '#2e7d32' : '#d32f2f' }}>
+                  <TableCell
+                    sx={{ color: result.roi > 0 ? "#2e7d32" : "#d32f2f" }}
+                  >
                     {result.roi.toFixed(1)}%
                   </TableCell>
-                  <TableCell sx={{ color: result.annualizedRoi > 0 ? '#2e7d32' : '#d32f2f' }}>
+                  <TableCell
+                    sx={{
+                      color: result.annualizedRoi > 0 ? "#2e7d32" : "#d32f2f",
+                    }}
+                  >
                     {result.annualizedRoi.toFixed(1)}%
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          
+
           {/* Confidence Intervals Summary for Exit Strategies */}
-          <Box sx={{ mt: 2, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#1a365d' }}>
+          <Box
+            sx={{ mt: 2, p: 2, backgroundColor: "#f8f9fa", borderRadius: 1 }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+            >
               Statistical Confidence (95%):
             </Typography>
-            <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-              Based on market volatility of {dealState?.riskFactors?.marketVolatility || 5}/10
+            <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+              Based on market volatility of{" "}
+              {dealState?.riskFactors?.marketVolatility || 5}/10
             </Typography>
-            <Typography variant="body2" sx={{ color: '#666' }}>
-                              - Higher volatility = wider confidence intervals
+            <Typography variant="body2" sx={{ color: "#666" }}>
+              - Higher volatility = wider confidence intervals
             </Typography>
-            <Typography variant="body2" sx={{ color: '#666' }}>
-                              - Lower volatility = more precise projections
+            <Typography variant="body2" sx={{ color: "#666" }}>
+              - Lower volatility = more precise projections
             </Typography>
           </Box>
-          
+
           {/* Charts */}
-          <Box sx={{ mt: 3, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+          <Box
+            sx={{
+              mt: 3,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 3,
+            }}
+          >
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', mb: 2, textAlign: 'center' }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  color: "#1a365d",
+                  mb: 2,
+                  textAlign: "center",
+                }}
+              >
                 ROI Trend Over Time
               </Typography>
               <LineChart
@@ -187,28 +271,48 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                 aria-label="ROI Trend Over Time Chart"
                 data-testid="roi-trend-chart"
                 series={[
-                  { 
-                    data: dealState.exitStrategyResults.map(r => r.roi), 
-                    label: 'ROI (%)',
-                    color: '#1a365d',
-                    type: 'line'
-                  } as LineSeriesType
+                  {
+                    data: dealState.exitStrategyResults.map((r) => r.roi),
+                    label: "ROI (%)",
+                    color: "#1a365d",
+                    type: "line",
+                  } as LineSeriesType,
                 ]}
-                xAxis={[{ 
-                  scaleType: 'point', 
-                  data: dealState.exitStrategyResults.map(r => `${r.timeframe} Years`),
-                  label: 'Timeframe'
-                }]}
-                yAxis={[{ 
-                  label: 'ROI (%)',
-                  min: Math.min(...dealState.exitStrategyResults.map(r => r.roi)) - 5,
-                  max: Math.max(...dealState.exitStrategyResults.map(r => r.roi)) + 5
-                }]}
+                xAxis={[
+                  {
+                    scaleType: "point",
+                    data: dealState.exitStrategyResults.map(
+                      (r) => `${r.timeframe} Years`,
+                    ),
+                    label: "Timeframe",
+                  },
+                ]}
+                yAxis={[
+                  {
+                    label: "ROI (%)",
+                    min:
+                      Math.min(
+                        ...dealState.exitStrategyResults.map((r) => r.roi),
+                      ) - 5,
+                    max:
+                      Math.max(
+                        ...dealState.exitStrategyResults.map((r) => r.roi),
+                      ) + 5,
+                  },
+                ]}
               />
             </Box>
-            
+
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', mb: 2, textAlign: 'center' }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  color: "#1a365d",
+                  mb: 2,
+                  textAlign: "center",
+                }}
+              >
                 Projected Property Values
               </Typography>
               <BarChart
@@ -217,22 +321,30 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                 aria-label="Projected Property Values Chart"
                 data-testid="projected-values-chart"
                 series={[
-                  { 
-                    data: dealState.exitStrategyResults.map(r => r.projectedValue / 1000), 
-                    label: 'Value ($K)',
-                    color: '#2e7d32',
-                    type: 'bar'
-                  } as BarSeriesType
+                  {
+                    data: dealState.exitStrategyResults.map(
+                      (r) => r.projectedValue / 1000,
+                    ),
+                    label: "Value ($K)",
+                    color: "#2e7d32",
+                    type: "bar",
+                  } as BarSeriesType,
                 ]}
-                xAxis={[{ 
-                  scaleType: 'point', 
-                  data: dealState.exitStrategyResults.map(r => `${r.timeframe} Years`),
-                  label: 'Timeframe'
-                }]}
-                yAxis={[{ 
-                  label: 'Value ($K)',
-                  min: 0
-                }]}
+                xAxis={[
+                  {
+                    scaleType: "point",
+                    data: dealState.exitStrategyResults.map(
+                      (r) => `${r.timeframe} Years`,
+                    ),
+                    label: "Timeframe",
+                  },
+                ]}
+                yAxis={[
+                  {
+                    label: "Value ($K)",
+                    min: 0,
+                  },
+                ]}
               />
             </Box>
           </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -20,8 +20,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  LinearProgress
-} from '@mui/material';
+  LinearProgress,
+} from "@mui/material";
 import {
   LoadingSpinner,
   LoadingOverlayComponent,
@@ -34,38 +34,38 @@ import {
   CompletionProgress,
   HelpTooltip,
   RequiredFieldIndicator,
-} from '../components';
+} from "../components";
 import {
   Calculate as CalculateIcon,
   Description as DescriptionIcon,
   Flag as FlagIcon,
   AttachMoney as MoneyIcon,
   Home as HomeIcon,
-  Close as CloseIcon
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const PageContainer = styled.div`
   height: 100vh;
   background: white;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  
+
   /* Ensure scrollbar appears on the far right */
   &::-webkit-scrollbar {
     width: 12px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 6px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
   }
@@ -95,13 +95,11 @@ const MortgageOptionCard = styled(Card)`
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
   }
 `;
-
-
 
 const LearningCard = styled(Card)`
   width: 320px;
@@ -124,7 +122,7 @@ const SplitWrap = styled.div`
   align-items: flex-start;
   max-width: 1100px;
   margin: 0 auto;
-  
+
   @media (max-width: 960px) {
     flex-direction: column;
   }
@@ -142,8 +140,6 @@ const RightCol = styled.div`
   top: 88px; /* below sticky header */
 `;
 
-
-
 const MortgagePage: React.FC = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -152,7 +148,8 @@ const MortgagePage: React.FC = () => {
   const [showDreamAbilityModal, setShowDreamAbilityModal] = useState(false);
   const [showDreamAbilityResults, setShowDreamAbilityResults] = useState(false);
   const [showWhatThisMeans, setShowWhatThisMeans] = useState(false);
-  const [showTargetPaymentBreakdown, setShowTargetPaymentBreakdown] = useState(false);
+  const [showTargetPaymentBreakdown, setShowTargetPaymentBreakdown] =
+    useState(false);
   const [showDownPaymentDetails, setShowDownPaymentDetails] = useState(false);
   const [showInterestRateDetails, setShowInterestRateDetails] = useState(false);
   const [showAprDetails, setShowAprDetails] = useState(false);
@@ -160,36 +157,49 @@ const MortgagePage: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [dreamAbilityForm, setDreamAbilityForm] = useState({
-    location: '',
-    annualIncome: '',
-    downPayment: '',
-    creditScore: '',
-    monthlyDebt: ''
+    location: "",
+    annualIncome: "",
+    downPayment: "",
+    creditScore: "",
+    monthlyDebt: "",
   });
   // Carousel sizing constants
   const CARDS_PER_SLIDE = 3;
   const CARD_WIDTH_PX = 320; // must match LearningCard width
   const GAP_PX = 16; // must match the gap used between cards
-  const SLIDE_WIDTH_PX = CARD_WIDTH_PX * CARDS_PER_SLIDE + GAP_PX * (CARDS_PER_SLIDE - 1);
+  const SLIDE_WIDTH_PX =
+    CARD_WIDTH_PX * CARDS_PER_SLIDE + GAP_PX * (CARDS_PER_SLIDE - 1);
 
   // Mortgage calculation constants
   const LOAN_AMOUNT = 1000000; // $1,000,000
   const CLOSING_COSTS = 15000; // $15,000 in closing costs
 
   // Mortgage payment calculation function
-  const calculateMonthlyPayment = (principal: number, annualRate: number, years: number) => {
+  const calculateMonthlyPayment = (
+    principal: number,
+    annualRate: number,
+    years: number,
+  ) => {
     const monthlyRate = annualRate / 12 / 100;
     const totalPayments = years * 12;
     if (monthlyRate === 0) return principal / totalPayments;
-    return principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
+    return (
+      (principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments))) /
+      (Math.pow(1 + monthlyRate, totalPayments) - 1)
+    );
   };
 
   // APR calculation function
-  const calculateAPR = (rate: number, points: number, years: number, loanAmount: number) => {
+  const calculateAPR = (
+    rate: number,
+    points: number,
+    years: number,
+    loanAmount: number,
+  ) => {
     const totalPayments = years * 12;
     const pointsCost = (points / 100) * loanAmount;
     const totalCost = pointsCost + CLOSING_COSTS;
-    
+
     // Calculate APR using Newton's method approximation
     let apr = rate;
     for (let i = 0; i < 10; i++) {
@@ -197,13 +207,13 @@ const MortgagePage: React.FC = () => {
       const payment = calculateMonthlyPayment(loanAmount, apr, years);
       const totalPaymentsValue = payment * totalPayments;
       const costDifference = totalPaymentsValue - (loanAmount - totalCost);
-      
+
       if (Math.abs(costDifference) < 0.01) break;
-      
-      const derivative = totalPayments * payment / (1 + monthlyAPR);
+
+      const derivative = (totalPayments * payment) / (1 + monthlyAPR);
       apr = apr - costDifference / derivative;
     }
-    
+
     return Math.min(apr, rate + 2); // Cap APR at rate + 2%
   };
 
@@ -213,36 +223,45 @@ const MortgagePage: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleNavigateToPreApproval = () => {
-    navigate('/pre-approval');
+    navigate("/pre-approval");
   };
 
   // CSV helpers for Airtable shared views (read-only; no secrets)
   const parseCsv = (text: string) => {
     const lines = text.trim().split(/\r?\n/);
     if (lines.length === 0) return [] as any[];
-    const headers = lines[0].split(',').map((h) => h.replace(/^"|"$/g, ''));
+    const headers = lines[0].split(",").map((h) => h.replace(/^"|"$/g, ""));
     return lines.slice(1).map((row) => {
-      const cells = (row.match(/(".*?"|[^,]+)(?=,|$)/g) || []).map((c) => c.replace(/^"|"$/g, ''));
+      const cells = (row.match(/(".*?"|[^,]+)(?=,|$)/g) || []).map((c) =>
+        c.replace(/^"|"$/g, ""),
+      );
       const obj: Record<string, string> = {};
       headers.forEach((h, i) => {
-        obj[h] = cells[i] ?? '';
+        obj[h] = cells[i] ?? "";
       });
       return obj;
     });
   };
 
-  const useCsvPoll = <T,>(url: string | undefined, ms = 60000, fallback: T[]) => {
+  const useCsvPoll = <T,>(
+    url: string | undefined,
+    ms = 60000,
+    fallback: T[],
+  ) => {
     const [data, setData] = useState<T[]>(fallback);
     React.useEffect(() => {
       if (!url) return;
       let cancelled = false;
       const load = async () => {
         try {
-          const r = await fetch(`${url}${url.includes('?') ? '&' : '?'}ts=${Date.now()}`, { cache: 'no-store' });
+          const r = await fetch(
+            `${url}${url.includes("?") ? "&" : "?"}ts=${Date.now()}`,
+            { cache: "no-store" },
+          );
           if (!r.ok) return;
           const txt = await r.text();
           if (!cancelled) setData(parseCsv(txt) as unknown as T[]);
@@ -252,18 +271,28 @@ const MortgagePage: React.FC = () => {
       };
       load();
       const id = setInterval(load, ms);
-      return () => { cancelled = true; clearInterval(id); };
+      return () => {
+        cancelled = true;
+        clearInterval(id);
+      };
     }, [url, ms]);
     return data;
   };
 
   // --- Investment Sections (inline components) ---
   type LenderRow = {
-    name: string; type: string; rate: number; term: number; points: number; dscrReq?: number; prepay?: string; applyUrl?: string;
+    name: string;
+    type: string;
+    rate: number;
+    term: number;
+    points: number;
+    dscrReq?: number;
+    prepay?: string;
+    applyUrl?: string;
   };
 
   const MortgageCalculatorSection: React.FC = () => {
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState("");
     const [purchase, setPurchase] = useState(600000);
     const [rehab, setRehab] = useState(40000);
     const [closing, setClosing] = useState(15000);
@@ -271,55 +300,70 @@ const MortgagePage: React.FC = () => {
     const [rate, setRate] = useState(6.25);
     const [term, setTerm] = useState(30);
 
-
     const monthlyInsurance = (purchase * 0.003) / 12;
     const monthlyTaxes = (purchase * 0.012) / 12;
     const rent = 3800; // placeholder until RentCast is wired
     const expenses = Math.round(monthlyInsurance + monthlyTaxes);
     const arv = Math.round(purchase * 1.08);
 
-    const loanAmount = Math.max(0, (purchase + rehab + closing) - (purchase * (downPct / 100)));
+    const loanAmount = Math.max(
+      0,
+      purchase + rehab + closing - purchase * (downPct / 100),
+    );
     const debtService = calculateMonthlyPayment(loanAmount, rate, term);
     const dscr = debtService ? (rent - expenses) / debtService : 0;
     const ltv = purchase ? loanAmount / purchase : 0;
-    const ltc = (purchase + rehab + closing) ? loanAmount / (purchase + rehab + closing) : 0;
+    const ltc =
+      purchase + rehab + closing
+        ? loanAmount / (purchase + rehab + closing)
+        : 0;
 
     return (
-      <Card sx={{ 
-        minHeight: 'fit-content', 
-        overflow: 'hidden',
-        transition: 'all 0.2s ease-in-out'
-      }}>
-        <CardContent sx={{ 
-          minHeight: 'fit-content',
-          width: '100%',
-          boxSizing: 'border-box'
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+      <Card
+        sx={{
+          minHeight: "fit-content",
+          overflow: "hidden",
+          transition: "all 0.2s ease-in-out",
+        }}
+      >
+        <CardContent
+          sx={{
+            minHeight: "fit-content",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: "#1a365d" }}>
               Mortgage Calculator
             </Typography>
             <HelpTooltip title="Calculate your monthly mortgage payment and total costs" />
           </Box>
-          
+
           {/* Progress indicator */}
           <CompletionProgress
-            completed={[address, purchase, rehab, closing, downPct, rate, term].filter(Boolean).length}
+            completed={
+              [address, purchase, rehab, closing, downPct, rate, term].filter(
+                Boolean,
+              ).length
+            }
             total={7}
             label="Calculator Completion"
           />
-          
-          <Box sx={{ 
-            display: 'grid', 
-            gap: 2, 
-            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
-            minHeight: 'fit-content',
-            gridAutoRows: 'min-content',
-            alignContent: 'start'
-          }}>
+
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+              minHeight: "fit-content",
+              gridAutoRows: "min-content",
+              alignContent: "start",
+            }}
+          >
             <EnhancedTextFieldWithValidation
               label="Property Address"
-              value={address} 
+              value={address}
               onChange={setAddress}
               required
               hint="Enter the property's full street address"
@@ -328,17 +372,19 @@ const MortgagePage: React.FC = () => {
               multiline
               rows={2}
             />
-            <Box sx={{ 
-              display: 'grid', 
-              gap: 2, 
-              gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
-              minHeight: 'fit-content',
-              gridAutoRows: 'min-content',
-              alignContent: 'start'
-            }}>
+            <Box
+              sx={{
+                display: "grid",
+                gap: 2,
+                gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(3, 1fr)" },
+                minHeight: "fit-content",
+                gridAutoRows: "min-content",
+                alignContent: "start",
+              }}
+            >
               <EnhancedNumberInput
                 label="Purchase Price"
-                value={purchase} 
+                value={purchase}
                 onChange={setPurchase}
                 format="currency"
                 required
@@ -348,7 +394,7 @@ const MortgagePage: React.FC = () => {
               />
               <EnhancedNumberInput
                 label="Rehab Costs"
-                value={rehab} 
+                value={rehab}
                 onChange={setRehab}
                 format="currency"
                 hint="Enter estimated rehabilitation costs"
@@ -357,7 +403,7 @@ const MortgagePage: React.FC = () => {
               />
               <EnhancedNumberInput
                 label="Closing Costs"
-                value={closing} 
+                value={closing}
                 onChange={setClosing}
                 format="currency"
                 hint="Enter estimated closing costs"
@@ -366,7 +412,7 @@ const MortgagePage: React.FC = () => {
               />
               <EnhancedNumberInput
                 label="Down Payment %"
-                value={downPct} 
+                value={downPct}
                 onChange={setDownPct}
                 format="percentage"
                 required
@@ -377,7 +423,7 @@ const MortgagePage: React.FC = () => {
               />
               <EnhancedNumberInput
                 label="Interest Rate %"
-                value={rate} 
+                value={rate}
                 onChange={setRate}
                 format="percentage"
                 required
@@ -388,7 +434,7 @@ const MortgagePage: React.FC = () => {
               />
               <EnhancedNumberInput
                 label="Loan Term (years)"
-                value={term} 
+                value={term}
                 onChange={setTerm}
                 required
                 hint="Enter loan term in years"
@@ -398,78 +444,108 @@ const MortgagePage: React.FC = () => {
               />
             </Box>
 
-            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1, minHeight: 'fit-content' }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Auto data</Typography>
-              <Box sx={{ 
-                display: 'grid', 
-                gap: 1, 
-                gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr' }, 
-                minHeight: 'fit-content',
-                gridAutoRows: 'min-content',
-                alignContent: 'start'
-              }}>
-                <TextField 
-                  fullWidth 
-                  label="Monthly rent" 
-                  type="number" 
+            <Box
+              sx={{
+                p: 2,
+                border: "1px solid #e0e0e0",
+                borderRadius: 1,
+                minHeight: "fit-content",
+              }}
+            >
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Auto data
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 1,
+                  gridTemplateColumns: { xs: "1fr 1fr", md: "1fr 1fr" },
+                  minHeight: "fit-content",
+                  gridAutoRows: "min-content",
+                  alignContent: "start",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Monthly rent"
+                  type="number"
                   value={rent}
-                  sx={{ 
-                    minHeight: '56px',
-                    '& .MuiInputBase-root': {
-                      minHeight: '56px'
-                    }
+                  sx={{
+                    minHeight: "56px",
+                    "& .MuiInputBase-root": {
+                      minHeight: "56px",
+                    },
                   }}
                 />
-                <TextField 
-                  fullWidth 
-                  label="Monthly expenses" 
-                  type="number" 
+                <TextField
+                  fullWidth
+                  label="Monthly expenses"
+                  type="number"
                   value={expenses}
-                  sx={{ 
-                    minHeight: '56px',
-                    '& .MuiInputBase-root': {
-                      minHeight: '56px'
-                    }
+                  sx={{
+                    minHeight: "56px",
+                    "& .MuiInputBase-root": {
+                      minHeight: "56px",
+                    },
                   }}
                 />
-                <Box sx={{ gridColumn: '1 / -1' }}>
-                  <TextField 
-                    fullWidth 
-                    label="ARV (from comps)" 
-                    type="number" 
+                <Box sx={{ gridColumn: "1 / -1" }}>
+                  <TextField
+                    fullWidth
+                    label="ARV (from comps)"
+                    type="number"
                     value={arv}
-                    sx={{ 
-                      minHeight: '56px',
-                      '& .MuiInputBase-root': {
-                        minHeight: '56px'
-                      }
+                    sx={{
+                      minHeight: "56px",
+                      "& .MuiInputBase-root": {
+                        minHeight: "56px",
+                      },
                     }}
                   />
                 </Box>
               </Box>
             </Box>
 
-            <Box sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1, minHeight: 'fit-content' }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Results</Typography>
-              
-              <LoadingOverlayComponent loading={isCalculating} message="Calculating mortgage...">
-                <Box sx={{ 
-                  display: 'grid', 
-                  gap: 1, 
-                  gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, 
-                  minHeight: 'fit-content',
-                  gridAutoRows: 'min-content',
-                  alignContent: 'start'
-                }}>
+            <Box
+              sx={{
+                p: 2,
+                border: "1px solid #e0e0e0",
+                borderRadius: 1,
+                minHeight: "fit-content",
+              }}
+            >
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Results
+              </Typography>
+
+              <LoadingOverlayComponent
+                loading={isCalculating}
+                message="Calculating mortgage..."
+              >
+                <Box
+                  sx={{
+                    display: "grid",
+                    gap: 1,
+                    gridTemplateColumns: {
+                      xs: "1fr 1fr",
+                      md: "repeat(3, 1fr)",
+                    },
+                    minHeight: "fit-content",
+                    gridAutoRows: "min-content",
+                    alignContent: "start",
+                  }}
+                >
                   <Typography>Loan: ${loanAmount.toLocaleString()}</Typography>
-                  <Typography>Debt svc: ${Math.round(debtService).toLocaleString()}/mo</Typography>
+                  <Typography>
+                    Debt svc: ${Math.round(debtService).toLocaleString()}/mo
+                  </Typography>
                   <Typography>DSCR: {dscr.toFixed(2)}</Typography>
-                  <Typography>LTV: {(ltv*100).toFixed(1)}%</Typography>
-                  <Typography>LTC: {(ltc*100).toFixed(1)}%</Typography>
+                  <Typography>LTV: {(ltv * 100).toFixed(1)}%</Typography>
+                  <Typography>LTC: {(ltc * 100).toFixed(1)}%</Typography>
                 </Box>
               </LoadingOverlayComponent>
-              
-              <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+
+              <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -483,20 +559,20 @@ const MortgagePage: React.FC = () => {
                   }}
                   disabled={isCalculating}
                   startIcon={<CalculateIcon />}
-                  sx={{ 
-                    backgroundColor: '#1a365d',
-                    textTransform: 'none',
-                    fontWeight: 600
+                  sx={{
+                    backgroundColor: "#1a365d",
+                    textTransform: "none",
+                    fontWeight: 600,
                   }}
                 >
-                  {isCalculating ? 'Calculating...' : 'Calculate Payment'}
+                  {isCalculating ? "Calculating..." : "Calculate Payment"}
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   onClick={() => {
                     // Reset form
-                    setAddress('');
+                    setAddress("");
                     setPurchase(0);
                     setRehab(0);
                     setClosing(0);
@@ -504,11 +580,11 @@ const MortgagePage: React.FC = () => {
                     setRate(0);
                     setTerm(0);
                   }}
-                  sx={{ 
-                    borderColor: '#1a365d',
-                    color: '#1a365d',
-                    textTransform: 'none',
-                    fontWeight: 600
+                  sx={{
+                    borderColor: "#1a365d",
+                    color: "#1a365d",
+                    textTransform: "none",
+                    fontWeight: 600,
                   }}
                 >
                   Reset
@@ -522,54 +598,81 @@ const MortgagePage: React.FC = () => {
   };
 
   const LenderComparisonSection: React.FC = () => {
-    const [type, setType] = useState<'dscr'|'fixflip'|'bridge'|'conventional'|'hard'>('dscr');
+    const [type, setType] = useState<
+      "dscr" | "fixflip" | "bridge" | "conventional" | "hard"
+    >("dscr");
     const [maxRate, setMaxRate] = useState<number>(12);
     const [maxPoints, setMaxPoints] = useState<number>(4);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [uploadedRows, setUploadedRows] = useState<LenderRow[] | null>(null);
-    const raw = useCsvPoll<any>(process.env.REACT_APP_AT_LENDERS_CSV, 60000, []);
+    const raw = useCsvPoll<any>(
+      process.env.REACT_APP_AT_LENDERS_CSV,
+      60000,
+      [],
+    );
     const lenders: LenderRow[] = raw.map((r: any) => {
-      const m: Record<string, string> = Object.entries(r).reduce((acc: Record<string,string>, [k, v]) => {
-        const key = k.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-        acc[key] = String(v);
-        return acc;
-      }, {});
-      const get = (key: string) => m[key] ?? '';
+      const m: Record<string, string> = Object.entries(r).reduce(
+        (acc: Record<string, string>, [k, v]) => {
+          const key = k
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "");
+          acc[key] = String(v);
+          return acc;
+        },
+        {},
+      );
+      const get = (key: string) => m[key] ?? "";
       const num = (key: string) => Number(get(key));
       return {
-        name: get('name'),
-        type: (get('type') || '').toLowerCase(),
-        rate: num('rate'),
-        term: num('term'),
-        points: num('points'),
-        dscrReq: m['dscrrequirement'] ? Number(m['dscrrequirement']) : undefined,
-        prepay: get('prepay'),
-        applyUrl: m['applyurl'] || get('applyurl')
+        name: get("name"),
+        type: (get("type") || "").toLowerCase(),
+        rate: num("rate"),
+        term: num("term"),
+        points: num("points"),
+        dscrReq: m["dscrrequirement"]
+          ? Number(m["dscrrequirement"])
+          : undefined,
+        prepay: get("prepay"),
+        applyUrl: m["applyurl"] || get("applyurl"),
       };
     });
     const source = uploadedRows ?? lenders;
-    const filtered = source.filter(l => (!type || l.type === type) && (isNaN(maxRate) || l.rate <= maxRate) && (isNaN(maxPoints) || l.points <= maxPoints));
+    const filtered = source.filter(
+      (l) =>
+        (!type || l.type === type) &&
+        (isNaN(maxRate) || l.rate <= maxRate) &&
+        (isNaN(maxPoints) || l.points <= maxPoints),
+    );
 
     const handleUploadCsv = (text: string) => {
       try {
         const rows = parseCsv(text);
         const mapped: LenderRow[] = rows.map((r: any) => {
-          const m: Record<string, string> = Object.entries(r).reduce((acc: Record<string,string>, [k, v]) => {
-            const key = String(k).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-            acc[key] = String(v);
-            return acc;
-          }, {});
-          const get = (key: string) => m[key] ?? '';
+          const m: Record<string, string> = Object.entries(r).reduce(
+            (acc: Record<string, string>, [k, v]) => {
+              const key = String(k)
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, "");
+              acc[key] = String(v);
+              return acc;
+            },
+            {},
+          );
+          const get = (key: string) => m[key] ?? "";
           const num = (key: string) => Number(get(key));
           return {
-            name: get('name'),
-            type: (get('type') || '').toLowerCase(),
-            rate: num('rate'),
-            term: num('term'),
-            points: num('points'),
-            dscrReq: m['dscrrequirement'] ? Number(m['dscrrequirement']) : undefined,
-            prepay: get('prepay'),
-            applyUrl: m['applyurl'] || get('applyurl')
+            name: get("name"),
+            type: (get("type") || "").toLowerCase(),
+            rate: num("rate"),
+            term: num("term"),
+            points: num("points"),
+            dscrReq: m["dscrrequirement"]
+              ? Number(m["dscrrequirement"])
+              : undefined,
+            prepay: get("prepay"),
+            applyUrl: m["applyurl"] || get("applyurl"),
           };
         });
         setUploadedRows(mapped);
@@ -581,34 +684,73 @@ const MortgagePage: React.FC = () => {
       if (!file) return;
       const text = await file.text();
       handleUploadCsv(text);
-      e.target.value = '';
+      e.target.value = "";
     };
 
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Compare Other Lenders</Typography>
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, mb: 2 }}>
-            <Select fullWidth value={type} onChange={(e)=>setType(e.target.value as any)}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+          >
+            Compare Other Lenders
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+              mb: 2,
+            }}
+          >
+            <Select
+              fullWidth
+              value={type}
+              onChange={(e) => setType(e.target.value as any)}
+            >
               <MenuItem value="dscr">DSCR</MenuItem>
               <MenuItem value="fixflip">Fix & Flip</MenuItem>
               <MenuItem value="bridge">Bridge</MenuItem>
               <MenuItem value="conventional">Conventional</MenuItem>
               <MenuItem value="hard">Hard Money</MenuItem>
             </Select>
-            <TextField fullWidth label="Max rate %" type="number" value={maxRate} onChange={(e)=>setMaxRate(Number(e.target.value))} />
-            <TextField fullWidth label="Max points" type="number" value={maxPoints} onChange={(e)=>setMaxPoints(Number(e.target.value))} />
+            <TextField
+              fullWidth
+              label="Max rate %"
+              type="number"
+              value={maxRate}
+              onChange={(e) => setMaxRate(Number(e.target.value))}
+            />
+            <TextField
+              fullWidth
+              label="Max points"
+              type="number"
+              value={maxPoints}
+              onChange={(e) => setMaxPoints(Number(e.target.value))}
+            />
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-            <Button variant="outlined" onClick={() => fileInputRef.current?.click()} sx={{ borderColor: '#1a365d', color: '#1a365d' }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+            <Button
+              variant="outlined"
+              onClick={() => fileInputRef.current?.click()}
+              sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+            >
               Upload lenders CSV
             </Button>
             {uploadedRows && (
-              <Typography variant="caption" sx={{ color: '#666' }}>
-                Loaded {uploadedRows.length} rows from CSV (overrides live feed until refresh)
+              <Typography variant="caption" sx={{ color: "#666" }}>
+                Loaded {uploadedRows.length} rows from CSV (overrides live feed
+                until refresh)
               </Typography>
             )}
-            <input ref={fileInputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={onChooseFile} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              style={{ display: "none" }}
+              onChange={onChooseFile}
+            />
           </Box>
           <Table size="small">
             <TableHead>
@@ -627,13 +769,30 @@ const MortgagePage: React.FC = () => {
               {filtered.map((l, i) => (
                 <TableRow key={i}>
                   <TableCell>{l.name}</TableCell>
-                  <TableCell sx={{ textTransform: 'uppercase' }}>{l.type}</TableCell>
-                  <TableCell>{isNaN(l.rate) ? '-' : `${l.rate.toFixed(2)}%`}</TableCell>
-                  <TableCell>{isNaN(l.term) ? '-' : `${l.term} mo`}</TableCell>
-                  <TableCell>{isNaN(l.points) ? '-' : l.points.toFixed(2)}</TableCell>
-                  <TableCell>{l.dscrReq ? l.dscrReq.toFixed(2) : '-'}</TableCell>
-                  <TableCell>{l.prepay || '-'}</TableCell>
-                  <TableCell align="right"><Button size="small" variant="outlined" sx={{ borderColor: '#1a365d', color: '#1a365d' }} href={l.applyUrl || '#'}>Apply</Button></TableCell>
+                  <TableCell sx={{ textTransform: "uppercase" }}>
+                    {l.type}
+                  </TableCell>
+                  <TableCell>
+                    {isNaN(l.rate) ? "-" : `${l.rate.toFixed(2)}%`}
+                  </TableCell>
+                  <TableCell>{isNaN(l.term) ? "-" : `${l.term} mo`}</TableCell>
+                  <TableCell>
+                    {isNaN(l.points) ? "-" : l.points.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    {l.dscrReq ? l.dscrReq.toFixed(2) : "-"}
+                  </TableCell>
+                  <TableCell>{l.prepay || "-"}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+                      href={l.applyUrl || "#"}
+                    >
+                      Apply
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -646,39 +805,98 @@ const MortgagePage: React.FC = () => {
   const PreApprovalSection: React.FC = () => {
     const [step, setStep] = useState(0);
     const [soft, setSoft] = useState(true);
-    const [form, setForm] = useState({ name: '', email: '', address: '', income: '', credit: '' });
-    const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+    const [form, setForm] = useState({
+      name: "",
+      email: "",
+      address: "",
+      income: "",
+      credit: "",
+    });
+    const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>Apply for Pre-Approval with our Partners</Typography>
-          <LinearProgress variant="determinate" value={(step+1)*33.33} sx={{ mb: 2, height: 8, borderRadius: 1 }} />
-          {step===0 && (
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-              <TextField fullWidth label="Full name" value={form.name} onChange={e=>set('name', e.target.value)} />
-              <TextField fullWidth label="Email" value={form.email} onChange={e=>set('email', e.target.value)} />
-              <Box sx={{ gridColumn: '1 / -1' }}>
-                <FormControlLabel control={<Switch checked={soft} onChange={e=>setSoft(e.target.checked)} />} label="Soft credit check" />
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+          >
+            Apply for Pre-Approval with our Partners
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(step + 1) * 33.33}
+            sx={{ mb: 2, height: 8, borderRadius: 1 }}
+          />
+          {step === 0 && (
+            <Box
+              sx={{
+                display: "grid",
+                gap: 2,
+                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              }}
+            >
+              <TextField
+                fullWidth
+                label="Full name"
+                value={form.name}
+                onChange={(e) => set("name", e.target.value)}
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                value={form.email}
+                onChange={(e) => set("email", e.target.value)}
+              />
+              <Box sx={{ gridColumn: "1 / -1" }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={soft}
+                      onChange={(e) => setSoft(e.target.checked)}
+                    />
+                  }
+                  label="Soft credit check"
+                />
               </Box>
             </Box>
           )}
-          {step===1 && (
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-              <Box sx={{ gridColumn: '1 / -1' }}>
-                <TextField fullWidth label="Property address" value={form.address} onChange={e=>set('address', e.target.value)} />
+          {step === 1 && (
+            <Box
+              sx={{
+                display: "grid",
+                gap: 2,
+                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              }}
+            >
+              <Box sx={{ gridColumn: "1 / -1" }}>
+                <TextField
+                  fullWidth
+                  label="Property address"
+                  value={form.address}
+                  onChange={(e) => set("address", e.target.value)}
+                />
               </Box>
-              <TextField fullWidth label="Annual income ($)" value={form.income} onChange={e=>set('income', e.target.value)} />
-              <Select fullWidth value={form.credit} onChange={e=>set('credit', String(e.target.value))}>
+              <TextField
+                fullWidth
+                label="Annual income ($)"
+                value={form.income}
+                onChange={(e) => set("income", e.target.value)}
+              />
+              <Select
+                fullWidth
+                value={form.credit}
+                onChange={(e) => set("credit", String(e.target.value))}
+              >
                 <MenuItem value="740+">740+</MenuItem>
                 <MenuItem value="670-739">670-739</MenuItem>
                 <MenuItem value="580-669">580-669</MenuItem>
-                <MenuItem value="<580">{'<'}580</MenuItem>
+                <MenuItem value="<580">{"<"}580</MenuItem>
               </Select>
             </Box>
           )}
-          {step===2 && (
+          {step === 2 && (
             <Box>
-              <Typography sx={{ mb: 1, color: '#666' }}>Next Steps</Typography>
+              <Typography sx={{ mb: 1, color: "#666" }}>Next Steps</Typography>
               <ul style={{ margin: 0, paddingLeft: 16 }}>
                 <li>Upload income docs</li>
                 <li>Verify identity</li>
@@ -686,9 +904,29 @@ const MortgagePage: React.FC = () => {
               </ul>
             </Box>
           )}
-          <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-            {step>0 && <Button variant="outlined" onClick={()=>setStep(s=>s-1)} sx={{ borderColor: '#1a365d', color: '#1a365d' }}>Back</Button>}
-            {step<2 ? <Button variant="contained" onClick={()=>setStep(s=>s+1)} sx={{ backgroundColor: '#1a365d' }}>Next</Button> : <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>Submit</Button>}
+          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+            {step > 0 && (
+              <Button
+                variant="outlined"
+                onClick={() => setStep((s) => s - 1)}
+                sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+              >
+                Back
+              </Button>
+            )}
+            {step < 2 ? (
+              <Button
+                variant="contained"
+                onClick={() => setStep((s) => s + 1)}
+                sx={{ backgroundColor: "#1a365d" }}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button variant="contained" sx={{ backgroundColor: "#1a365d" }}>
+                Submit
+              </Button>
+            )}
           </Box>
         </CardContent>
       </Card>
@@ -696,7 +934,9 @@ const MortgagePage: React.FC = () => {
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.ceil(learningArticles.length / 3));
+    setCurrentSlide(
+      (prev) => (prev + 1) % Math.ceil(learningArticles.length / 3),
+    );
   };
 
   const handlePrevSlide = () => {
@@ -723,22 +963,22 @@ const MortgagePage: React.FC = () => {
   const handleCloseDreamAbilityModal = () => {
     setShowDreamAbilityModal(false);
     setDreamAbilityForm({
-      location: '',
-      annualIncome: '',
-      downPayment: '',
-      creditScore: '',
-      monthlyDebt: ''
+      location: "",
+      annualIncome: "",
+      downPayment: "",
+      creditScore: "",
+      monthlyDebt: "",
     });
   };
 
   const handleCloseDreamAbilityResults = () => {
     setShowDreamAbilityResults(false);
     setDreamAbilityForm({
-      location: '',
-      annualIncome: '',
-      downPayment: '',
-      creditScore: '',
-      monthlyDebt: ''
+      location: "",
+      annualIncome: "",
+      downPayment: "",
+      creditScore: "",
+      monthlyDebt: "",
     });
   };
 
@@ -783,9 +1023,9 @@ const MortgagePage: React.FC = () => {
   };
 
   const handleDreamAbilityFormChange = (field: string, value: string) => {
-    setDreamAbilityForm(prev => ({
+    setDreamAbilityForm((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -807,18 +1047,18 @@ const MortgagePage: React.FC = () => {
       pointsCost: calculatePointsCost(1.844),
       monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 6.375, 30),
       features: ["3% min down payment", "Lower payments due to longer term"],
-      color: "#4caf50"
+      color: "#4caf50",
     },
     {
       title: "30-Year FHA",
       tag: "Lower credit profiles",
-      rate: 6.000,
-      apr: calculateAPR(6.000, 1.607, 30, LOAN_AMOUNT),
+      rate: 6.0,
+      apr: calculateAPR(6.0, 1.607, 30, LOAN_AMOUNT),
       points: 1.607,
       pointsCost: calculatePointsCost(1.607),
-      monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 6.000, 30),
+      monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 6.0, 30),
       features: ["3.5% min down payment", "Looser credit/debt requirements"],
-      color: "#4caf50"
+      color: "#4caf50",
     },
     {
       title: "30-Year VA",
@@ -829,7 +1069,7 @@ const MortgagePage: React.FC = () => {
       pointsCost: calculatePointsCost(1.816),
       monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 6.125, 30),
       features: ["0% down payment", "No private mortgage insurance"],
-      color: "#4caf50"
+      color: "#4caf50",
     },
     {
       title: "20-Year Fixed",
@@ -840,123 +1080,145 @@ const MortgagePage: React.FC = () => {
       pointsCost: calculatePointsCost(1.696),
       monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 6.125, 20),
       features: ["5% min down payment"],
-      color: "#4caf50"
+      color: "#4caf50",
     },
     {
       title: "15-Year Fixed",
       tag: "Faster payoff",
-      rate: 5.500,
-      apr: calculateAPR(5.500, 1.792, 15, LOAN_AMOUNT),
+      rate: 5.5,
+      apr: calculateAPR(5.5, 1.792, 15, LOAN_AMOUNT),
       points: 1.792,
       pointsCost: calculatePointsCost(1.792),
-      monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 5.500, 15),
-      features: ["5% min down payment", "Pay less interest due to shorter term"],
-      color: "#4caf50"
-    }
+      monthlyPayment: calculateMonthlyPayment(LOAN_AMOUNT, 5.5, 15),
+      features: [
+        "5% min down payment",
+        "Pay less interest due to shorter term",
+      ],
+      color: "#4caf50",
+    },
   ];
 
   const processSteps = [
     {
       step: "1",
       title: "Calculate your DreamAbility™",
-      description: "Get a real-time estimate of what you can afford with Zillow Home Loans.",
-      icon: <CalculateIcon />
+      description:
+        "Get a real-time estimate of what you can afford with Zillow Home Loans.",
+      icon: <CalculateIcon />,
     },
     {
       step: "2",
       title: "Get pre-approved",
-      description: "Make strong offers on homes with a Verified Pre-approval letter from us.",
-      icon: <DescriptionIcon />
+      description:
+        "Make strong offers on homes with a Verified Pre-approval letter from us.",
+      icon: <DescriptionIcon />,
     },
     {
       step: "3",
       title: "Make an offer",
-      description: "Confirm that a home fits your budget with us and determine a fair offer price.",
-      icon: <FlagIcon />
+      description:
+        "Confirm that a home fits your budget with us and determine a fair offer price.",
+      icon: <FlagIcon />,
     },
     {
       step: "4",
       title: "Apply for a mortgage",
-      description: "After your offer is accepted, you'll complete your full loan application.",
-      icon: <MoneyIcon />
+      description:
+        "After your offer is accepted, you'll complete your full loan application.",
+      icon: <MoneyIcon />,
     },
     {
       step: "5",
       title: "Close on your home",
-      description: "Congrats, homeowner! Sign the closing paperwork and we'll finalize the sale.",
-      icon: <HomeIcon />
-    }
+      description:
+        "Congrats, homeowner! Sign the closing paperwork and we'll finalize the sale.",
+      icon: <HomeIcon />,
+    },
   ];
-
-
 
   const learningArticles = [
     {
       title: "Pre-qualified vs. pre-approved: What's the difference?",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "How your credit score is calculated",
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "How are mortgage rates determined?",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Understanding closing costs",
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "First-time homebuyer guide",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Down payment assistance programs",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Mortgage insurance explained",
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Refinancing your mortgage",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Home inspection checklist",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
-      link: "#"
+      image:
+        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+      link: "#",
     },
     {
       title: "Property tax considerations",
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-      link: "#"
-    }
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+      link: "#",
+    },
   ];
 
   return (
     <PageContainer>
       {/* Header */}
       <HeaderSection>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="h6" sx={{ color: '#1a365d', fontWeight: 600 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               onClick={handleBack}
-              sx={{ color: '#666666', textTransform: 'none' }}
+              sx={{ color: "#666666", textTransform: "none" }}
             >
               Back to Home
             </Button>
@@ -968,78 +1230,135 @@ const MortgagePage: React.FC = () => {
       <SplitSection>
         <SplitWrap>
           <LeftCol>
-            <Typography variant="h2" sx={{ fontWeight: 800, mb: 2, color: '#1a365d' }}>
+            <Typography
+              variant="h2"
+              sx={{ fontWeight: 800, mb: 2, color: "#1a365d" }}
+            >
               Get a mortgage from Dreamery Home Loans
             </Typography>
-            <Typography variant="h6" sx={{ mb: 3, color: '#666' }}>
-              Competitive rates, clear fees, and guidance at every step. Get your DreamAbility™ to see what you can afford in real time.
+            <Typography variant="h6" sx={{ mb: 3, color: "#666" }}>
+              Competitive rates, clear fees, and guidance at every step. Get
+              your DreamAbility™ to see what you can afford in real time.
             </Typography>
             <Typography variant="body1" sx={{ mt: 2 }}>
-              Already working with us? <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>Access your dashboard</Link>
+              Already working with us?{" "}
+              <Link href="#" sx={{ color: "#1a365d", textDecoration: "none" }}>
+                Access your dashboard
+              </Link>
             </Typography>
           </LeftCol>
           <RightCol>
             <BuyAbilityCard>
               <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#1a365d', fontWeight: 700 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    mb: 2,
+                    textAlign: "center",
+                    color: "#1a365d",
+                    fontWeight: 700,
+                  }}
+                >
                   Your DreamAbility™ today
                 </Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2 }}>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
+                  <Box sx={{ textAlign: "center" }}>
+                    <Typography
+                      variant="h5"
+                      sx={{ fontWeight: 700, color: "#1a365d" }}
+                    >
                       ${LOAN_AMOUNT.toLocaleString()}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
                       Target price
                     </Typography>
                   </Box>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+                  <Box sx={{ textAlign: "center" }}>
+                    <Typography
+                      variant="h5"
+                      sx={{ fontWeight: 700, color: "#1a365d" }}
+                    >
                       ${LOAN_AMOUNT.toLocaleString()}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
                       DreamAbility™
                     </Typography>
                   </Box>
                 </Box>
-                <Box sx={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  columnGap: 4,
-                  alignItems: 'center',
-                  mt: 2,
-                  width: '100%'
-                }}>
-                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
-                      ${Math.round(mortgageOptions[0].monthlyPayment).toLocaleString()}
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    columnGap: 4,
+                    alignItems: "center",
+                    mt: 2,
+                    width: "100%",
+                  }}
+                >
+                  <Box sx={{ textAlign: "center", flex: 1, minWidth: 0 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 700, color: "#1a365d", mb: 0.5 }}
+                    >
+                      $
+                      {Math.round(
+                        mortgageOptions[0].monthlyPayment,
+                      ).toLocaleString()}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#666", fontSize: "0.75rem" }}
+                    >
                       Mo. payment
                     </Typography>
                   </Box>
-                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                  <Box sx={{ textAlign: "center", flex: 1, minWidth: 0 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 700, color: "#1a365d", mb: 0.5 }}
+                    >
                       {mortgageOptions[0].rate.toFixed(3)}%
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#666", fontSize: "0.75rem" }}
+                    >
                       Rate
                     </Typography>
                   </Box>
-                  <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 0.5 }}>
+                  <Box sx={{ textAlign: "center", flex: 1, minWidth: 0 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 700, color: "#1a365d", mb: 0.5 }}
+                    >
                       {mortgageOptions[0].apr.toFixed(3)}%
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#666", fontSize: "0.75rem" }}
+                    >
                       APR
                     </Typography>
                   </Box>
                 </Box>
-                <Button 
-                  fullWidth 
-                  variant="contained" 
+                <Button
+                  fullWidth
+                  variant="contained"
                   onClick={handleOpenDreamAbilityModal}
-                  sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600, mt: 3 }}
+                  sx={{
+                    backgroundColor: "#1a365d",
+                    color: "white",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    mt: 3,
+                  }}
                 >
                   Get your DreamAbility
                 </Button>
@@ -1051,65 +1370,138 @@ const MortgagePage: React.FC = () => {
 
       {/* Rates first, then Why Choose Us */}
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 700, mb: 2 }}>
+        <Typography
+          variant="h3"
+          sx={{ textAlign: "center", fontWeight: 700, mb: 2 }}
+        >
           Find the right mortgage with Dreamery Home Loans
         </Typography>
-        <Typography variant="body1" sx={{ textAlign: 'center', color: '#666', mb: 4 }}>
+        <Typography
+          variant="body1"
+          sx={{ textAlign: "center", color: "#666", mb: 4 }}
+        >
           Explore programs and compare rates. Get pre-approved with confidence.
         </Typography>
-        <Box sx={{ 
-          display: 'grid', 
-          gap: 4, 
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: 'repeat(3,1fr)' },
-          gridTemplateRows: { lg: 'auto auto' }
-        }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 4,
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "1fr 1fr",
+              lg: "repeat(3,1fr)",
+            },
+            gridTemplateRows: { lg: "auto auto" },
+          }}
+        >
           {mortgageOptions.map((option, index) => (
-            <Box key={index} sx={{
-              gridColumn: { lg: index < 3 ? `${index + 1}` : index === 3 ? '1' : '2' },
-              gridRow: { lg: index < 3 ? '1' : '2' }
-            }}>
+            <Box
+              key={index}
+              sx={{
+                gridColumn: {
+                  lg: index < 3 ? `${index + 1}` : index === 3 ? "1" : "2",
+                },
+                gridRow: { lg: index < 3 ? "1" : "2" },
+              }}
+            >
               <MortgageOptionCard>
                 <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      mb: 2,
+                    }}
+                  >
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       {option.title}
                     </Typography>
-                    <Chip label={option.tag} size="small" sx={{ backgroundColor: option.color, color: 'white', fontWeight: 600 }} />
+                    <Chip
+                      label={option.tag}
+                      size="small"
+                      sx={{
+                        backgroundColor: option.color,
+                        color: "white",
+                        fontWeight: 600,
+                      }}
+                    />
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 3, mb: 2, alignItems: 'baseline' }}>
-                    <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d' }}>{option.rate.toFixed(3)}%</Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>Rate</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 3,
+                      mb: 2,
+                      alignItems: "baseline",
+                    }}
+                  >
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 700, color: "#1a365d" }}
+                    >
+                      {option.rate.toFixed(3)}%
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
+                      Rate
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 3, mb: 2, alignItems: 'baseline' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a365d' }}>{option.apr.toFixed(3)}%</Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>APR</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 3,
+                      mb: 2,
+                      alignItems: "baseline",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      sx={{ fontWeight: 600, color: "#1a365d" }}
+                    >
+                      {option.apr.toFixed(3)}%
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
+                      APR
+                    </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-                    Points (cost) {option.points.toFixed(3)} (${option.pointsCost.toLocaleString()})
+                  <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                    Points (cost) {option.points.toFixed(3)} ($
+                    {option.pointsCost.toLocaleString()})
                   </Typography>
                   <Box sx={{ mb: 2 }}>
                     {option.features.map((feature, idx) => (
-                      <Typography key={idx} variant="body2" sx={{ color: '#666' }}>- {feature}</Typography>
+                      <Typography
+                        key={idx}
+                        variant="body2"
+                        sx={{ color: "#666" }}
+                      >
+                        - {feature}
+                      </Typography>
                     ))}
                   </Box>
-                  <Button 
-                    fullWidth 
-                    variant="outlined" 
+                  <Button
+                    fullWidth
+                    variant="outlined"
                     onClick={handleNavigateToPreApproval}
-                    sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600, mb: 1 }}
+                    sx={{
+                      borderColor: "#1a365d",
+                      color: "#1a365d",
+                      textTransform: "none",
+                      fontWeight: 600,
+                      mb: 1,
+                    }}
                   >
                     Get pre-approved
                   </Button>
-                  <Link 
+                  <Link
                     onClick={() => handleShowLoanTerms(option)}
-                    sx={{ 
-                      color: '#1a365d', 
-                      textDecoration: 'none', 
-                      fontSize: '0.875rem',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        textDecoration: 'underline'
-                      }
+                    sx={{
+                      color: "#1a365d",
+                      textDecoration: "none",
+                      fontSize: "0.875rem",
+                      cursor: "pointer",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
                     }}
                   >
                     See sample loan terms
@@ -1119,23 +1511,25 @@ const MortgagePage: React.FC = () => {
             </Box>
           ))}
           {/* Talk to a loan officer button positioned below 30-Year VA and to the right of 15-Year Fixed */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            gridColumn: { lg: '3' },
-            gridRow: { lg: '2' }
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gridColumn: { lg: "3" },
+              gridRow: { lg: "2" },
+            }}
+          >
             <Button
               variant="outlined"
-              sx={{ 
-                borderColor: '#1a365d', 
-                color: '#1a365d', 
-                textTransform: 'none', 
+              sx={{
+                borderColor: "#1a365d",
+                color: "#1a365d",
+                textTransform: "none",
                 fontWeight: 600,
                 py: 2,
                 px: 4,
-                fontSize: '1.1rem'
+                fontSize: "1.1rem",
               }}
             >
               Talk to a loan officer
@@ -1148,23 +1542,45 @@ const MortgagePage: React.FC = () => {
 
       {/* Vertical Timeline */}
 
-
       {/* Personalized CTA */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Box sx={{ display: 'grid', gap: 6, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 6,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            alignItems: "center",
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
               Get a personalized rate in minutes
             </Typography>
-            <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
-              Mortgage rates aren't one size fits all. We'll estimate based on your unique details.
+            <Typography variant="body1" sx={{ color: "#666", mb: 3 }}>
+              Mortgage rates aren't one size fits all. We'll estimate based on
+              your unique details.
             </Typography>
-            <Button variant="contained" sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#1a365d",
+                color: "white",
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
               Get your personalized rate
             </Button>
           </Box>
           <Box>
-            <Box sx={{ width: '100%', height: 260, borderRadius: 2, backgroundColor: '#f5f5f5' }} />
+            <Box
+              sx={{
+                width: "100%",
+                height: 260,
+                borderRadius: 2,
+                backgroundColor: "#f5f5f5",
+              }}
+            />
           </Box>
         </Box>
       </Container>
@@ -1180,110 +1596,138 @@ const MortgagePage: React.FC = () => {
       </Container>
 
       {/* Learning Center Carousel */}
-      <Box sx={{ backgroundColor: 'white', color: '#1a365d', py: 6 }}>
+      <Box sx={{ backgroundColor: "white", color: "#1a365d", py: 6 }}>
         <Container maxWidth="lg">
-          <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 700, mb: 4 }}>
+          <Typography
+            variant="h3"
+            sx={{ textAlign: "center", fontWeight: 700, mb: 4 }}
+          >
             Learn more about home financing
           </Typography>
-          
-          <Box sx={{ position: 'relative', mb: 4 }}>
+
+          <Box sx={{ position: "relative", mb: 4 }}>
             {/* Viewport strictly clamps the visible area to exactly 3 cards */}
-            <Box sx={{
-              width: `${SLIDE_WIDTH_PX}px`,
-              mx: 'auto',
-              overflow: 'hidden',
-              padding: '8px' // Increased padding to prevent border cutoff
-            }}>
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 2, 
-                width: 'max-content',
-                scrollBehavior: 'smooth',
-                transform: `translateX(-${currentSlide * SLIDE_WIDTH_PX}px)`,
-                transition: 'transform 0.3s ease-in-out'
-              }}>
-              {learningArticles.map((article, index) => (
-                <Box key={index} sx={{ margin: '4px' }}>
-                  <LearningCard>
-                    <Box sx={{ 
-                      height: 160, 
-                      backgroundColor: '#f5f5f5',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <Typography variant="h6" sx={{ color: '#666' }}>
-                        [Article Image]
-                      </Typography>
-                    </Box>
-                    <CardContent sx={{ p: 2 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '0.9rem' }}>
-                        {article.title}
-                      </Typography>
-                      <Link href={article.link} sx={{ color: '#1a365d', textDecoration: 'none', fontSize: '0.875rem' }}>
-                        Read article
-                      </Link>
-                    </CardContent>
-                  </LearningCard>
-                </Box>
-              ))}
+            <Box
+              sx={{
+                width: `${SLIDE_WIDTH_PX}px`,
+                mx: "auto",
+                overflow: "hidden",
+                padding: "8px", // Increased padding to prevent border cutoff
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  width: "max-content",
+                  scrollBehavior: "smooth",
+                  transform: `translateX(-${currentSlide * SLIDE_WIDTH_PX}px)`,
+                  transition: "transform 0.3s ease-in-out",
+                }}
+              >
+                {learningArticles.map((article, index) => (
+                  <Box key={index} sx={{ margin: "4px" }}>
+                    <LearningCard>
+                      <Box
+                        sx={{
+                          height: 160,
+                          backgroundColor: "#f5f5f5",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ color: "#666" }}>
+                          [Article Image]
+                        </Typography>
+                      </Box>
+                      <CardContent sx={{ p: 2 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600, mb: 1, fontSize: "0.9rem" }}
+                        >
+                          {article.title}
+                        </Typography>
+                        <Link
+                          href={article.link}
+                          sx={{
+                            color: "#1a365d",
+                            textDecoration: "none",
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          Read article
+                        </Link>
+                      </CardContent>
+                    </LearningCard>
+                  </Box>
+                ))}
               </Box>
             </Box>
-            
+
             {/* Carousel Navigation */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 3 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 1, mt: 3 }}
+            >
               <Button
                 onClick={handlePrevSlide}
-                sx={{ 
-                  minWidth: 40, 
-                  height: 40, 
-                  borderRadius: '50%',
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                sx={{
+                  minWidth: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 ‹
               </Button>
-              <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-                {Array.from({ length: Math.ceil(learningArticles.length / 3) }, (_, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: '50%',
-                      backgroundColor: i === currentSlide ? '#1a365d' : '#e0e0e0',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => setCurrentSlide(i)}
-                  />
-                ))}
+              <Box sx={{ display: "flex", gap: 0.5, alignItems: "center" }}>
+                {Array.from(
+                  { length: Math.ceil(learningArticles.length / 3) },
+                  (_, i) => (
+                    <Box
+                      key={i}
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        backgroundColor:
+                          i === currentSlide ? "#1a365d" : "#e0e0e0",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setCurrentSlide(i)}
+                    />
+                  ),
+                )}
               </Box>
               <Button
                 onClick={handleNextSlide}
-                sx={{ 
-                  minWidth: 40, 
-                  height: 40, 
-                  borderRadius: '50%',
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                sx={{
+                  minWidth: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 ›
               </Button>
             </Box>
           </Box>
-          
-          <Box sx={{ textAlign: 'center', mt: 4 }}>
+
+          <Box sx={{ textAlign: "center", mt: 4 }}>
             <Typography variant="body1" sx={{ mb: 2 }}>
-              Looking for additional resources? 
-              <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none', ml: 1 }}>
+              Looking for additional resources?
+              <Link
+                href="#"
+                sx={{ color: "#1a365d", textDecoration: "none", ml: 1 }}
+              >
                 Visit our Learning Center
               </Link>
             </Typography>
@@ -1292,62 +1736,85 @@ const MortgagePage: React.FC = () => {
       </Box>
 
       {/* Footer */}
-      <Box sx={{ backgroundColor: '#f5f5f5', py: 3, minHeight: '160px' }}>
+      <Box sx={{ backgroundColor: "#f5f5f5", py: 3, minHeight: "160px" }}>
         <Container maxWidth="lg">
-          <Box sx={{ display: 'grid', gap: 4, gridTemplateColumns: { xs: '1fr', md: 'repeat(3,1fr)' } }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 4,
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
+            }}
+          >
             <Box>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                <Link
+                  href="#"
+                  sx={{ color: "#1a365d", textDecoration: "none" }}
+                >
                   Terms of use
                 </Link>
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none' }}>
+              <Typography variant="body2" sx={{ color: "#666" }}>
+                <Link
+                  href="#"
+                  sx={{ color: "#1a365d", textDecoration: "none" }}
+                >
                   Privacy policy
                 </Link>
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 Dreamery Home Loans
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 1500 Dreamery Boulevard, Suite 500
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 Austin, TX 78701
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
+              <Typography variant="body2" sx={{ color: "#666" }}>
                 855-372-6337
               </Typography>
             </Box>
             <Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <HomeIcon sx={{ mr: 1, color: '#1a365d' }} />
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <HomeIcon sx={{ mr: 1, color: "#1a365d" }} />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   EQUAL HOUSING LENDER
                 </Typography>
               </Box>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 © Dreamery Home Loans, LLC
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 An Equal Housing Lender
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
                 NMLS ID#: 10287
               </Typography>
-              <Link href="#" sx={{ color: '#1a365d', textDecoration: 'none', fontSize: '0.875rem' }}>
+              <Link
+                href="#"
+                sx={{
+                  color: "#1a365d",
+                  textDecoration: "none",
+                  fontSize: "0.875rem",
+                }}
+              >
                 www.nmlsconsumeraccess.org
               </Link>
             </Box>
           </Box>
-          
+
           <Divider sx={{ my: 3 }} />
-          
-          <Typography variant="body2" sx={{ color: '#666', textAlign: 'center' }}>
-            Dreamery Group is committed to ensuring digital accessibility for individuals with disabilities. 
-            We are continuously working to improve the accessibility of our website and digital services.
+
+          <Typography
+            variant="body2"
+            sx={{ color: "#666", textAlign: "center" }}
+          >
+            Dreamery Group is committed to ensuring digital accessibility for
+            individuals with disabilities. We are continuously working to
+            improve the accessibility of our website and digital services.
           </Typography>
         </Container>
       </Box>
@@ -1357,79 +1824,128 @@ const MortgagePage: React.FC = () => {
       {showModal && selectedLoan && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1300,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseModal}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 4,
               maxWidth: 600,
-              width: '100%',
-              maxHeight: '90vh',
-              overflow: 'auto'
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 700, color: "#1a365d" }}
+              >
                 Sample loan terms
               </Typography>
-              <IconButton onClick={handleCloseModal} sx={{ color: '#666' }}>
+              <IconButton onClick={handleCloseModal} sx={{ color: "#666" }}>
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Content */}
-            <Typography variant="body1" sx={{ mb: 3, color: '#666' }}>
-              Loan interest rates and APR (Annual Percentage Rate) are dependent on the specific characteristics of the transaction and the individual's credit history. These figures are for estimation purposes only and may not reflect the exact terms of your loan. This is not a commitment to lend.
+            <Typography variant="body1" sx={{ mb: 3, color: "#666" }}>
+              Loan interest rates and APR (Annual Percentage Rate) are dependent
+              on the specific characteristics of the transaction and the
+              individual's credit history. These figures are for estimation
+              purposes only and may not reflect the exact terms of your loan.
+              This is not a commitment to lend.
             </Typography>
 
-            <Typography variant="body2" sx={{ mb: 3, color: '#666' }}>
-              Rates current as of: {new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })}
+            <Typography variant="body2" sx={{ mb: 3, color: "#666" }}>
+              Rates current as of:{" "}
+              {new Date().toLocaleDateString("en-US", {
+                month: "numeric",
+                day: "numeric",
+                year: "numeric",
+              })}
             </Typography>
 
             {/* Loan Example */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, color: "#1a365d" }}
+              >
                 {selectedLoan.title} Example
               </Typography>
-              
+
               {selectedLoan.title === "30-Year FHA" ? (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
-                    FHA Loan Example includes a one-time upfront mortgage insurance premium equal to 1.75% of base loan amount will be charged and paid at closing. A monthly mortgage insurance premium (MIP) equal to 0.5% of the base loan amount will apply and is included in monthly mortgage payments. For mortgages with an initial loan-to-value (LTV) ratio of 80%, the monthly MIP will be paid for the first 11 years of the loan only; greater LTVs require payment of MIP for the life of the loan.
+                  <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
+                    FHA Loan Example includes a one-time upfront mortgage
+                    insurance premium equal to 1.75% of base loan amount will be
+                    charged and paid at closing. A monthly mortgage insurance
+                    premium (MIP) equal to 0.5% of the base loan amount will
+                    apply and is included in monthly mortgage payments. For
+                    mortgages with an initial loan-to-value (LTV) ratio of 80%,
+                    the monthly MIP will be paid for the first 11 years of the
+                    loan only; greater LTVs require payment of MIP for the life
+                    of the loan.
                   </Typography>
-                  <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
-                    Interest rate of 6.000% (6.678% APR) calculated for a mortgage loan of $275,000, with a monthly payment of $1,792.00. Rate assumes a down payment of 20% and includes 1.607 points, paid at closing. Payment amount is for principal interest, and monthly mortgage insurance premium only and does not include taxes or other types of insurance; actual payment obligation will be greater.
+                  <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
+                    Interest rate of 6.000% (6.678% APR) calculated for a
+                    mortgage loan of $275,000, with a monthly payment of
+                    $1,792.00. Rate assumes a down payment of 20% and includes
+                    1.607 points, paid at closing. Payment amount is for
+                    principal interest, and monthly mortgage insurance premium
+                    only and does not include taxes or other types of insurance;
+                    actual payment obligation will be greater.
                   </Typography>
                 </>
               ) : selectedLoan.title === "30-Year VA" ? (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
-                    Interest rate of 6.125% (6.419% APR) calculated for a mortgage loan of $275,000, with a monthly payment of $1,692.00. Rate assumes a down payment of 20% and includes 1.816 points, paid at closing. Payment amount is for principal and interest only and does not include taxes or insurance; actual payment obligation will be greater.
+                  <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
+                    Interest rate of 6.125% (6.419% APR) calculated for a
+                    mortgage loan of $275,000, with a monthly payment of
+                    $1,692.00. Rate assumes a down payment of 20% and includes
+                    1.816 points, paid at closing. Payment amount is for
+                    principal and interest only and does not include taxes or
+                    insurance; actual payment obligation will be greater.
                   </Typography>
                 </>
               ) : (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
-                    Interest rate of {selectedLoan.rate.toFixed(3)}% ({selectedLoan.apr.toFixed(3)}% APR) calculated for a mortgage loan of ${LOAN_AMOUNT.toLocaleString()}, with a monthly payment of ${Math.round(selectedLoan.monthlyPayment).toLocaleString()}.
+                  <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
+                    Interest rate of {selectedLoan.rate.toFixed(3)}% (
+                    {selectedLoan.apr.toFixed(3)}% APR) calculated for a
+                    mortgage loan of ${LOAN_AMOUNT.toLocaleString()}, with a
+                    monthly payment of $
+                    {Math.round(selectedLoan.monthlyPayment).toLocaleString()}.
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    Rate assumes a down payment of 20% and includes {selectedLoan.points.toFixed(3)} points, paid at closing. Payment amount is for principal and interest only and does not include taxes or insurance; actual payment obligation will be greater.
+                  <Typography variant="body2" sx={{ color: "#666" }}>
+                    Rate assumes a down payment of 20% and includes{" "}
+                    {selectedLoan.points.toFixed(3)} points, paid at closing.
+                    Payment amount is for principal and interest only and does
+                    not include taxes or insurance; actual payment obligation
+                    will be greater.
                   </Typography>
                 </>
               )}
@@ -1437,10 +1953,13 @@ const MortgagePage: React.FC = () => {
 
             {/* Assumptions */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, color: "#1a365d" }}
+              >
                 For all rates shown, unless otherwise noted, we assumed:
               </Typography>
-              <Box component="ul" sx={{ pl: 2, color: '#666' }}>
+              <Box component="ul" sx={{ pl: 2, color: "#666" }}>
                 <Typography component="li" variant="body2" sx={{ mb: 1 }}>
                   Debt-to-income ratio less than 43%
                 </Typography>
@@ -1451,24 +1970,25 @@ const MortgagePage: React.FC = () => {
                   Closing costs, including points, are paid at closing
                 </Typography>
                 <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  Loan is to secure a single-family home used as a primary residence
+                  Loan is to secure a single-family home used as a primary
+                  residence
                 </Typography>
               </Box>
             </Box>
 
             {/* Action Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
                 onClick={handleNavigateToPreApproval}
                 sx={{
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  textTransform: 'none',
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  textTransform: "none",
                   fontWeight: 600,
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 Get pre-approved
@@ -1482,69 +2002,95 @@ const MortgagePage: React.FC = () => {
       {showDreamAbilityModal && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1300,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseDreamAbilityModal}
         >
-                      <Box
-              sx={{
-                backgroundColor: 'white',
-                borderRadius: 2,
-                p: 4,
-                maxWidth: 500,
-                width: '100%',
-                maxHeight: '90vh',
-                overflow: 'auto'
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: 2,
+              p: 4,
+              maxWidth: 500,
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 700, color: "#1a365d" }}
+              >
                 DreamAbility™
               </Typography>
-              <IconButton onClick={handleCloseDreamAbilityModal} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseDreamAbilityModal}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
-
-
             {/* Content */}
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#1a365d' }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+            >
               Find homes in your budget
             </Typography>
-            <Typography variant="body1" sx={{ mb: 4, color: '#666' }}>
+            <Typography variant="body1" sx={{ mb: 4, color: "#666" }}>
               See a real-time view of what you can afford in today's market.
             </Typography>
 
             {/* Form */}
-            <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, mb: 4 }}>
+            <Box
+              sx={{
+                display: "grid",
+                gap: 3,
+                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                mb: 4,
+              }}
+            >
               {/* Left Column */}
               <Box>
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 600, color: "#333" }}
+                  >
                     Location
                   </Typography>
                   <select
                     value={dreamAbilityForm.location}
-                    onChange={(e) => handleDreamAbilityFormChange('location', e.target.value)}
+                    onChange={(e) =>
+                      handleDreamAbilityFormChange("location", e.target.value)
+                    }
                     style={{
-                      width: '100%',
-                      padding: '12px',
-                      border: '1px solid #ddd',
-                      borderRadius: '4px',
-                      fontSize: '14px'
+                      width: "100%",
+                      padding: "12px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      fontSize: "14px",
                     }}
                   >
                     <option value="">Select a state</option>
@@ -1602,18 +2148,21 @@ const MortgagePage: React.FC = () => {
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 600, color: "#333" }}
+                  >
                     Annual income
                   </Typography>
-                  <Box sx={{ position: 'relative' }}>
-                    <Typography 
-                      component="span" 
-                      sx={{ 
-                        position: 'absolute', 
-                        left: 12, 
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        color: '#666'
+                  <Box sx={{ position: "relative" }}>
+                    <Typography
+                      component="span"
+                      sx={{
+                        position: "absolute",
+                        left: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#666",
                       }}
                     >
                       $
@@ -1621,46 +2170,57 @@ const MortgagePage: React.FC = () => {
                     <input
                       type="text"
                       value={dreamAbilityForm.annualIncome}
-                      onChange={(e) => handleDreamAbilityFormChange('annualIncome', e.target.value)}
+                      onChange={(e) =>
+                        handleDreamAbilityFormChange(
+                          "annualIncome",
+                          e.target.value,
+                        )
+                      }
                       style={{
-                        width: '100%',
-                        padding: '12px 12px 12px 24px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '14px'
+                        width: "100%",
+                        padding: "12px 12px 12px 24px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        fontSize: "14px",
                       }}
                     />
-                    <Typography 
-                      component="span" 
-                      sx={{ 
-                        position: 'absolute', 
-                        right: 12, 
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        color: '#666'
+                    <Typography
+                      component="span"
+                      sx={{
+                        position: "absolute",
+                        right: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#666",
                       }}
                     >
                       /year
                     </Typography>
                   </Box>
-                  <Typography variant="caption" sx={{ color: '#666', mt: 0.5, display: 'block' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#666", mt: 0.5, display: "block" }}
+                  >
                     Pre-tax income
                   </Typography>
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 600, color: "#333" }}
+                  >
                     Down payment
                   </Typography>
-                  <Box sx={{ position: 'relative' }}>
-                    <Typography 
-                      component="span" 
-                      sx={{ 
-                        position: 'absolute', 
-                        left: 12, 
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        color: '#666'
+                  <Box sx={{ position: "relative" }}>
+                    <Typography
+                      component="span"
+                      sx={{
+                        position: "absolute",
+                        left: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#666",
                       }}
                     >
                       $
@@ -1668,17 +2228,25 @@ const MortgagePage: React.FC = () => {
                     <input
                       type="text"
                       value={dreamAbilityForm.downPayment}
-                      onChange={(e) => handleDreamAbilityFormChange('downPayment', e.target.value)}
+                      onChange={(e) =>
+                        handleDreamAbilityFormChange(
+                          "downPayment",
+                          e.target.value,
+                        )
+                      }
                       style={{
-                        width: '100%',
-                        padding: '12px 12px 12px 24px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '14px'
+                        width: "100%",
+                        padding: "12px 12px 12px 24px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        fontSize: "14px",
                       }}
                     />
                   </Box>
-                  <Typography variant="caption" sx={{ color: '#666', mt: 0.5, display: 'block' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#666", mt: 0.5, display: "block" }}
+                  >
                     At least $1,500
                   </Typography>
                 </Box>
@@ -1687,18 +2255,26 @@ const MortgagePage: React.FC = () => {
               {/* Right Column */}
               <Box>
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 600, color: "#333" }}
+                  >
                     Credit score
                   </Typography>
                   <select
                     value={dreamAbilityForm.creditScore}
-                    onChange={(e) => handleDreamAbilityFormChange('creditScore', e.target.value)}
+                    onChange={(e) =>
+                      handleDreamAbilityFormChange(
+                        "creditScore",
+                        e.target.value,
+                      )
+                    }
                     style={{
-                      width: '100%',
-                      padding: '12px',
-                      border: '1px solid #ddd',
-                      borderRadius: '4px',
-                      fontSize: '14px'
+                      width: "100%",
+                      padding: "12px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      fontSize: "14px",
                     }}
                   >
                     <option value="">Select credit score</option>
@@ -1710,18 +2286,21 @@ const MortgagePage: React.FC = () => {
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#333' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 600, color: "#333" }}
+                  >
                     Monthly debt
                   </Typography>
-                  <Box sx={{ position: 'relative' }}>
-                    <Typography 
-                      component="span" 
-                      sx={{ 
-                        position: 'absolute', 
-                        left: 12, 
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        color: '#666'
+                  <Box sx={{ position: "relative" }}>
+                    <Typography
+                      component="span"
+                      sx={{
+                        position: "absolute",
+                        left: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#666",
                       }}
                     >
                       $
@@ -1729,29 +2308,37 @@ const MortgagePage: React.FC = () => {
                     <input
                       type="text"
                       value={dreamAbilityForm.monthlyDebt}
-                      onChange={(e) => handleDreamAbilityFormChange('monthlyDebt', e.target.value)}
+                      onChange={(e) =>
+                        handleDreamAbilityFormChange(
+                          "monthlyDebt",
+                          e.target.value,
+                        )
+                      }
                       style={{
-                        width: '100%',
-                        padding: '12px 12px 12px 24px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '14px'
+                        width: "100%",
+                        padding: "12px 12px 12px 24px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        fontSize: "14px",
                       }}
                     />
-                    <Typography 
-                      component="span" 
-                      sx={{ 
-                        position: 'absolute', 
-                        right: 12, 
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        color: '#666'
+                    <Typography
+                      component="span"
+                      sx={{
+                        position: "absolute",
+                        right: 12,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#666",
                       }}
                     >
                       /month
                     </Typography>
                   </Box>
-                  <Typography variant="caption" sx={{ color: '#666', mt: 0.5, display: 'block' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#666", mt: 0.5, display: "block" }}
+                  >
                     Loans, credit cards, alimony
                   </Typography>
                 </Box>
@@ -1759,21 +2346,21 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Action Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Button
                 variant="contained"
                 onClick={handleCalculateDreamAbility}
                 sx={{
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  textTransform: 'none',
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  textTransform: "none",
                   fontWeight: 600,
                   px: 4,
                   py: 1.5,
-                  fontSize: '1.1rem',
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                  fontSize: "1.1rem",
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 Get your DreamAbility™
@@ -1787,56 +2374,82 @@ const MortgagePage: React.FC = () => {
       {showDreamAbilityResults && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1300,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseDreamAbilityResults}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 4,
               maxWidth: 600,
-              width: '100%',
-              maxHeight: '90vh',
-              overflow: 'auto'
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="body2" sx={{ color: '#1a365d', cursor: 'pointer' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ color: "#1a365d", cursor: "pointer" }}
+              >
                 Edit
               </Typography>
-              <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a365d' }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 700, color: "#1a365d" }}
+              >
                 Your DreamAbility™
               </Typography>
-              <IconButton onClick={handleCloseDreamAbilityResults} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseDreamAbilityResults}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Today's Target Price */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#1a365d' }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+              >
                 Today's target price
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 700, color: '#4caf50', mb: 1 }}>
+              <Typography
+                variant="h3"
+                sx={{ fontWeight: 700, color: "#4caf50", mb: 1 }}
+              >
                 $739,853
               </Typography>
-              <Link 
+              <Link
                 onClick={handleShowWhatThisMeans}
-                sx={{ color: '#1a365d', textDecoration: 'underline', cursor: 'pointer' }}
+                sx={{
+                  color: "#1a365d",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
               >
                 What this means
               </Link>
@@ -1844,81 +2457,110 @@ const MortgagePage: React.FC = () => {
 
             {/* Payment Details */}
             <Box sx={{ mb: 4 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
-                      Target payment
-                    </Typography>
-                    <Box 
-                      onClick={handleShowTargetPaymentBreakdown}
-                      sx={{ 
-                        ml: 1, 
-                        width: 16, 
-                        height: 16, 
-                        borderRadius: '50%', 
-                        backgroundColor: '#1a365d', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: '#0d2340'
-                        }
-                      }}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, color: "#333" }}
+                  >
+                    Target payment
+                  </Typography>
+                  <Box
+                    onClick={handleShowTargetPaymentBreakdown}
+                    sx={{
+                      ml: 1,
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      backgroundColor: "#1a365d",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "#0d2340",
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "white", fontWeight: 600 }}
                     >
-                      <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
-                        i
-                      </Typography>
-                    </Box>
+                      i
+                    </Typography>
                   </Box>
-                <Box sx={{ 
-                  backgroundColor: '#f5f5f5', 
-                  px: 2, 
-                  py: 1, 
-                  borderRadius: 1,
-                  minWidth: 120,
-                  textAlign: 'center'
-                }}>
+                </Box>
+                <Box
+                  sx={{
+                    backgroundColor: "#f5f5f5",
+                    px: 2,
+                    py: 1,
+                    borderRadius: 1,
+                    minWidth: 120,
+                    textAlign: "center",
+                  }}
+                >
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
                     $ 5,276 /mo
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, color: "#333" }}
+                  >
                     Down payment
                   </Typography>
-                  <Box 
+                  <Box
                     onClick={handleShowDownPaymentDetails}
-                    sx={{ 
-                      ml: 1, 
-                      width: 16, 
-                      height: 16, 
-                      borderRadius: '50%', 
-                      backgroundColor: '#1a365d', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: '#0d2340'
-                      }
+                    sx={{
+                      ml: 1,
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      backgroundColor: "#1a365d",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "#0d2340",
+                      },
                     }}
                   >
-                    <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "white", fontWeight: 600 }}
+                    >
                       i
                     </Typography>
                   </Box>
                 </Box>
-                <Box sx={{ 
-                  backgroundColor: '#f5f5f5', 
-                  px: 2, 
-                  py: 1, 
-                  borderRadius: 1,
-                  minWidth: 120,
-                  textAlign: 'center'
-                }}>
+                <Box
+                  sx={{
+                    backgroundColor: "#f5f5f5",
+                    px: 2,
+                    py: 1,
+                    borderRadius: 1,
+                    minWidth: 120,
+                    textAlign: "center",
+                  }}
+                >
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
                     $ 75,000
                   </Typography>
@@ -1927,13 +2569,24 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Dreamery Home Loans Offer */}
-            <Box sx={{ mb: 4, border: '1px solid #e0e0e0', borderRadius: 2, p: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>
+            <Box
+              sx={{ mb: 4, border: "1px solid #e0e0e0", borderRadius: 2, p: 3 }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, color: "#1a365d" }}
+              >
                 What Dreamery Home Loans could offer
               </Typography>
               <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "#666" }}>
                     Max home price
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -1942,8 +2595,14 @@ const MortgagePage: React.FC = () => {
                 </Box>
               </Box>
               <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "#666" }}>
                     Max payment
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -1951,12 +2610,18 @@ const MortgagePage: React.FC = () => {
                   </Typography>
                 </Box>
               </Box>
-              
+
               <Divider sx={{ my: 2 }} />
-              
+
               <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "#666" }}>
                     Loan option
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -1965,62 +2630,80 @@ const MortgagePage: React.FC = () => {
                 </Box>
               </Box>
               <Box sx={{ mb: 2 }}>
-                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2" sx={{ color: '#666' }}>
-                        Your est. interest rate
-                      </Typography>
-                      <Box 
-                        onClick={handleShowInterestRateDetails}
-                        sx={{ 
-                          ml: 1, 
-                          width: 16, 
-                          height: 16, 
-                          borderRadius: '50%', 
-                          backgroundColor: '#1a365d', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            backgroundColor: '#0d2340'
-                          }
-                        }}
-                      >
-                        <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
-                          i
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      6.13%
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
+                      Your est. interest rate
                     </Typography>
-                  </Box>
-              </Box>
-              <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
-                      APR
-                    </Typography>
-                    <Box 
-                      onClick={handleShowAprDetails}
-                      sx={{ 
-                        ml: 1, 
-                        width: 16, 
-                        height: 16, 
-                        borderRadius: '50%', 
-                        backgroundColor: '#1a365d', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: '#0d2340'
-                        }
+                    <Box
+                      onClick={handleShowInterestRateDetails}
+                      sx={{
+                        ml: 1,
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        backgroundColor: "#1a365d",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        "&:hover": {
+                          backgroundColor: "#0d2340",
+                        },
                       }}
                     >
-                      <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "white", fontWeight: 600 }}
+                      >
+                        i
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    6.13%
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography variant="body2" sx={{ color: "#666" }}>
+                      APR
+                    </Typography>
+                    <Box
+                      onClick={handleShowAprDetails}
+                      sx={{
+                        ml: 1,
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        backgroundColor: "#1a365d",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        "&:hover": {
+                          backgroundColor: "#0d2340",
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "white", fontWeight: 600 }}
+                      >
                         i
                       </Typography>
                     </Box>
@@ -2031,8 +2714,14 @@ const MortgagePage: React.FC = () => {
                 </Box>
               </Box>
               <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "#666" }}>
                     Points
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2044,51 +2733,72 @@ const MortgagePage: React.FC = () => {
                 fullWidth
                 variant="contained"
                 sx={{
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  textTransform: 'none',
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  textTransform: "none",
                   fontWeight: 600,
                   py: 1.5,
                   mb: 2,
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 Get pre-qualified
               </Button>
-              <Typography variant="caption" sx={{ color: '#666', textAlign: 'center', display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "#666", textAlign: "center", display: "block" }}
+              >
                 powered by Dreamery Home Loans
               </Typography>
             </Box>
 
             {/* Disclaimer */}
-            <Typography variant="caption" sx={{ color: '#666', textAlign: 'center', display: 'block', mb: 3 }}>
-              All calculations are estimates and provided by Dreamery, Inc. for informational purposes only. Actual amounts may vary.
+            <Typography
+              variant="caption"
+              sx={{
+                color: "#666",
+                textAlign: "center",
+                display: "block",
+                mb: 3,
+              }}
+            >
+              All calculations are estimates and provided by Dreamery, Inc. for
+              informational purposes only. Actual amounts may vary.
             </Typography>
 
             {/* Save Preferences */}
-            <Box sx={{ textAlign: 'center' }}>
+            <Box sx={{ textAlign: "center" }}>
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: '#1a365d',
-                  color: 'white',
-                  textTransform: 'none',
+                  backgroundColor: "#1a365d",
+                  color: "white",
+                  textTransform: "none",
                   fontWeight: 600,
                   px: 4,
                   py: 1.5,
                   mb: 2,
-                  '&:hover': {
-                    backgroundColor: '#0d2340',
-                  }
+                  "&:hover": {
+                    backgroundColor: "#0d2340",
+                  },
                 }}
               >
                 Save preferences
               </Button>
-              <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>
-                We'll store your data according to the{' '}
-                <Link sx={{ color: '#1a365d', textDecoration: 'underline', cursor: 'pointer' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "#666", display: "block" }}
+              >
+                We'll store your data according to the{" "}
+                <Link
+                  sx={{
+                    color: "#1a365d",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                >
                   Dreamery Home Loans privacy policy
                 </Link>
               </Typography>
@@ -2101,60 +2811,79 @@ const MortgagePage: React.FC = () => {
       {showWhatThisMeans && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1400,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseWhatThisMeans}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 3,
               maxWidth: 400,
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              width: "100%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  width: 20, 
-                  height: 20, 
-                  borderRadius: '50%', 
-                  backgroundColor: '#1a365d', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mr: 1
-                }}>
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, fontSize: '12px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#1a365d",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "white", fontWeight: 600, fontSize: "12px" }}
+                  >
                     i
                   </Typography>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "#1a365d" }}
+                >
                   What DreamAbility™ means
                 </Typography>
               </Box>
-              <IconButton onClick={handleCloseWhatThisMeans} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseWhatThisMeans}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Content */}
-            <Typography variant="body1" sx={{ color: '#333', lineHeight: 1.5 }}>
-              DreamAbility™ is a real-time estimate of what you can afford in today's market.
+            <Typography variant="body1" sx={{ color: "#333", lineHeight: 1.5 }}>
+              DreamAbility™ is a real-time estimate of what you can afford in
+              today's market.
             </Typography>
           </Box>
         </Box>
@@ -2164,114 +2893,170 @@ const MortgagePage: React.FC = () => {
       {showTargetPaymentBreakdown && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1500,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseTargetPaymentBreakdown}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 3,
               maxWidth: 450,
-              width: '100%',
-              maxHeight: '80vh',
-              overflow: 'auto',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              width: "100%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  width: 20, 
-                  height: 20, 
-                  borderRadius: '50%', 
-                  backgroundColor: '#1a365d', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mr: 1
-                }}>
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, fontSize: '12px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#1a365d",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "white", fontWeight: 600, fontSize: "12px" }}
+                  >
                     i
                   </Typography>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "#1a365d" }}
+                >
                   Target payment
                 </Typography>
               </Box>
-              <IconButton onClick={handleCloseTargetPaymentBreakdown} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseTargetPaymentBreakdown}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
+            <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
               The amount you tell us you feel comfortable spending per month.
             </Typography>
 
             {/* Loan Terms */}
-            <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
+            <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
               30 Year Fixed, 6.130%
             </Typography>
 
             {/* Payment Breakdown */}
             <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#333' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#333" }}>
                   Target payment
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   $5,276
                 </Typography>
               </Box>
-              
+
               <Divider sx={{ my: 2 }} />
-              
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#333' }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#333" }}>
                   Principal and interest
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   $4,042
                 </Typography>
               </Box>
-              <Typography variant="caption" sx={{ color: '#666', display: 'block', mb: 2 }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "#666", display: "block", mb: 2 }}
+              >
                 30 Year Fixed, 6.130%
               </Typography>
-              
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#333' }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#333" }}>
                   Taxes*
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   $666
                 </Typography>
               </Box>
-              
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#333' }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#333" }}>
                   Homeowners insurance
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   $247
                 </Typography>
               </Box>
-              
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: '#333' }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#333" }}>
                   Private Mortgage Insurance (PMI)
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2281,16 +3066,34 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Disclaimer */}
-            <Typography variant="caption" sx={{ color: '#666', display: 'block', lineHeight: 1.4 }}>
-              *To estimate your property taxes, we multiply the home value you provide by the county's effective{' '}
-              <Link sx={{ color: '#1a365d', textDecoration: 'underline', cursor: 'pointer' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: "#666", display: "block", lineHeight: 1.4 }}
+            >
+              *To estimate your property taxes, we multiply the home value you
+              provide by the county's effective{" "}
+              <Link
+                sx={{
+                  color: "#1a365d",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+              >
                 property tax rate
               </Link>
-              . The specific{' '}
-              <Link sx={{ color: '#1a365d', textDecoration: 'underline', cursor: 'pointer' }}>
+              . The specific{" "}
+              <Link
+                sx={{
+                  color: "#1a365d",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+              >
                 process
-              </Link>
-              {' '}and formula used to calculate property taxes can vary based on where the property is located and regulations set by the local governing authority there.
+              </Link>{" "}
+              and formula used to calculate property taxes can vary based on
+              where the property is located and regulations set by the local
+              governing authority there.
             </Typography>
           </Box>
         </Box>
@@ -2300,87 +3103,111 @@ const MortgagePage: React.FC = () => {
       {showDownPaymentDetails && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1600,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseDownPaymentDetails}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 3,
               maxWidth: 400,
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              width: "100%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  width: 20, 
-                  height: 20, 
-                  borderRadius: '50%', 
-                  backgroundColor: '#1a365d', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mr: 1
-                }}>
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, fontSize: '12px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#1a365d",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "white", fontWeight: 600, fontSize: "12px" }}
+                  >
                     i
                   </Typography>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "#1a365d" }}
+                >
                   Down payment
                 </Typography>
               </Box>
-              <IconButton onClick={handleCloseDownPaymentDetails} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseDownPaymentDetails}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
-              A down payment is a percentage of the home price you pay upfront before you close.
+            <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+              A down payment is a percentage of the home price you pay upfront
+              before you close.
             </Typography>
 
             {/* Down Payment Details */}
-            <Box sx={{ 
-              backgroundColor: '#f5f5f5', 
-              borderRadius: 1, 
-              p: 2, 
-              mb: 3,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
+            <Box
+              sx={{
+                backgroundColor: "#f5f5f5",
+                borderRadius: 1,
+                p: 2,
+                mb: 3,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Box>
-                <Typography variant="body2" sx={{ color: '#666' }}>
+                <Typography variant="body2" sx={{ color: "#666" }}>
                   Down payment
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>
+                <Typography variant="body2" sx={{ color: "#666" }}>
                   10.1% of $739,853
                 </Typography>
               </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d' }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, color: "#1a365d" }}
+              >
                 $75,000
               </Typography>
             </Box>
 
             {/* Lender Requirement */}
-            <Typography variant="body2" sx={{ color: '#666' }}>
+            <Typography variant="body2" sx={{ color: "#666" }}>
               Most lenders require at least 3% down.
             </Typography>
           </Box>
@@ -2391,60 +3218,80 @@ const MortgagePage: React.FC = () => {
       {showAprDetails && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1800,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseAprDetails}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 3,
               maxWidth: 450,
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              width: "100%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  width: 20, 
-                  height: 20, 
-                  borderRadius: '50%', 
-                  backgroundColor: '#1a365d', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mr: 1
-                }}>
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, fontSize: '12px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#1a365d",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "white", fontWeight: 600, fontSize: "12px" }}
+                  >
                     i
                   </Typography>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "#1a365d" }}
+                >
                   What is APR?
                 </Typography>
               </Box>
-              <IconButton onClick={handleCloseAprDetails} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseAprDetails}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Content */}
-            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-              Annual Percentage Rate (APR) is a way of expressing the cost of a loan that includes the interest rate and loan-related fees, such as origination fees, points, and mortgage insurance.
+            <Typography variant="body2" sx={{ color: "#333", lineHeight: 1.5 }}>
+              Annual Percentage Rate (APR) is a way of expressing the cost of a
+              loan that includes the interest rate and loan-related fees, such
+              as origination fees, points, and mortgage insurance.
             </Typography>
           </Box>
         </Box>
@@ -2454,65 +3301,93 @@ const MortgagePage: React.FC = () => {
       {showInterestRateDetails && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 1700,
-            p: 2
+            p: 2,
           }}
           onClick={handleCloseInterestRateDetails}
         >
           <Box
             sx={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 2,
               p: 3,
               maxWidth: 450,
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              width: "100%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  width: 20, 
-                  height: 20, 
-                  borderRadius: '50%', 
-                  backgroundColor: '#1a365d', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mr: 1
-                }}>
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, fontSize: '12px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#1a365d",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "white", fontWeight: 600, fontSize: "12px" }}
+                  >
                     i
                   </Typography>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "#1a365d" }}
+                >
                   Your estimated interest rate
                 </Typography>
               </Box>
-              <IconButton onClick={handleCloseInterestRateDetails} sx={{ color: '#666' }}>
+              <IconButton
+                onClick={handleCloseInterestRateDetails}
+                sx={{ color: "#666" }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
 
             {/* Content */}
-            <Typography variant="body2" sx={{ color: '#333', mb: 2, lineHeight: 1.5 }}>
-              Dreamery Home Loans mortgage interest rates are dependent on a number of factors, including credit score, down payment, and loan term.
+            <Typography
+              variant="body2"
+              sx={{ color: "#333", mb: 2, lineHeight: 1.5 }}
+            >
+              Dreamery Home Loans mortgage interest rates are dependent on a
+              number of factors, including credit score, down payment, and loan
+              term.
             </Typography>
-            <Typography variant="body2" sx={{ color: '#333', mb: 2, lineHeight: 1.5 }}>
-              Interest rates updated daily as of 2AM UTC and includes up to two (2) buydown points of the loan amount on a conforming fixed-rate loan.
+            <Typography
+              variant="body2"
+              sx={{ color: "#333", mb: 2, lineHeight: 1.5 }}
+            >
+              Interest rates updated daily as of 2AM UTC and includes up to two
+              (2) buydown points of the loan amount on a conforming fixed-rate
+              loan.
             </Typography>
-            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+            <Typography variant="body2" sx={{ color: "#333", lineHeight: 1.5 }}>
               The actual payment obligation may be greater.
             </Typography>
           </Box>
@@ -2536,4 +3411,4 @@ const MortgagePage: React.FC = () => {
   );
 };
 
-export default MortgagePage; 
+export default MortgagePage;

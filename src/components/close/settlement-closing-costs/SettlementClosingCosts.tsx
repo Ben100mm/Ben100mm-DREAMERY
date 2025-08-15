@@ -27,4 +27,4 @@ const SettlementClosingCosts: React.FC = () => {
   );
 };
 
-export { SettlementClosingCosts };
+export default SettlementClosingCosts;

@@ -31,7 +31,7 @@ export interface RiskAnalysisResult {
     tenantRisk: number;
     financingRisk: number;
   };
-  riskCategory: 'Low' | 'Medium' | 'High' | 'Very High';
+  riskCategory: "Low" | "Medium" | "High" | "Very High";
   recommendations: string[];
   // Additional properties that might be present
   overallScore?: number;
@@ -138,7 +138,7 @@ export interface SeasonalAdjustmentsResult {
 
 // Market Conditions Results
 export interface MarketConditionsResult {
-  marketType: 'hot' | 'stable' | 'slow';
+  marketType: "hot" | "stable" | "slow";
   adjustments: {
     rentGrowth: number;
     appreciation: number;
@@ -153,7 +153,7 @@ export interface MarketConditionsResult {
     infrastructure: number;
   };
   marketTrends: {
-    direction: 'up' | 'down' | 'stable';
+    direction: "up" | "down" | "stable";
     strength: number;
     confidence: number;
   };
@@ -280,40 +280,59 @@ export interface CalculatorResults {
 export type PartialCalculatorResults = Partial<CalculatorResults>;
 
 // Result type for individual calculator functions
-export type CalculatorResult<T extends keyof CalculatorResults> = CalculatorResults[T];
+export type CalculatorResult<T extends keyof CalculatorResults> =
+  CalculatorResults[T];
 
 // Utility types for specific calculations
-export type ExitStrategyResults = CalculatorResults['exit'];
-export type RiskAnalysisResults = CalculatorResults['risk'];
-export type TaxImplicationsResults = CalculatorResults['tax'];
-export type RefinanceScenarioResults = CalculatorResults['refinance'];
-export type SeasonalAdjustmentsResults = CalculatorResults['seasonal'];
-export type MarketConditionsResults = CalculatorResults['market'];
-export type SensitivityAnalysisResults = CalculatorResults['sensitivity'];
-export type StressTestingResults = CalculatorResults['stress'];
-export type InflationAdjustmentsResults = CalculatorResults['inflation'];
-export type ScenarioComparisonResults = CalculatorResults['scenarios'];
+export type ExitStrategyResults = CalculatorResults["exit"];
+export type RiskAnalysisResults = CalculatorResults["risk"];
+export type TaxImplicationsResults = CalculatorResults["tax"];
+export type RefinanceScenarioResults = CalculatorResults["refinance"];
+export type SeasonalAdjustmentsResults = CalculatorResults["seasonal"];
+export type MarketConditionsResults = CalculatorResults["market"];
+export type SensitivityAnalysisResults = CalculatorResults["sensitivity"];
+export type StressTestingResults = CalculatorResults["stress"];
+export type InflationAdjustmentsResults = CalculatorResults["inflation"];
+export type ScenarioComparisonResults = CalculatorResults["scenarios"];
 
 // Type guards for checking result completeness
-export const isCompleteExitResults = (results: any): results is ExitStrategyResult[] => {
-  return Array.isArray(results) && results.length > 0 && 
-         results.every(r => r.timeframe && r.projectedValue && r.roi);
+export const isCompleteExitResults = (
+  results: any,
+): results is ExitStrategyResult[] => {
+  return (
+    Array.isArray(results) &&
+    results.length > 0 &&
+    results.every((r) => r.timeframe && r.projectedValue && r.roi)
+  );
 };
 
-export const isCompleteRiskResults = (results: any): results is RiskAnalysisResult => {
-  return results && typeof results.overallRiskScore === 'number' && 
-         results.riskBreakdown && results.riskCategory;
+export const isCompleteRiskResults = (
+  results: any,
+): results is RiskAnalysisResult => {
+  return (
+    results &&
+    typeof results.overallRiskScore === "number" &&
+    results.riskBreakdown &&
+    results.riskCategory
+  );
 };
 
-export const isCompleteTaxResults = (results: any): results is TaxImplicationsResult => {
-  return results && typeof results.taxableIncome === 'number' && 
-         typeof results.effectiveTaxRate === 'number';
+export const isCompleteTaxResults = (
+  results: any,
+): results is TaxImplicationsResult => {
+  return (
+    results &&
+    typeof results.taxableIncome === "number" &&
+    typeof results.effectiveTaxRate === "number"
+  );
 };
 
 // Helper function to get result type from key
 export const getResultType = <K extends keyof CalculatorResults>(
-  key: K
+  key: K,
 ): CalculatorResults[K] => {
   // This is a type helper - actual implementation would depend on context
-  throw new Error(`getResultType is a type helper and should not be called directly`);
+  throw new Error(
+    `getResultType is a type helper and should not be called directly`,
+  );
 };

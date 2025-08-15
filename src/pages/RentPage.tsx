@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -21,7 +21,7 @@ import {
   Popover,
   Paper,
   Link,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Search,
   Favorite,
@@ -30,8 +30,8 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Clear,
-} from '@mui/icons-material';
-import styled from 'styled-components';
+} from "@mui/icons-material";
+import styled from "styled-components";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -114,25 +114,40 @@ const RentPage: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   // Filter states
-  const [propertyStatus, setPropertyStatus] = useState('for-rent');
-  const [priceType, setPriceType] = useState('monthly-rent');
-  const [minPrice, setMinPrice] = useState('no-min');
-  const [maxPrice, setMaxPrice] = useState('no-max');
-  const [minBeds, setMinBeds] = useState('any');
-  const [minBaths, setMinBaths] = useState('any');
-  const [homeTypes, setHomeTypes] = useState(['apartments', 'houses', 'townhomes', 'condos', 'multi-family', 'duplexes', 'studios', 'lofts']);
-  const [listingTypes, setListingTypes] = useState(['owner-posted', 'property-manager', 'agent-listed', 'corporate-housing', 'short-term']);
-  const [maxHoa, setMaxHoa] = useState('any');
-  const [parkingSpots, setParkingSpots] = useState('any');
-  const [minSqft, setMinSqft] = useState('no-min');
-  const [maxSqft, setMaxSqft] = useState('no-max');
-  const [petPolicy, setPetPolicy] = useState('any');
-  const [leaseTerms, setLeaseTerms] = useState('any');
-  const [utilitiesIncluded, setUtilitiesIncluded] = useState('any');
-  const [furnished, setFurnished] = useState('any');
-  const [fiftyFivePlus, setFiftyFivePlus] = useState('include');
-  const [daysOnZillow, setDaysOnZillow] = useState('any');
-  const [keywords, setKeywords] = useState('');
+  const [propertyStatus, setPropertyStatus] = useState("for-rent");
+  const [priceType, setPriceType] = useState("monthly-rent");
+  const [minPrice, setMinPrice] = useState("no-min");
+  const [maxPrice, setMaxPrice] = useState("no-max");
+  const [minBeds, setMinBeds] = useState("any");
+  const [minBaths, setMinBaths] = useState("any");
+  const [homeTypes, setHomeTypes] = useState([
+    "apartments",
+    "houses",
+    "townhomes",
+    "condos",
+    "multi-family",
+    "duplexes",
+    "studios",
+    "lofts",
+  ]);
+  const [listingTypes, setListingTypes] = useState([
+    "owner-posted",
+    "property-manager",
+    "agent-listed",
+    "corporate-housing",
+    "short-term",
+  ]);
+  const [maxHoa, setMaxHoa] = useState("any");
+  const [parkingSpots, setParkingSpots] = useState("any");
+  const [minSqft, setMinSqft] = useState("no-min");
+  const [maxSqft, setMaxSqft] = useState("no-max");
+  const [petPolicy, setPetPolicy] = useState("any");
+  const [leaseTerms, setLeaseTerms] = useState("any");
+  const [utilitiesIncluded, setUtilitiesIncluded] = useState("any");
+  const [furnished, setFurnished] = useState("any");
+  const [fiftyFivePlus, setFiftyFivePlus] = useState("include");
+  const [daysOnZillow, setDaysOnZillow] = useState("any");
+  const [keywords, setKeywords] = useState("");
 
   const toggleFavorite = (id: number) => {
     const newFavorites = new Set(favorites);
@@ -144,7 +159,10 @@ const RentPage: React.FC = () => {
     setFavorites(newFavorites);
   };
 
-  const handleFilterClick = (filterName: string, event: React.MouseEvent<HTMLElement>) => {
+  const handleFilterClick = (
+    filterName: string,
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setActiveFilter(activeFilter === filterName ? null : filterName);
     setAnchorEl(event.currentTarget);
   };
@@ -157,170 +175,187 @@ const RentPage: React.FC = () => {
   const properties = [
     {
       id: 1,
-      price: '$2,400/month',
-      address: '153 Silliman St, San Francisco, CA 94134',
+      price: "$2,400/month",
+      address: "153 Silliman St, San Francisco, CA 94134",
       beds: 2,
       baths: 1,
       sqft: 850,
-      type: 'Apartment for rent',
+      type: "Apartment for rent",
       daysOnMarket: 5,
-      image: 'Property 1'
+      image: "Property 1",
     },
     {
       id: 2,
-      price: '$3,200/month',
-      address: '275 Teddy Ave, San Francisco, CA 94134',
+      price: "$3,200/month",
+      address: "275 Teddy Ave, San Francisco, CA 94134",
       beds: 3,
       baths: 2,
       sqft: 1168,
-      type: 'House for rent',
-      priceCut: '$200/month',
-      image: 'Property 2'
+      type: "House for rent",
+      priceCut: "$200/month",
+      image: "Property 2",
     },
     {
       id: 3,
-      price: '$1,800/month',
-      address: '76 Bay View St, San Francisco, CA 94124',
+      price: "$1,800/month",
+      address: "76 Bay View St, San Francisco, CA 94124",
       beds: 1,
       baths: 1,
       sqft: 650,
-      type: 'Studio for rent',
-      openHouse: 'Sat 2-4pm',
-      image: 'Property 3'
+      type: "Studio for rent",
+      openHouse: "Sat 2-4pm",
+      image: "Property 3",
     },
     {
       id: 4,
-      price: '$2,800/month',
-      address: '444 Ellington Ave, San Francisco, CA 94112',
+      price: "$2,800/month",
+      address: "444 Ellington Ave, San Francisco, CA 94112",
       beds: 2,
       baths: 1,
       sqft: 950,
-      type: 'Townhouse for rent',
+      type: "Townhouse for rent",
       flexible: true,
-      image: 'Property 4'
+      image: "Property 4",
     },
     {
       id: 5,
-      price: '$4,500/month',
-      address: '789 Ocean Blvd, San Francisco, CA 94121',
+      price: "$4,500/month",
+      address: "789 Ocean Blvd, San Francisco, CA 94121",
       beds: 3,
       baths: 2,
       sqft: 1400,
-      type: 'House for rent',
-      image: 'Property 5'
+      type: "House for rent",
+      image: "Property 5",
     },
     {
       id: 6,
-      price: '$1,600/month',
-      address: '321 Market St, San Francisco, CA 94105',
+      price: "$1,600/month",
+      address: "321 Market St, San Francisco, CA 94105",
       beds: 1,
       baths: 1,
       sqft: 750,
-      type: 'Apartment for rent',
-      image: 'Property 6'
+      type: "Apartment for rent",
+      image: "Property 6",
     },
     {
       id: 7,
-      price: '$3,800/month',
-      address: '456 Castro St, San Francisco, CA 94114',
+      price: "$3,800/month",
+      address: "456 Castro St, San Francisco, CA 94114",
       beds: 2,
       baths: 2,
       sqft: 1100,
-      type: 'Condo for rent',
-      image: 'Property 7'
+      type: "Condo for rent",
+      image: "Property 7",
     },
     {
       id: 8,
-      price: '$2,200/month',
-      address: '654 Mission St, San Francisco, CA 94105',
+      price: "$2,200/month",
+      address: "654 Mission St, San Francisco, CA 94105",
       beds: 2,
       baths: 1,
       sqft: 900,
-      type: 'Apartment for rent',
-      image: 'Property 8'
+      type: "Apartment for rent",
+      image: "Property 8",
     },
     {
       id: 9,
-      price: '$5,200/month',
-      address: '987 Pacific Ave, San Francisco, CA 94133',
+      price: "$5,200/month",
+      address: "987 Pacific Ave, San Francisco, CA 94133",
       beds: 3,
       baths: 2,
       sqft: 1600,
-      type: 'House for rent',
-      image: 'Property 9'
+      type: "House for rent",
+      image: "Property 9",
     },
     {
       id: 10,
-      price: '$1,900/month',
-      address: '123 Valencia St, San Francisco, CA 94103',
+      price: "$1,900/month",
+      address: "123 Valencia St, San Francisco, CA 94103",
       beds: 1,
       baths: 1,
       sqft: 800,
-      type: 'Loft for rent',
-      image: 'Property 10'
+      type: "Loft for rent",
+      image: "Property 10",
     },
     {
       id: 11,
-      price: '$3,500/month',
-      address: '456 Hayes St, San Francisco, CA 94102',
+      price: "$3,500/month",
+      address: "456 Hayes St, San Francisco, CA 94102",
       beds: 2,
       baths: 2,
       sqft: 1200,
-      type: 'Townhouse for rent',
-      image: 'Property 11'
+      type: "Townhouse for rent",
+      image: "Property 11",
     },
     {
       id: 12,
-      price: '$2,600/month',
-      address: '789 Haight St, San Francisco, CA 94117',
+      price: "$2,600/month",
+      address: "789 Haight St, San Francisco, CA 94117",
       beds: 2,
       baths: 1,
       sqft: 1000,
-      type: 'Apartment for rent',
-      image: 'Property 12'
+      type: "Apartment for rent",
+      image: "Property 12",
     },
     {
       id: 13,
-      price: '$4,800/month',
-      address: '321 Divisadero St, San Francisco, CA 94117',
+      price: "$4,800/month",
+      address: "321 Divisadero St, San Francisco, CA 94117",
       beds: 3,
       baths: 2,
       sqft: 1500,
-      type: 'House for rent',
-      image: 'Property 13'
+      type: "House for rent",
+      image: "Property 13",
     },
     {
       id: 14,
-      price: '$1,700/month',
-      address: '654 Fillmore St, San Francisco, CA 94117',
+      price: "$1,700/month",
+      address: "654 Fillmore St, San Francisco, CA 94117",
       beds: 1,
       baths: 1,
       sqft: 700,
-      type: 'Studio for rent',
-      image: 'Property 14'
+      type: "Studio for rent",
+      image: "Property 14",
     },
     {
       id: 15,
-      price: '$3,300/month',
-      address: '987 Church St, San Francisco, CA 94114',
+      price: "$3,300/month",
+      address: "987 Church St, San Francisco, CA 94114",
       beds: 2,
       baths: 2,
       sqft: 1100,
-      type: 'Condo for rent',
-      image: 'Property 15'
-    }
+      type: "Condo for rent",
+      image: "Property 15",
+    },
   ];
 
   const renderFilterContent = () => {
     switch (activeFilter) {
-      case 'for-rent':
+      case "for-rent":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Property Status</Typography>
-            <RadioGroup value={propertyStatus} onChange={(e) => setPropertyStatus(e.target.value)}>
-              <FormControlLabel value="for-rent" control={<Radio />} label="For Rent" />
-              <FormControlLabel value="coming-soon" control={<Radio />} label="Coming Soon" />
-              <FormControlLabel value="recently-rented" control={<Radio />} label="Recently Rented" />
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Property Status
+            </Typography>
+            <RadioGroup
+              value={propertyStatus}
+              onChange={(e) => setPropertyStatus(e.target.value)}
+            >
+              <FormControlLabel
+                value="for-rent"
+                control={<Radio />}
+                label="For Rent"
+              />
+              <FormControlLabel
+                value="coming-soon"
+                control={<Radio />}
+                label="Coming Soon"
+              />
+              <FormControlLabel
+                value="recently-rented"
+                control={<Radio />}
+                label="Recently Rented"
+              />
             </RadioGroup>
             <Box sx={{ mt: 2 }}>
               <Button variant="contained" fullWidth onClick={handleCloseFilter}>
@@ -330,23 +365,25 @@ const RentPage: React.FC = () => {
           </Box>
         );
 
-      case 'price':
+      case "price":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Monthly Rent</Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Monthly Rent
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Minimum</InputLabel>
-                <Select 
-                  value={minPrice} 
-                  onChange={(e) => setMinPrice(e.target.value)} 
+                <Select
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
                   label="Minimum"
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="no-min">No Min</MenuItem>
@@ -366,19 +403,19 @@ const RentPage: React.FC = () => {
                   <MenuItem value="10000">$10,000/month</MenuItem>
                 </Select>
               </FormControl>
-              <Typography sx={{ alignSelf: 'center' }}>-</Typography>
+              <Typography sx={{ alignSelf: "center" }}>-</Typography>
               <FormControl fullWidth size="small">
                 <InputLabel>Maximum</InputLabel>
-                <Select 
-                  value={maxPrice} 
-                  onChange={(e) => setMaxPrice(e.target.value)} 
+                <Select
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
                   label="Maximum"
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="no-max">No Max</MenuItem>
@@ -407,20 +444,30 @@ const RentPage: React.FC = () => {
           </Box>
         );
 
-      case 'beds-baths':
+      case "beds-baths":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Beds & Baths</Typography>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Beds & Baths
+            </Typography>
             <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Bedrooms</Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {['Any', '1+', '2+', '3+', '4+', '5+'].map((bed) => (
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Bedrooms
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                {["Any", "1+", "2+", "3+", "4+", "5+"].map((bed) => (
                   <Button
                     key={bed}
-                    variant={minBeds === bed.toLowerCase().replace('+', '') ? 'contained' : 'outlined'}
+                    variant={
+                      minBeds === bed.toLowerCase().replace("+", "")
+                        ? "contained"
+                        : "outlined"
+                    }
                     size="small"
-                    onClick={() => setMinBeds(bed.toLowerCase().replace('+', ''))}
-                    sx={{ minWidth: '60px' }}
+                    onClick={() =>
+                      setMinBeds(bed.toLowerCase().replace("+", ""))
+                    }
+                    sx={{ minWidth: "60px" }}
                   >
                     {bed}
                   </Button>
@@ -428,15 +475,26 @@ const RentPage: React.FC = () => {
               </Box>
             </Box>
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Bathrooms</Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {['Any', '1+', '1.5+', '2+', '3+', '4+'].map((bath) => (
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Bathrooms
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                {["Any", "1+", "1.5+", "2+", "3+", "4+"].map((bath) => (
                   <Button
                     key={bath}
-                    variant={minBaths === bath.toLowerCase().replace('+', '').replace('.5', '5') ? 'contained' : 'outlined'}
+                    variant={
+                      minBaths ===
+                      bath.toLowerCase().replace("+", "").replace(".5", "5")
+                        ? "contained"
+                        : "outlined"
+                    }
                     size="small"
-                    onClick={() => setMinBaths(bath.toLowerCase().replace('+', '').replace('.5', '5'))}
-                    sx={{ minWidth: '60px' }}
+                    onClick={() =>
+                      setMinBaths(
+                        bath.toLowerCase().replace("+", "").replace(".5", "5"),
+                      )
+                    }
+                    sx={{ minWidth: "60px" }}
                   >
                     {bath}
                   </Button>
@@ -451,22 +509,24 @@ const RentPage: React.FC = () => {
           </Box>
         );
 
-      case 'home-type':
+      case "home-type":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Home Type</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Home Type
+            </Typography>
+
             <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 {[
-                  { value: 'apartments', label: 'Apartments' },
-                  { value: 'houses', label: 'Houses' },
-                  { value: 'townhomes', label: 'Townhomes' },
-                  { value: 'condos', label: 'Condos/Co-ops' },
-                  { value: 'multi-family', label: 'Multi-family' },
-                  { value: 'duplexes', label: 'Duplexes' },
-                  { value: 'studios', label: 'Studios' },
-                  { value: 'lofts', label: 'Lofts' }
+                  { value: "apartments", label: "Apartments" },
+                  { value: "houses", label: "Houses" },
+                  { value: "townhomes", label: "Townhomes" },
+                  { value: "condos", label: "Condos/Co-ops" },
+                  { value: "multi-family", label: "Multi-family" },
+                  { value: "duplexes", label: "Duplexes" },
+                  { value: "studios", label: "Studios" },
+                  { value: "lofts", label: "Lofts" },
                 ].map((type) => (
                   <FormControlLabel
                     key={type.value}
@@ -477,7 +537,9 @@ const RentPage: React.FC = () => {
                           if (e.target.checked) {
                             setHomeTypes([...homeTypes, type.value]);
                           } else {
-                            setHomeTypes(homeTypes.filter(t => t !== type.value));
+                            setHomeTypes(
+                              homeTypes.filter((t) => t !== type.value),
+                            );
                           }
                         }}
                       />
@@ -496,17 +558,19 @@ const RentPage: React.FC = () => {
           </Box>
         );
 
-      case 'listing-type':
+      case "listing-type":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Listing Type</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Listing Type
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {[
-                { value: 'owner-posted', label: 'Owner posted' },
-                { value: 'property-manager', label: 'Property manager listed' },
-                { value: 'agent-listed', label: 'Agent listed' },
-                { value: 'corporate-housing', label: 'Corporate housing' },
-                { value: 'short-term', label: 'Short-term rentals' }
+                { value: "owner-posted", label: "Owner posted" },
+                { value: "property-manager", label: "Property manager listed" },
+                { value: "agent-listed", label: "Agent listed" },
+                { value: "corporate-housing", label: "Corporate housing" },
+                { value: "short-term", label: "Short-term rentals" },
               ].map((type) => (
                 <FormControlLabel
                   key={type.value}
@@ -517,7 +581,9 @@ const RentPage: React.FC = () => {
                         if (e.target.checked) {
                           setListingTypes([...listingTypes, type.value]);
                         } else {
-                          setListingTypes(listingTypes.filter(t => t !== type.value));
+                          setListingTypes(
+                            listingTypes.filter((t) => t !== type.value),
+                          );
                         }
                       }}
                     />
@@ -534,23 +600,27 @@ const RentPage: React.FC = () => {
           </Box>
         );
 
-      case 'more':
+      case "more":
         return (
           <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>More Filters</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              More Filters
+            </Typography>
+
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Max HOA</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Max HOA
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={maxHoa} 
+                <Select
+                  value={maxHoa}
                   onChange={(e) => setMaxHoa(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -573,17 +643,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Parking spots</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Parking spots
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={parkingSpots} 
+                <Select
+                  value={parkingSpots}
                   onChange={(e) => setParkingSpots(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -596,18 +668,20 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Square feet</Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Square feet
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1 }}>
                 <FormControl fullWidth size="small">
-                  <Select 
-                    value={minSqft} 
+                  <Select
+                    value={minSqft}
                     onChange={(e) => setMinSqft(e.target.value)}
                     MenuProps={{
                       PaperProps: {
                         style: {
-                          maxHeight: 300
-                        }
-                      }
+                          maxHeight: 300,
+                        },
+                      },
                     }}
                   >
                     <MenuItem value="no-min">No Min</MenuItem>
@@ -628,17 +702,17 @@ const RentPage: React.FC = () => {
                     <MenuItem value="7500">7,500</MenuItem>
                   </Select>
                 </FormControl>
-                <Typography sx={{ alignSelf: 'center' }}>-</Typography>
+                <Typography sx={{ alignSelf: "center" }}>-</Typography>
                 <FormControl fullWidth size="small">
-                  <Select 
-                    value={maxSqft} 
+                  <Select
+                    value={maxSqft}
                     onChange={(e) => setMaxSqft(e.target.value)}
                     MenuProps={{
                       PaperProps: {
                         style: {
-                          maxHeight: 300
-                        }
-                      }
+                          maxHeight: 300,
+                        },
+                      },
                     }}
                   >
                     <MenuItem value="no-max">No Max</MenuItem>
@@ -663,17 +737,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Pet Policy</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Pet Policy
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={petPolicy} 
+                <Select
+                  value={petPolicy}
                   onChange={(e) => setPetPolicy(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -686,17 +762,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Lease Terms</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Lease Terms
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={leaseTerms} 
+                <Select
+                  value={leaseTerms}
                   onChange={(e) => setLeaseTerms(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -711,17 +789,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Utilities Included</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Utilities Included
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={utilitiesIncluded} 
+                <Select
+                  value={utilitiesIncluded}
                   onChange={(e) => setUtilitiesIncluded(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -736,17 +816,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Furnished</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Furnished
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={furnished} 
+                <Select
+                  value={furnished}
                   onChange={(e) => setFurnished(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -762,15 +844,15 @@ const RentPage: React.FC = () => {
                 55+ Communities
               </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={fiftyFivePlus} 
+                <Select
+                  value={fiftyFivePlus}
                   onChange={(e) => setFiftyFivePlus(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="include">Include</MenuItem>
@@ -781,17 +863,19 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Days on Dreamery</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Days on Dreamery
+              </Typography>
               <FormControl fullWidth size="small">
-                <Select 
-                  value={daysOnZillow} 
+                <Select
+                  value={daysOnZillow}
                   onChange={(e) => setDaysOnZillow(e.target.value)}
                   MenuProps={{
                     PaperProps: {
                       style: {
-                        maxHeight: 300
-                      }
-                    }
+                        maxHeight: 300,
+                      },
+                    },
                   }}
                 >
                   <MenuItem value="any">Any</MenuItem>
@@ -809,7 +893,9 @@ const RentPage: React.FC = () => {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Keywords</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Keywords
+              </Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -819,11 +905,19 @@ const RentPage: React.FC = () => {
               />
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button variant="text" onClick={handleCloseFilter} sx={{ flex: 1 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                variant="text"
+                onClick={handleCloseFilter}
+                sx={{ flex: 1 }}
+              >
                 Reset all filters
               </Button>
-              <Button variant="contained" onClick={handleCloseFilter} sx={{ flex: 1 }}>
+              <Button
+                variant="contained"
+                onClick={handleCloseFilter}
+                sx={{ flex: 1 }}
+              >
                 Apply
               </Button>
             </Box>
@@ -838,26 +932,28 @@ const RentPage: React.FC = () => {
   return (
     <PageContainer>
       {/* Top Search Section */}
-      <Box sx={{ 
-        background: 'white', 
-        py: 2
-      }}>
+      <Box
+        sx={{
+          background: "white",
+          py: 2,
+        }}
+      >
         <Container maxWidth="xl">
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => window.history.back()}
-              sx={{ color: '#666', textTransform: 'none' }}
+              sx={{ color: "#666", textTransform: "none" }}
             >
               Back
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a365d' }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: "#1a365d" }}>
               San Francisco, CA Real Estate & Homes For Rent
             </Typography>
           </Box>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box sx={{ flex: 1, position: 'relative' }}>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ flex: 1, position: "relative" }}>
               <TextField
                 fullWidth
                 placeholder="San Francisco, CA"
@@ -866,61 +962,66 @@ const RentPage: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search sx={{ color: '#666' }} />
+                      <Search sx={{ color: "#666" }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton size="small">
-                        <Clear sx={{ color: '#666' }} />
+                        <Clear sx={{ color: "#666" }} />
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                  }
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
                 }}
               />
             </Box>
-            
+
             <Button
               variant="contained"
               sx={{
-                backgroundColor: '#1a365d',
-                color: 'white',
-                textTransform: 'uppercase',
+                backgroundColor: "#1a365d",
+                color: "white",
+                textTransform: "uppercase",
                 fontWeight: 600,
                 px: 3,
                 py: 1,
-                borderRadius: '8px',
-                '&:hover': {
-                  backgroundColor: '#0d2340',
-                }
+                borderRadius: "8px",
+                "&:hover": {
+                  backgroundColor: "#0d2340",
+                },
               }}
             >
               Save Search
             </Button>
-            
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 1,
-              border: '1px solid #e0e0e0',
-              borderRadius: '6px',
-              padding: '6px 12px',
-              backgroundColor: '#f8f9fa',
-              cursor: 'pointer',
-              '&:hover': {
-                backgroundColor: '#e9ecef',
-                borderColor: '#c0c0c0'
-              }
-            }}>
-              <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                border: "1px solid #e0e0e0",
+                borderRadius: "6px",
+                padding: "6px 12px",
+                backgroundColor: "#f8f9fa",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#e9ecef",
+                  borderColor: "#c0c0c0",
+                },
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, color: "#333" }}
+              >
                 500
               </Typography>
-              <Favorite sx={{ color: '#e31c25', fontSize: 20 }} />
+              <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
             </Box>
           </Box>
         </Container>
@@ -928,51 +1029,94 @@ const RentPage: React.FC = () => {
 
       <HeaderSection>
         <Container maxWidth="xl">
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flexWrap: "wrap",
+            }}
+          >
             <FilterButton
-              onClick={(e) => handleFilterClick('for-rent', e)}
-              className={activeFilter === 'for-rent' ? 'active' : ''}
-              endIcon={activeFilter === 'for-rent' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("for-rent", e)}
+              className={activeFilter === "for-rent" ? "active" : ""}
+              endIcon={
+                activeFilter === "for-rent" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               For Rent
             </FilterButton>
-            
+
             <FilterButton
-              onClick={(e) => handleFilterClick('price', e)}
-              className={activeFilter === 'price' ? 'active' : ''}
-              endIcon={activeFilter === 'price' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("price", e)}
+              className={activeFilter === "price" ? "active" : ""}
+              endIcon={
+                activeFilter === "price" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               Price
             </FilterButton>
-            
+
             <FilterButton
-              onClick={(e) => handleFilterClick('beds-baths', e)}
-              className={activeFilter === 'beds-baths' ? 'active' : ''}
-              endIcon={activeFilter === 'beds-baths' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("beds-baths", e)}
+              className={activeFilter === "beds-baths" ? "active" : ""}
+              endIcon={
+                activeFilter === "beds-baths" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               Beds & Baths
             </FilterButton>
-            
+
             <FilterButton
-              onClick={(e) => handleFilterClick('home-type', e)}
-              className={activeFilter === 'home-type' ? 'active' : ''}
-              endIcon={activeFilter === 'home-type' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("home-type", e)}
+              className={activeFilter === "home-type" ? "active" : ""}
+              endIcon={
+                activeFilter === "home-type" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               Home Type
             </FilterButton>
-            
+
             <FilterButton
-              onClick={(e) => handleFilterClick('listing-type', e)}
-              className={activeFilter === 'listing-type' ? 'active' : ''}
-              endIcon={activeFilter === 'listing-type' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("listing-type", e)}
+              className={activeFilter === "listing-type" ? "active" : ""}
+              endIcon={
+                activeFilter === "listing-type" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               Listing Type
             </FilterButton>
-            
+
             <FilterButton
-              onClick={(e) => handleFilterClick('more', e)}
-              className={activeFilter === 'more' ? 'active' : ''}
-              endIcon={activeFilter === 'more' ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              onClick={(e) => handleFilterClick("more", e)}
+              className={activeFilter === "more" ? "active" : ""}
+              endIcon={
+                activeFilter === "more" ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )
+              }
             >
               More
             </FilterButton>
@@ -985,54 +1129,63 @@ const RentPage: React.FC = () => {
         anchorEl={anchorEl}
         onClose={handleCloseFilter}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: "bottom",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
       >
-        <FilterPopover>
-          {renderFilterContent()}
-        </FilterPopover>
+        <FilterPopover>{renderFilterContent()}</FilterPopover>
       </Popover>
 
-      <Box sx={{ display: 'flex', height: 'calc(100vh - 200px)' }}>
-        <Box sx={{ flex: '2', position: 'relative', p: 2 }}>
-          <Box sx={{
-            height: '100%',
-            background: 'linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '1.2rem',
-            position: 'relative',
-            borderRadius: '8px',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              top: '1rem',
-              left: '1rem',
-              background: 'rgba(255, 255, 255, 0.9)',
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              color: '#333',
-              fontWeight: 600
-            }}>
+      <Box sx={{ display: "flex", height: "calc(100vh - 200px)" }}>
+        <Box sx={{ flex: "2", position: "relative", p: 2 }}>
+          <Box
+            sx={{
+              height: "100%",
+              background: "linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              fontSize: "1.2rem",
+              position: "relative",
+              borderRadius: "8px",
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "1rem",
+                left: "1rem",
+                background: "rgba(255, 255, 255, 0.9)",
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                color: "#333",
+                fontWeight: 600,
+              }}
+            >
               500 of 1,095 rentals
             </Box>
-            <Typography variant="h6">
-              Interactive Map View
-            </Typography>
+            <Typography variant="h6">Interactive Map View</Typography>
           </Box>
         </Box>
-        
-        <Box sx={{ flex: '1', overflowY: 'auto', borderLeft: '1px solid #e0e0e0' }}>
+
+        <Box
+          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid #e0e0e0" }}
+        >
           <Container maxWidth="xl" sx={{ p: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 1,095 results
               </Typography>
@@ -1047,56 +1200,103 @@ const RentPage: React.FC = () => {
               </FormControl>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {properties.map((property) => (
-                <PropertyCard key={property.id} sx={{ width: '100%' }}>
-                  <Box sx={{ display: 'flex' }}>
-                    <Box sx={{ 
-                      width: '120px', 
-                      height: '90px', 
-                      flexShrink: 0,
-                      background: '#f0f0f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#666'
-                    }}>
+                <PropertyCard key={property.id} sx={{ width: "100%" }}>
+                  <Box sx={{ display: "flex" }}>
+                    <Box
+                      sx={{
+                        width: "120px",
+                        height: "90px",
+                        flexShrink: 0,
+                        background: "#f0f0f0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#666",
+                      }}
+                    >
                       {property.image}
                     </Box>
                     <CardContent sx={{ p: 2, flex: 1 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d' }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: 1,
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 700, color: "#1a365d" }}
+                        >
                           {property.price}
                         </Typography>
                         <IconButton
                           size="small"
                           onClick={() => toggleFavorite(property.id)}
-                          sx={{ color: favorites.has(property.id) ? '#e31c25' : '#ccc' }}
+                          sx={{
+                            color: favorites.has(property.id)
+                              ? "#e31c25"
+                              : "#ccc",
+                          }}
                         >
-                          {favorites.has(property.id) ? <Favorite /> : <FavoriteBorder />}
+                          {favorites.has(property.id) ? (
+                            <Favorite />
+                          ) : (
+                            <FavoriteBorder />
+                          )}
                         </IconButton>
                       </Box>
-                      
-                      <Box sx={{ display: 'flex', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          mb: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
                         {property.daysOnMarket && (
-                          <Chip label={`${property.daysOnMarket} days on Dreamery`} size="small" color="primary" />
+                          <Chip
+                            label={`${property.daysOnMarket} days on Dreamery`}
+                            size="small"
+                            color="primary"
+                          />
                         )}
                         {property.priceCut && (
-                          <Chip label={`Price cut: ${property.priceCut}`} size="small" color="secondary" />
+                          <Chip
+                            label={`Price cut: ${property.priceCut}`}
+                            size="small"
+                            color="secondary"
+                          />
                         )}
                         {property.openHouse && (
-                          <Chip label={`Open: ${property.openHouse}`} size="small" color="success" />
+                          <Chip
+                            label={`Open: ${property.openHouse}`}
+                            size="small"
+                            color="success"
+                          />
                         )}
                         {property.flexible && (
-                          <Chip label="Flexible lease" size="small" color="info" />
+                          <Chip
+                            label="Flexible lease"
+                            size="small"
+                            color="info"
+                          />
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: '#666' }}>
-                        {property.beds} bds | {property.baths} ba | {property.sqft.toLocaleString()} sqft - {property.type}
+                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                        {property.beds} bds | {property.baths} ba |{" "}
+                        {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>
-                      
-                      <Typography variant="body2" sx={{ color: '#333', fontWeight: 500 }}>
+
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#333", fontWeight: 500 }}
+                      >
                         {property.address}
                       </Typography>
                     </CardContent>
@@ -1111,4 +1311,4 @@ const RentPage: React.FC = () => {
   );
 };
 
-export default RentPage; 
+export default RentPage;

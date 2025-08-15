@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User } from 'firebase/auth';
-import { onAuthChange } from '../firebase/services';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { User } from "firebase/auth";
+import { onAuthChange } from "../firebase/services";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -13,7 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

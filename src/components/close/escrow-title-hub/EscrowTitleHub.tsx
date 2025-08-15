@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -25,181 +24,302 @@ import {
   Select,
   MenuItem,
   LinearProgress,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Tabs,
+  Tab,
+  Paper,
+  InputAdornment,
+  Divider,
+  CircularProgress,
 } from '@mui/material';
 import {
   Security as SecurityIcon,
-  AccountBalance as AccountBalanceIcon,
   Search as SearchIcon,
-  Insurance as InsuranceIcon,
+  AccountBalance as AccountBalanceIcon,
   DocumentScanner as DocumentIcon,
   Add as AddIcon,
   Edit as EditIcon,
-  Delete as DeleteIcon,
-  Download as DownloadIcon,
   Visibility as ViewIcon,
-  ExpandMore as ExpandMoreIcon,
+  Download as DownloadIcon,
+  Send as SendIcon,
+  Lock as LockIcon,
+  Message as MessageIcon,
+  Security as InsuranceIcon,
 } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-
-// Styled components
-const FeatureCard = styled(Card)`
-  height: 100%;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  }
-`;
-
-const StatusChip = styled(Chip)<{ status: 'active' | 'pending' | 'completed' | 'error' }>`
-  background-color: ${({ status }) => {
-    switch (status) {
-      case 'active': return '#4caf50';
-      case 'pending': return '#ff9800';
-      case 'completed': return '#2196f3';
-      case 'error': return '#f44336';
-      default: return '#9e9e9e';
-    }
-  }};
-  color: white;
-  font-weight: 600;
-`;
-
-// Mock data types
-interface EscrowAccount {
-  id: string;
-  accountNumber: string;
-  propertyAddress: string;
-  buyer: string;
-  seller: string;
-  amount: number;
-  status: 'active' | 'pending' | 'closed';
-  createdAt: string;
-  closingDate: string;
-}
-
-interface TitleSearch {
+// Types
+interface SearchResult {
   id: string;
   propertyAddress: string;
   searchDate: string;
-  status: 'in-progress' | 'completed' | 'failed';
+  status: 'completed' | 'in-progress' | 'error';
   results: string[];
   documents: string[];
 }
 
-interface TitleInsurance {
+interface InsuranceQuote {
   id: string;
-  policyNumber: string;
   propertyAddress: string;
   coverage: number;
   premium: number;
-  status: 'active' | 'pending' | 'expired';
   effectiveDate: string;
-  expirationDate: string;
+  status: 'pending' | 'active' | 'expired';
+}
+
+interface EscrowAccount {
+  id: string;
+  accountNumber: string;
+  propertyAddress: string;
+  amount: number;
+  status: 'active' | 'pending' | 'completed';
+  lastUpdated: string;
+}
+
+interface TitleData {
+  searchResults: SearchResult[];
+  insuranceQuote: InsuranceQuote;
+}
+
+interface Message {
+  id: string;
+  from: string;
+  to: string;
+  subject: string;
+  content: string;
+  timestamp: string;
+  encrypted: boolean;
+}
+
+// Helper function for status colors
+const getStatusColor = (status: 'completed' | 'in-progress' | 'error' | 'active' | 'pending' | 'expired') => {
+  switch (status) {
+    case 'completed':
+    case 'active':
+      return '#4caf50';
+    case 'in-progress':
+    case 'pending':
+      return '#2196f3';
+    case 'error':
+    case 'expired':
+      return '#f44336';
+    default:
+      return '#9e9e9e';
+  }
+};
+
+// Tab interface
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanelComponent(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`escrow-title-tabpanel-${index}`}
+      aria-labelledby={`escrow-title-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ padding: '2rem', '@media (max-width: 600px)': { padding: '1rem' } }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
 }
 
 const EscrowTitleHub: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [titleData, setTitleData] = useState<TitleData>({
+    searchResults: [],
+    insuranceQuote: {} as InsuranceQuote,
+  });
   const [escrowAccounts, setEscrowAccounts] = useState<EscrowAccount[]>([]);
-  const [titleSearches, setTitleSearches] = useState<TitleSearch[]>([]);
-  const [titleInsurance, setTitleInsurance] = useState<TitleInsurance[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [newMessage, setNewMessage] = useState({ to: '', subject: '', content: '' });
   const [openEscrowDialog, setOpenEscrowDialog] = useState(false);
   const [openTitleSearchDialog, setOpenTitleSearchDialog] = useState(false);
   const [openInsuranceDialog, setOpenInsuranceDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
+  // Mock API calls
   useEffect(() => {
-    // Mock data initialization
-    const mockEscrowAccounts: EscrowAccount[] = [
-      {
-        id: '1',
-        accountNumber: 'ESC-2024-001',
-        propertyAddress: '123 Main St, San Francisco, CA',
-        buyer: 'John Smith',
-        seller: 'Jane Doe',
-        amount: 850000,
-        status: 'active',
-        createdAt: '2024-01-01',
-        closingDate: '2024-01-25',
-      },
-      {
-        id: '2',
-        accountNumber: 'ESC-2024-002',
-        propertyAddress: '456 Oak Ave, Los Angeles, CA',
-        buyer: 'Mike Johnson',
-        seller: 'Sarah Wilson',
-        amount: 650000,
-        status: 'pending',
-        createdAt: '2024-01-05',
-        closingDate: '2024-02-01',
-      },
-    ];
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simulate API calls
+        const mockSearchResults: SearchResult[] = [
+          {
+            id: '1',
+            propertyAddress: '123 Main St, San Francisco, CA',
+            searchDate: '2024-01-25',
+            status: 'completed',
+            results: ['No liens found', 'Clear title', 'Property taxes current'],
+            documents: ['title_report.pdf', 'lien_search.pdf', 'tax_certificate.pdf'],
+          },
+          {
+            id: '2',
+            propertyAddress: '456 Oak Ave, Los Angeles, CA',
+            searchDate: '2024-01-24',
+            status: 'in-progress',
+            results: ['Search in progress'],
+            documents: [],
+          },
+          {
+            id: '3',
+            propertyAddress: '789 Pine St, Seattle, WA',
+            searchDate: '2024-01-23',
+            status: 'completed',
+            results: ['No liens found', 'Clear title', 'Property taxes current'],
+            documents: ['title_report.pdf', 'lien_search.pdf'],
+          },
+        ];
 
-    const mockTitleSearches: TitleSearch[] = [
-      {
-        id: '1',
-        propertyAddress: '123 Main St, San Francisco, CA',
-        searchDate: '2024-01-02',
-        status: 'completed',
-        results: ['No liens found', 'Clear title', 'Property taxes current'],
-        documents: ['Title Report.pdf', 'Tax Certificate.pdf'],
-      },
-      {
-        id: '2',
-        propertyAddress: '456 Oak Ave, Los Angeles, CA',
-        searchDate: '2024-01-06',
-        status: 'in-progress',
-        results: ['Search in progress'],
-        documents: [],
-      },
-    ];
+        const mockInsuranceQuote: InsuranceQuote = {
+          id: '1',
+          propertyAddress: '123 Main St, San Francisco, CA',
+          coverage: 750000,
+          premium: 1250,
+          effectiveDate: '2024-02-01',
+          status: 'active',
+        };
 
-    const mockTitleInsurance: TitleInsurance[] = [
-      {
-        id: '1',
-        policyNumber: 'TI-2024-001',
-        propertyAddress: '123 Main St, San Francisco, CA',
-        coverage: 850000,
-        premium: 2125,
-        status: 'active',
-        effectiveDate: '2024-01-25',
-        expirationDate: '2025-01-25',
-      },
-      {
-        id: '2',
-        policyNumber: 'TI-2024-002',
-        propertyAddress: '456 Oak Ave, Los Angeles, CA',
-        coverage: 650000,
-        premium: 1625,
-        status: 'pending',
-        effectiveDate: '2024-02-01',
-        expirationDate: '2025-02-01',
-      },
-    ];
+        const mockEscrowAccounts: EscrowAccount[] = [
+          {
+            id: '1',
+            accountNumber: 'ESC-001-2024',
+            propertyAddress: '123 Main St, San Francisco, CA',
+            amount: 150000,
+            status: 'active',
+            lastUpdated: '2024-01-25',
+          },
+          {
+            id: '2',
+            accountNumber: 'ESC-002-2024',
+            propertyAddress: '456 Oak Ave, Los Angeles, CA',
+            amount: 200000,
+            status: 'pending',
+            lastUpdated: '2024-01-24',
+          },
+          {
+            id: '3',
+            accountNumber: 'ESC-003-2024',
+            propertyAddress: '789 Pine St, Seattle, WA',
+            amount: 175000,
+            status: 'active',
+            lastUpdated: '2024-01-23',
+          },
+        ];
 
-    setEscrowAccounts(mockEscrowAccounts);
-    setTitleSearches(mockTitleSearches);
-    setTitleInsurance(mockTitleInsurance);
+        const mockMessages: Message[] = [
+          {
+            id: '1',
+            from: 'title@company.com',
+            to: 'agent@dreamery.com',
+            subject: 'Title Search Results - 123 Main St',
+            content: 'Title search completed successfully. No liens found.',
+            timestamp: '2024-01-25T10:30:00Z',
+            encrypted: true,
+          },
+          {
+            id: '2',
+            from: 'escrow@company.com',
+            to: 'agent@dreamery.com',
+            subject: 'Escrow Account Update',
+            content: 'Escrow account ESC-001-2024 has been funded.',
+            timestamp: '2024-01-25T09:15:00Z',
+            encrypted: true,
+          },
+        ];
+
+        setTitleData({
+          searchResults: mockSearchResults,
+          insuranceQuote: mockInsuranceQuote,
+        });
+        setEscrowAccounts(mockEscrowAccounts);
+        setMessages(mockMessages);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const handleOpenEscrowDialog = (account?: EscrowAccount) => {
-    setSelectedItem(account || null);
-    setOpenEscrowDialog(true);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
   };
 
-  const handleOpenTitleSearchDialog = (search?: TitleSearch) => {
-    setSelectedItem(search || null);
-    setOpenTitleSearchDialog(true);
+  const handleTitleSearch = async () => {
+    if (searchQuery.trim()) {
+      try {
+        // Mock API call to /api/title/search
+        console.log('Searching for:', searchQuery);
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Show success message
+        alert(`Title search initiated for: ${searchQuery}`);
+        setSearchQuery('');
+      } catch (error) {
+        console.error('Error searching title:', error);
+        alert('Error initiating title search. Please try again.');
+      }
+    }
   };
 
-  const handleOpenInsuranceDialog = (insurance?: TitleInsurance) => {
-    setSelectedItem(insurance || null);
-    setOpenInsuranceDialog(true);
+  const handleInsuranceOrder = async () => {
+    try {
+      // Mock API call to /api/title/insurance
+      console.log('Ordering title insurance');
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      alert('Title insurance order submitted successfully!');
+    } catch (error) {
+      console.error('Error ordering insurance:', error);
+      alert('Error ordering title insurance. Please try again.');
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (newMessage.to && newMessage.subject && newMessage.content) {
+      try {
+        // Mock encrypted message using crypto-js (would be implemented in production)
+        console.log('Sending encrypted message:', newMessage);
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Add message to list
+        const message: Message = {
+          id: Date.now().toString(),
+          from: 'agent@dreamery.com',
+          to: newMessage.to,
+          subject: newMessage.subject,
+          content: newMessage.content,
+          timestamp: new Date().toISOString(),
+          encrypted: true,
+        };
+        
+        setMessages([message, ...messages]);
+        setNewMessage({ to: '', subject: '', content: '' });
+        alert('Message sent successfully!');
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Error sending message. Please try again.');
+      }
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -209,37 +329,31 @@ const EscrowTitleHub: React.FC = () => {
     }).format(amount);
   };
 
-  return (
-    <Box>
-      {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" component="h2" sx={{ fontWeight: 600 }}>
-          Escrow & Title Hub
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => handleOpenEscrowDialog()}
-            sx={{ backgroundColor: '#1976d2' }}
-          >
-            New Escrow Account
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<SearchIcon />}
-            onClick={() => handleOpenTitleSearchDialog()}
-            sx={{ borderColor: '#1976d2', color: '#1976d2' }}
-          >
-            New Title Search
-          </Button>
+  if (loading) {
+    return (
+      <Box sx={{ padding: '1rem' }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+          <CircularProgress size={60} />
         </Box>
       </Box>
+    );
+  }
 
+  return (
+    <Box sx={{ padding: '1rem' }}>
       {/* Quick Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <FeatureCard>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+        <Box>
+          <Card sx={{ 
+            height: '100%',
+            borderRadius: '12px',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+            }
+          }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <AccountBalanceIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
@@ -249,36 +363,63 @@ const EscrowTitleHub: React.FC = () => {
                 Active Escrow Accounts
               </Typography>
             </CardContent>
-          </FeatureCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <FeatureCard>
+          </Card>
+        </Box>
+        <Box>
+          <Card sx={{ 
+            height: '100%',
+            borderRadius: '12px',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+            }
+          }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <SearchIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
-                {titleSearches.filter(s => s.status === 'completed').length}
+                {titleData.searchResults.filter(s => s.status === 'completed').length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Completed Title Searches
               </Typography>
             </CardContent>
-          </FeatureCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <FeatureCard>
+          </Card>
+        </Box>
+        <Box>
+          <Card sx={{ 
+            height: '100%',
+            borderRadius: '12px',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+            }
+          }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <InsuranceIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
-                {titleInsurance.filter(i => i.status === 'active').length}
+                {titleData.insuranceQuote.status === 'active' ? 1 : 0}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Active Insurance Policies
               </Typography>
             </CardContent>
-          </FeatureCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <FeatureCard>
+          </Card>
+        </Box>
+        <Box>
+          <Card sx={{ 
+            height: '100%',
+            borderRadius: '12px',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+            }
+          }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <SecurityIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
@@ -288,295 +429,540 @@ const EscrowTitleHub: React.FC = () => {
                 Total Escrow Value
               </Typography>
             </CardContent>
-          </FeatureCard>
-        </Grid>
-      </Grid>
+          </Card>
+        </Box>
+      </Box>
 
       {/* Main Content Tabs */}
-      <Grid container spacing={3}>
-        {/* Escrow Accounts */}
-        <Grid item xs={12} lg={6}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
+      <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#f5f5f5' }}>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="Escrow and title management tabs"
+            sx={{
+              '& .MuiTab-root': {
+                minHeight: 64,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                color: '#1976d2',
+              },
+            }}
+          >
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <SearchIcon />
+                  Title Search
+                </Box>
+              }
+              id="escrow-title-tab-0"
+              aria-controls="escrow-title-tabpanel-0"
+            />
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <InsuranceIcon />
+                  Title Insurance
+                </Box>
+              }
+              id="escrow-title-tab-1"
+              aria-controls="escrow-title-tabpanel-1"
+            />
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <AccountBalanceIcon />
                   Escrow Accounts
-                </Typography>
-                <Button
-                  size="small"
-                  startIcon={<AddIcon />}
-                  onClick={() => handleOpenEscrowDialog()}
-                >
-                  Add Account
-                </Button>
-              </Box>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Account</TableCell>
-                    <TableCell>Property</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {escrowAccounts.map((account) => (
-                    <TableRow key={account.id}>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {account.accountNumber}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ maxWidth: 150 }}>
-                          {account.propertyAddress}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {formatCurrency(account.amount)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <StatusChip
-                          label={account.status}
-                          status={account.status === 'active' ? 'active' : account.status === 'pending' ? 'pending' : 'completed'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          <Tooltip title="View Details">
-                            <IconButton size="small">
-                              <ViewIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit Account">
-                            <IconButton size="small" onClick={() => handleOpenEscrowDialog(account)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid>
+                </Box>
+              }
+              id="escrow-title-tab-2"
+              aria-controls="escrow-title-tabpanel-2"
+            />
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <MessageIcon />
+                  Secure Messaging
+                </Box>
+              }
+              id="escrow-title-tab-3"
+              aria-controls="escrow-title-tabpanel-3"
+            />
+          </Tabs>
+        </Box>
 
-        {/* Title Searches */}
-        <Grid item xs={12} lg={6}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
-                  Title Searches
-                </Typography>
-                <Button
-                  size="small"
-                  startIcon={<AddIcon />}
-                  onClick={() => handleOpenTitleSearchDialog()}
-                >
-                  New Search
-                </Button>
-              </Box>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Property</TableCell>
-                    <TableCell>Search Date</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {titleSearches.map((search) => (
-                    <TableRow key={search.id}>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ maxWidth: 150 }}>
-                          {search.propertyAddress}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {new Date(search.searchDate).toLocaleDateString()}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <StatusChip
-                          label={search.status}
-                          status={search.status === 'completed' ? 'completed' : search.status === 'in-progress' ? 'pending' : 'error'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          <Tooltip title="View Results">
-                            <IconButton size="small">
-                              <ViewIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Download Documents">
-                            <IconButton size="small">
-                              <DownloadIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid>
+        {/* Tab Content */}
+        <TabPanelComponent value={activeTab} index={0}>
+          {/* Title Search Tab */}
+          <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                Title Search
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenTitleSearchDialog(true)}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+              >
+                New Search
+              </Button>
+            </Box>
 
-        {/* Title Insurance */}
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
-                  Title Insurance Policies
-                </Typography>
-                <Button
-                  size="small"
-                  startIcon={<AddIcon />}
-                  onClick={() => handleOpenInsuranceDialog()}
-                >
-                  New Policy
-                </Button>
-              </Box>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Policy Number</TableCell>
-                    <TableCell>Property</TableCell>
-                    <TableCell>Coverage</TableCell>
-                    <TableCell>Premium</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Effective Date</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {titleInsurance.map((policy) => (
-                    <TableRow key={policy.id}>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {policy.policyNumber}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ maxWidth: 200 }}>
-                          {policy.propertyAddress}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {formatCurrency(policy.coverage)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {formatCurrency(policy.premium)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <StatusChip
-                          label={policy.status}
-                          status={policy.status === 'active' ? 'active' : policy.status === 'pending' ? 'pending' : 'error'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {new Date(policy.effectiveDate).toLocaleDateString()}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          <Tooltip title="View Policy">
-                            <IconButton size="small">
-                              <ViewIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit Policy">
-                            <IconButton size="small" onClick={() => handleOpenInsuranceDialog(policy)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Download Policy">
-                            <IconButton size="small">
-                              <DownloadIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+            {/* Search Form */}
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
+                  <TextField
+                    fullWidth
+                    label="Property Address"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Enter property address to search..."
+                    variant="outlined"
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<SearchIcon />}
+                    onClick={handleTitleSearch}
+                    disabled={!searchQuery.trim()}
+                    sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                  >
+                    Search
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
 
-      {/* Recent Activity */}
-      <Card sx={{ mt: 3 }}>
-        <CardContent>
-          <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
-            Recent Activity
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Alert severity="info" sx={{ fontSize: '0.875rem' }}>
-              New escrow account created for 789 Pine St, Seattle, WA
-            </Alert>
-            <Alert severity="success" sx={{ fontSize: '0.875rem' }}>
-              Title search completed for 123 Main St, San Francisco, CA
-            </Alert>
-            <Alert severity="warning" sx={{ fontSize: '0.875rem' }}>
-              Title insurance policy pending approval for 456 Oak Ave, Los Angeles, CA
-            </Alert>
+            {/* Search Results */}
+            <Card>
+              <CardContent>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
+                  Recent Searches
+                </Typography>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Property</TableCell>
+                      <TableCell>Search Date</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Results</TableCell>
+                      <TableCell>Documents</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {titleData.searchResults.map((search) => (
+                      <TableRow key={search.id}>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ maxWidth: 200 }}>
+                            {search.propertyAddress}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {new Date(search.searchDate).toLocaleDateString()}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                                                     <Chip
+                             label={search.status}
+                             size="small"
+                             sx={{
+                               backgroundColor: getStatusColor(search.status),
+                               color: 'white',
+                               fontWeight: 600
+                             }}
+                           />
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ maxWidth: 200 }}>
+                            {search.results.map((result, index) => (
+                              <Typography key={index} variant="body2" sx={{ mb: 0.5 }}>
+                                • {result}
+                              </Typography>
+                            ))}
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                            {search.documents.map((doc, index) => (
+                              <Button
+                                key={index}
+                                size="small"
+                                startIcon={<DownloadIcon />}
+                                variant="outlined"
+                                sx={{ fontSize: '0.75rem' }}
+                              >
+                                {doc}
+                              </Button>
+                            ))}
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', gap: 0.5 }}>
+                            <Tooltip title="View Details">
+                              <IconButton size="small">
+                                <ViewIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Download Report">
+                              <IconButton size="small">
+                                <DownloadIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
           </Box>
-        </CardContent>
-      </Card>
+        </TabPanelComponent>
 
+        <TabPanelComponent value={activeTab} index={1}>
+          {/* Title Insurance Tab */}
+          <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                Title Insurance
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenInsuranceDialog(true)}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+              >
+                New Policy
+              </Button>
+            </Box>
+
+            {/* Current Policy */}
+            {titleData.insuranceQuote.id && (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
+                    Current Policy
+                  </Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Property Address
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {titleData.insuranceQuote.propertyAddress}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Coverage Amount
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {formatCurrency(titleData.insuranceQuote.coverage)}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Premium
+                      </Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {formatCurrency(titleData.insuranceQuote.premium)}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Status
+                      </Typography>
+                                             <Chip
+                         label={titleData.insuranceQuote.status}
+                         size="small"
+                         sx={{
+                           backgroundColor: getStatusColor(titleData.insuranceQuote.status),
+                           color: 'white',
+                           fontWeight: 600
+                         }}
+                       />
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Order New Insurance */}
+            <Card>
+              <CardContent>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
+                  Order New Title Insurance
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Get a quote and order title insurance for your property.
+                </Typography>
+                <Button
+                  variant="contained"
+                  startIcon={<InsuranceIcon />}
+                  onClick={handleInsuranceOrder}
+                  sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                >
+                  Get Insurance Quote
+                </Button>
+              </CardContent>
+            </Card>
+          </Box>
+        </TabPanelComponent>
+
+        <TabPanelComponent value={activeTab} index={2}>
+          {/* Escrow Accounts Tab */}
+          <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                Escrow Accounts
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenEscrowDialog(true)}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+              >
+                Add Account
+              </Button>
+            </Box>
+
+            {/* Escrow Balance Tracker */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
+              {/* Escrow Accounts */}
+              <Box>
+                <Card>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
+                        Escrow Accounts
+                      </Typography>
+                      <Button
+                        size="small"
+                        startIcon={<AddIcon />}
+                        onClick={() => setOpenEscrowDialog(true)}
+                      >
+                        Add Account
+                      </Button>
+                    </Box>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Account</TableCell>
+                          <TableCell>Property</TableCell>
+                          <TableCell>Amount</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {escrowAccounts.map((account) => (
+                          <TableRow key={account.id}>
+                            <TableCell>
+                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                {account.accountNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="body2" sx={{ maxWidth: 150 }}>
+                                {account.propertyAddress}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                {formatCurrency(account.amount)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                                                           <Chip
+                               label={account.status}
+                               size="small"
+                               sx={{
+                                 backgroundColor: getStatusColor(account.status),
+                                 color: 'white',
+                                 fontWeight: 600
+                               }}
+                             />
+                            </TableCell>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                <Tooltip title="View Details">
+                                  <IconButton size="small">
+                                    <ViewIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Edit Account">
+                                  <IconButton size="small" onClick={() => setOpenEscrowDialog(true)}>
+                                    <EditIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </Box>
+
+              {/* Total Balance */}
+              <Box>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
+                      Total Escrow Balance
+                    </Typography>
+                    <Typography variant="h3" component="div" sx={{ fontWeight: 700, color: '#1976d2', mb: 2 }}>
+                      {formatCurrency(escrowAccounts.reduce((sum, acc) => sum + acc.amount, 0))}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="body2">Active Accounts:</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {escrowAccounts.filter(acc => acc.status === 'active').length}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="body2">Pending Accounts:</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {escrowAccounts.filter(acc => acc.status === 'pending').length}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Box>
+          </Box>
+        </TabPanelComponent>
+
+        <TabPanelComponent value={activeTab} index={3}>
+          {/* Secure Messaging Tab */}
+          <Box>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 3, color: '#1976d2' }}>
+              Secure Messaging
+            </Typography>
+
+                         {/* Send New Message */}
+             <Box sx={{ 
+               border: '2px solid #1976d2',
+               borderRadius: '12px',
+               padding: '1rem',
+               background: '#f8f9fa',
+               position: 'relative',
+               mb: 4
+             }}>
+               <Typography variant="h6" component="h4" sx={{ fontWeight: 600, mb: 2, color: '#1976d2' }}>
+                 Send Encrypted Message
+               </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField
+                  label="To"
+                  value={newMessage.to}
+                  onChange={(e) => setNewMessage({ ...newMessage, to: e.target.value })}
+                  placeholder="recipient@example.com"
+                  variant="outlined"
+                  size="small"
+                />
+                <TextField
+                  label="Subject"
+                  value={newMessage.subject}
+                  onChange={(e) => setNewMessage({ ...newMessage, subject: e.target.value })}
+                  placeholder="Message subject"
+                  variant="outlined"
+                  size="small"
+                />
+                <TextField
+                  label="Message"
+                  value={newMessage.content}
+                  onChange={(e) => setNewMessage({ ...newMessage, content: e.target.value })}
+                  placeholder="Type your secure message here..."
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#1976d2' }}>
+                    <LockIcon fontSize="small" />
+                    <Typography variant="caption">
+                      Message will be encrypted using AES-256
+                    </Typography>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    startIcon={<SendIcon />}
+                    onClick={handleSendMessage}
+                    disabled={!newMessage.to || !newMessage.subject || !newMessage.content}
+                    sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                  >
+                    Send Message
+                  </Button>
+                                 </Box>
+               </Box>
+             </Box>
+
+            {/* Message History */}
+            <Card>
+              <CardContent>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
+                  Message History
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {messages.map((message) => (
+                    <Box key={message.id} sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          {message.subject}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {message.encrypted && (
+                            <LockIcon fontSize="small" color="primary" />
+                          )}
+                          <Typography variant="caption" color="text.secondary">
+                            {new Date(message.timestamp).toLocaleString()}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        From: {message.from} | To: {message.to}
+                      </Typography>
+                      <Typography variant="body2">
+                        {message.content}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        </TabPanelComponent>
+      </Paper>
+
+      {/* Dialogs */}
       {/* Escrow Account Dialog */}
       <Dialog open={openEscrowDialog} onClose={() => setOpenEscrowDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {selectedItem ? 'Edit Escrow Account' : 'New Escrow Account'}
-        </DialogTitle>
+        <DialogTitle>Escrow Account</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
+          <Box sx={{ mt: 2 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
+              <TextField
+                fullWidth
+                label="Account Number"
+                defaultValue={selectedItem?.accountNumber || ''}
+                margin="normal"
+              />
               <TextField
                 fullWidth
                 label="Property Address"
                 defaultValue={selectedItem?.propertyAddress || ''}
                 margin="normal"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Buyer Name"
-                defaultValue={selectedItem?.buyer || ''}
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Seller Name"
-                defaultValue={selectedItem?.seller || ''}
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Escrow Amount"
@@ -584,11 +970,9 @@ const EscrowTitleHub: React.FC = () => {
                 defaultValue={selectedItem?.amount || ''}
                 margin="normal"
                 InputProps={{
-                  startAdornment: <Typography>$</Typography>,
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Closing Date"
@@ -597,88 +981,76 @@ const EscrowTitleHub: React.FC = () => {
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Status</InputLabel>
                 <Select defaultValue={selectedItem?.status || 'pending'}>
                   <MenuItem value="pending">Pending</MenuItem>
                   <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="closed">Closed</MenuItem>
+                  <MenuItem value="completed">Completed</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenEscrowDialog(false)}>Cancel</Button>
-          <Button variant="contained" sx={{ backgroundColor: '#1976d2' }}>
-            {selectedItem ? 'Update' : 'Create'}
+          <Button variant="contained" onClick={() => setOpenEscrowDialog(false)}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Title Search Dialog */}
       <Dialog open={openTitleSearchDialog} onClose={() => setOpenTitleSearchDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {selectedItem ? 'Edit Title Search' : 'New Title Search'}
-        </DialogTitle>
+        <DialogTitle>New Title Search</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
+          <Box sx={{ mt: 2 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
               <TextField
                 fullWidth
                 label="Property Address"
                 defaultValue={selectedItem?.propertyAddress || ''}
                 margin="normal"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Search Date"
                 type="date"
-                defaultValue={selectedItem?.searchDate || new Date().toISOString().split('T')[0]}
+                defaultValue={selectedItem?.searchDate || ''}
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Status</InputLabel>
                 <Select defaultValue={selectedItem?.status || 'in-progress'}>
                   <MenuItem value="in-progress">In Progress</MenuItem>
                   <MenuItem value="completed">Completed</MenuItem>
-                  <MenuItem value="failed">Failed</MenuItem>
+                  <MenuItem value="error">Error</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenTitleSearchDialog(false)}>Cancel</Button>
-          <Button variant="contained" sx={{ backgroundColor: '#1976d2' }}>
-            {selectedItem ? 'Update' : 'Create'}
+          <Button variant="contained" onClick={() => setOpenTitleSearchDialog(false)}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Title Insurance Dialog */}
       <Dialog open={openInsuranceDialog} onClose={() => setOpenInsuranceDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {selectedItem ? 'Edit Title Insurance Policy' : 'New Title Insurance Policy'}
-        </DialogTitle>
+        <DialogTitle>Title Insurance Policy</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
+          <Box sx={{ mt: 2 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
               <TextField
                 fullWidth
                 label="Property Address"
                 defaultValue={selectedItem?.propertyAddress || ''}
                 margin="normal"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Coverage Amount"
@@ -686,11 +1058,9 @@ const EscrowTitleHub: React.FC = () => {
                 defaultValue={selectedItem?.coverage || ''}
                 margin="normal"
                 InputProps={{
-                  startAdornment: <Typography>$</Typography>,
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Premium Amount"
@@ -698,11 +1068,9 @@ const EscrowTitleHub: React.FC = () => {
                 defaultValue={selectedItem?.premium || ''}
                 margin="normal"
                 InputProps={{
-                  startAdornment: <Typography>$</Typography>,
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Effective Date"
@@ -711,8 +1079,6 @@ const EscrowTitleHub: React.FC = () => {
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Status</InputLabel>
                 <Select defaultValue={selectedItem?.status || 'pending'}>
@@ -721,13 +1087,13 @@ const EscrowTitleHub: React.FC = () => {
                   <MenuItem value="expired">Expired</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenInsuranceDialog(false)}>Cancel</Button>
-          <Button variant="contained" sx={{ backgroundColor: '#1976d2' }}>
-            {selectedItem ? 'Update' : 'Create'}
+          <Button variant="contained" onClick={() => setOpenInsuranceDialog(false)}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -735,4 +1101,4 @@ const EscrowTitleHub: React.FC = () => {
   );
 };
 
-export { EscrowTitleHub };
+export default EscrowTitleHub;

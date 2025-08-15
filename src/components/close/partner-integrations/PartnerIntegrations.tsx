@@ -27,4 +27,4 @@ const PartnerIntegrations: React.FC = () => {
   );
 };
 
-export { PartnerIntegrations };
+export default PartnerIntegrations;

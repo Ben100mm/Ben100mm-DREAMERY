@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Card,
@@ -8,7 +8,7 @@ import {
   Alert,
   InputAdornment,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Calculate as CalculateIcon,
   Settings as SettingsIcon,
@@ -18,12 +18,12 @@ import {
   ShowChart as ShowChartIcon,
   Timeline as TimelineIcon,
   SwapHoriz as SwapHorizIcon,
-} from '@mui/icons-material';
-import { OverviewTab } from '../components/OverviewTab';
-import { GlobalConfigTab } from '../components/GlobalConfigTab';
-import { ExitStrategiesTab } from '../components/ExitStrategiesTab';
-import { RiskAnalysisTab } from '../components/RiskAnalysisTab';
-import { ScenarioComparisonTab } from '../components/ScenarioComparisonTab';
+} from "@mui/icons-material";
+import { OverviewTab } from "../components/OverviewTab";
+import { GlobalConfigTab } from "../components/GlobalConfigTab";
+import { ExitStrategiesTab } from "../components/ExitStrategiesTab";
+import { RiskAnalysisTab } from "../components/RiskAnalysisTab";
+import { ScenarioComparisonTab } from "../components/ScenarioComparisonTab";
 import {
   SeasonalAdjustmentsCalculator,
   MarketConditionsCalculator,
@@ -35,14 +35,14 @@ import {
   StressTestingCalculator,
   InflationAdjustmentsCalculator,
   ComprehensiveRefinanceCalculator,
-} from '../components';
+} from "../components";
 
 // Color constants
-export const DEFAULT_COLOR = '#1a365d';
-export const SECONDARY_COLOR = '#2e7d32';
-export const WARNING_COLOR = '#d32f2f';
-export const INFO_COLOR = '#1976d2';
-export const SUCCESS_COLOR = '#2e7d32';
+export const DEFAULT_COLOR = "#1a365d";
+export const SECONDARY_COLOR = "#2e7d32";
+export const WARNING_COLOR = "#d32f2f";
+export const INFO_COLOR = "#1976d2";
+export const SUCCESS_COLOR = "#2e7d32";
 
 // Spacing constants
 export const DEFAULT_SPACING = 2;
@@ -50,9 +50,9 @@ export const CARD_SPACING = 3;
 export const SECTION_SPACING = 4;
 
 // Background colors
-export const CARD_BACKGROUND = '#f8f9fa';
-export const ALERT_BACKGROUND = '#f0f8ff';
-export const INFO_BACKGROUND = '#e3f2fd';
+export const CARD_BACKGROUND = "#f8f9fa";
+export const ALERT_BACKGROUND = "#f0f8ff";
+export const INFO_BACKGROUND = "#e3f2fd";
 
 // Tab configuration
 export const createTabConfig = (
@@ -66,24 +66,26 @@ export const createTabConfig = (
   allResults: any,
   setAllResults: any,
   setTabValue: any,
-  setSnackbar: (snackbar: { open: boolean; message: string; severity: 'success' | 'error' | 'warning' | 'info' }) => void
+  setSnackbar: (snackbar: {
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "warning" | "info";
+  }) => void,
 ) => [
   {
-    label: 'Overview',
+    label: "Overview",
     icon: <CalculateIcon aria-label="Calculate" />,
-    className: 'overview-tab',
-    component: (
-      <OverviewTab dealState={dealState} allResults={allResults} />
-    ),
+    className: "overview-tab",
+    component: <OverviewTab dealState={dealState} allResults={allResults} />,
   },
   {
-    label: 'Global Configuration',
+    label: "Global Configuration",
     icon: <SettingsIcon aria-label="Settings" />,
-    className: 'global-config-tab',
+    className: "global-config-tab",
     component: (
-      <GlobalConfigTab 
-        dealState={dealState} 
-        updateDealState={updateDealState} 
+      <GlobalConfigTab
+        dealState={dealState}
+        updateDealState={updateDealState}
         handleResultsChange={handleResultsChange}
         scenarios={scenarios}
         setScenarios={setScenarios}
@@ -93,15 +95,23 @@ export const createTabConfig = (
     ),
   },
   {
-    label: 'Seasonal & Market',
+    label: "Seasonal & Market",
     icon: <TimelineIcon />,
     component: (
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+      <Box
+        sx={{
+          display: "grid",
+          gap: 2,
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+        }}
+      >
         <Box>
           <SeasonalAdjustmentsCalculator
             baseVacancyRate={dealState?.proForma?.vacancy || 0.05}
             baseMaintenanceCost={dealState?.proForma?.maintenance || 500}
-            onResultsChange={(results: any) => handleResultsChange('seasonal', results)}
+            onResultsChange={(results: any) =>
+              handleResultsChange("seasonal", results)
+            }
           />
         </Box>
         <Box>
@@ -109,23 +119,26 @@ export const createTabConfig = (
             baseMetrics={{
               vacancyRate: dealState?.proForma?.vacancy || 0.05,
               rentGrowth: dealState?.marketConditions?.rentGrowthRate || 0.03,
-              appreciation: dealState?.marketConditions?.appreciationRate || 0.04,
+              appreciation:
+                dealState?.marketConditions?.appreciationRate || 0.04,
               capRate: 0.06,
             }}
-            onResultsChange={(results: any) => handleResultsChange('market', results)}
+            onResultsChange={(results: any) =>
+              handleResultsChange("market", results)
+            }
           />
         </Box>
       </Box>
     ),
   },
   {
-    label: 'Exit Strategies',
+    label: "Exit Strategies",
     icon: <TrendingUpIcon aria-label="Trending Up" />,
-    className: 'exit-strategies-tab',
+    className: "exit-strategies-tab",
     component: (
-      <ExitStrategiesTab 
-        dealState={dealState} 
-        updateDealState={updateDealState} 
+      <ExitStrategiesTab
+        dealState={dealState}
+        updateDealState={updateDealState}
         handleResultsChange={handleResultsChange}
         isCalculating={isCalculating}
         setIsCalculating={setIsCalculating}
@@ -133,33 +146,35 @@ export const createTabConfig = (
     ),
   },
   {
-    label: 'Tax',
+    label: "Tax",
     icon: <AccountBalanceIcon aria-label="Account Balance" />,
-    className: 'tax-implications-tab',
+    className: "tax-implications-tab",
     component: (
       <TaxImplicationsCalculator
-        onResultsChange={(results: any) => handleResultsChange('tax', results)}
+        onResultsChange={(results: any) => handleResultsChange("tax", results)}
       />
     ),
   },
   {
-    label: 'Refinance',
+    label: "Refinance",
     icon: <AccountBalanceIcon aria-label="Account Balance" />,
-    className: 'refinance-tab',
+    className: "refinance-tab",
     component: (
       <ComprehensiveRefinanceCalculator
-        onResultsChange={(results: any) => handleResultsChange('refinance', results)}
+        onResultsChange={(results: any) =>
+          handleResultsChange("refinance", results)
+        }
       />
     ),
   },
   {
-    label: 'Risk Analysis',
+    label: "Risk Analysis",
     icon: <SecurityIcon aria-label="Security" />,
-    className: 'risk-analysis-tab',
+    className: "risk-analysis-tab",
     component: (
-      <RiskAnalysisTab 
-        dealState={dealState} 
-        updateDealState={updateDealState} 
+      <RiskAnalysisTab
+        dealState={dealState}
+        updateDealState={updateDealState}
         handleResultsChange={handleResultsChange}
         isCalculating={isCalculating}
         setIsCalculating={setIsCalculating}
@@ -167,28 +182,38 @@ export const createTabConfig = (
     ),
   },
   {
-    label: 'Sensitivity & Inflation',
+    label: "Sensitivity & Inflation",
     icon: <ShowChartIcon aria-label="Show Chart" />,
-    className: 'sensitivity-analysis-tab',
+    className: "sensitivity-analysis-tab",
     component: (
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+      <Box
+        sx={{
+          display: "grid",
+          gap: 2,
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+        }}
+      >
         <Box>
           <SensitivityAnalysisCalculator
-            onResultsChange={(results: any) => handleResultsChange('sensitivity', results)}
+            onResultsChange={(results: any) =>
+              handleResultsChange("sensitivity", results)
+            }
           />
         </Box>
         <Box>
           <InflationAdjustmentsCalculator
-            onResultsChange={(results: any) => handleResultsChange('inflation', results)}
+            onResultsChange={(results: any) =>
+              handleResultsChange("inflation", results)
+            }
           />
         </Box>
       </Box>
     ),
   },
   {
-    label: 'Scenario Comparison',
+    label: "Scenario Comparison",
     icon: <SwapHorizIcon aria-label="Swap Horizontally" />,
-    className: 'scenario-comparison-tab',
+    className: "scenario-comparison-tab",
     component: (
       <ScenarioComparisonTab
         dealState={dealState}
@@ -207,29 +232,29 @@ export const DEFAULT_TAB_VALUE = 0;
 
 // Tab labels for easy reference
 export const TAB_LABELS = {
-  OVERVIEW: 'Overview',
-  GLOBAL_CONFIG: 'Global Configuration',
-  SEASONAL_MARKET: 'Seasonal & Market',
-  EXIT_STRATEGIES: 'Exit Strategies',
-  TAX: 'Tax',
-  REFINANCE: 'Refinance',
-  RISK_ANALYSIS: 'Risk Analysis',
-  SENSITIVITY_INFLATION: 'Sensitivity & Inflation',
-  SCENARIO_COMPARISON: 'Scenario Comparison',
+  OVERVIEW: "Overview",
+  GLOBAL_CONFIG: "Global Configuration",
+  SEASONAL_MARKET: "Seasonal & Market",
+  EXIT_STRATEGIES: "Exit Strategies",
+  TAX: "Tax",
+  REFINANCE: "Refinance",
+  RISK_ANALYSIS: "Risk Analysis",
+  SENSITIVITY_INFLATION: "Sensitivity & Inflation",
+  SCENARIO_COMPARISON: "Scenario Comparison",
 } as const;
 
 // Tab class names for styling
 export const TAB_CLASSES = {
-  OVERVIEW: 'overview-tab',
-  GLOBAL_CONFIG: 'global-config-tab',
-  EXIT_STRATEGIES: 'exit-strategies-tab',
-  TAX: 'tax-implications-tab',
-  REFINANCE: 'refinance-tab',
-  RISK_ANALYSIS: 'risk-analysis-tab',
-  SENSITIVITY_ANALYSIS: 'sensitivity-analysis-tab',
-  SCENARIO_COMPARISON: 'scenario-comparison-tab',
+  OVERVIEW: "overview-tab",
+  GLOBAL_CONFIG: "global-config-tab",
+  EXIT_STRATEGIES: "exit-strategies-tab",
+  TAX: "tax-implications-tab",
+  REFINANCE: "refinance-tab",
+  RISK_ANALYSIS: "risk-analysis-tab",
+  SENSITIVITY_ANALYSIS: "sensitivity-analysis-tab",
+  SCENARIO_COMPARISON: "scenario-comparison-tab",
 } as const;
 
 // Export types for better type safety
-export type TabLabel = typeof TAB_LABELS[keyof typeof TAB_LABELS];
-export type TabClass = typeof TAB_CLASSES[keyof typeof TAB_CLASSES];
+export type TabLabel = (typeof TAB_LABELS)[keyof typeof TAB_LABELS];
+export type TabClass = (typeof TAB_CLASSES)[keyof typeof TAB_CLASSES];

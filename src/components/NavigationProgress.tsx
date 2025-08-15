@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -20,7 +20,7 @@ import {
   ListItemButton,
   Fab,
   Tooltip,
-} from '@mui/material';
+} from "@mui/material";
 import {
   NavigateNext as NavigateNextIcon,
   NavigateBefore as NavigateBeforeIcon,
@@ -31,14 +31,14 @@ import {
   RadioButtonUnchecked as RadioButtonUncheckedIcon,
   Home as HomeIcon,
   ArrowUpward as ArrowUpwardIcon,
-} from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-import { 
-  Breadcrumbs, 
-  QuickJumpMenu, 
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import {
+  Breadcrumbs,
+  QuickJumpMenu,
   CompletionProgress,
   SectionStatusIndicator,
-} from './UXComponents';
+} from "./UXComponents";
 
 // Styled components
 const ProgressContainer = styled(Paper)(({ theme }) => ({
@@ -55,7 +55,7 @@ const StepContentWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const FloatingActionButton = styled(Fab)(({ theme }) => ({
-  position: 'fixed',
+  position: "fixed",
   bottom: theme.spacing(3),
   right: theme.spacing(3),
   zIndex: 1000,
@@ -64,9 +64,9 @@ const FloatingActionButton = styled(Fab)(({ theme }) => ({
 const DrawerHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   borderBottom: `1px solid ${theme.palette.divider}`,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
 }));
 
 // Navigation Step Interface
@@ -130,7 +130,7 @@ export const NavigationProgress: React.FC<{
     setExpandedStep(expandedStep === stepIndex ? null : stepIndex);
   };
 
-  const completedSteps = steps.filter(step => step.completed).length;
+  const completedSteps = steps.filter((step) => step.completed).length;
   const totalSteps = steps.length;
 
   const breadcrumbItems = steps.map((step, index) => ({
@@ -146,7 +146,7 @@ export const NavigationProgress: React.FC<{
   }));
 
   const handleJumpTo = (id: string) => {
-    const stepIndex = steps.findIndex(step => step.id === id);
+    const stepIndex = steps.findIndex((step) => step.id === id);
     if (stepIndex !== -1) {
       handleStepClick(stepIndex);
     }
@@ -154,7 +154,7 @@ export const NavigationProgress: React.FC<{
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -174,30 +174,33 @@ export const NavigationProgress: React.FC<{
       )}
 
       {/* Breadcrumbs */}
-      {showBreadcrumbs && (
-        <Breadcrumbs items={breadcrumbItems} />
-      )}
+      {showBreadcrumbs && <Breadcrumbs items={breadcrumbItems} />}
 
       {/* Progress Overview */}
       {showProgress && (
         <ProgressContainer>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
             <Typography variant="h6" component="h2">
               Progress Overview
             </Typography>
             <Chip
               label={`${completedSteps}/${totalSteps} completed`}
-              color={completedSteps === totalSteps ? 'success' : 'primary'}
+              color={completedSteps === totalSteps ? "success" : "primary"}
               variant="outlined"
             />
           </Box>
-          
+
           <CompletionProgress
             completed={completedSteps}
             total={totalSteps}
             label="Overall Progress"
           />
-          
+
           {showQuickJump && (
             <Box mt={2}>
               <QuickJumpMenu
@@ -218,20 +221,32 @@ export const NavigationProgress: React.FC<{
                 optional={
                   <Box display="flex" alignItems="center" gap={1}>
                     {step.required && (
-                      <Chip label="Required" size="small" color="error" variant="outlined" />
+                      <Chip
+                        label="Required"
+                        size="small"
+                        color="error"
+                        variant="outlined"
+                      />
                     )}
                     {step.completed && (
-                      <Chip label="Completed" size="small" color="success" variant="outlined" />
+                      <Chip
+                        label="Completed"
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                      />
                     )}
                   </Box>
                 }
                 onClick={() => handleStepToggle(index)}
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: "pointer" }}
               >
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="subtitle1">
-                    {step.label}
-                  </Typography>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="subtitle1">{step.label}</Typography>
                   {step.description && (
                     <IconButton
                       size="small"
@@ -240,12 +255,16 @@ export const NavigationProgress: React.FC<{
                         handleStepToggle(index);
                       }}
                     >
-                      {expandedStep === index ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      {expandedStep === index ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
                     </IconButton>
                   )}
                 </Box>
               </StepLabel>
-              
+
               <StepContent>
                 <StepContentWrapper>
                   {step.description && (
@@ -253,11 +272,11 @@ export const NavigationProgress: React.FC<{
                       {step.description}
                     </Typography>
                   )}
-                  
+
                   <Collapse in={expandedStep === index}>
                     {step.component}
                   </Collapse>
-                  
+
                   <Box display="flex" justifyContent="space-between" mt={2}>
                     <Button
                       disabled={index === 0}
@@ -266,7 +285,7 @@ export const NavigationProgress: React.FC<{
                     >
                       Back
                     </Button>
-                    
+
                     <Box>
                       {index === steps.length - 1 ? (
                         <Button
@@ -321,7 +340,7 @@ export const NavigationProgress: React.FC<{
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
-          sx: { width: 320 }
+          sx: { width: 320 },
         }}
       >
         <DrawerHeader>
@@ -330,7 +349,7 @@ export const NavigationProgress: React.FC<{
             <NavigateBeforeIcon />
           </IconButton>
         </DrawerHeader>
-        
+
         <List>
           {steps.map((step, index) => (
             <ListItem key={step.id} disablePadding>
@@ -349,27 +368,29 @@ export const NavigationProgress: React.FC<{
                   primary={step.label}
                   secondary={step.description}
                   primaryTypographyProps={{
-                    fontWeight: index === currentStep ? 'medium' : 'normal',
+                    fontWeight: index === currentStep ? "medium" : "normal",
                   }}
                 />
                 {step.required && (
-                  <Chip label="Required" size="small" color="error" variant="outlined" />
+                  <Chip
+                    label="Required"
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                  />
                 )}
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-        
+
         <Divider />
-        
+
         <Box p={2}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Progress Summary
           </Typography>
-          <CompletionProgress
-            completed={completedSteps}
-            total={totalSteps}
-          />
+          <CompletionProgress completed={completedSteps} total={totalSteps} />
         </Box>
       </Drawer>
     </Box>
@@ -378,7 +399,12 @@ export const NavigationProgress: React.FC<{
 
 // Section Status Component
 export const SectionStatusList: React.FC<{
-  sections: Array<{ id: string; label: string; completed: boolean; required?: boolean }>;
+  sections: Array<{
+    id: string;
+    label: string;
+    completed: boolean;
+    required?: boolean;
+  }>;
   onSectionClick?: (id: string) => void;
 }> = ({ sections, onSectionClick }) => {
   return (
@@ -390,7 +416,7 @@ export const SectionStatusList: React.FC<{
         <SectionStatusIndicator
           key={section.id}
           completed={section.completed}
-          label={`${section.label}${section.required ? ' *' : ''}`}
+          label={`${section.label}${section.required ? " *" : ""}`}
           onClick={() => onSectionClick?.(section.id)}
         />
       ))}
@@ -404,45 +430,59 @@ export const ProgressBar: React.FC<{
   total: number;
   label?: string;
   showPercentage?: boolean;
-  color?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
-}> = ({ current, total, label, showPercentage = true, color = 'primary' }) => {
+  color?: "primary" | "secondary" | "success" | "error" | "warning" | "info";
+}> = ({ current, total, label, showPercentage = true, color = "primary" }) => {
   const percentage = total > 0 ? (current / total) * 100 : 0;
-  
+
   return (
     <Box>
       {label && (
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1}
+        >
           <Typography variant="body2" color="text.secondary">
             {label}
           </Typography>
           {showPercentage && (
-            <Typography variant="body2" color="text.primary" fontWeight="medium">
+            <Typography
+              variant="body2"
+              color="text.primary"
+              fontWeight="medium"
+            >
               {Math.round(percentage)}%
             </Typography>
           )}
         </Box>
       )}
-      
+
       <Box
         sx={{
-          width: '100%',
+          width: "100%",
           height: 8,
-          backgroundColor: 'divider',
+          backgroundColor: "divider",
           borderRadius: 4,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         <Box
           sx={{
             width: `${percentage}%`,
-            height: '100%',
+            height: "100%",
             backgroundColor: `${color}.main`,
-            transition: 'width 0.3s ease',
+            transition: "width 0.3s ease",
           }}
         />
       </Box>
-      
-      <Typography variant="caption" color="text.secondary" display="block" textAlign="right">
+
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        display="block"
+        textAlign="right"
+      >
         {current} of {total}
       </Typography>
     </Box>

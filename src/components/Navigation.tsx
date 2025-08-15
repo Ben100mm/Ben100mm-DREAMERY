@@ -70,6 +70,7 @@ const Navigation: React.FC = () => {
   ];
 
   const handleNavClick = (path: string) => {
+    console.log('Navigation clicked:', path); // Debug log
     // Navigate to any declared route; non-declared paths will log for now
     switch (path) {
       case '/buy':
@@ -78,9 +79,11 @@ const Navigation: React.FC = () => {
       case '/mortgage':
       case '/underwrite':
       case '/close':
+        console.log('Navigating to:', path); // Debug log
         navigate(path);
         break;
       default:
+        console.log('Route not implemented:', path); // Debug log
         // Route not implemented yet
         break;
     }

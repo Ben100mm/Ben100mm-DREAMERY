@@ -79,7 +79,7 @@ export interface LoanTerms {
 }
 
 export interface MarketConditions {
-  type: 'hot' | 'stable' | 'slow';
+  type: "hot" | "stable" | "slow";
   vacancyRateAdjustment: number; // Percentage adjustment to base vacancy rate
   rentGrowthRate: number; // Annual rent growth percentage
   appreciationRate: number; // Annual property appreciation percentage
@@ -106,7 +106,7 @@ export interface PropertyAgeFactors {
 }
 
 export interface LocationFactors {
-  type: 'urban' | 'suburban' | 'rural';
+  type: "urban" | "suburban" | "rural";
   propertyTaxRate: number;
   insuranceCostMultiplier: number;
   maintenanceCostMultiplier: number;
@@ -151,21 +151,42 @@ export interface RiskFactors {
 
 export interface DealState {
   // Basic Property Information
-  propertyType: 'Single Family' | 'Multi Family' | 'Condo' | 'Townhouse' | 'Land' | 'Hotel';
-  operationType: 'Buy & Hold' | 'Fix & Flip' | 'Short Term Rental' | 'Rental Arbitrage' | 'BRRRR';
+  propertyType:
+    | "Single Family"
+    | "Multi Family"
+    | "Condo"
+    | "Townhouse"
+    | "Land"
+    | "Hotel";
+  operationType:
+    | "Buy & Hold"
+    | "Fix & Flip"
+    | "Short Term Rental"
+    | "Rental Arbitrage"
+    | "BRRRR";
   purchasePrice: number;
   city: string;
   state: string;
-  
+
   // Financing Type
-  offerType?: 'Cash' | 'Conventional' | 'FHA' | 'DSCR' | 'Seller Finance' | 'Hard Money' | 'Private' | 'Subject To Existing Mortgage' | 'Hybrid' | 'Line of Credit';
-  
+  offerType?:
+    | "Cash"
+    | "Conventional"
+    | "FHA"
+    | "DSCR"
+    | "Seller Finance"
+    | "Hard Money"
+    | "Private"
+    | "Subject To Existing Mortgage"
+    | "Hybrid"
+    | "Line of Credit";
+
   // Market Type
-  marketType: 'hot' | 'stable' | 'slow';
-  
+  marketType: "hot" | "stable" | "slow";
+
   // Loan Information
   loan: LoanTerms;
-  
+
   // Subject-To Financing
   subjectTo: {
     loans: Array<{
@@ -180,10 +201,10 @@ export interface DealState {
     totalBalance: number;
     totalMonthlyPayment: number;
   };
-  
+
   // Hybrid Financing
   hybrid: HybridInputs;
-  
+
   // Operations
   ops: {
     taxes: number;
@@ -194,7 +215,7 @@ export interface DealState {
     capEx: number;
     opEx: number;
   };
-  
+
   // Revenue Inputs (for Hotel/STR)
   revenueInputs: {
     totalRooms: number;
@@ -202,7 +223,7 @@ export interface DealState {
     occupancyRate: number;
     seasonalVariations: SeasonalFactors;
   };
-  
+
   // Pro Forma
   proForma: {
     taxes: number;
@@ -214,13 +235,13 @@ export interface DealState {
     opEx: number;
   };
   proFormaAuto: boolean;
-  
+
   // Fix & Flip
   fixFlip: FixFlipInputs;
-  
+
   // BRRRR
   brrrr: BRRRRInputs;
-  
+
   // Advanced Analysis Configuration
   marketConditions: MarketConditions;
   exitStrategies: ExitStrategy[];
@@ -229,7 +250,7 @@ export interface DealState {
   locationFactors: LocationFactors;
   riskFactors: RiskFactors;
   taxImplications: TaxImplications;
-  
+
   // Advanced Analysis Results
   exitStrategyResults?: Array<{
     timeframe: number;
@@ -268,16 +289,16 @@ export interface DealState {
       adjustedPropertyValue: number;
     };
   };
-  
+
   // Inflation Adjustment Configuration
   inflationProjectionYears?: number;
   baseMonthlyRent?: number;
-  
+
   // Market Data API Integration
   marketDataLoading?: boolean;
   marketDataError?: string | null;
   lastMarketDataUpdate?: string | null;
-  
+
   // Deal Modification Tracking
   lastModified?: string;
 }

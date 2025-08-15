@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Typography,
@@ -10,8 +10,8 @@ import {
   Button,
   Chip,
   Alert,
-} from '@mui/material';
-import { DealState } from '../types/deal';
+} from "@mui/material";
+import { DealState } from "../types/deal";
 
 interface ScenarioComparisonTabProps {
   dealState: DealState | null;
@@ -31,8 +31,9 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: '#666' }}>
-          No deal data found. Please go back to the Underwrite page and click "Open Advanced Analysis" to load your deal data.
+        <Typography variant="body2" sx={{ color: "#666" }}>
+          No deal data found. Please go back to the Underwrite page and click
+          "Open Advanced Analysis" to load your deal data.
         </Typography>
       </Box>
     );
@@ -42,7 +43,8 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
     return (
       <Alert severity="info" sx={{ mb: 2 }}>
         <Typography variant="body2">
-          No scenarios saved yet. Go to the Global Configuration tab to save your first scenario.
+          No scenarios saved yet. Go to the Global Configuration tab to save
+          your first scenario.
         </Typography>
       </Alert>
     );
@@ -60,63 +62,71 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
   };
 
   const handleRenameScenario = (index: number, currentName: string) => {
-    const newName = prompt('Enter new name for scenario:', currentName);
+    const newName = prompt("Enter new name for scenario:", currentName);
     if (newName && newName.trim()) {
       const updatedScenarios = [...scenarios];
-      updatedScenarios[index] = { ...updatedScenarios[index], name: newName.trim() };
+      updatedScenarios[index] = {
+        ...updatedScenarios[index],
+        name: newName.trim(),
+      };
       setScenarios(updatedScenarios);
     }
   };
 
   const exportScenariosAsCSV = () => {
     if (scenarios.length === 0) return;
-    
-    const headers = ['Scenario Name', 'Timestamp', 'Key Metrics'];
+
+    const headers = ["Scenario Name", "Timestamp", "Key Metrics"];
     const csvContent = [
-      headers.join(','),
-      ...scenarios.map(scenario => [
-        `"${scenario.name}"`,
-        `"${scenario.timestamp || 'N/A'}"`,
-        `"${Object.keys(scenario.results || {}).join(', ')}"`
-      ].join(','))
-    ].join('\n');
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+      headers.join(","),
+      ...scenarios.map((scenario) =>
+        [
+          `"${scenario.name}"`,
+          `"${scenario.timestamp || "N/A"}"`,
+          `"${Object.keys(scenario.results || {}).join(", ")}"`,
+        ].join(","),
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `scenarios-comparison-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `scenarios-comparison-${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
   const exportScenariosAsJSON = () => {
     if (scenarios.length === 0) return;
-    
+
     const jsonContent = JSON.stringify(scenarios, null, 2);
-    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const blob = new Blob([jsonContent], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `scenarios-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `scenarios-${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', mb: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+      >
         Scenario Comparison
       </Typography>
-      <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
         Compare saved scenarios and their key metrics
       </Typography>
-      
-      <Table 
-        size="small" 
+
+      <Table
+        size="small"
         aria-label="Scenario Comparison Results"
         data-testid="scenario-comparison-table"
-        sx={{ border: 1, borderColor: '#e0e0e0' }}
+        sx={{ border: 1, borderColor: "#e0e0e0" }}
       >
         <TableHead>
           <TableRow>
@@ -135,35 +145,39 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  {scenario.timestamp ? new Date(scenario.timestamp).toLocaleString() : 'No timestamp'}
+                <Typography variant="body2" sx={{ color: "#666" }}>
+                  {scenario.timestamp
+                    ? new Date(scenario.timestamp).toLocaleString()
+                    : "No timestamp"}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                  {Object.keys(scenario.results || {}).map((metric, metricIndex) => (
-                    <Chip
-                      key={metricIndex}
-                      label={metric}
-                      size="small"
-                      variant="outlined"
-                      sx={{ fontSize: '0.75rem' }}
-                    />
-                  ))}
+                <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
+                  {Object.keys(scenario.results || {}).map(
+                    (metric, metricIndex) => (
+                      <Chip
+                        key={metricIndex}
+                        label={metric}
+                        size="small"
+                        variant="outlined"
+                        sx={{ fontSize: "0.75rem" }}
+                      />
+                    ),
+                  )}
                 </Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                   <Button
                     size="small"
                     variant="outlined"
                     onClick={() => handleLoadScenario(scenario)}
-                    sx={{ 
-                      borderColor: '#1a365d', 
-                      color: '#1a365d',
-                      fontSize: '0.75rem',
-                      minWidth: 'auto',
-                      px: 1
+                    sx={{
+                      borderColor: "#1a365d",
+                      color: "#1a365d",
+                      fontSize: "0.75rem",
+                      minWidth: "auto",
+                      px: 1,
                     }}
                   >
                     Load
@@ -172,12 +186,12 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                     size="small"
                     variant="outlined"
                     onClick={() => handleRenameScenario(index, scenario.name)}
-                    sx={{ 
-                      borderColor: '#2e7d32', 
-                      color: '#2e7d32',
-                      fontSize: '0.75rem',
-                      minWidth: 'auto',
-                      px: 1
+                    sx={{
+                      borderColor: "#2e7d32",
+                      color: "#2e7d32",
+                      fontSize: "0.75rem",
+                      minWidth: "auto",
+                      px: 1,
                     }}
                   >
                     Rename
@@ -188,12 +202,12 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                     onClick={() => {
                       setScenarios(scenarios.filter((_, i) => i !== index));
                     }}
-                    sx={{ 
-                      borderColor: '#d32f2f', 
-                      color: '#d32f2f',
-                      fontSize: '0.75rem',
-                      minWidth: 'auto',
-                      px: 1
+                    sx={{
+                      borderColor: "#d32f2f",
+                      color: "#d32f2f",
+                      fontSize: "0.75rem",
+                      minWidth: "auto",
+                      px: 1,
                     }}
                   >
                     Remove
@@ -204,21 +218,24 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
           ))}
         </TableBody>
       </Table>
-      
+
       {/* Export Scenarios */}
-      <Box sx={{ mt: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#1a365d' }}>
+      <Box sx={{ mt: 3, p: 2, backgroundColor: "#f8f9fa", borderRadius: 1 }}>
+        <Typography
+          variant="subtitle2"
+          sx={{ fontWeight: 600, mb: 2, color: "#1a365d" }}
+        >
           Export Scenarios
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           <Button
             variant="outlined"
             onClick={exportScenariosAsCSV}
             disabled={scenarios.length === 0}
-            sx={{ 
-              borderColor: '#1a365d', 
-              color: '#1a365d',
-              '&:hover': { borderColor: '#0f2027', bgcolor: '#e6f3ff' }
+            sx={{
+              borderColor: "#1a365d",
+              color: "#1a365d",
+              "&:hover": { borderColor: "#0f2027", bgcolor: "#e6f3ff" },
             }}
           >
             Export Comparison as CSV
@@ -227,10 +244,10 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
             variant="outlined"
             onClick={exportScenariosAsJSON}
             disabled={scenarios.length === 0}
-            sx={{ 
-              borderColor: '#1a365d', 
-              color: '#1a365d',
-              '&:hover': { borderColor: '#0f2027', bgcolor: '#e6f3ff' }
+            sx={{
+              borderColor: "#1a365d",
+              color: "#1a365d",
+              "&:hover": { borderColor: "#0f2027", bgcolor: "#e6f3ff" },
             }}
           >
             Export as JSON

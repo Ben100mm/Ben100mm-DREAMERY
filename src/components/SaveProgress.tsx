@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Save as SaveIcon,
   CloudDone as CloudDoneIcon,
@@ -29,14 +29,14 @@ import {
   RestoreFromTrash as RestoreIcon,
   Download as DownloadIcon,
   Upload as UploadIcon,
-} from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-import { SaveProgressIndicator, StatusChip } from './UXComponents';
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import { SaveProgressIndicator, StatusChip } from "./UXComponents";
 
 // Styled components
 const SaveStatusContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   gap: theme.spacing(1),
   padding: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
@@ -45,10 +45,10 @@ const SaveStatusContainer = styled(Box)(({ theme }) => ({
 }));
 
 const AutoSaveIndicator = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   gap: theme.spacing(0.5),
-  fontSize: '0.75rem',
+  fontSize: "0.75rem",
   color: theme.palette.text.secondary,
 }));
 
@@ -57,13 +57,15 @@ export const useSaveProgress = (
   initialData: any,
   saveFunction: (data: any) => Promise<void>,
   autoSaveInterval: number = 30000, // 30 seconds
-  enableAutoSave: boolean = true
+  enableAutoSave: boolean = true,
 ) => {
   const [data, setData] = useState(initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [saveHistory, setSaveHistory] = useState<Array<{ timestamp: Date; data: any }>>([]);
+  const [saveHistory, setSaveHistory] = useState<
+    Array<{ timestamp: Date; data: any }>
+  >([]);
   const [error, setError] = useState<string | null>(null);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedDataRef = useRef(JSON.stringify(initialData));
@@ -77,36 +79,38 @@ export const useSaveProgress = (
   }, [data]);
 
   // Save function
-  const save = useCallback(async (showSuccessMessage = true) => {
-    if (isSaving) return;
-    
-    try {
-      setIsSaving(true);
-      setError(null);
-      
-      await saveFunction(data);
-      
-      setLastSaved(new Date());
-      setHasUnsavedChanges(false);
-      lastSavedDataRef.current = JSON.stringify(data);
-      
-      // Add to save history
-      setSaveHistory(prev => [
-        { timestamp: new Date(), data: JSON.parse(JSON.stringify(data)) },
-        ...prev.slice(0, 9) // Keep last 10 saves
-      ]);
-      
-      if (showSuccessMessage) {
-        // Success message will be handled by the component
+  const save = useCallback(
+    async (showSuccessMessage = true) => {
+      if (isSaving) return;
+
+      try {
+        setIsSaving(true);
+        setError(null);
+
+        await saveFunction(data);
+
+        setLastSaved(new Date());
+        setHasUnsavedChanges(false);
+        lastSavedDataRef.current = JSON.stringify(data);
+
+        // Add to save history
+        setSaveHistory((prev) => [
+          { timestamp: new Date(), data: JSON.parse(JSON.stringify(data)) },
+          ...prev.slice(0, 9), // Keep last 10 saves
+        ]);
+
+        if (showSuccessMessage) {
+          // Success message will be handled by the component
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to save");
+        throw err;
+      } finally {
+        setIsSaving(false);
       }
-      
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save');
-      throw err;
-    } finally {
-      setIsSaving(false);
-    }
-  }, [data, saveFunction, isSaving]);
+    },
+    [data, saveFunction, isSaving],
+  );
 
   // Auto-save effect
   useEffect(() => {
@@ -143,19 +147,22 @@ export const useSaveProgress = (
   }, []);
 
   // Restore from history
-  const restoreFromHistory = useCallback((historyItem: { timestamp: Date; data: any }) => {
-    setData(historyItem.data);
-    setHasUnsavedChanges(true);
-  }, []);
+  const restoreFromHistory = useCallback(
+    (historyItem: { timestamp: Date; data: any }) => {
+      setData(historyItem.data);
+      setHasUnsavedChanges(true);
+    },
+    [],
+  );
 
   // Export data
   const exportData = useCallback(() => {
     const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `data-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `data-${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   }, [data]);
@@ -171,10 +178,10 @@ export const useSaveProgress = (
           setHasUnsavedChanges(true);
           resolve();
         } catch (err) {
-          reject(new Error('Invalid JSON file'));
+          reject(new Error("Invalid JSON file"));
         }
       };
-      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.onerror = () => reject(new Error("Failed to read file"));
       reader.readAsText(file);
     });
   }, []);
@@ -245,21 +252,21 @@ export const SaveProgressComponent: React.FC<{
         lastSaved={lastSaved ?? undefined}
         onSave={onSave}
       />
-      
+
       {isSaving && (
         <Box display="flex" alignItems="center" gap={1}>
           <CircularProgress size={16} />
           <Typography variant="caption">Saving...</Typography>
         </Box>
       )}
-      
+
       {showAutoSave && (
         <AutoSaveIndicator>
           <InfoIcon fontSize="small" />
           Auto-save every {Math.round(autoSaveInterval / 1000)}s
         </AutoSaveIndicator>
       )}
-      
+
       <Box display="flex" gap={1}>
         {onReset && hasUnsavedChanges && (
           <Tooltip title="Reset to last saved">
@@ -268,7 +275,7 @@ export const SaveProgressComponent: React.FC<{
             </IconButton>
           </Tooltip>
         )}
-        
+
         {onExport && (
           <Tooltip title="Export data">
             <IconButton size="small" onClick={onExport}>
@@ -276,7 +283,7 @@ export const SaveProgressComponent: React.FC<{
             </IconButton>
           </Tooltip>
         )}
-        
+
         {onImport && (
           <Tooltip title="Import data">
             <IconButton size="small" onClick={() => setShowImportDialog(true)}>
@@ -284,7 +291,7 @@ export const SaveProgressComponent: React.FC<{
             </IconButton>
           </Tooltip>
         )}
-        
+
         <Tooltip title="Save history">
           <IconButton size="small" onClick={() => setShowHistory(true)}>
             <HistoryIcon />
@@ -293,7 +300,12 @@ export const SaveProgressComponent: React.FC<{
       </Box>
 
       {/* Save History Dialog */}
-      <Dialog open={showHistory} onClose={() => setShowHistory(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={showHistory}
+        onClose={() => setShowHistory(false)}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>Save History</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -318,7 +330,11 @@ export const SaveProgressComponent: React.FC<{
               </ListItemIcon>
               <ListItemText
                 primary="Current Status"
-                secondary={hasUnsavedChanges ? 'Has unsaved changes' : 'All changes saved'}
+                secondary={
+                  hasUnsavedChanges
+                    ? "Has unsaved changes"
+                    : "All changes saved"
+                }
               />
             </ListItem>
           </List>
@@ -329,7 +345,10 @@ export const SaveProgressComponent: React.FC<{
       </Dialog>
 
       {/* Import Dialog */}
-      <Dialog open={showImportDialog} onClose={() => setShowImportDialog(false)}>
+      <Dialog
+        open={showImportDialog}
+        onClose={() => setShowImportDialog(false)}
+      >
         <DialogTitle>Import Data</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -340,7 +359,7 @@ export const SaveProgressComponent: React.FC<{
             type="file"
             accept=".json"
             onChange={handleFileSelect}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
           <Button
             variant="outlined"
@@ -384,7 +403,7 @@ export const AutoSaveStatus: React.FC<{
   return (
     <Box display="flex" alignItems="center" gap={1}>
       <StatusChip
-        status={enabled ? 'info' : 'default'}
+        status={enabled ? "info" : "default"}
         label="Auto-save"
         size="small"
       />
@@ -393,12 +412,12 @@ export const AutoSaveStatus: React.FC<{
       </Typography>
       {lastAutoSave && (
         <Typography variant="caption" color="text.secondary">
-                          - Last: {lastAutoSave.toLocaleTimeString()}
+          - Last: {lastAutoSave.toLocaleTimeString()}
         </Typography>
       )}
       {nextAutoSave && (
         <Typography variant="caption" color="text.secondary">
-                          - Next: {nextAutoSave.toLocaleTimeString()}
+          - Next: {nextAutoSave.toLocaleTimeString()}
         </Typography>
       )}
     </Box>
@@ -408,24 +427,32 @@ export const AutoSaveStatus: React.FC<{
 // Save Progress Bar Component
 export const SaveProgressBar: React.FC<{
   progress: number;
-  status: 'idle' | 'saving' | 'saved' | 'error';
+  status: "idle" | "saving" | "saved" | "error";
   message?: string;
 }> = ({ progress, status, message }) => {
   const getStatusColor = () => {
     switch (status) {
-      case 'saving': return 'primary';
-      case 'saved': return 'success';
-      case 'error': return 'error';
-      default: return 'default';
+      case "saving":
+        return "primary";
+      case "saved":
+        return "success";
+      case "error":
+        return "error";
+      default:
+        return "default";
     }
   };
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'saving': return <CircularProgress size={16} />;
-      case 'saved': return <CloudDoneIcon />;
-      case 'error': return <WarningIcon />;
-      default: return null;
+      case "saving":
+        return <CircularProgress size={16} />;
+      case "saved":
+        return <CloudDoneIcon />;
+      case "error":
+        return <WarningIcon />;
+      default:
+        return null;
     }
   };
 
@@ -437,37 +464,37 @@ export const SaveProgressBar: React.FC<{
           {message || `Save Status: ${status}`}
         </Typography>
       </Box>
-      
-      {status === 'saving' && (
+
+      {status === "saving" && (
         <Box
           sx={{
-            width: '100%',
+            width: "100%",
             height: 4,
-            backgroundColor: 'divider',
+            backgroundColor: "divider",
             borderRadius: 2,
-            overflow: 'hidden',
+            overflow: "hidden",
           }}
         >
           <Box
             sx={{
               width: `${progress}%`,
-              height: '100%',
+              height: "100%",
               backgroundColor: `${getStatusColor()}.main`,
-              transition: 'width 0.3s ease',
+              transition: "width 0.3s ease",
             }}
           />
         </Box>
       )}
-      
-      {status === 'saved' && (
+
+      {status === "saved" && (
         <Typography variant="caption" color="success.main">
-                        Saved successfully
+          Saved successfully
         </Typography>
       )}
-      
-      {status === 'error' && (
+
+      {status === "error" && (
         <Typography variant="caption" color="error.main">
-                          Save failed
+          Save failed
         </Typography>
       )}
     </Box>

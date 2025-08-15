@@ -27,4 +27,4 @@ const FinalWalkthroughHandover: React.FC = () => {
   );
 };
 
-export { FinalWalkthroughHandover };
+export default FinalWalkthroughHandover;

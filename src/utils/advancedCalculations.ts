@@ -2,7 +2,7 @@
 // These utilities can be integrated with existing calculations without breaking current functionality
 
 export interface MarketConditions {
-  type: 'hot' | 'stable' | 'slow';
+  type: "hot" | "stable" | "slow";
   vacancyRateAdjustment: number; // Percentage adjustment to base vacancy rate
   rentGrowthRate: number; // Annual rent growth percentage
   appreciationRate: number; // Annual property appreciation percentage
@@ -27,7 +27,7 @@ export interface PropertyAgeFactors {
 }
 
 export interface LocationFactors {
-  type: 'urban' | 'suburban' | 'rural';
+  type: "urban" | "suburban" | "rural";
   propertyTaxRate: number;
   insuranceCostMultiplier: number;
   maintenanceCostMultiplier: number;
@@ -71,10 +71,10 @@ export interface RiskFactors {
 export const calculateSeasonalAdjustments = (
   baseVacancyRate: number,
   seasonalFactors: SeasonalFactors,
-  month: number
+  month: number,
 ): { adjustedVacancyRate: number; maintenanceMultiplier: number } => {
   let seasonalVacancyRate: number;
-  
+
   // Determine season based on month
   if (month >= 6 && month <= 8) {
     seasonalVacancyRate = seasonalFactors.summerVacancyRate;
@@ -85,10 +85,10 @@ export const calculateSeasonalAdjustments = (
   } else {
     seasonalVacancyRate = seasonalFactors.fallVacancyRate;
   }
-  
+
   const adjustedVacancyRate = baseVacancyRate * (1 + seasonalVacancyRate);
   const maintenanceMultiplier = seasonalFactors.seasonalMaintenanceMultiplier;
-  
+
   return { adjustedVacancyRate, maintenanceMultiplier };
 };
 
@@ -100,7 +100,7 @@ export const calculateMarketAdjustments = (
     appreciation: number;
     capRate: number;
   },
-  marketConditions: MarketConditions
+  marketConditions: MarketConditions,
 ): {
   adjustedVacancyRate: number;
   adjustedRentGrowth: number;
@@ -108,10 +108,14 @@ export const calculateMarketAdjustments = (
   adjustedCapRate: number;
 } => {
   return {
-    adjustedVacancyRate: baseMetrics.vacancyRate * (1 + marketConditions.vacancyRateAdjustment),
-    adjustedRentGrowth: baseMetrics.rentGrowth * (1 + marketConditions.rentGrowthRate),
-    adjustedAppreciation: baseMetrics.appreciation * (1 + marketConditions.appreciationRate),
-    adjustedCapRate: baseMetrics.capRate * (1 + marketConditions.capRateAdjustment),
+    adjustedVacancyRate:
+      baseMetrics.vacancyRate * (1 + marketConditions.vacancyRateAdjustment),
+    adjustedRentGrowth:
+      baseMetrics.rentGrowth * (1 + marketConditions.rentGrowthRate),
+    adjustedAppreciation:
+      baseMetrics.appreciation * (1 + marketConditions.appreciationRate),
+    adjustedCapRate:
+      baseMetrics.capRate * (1 + marketConditions.capRateAdjustment),
   };
 };
 
@@ -122,7 +126,7 @@ export const calculateAgeBasedAdjustments = (
     utilities: number;
     insurance: number;
   },
-  propertyAge: PropertyAgeFactors
+  propertyAge: PropertyAgeFactors,
 ): {
   adjustedMaintenance: number;
   adjustedUtilities: number;
@@ -130,12 +134,20 @@ export const calculateAgeBasedAdjustments = (
   remainingLifespan: number;
 } => {
   const ageMultiplier = Math.max(1, propertyAge.age / 20); // Increase costs with age
-  
+
   return {
-    adjustedMaintenance: baseCosts.maintenance * propertyAge.maintenanceCostMultiplier * ageMultiplier,
-    adjustedUtilities: baseCosts.utilities * propertyAge.utilityEfficiencyMultiplier,
-    adjustedInsurance: baseCosts.insurance * propertyAge.insuranceCostMultiplier * ageMultiplier,
-    remainingLifespan: Math.max(0, propertyAge.expectedLifespan - propertyAge.age),
+    adjustedMaintenance:
+      baseCosts.maintenance *
+      propertyAge.maintenanceCostMultiplier *
+      ageMultiplier,
+    adjustedUtilities:
+      baseCosts.utilities * propertyAge.utilityEfficiencyMultiplier,
+    adjustedInsurance:
+      baseCosts.insurance * propertyAge.insuranceCostMultiplier * ageMultiplier,
+    remainingLifespan: Math.max(
+      0,
+      propertyAge.expectedLifespan - propertyAge.age,
+    ),
   };
 };
 
@@ -148,7 +160,7 @@ export const calculateLocationAdjustments = (
     utilities: number;
     transportation: number;
   },
-  locationFactors: LocationFactors
+  locationFactors: LocationFactors,
 ): {
   adjustedPropertyTax: number;
   adjustedInsurance: number;
@@ -157,11 +169,16 @@ export const calculateLocationAdjustments = (
   adjustedTransportation: number;
 } => {
   return {
-    adjustedPropertyTax: baseCosts.propertyTax * locationFactors.propertyTaxRate,
-    adjustedInsurance: baseCosts.insurance * locationFactors.insuranceCostMultiplier,
-    adjustedMaintenance: baseCosts.maintenance * locationFactors.maintenanceCostMultiplier,
-    adjustedUtilities: baseCosts.utilities * locationFactors.utilityCostMultiplier,
-    adjustedTransportation: baseCosts.transportation * locationFactors.transportationCostMultiplier,
+    adjustedPropertyTax:
+      baseCosts.propertyTax * locationFactors.propertyTaxRate,
+    adjustedInsurance:
+      baseCosts.insurance * locationFactors.insuranceCostMultiplier,
+    adjustedMaintenance:
+      baseCosts.maintenance * locationFactors.maintenanceCostMultiplier,
+    adjustedUtilities:
+      baseCosts.utilities * locationFactors.utilityCostMultiplier,
+    adjustedTransportation:
+      baseCosts.transportation * locationFactors.transportationCostMultiplier,
   };
 };
 
@@ -169,7 +186,7 @@ export const calculateLocationAdjustments = (
 export const calculateExitStrategies = (
   propertyValue: number,
   exitStrategies: ExitStrategy[],
-  currentMarketValue: number
+  currentMarketValue: number,
 ): Array<{
   timeframe: number;
   projectedValue: number;
@@ -177,16 +194,22 @@ export const calculateExitStrategies = (
   roi: number;
   annualizedRoi: number;
 }> => {
-  return exitStrategies.map(strategy => {
-    const projectedValue = currentMarketValue * Math.pow(1 + strategy.marketAppreciation, strategy.timeframe);
+  return exitStrategies.map((strategy) => {
+    const projectedValue =
+      currentMarketValue *
+      Math.pow(1 + strategy.marketAppreciation, strategy.timeframe);
     const sellingCosts = projectedValue * (strategy.sellingCosts / 100);
-    const capitalGainsTax = (projectedValue - propertyValue) * (strategy.capitalGainsTax / 100);
-    const depreciationRecapture = (projectedValue - propertyValue) * (strategy.depreciationRecapture / 100);
-    
-    const netProceeds = projectedValue - sellingCosts - capitalGainsTax - depreciationRecapture;
+    const capitalGainsTax =
+      (projectedValue - propertyValue) * (strategy.capitalGainsTax / 100);
+    const depreciationRecapture =
+      (projectedValue - propertyValue) * (strategy.depreciationRecapture / 100);
+
+    const netProceeds =
+      projectedValue - sellingCosts - capitalGainsTax - depreciationRecapture;
     const roi = ((netProceeds - propertyValue) / propertyValue) * 100;
-    const annualizedRoi = (Math.pow(1 + roi / 100, 1 / strategy.timeframe) - 1) * 100;
-    
+    const annualizedRoi =
+      (Math.pow(1 + roi / 100, 1 / strategy.timeframe) - 1) * 100;
+
     return {
       timeframe: strategy.timeframe,
       projectedValue,
@@ -206,7 +229,7 @@ export const calculateRefinanceScenarios = (
     monthlyPayment: number;
   },
   refinanceScenarios: RefinanceScenario[],
-  propertyValue: number
+  propertyValue: number,
 ): Array<{
   timing: number;
   newMonthlyPayment: number;
@@ -215,13 +238,19 @@ export const calculateRefinanceScenarios = (
   breakEvenMonths: number;
   cashOutAmount: number;
 }> => {
-  return refinanceScenarios.map(scenario => {
-    const remainingBalance = currentLoan.balance * Math.pow(1 + currentLoan.rate / 100 / 12, scenario.timing * 12);
-    const newMonthlyPayment = calculateMonthlyPayment(remainingBalance, scenario.newRate, scenario.newTerm);
+  return refinanceScenarios.map((scenario) => {
+    const remainingBalance =
+      currentLoan.balance *
+      Math.pow(1 + currentLoan.rate / 100 / 12, scenario.timing * 12);
+    const newMonthlyPayment = calculateMonthlyPayment(
+      remainingBalance,
+      scenario.newRate,
+      scenario.newTerm,
+    );
     const monthlySavings = currentLoan.monthlyPayment - newMonthlyPayment;
     const totalSavings = monthlySavings * (scenario.newTerm * 12);
     const breakEvenMonths = scenario.refinanceCosts / monthlySavings;
-    
+
     return {
       timing: scenario.timing,
       newMonthlyPayment,
@@ -242,7 +271,7 @@ export const calculateTaxImplications = (
     depreciation: number;
     repairs: number;
   },
-  taxImplications: TaxImplications
+  taxImplications: TaxImplications,
 ): {
   taxableIncome: number;
   taxSavings: number;
@@ -250,7 +279,7 @@ export const calculateTaxImplications = (
   netIncome: number;
 } => {
   let deductions = 0;
-  
+
   if (taxImplications.mortgageInterestDeduction) {
     deductions += propertyExpenses.mortgageInterest;
   }
@@ -263,12 +292,18 @@ export const calculateTaxImplications = (
   if (taxImplications.repairExpenseDeduction) {
     deductions += propertyExpenses.repairs;
   }
-  
+
   const taxableIncome = Math.max(0, annualIncome - deductions);
   const taxSavings = deductions * (taxImplications.taxBracket / 100);
-  const effectiveTaxRate = taxableIncome > 0 ? (taxableIncome * (taxImplications.taxBracket / 100)) / annualIncome : 0;
-  const netIncome = annualIncome - (taxableIncome * (taxImplications.taxBracket / 100)) + taxSavings;
-  
+  const effectiveTaxRate =
+    taxableIncome > 0
+      ? (taxableIncome * (taxImplications.taxBracket / 100)) / annualIncome
+      : 0;
+  const netIncome =
+    annualIncome -
+    taxableIncome * (taxImplications.taxBracket / 100) +
+    taxSavings;
+
   return {
     taxableIncome,
     taxSavings,
@@ -285,14 +320,14 @@ export const calculateInflationAdjustments = (
     propertyValue: number;
   },
   inflationRate: number,
-  years: number
+  years: number,
 ): {
   adjustedRent: number;
   adjustedExpenses: number;
   adjustedPropertyValue: number;
 } => {
   const inflationMultiplier = Math.pow(1 + inflationRate / 100, years);
-  
+
   return {
     adjustedRent: baseAmounts.rent * inflationMultiplier,
     adjustedExpenses: baseAmounts.expenses * inflationMultiplier,
@@ -312,7 +347,7 @@ export const calculateSensitivityAnalysis = (
     rentChange: number; // Percentage
     expenseChange: number; // Percentage
     valueChange: number; // Percentage
-  }>
+  }>,
 ): Array<{
   scenario: string;
   adjustedRent: number;
@@ -323,11 +358,14 @@ export const calculateSensitivityAnalysis = (
   cashFlowChangePercent: number;
 }> => {
   return variations.map((variation, index) => {
-    const adjustedRent = baseScenario.monthlyRent * (1 + variation.rentChange / 100);
-    const adjustedExpenses = baseScenario.monthlyExpenses * (1 + variation.expenseChange / 100);
-    const adjustedValue = baseScenario.propertyValue * (1 + variation.valueChange / 100);
+    const adjustedRent =
+      baseScenario.monthlyRent * (1 + variation.rentChange / 100);
+    const adjustedExpenses =
+      baseScenario.monthlyExpenses * (1 + variation.expenseChange / 100);
+    const adjustedValue =
+      baseScenario.propertyValue * (1 + variation.valueChange / 100);
     const adjustedCashFlow = adjustedRent - adjustedExpenses;
-    
+
     return {
       scenario: `Scenario ${index + 1}`,
       adjustedRent,
@@ -335,7 +373,10 @@ export const calculateSensitivityAnalysis = (
       adjustedValue,
       adjustedCashFlow,
       cashFlowChange: adjustedCashFlow - baseScenario.monthlyCashFlow,
-      cashFlowChangePercent: ((adjustedCashFlow - baseScenario.monthlyCashFlow) / baseScenario.monthlyCashFlow) * 100,
+      cashFlowChangePercent:
+        ((adjustedCashFlow - baseScenario.monthlyCashFlow) /
+          baseScenario.monthlyCashFlow) *
+        100,
     };
   });
 };
@@ -354,32 +395,37 @@ export const calculateStressTest = (
     expenseIncrease: number; // Percentage
     valueDrop: number; // Percentage
     vacancyIncrease: number; // Percentage
-  }
+  },
 ): {
   stressTestCashFlow: number;
   stressTestRoi: number;
   cashFlowBuffer: number;
-  riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
+  riskLevel: "Low" | "Medium" | "High" | "Critical";
 } => {
-  const stressRent = baseScenario.monthlyRent * (1 - stressFactors.rentDrop / 100) * (1 - stressFactors.vacancyIncrease / 100);
-  const stressExpenses = baseScenario.monthlyExpenses * (1 + stressFactors.expenseIncrease / 100);
+  const stressRent =
+    baseScenario.monthlyRent *
+    (1 - stressFactors.rentDrop / 100) *
+    (1 - stressFactors.vacancyIncrease / 100);
+  const stressExpenses =
+    baseScenario.monthlyExpenses * (1 + stressFactors.expenseIncrease / 100);
   const stressCashFlow = stressRent - stressExpenses;
-  const stressValue = baseScenario.propertyValue * (1 - stressFactors.valueDrop / 100);
-  
+  const stressValue =
+    baseScenario.propertyValue * (1 - stressFactors.valueDrop / 100);
+
   const stressTestRoi = ((stressCashFlow * 12) / stressValue) * 100;
   const cashFlowBuffer = stressCashFlow / baseScenario.monthlyCashFlow;
-  
-  let riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
+
+  let riskLevel: "Low" | "Medium" | "High" | "Critical";
   if (cashFlowBuffer >= 0.8 && stressTestRoi >= 6) {
-    riskLevel = 'Low';
+    riskLevel = "Low";
   } else if (cashFlowBuffer >= 0.6 && stressTestRoi >= 4) {
-    riskLevel = 'Medium';
+    riskLevel = "Medium";
   } else if (cashFlowBuffer >= 0.4 && stressTestRoi >= 2) {
-    riskLevel = 'High';
+    riskLevel = "High";
   } else {
-    riskLevel = 'Critical';
+    riskLevel = "Critical";
   }
-  
+
   return {
     stressTestCashFlow: stressCashFlow,
     stressTestRoi: stressTestRoi,
@@ -399,7 +445,7 @@ export const calculateRiskScore = (
     balloonDueYears: number;
     interestOnly: boolean;
     totalLoanAmount: number;
-  }
+  },
 ): {
   overallRiskScore: number; // 1-10 scale
   riskBreakdown: {
@@ -408,86 +454,124 @@ export const calculateRiskScore = (
     tenantRisk: number;
     financingRisk: number;
   };
-  riskCategory: 'Low' | 'Medium' | 'High' | 'Very High';
+  riskCategory: "Low" | "Medium" | "High" | "Very High";
   recommendations: string[];
 } => {
   // Calculate individual risk components
-  const marketRisk = (riskFactors.marketVolatility + (marketConditions.type === 'slow' ? 3 : marketConditions.type === 'stable' ? 1 : 0)) / 2;
-  const propertyRisk = (riskFactors.propertyCondition + (propertyAge.age > 30 ? 3 : propertyAge.age > 20 ? 2 : propertyAge.age > 10 ? 1 : 0)) / 2;
+  const marketRisk =
+    (riskFactors.marketVolatility +
+      (marketConditions.type === "slow"
+        ? 3
+        : marketConditions.type === "stable"
+          ? 1
+          : 0)) /
+    2;
+  const propertyRisk =
+    (riskFactors.propertyCondition +
+      (propertyAge.age > 30
+        ? 3
+        : propertyAge.age > 20
+          ? 2
+          : propertyAge.age > 10
+            ? 1
+            : 0)) /
+    2;
   const tenantRisk = riskFactors.tenantQuality;
-  
+
   // Enhanced financing risk calculation including balloon payment risk
   let financingRisk = riskFactors.financingRisk;
-  
+
   if (financingDetails) {
     // Add balloon payment risk
     if (financingDetails.balloonPayment > 0) {
-      const balloonRiskMultiplier = Math.max(1, (financingDetails.balloonPayment / financingDetails.totalLoanAmount) * 2);
-      const timeRiskMultiplier = Math.max(1, (10 - financingDetails.balloonDueYears) / 5); // Shorter time = higher risk
-      financingRisk = Math.min(10, financingRisk * balloonRiskMultiplier * timeRiskMultiplier);
+      const balloonRiskMultiplier = Math.max(
+        1,
+        (financingDetails.balloonPayment / financingDetails.totalLoanAmount) *
+          2,
+      );
+      const timeRiskMultiplier = Math.max(
+        1,
+        (10 - financingDetails.balloonDueYears) / 5,
+      ); // Shorter time = higher risk
+      financingRisk = Math.min(
+        10,
+        financingRisk * balloonRiskMultiplier * timeRiskMultiplier,
+      );
     }
-    
+
     // Add interest-only risk
     if (financingDetails.interestOnly) {
       financingRisk = Math.min(10, financingRisk * 1.3);
     }
   }
-  
+
   // Weighted average for overall risk score
-  const overallRiskScore = (
+  const overallRiskScore =
     marketRisk * 0.25 +
     propertyRisk * 0.25 +
     tenantRisk * 0.25 +
-    financingRisk * 0.25
-  );
-  
+    financingRisk * 0.25;
+
   // Determine risk category
-  let riskCategory: 'Low' | 'Medium' | 'High' | 'Very High';
+  let riskCategory: "Low" | "Medium" | "High" | "Very High";
   if (overallRiskScore <= 3) {
-    riskCategory = 'Low';
+    riskCategory = "Low";
   } else if (overallRiskScore <= 5) {
-    riskCategory = 'Medium';
+    riskCategory = "Medium";
   } else if (overallRiskScore <= 7) {
-    riskCategory = 'High';
+    riskCategory = "High";
   } else {
-    riskCategory = 'Very High';
+    riskCategory = "Very High";
   }
-  
+
   // Generate recommendations based on risk factors
   const recommendations: string[] = [];
-  
+
   if (marketRisk > 5) {
-    recommendations.push('Consider market timing and local economic factors');
+    recommendations.push("Consider market timing and local economic factors");
   }
   if (propertyRisk > 5) {
-    recommendations.push('Budget for increased maintenance and repairs');
+    recommendations.push("Budget for increased maintenance and repairs");
   }
   if (tenantRisk > 5) {
-    recommendations.push('Implement stricter tenant screening and lease terms');
+    recommendations.push("Implement stricter tenant screening and lease terms");
   }
   if (financingRisk > 5) {
-    recommendations.push('Consider more conservative financing terms');
+    recommendations.push("Consider more conservative financing terms");
   }
-  
+
   // Add balloon payment specific recommendations
   if (financingDetails?.balloonPayment && financingDetails.balloonPayment > 0) {
     if (financingDetails.balloonDueYears <= 3) {
-      recommendations.push('High balloon payment risk: Plan exit strategy within 3 years');
+      recommendations.push(
+        "High balloon payment risk: Plan exit strategy within 3 years",
+      );
     } else if (financingDetails.balloonDueYears <= 5) {
-      recommendations.push('Medium balloon payment risk: Ensure sufficient cash flow for balloon payment');
+      recommendations.push(
+        "Medium balloon payment risk: Ensure sufficient cash flow for balloon payment",
+      );
     } else {
-      recommendations.push('Balloon payment due: Plan refinancing or sale strategy');
+      recommendations.push(
+        "Balloon payment due: Plan refinancing or sale strategy",
+      );
     }
-    
-    if (financingDetails.balloonPayment > (financingDetails.totalLoanAmount || 0) * 0.5) {
-      recommendations.push('Large balloon payment: Consider refinancing before balloon due date');
+
+    if (
+      financingDetails.balloonPayment >
+      (financingDetails.totalLoanAmount || 0) * 0.5
+    ) {
+      recommendations.push(
+        "Large balloon payment: Consider refinancing before balloon due date",
+      );
     }
   }
-  
+
   if (financingDetails?.interestOnly) {
-    recommendations.push('Interest-only loan: Plan for principal payments or refinancing');
+    recommendations.push(
+      "Interest-only loan: Plan for principal payments or refinancing",
+    );
   }
-  
+
   return {
     overallRiskScore: Math.round(overallRiskScore * 10) / 10,
     riskBreakdown: {
@@ -505,16 +589,17 @@ export const calculateRiskScore = (
 export const calculateConfidenceIntervals = (
   baseProjection: number,
   volatility: number, // Percentage
-  confidenceLevel: number = 0.95 // 95% confidence interval
+  confidenceLevel: number = 0.95, // 95% confidence interval
 ): {
   lowerBound: number;
   upperBound: number;
   confidenceLevel: number;
 } => {
   // Using normal distribution approximation
-  const zScore = confidenceLevel === 0.95 ? 1.96 : confidenceLevel === 0.90 ? 1.645 : 2.576;
+  const zScore =
+    confidenceLevel === 0.95 ? 1.96 : confidenceLevel === 0.9 ? 1.645 : 2.576;
   const marginOfError = baseProjection * (volatility / 100) * zScore;
-  
+
   return {
     lowerBound: Math.max(0, baseProjection - marginOfError),
     upperBound: baseProjection + marginOfError,
@@ -523,19 +608,26 @@ export const calculateConfidenceIntervals = (
 };
 
 // Helper function for monthly payment calculation
-const calculateMonthlyPayment = (principal: number, annualRate: number, years: number): number => {
+const calculateMonthlyPayment = (
+  principal: number,
+  annualRate: number,
+  years: number,
+): number => {
   const monthlyRate = annualRate / 12 / 100;
   const totalPayments = years * 12;
-  
+
   if (monthlyRate === 0) return principal / totalPayments;
-  
-  return principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
+
+  return (
+    (principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments))) /
+    (Math.pow(1 + monthlyRate, totalPayments) - 1)
+  );
 };
 
 // Default market conditions for common scenarios
 export const defaultMarketConditions: Record<string, MarketConditions> = {
   hot: {
-    type: 'hot',
+    type: "hot",
     vacancyRateAdjustment: -0.3, // 30% lower vacancy
     rentGrowthRate: 0.15, // 15% annual growth
     appreciationRate: 0.12, // 12% annual appreciation
@@ -543,7 +635,7 @@ export const defaultMarketConditions: Record<string, MarketConditions> = {
     inflationRate: 0.04, // 4% inflation in hot markets
   },
   stable: {
-    type: 'stable',
+    type: "stable",
     vacancyRateAdjustment: 0, // No adjustment
     rentGrowthRate: 0.03, // 3% annual growth
     appreciationRate: 0.04, // 4% annual appreciation
@@ -551,7 +643,7 @@ export const defaultMarketConditions: Record<string, MarketConditions> = {
     inflationRate: 0.02, // 2% inflation in stable markets
   },
   slow: {
-    type: 'slow',
+    type: "slow",
     vacancyRateAdjustment: 0.4, // 40% higher vacancy
     rentGrowthRate: -0.02, // -2% annual growth
     appreciationRate: 0.01, // 1% annual appreciation
@@ -580,7 +672,7 @@ export const defaultSeasonalFactors: SeasonalFactors = {
 // Default location factors
 export const defaultLocationFactors: Record<string, LocationFactors> = {
   urban: {
-    type: 'urban',
+    type: "urban",
     propertyTaxRate: 1.2, // 20% higher taxes
     insuranceCostMultiplier: 1.3, // 30% higher insurance
     maintenanceCostMultiplier: 1.4, // 40% higher maintenance
@@ -588,7 +680,7 @@ export const defaultLocationFactors: Record<string, LocationFactors> = {
     transportationCostMultiplier: 0.7, // 30% lower transportation
   },
   suburban: {
-    type: 'suburban',
+    type: "suburban",
     propertyTaxRate: 1.0, // Standard rates
     insuranceCostMultiplier: 1.0, // Standard rates
     maintenanceCostMultiplier: 1.0, // Standard rates
@@ -596,7 +688,7 @@ export const defaultLocationFactors: Record<string, LocationFactors> = {
     transportationCostMultiplier: 1.0, // Standard rates
   },
   rural: {
-    type: 'rural',
+    type: "rural",
     propertyTaxRate: 0.8, // 20% lower taxes
     insuranceCostMultiplier: 0.9, // 10% lower insurance
     maintenanceCostMultiplier: 1.2, // 20% higher maintenance
@@ -655,21 +747,28 @@ export const calculateYearsUntilRefinance = (
   currentLoanBalance: number,
   purchasePrice: number,
   annualAppreciationRate: number,
-  refinanceLtv: number
+  refinanceLtv: number,
 ): number => {
-  if (currentLoanBalance <= 0 || purchasePrice <= 0 || annualAppreciationRate <= 0 || refinanceLtv <= 0) {
+  if (
+    currentLoanBalance <= 0 ||
+    purchasePrice <= 0 ||
+    annualAppreciationRate <= 0 ||
+    refinanceLtv <= 0
+  ) {
     return 0;
   }
-  
+
   // Calculate the property value needed to support the current loan balance at the target LTV
   const targetPropertyValue = currentLoanBalance / (refinanceLtv / 100);
-  
+
   // Calculate years needed for the property to appreciate to that value
   if (targetPropertyValue <= purchasePrice) {
     return 0; // Already possible to refinance
   }
-  
-  const years = Math.log(targetPropertyValue / purchasePrice) / Math.log(1 + annualAppreciationRate / 100);
+
+  const years =
+    Math.log(targetPropertyValue / purchasePrice) /
+    Math.log(1 + annualAppreciationRate / 100);
   return Math.max(0, Math.ceil(years));
 };
 
@@ -677,12 +776,12 @@ export const calculateYearsUntilRefinance = (
 export const calculateRefinancePotential = (
   futurePropertyValue: number,
   currentLoanBalance: number,
-  refinanceLtv: number
+  refinanceLtv: number,
 ): number => {
   if (futurePropertyValue <= 0 || refinanceLtv <= 0) {
     return 0;
   }
-  
+
   const maxRefinanceLoan = futurePropertyValue * (refinanceLtv / 100);
   return Math.max(0, maxRefinanceLoan - currentLoanBalance);
 };

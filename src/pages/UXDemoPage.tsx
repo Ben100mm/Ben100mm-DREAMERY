@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -10,7 +10,7 @@ import {
   CardContent,
   Divider,
   Alert,
-} from '@mui/material';
+} from "@mui/material";
 import {
   LoadingSpinner,
   LoadingOverlayComponent,
@@ -43,7 +43,7 @@ import {
   SaveProgressComponent,
   AutoSaveStatus,
   SaveProgressBar,
-} from '../components';
+} from "../components";
 
 const UXDemoPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -55,23 +55,23 @@ const UXDemoPage: React.FC = () => {
 
   // Form validation example
   const formValidation = useFormValidation({
-    name: '',
-    email: '',
-    phone: '',
+    name: "",
+    email: "",
+    phone: "",
     amount: 0,
     percentage: 0,
   });
 
   // Save progress example
   const saveProgress = useSaveProgress(
-    { demoData: 'Initial value' },
+    { demoData: "Initial value" },
     async (data) => {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Saving:', data);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("Saving:", data);
     },
     10000, // 10 seconds
-    true
+    true,
   );
 
   // Demo loading state
@@ -84,7 +84,7 @@ const UXDemoPage: React.FC = () => {
   const handleDemoProgress = () => {
     setProgress(0);
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
@@ -102,17 +102,17 @@ const UXDemoPage: React.FC = () => {
   // Navigation steps
   const navigationSteps = [
     {
-      id: 'step1',
-      label: 'Basic Information',
-      description: 'Enter your basic details',
-      completed: formValidation.values.name !== '',
+      id: "step1",
+      label: "Basic Information",
+      description: "Enter your basic details",
+      completed: formValidation.values.name !== "",
       required: true,
       component: (
         <Box>
           <EnhancedTextFieldWithValidation
             label="Full Name"
             value={formValidation.values.name}
-            onChange={(value) => formValidation.setValue('name', value)}
+            onChange={(value) => formValidation.setValue("name", value)}
             required
             hint="Enter your full legal name"
             tooltip="This is the name that will appear on official documents"
@@ -123,18 +123,26 @@ const UXDemoPage: React.FC = () => {
       ),
     },
     {
-      id: 'step2',
-      label: 'Contact Details',
-      description: 'Provide your contact information',
-      completed: formValidation.values.email !== '' && formValidation.values.phone !== '',
+      id: "step2",
+      label: "Contact Details",
+      description: "Provide your contact information",
+      completed:
+        formValidation.values.email !== "" &&
+        formValidation.values.phone !== "",
       required: true,
       component: (
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 2,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          }}
+        >
           <Box>
             <EnhancedTextFieldWithValidation
               label="Email Address"
               value={formValidation.values.email}
-              onChange={(value) => formValidation.setValue('email', value)}
+              onChange={(value) => formValidation.setValue("email", value)}
               type="email"
               required
               hint="Enter a valid email address"
@@ -145,7 +153,7 @@ const UXDemoPage: React.FC = () => {
             <EnhancedTextFieldWithValidation
               label="Phone Number"
               value={formValidation.values.phone}
-              onChange={(value) => formValidation.setValue('phone', value)}
+              onChange={(value) => formValidation.setValue("phone", value)}
               type="tel"
               format="phone"
               required
@@ -157,18 +165,26 @@ const UXDemoPage: React.FC = () => {
       ),
     },
     {
-      id: 'step3',
-      label: 'Financial Information',
-      description: 'Enter your financial details',
-      completed: formValidation.values.amount > 0 && formValidation.values.percentage > 0,
+      id: "step3",
+      label: "Financial Information",
+      description: "Enter your financial details",
+      completed:
+        formValidation.values.amount > 0 &&
+        formValidation.values.percentage > 0,
       required: true,
       component: (
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 2,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          }}
+        >
           <Box>
             <EnhancedNumberInput
               label="Amount"
               value={formValidation.values.amount}
-              onChange={(value) => formValidation.setValue('amount', value)}
+              onChange={(value) => formValidation.setValue("amount", value)}
               format="currency"
               required
               hint="Enter the amount in dollars"
@@ -180,7 +196,7 @@ const UXDemoPage: React.FC = () => {
             <EnhancedNumberInput
               label="Interest Rate"
               value={formValidation.values.percentage}
-              onChange={(value) => formValidation.setValue('percentage', value)}
+              onChange={(value) => formValidation.setValue("percentage", value)}
               format="percentage"
               required
               hint="Enter the annual interest rate"
@@ -196,19 +212,44 @@ const UXDemoPage: React.FC = () => {
 
   // Section status data
   const sectionStatus = [
-    { id: 'basic', label: 'Basic Information', completed: true, required: true },
-    { id: 'contact', label: 'Contact Details', completed: true, required: true },
-    { id: 'financial', label: 'Financial Information', completed: false, required: true },
-    { id: 'documents', label: 'Document Upload', completed: false, required: false },
-    { id: 'review', label: 'Review & Submit', completed: false, required: true },
+    {
+      id: "basic",
+      label: "Basic Information",
+      completed: true,
+      required: true,
+    },
+    {
+      id: "contact",
+      label: "Contact Details",
+      completed: true,
+      required: true,
+    },
+    {
+      id: "financial",
+      label: "Financial Information",
+      completed: false,
+      required: true,
+    },
+    {
+      id: "documents",
+      label: "Document Upload",
+      completed: false,
+      required: false,
+    },
+    {
+      id: "review",
+      label: "Review & Submit",
+      completed: false,
+      required: true,
+    },
   ];
 
   // Quick jump sections
   const quickJumpSections = [
-    { id: 'overview', label: 'Overview', completed: true },
-    { id: 'details', label: 'Details', completed: true },
-    { id: 'finances', label: 'Finances', completed: false },
-    { id: 'summary', label: 'Summary', completed: false },
+    { id: "overview", label: "Overview", completed: true },
+    { id: "details", label: "Details", completed: true },
+    { id: "finances", label: "Finances", completed: false },
+    { id: "summary", label: "Summary", completed: false },
   ];
 
   return (
@@ -217,7 +258,8 @@ const UXDemoPage: React.FC = () => {
         UX Improvements Demo
       </Typography>
       <Typography variant="body1" color="text.secondary" paragraph>
-        This page demonstrates all the user experience improvements implemented across the application.
+        This page demonstrates all the user experience improvements implemented
+        across the application.
       </Typography>
 
       {/* Breadcrumbs */}
@@ -227,9 +269,9 @@ const UXDemoPage: React.FC = () => {
         </Typography>
         <Breadcrumbs
           items={[
-            { label: 'Home', onClick: () => console.log('Home clicked') },
-            { label: 'Demo', onClick: () => console.log('Demo clicked') },
-            { label: 'UX Improvements', active: true },
+            { label: "Home", onClick: () => console.log("Home clicked") },
+            { label: "Demo", onClick: () => console.log("Demo clicked") },
+            { label: "UX Improvements", active: true },
           ]}
         />
       </Box>
@@ -239,7 +281,13 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Progress Indicators
         </Typography>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 3,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          }}
+        >
           <Box>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -275,9 +323,15 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Loading States
         </Typography>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 3,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
+          }}
+        >
           <Box>
-            <Paper sx={{ p: 3, textAlign: 'center' }}>
+            <Paper sx={{ p: 3, textAlign: "center" }}>
               <Typography variant="h6" gutterBottom>
                 Loading Spinner
               </Typography>
@@ -285,18 +339,21 @@ const UXDemoPage: React.FC = () => {
             </Paper>
           </Box>
           <Box>
-            <Paper sx={{ p: 3, textAlign: 'center' }}>
+            <Paper sx={{ p: 3, textAlign: "center" }}>
               <Typography variant="h6" gutterBottom>
                 Loading Overlay
               </Typography>
-              <LoadingOverlayComponent loading={loading} message="Loading data...">
+              <LoadingOverlayComponent
+                loading={loading}
+                message="Loading data..."
+              >
                 <Box
                   sx={{
                     height: 100,
-                    backgroundColor: '#f5f5f5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    backgroundColor: "#f5f5f5",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     borderRadius: 1,
                   }}
                 >
@@ -309,7 +366,7 @@ const UXDemoPage: React.FC = () => {
             </Paper>
           </Box>
           <Box>
-            <Paper sx={{ p: 3, textAlign: 'center' }}>
+            <Paper sx={{ p: 3, textAlign: "center" }}>
               <Typography variant="h6" gutterBottom>
                 Progress Bar
               </Typography>
@@ -329,9 +386,13 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Success/Error Messages
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           <Box>
-            <Button variant="contained" color="success" onClick={handleDemoSuccess}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleDemoSuccess}
+            >
               Show Success
             </Button>
           </Box>
@@ -353,7 +414,13 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Enhanced Form Components
         </Typography>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 3,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          }}
+        >
           <Box>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -362,7 +429,7 @@ const UXDemoPage: React.FC = () => {
               <EnhancedTextFieldWithValidation
                 label="Property Address"
                 value={formValidation.values.name}
-                onChange={(value) => formValidation.setValue('name', value)}
+                onChange={(value) => formValidation.setValue("name", value)}
                 required
                 hint="Enter the property's full street address"
                 tooltip="This should include street number, name, city, state, and ZIP code"
@@ -380,12 +447,12 @@ const UXDemoPage: React.FC = () => {
               <EnhancedSelectWithValidation
                 label="Property Type"
                 value={formValidation.values.email}
-                onChange={(value) => formValidation.setValue('email', value)}
+                onChange={(value) => formValidation.setValue("email", value)}
                 options={[
-                  { value: 'single', label: 'Single Family' },
-                  { value: 'multi', label: 'Multi Family' },
-                  { value: 'condo', label: 'Condominium' },
-                  { value: 'townhouse', label: 'Townhouse' },
+                  { value: "single", label: "Single Family" },
+                  { value: "multi", label: "Multi Family" },
+                  { value: "condo", label: "Condominium" },
+                  { value: "townhouse", label: "Townhouse" },
                 ]}
                 required
                 hint="Select the type of property"
@@ -401,7 +468,13 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Auto-formatting Examples
         </Typography>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 3,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
+          }}
+        >
           <Box>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -411,7 +484,7 @@ const UXDemoPage: React.FC = () => {
                 Input: 150000
               </Typography>
               <Typography variant="h6" color="primary">
-                {formatCurrency('150000')}
+                {formatCurrency("150000")}
               </Typography>
             </Paper>
           </Box>
@@ -424,7 +497,7 @@ const UXDemoPage: React.FC = () => {
                 Input: 3.75
               </Typography>
               <Typography variant="h6" color="primary">
-                {formatPercentage('3.75')}
+                {formatPercentage("3.75")}
               </Typography>
             </Paper>
           </Box>
@@ -437,7 +510,7 @@ const UXDemoPage: React.FC = () => {
                 Input: 5551234567
               </Typography>
               <Typography variant="h6" color="primary">
-                {formatPhoneNumber('5551234567')}
+                {formatPhoneNumber("5551234567")}
               </Typography>
             </Paper>
           </Box>
@@ -449,7 +522,13 @@ const UXDemoPage: React.FC = () => {
         <Typography variant="h5" gutterBottom>
           Section Status
         </Typography>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Box
+          sx={{
+            display: "grid",
+            gap: 3,
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          }}
+        >
           <Box>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -457,7 +536,7 @@ const UXDemoPage: React.FC = () => {
               </Typography>
               <SectionStatusList
                 sections={sectionStatus}
-                onSectionClick={(id) => console.log('Clicked section:', id)}
+                onSectionClick={(id) => console.log("Clicked section:", id)}
               />
             </Paper>
           </Box>
@@ -468,7 +547,7 @@ const UXDemoPage: React.FC = () => {
               </Typography>
               <QuickJumpMenu
                 sections={quickJumpSections}
-                onJumpTo={(id) => console.log('Jump to:', id)}
+                onJumpTo={(id) => console.log("Jump to:", id)}
               />
             </Paper>
           </Box>
@@ -539,7 +618,13 @@ const UXDemoPage: React.FC = () => {
           collapsible
           defaultExpanded
         >
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            }}
+          >
             <Box>
               <EnhancedTextFieldWithValidation
                 label="Property Address"

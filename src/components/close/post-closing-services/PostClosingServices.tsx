@@ -27,4 +27,4 @@ const PostClosingServices: React.FC = () => {
   );
 };
 
-export { PostClosingServices };
+export default PostClosingServices;

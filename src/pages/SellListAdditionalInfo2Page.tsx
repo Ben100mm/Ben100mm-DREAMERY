@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -8,11 +8,11 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  Checkbox
-} from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import additionalInfo2Image from '../Additional Info-2.png';
+  Checkbox,
+} from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import additionalInfo2Image from "../Additional Info-2.png";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -63,113 +63,151 @@ const ImageContainer = styled.div`
 `;
 
 const hoaOptions = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' }
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
 ];
 
 const communityOptions = [
-  { value: 'age_restricted', label: 'Age-restricted community' },
-  { value: 'gated', label: 'Gated community' }
+  { value: "age_restricted", label: "Age-restricted community" },
+  { value: "gated", label: "Gated community" },
 ];
 
 const guardOptions = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' }
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
 ];
 
 const SellListAdditionalInfo2Page: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const prevState = location.state || {};
-  const [hoaSelected, setHoaSelected] = useState<string>('');
+  const [hoaSelected, setHoaSelected] = useState<string>("");
   const [communityTypes, setCommunityTypes] = useState<string[]>([]);
-  const [guardSelected, setGuardSelected] = useState<string>('');
+  const [guardSelected, setGuardSelected] = useState<string>("");
 
   const handleNext = () => {
     if (!hoaSelected) return;
     const state = {
       ...prevState,
       hoa: hoaSelected,
-      ...(hoaSelected === 'yes' && {
+      ...(hoaSelected === "yes" && {
         communityTypes,
-        guard: guardSelected
-      })
+        guard: guardSelected,
+      }),
     };
-    navigate('/sell-additional-info-3', { state });
+    navigate("/sell-additional-info-3", { state });
   };
   const handleBack = () => {
-    navigate('/sell-additional-info', { state: prevState });
+    navigate("/sell-additional-info", { state: prevState });
   };
-  const handleExit = () => navigate('/');
+  const handleExit = () => navigate("/");
 
   const handleCommunityChange = (value: string) => {
-    setCommunityTypes(prev => 
-      prev.includes(value) 
-        ? prev.filter(item => item !== value)
-        : [...prev, value]
+    setCommunityTypes((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value],
     );
   };
 
   return (
     <PageContainer>
       <HeaderSection>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: '#666666', mb: 1 }}>
+            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
               Additional info
             </Typography>
-                        <LinearProgress 
-              variant="determinate" 
-              value={80} 
-              sx={{ height: 8, borderRadius: 4, backgroundColor: '#e0e0e0', '& .MuiLinearProgress-bar': { backgroundColor: '#1a365d', borderRadius: 4 } }}
+            <LinearProgress
+              variant="determinate"
+              value={80}
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: "#e0e0e0",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#1a365d",
+                  borderRadius: 4,
+                },
+              }}
             />
           </Box>
-          <Button onClick={handleExit} sx={{ color: '#666666', textTransform: 'none' }}>Exit</Button>
+          <Button
+            onClick={handleExit}
+            sx={{ color: "#666666", textTransform: "none" }}
+          >
+            Exit
+          </Button>
         </Box>
       </HeaderSection>
 
       <MainContent>
         <ContentWrapper>
           <LeftSection>
-            <Typography variant="h5" sx={{ fontWeight: 800, color: '#1a365d', mb: 3 }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 800, color: "#1a365d", mb: 3 }}
+            >
               Is your home part of a home owner's association (HOA)?
             </Typography>
 
-            <FormControl component="fieldset" sx={{ width: '100%', mb: 3 }}>
+            <FormControl component="fieldset" sx={{ width: "100%", mb: 3 }}>
               <RadioGroup
                 value={hoaSelected}
                 onChange={(e) => setHoaSelected(e.target.value)}
-                sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                sx={{ display: "flex", flexDirection: "column", gap: 1 }}
               >
                 {hoaOptions.map((option) => (
                   <FormControlLabel
                     key={option.value}
                     value={option.value}
-                    control={<Radio sx={{ color: '#1a365d', '&.Mui-checked': { color: '#1a365d' } }} />}
+                    control={
+                      <Radio
+                        sx={{
+                          color: "#1a365d",
+                          "&.Mui-checked": { color: "#1a365d" },
+                        }}
+                      />
+                    }
                     label={option.label}
                     sx={{
                       margin: 0,
-                      padding: '0.75rem',
+                      padding: "0.75rem",
                       borderRadius: 1,
-                      border: hoaSelected === option.value ? '2px solid #1a365d' : '1px solid #e5e7eb',
-                      backgroundColor: hoaSelected === option.value ? '#f8fafc' : 'transparent',
-                      '&:hover': {
-                        backgroundColor: '#f8fafc',
-                        borderColor: '#1a365d'
-                      }
+                      border:
+                        hoaSelected === option.value
+                          ? "2px solid #1a365d"
+                          : "1px solid #e5e7eb",
+                      backgroundColor:
+                        hoaSelected === option.value
+                          ? "#f8fafc"
+                          : "transparent",
+                      "&:hover": {
+                        backgroundColor: "#f8fafc",
+                        borderColor: "#1a365d",
+                      },
                     }}
                   />
                 ))}
               </RadioGroup>
             </FormControl>
 
-            {hoaSelected === 'yes' && (
+            {hoaSelected === "yes" && (
               <>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+                >
                   Do any of these apply to your home?
                 </Typography>
 
-                <FormControl component="fieldset" sx={{ width: '100%', mb: 3 }}>
+                <FormControl component="fieldset" sx={{ width: "100%", mb: 3 }}>
                   {communityOptions.map((option) => (
                     <FormControlLabel
                       key={option.value}
@@ -177,51 +215,74 @@ const SellListAdditionalInfo2Page: React.FC = () => {
                         <Checkbox
                           checked={communityTypes.includes(option.value)}
                           onChange={() => handleCommunityChange(option.value)}
-                          sx={{ color: '#1a365d', '&.Mui-checked': { color: '#1a365d' } }}
+                          sx={{
+                            color: "#1a365d",
+                            "&.Mui-checked": { color: "#1a365d" },
+                          }}
                         />
                       }
                       label={option.label}
                       sx={{
                         margin: 0,
-                        padding: '0.75rem',
+                        padding: "0.75rem",
                         borderRadius: 1,
-                        border: communityTypes.includes(option.value) ? '2px solid #1a365d' : '1px solid #e5e7eb',
-                        backgroundColor: communityTypes.includes(option.value) ? '#f8fafc' : 'transparent',
-                        '&:hover': {
-                          backgroundColor: '#f8fafc',
-                          borderColor: '#1a365d'
-                        }
+                        border: communityTypes.includes(option.value)
+                          ? "2px solid #1a365d"
+                          : "1px solid #e5e7eb",
+                        backgroundColor: communityTypes.includes(option.value)
+                          ? "#f8fafc"
+                          : "transparent",
+                        "&:hover": {
+                          backgroundColor: "#f8fafc",
+                          borderColor: "#1a365d",
+                        },
                       }}
                     />
                   ))}
                 </FormControl>
 
-                <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d', mb: 2 }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+                >
                   Is there a guard at the entrance?
                 </Typography>
 
-                <FormControl component="fieldset" sx={{ width: '100%' }}>
+                <FormControl component="fieldset" sx={{ width: "100%" }}>
                   <RadioGroup
                     value={guardSelected}
                     onChange={(e) => setGuardSelected(e.target.value)}
-                    sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}
+                    sx={{ display: "flex", flexDirection: "row", gap: 2 }}
                   >
                     {guardOptions.map((option) => (
                       <FormControlLabel
                         key={option.value}
                         value={option.value}
-                        control={<Radio sx={{ color: '#1a365d', '&.Mui-checked': { color: '#1a365d' } }} />}
+                        control={
+                          <Radio
+                            sx={{
+                              color: "#1a365d",
+                              "&.Mui-checked": { color: "#1a365d" },
+                            }}
+                          />
+                        }
                         label={option.label}
                         sx={{
                           margin: 0,
-                          padding: '0.75rem',
+                          padding: "0.75rem",
                           borderRadius: 1,
-                          border: guardSelected === option.value ? '2px solid #1a365d' : '1px solid #e5e7eb',
-                          backgroundColor: guardSelected === option.value ? '#f8fafc' : 'transparent',
-                          '&:hover': {
-                            backgroundColor: '#f8fafc',
-                            borderColor: '#1a365d'
-                          }
+                          border:
+                            guardSelected === option.value
+                              ? "2px solid #1a365d"
+                              : "1px solid #e5e7eb",
+                          backgroundColor:
+                            guardSelected === option.value
+                              ? "#f8fafc"
+                              : "transparent",
+                          "&:hover": {
+                            backgroundColor: "#f8fafc",
+                            borderColor: "#1a365d",
+                          },
                         }}
                       />
                     ))}
@@ -239,13 +300,41 @@ const SellListAdditionalInfo2Page: React.FC = () => {
         </ContentWrapper>
       </MainContent>
 
-      <Box sx={{ position: 'sticky', bottom: 0, backgroundColor: 'white', px: { xs: '1rem', md: '2rem' }, py: { xs: '0.75rem', md: '1rem' }, display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #e0e0e0', zIndex: 5 }}>
-        <Button onClick={handleBack} variant="outlined" sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none', fontWeight: 600 }}>Back</Button>
-        <Button 
-          onClick={handleNext} 
-          disabled={!hoaSelected || (hoaSelected === 'yes' && !guardSelected)} 
-          variant="contained" 
-          sx={{ backgroundColor: '#1a365d', color: 'white', textTransform: 'none', fontWeight: 600 }}
+      <Box
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          backgroundColor: "white",
+          px: { xs: "1rem", md: "2rem" },
+          py: { xs: "0.75rem", md: "1rem" },
+          display: "flex",
+          justifyContent: "space-between",
+          borderTop: "1px solid #e0e0e0",
+          zIndex: 5,
+        }}
+      >
+        <Button
+          onClick={handleBack}
+          variant="outlined"
+          sx={{
+            borderColor: "#1a365d",
+            color: "#1a365d",
+            textTransform: "none",
+            fontWeight: 600,
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          onClick={handleNext}
+          disabled={!hoaSelected || (hoaSelected === "yes" && !guardSelected)}
+          variant="contained"
+          sx={{
+            backgroundColor: "#1a365d",
+            color: "white",
+            textTransform: "none",
+            fontWeight: 600,
+          }}
         >
           Next
         </Button>
@@ -254,4 +343,4 @@ const SellListAdditionalInfo2Page: React.FC = () => {
   );
 };
 
-export default SellListAdditionalInfo2Page; 
+export default SellListAdditionalInfo2Page;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -6,7 +6,9 @@
   padding: 0;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -15,8 +17,18 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -46,5 +58,7 @@ body {
 
 /* Smooth opacity and transform transitions */
 [data-transition="true"] {
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out !important;
 }

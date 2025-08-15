@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 // Firebase configuration - Replace with your actual Firebase project config
 const firebaseConfig = {
@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "your-project-id",
   storageBucket: "your-project.appspot.com",
   messagingSenderId: "123456789",
-  appId: "your-app-id"
+  appId: "your-app-id",
 };
 
 // Initialize Firebase

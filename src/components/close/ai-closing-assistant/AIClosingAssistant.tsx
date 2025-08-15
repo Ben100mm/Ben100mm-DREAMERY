@@ -27,4 +27,4 @@ const AIClosingAssistant: React.FC = () => {
   );
 };
 
-export { AIClosingAssistant };
+export default AIClosingAssistant;

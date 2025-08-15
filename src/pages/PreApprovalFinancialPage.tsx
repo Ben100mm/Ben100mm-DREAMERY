@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -10,11 +10,11 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  Tooltip
-} from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import InfoIcon from '@mui/icons-material/Info';
+  Tooltip,
+} from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import InfoIcon from "@mui/icons-material/Info";
 
 const PageContainer = styled.div`
   height: 100vh;
@@ -55,79 +55,93 @@ const PreApprovalFinancialPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [answers, setAnswers] = useState({
-    homePrice: '',
-    monthlyPayment: '',
-    upfrontCosts: ''
+    homePrice: "",
+    monthlyPayment: "",
+    upfrontCosts: "",
   });
 
   const questions = [
     {
-      id: 'homePrice',
-      title: 'How much are you planning to spend on your new home?',
-      description: 'If you\'re not sure, feel free to estimate.',
-      type: 'currency',
-      required: true
+      id: "homePrice",
+      title: "How much are you planning to spend on your new home?",
+      description: "If you're not sure, feel free to estimate.",
+      type: "currency",
+      required: true,
     },
     {
-      id: 'monthlyPayment',
-      title: 'How much are you willing to pay per month for a mortgage?',
-      type: 'currency',
-      suffix: '/month',
+      id: "monthlyPayment",
+      title: "How much are you willing to pay per month for a mortgage?",
+      type: "currency",
+      suffix: "/month",
       required: true,
       hasInfo: true,
-      infoText: 'This includes principal, interest, taxes, and insurance (PITI).'
+      infoText:
+        "This includes principal, interest, taxes, and insurance (PITI).",
     },
     {
-      id: 'upfrontCosts',
-      title: 'How much are you willing to spend upfront to cover your down payment and closing costs?',
-      type: 'currency',
+      id: "upfrontCosts",
+      title:
+        "How much are you willing to spend upfront to cover your down payment and closing costs?",
+      type: "currency",
       required: true,
       hasInfo: true,
-      infoText: 'This includes your down payment plus closing costs like appraisal, title insurance, and other fees.'
-    }
+      infoText:
+        "This includes your down payment plus closing costs like appraisal, title insurance, and other fees.",
+    },
   ];
 
   const handleBack = () => {
-    navigate('/pre-approval-home-preferences', { state: { answers: location.state?.answers } });
+    navigate("/pre-approval-home-preferences", {
+      state: { answers: location.state?.answers },
+    });
   };
 
   const handleNext = () => {
     // Navigate to property financial page with all answers data
     const allAnswers = {
       ...location.state?.answers,
-      ...answers
+      ...answers,
     };
-    navigate('/pre-approval-property-financial', { state: { answers: allAnswers } });
+    navigate("/pre-approval-property-financial", {
+      state: { answers: allAnswers },
+    });
   };
 
   const handleInputChange = (field: string, value: string) => {
     // Remove all non-numeric characters
-    const numericValue = value.replace(/[^0-9]/g, '');
-    setAnswers(prev => ({ ...prev, [field]: numericValue }));
+    const numericValue = value.replace(/[^0-9]/g, "");
+    setAnswers((prev) => ({ ...prev, [field]: numericValue }));
   };
 
   const formatCurrency = (value: string) => {
-    if (!value) return '';
+    if (!value) return "";
     const numValue = parseInt(value);
-    if (isNaN(numValue)) return '';
-    return numValue.toLocaleString('en-US');
+    if (isNaN(numValue)) return "";
+    return numValue.toLocaleString("en-US");
   };
 
-  const isNextDisabled = !answers.homePrice || !answers.monthlyPayment || !answers.upfrontCosts;
+  const isNextDisabled =
+    !answers.homePrice || !answers.monthlyPayment || !answers.upfrontCosts;
 
   return (
     <PageContainer>
       {/* Header */}
       <HeaderSection>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="h6" sx={{ color: '#1a365d', fontWeight: 600 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: '#666666', textTransform: 'none' }}
+            sx={{ color: "#666666", textTransform: "none" }}
           >
             Back
           </Button>
@@ -136,74 +150,109 @@ const PreApprovalFinancialPage: React.FC = () => {
 
       {/* Main Content */}
       <ContentSection>
-        <Container maxWidth="md" sx={{ width: '100%', py: { xs: 0.5, md: 1 } }}>
+        <Container maxWidth="md" sx={{ width: "100%", py: { xs: 0.5, md: 1 } }}>
           <QuestionCard>
-            <CardContent sx={{ p: { xs: 1.5, md: 3 }, flex: 1, overflow: 'auto' }}>
+            <CardContent
+              sx={{ p: { xs: 1.5, md: 3 }, flex: 1, overflow: "auto" }}
+            >
               {/* Progress Bar */}
-              <LinearProgress 
-                variant="determinate" 
-                value={50} 
-                sx={{ mb: 2, height: 6, borderRadius: 1, backgroundColor: '#e0e0e0' }}
+              <LinearProgress
+                variant="determinate"
+                value={50}
+                sx={{
+                  mb: 2,
+                  height: 6,
+                  borderRadius: 1,
+                  backgroundColor: "#e0e0e0",
+                }}
               />
 
-              <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 2, textAlign: 'center', fontSize: { xs: '1.25rem', md: '1.75rem' } }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: "#1a365d",
+                  mb: 2,
+                  textAlign: "center",
+                  fontSize: { xs: "1.25rem", md: "1.75rem" },
+                }}
+              >
                 Financial Information
               </Typography>
-              
-              <Typography variant="body2" sx={{ color: '#666', mb: 4, textAlign: 'center' }}>
+
+              <Typography
+                variant="body2"
+                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+              >
                 Help us understand your financial goals and budget.
               </Typography>
 
               {/* Questions */}
-              <Box sx={{ display: 'grid', gap: 3 }}>
+              <Box sx={{ display: "grid", gap: 3 }}>
                 {questions.map((question, index) => (
                   <Box key={index}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                      >
                         {question.title} *
                       </Typography>
                       {question.hasInfo && (
                         <Tooltip title={question.infoText} arrow>
-                          <IconButton size="small" sx={{ color: '#666' }}>
+                          <IconButton size="small" sx={{ color: "#666" }}>
                             <InfoIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       )}
                     </Box>
-                    
+
                     {question.description && (
-                      <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
                         {question.description}
                       </Typography>
                     )}
-                    
+
                     <TextField
                       fullWidth
                       type="text"
-                      value={answers[question.id as keyof typeof answers] ? `$ ${formatCurrency(answers[question.id as keyof typeof answers])}` : ''}
+                      value={
+                        answers[question.id as keyof typeof answers]
+                          ? `$ ${formatCurrency(answers[question.id as keyof typeof answers])}`
+                          : ""
+                      }
                       onChange={(e) => {
                         // Remove all non-numeric characters from the input
-                        const rawValue = e.target.value.replace(/[^0-9]/g, '');
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
                         handleInputChange(question.id, rawValue);
                       }}
                       placeholder="$ 0"
                       sx={{
-                        '& .MuiOutlinedInput-root': {
-                          backgroundColor: '#f5f5f5',
-                          '&:hover': {
-                            backgroundColor: '#f0f0f0'
-                          }
-                        }
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "#f5f5f5",
+                          "&:hover": {
+                            backgroundColor: "#f0f0f0",
+                          },
+                        },
                       }}
                       InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
                         endAdornment: question.suffix ? (
                           <InputAdornment position="end">
-                            <Typography variant="body2" sx={{ color: '#666' }}>
+                            <Typography variant="body2" sx={{ color: "#666" }}>
                               {question.suffix}
                             </Typography>
                           </InputAdornment>
-                        ) : null
+                        ) : null,
                       }}
                     />
                   </Box>
@@ -211,27 +260,31 @@ const PreApprovalFinancialPage: React.FC = () => {
               </Box>
 
               {/* Navigation Buttons */}
-              <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-                <Button 
-                  variant="outlined" 
+              <Box sx={{ display: "flex", gap: 2, mt: 4 }}>
+                <Button
+                  variant="outlined"
                   onClick={handleBack}
-                  sx={{ borderColor: '#1a365d', color: '#1a365d', textTransform: 'none' }}
+                  sx={{
+                    borderColor: "#1a365d",
+                    color: "#1a365d",
+                    textTransform: "none",
+                  }}
                 >
                   Back
                 </Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   onClick={handleNext}
                   disabled={isNextDisabled}
-                  sx={{ 
-                    backgroundColor: '#1a365d', 
-                    color: 'white', 
-                    textTransform: 'none',
+                  sx={{
+                    backgroundColor: "#1a365d",
+                    color: "white",
+                    textTransform: "none",
                     flex: 1,
-                    '&:disabled': {
-                      backgroundColor: '#e0e0e0',
-                      color: '#999'
-                    }
+                    "&:disabled": {
+                      backgroundColor: "#e0e0e0",
+                      color: "#999",
+                    },
                   }}
                 >
                   Next
@@ -245,4 +298,4 @@ const PreApprovalFinancialPage: React.FC = () => {
   );
 };
 
-export default PreApprovalFinancialPage; 
+export default PreApprovalFinancialPage;

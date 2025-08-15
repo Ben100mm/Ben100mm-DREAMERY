@@ -324,7 +324,7 @@ const ClosePage: React.FC = () => {
         position="fixed" 
         sx={{ 
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#1976d2',
+          backgroundColor: '#1a365d',
           boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
         }}
       >
@@ -406,17 +406,17 @@ const ClosePage: React.FC = () => {
                 mb: 0.5,
                 borderRadius: 1,
                 cursor: 'pointer',
-                backgroundColor: activeTabIndex === index ? '#e3f2fd' : 'transparent',
-                color: activeTabIndex === index ? '#1976d2' : 'inherit',
-                '&:hover': {
-                  backgroundColor: activeTabIndex === index ? '#bbdefb' : '#f5f5f5',
-                },
+                                 backgroundColor: activeTabIndex === index ? '#f0f8ff' : 'transparent',
+                 color: activeTabIndex === index ? '#1a365d' : 'inherit',
+                 '&:hover': {
+                   backgroundColor: activeTabIndex === index ? '#e0f0ff' : '#f5f5f5',
+                 },
               }}
             >
-              <ListItemIcon sx={{ 
-                color: activeTabIndex === index ? '#1976d2' : 'inherit',
-                minWidth: 40 
-              }}>
+                             <ListItemIcon sx={{ 
+                 color: activeTabIndex === index ? '#1a365d' : 'inherit',
+                 minWidth: 40 
+               }}>
                 {feature.icon}
               </ListItemIcon>
               <ListItemText 
@@ -442,7 +442,7 @@ const ClosePage: React.FC = () => {
       }}>
         {/* Header Section */}
         <Box sx={{ 
-          background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+          background: 'linear-gradient(135deg, #1a365d 0%, #0d2340 100%)',
           color: 'white',
           padding: '3rem 0',
           marginBottom: '2rem'
@@ -491,7 +491,7 @@ const ClosePage: React.FC = () => {
                 scrollButtons="auto"
                 aria-label="Closing management tabs"
                 sx={{
-                  backgroundColor: '#1976d2',
+                                     backgroundColor: '#1a365d',
                   '& .MuiTab-root': {
                     minHeight: 64,
                     fontSize: '0.9rem',

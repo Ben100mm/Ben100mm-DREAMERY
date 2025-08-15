@@ -1082,14 +1082,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                   size="small"
                   disabled
                   sx={{
-                    borderColor: "#1976d2",
-                    color: "#1976d2",
+                    borderColor: "#1a365d",
+                    color: "#1a365d",
                     px: 2,
                     py: 0.75,
                     fontSize: "0.75rem",
                     "&.Mui-disabled": {
-                      borderColor: "#1976d2",
-                      color: "#1976d2",
+                      borderColor: "#1a365d",
+                      color: "#1a365d",
                       opacity: 0.8,
                     },
                   }}
@@ -1307,10 +1307,10 @@ const AdvancedCalculationsPage: React.FC = () => {
             {!configsComplete && (
               <Alert
                 severity="info"
-                sx={{ mb: 2, bgcolor: "#e3f2fd", borderColor: "#1976d2" }}
+                sx={{ mb: 2, bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
                 data-testid="config-status-alert"
               >
-                <Typography variant="body2" sx={{ color: "#1976d2", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: "#1a365d", mb: 1 }}>
                   <strong>Configuration Required:</strong> Complete the Global
                   Configuration tab to unlock advanced analysis features.
                   <Button
@@ -1319,7 +1319,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                     onClick={() => setTabValue(1)}
                     sx={{
                       ml: 1,
-                      color: "#1976d2",
+                      color: "#1a365d",
                       textDecoration: "underline",
                       "&:hover": { bgcolor: "transparent" },
                     }}
@@ -1330,7 +1330,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 <Typography
                   variant="caption"
                   sx={{
-                    color: "#1976d2",
+                    color: "#1a365d",
                     opacity: 0.8,
                     display: "block",
                     mb: 1,
@@ -1537,8 +1537,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                   size="small"
                   onClick={() => setTabValue(1)}
                   sx={{
-                    bgcolor: "#1976d2",
-                    "&:hover": { bgcolor: "#1565c0" },
+                    bgcolor: "#1a365d",
+                    "&:hover": { bgcolor: "#0d2340" },
                     minWidth: { xs: "100%", sm: "120px" },
                     fontSize: { xs: "0.8rem", sm: "0.875rem" },
                   }}
@@ -1681,39 +1681,39 @@ const AdvancedCalculationsPage: React.FC = () => {
                 {!configsComplete && (
                   <Alert
                     severity="info"
-                    sx={{ mb: 3, bgcolor: "#e3f2fd", borderColor: "#1976d2" }}
+                    sx={{ mb: 3, bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
                   >
                     <Typography
                       variant="body2"
-                      sx={{ color: "#1976d2", mb: 1 }}
+                      sx={{ color: "#1a365d", mb: 1 }}
                     >
                       <strong>Getting Started:</strong> Complete the Global
                       Configuration tab to unlock advanced analysis features.
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1976d2", opacity: 0.8, display: "block" }}
+                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
                     >
                       - Configure Market Conditions (inflation, appreciation,
                       rent growth rates)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1976d2", opacity: 0.8, display: "block" }}
+                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
                     >
                       - Set Risk Factors (market volatility, tenant quality,
                       property age)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1976d2", opacity: 0.8, display: "block" }}
+                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
                     >
                       - Define Exit Strategies (timeline, selling costs, ROI
                       targets)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1976d2", opacity: 0.8, display: "block" }}
+                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
                     >
                       - Configure Tax Implications (bracket, deductions,
                       property expenses)
@@ -1993,9 +1993,9 @@ const AdvancedCalculationsPage: React.FC = () => {
               <CardContent sx={{ p: 3 }}>
                 <Alert
                   severity="info"
-                  sx={{ bgcolor: "#e3f2fd", borderColor: "#1976d2" }}
+                  sx={{ bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
                 >
-                  <Typography variant="body2" sx={{ color: "#1976d2" }}>
+                  <Typography variant="body2" sx={{ color: "#1a365d" }}>
                     <strong>Enhanced Capabilities:</strong> Our comprehensive
                     analysis suite provides sophisticated financial modeling and
                     risk assessment tools. Leverage advanced algorithms for
@@ -2491,16 +2491,16 @@ const AdvancedCalculationsPage: React.FC = () => {
             onClick={() => setTabValue(1)}
             startIcon={<span>-</span>}
             sx={{
-              bgcolor: "#1976d2",
+              bgcolor: "#1a365d",
               color: "white",
               borderRadius: "50px",
               px: { xs: 2, sm: 2.5, md: 3 },
               py: { xs: 1, sm: 1.25, md: 1.5 },
               fontSize: { xs: "0.875rem", sm: "1rem" },
-              boxShadow: "0 4px 20px rgba(25, 118, 210, 0.3)",
+              boxShadow: "0 4px 20px rgba(26, 54, 93, 0.3)",
               "&:hover": {
-                bgcolor: "#1565c0",
-                boxShadow: "0 6px 25px rgba(25, 118, 210, 0.4)",
+                bgcolor: "#0d2340",
+                boxShadow: "0 6px 25px rgba(26, 54, 93, 0.4)",
                 transform: "translateY(-2px)",
               },
               transition: "all 0.3s ease",

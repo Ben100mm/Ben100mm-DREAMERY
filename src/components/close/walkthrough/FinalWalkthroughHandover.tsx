@@ -67,6 +67,7 @@ import { toast } from 'react-hot-toast';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { brandColors } from "../../../theme";
 
 // Types
 interface Task {
@@ -499,32 +500,32 @@ const FinalWalkthroughHandover: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'in-progress':
-        return '#2196f3';
+        return brandColors.accent.info;
       case 'completed':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'failed':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'verified':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'medium':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'high':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'critical':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -566,7 +567,7 @@ const FinalWalkthroughHandover: React.FC = () => {
         <Card>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <ChecklistIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+              <ChecklistIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h6" gutterBottom>
                   Walkthrough Progress
@@ -592,7 +593,7 @@ const FinalWalkthroughHandover: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <ChecklistIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <ChecklistIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               {totalTasks}
             </Typography>
@@ -604,7 +605,7 @@ const FinalWalkthroughHandover: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <CheckCircleIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               {completedTasks}
             </Typography>
@@ -616,7 +617,7 @@ const FinalWalkthroughHandover: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <BuildIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <BuildIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               {walkthroughData.repairs.length}
             </Typography>
@@ -641,7 +642,7 @@ const FinalWalkthroughHandover: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="Walkthrough Checklist" />
           <Tab label="Repair Verification" />
           <Tab label="Key Exchange" />
@@ -672,7 +673,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                     <Card>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                          <Avatar sx={{ backgroundColor: '#1976d2' }}>
+                          <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
                             {getCategoryIcon(task.category)}
                           </Avatar>
                           <Box sx={{ flexGrow: 1 }}>
@@ -697,7 +698,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                             size="small"
                             sx={{ 
                               backgroundColor: getStatusColor(task.status),
-                              color: 'white'
+                              color: brandColors.backgrounds.primary
                             }}
                           />
                           <Chip 
@@ -705,7 +706,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                             size="small"
                             sx={{ 
                               backgroundColor: getPriorityColor(task.priority),
-                              color: 'white'
+                              color: brandColors.backgrounds.primary
                             }}
                           />
                         </Box>
@@ -820,7 +821,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                           size="small"
                           sx={{ 
                             backgroundColor: getStatusColor(repair.status),
-                            color: 'white'
+                            color: brandColors.backgrounds.primary
                           }}
                         />
                       </TableCell>
@@ -830,7 +831,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                           size="small"
                           sx={{ 
                             backgroundColor: getPriorityColor(repair.priority),
-                            color: 'white'
+                            color: brandColors.backgrounds.primary
                           }}
                         />
                       </TableCell>
@@ -955,7 +956,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
                       {walkthroughData.keyExchange.keys.map((key) => (
-                        <Box key={key.id} sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+                        <Box key={key.id} sx={{ p: 2, border: '1px solid brandColors.borders.secondary', borderRadius: 1 }}>
                           <Typography variant="body2" sx={{ fontWeight: 500 }}>
                             {key.type.replace('-', ' ').toUpperCase()}
                           </Typography>

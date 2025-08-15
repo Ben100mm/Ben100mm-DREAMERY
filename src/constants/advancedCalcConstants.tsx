@@ -9,6 +9,7 @@ import {
   InputAdornment,
   CircularProgress,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import {
   Calculate as CalculateIcon,
   Settings as SettingsIcon,
@@ -38,11 +39,11 @@ import {
 } from "../components";
 
 // Color constants
-export const DEFAULT_COLOR = "#1a365d";
-export const SECONDARY_COLOR = "#2e7d32";
+export const DEFAULT_COLOR = brandColors.primary;
+export const SECONDARY_COLOR = brandColors.accent.success;
 export const WARNING_COLOR = "#d32f2f";
-export const INFO_COLOR = "#1976d2";
-export const SUCCESS_COLOR = "#2e7d32";
+export const INFO_COLOR = brandColors.actions.primary;
+export const SUCCESS_COLOR = brandColors.accent.success;
 
 // Spacing constants
 export const DEFAULT_SPACING = 2;
@@ -50,9 +51,9 @@ export const CARD_SPACING = 3;
 export const SECTION_SPACING = 4;
 
 // Background colors
-export const CARD_BACKGROUND = "#f8f9fa";
-export const ALERT_BACKGROUND = "#f0f8ff";
-export const INFO_BACKGROUND = "#e3f2fd";
+export const CARD_BACKGROUND = brandColors.backgrounds.secondary;
+export const ALERT_BACKGROUND = brandColors.backgrounds.hover;
+export const INFO_BACKGROUND = brandColors.backgrounds.selected;
 
 // Tab configuration
 export const createTabConfig = (

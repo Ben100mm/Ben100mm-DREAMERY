@@ -12,19 +12,20 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -80,13 +81,13 @@ const PreApprovalResultsPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -108,7 +109,7 @@ const PreApprovalResultsPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -116,7 +117,7 @@ const PreApprovalResultsPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -127,7 +128,7 @@ const PreApprovalResultsPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
               >
                 We've received your pre-approval application and will be in
                 touch soon.
@@ -136,16 +137,16 @@ const PreApprovalResultsPage: React.FC = () => {
               {/* Information Summary */}
               <Box
                 sx={{
-                  backgroundColor: "#f8f9fa",
+                  backgroundColor: brandColors.backgrounds.secondary,
                   p: 3,
                   borderRadius: 2,
                   mb: 4,
-                  border: "1px solid #e0e0e0",
+                  border: "1px solid brandColors.borders.secondary",
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                 >
                   Your Information Summary:
                 </Typography>
@@ -158,13 +159,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Name:
                       </Typography>
                       <Chip
                         label={`${answers.firstName} ${answers.lastName}`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -176,13 +177,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Email:
                       </Typography>
                       <Chip
                         label={answers.emailAddress}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -194,13 +195,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Phone:
                       </Typography>
                       <Chip
                         label={answers.phoneNumber}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -212,13 +213,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Current Address:
                       </Typography>
                       <Chip
                         label={`${answers.streetAddress}, ${answers.city}, ${answers.state} ${answers.zipCode}`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -230,13 +231,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Annual Income:
                       </Typography>
                       <Chip
                         label={`$${formatCurrency(answers.income)}`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -248,13 +249,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Credit Score:
                       </Typography>
                       <Chip
                         label={answers.credit}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -266,13 +267,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Home-buying Journey:
                       </Typography>
                       <Chip
                         label={answers.journey}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -284,13 +285,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Timeline:
                       </Typography>
                       <Chip
                         label={answers.timeline}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -302,13 +303,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Location:
                       </Typography>
                       <Chip
                         label={answers.location}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -320,13 +321,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Home Type:
                       </Typography>
                       <Chip
                         label={answers.homeType}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -338,13 +339,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Home Use:
                       </Typography>
                       <Chip
                         label={answers.homeUse}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -356,13 +357,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Target Home Price:
                       </Typography>
                       <Chip
                         label={`$${formatCurrency(answers.homePrice)}`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -374,13 +375,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Target Monthly Payment:
                       </Typography>
                       <Chip
                         label={`$${formatCurrency(answers.monthlyPayment)}/month`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -392,13 +393,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         Upfront Costs:
                       </Typography>
                       <Chip
                         label={`$${formatCurrency(answers.upfrontCosts)}`}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -410,13 +411,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         First-time Buyer:
                       </Typography>
                       <Chip
                         label={answers.isFirstTimeBuyer}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -428,13 +429,13 @@ const PreApprovalResultsPage: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#666" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                         US Citizen:
                       </Typography>
                       <Chip
                         label={answers.isUSCitizen}
                         size="small"
-                        sx={{ backgroundColor: "#1a365d", color: "white" }}
+                        sx={{ backgroundColor: brandColors.primary, color: brandColors.backgrounds.primary }}
                       />
                     </Box>
                   )}
@@ -452,11 +453,11 @@ const PreApprovalResultsPage: React.FC = () => {
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                 >
                   Next Steps:
                 </Typography>
-                <Box component="ul" sx={{ pl: 2, color: "#666", m: 0 }}>
+                <Box component="ul" sx={{ pl: 2, color: brandColors.neutral.dark, m: 0 }}>
                   <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
                     Our team will review your information within 24 hours
                   </Typography>
@@ -475,28 +476,28 @@ const PreApprovalResultsPage: React.FC = () => {
               {/* Additional Information (What to Expect) */}
               <Box
                 sx={{
-                  backgroundColor: "#f8f9fa",
+                  backgroundColor: brandColors.backgrounds.secondary,
                   p: 3,
                   borderRadius: 2,
                   mb: 4,
-                  border: "1px solid #e0e0e0",
+                  border: "1px solid brandColors.borders.secondary",
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                 >
                   What to Expect:
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                   - Your pre-approval letter will include your maximum loan
                   amount and estimated monthly payment
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                   - You'll receive personalized rate quotes based on your
                   financial profile
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   - Our loan officers are available to answer questions and
                   guide you through the process
                 </Typography>
@@ -508,8 +509,8 @@ const PreApprovalResultsPage: React.FC = () => {
                   variant="contained"
                   onClick={handleComplete}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                   }}

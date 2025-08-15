@@ -30,6 +30,7 @@ import {
   Tooltip,
   Snackbar,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import MuiAlert from "@mui/material/Alert";
 import {
   ExpandMore as ExpandMoreIcon,
@@ -990,7 +991,7 @@ const AdvancedCalculationsPage: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "#ffffff",
+        background: brandColors.backgrounds.primary,
         transition: "all 0.3s ease-in-out",
       }}
     >
@@ -1017,7 +1018,7 @@ const AdvancedCalculationsPage: React.FC = () => {
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Typography
                 variant="h4"
-                sx={{ fontWeight: 700, color: "#1a365d" }}
+                sx={{ fontWeight: 700, color: brandColors.primary }}
               >
                 Advanced Analysis
               </Typography>
@@ -1029,15 +1030,15 @@ const AdvancedCalculationsPage: React.FC = () => {
                     gap: 1,
                     px: 1.5,
                     py: 0.5,
-                    bgcolor: configsComplete ? "#e8f5e8" : "#fff3cd",
+                    bgcolor: configsComplete ? brandColors.backgrounds.success : brandColors.backgrounds.warning,
                     borderRadius: 1,
-                    border: `1px solid ${configsComplete ? "#2e7d32" : "#ffc107"}`,
+                    border: `1px solid ${configsComplete ? brandColors.accent.success : brandColors.accent.warning}`,
                   }}
                 >
                   <Typography
                     variant="caption"
                     sx={{
-                      color: configsComplete ? "#2e7d32" : "#856404",
+                      color: configsComplete ? brandColors.accent.success : brandColors.neutral.dark,
                       fontWeight: 600,
                     }}
                   >
@@ -1058,7 +1059,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       variant="text"
                       onClick={() => setTabValue(1)}
                       sx={{
-                        color: "#856404",
+                        color: brandColors.neutral.dark,
                         textDecoration: "underline",
                         fontSize: "0.75rem",
                         minWidth: "auto",
@@ -1082,14 +1083,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                   size="small"
                   disabled
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     px: 2,
                     py: 0.75,
                     fontSize: "0.75rem",
                     "&.Mui-disabled": {
-                      borderColor: "#1a365d",
-                      color: "#1a365d",
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
                       opacity: 0.8,
                     },
                   }}
@@ -1107,14 +1108,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                   size="small"
                   disabled
                   sx={{
-                    borderColor: "#ff9800",
-                    color: "#ff9800",
+                    borderColor: brandColors.accent.warning,
+                    color: brandColors.accent.warning,
                     px: 2,
                     py: 0.75,
                     fontSize: "0.75rem",
                     "&.Mui-disabled": {
-                      borderColor: "#ff9800",
-                      color: "#ff9800",
+                      borderColor: brandColors.accent.warning,
+                      color: brandColors.accent.warning,
                       opacity: 0.8,
                     },
                   }}
@@ -1131,11 +1132,11 @@ const AdvancedCalculationsPage: React.FC = () => {
                 aria-label="Start Guided Tour"
                 data-testid="guided-tour-button"
                 sx={{
-                  borderColor: "#1a365d",
-                  color: "#1a365d",
+                  borderColor: brandColors.primary,
+                  color: brandColors.primary,
                   px: 2,
                   py: 0.75,
-                  "&:hover": { borderColor: "#0f2027", bgcolor: "#f0f8ff" },
+                  "&:hover": { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover },
                 }}
               >
                 Guided Tour
@@ -1161,19 +1162,19 @@ const AdvancedCalculationsPage: React.FC = () => {
                 aria-label="Return to Underwrite page"
                 data-testid="back-to-underwrite-button"
                 sx={{
-                  borderColor: "#1a365d",
-                  color: "#1a365d",
+                  borderColor: brandColors.primary,
+                  color: brandColors.primary,
                   px: 2,
                   py: 0.75,
                   cursor: "pointer",
                   position: "relative",
                   zIndex: 10,
                   "&:hover": {
-                    borderColor: "#0f2027",
-                    backgroundColor: "#f0f8ff",
+                    borderColor: brandColors.secondary,
+                    backgroundColor: brandColors.backgrounds.hover,
                   },
                   "&:active": {
-                    backgroundColor: "#e0f0ff",
+                    backgroundColor: brandColors.backgrounds.selected,
                   },
                 }}
               >
@@ -1201,15 +1202,15 @@ const AdvancedCalculationsPage: React.FC = () => {
                     gap: 1,
                     px: 2,
                     py: 0.75,
-                    backgroundColor: "#f0f8ff",
+                    backgroundColor: brandColors.backgrounds.hover,
                     borderRadius: 1.5,
-                    border: "1px solid #1a365d",
+                    border: `1px solid ${brandColors.primary}`,
                     minHeight: 36,
                   }}
                 >
                   <Typography
                     variant="body2"
-                    sx={{ color: "#1a365d", fontWeight: 500 }}
+                    sx={{ color: brandColors.primary, fontWeight: 500 }}
                   >
                     History: {dealHistory.length - 1} step
                     {dealHistory.length > 2 ? "s" : ""} available
@@ -1230,10 +1231,10 @@ const AdvancedCalculationsPage: React.FC = () => {
                 }
                 data-testid="undo-button"
                 sx={{
-                  borderColor: canUndo ? "#1a365d" : "#ccc",
-                  color: canUndo ? "#1a365d" : "#ccc",
+                  borderColor: canUndo ? brandColors.primary : "#ccc",
+                  color: canUndo ? brandColors.primary : "#ccc",
                   "&:hover": canUndo
-                    ? { borderColor: "#0f2027", bgcolor: "#f0f8ff" }
+                    ? { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover }
                     : {},
                   minWidth: 80,
                   px: 2,
@@ -1256,10 +1257,10 @@ const AdvancedCalculationsPage: React.FC = () => {
                 }
                 data-testid="reset-button"
                 sx={{
-                  borderColor: canReset ? "#dc3545" : "#ccc",
-                  color: canReset ? "#dc3545" : "#ccc",
+                  borderColor: canReset ? brandColors.actions.error : "#ccc",
+                  color: canReset ? brandColors.actions.error : "#ccc",
                   "&:hover": canReset
-                    ? { borderColor: "#c82333", bgcolor: "#fff5f5" }
+                    ? { borderColor: brandColors.actions.error, bgcolor: brandColors.backgrounds.error }
                     : {},
                   minWidth: 80,
                   px: 2,
@@ -1282,10 +1283,10 @@ const AdvancedCalculationsPage: React.FC = () => {
           <Box>
             <Alert
               severity="success"
-              sx={{ mb: 2, bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
+              sx={{ mb: 2, bgcolor: brandColors.backgrounds.hover, borderColor: brandColors.primary }}
               data-testid="deal-loaded-alert"
             >
-              <Typography variant="body2" sx={{ color: "#1a365d" }}>
+              <Typography variant="body2" sx={{ color: brandColors.primary }}>
                 <strong>Deal Loaded:</strong> {dealState.propertyType} property
                 in {dealState.city}, {dealState.state} - $
                 {dealState.purchasePrice?.toLocaleString()}
@@ -1293,7 +1294,7 @@ const AdvancedCalculationsPage: React.FC = () => {
               <Typography
                 variant="caption"
                 sx={{
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   opacity: 0.8,
                   display: "block",
                   mt: 0.5,
@@ -1307,10 +1308,10 @@ const AdvancedCalculationsPage: React.FC = () => {
             {!configsComplete && (
               <Alert
                 severity="info"
-                sx={{ mb: 2, bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
+                sx={{ mb: 2, bgcolor: brandColors.backgrounds.hover, borderColor: brandColors.primary }}
                 data-testid="config-status-alert"
               >
-                <Typography variant="body2" sx={{ color: "#1a365d", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.primary, mb: 1 }}>
                   <strong>Configuration Required:</strong> Complete the Global
                   Configuration tab to unlock advanced analysis features.
                   <Button
@@ -1319,7 +1320,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                     onClick={() => setTabValue(1)}
                     sx={{
                       ml: 1,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       textDecoration: "underline",
                       "&:hover": { bgcolor: "transparent" },
                     }}
@@ -1330,7 +1331,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 <Typography
                   variant="caption"
                   sx={{
-                    color: "#1a365d",
+                    color: brandColors.primary,
                     opacity: 0.8,
                     display: "block",
                     mb: 1,
@@ -1395,8 +1396,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                 severity="success"
                 sx={{
                   mb: 2,
-                  bgcolor: "#e8f5e8",
-                  borderColor: "#2e7d32",
+                  bgcolor: brandColors.backgrounds.success,
+                  borderColor: brandColors.accent.success,
                   animation: "slideIn 0.5s ease-out",
                   "@keyframes slideIn": {
                     "0%": { transform: "translateY(-20px)", opacity: 0 },
@@ -1405,7 +1406,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 }}
                 onClose={() => setShowConfigSuccess(false)}
               >
-                <Typography variant="body2" sx={{ color: "#2e7d32" }}>
+                <Typography variant="body2" sx={{ color: brandColors.accent.success }}>
                   <strong>Configuration Complete!</strong> All advanced analysis
                   features are now unlocked and ready to use.
                 </Typography>
@@ -1418,9 +1419,9 @@ const AdvancedCalculationsPage: React.FC = () => {
                 sx={{
                   mb: 2,
                   p: { xs: 1.5, md: 2 },
-                  bgcolor: "#f8f9fa",
+                  bgcolor: brandColors.backgrounds.secondary,
                   borderRadius: 2,
-                  border: "1px solid #e0e0e0",
+                  border: `1px solid ${brandColors.borders.secondary}`,
                   display: "flex",
                   flexDirection: { xs: "column", sm: "row" },
                   alignItems: { xs: "flex-start", sm: "center" },
@@ -1431,7 +1432,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: "#666",
+                      color: brandColors.neutral.dark,
                       mb: 1,
                       fontSize: { xs: "0.875rem", sm: "1rem" },
                     }}
@@ -1537,8 +1538,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                   size="small"
                   onClick={() => setTabValue(1)}
                   sx={{
-                    bgcolor: "#1a365d",
-                    "&:hover": { bgcolor: "#0d2340" },
+                    bgcolor: brandColors.primary,
+                    "&:hover": { bgcolor: brandColors.secondary },
                     minWidth: { xs: "100%", sm: "120px" },
                     fontSize: { xs: "0.8rem", sm: "0.875rem" },
                   }}
@@ -1556,7 +1557,7 @@ const AdvancedCalculationsPage: React.FC = () => {
             <Card
               sx={{
                 borderRadius: 2,
-                border: "1px solid #e0e0e0",
+                border: "1px solid brandColors.borders.secondary",
                 transition: "all 0.3s ease-in-out",
                 minHeight: "fit-content",
               }}
@@ -1566,7 +1567,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                    DESCRIPTION TEXT
                    ============================================================================ */}
 
-                <Typography variant="body1" sx={{ mb: 4, color: "#666" }}>
+                <Typography variant="body1" sx={{ mb: 4, color: brandColors.neutral.dark }}>
                   Comprehensive financial analysis tools with seasonal
                   adjustments, market factors, exit strategies, tax
                   implications, refinance scenarios, sensitivity analysis,
@@ -1579,14 +1580,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                     sx={{
                       mb: 3,
                       p: 2,
-                      bgcolor: "#fff3cd",
+                      bgcolor: brandColors.backgrounds.warning,
                       borderRadius: 1,
-                      border: "1px solid #ffc107",
+                      border: "1px solid brandColors.accent.warning",
                     }}
                   >
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: 600, color: "#856404", mb: 2 }}
+                      sx={{ fontWeight: 600, color: brandColors.neutral.dark, mb: 2 }}
                     >
                       Financing Details & Balloon Payment Integration
                     </Typography>
@@ -1605,20 +1606,20 @@ const AdvancedCalculationsPage: React.FC = () => {
                           <Box>
                             <Typography
                               variant="subtitle2"
-                              sx={{ fontWeight: 600, color: "#856404" }}
+                              sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
                             >
                               {financing.type}
                             </Typography>
                             <Typography
                               variant="body2"
-                              sx={{ color: "#856404" }}
+                              sx={{ color: brandColors.neutral.dark }}
                             >
                               <strong>Monthly Payment:</strong> $
                               {financing.monthlyPayment.toLocaleString()}
                             </Typography>
                             <Typography
                               variant="body2"
-                              sx={{ color: "#856404" }}
+                              sx={{ color: brandColors.neutral.dark }}
                             >
                               <strong>Total Loan Amount:</strong> $
                               {financing.totalLoanAmount.toLocaleString()}
@@ -1652,7 +1653,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                             {financing.interestOnly && (
                               <Typography
                                 variant="body2"
-                                sx={{ color: "#856404" }}
+                                sx={{ color: brandColors.neutral.dark }}
                               >
                                 <strong>Interest Only:</strong> Yes
                               </Typography>
@@ -1664,7 +1665,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                     <Typography
                       variant="caption"
                       sx={{
-                        color: "#856404",
+                        color: brandColors.neutral.dark,
                         fontStyle: "italic",
                         display: "block",
                         mt: 1,
@@ -1681,39 +1682,39 @@ const AdvancedCalculationsPage: React.FC = () => {
                 {!configsComplete && (
                   <Alert
                     severity="info"
-                    sx={{ mb: 3, bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
+                    sx={{ mb: 3, bgcolor: brandColors.backgrounds.hover, borderColor: brandColors.primary }}
                   >
                     <Typography
                       variant="body2"
-                      sx={{ color: "#1a365d", mb: 1 }}
+                      sx={{ color: brandColors.primary, mb: 1 }}
                     >
                       <strong>Getting Started:</strong> Complete the Global
                       Configuration tab to unlock advanced analysis features.
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
+                      sx={{ color: brandColors.primary, opacity: 0.8, display: "block" }}
                     >
                       - Configure Market Conditions (inflation, appreciation,
                       rent growth rates)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
+                      sx={{ color: brandColors.primary, opacity: 0.8, display: "block" }}
                     >
                       - Set Risk Factors (market volatility, tenant quality,
                       property age)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
+                      sx={{ color: brandColors.primary, opacity: 0.8, display: "block" }}
                     >
                       - Define Exit Strategies (timeline, selling costs, ROI
                       targets)
                     </Typography>
                     <Typography
                       variant="caption"
-                      sx={{ color: "#1a365d", opacity: 0.8, display: "block" }}
+                      sx={{ color: brandColors.primary, opacity: 0.8, display: "block" }}
                     >
                       - Configure Tax Implications (bracket, deductions,
                       property expenses)
@@ -1737,14 +1738,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                   sx={{
                     mt: 3,
                     p: 2,
-                    bgcolor: "#f8f9fa",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 1,
-                    border: "1px solid #e0e0e0",
+                    border: `1px solid ${brandColors.borders.secondary}`,
                   }}
                 >
                   <Typography
                     variant="subtitle2"
-                    sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                    sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                   >
                     Configuration Progress
                   </Typography>
@@ -1758,7 +1759,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                         mb: 1,
                       }}
                     >
-                      <Typography variant="caption" sx={{ color: "#666" }}>
+                      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
                         {(() => {
                           const { status } =
                             checkConfigurationStatus(dealState);
@@ -1767,13 +1768,13 @@ const AdvancedCalculationsPage: React.FC = () => {
                           return `${completed}/4 configurations complete`;
                         })()}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: "#666" }}>
+                      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
                         {(() => {
                           const { status } =
                             checkConfigurationStatus(dealState);
-                          const completed =
-                            Object.values(status).filter(Boolean).length;
-                          return `${Math.round((completed / 4) * 100)}%`;
+                            const completed =
+                              Object.values(status).filter(Boolean).length;
+                            return `${Math.round((completed / 4) * 100)}%`;
                         })()}
                       </Typography>
                     </Box>
@@ -1781,7 +1782,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       sx={{
                         width: "100%",
                         height: 8,
-                        bgcolor: "#e0e0e0",
+                        bgcolor: brandColors.borders.secondary,
                         borderRadius: 4,
                         overflow: "hidden",
                       }}
@@ -1796,7 +1797,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                             return (completed / 4) * 100;
                           })()}%`,
                           height: "100%",
-                          bgcolor: configsComplete ? "#2e7d32" : "#1976d2",
+                          bgcolor: configsComplete ? brandColors.accent.success : brandColors.actions.primary,
                           transition: "width 0.3s ease-in-out",
                         }}
                       />
@@ -1824,7 +1825,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: "#666" }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                               Market Conditions
                             </Typography>
                             <Chip
@@ -1853,7 +1854,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: "#666" }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                               Risk Factors
                             </Typography>
                             <Chip
@@ -1876,7 +1877,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: "#666" }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                               Exit Strategies
                             </Typography>
                             <Chip
@@ -1901,7 +1902,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: "#666" }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                               Tax Implications
                             </Typography>
                             <Chip
@@ -1932,8 +1933,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                       severity="success"
                       sx={{
                         mt: 2,
-                        bgcolor: "#e8f5e8",
-                        borderColor: "#2e7d32",
+                        bgcolor: brandColors.backgrounds.success,
+                        borderColor: brandColors.accent.success,
                         animation: "pulse 2s ease-in-out",
                         "@keyframes pulse": {
                           "0%": { transform: "scale(1)" },
@@ -1950,14 +1951,14 @@ const AdvancedCalculationsPage: React.FC = () => {
                         },
                       }}
                     >
-                      <Typography variant="body2" sx={{ color: "#2e7d32" }}>
+                      <Typography variant="body2" sx={{ color: brandColors.accent.success }}>
                         All configurations complete! Advanced analysis features
                         are now unlocked.
                       </Typography>
                       <Typography
                         variant="caption"
                         sx={{
-                          color: "#2e7d32",
+                          color: brandColors.accent.success,
                           opacity: 0.8,
                           display: "block",
                           mt: 0.5,
@@ -1969,7 +1970,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       <Typography
                         variant="caption"
                         sx={{
-                          color: "#2e7d32",
+                          color: brandColors.accent.success,
                           opacity: 0.8,
                           display: "block",
                           mt: 0.5,
@@ -1989,13 +1990,13 @@ const AdvancedCalculationsPage: React.FC = () => {
                ============================================================================ */}
 
             {/* New Features Alert */}
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <CardContent sx={{ p: 3 }}>
                 <Alert
                   severity="info"
-                  sx={{ bgcolor: "#f0f8ff", borderColor: "#1a365d" }}
+                  sx={{ bgcolor: brandColors.backgrounds.hover, borderColor: brandColors.primary }}
                 >
-                  <Typography variant="body2" sx={{ color: "#1a365d" }}>
+                  <Typography variant="body2" sx={{ color: brandColors.primary }}>
                     <strong>Enhanced Capabilities:</strong> Our comprehensive
                     analysis suite provides sophisticated financial modeling and
                     risk assessment tools. Leverage advanced algorithms for
@@ -2009,7 +2010,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                MAIN TABS CARD
                ============================================================================ */}
 
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               {/* ============================================================================
                  CARD CONTENT
                  ============================================================================ */}
@@ -2023,8 +2024,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                   <Box
                     sx={{
                       p: { xs: 2, md: 3 },
-                      bgcolor: "#fff3cd",
-                      borderBottom: "1px solid #ffc107",
+                      bgcolor: brandColors.backgrounds.warning,
+                      borderBottom: "1px solid brandColors.accent.warning",
                       display: "flex",
                       flexDirection: { xs: "column", sm: "row" },
                       justifyContent: "space-between",
@@ -2036,7 +2037,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: "#856404",
+                          color: brandColors.neutral.dark,
                           fontWeight: 500,
                           fontSize: { xs: "0.875rem", sm: "1rem" },
                         }}
@@ -2049,7 +2050,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: "#856404",
+                          color: brandColors.neutral.dark,
                           fontWeight: 600,
                           fontSize: { xs: "0.875rem", sm: "1rem" },
                         }}
@@ -2067,7 +2068,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                         variant="text"
                         onClick={() => setTabValue(1)}
                         sx={{
-                          color: "#856404",
+                          color: brandColors.neutral.dark,
                           textDecoration: "underline",
                           fontSize: { xs: "0.75rem", sm: "0.875rem" },
                           minWidth: "auto",
@@ -2088,8 +2089,8 @@ const AdvancedCalculationsPage: React.FC = () => {
                 <Box
                   sx={{
                     borderBottom: 1,
-                    borderColor: "#e0e0e0",
-                    bgcolor: "#fafbfc",
+                    borderColor: brandColors.borders.secondary,
+                    bgcolor: brandColors.backgrounds.secondary,
                   }}
                 >
                   {/* ============================================================================
@@ -2107,19 +2108,19 @@ const AdvancedCalculationsPage: React.FC = () => {
                     }
                     sx={{
                       "& .MuiTab-root": {
-                        color: "#666",
+                        color: brandColors.neutral.dark,
                         fontWeight: 600,
                         textTransform: "none",
                         minHeight: { xs: 48, md: 64 },
                         fontSize: { xs: "0.75rem", sm: "0.875rem" },
                         px: { xs: 1, sm: 1.5, md: 2 },
                         "&.Mui-selected": {
-                          color: "#1a365d",
+                          color: brandColors.primary,
                           fontWeight: 700,
                         },
                       },
                       "& .MuiTabs-indicator": {
-                        backgroundColor: "#1a365d",
+                        backgroundColor: brandColors.primary,
                         height: 3,
                       },
                       "& .MuiTabs-scrollButtons": {
@@ -2202,16 +2203,16 @@ const AdvancedCalculationsPage: React.FC = () => {
               <Box>
                 <Accordion
                   sx={{
-                    "& .MuiAccordionSummary-root": { bgcolor: "#fafbfc" },
-                    "& .MuiAccordionDetails-root": { bgcolor: "#ffffff" },
+                    "& .MuiAccordionSummary-root": { bgcolor: brandColors.backgrounds.secondary },
+                    "& .MuiAccordionDetails-root": { bgcolor: brandColors.backgrounds.primary },
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{ color: "#1a365d" }} />}
+                    expandIcon={<ExpandMoreIcon sx={{ color: brandColors.primary }} />}
                   >
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: 600, color: "#1a365d" }}
+                      sx={{ fontWeight: 600, color: brandColors.primary }}
                     >
                       Advanced Scenarios
                     </Typography>
@@ -2220,28 +2221,28 @@ const AdvancedCalculationsPage: React.FC = () => {
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Multiple exit strategies (2, 5, 10 years)
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Refinance timing options and scenarios
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Tax benefits and deductions included
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Inflation adjustments over time
                     </Typography>
@@ -2250,16 +2251,16 @@ const AdvancedCalculationsPage: React.FC = () => {
 
                 <Accordion
                   sx={{
-                    "& .MuiAccordionSummary-root": { bgcolor: "#fafbfc" },
-                    "& .MuiAccordionDetails-root": { bgcolor: "#ffffff" },
+                    "& .MuiAccordionSummary-root": { bgcolor: brandColors.backgrounds.secondary },
+                    "& .MuiAccordionDetails-root": { bgcolor: brandColors.backgrounds.primary },
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{ color: "#1a365d" }} />}
+                    expandIcon={<ExpandMoreIcon sx={{ color: brandColors.primary }} />}
                   >
                     <Typography
                       variant="h6"
-                      sx={{ color: "#1a365d", fontWeight: 600 }}
+                      sx={{ color: brandColors.primary, fontWeight: 600 }}
                     >
                       Risk Analysis
                     </Typography>
@@ -2294,12 +2295,12 @@ const AdvancedCalculationsPage: React.FC = () => {
                               color:
                                 dealState.riskScoreResults.overallRiskScore > 5
                                   ? "#d32f2f"
-                                  : "#2e7d32",
+                                  : brandColors.accent.success,
                               fontWeight: 700,
                               fontSize: "1rem",
                             }}
                           />
-                          <Typography variant="body2" sx={{ color: "#666" }}>
+                          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                             {dealState.riskScoreResults.riskCategory}
                           </Typography>
                         </>
@@ -2308,28 +2309,28 @@ const AdvancedCalculationsPage: React.FC = () => {
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Sensitivity analysis for key variables
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Stress testing with worst-case scenarios
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Confidence intervals for projections
                     </Typography>
                     <Typography
                       variant="body2"
                       paragraph
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       - Risk scoring (1-10 scale) with recommendations
                     </Typography>
@@ -2343,16 +2344,16 @@ const AdvancedCalculationsPage: React.FC = () => {
                ============================================================================ */}
 
             {/* Integration Instructions */}
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography
                   variant="h5"
                   gutterBottom
-                  sx={{ fontWeight: 700, color: "#1a365d" }}
+                  sx={{ fontWeight: 700, color: brandColors.primary }}
                 >
                   How to Integrate with Existing Calculations
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 3, color: "#666" }}>
+                <Typography variant="body1" sx={{ mb: 3, color: brandColors.neutral.dark }}>
                   Our sophisticated analysis tools seamlessly integrate with
                   your existing mortgage and underwriting workflows to provide
                   more sophisticated analysis without breaking current
@@ -2370,27 +2371,27 @@ const AdvancedCalculationsPage: React.FC = () => {
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: "#fafbfc",
+                        bgcolor: brandColors.backgrounds.secondary,
                         borderRadius: 1,
-                        border: "1px solid #e8eaed",
+                        border: "1px solid brandColors.borders.secondary",
                       }}
                     >
                       <Typography
                         variant="h6"
                         gutterBottom
-                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                        sx={{ fontWeight: 600, color: brandColors.primary }}
                       >
                         For Mortgage Calculations
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         - Use seasonal adjustments to modify vacancy rates in
                         your DSCR calculations
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         - Apply market conditions to adjust rent growth and
                         appreciation rates
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         - Include tax implications to show net income after
                         deductions
                       </Typography>
@@ -2401,28 +2402,28 @@ const AdvancedCalculationsPage: React.FC = () => {
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: "#fafbfc",
+                        bgcolor: brandColors.backgrounds.secondary,
                         borderRadius: 1,
-                        border: "1px solid #e8eaed",
+                        border: "1px solid brandColors.borders.secondary",
                       }}
                     >
                       <Typography
                         variant="h6"
                         gutterBottom
-                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                        sx={{ fontWeight: 600, color: brandColors.primary }}
                       >
                         For Underwriting Analysis
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         - Use risk scoring to evaluate deal quality
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         - Apply stress testing to assess worst-case scenarios
                       </Typography>
                       <Typography
                         variant="body2"
                         paragraph
-                        sx={{ color: "#666" }}
+                        sx={{ color: brandColors.neutral.dark }}
                       >
                         - Include exit strategies to show different ROI
                         timelines
@@ -2491,15 +2492,15 @@ const AdvancedCalculationsPage: React.FC = () => {
             onClick={() => setTabValue(1)}
             startIcon={<span>-</span>}
             sx={{
-              bgcolor: "#1a365d",
-              color: "white",
+              bgcolor: brandColors.primary,
+              color: brandColors.backgrounds.primary,
               borderRadius: "50px",
               px: { xs: 2, sm: 2.5, md: 3 },
               py: { xs: 1, sm: 1.25, md: 1.5 },
               fontSize: { xs: "0.875rem", sm: "1rem" },
               boxShadow: "0 4px 20px rgba(26, 54, 93, 0.3)",
               "&:hover": {
-                bgcolor: "#0d2340",
+                bgcolor: brandColors.secondary,
                 boxShadow: "0 6px 25px rgba(26, 54, 93, 0.4)",
                 transform: "translateY(-2px)",
               },
@@ -2554,13 +2555,13 @@ const AdvancedCalculationsPage: React.FC = () => {
             <CardContent sx={{ p: 3, textAlign: "center" }}>
               <Typography
                 variant="h6"
-                sx={{ mb: 2, color: "#1a365d", fontWeight: 600 }}
+                sx={{ mb: 2, color: brandColors.primary, fontWeight: 600 }}
               >
                 Welcome to Advanced Analysis
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ mb: 3, color: "#666", lineHeight: 1.6 }}
+                sx={{ mb: 3, color: brandColors.neutral.dark, lineHeight: 1.6 }}
               >
                 {tourSteps[currentTourStep].content}
               </Typography>
@@ -2573,7 +2574,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                     setShowTourTooltip(false);
                     setCurrentTourStep(0);
                   }}
-                  sx={{ borderColor: "#666", color: "#666" }}
+                  sx={{ borderColor: brandColors.neutral.dark, color: brandColors.neutral.dark }}
                 >
                   Dismiss
                 </Button>
@@ -2588,7 +2589,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       setCurrentTourStep(0);
                     }
                   }}
-                  sx={{ bgcolor: "#1a365d", "&:hover": { bgcolor: "#0f2027" } }}
+                  sx={{ bgcolor: brandColors.primary, "&:hover": { bgcolor: brandColors.secondary } }}
                 >
                   {currentTourStep < tourSteps.length - 1 ? "Next" : "Finish"}
                 </Button>
@@ -2609,7 +2610,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       width: 8,
                       height: 8,
                       borderRadius: "50%",
-                      bgcolor: index === currentTourStep ? "#1a365d" : "#ccc",
+                      bgcolor: index === currentTourStep ? brandColors.primary : "#ccc",
                     }}
                   />
                 ))}

@@ -17,17 +17,18 @@ import {
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -47,7 +48,7 @@ const MainContent = styled.div`
 const ContentWrapper = styled.div`
   max-width: 600px;
   width: 100%;
-  background: white;
+  background: brandColors.backgrounds.primary;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -63,10 +64,10 @@ const ScrollButton = styled(IconButton)`
   position: absolute;
   right: 12px;
   bottom: 12px;
-  background: #1a365d;
-  color: white;
+  background: brandColors.primary;
+  color: brandColors.backgrounds.primary;
   &:hover {
-    background: #0d2340;
+    background: brandColors.secondary;
   }
 `;
 
@@ -161,7 +162,7 @@ const SellListHomeDetails3Page: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -170,9 +171,9 @@ const SellListHomeDetails3Page: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -180,7 +181,7 @@ const SellListHomeDetails3Page: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -191,7 +192,7 @@ const SellListHomeDetails3Page: React.FC = () => {
         <ContentWrapper>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 800, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 800, color: brandColors.primary, mb: 2 }}
           >
             Does your home have a basement?
           </Typography>
@@ -207,8 +208,8 @@ const SellListHomeDetails3Page: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -219,8 +220,8 @@ const SellListHomeDetails3Page: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -270,8 +271,8 @@ const SellListHomeDetails3Page: React.FC = () => {
                     control={
                       <Radio
                         sx={{
-                          color: "#1a365d",
-                          "&.Mui-checked": { color: "#1a365d" },
+                          color: brandColors.primary,
+                          "&.Mui-checked": { color: brandColors.primary },
                         }}
                       />
                     }
@@ -282,8 +283,8 @@ const SellListHomeDetails3Page: React.FC = () => {
                     control={
                       <Radio
                         sx={{
-                          color: "#1a365d",
-                          "&.Mui-checked": { color: "#1a365d" },
+                          color: brandColors.primary,
+                          "&.Mui-checked": { color: brandColors.primary },
                         }}
                       />
                     }
@@ -302,7 +303,7 @@ const SellListHomeDetails3Page: React.FC = () => {
                   </Typography>
                   <Typography
                     variant="caption"
-                    sx={{ color: "#6b7280", mb: 1, display: "block" }}
+                    sx={{ color: brandColors.neutral.dark, mb: 1, display: "block" }}
                   >
                     It's okay to estimate.
                   </Typography>
@@ -341,12 +342,12 @@ const SellListHomeDetails3Page: React.FC = () => {
         sx={{
           position: "sticky",
           bottom: 0,
-          backgroundColor: "white",
+          backgroundColor: brandColors.backgrounds.primary,
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "1rem", md: "2rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           zIndex: 5,
         }}
       >
@@ -354,8 +355,8 @@ const SellListHomeDetails3Page: React.FC = () => {
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
           }}
@@ -367,8 +368,8 @@ const SellListHomeDetails3Page: React.FC = () => {
           onClick={handleNext}
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
           }}

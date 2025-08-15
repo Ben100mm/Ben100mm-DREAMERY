@@ -16,6 +16,7 @@ import {
   EnhancedTextFieldWithValidation,
 } from "./EnhancedFormComponents";
 import { CompletionProgress, HelpTooltip } from "./UXComponents";
+import { brandColors } from "../theme";
 
 type SeasonalAdjustmentsProps = {
   baseVacancyRate: number;
@@ -68,10 +69,10 @@ export const AdvancedAnalysisDashboard: React.FC<{
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
           Advanced Analysis Dashboard
         </Typography>
-        <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
           Configure market and seasonal inputs, then review calculated outputs.
         </Typography>
         <CompletionProgress
@@ -88,9 +89,9 @@ export const AdvancedAnalysisDashboard: React.FC<{
               onClick={handleExport}
               size="small"
               sx={{
-                borderColor: "#1a365d",
-                color: "#1a365d",
-                "&:hover": { borderColor: "#0f2027", bgcolor: "#f0f8ff" },
+                borderColor: brandColors.primary,
+                color: brandColors.primary,
+                "&:hover": { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover },
               }}
             >
               Quick Export Results
@@ -131,10 +132,10 @@ export const SeasonalAdjustmentsCalculator: React.FC<
           max={12}
         />
         <Box sx={{ mt: 1 }}>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Adjusted Vacancy: {(result.adjustedVacancyRate * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Maintenance Multiplier: {result.maintenanceMultiplier.toFixed(2)}
           </Typography>
         </Box>
@@ -177,16 +178,16 @@ export const MarketConditionsCalculator: React.FC<MarketConditionsProps> = ({
           ]}
         />
         <Box sx={{ mt: 1 }}>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Adj Vacancy: {(result.adjustedVacancyRate * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Adj Rent Growth: {(result.adjustedRentGrowth * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Adj Appreciation: {(result.adjustedAppreciation * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: "#666" }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
             Adj Cap Rate: {(result.adjustedCapRate * 100).toFixed(2)}%
           </Typography>
         </Box>
@@ -241,7 +242,7 @@ export const ExitStrategiesCalculator: React.FC<ExitStrategiesProps> = ({
             <Typography
               key={r.timeframe}
               variant="body2"
-              sx={{ color: "#666" }}
+              sx={{ color: brandColors.neutral.dark }}
             >
               Year {r.timeframe}: ROI {r.roi.toFixed(1)}%, Annualized{" "}
               {r.annualizedRoi.toFixed(1)}%

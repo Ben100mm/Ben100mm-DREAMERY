@@ -9,17 +9,18 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -66,7 +67,7 @@ const SellListPhoneInfoPage: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -75,9 +76,9 @@ const SellListPhoneInfoPage: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -85,7 +86,7 @@ const SellListPhoneInfoPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -98,7 +99,7 @@ const SellListPhoneInfoPage: React.FC = () => {
             variant="h5"
             sx={{
               fontWeight: 800,
-              color: "#1a365d",
+              color: brandColors.primary,
               mb: 2,
               textAlign: "center",
             }}
@@ -108,7 +109,7 @@ const SellListPhoneInfoPage: React.FC = () => {
 
           <Typography
             variant="body2"
-            sx={{ color: "#666666", mb: 4, textAlign: "center" }}
+            sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
           >
             We'll send you a text so you can get help when you're ready. You
             don't need to reply.
@@ -126,19 +127,19 @@ const SellListPhoneInfoPage: React.FC = () => {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 2,
                   "& fieldset": {
-                    borderColor: "#e5e7eb",
+                    borderColor: brandColors.borders.secondary,
                   },
                   "&:hover fieldset": {
-                    borderColor: "#1a365d",
+                    borderColor: brandColors.primary,
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#1a365d",
+                    borderColor: brandColors.primary,
                   },
                 },
                 "& .MuiInputLabel-root": {
-                  color: "#666666",
+                  color: brandColors.neutral.dark,
                   "&.Mui-focused": {
-                    color: "#1a365d",
+                    color: brandColors.primary,
                   },
                 },
               }}
@@ -146,7 +147,7 @@ const SellListPhoneInfoPage: React.FC = () => {
 
             <Typography
               variant="body2"
-              sx={{ color: "#666666", fontSize: "0.875rem", lineHeight: 1.5 }}
+              sx={{ color: brandColors.neutral.dark, fontSize: "0.875rem", lineHeight: 1.5 }}
             >
               By tapping "Next", you agree that Dreamery Group and its
               affiliates, and other real estate professionals may call/text you
@@ -157,7 +158,7 @@ const SellListPhoneInfoPage: React.FC = () => {
               <Link
                 href="#"
                 sx={{
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   textDecoration: "none",
                   "&:hover": { textDecoration: "underline" },
                 }}
@@ -176,12 +177,12 @@ const SellListPhoneInfoPage: React.FC = () => {
         sx={{
           position: "sticky",
           bottom: 0,
-          backgroundColor: "white",
+          backgroundColor: brandColors.backgrounds.primary,
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "0.75rem", md: "1rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           zIndex: 5,
         }}
       >
@@ -189,8 +190,8 @@ const SellListPhoneInfoPage: React.FC = () => {
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
           }}
@@ -202,8 +203,8 @@ const SellListPhoneInfoPage: React.FC = () => {
           disabled={!phoneNumber.trim()}
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
           }}

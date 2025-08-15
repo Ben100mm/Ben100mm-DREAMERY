@@ -23,6 +23,7 @@ import {
   ArrowBack,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import { brandColors } from "../theme";
 
 // Custom X (Twitter) Icon Component
 const XIcon = () => (
@@ -64,8 +65,8 @@ const MicrosoftIcon = () => (
 );
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: "#ffffff",
-  border: "1px solid #e0e0e0",
+  background: brandColors.backgrounds.primary,
+  border: "1px solid brandColors.borders.secondary",
   borderRadius: "8px",
   boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   maxWidth: "400px",
@@ -107,7 +108,7 @@ const AuthPage: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "#ffffff",
+        background: brandColors.backgrounds.primary,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -135,7 +136,7 @@ const AuthPage: React.FC = () => {
                 variant="h5"
                 component="h2"
                 sx={{
-                  color: "#333333",
+                  color: brandColors.text.primary,
                   fontWeight: 600,
                   fontSize: "1.5rem",
                 }}
@@ -167,9 +168,9 @@ const AuthPage: React.FC = () => {
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -179,7 +180,7 @@ const AuthPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#1e3a8a",
@@ -195,9 +196,9 @@ const AuthPage: React.FC = () => {
                 sx={{
                   mb: 3,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -207,7 +208,7 @@ const AuthPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#1e3a8a",
@@ -219,7 +220,7 @@ const AuthPage: React.FC = () => {
                       <IconButton
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
-                        sx={{ color: "#666666" }}
+                        sx={{ color: brandColors.neutral.dark }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -250,7 +251,7 @@ const AuthPage: React.FC = () => {
 
             {/* Toggle Sign In/Sign Up */}
             <Box sx={{ textAlign: "center", mb: 3 }}>
-              <Typography sx={{ color: "#666666", fontSize: "14px" }}>
+              <Typography sx={{ color: brandColors.neutral.dark, fontSize: "14px" }}>
                 {isSignUp ? "Have a Dreamery account?" : "New to Dreamery?"}{" "}
                 <Link
                   component="button"
@@ -268,7 +269,7 @@ const AuthPage: React.FC = () => {
                 </Link>
               </Typography>
               {isSignUp && (
-                <Typography sx={{ color: "#666666", fontSize: "14px", mt: 1 }}>
+                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "14px", mt: 1 }}>
                   I am a{" "}
                   <Link
                     component="button"
@@ -307,11 +308,11 @@ const AuthPage: React.FC = () => {
 
             {/* Divider */}
             <Box sx={{ my: 3, display: "flex", alignItems: "center" }}>
-              <Divider sx={{ flex: 1, borderColor: "#e0e0e0" }} />
-              <Typography sx={{ px: 2, color: "#666666", fontSize: "14px" }}>
+              <Divider sx={{ flex: 1, borderColor: brandColors.borders.secondary }} />
+              <Typography sx={{ px: 2, color: brandColors.neutral.dark, fontSize: "14px" }}>
                 Or Continue with
               </Typography>
-              <Divider sx={{ flex: 1, borderColor: "#e0e0e0" }} />
+              <Divider sx={{ flex: 1, borderColor: brandColors.borders.secondary }} />
             </Box>
 
             {/* Social Login Buttons */}
@@ -323,10 +324,10 @@ const AuthPage: React.FC = () => {
                 sx={{
                   width: 48,
                   height: 48,
-                  border: "1px solid #e0e0e0",
-                  background: "#ffffff",
+                  border: "1px solid brandColors.borders.secondary",
+                  background: brandColors.backgrounds.primary,
                   "&:hover": {
-                    background: "#f8f9fa",
+                    background: brandColors.backgrounds.secondary,
                     borderColor: "#c0c0c0",
                   },
                 }}
@@ -339,11 +340,11 @@ const AuthPage: React.FC = () => {
                 sx={{
                   width: 48,
                   height: 48,
-                  border: "1px solid #e0e0e0",
-                  background: "#ffffff",
+                  border: "1px solid brandColors.borders.secondary",
+                  background: brandColors.backgrounds.primary,
                   color: "#000000",
                   "&:hover": {
-                    background: "#f8f9fa",
+                    background: brandColors.backgrounds.secondary,
                     borderColor: "#c0c0c0",
                   },
                 }}
@@ -356,10 +357,10 @@ const AuthPage: React.FC = () => {
                 sx={{
                   width: 48,
                   height: 48,
-                  border: "1px solid #e0e0e0",
-                  background: "#ffffff",
+                  border: "1px solid brandColors.borders.secondary",
+                  background: brandColors.backgrounds.primary,
                   "&:hover": {
-                    background: "#f8f9fa",
+                    background: brandColors.backgrounds.secondary,
                     borderColor: "#c0c0c0",
                   },
                 }}
@@ -372,11 +373,11 @@ const AuthPage: React.FC = () => {
                 sx={{
                   width: 48,
                   height: 48,
-                  border: "1px solid #e0e0e0",
-                  background: "#ffffff",
+                  border: "1px solid brandColors.borders.secondary",
+                  background: brandColors.backgrounds.primary,
                   color: "#1877f2",
                   "&:hover": {
-                    background: "#f8f9fa",
+                    background: brandColors.backgrounds.secondary,
                     borderColor: "#c0c0c0",
                   },
                 }}
@@ -389,11 +390,11 @@ const AuthPage: React.FC = () => {
                 sx={{
                   width: 48,
                   height: 48,
-                  border: "1px solid #e0e0e0",
-                  background: "#ffffff",
+                  border: "1px solid brandColors.borders.secondary",
+                  background: brandColors.backgrounds.primary,
                   color: "#000000",
                   "&:hover": {
-                    background: "#f8f9fa",
+                    background: brandColors.backgrounds.secondary,
                     borderColor: "#c0c0c0",
                   },
                 }}
@@ -404,7 +405,7 @@ const AuthPage: React.FC = () => {
 
             {/* Terms of Use */}
             <Box sx={{ textAlign: "center", mb: 2 }}>
-              <Typography sx={{ color: "#666666", fontSize: "12px" }}>
+              <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
                 By submitting, I accept Dreamery's{" "}
                 <Link
                   sx={{
@@ -426,11 +427,11 @@ const AuthPage: React.FC = () => {
                 startIcon={<ArrowBack />}
                 onClick={() => window.history.back()}
                 sx={{
-                  color: "#666666",
+                  color: brandColors.neutral.dark,
                   textTransform: "none",
                   fontSize: "14px",
                   "&:hover": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                   },
                 }}
               >

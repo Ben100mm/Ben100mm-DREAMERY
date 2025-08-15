@@ -9,6 +9,7 @@ import {
   InputAdornment,
   CircularProgress,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import { DealState } from "../types/deal";
 import {
   defaultMarketConditionsSimple,
@@ -51,10 +52,10 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
   return (
     <Box sx={{ display: "grid", gap: 3 }}>
       {/* Market Conditions Configuration */}
-      <Card sx={{ p: 2, backgroundColor: "#f8f9fa" }}>
+      <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
         <Typography
           variant="h6"
-          sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+          sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
         >
           Market Conditions
         </Typography>
@@ -193,10 +194,10 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
       </Card>
 
       {/* Exit Strategy Configuration */}
-      <Card sx={{ p: 2, backgroundColor: "#f8f9fa" }}>
+      <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
         <Typography
           variant="h6"
-          sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+          sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
         >
           Exit Strategy Configuration
         </Typography>
@@ -259,10 +260,10 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
       </Card>
 
       {/* Risk Factor Configuration */}
-      <Card sx={{ p: 2, backgroundColor: "#f8f9fa" }}>
+      <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
         <Typography
           variant="h6"
-          sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+          sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
         >
           Risk Factor Configuration
         </Typography>
@@ -327,10 +328,10 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
       </Card>
 
       {/* Scenario Management */}
-      <Card sx={{ p: 2, backgroundColor: "#f8f9fa" }}>
+      <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
         <Typography
           variant="h6"
-          sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+          sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
         >
           Scenario Management
         </Typography>
@@ -380,8 +381,8 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
             }}
             data-testid="save-scenario-button"
             sx={{
-              bgcolor: "#2e7d32",
-              color: "white",
+              bgcolor: brandColors.accent.success,
+              color: brandColors.backgrounds.primary,
               width: { xs: "100%", sm: "auto" },
             }}
           >

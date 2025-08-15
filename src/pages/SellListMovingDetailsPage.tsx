@@ -12,17 +12,18 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import movingDetailsImage from "../moving-details-illustration.png";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -42,7 +43,7 @@ const MainContent = styled.div`
 const ContentWrapper = styled.div`
   max-width: 500px;
   width: 100%;
-  background: white;
+  background: brandColors.backgrounds.primary;
   border-radius: 12px;
   padding: 3rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -119,7 +120,7 @@ const SellListMovingDetailsPage: React.FC = () => {
           }}
         >
           <Box sx={{ width: 200 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -128,9 +129,9 @@ const SellListMovingDetailsPage: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -139,11 +140,11 @@ const SellListMovingDetailsPage: React.FC = () => {
           <Button
             onClick={handleExit}
             sx={{
-              color: "#666666",
+              color: brandColors.neutral.dark,
               textTransform: "none",
               "&:hover": {
                 backgroundColor: "transparent",
-                color: "#333333",
+                color: brandColors.text.primary,
               },
             }}
           >
@@ -159,7 +160,7 @@ const SellListMovingDetailsPage: React.FC = () => {
             variant="h4"
             sx={{
               fontWeight: 700,
-              color: "#1a365d",
+              color: brandColors.primary,
               mb: 2,
             }}
           >
@@ -169,7 +170,7 @@ const SellListMovingDetailsPage: React.FC = () => {
           <Typography
             variant="body1"
             sx={{
-              color: "#666666",
+              color: brandColors.neutral.dark,
               mb: 4,
               fontSize: "14px",
             }}
@@ -189,8 +190,8 @@ const SellListMovingDetailsPage: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -198,7 +199,7 @@ const SellListMovingDetailsPage: React.FC = () => {
                 sx={{
                   "& .MuiFormControlLabel-label": {
                     fontSize: "16px",
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     fontWeight: 500,
                   },
                 }}
@@ -208,8 +209,8 @@ const SellListMovingDetailsPage: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -217,7 +218,7 @@ const SellListMovingDetailsPage: React.FC = () => {
                 sx={{
                   "& .MuiFormControlLabel-label": {
                     fontSize: "16px",
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     fontWeight: 500,
                   },
                 }}
@@ -227,8 +228,8 @@ const SellListMovingDetailsPage: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -236,7 +237,7 @@ const SellListMovingDetailsPage: React.FC = () => {
                 sx={{
                   "& .MuiFormControlLabel-label": {
                     fontSize: "16px",
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     fontWeight: 500,
                   },
                 }}
@@ -246,8 +247,8 @@ const SellListMovingDetailsPage: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -255,7 +256,7 @@ const SellListMovingDetailsPage: React.FC = () => {
                 sx={{
                   "& .MuiFormControlLabel-label": {
                     fontSize: "16px",
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     fontWeight: 500,
                   },
                 }}
@@ -265,8 +266,8 @@ const SellListMovingDetailsPage: React.FC = () => {
                 control={
                   <Radio
                     sx={{
-                      color: "#1a365d",
-                      "&.Mui-checked": { color: "#1a365d" },
+                      color: brandColors.primary,
+                      "&.Mui-checked": { color: brandColors.primary },
                     }}
                   />
                 }
@@ -274,7 +275,7 @@ const SellListMovingDetailsPage: React.FC = () => {
                 sx={{
                   "& .MuiFormControlLabel-label": {
                     fontSize: "16px",
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     fontWeight: 500,
                   },
                 }}
@@ -295,19 +296,19 @@ const SellListMovingDetailsPage: React.FC = () => {
           py: { xs: "1rem", md: "2rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
         }}
       >
         <Button
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
             "&:hover": {
-              borderColor: "#0d2340",
+              borderColor: brandColors.secondary,
               backgroundColor: "rgba(26, 54, 93, 0.04)",
             },
           }}
@@ -320,12 +321,12 @@ const SellListMovingDetailsPage: React.FC = () => {
           disabled={!selectedOption}
           variant="contained"
           sx={{
-            backgroundColor: selectedOption ? "#1a365d" : "#cccccc",
-            color: "white",
+            backgroundColor: selectedOption ? brandColors.primary : "#cccccc",
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
             "&:hover": {
-              backgroundColor: selectedOption ? "#0d2340" : "#cccccc",
+              backgroundColor: selectedOption ? brandColors.secondary : "#cccccc",
             },
             "&:disabled": {
               backgroundColor: "#cccccc",

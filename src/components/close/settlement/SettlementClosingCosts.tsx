@@ -50,6 +50,7 @@ import {
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 import jsPDF from 'jspdf';
+import { brandColors } from "../../../theme";
 
 // Types
 interface Statement {
@@ -481,22 +482,22 @@ const SettlementClosingCosts: React.FC = () => {
 
   const getSectionColor = (section: string) => {
     const colors: { [key: string]: string } = {
-      'A': '#e3f2fd',
-      'B': '#f3e5f5',
-      'C': '#e8f5e8',
-      'D': '#fff3e0',
-      'E': '#fce4ec',
-      'F': '#f1f8e9',
-      'G': '#e0f2f1',
-      'H': '#fafafa',
-      'I': '#fff8e1',
-      'J': '#f9fbe7',
-      'K': '#e8eaf6',
-      'L': '#fce4ec',
-      'M': '#e0f7fa',
-      'N': '#f3e5f5',
+      'A': '#f8f9fa',      // Very light grey
+      'B': '#e9ecef',      // Light grey
+      'C': '#dee2e6',      // Medium light grey
+      'D': '#ced4da',      // Medium grey
+      'E': '#adb5bd',      // Medium dark grey
+      'F': '#6c757d',      // Dark grey
+      'G': '#495057',      // Darker grey
+      'H': '#343a40',      // Very dark grey
+      'I': '#f8f9fa',      // Very light grey (repeating pattern)
+      'J': '#e9ecef',      // Light grey (repeating pattern)
+      'K': '#dee2e6',      // Medium light grey (repeating pattern)
+      'L': '#ced4da',      // Medium grey (repeating pattern)
+      'M': '#adb5bd',      // Medium dark grey (repeating pattern)
+      'N': '#6c757d',      // Dark grey (repeating pattern)
     };
-    return colors[section] || '#ffffff';
+    return colors[section] || '#ffffff'; // Default to white
   };
 
   return (
@@ -515,7 +516,7 @@ const SettlementClosingCosts: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <ReceiptIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <ReceiptIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               ${totalCosts.toLocaleString()}
             </Typography>
@@ -527,7 +528,7 @@ const SettlementClosingCosts: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <MoneyIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <MoneyIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               ${buyerTotal.toLocaleString()}
             </Typography>
@@ -539,7 +540,7 @@ const SettlementClosingCosts: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <TrendingUpIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               ${sellerTotal.toLocaleString()}
             </Typography>
@@ -564,7 +565,7 @@ const SettlementClosingCosts: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="Cost Breakdown" />
           <Tab label="Commission Calculator" />
           <Tab label="Prorations" />
@@ -648,7 +649,7 @@ const SettlementClosingCosts: React.FC = () => {
                 </TableBody>
               </Table>
 
-              <Box sx={{ mt: 3, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+              <Box sx={{ mt: 3, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
                 <Typography variant="h6" gutterBottom>
                   Cost Summary
                 </Typography>
@@ -864,7 +865,7 @@ const SettlementClosingCosts: React.FC = () => {
                     />
                   </Box>
                   
-                  <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
                     <Typography variant="body2" color="text.secondary">Seller Credit: ${settlementData.prorations.propertyTaxes.sellerCredit.toFixed(2)}</Typography>
                     <Typography variant="body2" color="text.secondary">Buyer Debit: ${settlementData.prorations.propertyTaxes.buyerDebit.toFixed(2)}</Typography>
                   </Box>
@@ -921,7 +922,7 @@ const SettlementClosingCosts: React.FC = () => {
                     />
                   </Box>
                   
-                  <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
                     <Typography variant="body2" color="text.secondary">Seller Credit: ${settlementData.prorations.hoa.sellerCredit.toFixed(2)}</Typography>
                     <Typography variant="body2" color="text.secondary">Buyer Debit: ${settlementData.prorations.hoa.buyerDebit.toFixed(2)}</Typography>
                   </Box>

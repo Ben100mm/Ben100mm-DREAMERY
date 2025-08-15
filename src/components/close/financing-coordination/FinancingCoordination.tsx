@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Alert } from '@mui/material';
 import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
+import { brandColors } from "../../../theme";
 
 const FinancingCoordination: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const FinancingCoordination: React.FC = () => {
       <Card>
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <AccountBalanceIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+            <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />
             <Typography variant="h6">
               Coordinate with lenders and manage funding processes
             </Typography>

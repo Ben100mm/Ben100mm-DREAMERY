@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { TextField, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MapIcon from "@mui/icons-material/Map";
+import { brandColors } from "../theme";
 
 const HeroContainer = styled.div`
   height: 100vh;
@@ -20,7 +21,7 @@ const HeroContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: brandColors.backgrounds.primary;
   padding: 0 2rem;
   z-index: 1;
 `;
@@ -47,6 +48,7 @@ const Title = styled.h1`
   margin-bottom: 1.5rem;
   font-weight: 700;
   margin-top: -5%;
+  color: white;
 `;
 
 const SearchContainer = styled.div`
@@ -69,7 +71,7 @@ const SearchContainer = styled.div`
 const StyledTextField = styled(TextField)`
   flex-grow: 1;
   .MuiInputBase-root {
-    color: #1a365d;
+    color: brandColors.primary;
     font-weight: 600;
     &::before,
     &::after {
@@ -78,7 +80,7 @@ const StyledTextField = styled(TextField)`
     input {
       font-size: 1.1rem;
       &::placeholder {
-        color: #1a365d;
+        color: brandColors.primary;
         opacity: 1;
         font-weight: 500;
       }
@@ -87,7 +89,7 @@ const StyledTextField = styled(TextField)`
 `;
 
 const SparkleButton = styled(IconButton)`
-  color: #1a365d;
+  color: brandColors.primary;
   opacity: 1;
   margin-right: 0.25rem;
   width: 40px;
@@ -99,12 +101,12 @@ const SparkleButton = styled(IconButton)`
   &:hover {
     opacity: 1;
     background-color: rgba(26, 54, 93, 1);
-    color: white;
+    color: brandColors.backgrounds.primary;
   }
 `;
 
 const MapButton = styled(IconButton)`
-  color: #1a365d;
+  color: brandColors.primary;
   opacity: 1;
   margin-right: 0.25rem;
   width: 40px;
@@ -116,12 +118,12 @@ const MapButton = styled(IconButton)`
   &:hover {
     opacity: 1;
     background-color: rgba(26, 54, 93, 1);
-    color: white;
+    color: brandColors.backgrounds.primary;
   }
 `;
 
 const SearchButton = styled.button`
-  background: #1e3a8a;
+  background: #1a365d;
   color: white;
   border: none;
   border-radius: 6px;
@@ -131,13 +133,13 @@ const SearchButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   &:hover {
-    background: #1d4ed8;
+    background: #0d2340;
   }
 `;
 
 const SparkleIcon = () => {
   // Get the background color at the logo's position to determine logo color
-  const [logoColor, setLogoColor] = React.useState("#1a365d"); // Default navy blue
+  const [logoColor, setLogoColor] = React.useState(brandColors.primary); // Default navy blue
 
   React.useEffect(() => {
     const updateLogoColor = () => {
@@ -164,7 +166,7 @@ const SparkleIcon = () => {
           const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
           // Set logo color based on background brightness
-          setLogoColor(brightness > 128 ? "#1a365d" : "#ffffff");
+          setLogoColor(brightness > 128 ? brandColors.primary : brandColors.backgrounds.primary);
         }
       }
     };
@@ -183,7 +185,7 @@ const SparkleIcon = () => {
         height: "65px",
         objectFit: "contain",
         filter:
-          logoColor === "#ffffff"
+          logoColor === brandColors.backgrounds.primary
             ? "brightness(0) invert(1)"
             : "brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)",
       }}

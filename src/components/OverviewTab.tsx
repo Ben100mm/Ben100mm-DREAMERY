@@ -8,6 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 import { AdvancedAnalysisDashboard } from "./AdvancedCalculations";
+import { brandColors } from "../theme";
 
 interface OverviewTabProps {
   dealState: any;
@@ -21,7 +22,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: "#666" }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -151,11 +152,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     <Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
       >
         Advanced Calculations Overview
       </Typography>
-      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
         Welcome to the Advanced Calculations Suite. This comprehensive tool
         provides sophisticated analysis for your real estate investments.
       </Typography>
@@ -168,11 +169,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         }}
       >
         <Box>
-          <Card sx={{ height: "100%", backgroundColor: "#f8f9fa" }}>
+          <Card sx={{ height: "100%", backgroundColor: brandColors.backgrounds.secondary }}>
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
               >
                 Deal Information
               </Typography>
@@ -200,11 +201,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </Card>
         </Box>
         <Box>
-          <Card sx={{ height: "100%", backgroundColor: "#f0f8ff" }}>
+          <Card sx={{ height: "100%", backgroundColor: brandColors.backgrounds.hover }}>
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
               >
                 Quick Actions
               </Typography>
@@ -234,12 +235,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         ) && (
           <Box sx={{ mt: 3 }}>
             <Card
-              sx={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107" }}
+              sx={{ backgroundColor: brandColors.backgrounds.warning, border: "1px solid brandColors.accent.warning" }}
             >
               <CardContent>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#856404", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.neutral.dark, mb: 2 }}
                 >
                   Financing Details & Balloon Payment Information
                 </Typography>
@@ -247,7 +248,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                 <Divider sx={{ my: 2 }} />
                 <Typography
                   variant="caption"
-                  sx={{ color: "#856404", fontStyle: "italic" }}
+                  sx={{ color: brandColors.neutral.dark, fontStyle: "italic" }}
                 >
                   Balloon payment terms are now integrated for advanced
                   financial modeling and risk analysis.

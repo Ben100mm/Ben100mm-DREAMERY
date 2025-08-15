@@ -21,6 +21,7 @@ import {
   Warning as WarningIcon,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import { brandColors } from "../theme";
 
 // Styled components for enhanced visual feedback
 const LoadingOverlay = styled(Box)(({ theme }) => ({

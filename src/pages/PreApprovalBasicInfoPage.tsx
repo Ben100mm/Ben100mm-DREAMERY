@@ -18,19 +18,20 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SearchIcon from "@mui/icons-material/Search";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -110,13 +111,13 @@ const PreApprovalBasicInfoPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -138,7 +139,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -146,7 +147,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -157,7 +158,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
               >
                 Let's start with your basic contact information and current
                 address.
@@ -166,7 +167,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
               {/* Personal Contact Information */}
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2, mt: 3 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2, mt: 3 }}
               >
                 Personal Contact Information
               </Typography>
@@ -225,7 +226,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
               {/* Current Address */}
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2, mt: 4 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2, mt: 4 }}
               >
                 Your current address
               </Typography>
@@ -360,7 +361,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
                     <Switch
                       checked={softCheck}
                       onChange={(e) => setSoftCheck(e.target.checked)}
-                      sx={{ color: "#1a365d" }}
+                      sx={{ color: brandColors.primary }}
                     />
                   }
                   label="Soft credit check (no impact on credit score)"
@@ -373,8 +374,8 @@ const PreApprovalBasicInfoPage: React.FC = () => {
                   variant="outlined"
                   onClick={handleBack}
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     textTransform: "none",
                   }}
                 >
@@ -385,12 +386,12 @@ const PreApprovalBasicInfoPage: React.FC = () => {
                   onClick={handleNext}
                   disabled={isNextDisabled}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                     "&:disabled": {
-                      backgroundColor: "#e0e0e0",
+                      backgroundColor: brandColors.borders.secondary,
                       color: "#999",
                     },
                   }}

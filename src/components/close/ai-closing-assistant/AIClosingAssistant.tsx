@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Alert } from '@mui/material';
 import { SmartToy as SmartToyIcon } from '@mui/icons-material';
+import { brandColors } from "../../../theme";
 
 const AIClosingAssistant: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const AIClosingAssistant: React.FC = () => {
       <Card>
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <SmartToyIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+            <SmartToyIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />
             <Typography variant="h6">
               Intelligent assistance for closing processes and decision making
             </Typography>

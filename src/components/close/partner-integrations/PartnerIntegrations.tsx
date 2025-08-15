@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Alert } from '@mui/material';
 import { IntegrationInstructions as IntegrationIcon } from '@mui/icons-material';
+import { brandColors } from "../../../theme";
 
 const PartnerIntegrations: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const PartnerIntegrations: React.FC = () => {
       <Card>
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <IntegrationIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+            <IntegrationIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />
             <Typography variant="h6">
               Connect with third-party services and platforms
             </Typography>

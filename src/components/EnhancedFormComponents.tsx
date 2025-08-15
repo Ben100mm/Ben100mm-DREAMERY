@@ -12,6 +12,7 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
@@ -242,7 +243,7 @@ export const EnhancedTextFieldWithValidation: React.FC<{
         }}
         sx={{
           "& .MuiOutlinedInput-root": {
-            backgroundColor: disabled ? "#f5f5f5" : "white",
+            backgroundColor: disabled ? brandColors.neutral.light : brandColors.backgrounds.primary,
           },
         }}
       />

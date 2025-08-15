@@ -14,17 +14,18 @@ import {
 import { Add, Remove } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -44,7 +45,7 @@ const MainContent = styled.div`
 const ContentWrapper = styled.div`
   max-width: 600px;
   width: 100%;
-  background: white;
+  background: brandColors.backgrounds.primary;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -86,7 +87,7 @@ const CounterRow = ({
       mb: 2,
     }}
   >
-    <Typography sx={{ color: "#333333", fontWeight: 600 }}>{label}</Typography>
+    <Typography sx={{ color: brandColors.text.primary, fontWeight: 600 }}>{label}</Typography>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
       <IconButton
         onClick={() => onChange(Math.max(0, value - 1))}
@@ -95,7 +96,7 @@ const CounterRow = ({
           height: 36,
           border: "1px solid #cbd5e1",
           borderRadius: "50%",
-          color: "#1a365d",
+          color: brandColors.primary,
         }}
       >
         <Remove />
@@ -105,7 +106,7 @@ const CounterRow = ({
           width: 36,
           textAlign: "center",
           fontWeight: 700,
-          color: "#1a365d",
+          color: brandColors.primary,
         }}
       >
         {value}
@@ -117,7 +118,7 @@ const CounterRow = ({
           height: 36,
           border: "1px solid #cbd5e1",
           borderRadius: "50%",
-          color: "#1a365d",
+          color: brandColors.primary,
         }}
       >
         <Add />
@@ -197,7 +198,7 @@ const SellListHomeDetailsPage: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -206,9 +207,9 @@ const SellListHomeDetailsPage: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -216,7 +217,7 @@ const SellListHomeDetailsPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -227,11 +228,11 @@ const SellListHomeDetailsPage: React.FC = () => {
         <ContentWrapper>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 800, color: "#1a365d", mb: 1 }}
+            sx={{ fontWeight: 800, color: brandColors.primary, mb: 1 }}
           >
             Review your home details
           </Typography>
-          <Typography variant="body2" sx={{ color: "#6b7280", mb: 3 }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
             Update any missing or incorrect info.
           </Typography>
 
@@ -264,7 +265,7 @@ const SellListHomeDetailsPage: React.FC = () => {
           />
           <Typography
             variant="caption"
-            sx={{ color: "#6b7280", display: "block", mb: 2 }}
+            sx={{ color: brandColors.neutral.dark, display: "block", mb: 2 }}
           >
             Tip: Don’t include basements, non‑permitted additions, or non‑heated
             square footage.
@@ -321,15 +322,15 @@ const SellListHomeDetailsPage: React.FC = () => {
           py: { xs: "1rem", md: "2rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
         }}
       >
         <Button
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
           }}
@@ -341,8 +342,8 @@ const SellListHomeDetailsPage: React.FC = () => {
           onClick={handleNext}
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
           }}

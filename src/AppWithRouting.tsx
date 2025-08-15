@@ -43,17 +43,7 @@ import UnderwritePage from './pages/UnderwritePage';
 import UXDemoPage from './pages/UXDemoPage';
 import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
 import ClosePage from './pages/ClosePage';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1a365d',
-    },
-  },
-  typography: {
-    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
-  },
-});
+import { theme } from "./theme";
 
 const AppContainer = styled.div`
   width: 100%;

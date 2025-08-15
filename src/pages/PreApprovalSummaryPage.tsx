@@ -10,19 +10,20 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -71,13 +72,13 @@ const PreApprovalSummaryPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -99,7 +100,7 @@ const PreApprovalSummaryPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -107,7 +108,7 @@ const PreApprovalSummaryPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -118,7 +119,7 @@ const PreApprovalSummaryPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
               >
                 You'll get connected with a dedicated loan officer to verify
                 you're on track, explore your loan options and upgrade to a
@@ -128,44 +129,44 @@ const PreApprovalSummaryPage: React.FC = () => {
               {/* Information Summary Preview */}
               <Box
                 sx={{
-                  backgroundColor: "#f8f9fa",
+                  backgroundColor: brandColors.backgrounds.secondary,
                   p: 3,
                   borderRadius: 2,
                   mb: 4,
-                  border: "1px solid #e0e0e0",
+                  border: "1px solid brandColors.borders.secondary",
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                 >
                   Application Summary:
                 </Typography>
                 <Box sx={{ display: "grid", gap: 1.5 }}>
                   {answers.firstName && answers.lastName && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Name:</strong> {answers.firstName}{" "}
                       {answers.lastName}
                     </Typography>
                   )}
                   {answers.emailAddress && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Email:</strong> {answers.emailAddress}
                     </Typography>
                   )}
                   {answers.phoneNumber && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Phone:</strong> {answers.phoneNumber}
                     </Typography>
                   )}
                   {answers.streetAddress && answers.city && answers.state && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Current Address:</strong> {answers.streetAddress},{" "}
                       {answers.city}, {answers.state} {answers.zipCode}
                     </Typography>
                   )}
                   {answers.income && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Annual Income:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -176,37 +177,37 @@ const PreApprovalSummaryPage: React.FC = () => {
                     </Typography>
                   )}
                   {answers.credit && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Credit Score:</strong> {answers.credit}
                     </Typography>
                   )}
                   {answers.journey && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Home-buying Journey:</strong> {answers.journey}
                     </Typography>
                   )}
                   {answers.timeline && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Timeline:</strong> {answers.timeline}
                     </Typography>
                   )}
                   {answers.location && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Target Location:</strong> {answers.location}
                     </Typography>
                   )}
                   {answers.homeType && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Home Type:</strong> {answers.homeType}
                     </Typography>
                   )}
                   {answers.homeUse && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Home Use:</strong> {answers.homeUse}
                     </Typography>
                   )}
                   {answers.homePrice && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Target Home Price:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -217,7 +218,7 @@ const PreApprovalSummaryPage: React.FC = () => {
                     </Typography>
                   )}
                   {answers.monthlyPayment && (
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                       <strong>Target Monthly Payment:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -234,7 +235,7 @@ const PreApprovalSummaryPage: React.FC = () => {
               {/* Next Steps */}
               <Box
                 sx={{
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: brandColors.neutral.light,
                   p: 2,
                   borderRadius: 2,
                   mb: 4,
@@ -242,11 +243,11 @@ const PreApprovalSummaryPage: React.FC = () => {
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 1 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 1 }}
                 >
                   Next Steps:
                 </Typography>
-                <Box component="ul" sx={{ pl: 2, color: "#666", m: 0 }}>
+                <Box component="ul" sx={{ pl: 2, color: brandColors.neutral.dark, m: 0 }}>
                   <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
                     Upload income documents
                   </Typography>
@@ -268,8 +269,8 @@ const PreApprovalSummaryPage: React.FC = () => {
                   variant="outlined"
                   onClick={handleBack}
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     textTransform: "none",
                   }}
                 >
@@ -279,8 +280,8 @@ const PreApprovalSummaryPage: React.FC = () => {
                   variant="contained"
                   onClick={handleSubmit}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                   }}

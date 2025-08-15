@@ -11,19 +11,20 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -60,13 +61,13 @@ const PreApprovalPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back to Mortgage
           </Button>
@@ -92,7 +93,7 @@ const PreApprovalPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 1,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -102,7 +103,7 @@ const PreApprovalPage: React.FC = () => {
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 2, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 2, textAlign: "center" }}
               >
                 Pre-qualification is the first step toward a pre-approval with
                 us.
@@ -116,7 +117,7 @@ const PreApprovalPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -124,11 +125,11 @@ const PreApprovalPage: React.FC = () => {
               <Box sx={{ textAlign: "center", py: 4 }}>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                 >
                   Ready to get started?
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666", mb: 4 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 4 }}>
                   Our pre-approval process takes just a few minutes and will
                   help you understand your borrowing power and loan options.
                 </Typography>
@@ -140,8 +141,8 @@ const PreApprovalPage: React.FC = () => {
                   variant="outlined"
                   onClick={handleBack}
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     textTransform: "none",
                   }}
                 >
@@ -151,8 +152,8 @@ const PreApprovalPage: React.FC = () => {
                   variant="contained"
                   onClick={handleStart}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                   }}
@@ -163,12 +164,12 @@ const PreApprovalPage: React.FC = () => {
 
               {/* Additional Information */}
               <Box sx={{ mt: 2, textAlign: "center" }}>
-                <Typography variant="body2" sx={{ color: "#666", mb: 0.5 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 0.5 }}>
                   Your information is safe and secure with us.
                 </Typography>
                 <Link
                   href="#"
-                  sx={{ color: "#1a365d", textDecoration: "none" }}
+                  sx={{ color: brandColors.primary, textDecoration: "none" }}
                 >
                   Learn more about our privacy policy
                 </Link>

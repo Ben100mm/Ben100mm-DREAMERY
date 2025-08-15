@@ -23,6 +23,7 @@ import {
   EnhancedTextFieldWithValidation,
 } from "./EnhancedFormComponents";
 import { HelpTooltip, CompletionProgress, StatusChip } from "./UXComponents";
+import { brandColors } from "../theme";
 
 // Tax Implications Calculator (Production)
 export const TaxImplicationsCalculator: React.FC<{
@@ -53,7 +54,7 @@ export const TaxImplicationsCalculator: React.FC<{
     <Card>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
             Tax Implications
           </Typography>
           <HelpTooltip title="Configure deductions and income for after-tax results" />
@@ -167,9 +168,9 @@ export const TaxImplicationsCalculator: React.FC<{
           sx={{
             mt: 2,
             p: 2,
-            bgcolor: "#fafbfc",
+            bgcolor: brandColors.backgrounds.secondary,
             borderRadius: 1,
-            border: "1px solid #e8eaed",
+            border: "1px solid brandColors.borders.secondary",
           }}
         >
           <Typography variant="body2">
@@ -228,7 +229,7 @@ export const RefinanceScenariosCalculator: React.FC<{
     <Card>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
             Refinance Scenarios
           </Typography>
           <HelpTooltip title="Compare different refi timing and terms" />
@@ -273,7 +274,7 @@ export const RefinanceScenariosCalculator: React.FC<{
           {results.map((r: any, idx: number) => (
             <Box
               key={idx}
-              sx={{ p: 1, border: "1px solid #e0e0e0", borderRadius: 1, mb: 1 }}
+              sx={{ p: 1, border: "1px solid brandColors.borders.secondary", borderRadius: 1, mb: 1 }}
             >
               <Typography variant="body2">
                 Timing: {r.timing} yrs, New Pmt: $
@@ -316,7 +317,7 @@ export const SensitivityAnalysisCalculator: React.FC<{
     <Card>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
             Sensitivity Analysis
           </Typography>
           <HelpTooltip title="See cash flow changes with rent/expense/value shifts" />
@@ -357,7 +358,7 @@ export const SensitivityAnalysisCalculator: React.FC<{
           {results.map((r: any, i: number) => (
             <Box
               key={i}
-              sx={{ p: 1, border: "1px solid #e0e0e0", borderRadius: 1, mb: 1 }}
+              sx={{ p: 1, border: "1px solid brandColors.borders.secondary", borderRadius: 1, mb: 1 }}
             >
               <Typography variant="body2">
                 {r.scenario}: Cash Flow {r.adjustedCashFlow.toFixed(0)} (
@@ -399,7 +400,7 @@ export const StressTestingCalculator: React.FC<{
     <Card>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
             Stress Testing
           </Typography>
           <HelpTooltip title="Worst-case impacts to cash flow and ROI" />
@@ -496,7 +497,7 @@ export const InflationAdjustmentsCalculator: React.FC<{
     <Card>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
             Inflation Adjustments
           </Typography>
           <HelpTooltip title="Project forward with inflation for key amounts" />
@@ -547,9 +548,9 @@ export const InflationAdjustmentsCalculator: React.FC<{
           sx={{
             mt: 2,
             p: 2,
-            bgcolor: "#fafbfc",
+            bgcolor: brandColors.backgrounds.secondary,
             borderRadius: 1,
-            border: "1px solid #e8eaed",
+            border: "1px solid brandColors.borders.secondary",
           }}
         >
           <Typography variant="body2">

@@ -13,19 +13,20 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -93,13 +94,13 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -121,7 +122,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -129,7 +130,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -140,7 +141,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
               >
                 Help us understand your property preferences and financial
                 situation to provide accurate estimates.
@@ -149,7 +150,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
               {/* Property Information */}
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2, mt: 3 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2, mt: 3 }}
               >
                 Property Information
               </Typography>
@@ -166,7 +167,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
               {/* Financial Information */}
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 2, mt: 4 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 2, mt: 4 }}
               >
                 Financial Information
               </Typography>
@@ -205,8 +206,8 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
                   variant="outlined"
                   onClick={handleBack}
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     textTransform: "none",
                   }}
                 >
@@ -217,12 +218,12 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
                   onClick={handleNext}
                   disabled={isNextDisabled}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                     "&:disabled": {
-                      backgroundColor: "#e0e0e0",
+                      backgroundColor: brandColors.borders.secondary,
                       color: "#999",
                     },
                   }}

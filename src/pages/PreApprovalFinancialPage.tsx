@@ -15,19 +15,20 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -135,13 +136,13 @@ const PreApprovalFinancialPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -163,7 +164,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
@@ -171,7 +172,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                   fontSize: { xs: "1.25rem", md: "1.75rem" },
@@ -182,7 +183,7 @@ const PreApprovalFinancialPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: "#666", mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
               >
                 Help us understand your financial goals and budget.
               </Typography>
@@ -201,13 +202,13 @@ const PreApprovalFinancialPage: React.FC = () => {
                     >
                       <Typography
                         variant="h6"
-                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                        sx={{ fontWeight: 600, color: brandColors.primary }}
                       >
                         {question.title} *
                       </Typography>
                       {question.hasInfo && (
                         <Tooltip title={question.infoText} arrow>
-                          <IconButton size="small" sx={{ color: "#666" }}>
+                          <IconButton size="small" sx={{ color: brandColors.neutral.dark }}>
                             <InfoIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -215,7 +216,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                     </Box>
 
                     {question.description && (
-                      <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
                         {question.description}
                       </Typography>
                     )}
@@ -236,7 +237,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                       placeholder="$ 0"
                       sx={{
                         "& .MuiOutlinedInput-root": {
-                          backgroundColor: "#f5f5f5",
+                          backgroundColor: brandColors.neutral.light,
                           "&:hover": {
                             backgroundColor: "#f0f0f0",
                           },
@@ -248,7 +249,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                         ),
                         endAdornment: question.suffix ? (
                           <InputAdornment position="end">
-                            <Typography variant="body2" sx={{ color: "#666" }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                               {question.suffix}
                             </Typography>
                           </InputAdornment>
@@ -265,8 +266,8 @@ const PreApprovalFinancialPage: React.FC = () => {
                   variant="outlined"
                   onClick={handleBack}
                   sx={{
-                    borderColor: "#1a365d",
-                    color: "#1a365d",
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
                     textTransform: "none",
                   }}
                 >
@@ -277,12 +278,12 @@ const PreApprovalFinancialPage: React.FC = () => {
                   onClick={handleNext}
                   disabled={isNextDisabled}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                     "&:disabled": {
-                      backgroundColor: "#e0e0e0",
+                      backgroundColor: brandColors.borders.secondary,
                       color: "#999",
                     },
                   }}

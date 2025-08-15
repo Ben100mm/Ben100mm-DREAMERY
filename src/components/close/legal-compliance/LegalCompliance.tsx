@@ -61,6 +61,7 @@ import { toast } from 'react-hot-toast';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { brandColors } from "../../../theme";
 
 // Types
 interface ChecklistItem {
@@ -379,30 +380,30 @@ const LegalCompliance: React.FC = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'high':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'medium':
-        return '#2196f3';
+        return brandColors.accent.info;
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'draft':
-        return '#9e9e9e';
+        return brandColors.text.disabled;
       case 'signed':
-        return '#2196f3';
+        return brandColors.accent.info;
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -580,9 +581,9 @@ const LegalCompliance: React.FC = () => {
           sx={{ 
             height: 8, 
             borderRadius: 4,
-            backgroundColor: '#e0e0e0',
+            backgroundColor: brandColors.borders.secondary,
             '& .MuiLinearProgress-bar': {
-              backgroundColor: completionPercentage === 100 ? '#4caf50' : '#2196f3',
+              backgroundColor: completionPercentage === 100 ? brandColors.accent.success : brandColors.accent.info,
             }
           }} 
         />
@@ -590,7 +591,7 @@ const LegalCompliance: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="Compliance Checklist" />
           <Tab label="Document Management" />
           <Tab label="Attorney Referrals" />
@@ -625,7 +626,7 @@ const LegalCompliance: React.FC = () => {
                     <AccordionDetails>
                       <List>
                         {categoryItems.map((item) => (
-                          <ListItem key={item.id} sx={{ border: '1px solid #e0e0e0', borderRadius: 1, mb: 1 }}>
+                          <ListItem key={item.id} sx={{ border: '1px solid brandColors.borders.secondary', borderRadius: 1, mb: 1 }}>
                             <ListItemIcon>
                               <Checkbox
                                 checked={item.completed}
@@ -644,7 +645,7 @@ const LegalCompliance: React.FC = () => {
                                     size="small"
                                     sx={{ 
                                       backgroundColor: getPriorityColor(item.priority),
-                                      color: 'white',
+                                      color: brandColors.backgrounds.primary,
                                       fontSize: '0.7rem'
                                     }}
                                   />
@@ -726,7 +727,7 @@ const LegalCompliance: React.FC = () => {
                           size="small"
                           sx={{ 
                             backgroundColor: getStatusColor(doc.status),
-                            color: 'white'
+                            color: brandColors.backgrounds.primary
                           }}
                         />
                       </TableCell>
@@ -788,7 +789,7 @@ const LegalCompliance: React.FC = () => {
                             {attorney.name}
                           </Typography>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <StarIcon sx={{ color: '#ffc107', fontSize: 20 }} />
+                            <StarIcon sx={{ color: brandColors.accent.warning, fontSize: 20 }} />
                             <Typography variant="body2">{attorney.rating}</Typography>
                           </Box>
                         </Box>

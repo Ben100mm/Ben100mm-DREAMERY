@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -43,6 +44,7 @@ import {
   AccountCircle as AccountCircleIcon,
   Close as CloseIcon,
   ChevronLeft as ChevronLeftIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 
 // Import the actual components
@@ -57,6 +59,7 @@ import FinalWalkthroughHandover from '../components/close/walkthrough/FinalWalkt
 import PostClosingServices from '../components/close/post-closing/PostClosingServices';
 import AIClosingAssistant from '../components/close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../components/close/integrations/PartnerIntegrations';
+import { brandColors } from "../theme";
 
 // Types
 interface UserRole {
@@ -228,6 +231,7 @@ const ClosePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   
   const [closeState, setCloseState] = useState<CloseState>({
     activeTab: 'dashboard',
@@ -270,6 +274,10 @@ const ClosePage: React.FC = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleBackToHome = () => {
+    navigate('/');
   };
 
   const renderTabContent = () => {
@@ -318,13 +326,14 @@ const ClosePage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', background: '#f8f9fa' }}>
+    <Box sx={{ minHeight: '100vh', background: brandColors.backgrounds.secondary }}>
+      
       {/* AppBar */}
       <AppBar 
         position="fixed" 
         sx={{ 
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#1a365d',
+          backgroundColor: brandColors.primary,
           boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
         }}
       >
@@ -339,8 +348,8 @@ const ClosePage: React.FC = () => {
             <MenuIcon />
           </IconButton>
           
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
-            Dreamery Closing Management
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+            Dreamery Closing Hub
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -362,6 +371,15 @@ const ClosePage: React.FC = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+
+            <Tooltip title="Back to Home">
+              <IconButton
+                color="inherit"
+                onClick={handleBackToHome}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Toolbar>
       </AppBar>
@@ -372,49 +390,63 @@ const ClosePage: React.FC = () => {
         open={closeState.drawerOpen}
         onClose={handleDrawerToggle}
         sx={{
-          width: 280,
+          width: 320, // Increased from 280px to 320px
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: 280,
+            width: 320, // Increased from 280px to 320px
             boxSizing: 'border-box',
-            backgroundColor: '#f8f9fa',
-            borderRight: '1px solid #e0e0e0',
+            backgroundColor: brandColors.backgrounds.secondary,
+            borderRight: '1px solid brandColors.borders.secondary',
+            marginTop: '80px', // Add space below header
+            marginLeft: '2mm', // Add 2mm gap on left side
+            marginRight: '2mm', // Add 2mm gap on right side
           },
         }}
         ModalProps={{
           keepMounted: true, // Better open performance on mobile.
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, borderBottom: '1px solid #e0e0e0' }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
-            Close Module
-          </Typography>
-          {isMobile && (
+        {isMobile && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, borderBottom: '1px solid brandColors.borders.secondary' }}>
             <IconButton onClick={handleDrawerToggle}>
               <CloseIcon />
             </IconButton>
-          )}
+          </Box>
+        )}
+        
+        {/* Header Section in Sidebar */}
+        <Box sx={{ 
+          background: '#1a365d',
+          color: brandColors.backgrounds.primary,
+          padding: '2rem 1.5rem', // Increased padding from 1.5rem 1rem
+          margin: '1rem 0.75rem 1.5rem 0.75rem', // Increased margins
+          borderRadius: 1
+        }}>
+          <Typography variant="h6" component="h2" sx={{ fontWeight: 700, fontSize: '1.1rem', textAlign: 'center', color: 'white' }}>
+            Station
+          </Typography>
         </Box>
         
-        <List sx={{ pt: 1 }}>
+        <List sx={{ pt: 2, px: 1 }}> {/* Increased top padding and added horizontal padding */}
           {accessibleFeatures.map((feature, index) => (
             <ListItem
               key={feature.id}
               onClick={() => handleTabChange({} as React.SyntheticEvent, index)}
               sx={{
-                mx: 1,
-                mb: 0.5,
+                mx: 0.5, // Reduced from 1 to 0.5 for better spacing
+                mb: 1, // Increased from 0.5 to 1 for more space between items
                 borderRadius: 1,
                 cursor: 'pointer',
-                                 backgroundColor: activeTabIndex === index ? '#f0f8ff' : 'transparent',
-                 color: activeTabIndex === index ? '#1a365d' : 'inherit',
-                 '&:hover': {
-                   backgroundColor: activeTabIndex === index ? '#e0f0ff' : '#f5f5f5',
-                 },
+                backgroundColor: activeTabIndex === index ? brandColors.backgrounds.hover : 'transparent',
+                color: activeTabIndex === index ? brandColors.primary : 'inherit',
+                padding: '0.75rem 1rem', // Added explicit padding
+                '&:hover': {
+                  backgroundColor: activeTabIndex === index ? brandColors.backgrounds.selected : brandColors.neutral.light,
+                },
               }}
             >
                              <ListItemIcon sx={{ 
-                 color: activeTabIndex === index ? '#1a365d' : 'inherit',
+                 color: activeTabIndex === index ? brandColors.primary : 'inherit',
                  minWidth: 40 
                }}>
                 {feature.icon}
@@ -433,106 +465,41 @@ const ClosePage: React.FC = () => {
 
       {/* Main Content */}
       <Box sx={{ 
-        marginLeft: { xs: 0, md: '280px' },
-        marginTop: '64px',
+        marginLeft: { xs: 0, md: '344px' }, // Increased to 320px + 2mm + 2mm + some extra space
+        marginTop: '80px', // Increased from 64px to 80px for more space below header
+        paddingLeft: '0.5rem', // Reduced from 2rem to 0.5rem for less left spacing
+        paddingRight: '0.5rem', // Reduced from 2rem to 0.5rem for less right spacing
         transition: theme.transitions.create(['margin'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
       }}>
-        {/* Header Section */}
-        <Box sx={{ 
-          background: 'linear-gradient(135deg, #1a365d 0%, #0d2340 100%)',
-          color: 'white',
-          padding: '3rem 0',
-          marginBottom: '2rem'
-        }}>
-          <Container maxWidth="xl">
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box>
-                <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
-                  Closing Management
-                </Typography>
-                <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 600 }}>
-                  Streamline your real estate closing process with comprehensive tools and AI-powered assistance
-                </Typography>
-                <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Chip
-                    label={`Role: ${closeState.userRole.level}`}
-                    sx={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                      color: 'white',
-                      fontWeight: 600,
-                    }}
-                  />
-                  <Chip
-                    label="Closing Session Active"
-                    sx={{ 
-                      backgroundColor: '#4caf50',
-                      color: 'white',
-                      fontWeight: 600,
-                    }}
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </Container>
-        </Box>
-
-        {/* Main Content */}
-        <Container maxWidth="xl" sx={{ mb: 4 }}>
-          {/* Tabbed Interface */}
+        <Container maxWidth={false} sx={{ mb: 4, px: 1 }}> {/* Reduced horizontal padding from px: 4 to px: 1 */}
+          {/* Content Display - Shows only selected topic */}
           <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={activeTabIndex}
-                onChange={handleTabChange}
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="Closing management tabs"
-                sx={{
-                                     backgroundColor: '#1a365d',
-                  '& .MuiTab-root': {
-                    minHeight: 64,
-                    fontSize: '0.9rem',
-                    fontWeight: 600,
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    '&.Mui-selected': {
-                      color: 'white',
-                    },
-                    '&:hover': {
-                      color: 'white',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    },
-                  },
-                  '& .MuiTabs-indicator': {
-                    backgroundColor: 'white',
-                    height: 3,
-                  },
-                }}
-              >
-                {accessibleFeatures.map((feature, index) => (
-                  <Tab
-                    key={feature.id}
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {feature.icon}
-                        {feature.name}
-                      </Box>
-                    }
-                    id={`close-tab-${index}`}
-                    aria-controls={`close-tabpanel-${index}`}
-                  />
-                ))}
-              </Tabs>
+            {/* Header for selected topic */}
+            <Box sx={{ 
+              backgroundColor: brandColors.primary,
+              padding: '1.5rem 2rem',
+              borderBottom: '1px solid brandColors.borders.secondary'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ color: brandColors.backgrounds.primary }}>
+                  {accessibleFeatures[activeTabIndex]?.icon}
+                </Box>
+                <Typography variant="h5" sx={{ color: brandColors.backgrounds.primary, fontWeight: 600 }}>
+                  {accessibleFeatures[activeTabIndex]?.name}
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)', marginTop: 1 }}>
+                {accessibleFeatures[activeTabIndex]?.description}
+              </Typography>
             </Box>
 
-            {/* Tab Content */}
-            {accessibleFeatures.map((feature, index) => (
-              <TabPanelComponent key={feature.id} value={activeTabIndex} index={index}>
-                {renderTabContent()}
-              </TabPanelComponent>
-            ))}
+            {/* Content for selected topic */}
+            <Box sx={{ padding: '2rem' }}>
+              {renderTabContent()}
+            </Box>
           </Paper>
         </Container>
       </Box>

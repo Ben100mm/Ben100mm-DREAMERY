@@ -14,17 +14,18 @@ import { Info as InfoIcon } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import additionalInfo3Image from "../Additional Info-3.png";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -204,7 +205,7 @@ const SellListAdditionalInfo3Page: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Additional info
             </Typography>
             <LinearProgress
@@ -213,9 +214,9 @@ const SellListAdditionalInfo3Page: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -223,7 +224,7 @@ const SellListAdditionalInfo3Page: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -235,12 +236,12 @@ const SellListAdditionalInfo3Page: React.FC = () => {
           <LeftSection>
             <Typography
               variant="h5"
-              sx={{ fontWeight: 800, color: "#1a365d", mb: 2 }}
+              sx={{ fontWeight: 800, color: brandColors.primary, mb: 2 }}
             >
               To the best of your knowledge, do any of these apply to your home?
             </Typography>
 
-            <Typography variant="body2" sx={{ color: "#666666", mb: 3 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
               Select all that apply.
             </Typography>
 
@@ -253,8 +254,8 @@ const SellListAdditionalInfo3Page: React.FC = () => {
                         checked={selectedConditions.includes(condition.value)}
                         onChange={() => handleConditionChange(condition.value)}
                         sx={{
-                          color: "#1a365d",
-                          "&.Mui-checked": { color: "#1a365d" },
+                          color: brandColors.primary,
+                          "&.Mui-checked": { color: brandColors.primary },
                         }}
                       />
                     }
@@ -262,13 +263,13 @@ const SellListAdditionalInfo3Page: React.FC = () => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <Typography sx={{ color: "#111827" }}>
+                        <Typography sx={{ color: brandColors.text.primary }}>
                           {condition.label}
                         </Typography>
                         <Tooltip title={condition.description} arrow>
                           <IconButton
                             size="small"
-                            sx={{ color: "#1a365d", p: 0 }}
+                            sx={{ color: brandColors.primary, p: 0 }}
                           >
                             <InfoIcon fontSize="small" />
                           </IconButton>
@@ -280,8 +281,8 @@ const SellListAdditionalInfo3Page: React.FC = () => {
                       padding: "0.75rem",
                       borderRadius: 1,
                       border: selectedConditions.includes(condition.value)
-                        ? "2px solid #1a365d"
-                        : "1px solid #e5e7eb",
+                        ? "2px solid brandColors.primary"
+                        : "1px solid brandColors.borders.secondary",
                       backgroundColor: selectedConditions.includes(
                         condition.value,
                       )
@@ -292,7 +293,7 @@ const SellListAdditionalInfo3Page: React.FC = () => {
                       alignItems: "center",
                       "&:hover": {
                         backgroundColor: "#f8fafc",
-                        borderColor: "#1a365d",
+                        borderColor: brandColors.primary,
                       },
                     }}
                   />
@@ -308,12 +309,12 @@ const SellListAdditionalInfo3Page: React.FC = () => {
                           onChange={(e) => setOtherDetails(e.target.value)}
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              borderColor: "#e5e7eb",
+                              borderColor: brandColors.borders.secondary,
                               "&:hover": {
-                                borderColor: "#1a365d",
+                                borderColor: brandColors.primary,
                               },
                               "&.Mui-focused": {
-                                borderColor: "#1a365d",
+                                borderColor: brandColors.primary,
                               },
                             },
                           }}
@@ -337,12 +338,12 @@ const SellListAdditionalInfo3Page: React.FC = () => {
         sx={{
           position: "sticky",
           bottom: 0,
-          backgroundColor: "white",
+          backgroundColor: brandColors.backgrounds.primary,
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "0.75rem", md: "1rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           zIndex: 5,
         }}
       >
@@ -350,8 +351,8 @@ const SellListAdditionalInfo3Page: React.FC = () => {
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
           }}
@@ -365,8 +366,8 @@ const SellListAdditionalInfo3Page: React.FC = () => {
           }
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
           }}

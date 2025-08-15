@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Alert } from '@mui/material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { brandColors } from "../../../theme";
 
 const FinalWalkthroughHandover: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const FinalWalkthroughHandover: React.FC = () => {
       <Card>
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <CheckCircleIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+            <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />
             <Typography variant="h6">
               Final property inspection and key handover process
             </Typography>

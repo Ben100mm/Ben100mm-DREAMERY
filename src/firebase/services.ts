@@ -17,6 +17,7 @@ import {
   equalTo,
 } from "firebase/database";
 import { auth, database } from "./config";
+import { brandColors } from "../theme";
 
 // Authentication services
 export const signIn = async (email: string, password: string) => {

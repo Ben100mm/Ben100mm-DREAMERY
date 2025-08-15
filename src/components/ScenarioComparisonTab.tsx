@@ -12,6 +12,7 @@ import {
   Alert,
 } from "@mui/material";
 import { DealState } from "../types/deal";
+import { brandColors } from "../theme";
 
 interface ScenarioComparisonTabProps {
   dealState: DealState | null;
@@ -31,7 +32,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: "#666" }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -114,11 +115,11 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
     <Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
       >
         Scenario Comparison
       </Typography>
-      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
         Compare saved scenarios and their key metrics
       </Typography>
 
@@ -126,7 +127,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
         size="small"
         aria-label="Scenario Comparison Results"
         data-testid="scenario-comparison-table"
-        sx={{ border: 1, borderColor: "#e0e0e0" }}
+        sx={{ border: 1, borderColor: brandColors.borders.secondary }}
       >
         <TableHead>
           <TableRow>
@@ -145,7 +146,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   {scenario.timestamp
                     ? new Date(scenario.timestamp).toLocaleString()
                     : "No timestamp"}
@@ -173,8 +174,8 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                     variant="outlined"
                     onClick={() => handleLoadScenario(scenario)}
                     sx={{
-                      borderColor: "#1a365d",
-                      color: "#1a365d",
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
                       fontSize: "0.75rem",
                       minWidth: "auto",
                       px: 1,
@@ -187,8 +188,8 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                     variant="outlined"
                     onClick={() => handleRenameScenario(index, scenario.name)}
                     sx={{
-                      borderColor: "#2e7d32",
-                      color: "#2e7d32",
+                      borderColor: brandColors.accent.success,
+                      color: brandColors.accent.success,
                       fontSize: "0.75rem",
                       minWidth: "auto",
                       px: 1,
@@ -220,10 +221,10 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
       </Table>
 
       {/* Export Scenarios */}
-      <Box sx={{ mt: 3, p: 2, backgroundColor: "#f8f9fa", borderRadius: 1 }}>
+      <Box sx={{ mt: 3, p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
         <Typography
           variant="subtitle2"
-          sx={{ fontWeight: 600, mb: 2, color: "#1a365d" }}
+          sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}
         >
           Export Scenarios
         </Typography>
@@ -233,9 +234,9 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
             onClick={exportScenariosAsCSV}
             disabled={scenarios.length === 0}
             sx={{
-              borderColor: "#1a365d",
-              color: "#1a365d",
-              "&:hover": { borderColor: "#0f2027", bgcolor: "#e6f3ff" },
+              borderColor: brandColors.primary,
+              color: brandColors.primary,
+              "&:hover": { borderColor: brandColors.secondary, bgcolor: "#e6f3ff" },
             }}
           >
             Export Comparison as CSV
@@ -245,9 +246,9 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
             onClick={exportScenariosAsJSON}
             disabled={scenarios.length === 0}
             sx={{
-              borderColor: "#1a365d",
-              color: "#1a365d",
-              "&:hover": { borderColor: "#0f2027", bgcolor: "#e6f3ff" },
+              borderColor: brandColors.primary,
+              color: brandColors.primary,
+              "&:hover": { borderColor: brandColors.secondary, bgcolor: "#e6f3ff" },
             }}
           >
             Export as JSON

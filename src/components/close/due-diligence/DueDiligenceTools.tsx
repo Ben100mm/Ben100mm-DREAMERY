@@ -26,6 +26,7 @@ import {
   Tab,
   Paper,
 } from '@mui/material';
+import { brandColors } from '../../../theme';
 import {
   Search as SearchIcon,
   Edit as EditIcon,
@@ -105,19 +106,19 @@ const getStatusColor = (status: string) => {
     case 'approved':
     case 'resolved':
     case 'closed':
-      return '#4caf50';
+      return brandColors.accent.success;
     case 'pending':
     case 'in-progress':
     case 'requested':
     case 'received':
-      return '#2196f3';
+      return brandColors.accent.info;
     case 'cancelled':
     case 'rejected':
-      return '#f44336';
+      return brandColors.actions.error;
     case 'reviewed':
-      return '#ff9800';
+      return brandColors.accent.warning;
     default:
-      return '#9e9e9e';
+      return brandColors.text.disabled;
   }
 };
 
@@ -125,15 +126,15 @@ const getStatusColor = (status: string) => {
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case 'critical':
-      return '#f44336';
+      return brandColors.actions.error;
     case 'high':
-      return '#ff9800';
+      return brandColors.accent.warning;
     case 'medium':
-      return '#2196f3';
+      return brandColors.accent.info;
     case 'low':
-      return '#4caf50';
+      return brandColors.accent.success;
     default:
-      return '#9e9e9e';
+      return brandColors.text.disabled;
   }
 };
 
@@ -458,7 +459,7 @@ const DueDiligenceTools: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <SearchIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <SearchIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {dueDiligenceData.inspectors.length}
               </Typography>
@@ -480,7 +481,7 @@ const DueDiligenceTools: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <AssessmentIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <AssessmentIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {dueDiligenceData.appraisals.length}
               </Typography>
@@ -502,7 +503,7 @@ const DueDiligenceTools: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <BusinessIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <BusinessIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {dueDiligenceData.hoaDocuments.length}
               </Typography>
@@ -524,7 +525,7 @@ const DueDiligenceTools: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <WarningIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <WarningIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {dueDiligenceData.issues.length}
               </Typography>
@@ -538,7 +539,7 @@ const DueDiligenceTools: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#f5f5f5' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: brandColors.neutral.light }}>
           <Tabs
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
@@ -549,10 +550,10 @@ const DueDiligenceTools: React.FC = () => {
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textTransform: 'none',
-                color: '#666',
+                color: brandColors.neutral.dark,
                 '&.Mui-selected': {
-                  color: '#1976d2',
-                  backgroundColor: 'white',
+                  color: brandColors.actions.primary,
+                  backgroundColor: brandColors.backgrounds.primary,
                 },
               },
             }}
@@ -605,14 +606,14 @@ const DueDiligenceTools: React.FC = () => {
           {/* Inspections Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Inspection Booking
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenInspectionDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Book Inspection
               </Button>
@@ -634,7 +635,7 @@ const DueDiligenceTools: React.FC = () => {
                         <Chip
                           label={`${inspector.rating}★`}
                           size="small"
-                          sx={{ backgroundColor: '#4caf50', color: 'white' }}
+                          sx={{ backgroundColor: brandColors.accent.success, color: brandColors.backgrounds.primary }}
                         />
                       </Box>
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -680,14 +681,14 @@ const DueDiligenceTools: React.FC = () => {
           {/* Appraisals Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Appraisal Orders
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenAppraisalDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Order Appraisal
               </Button>
@@ -745,7 +746,7 @@ const DueDiligenceTools: React.FC = () => {
                             size="small"
                             sx={{
                               backgroundColor: getStatusColor(appraisal.status),
-                              color: 'white',
+                              color: brandColors.backgrounds.primary,
                               fontWeight: 600
                             }}
                           />
@@ -777,14 +778,14 @@ const DueDiligenceTools: React.FC = () => {
           {/* HOA Documents Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 HOA Document Portal
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenHOADialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Request Document
               </Button>
@@ -839,7 +840,7 @@ const DueDiligenceTools: React.FC = () => {
                             size="small"
                             sx={{
                               backgroundColor: getStatusColor(document.status),
-                              color: 'white',
+                              color: brandColors.backgrounds.primary,
                               fontWeight: 600
                             }}
                           />
@@ -878,14 +879,14 @@ const DueDiligenceTools: React.FC = () => {
           {/* Issue Tracking Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Issue Tracking
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenIssueDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Create Issue
               </Button>
@@ -937,7 +938,7 @@ const DueDiligenceTools: React.FC = () => {
                             size="small"
                             sx={{
                               backgroundColor: getPriorityColor(issue.priority),
-                              color: 'white',
+                              color: brandColors.backgrounds.primary,
                               fontWeight: 600
                             }}
                           />
@@ -948,7 +949,7 @@ const DueDiligenceTools: React.FC = () => {
                             size="small"
                             sx={{
                               backgroundColor: getStatusColor(issue.status),
-                              color: 'white',
+                              color: brandColors.backgrounds.primary,
                               fontWeight: 600
                             }}
                           />

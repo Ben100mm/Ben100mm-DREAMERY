@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
+import { brandColors } from "../theme";
 
 // Firebase configuration - Replace with your actual Firebase project config
 const firebaseConfig = {

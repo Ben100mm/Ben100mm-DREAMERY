@@ -48,6 +48,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import { brandColors } from "../../../theme";
 
 // Types
 interface Exemption {
@@ -428,27 +429,27 @@ const PostClosingServices: React.FC = () => {
     const getStatusColor = (status: string) => {
       switch (status) {
         case 'pending':
-          return '#ff9800';
+          return brandColors.accent.warning;
         case 'approved':
-          return '#4caf50';
+          return brandColors.accent.success;
         case 'denied':
-          return '#f44336';
+          return brandColors.actions.error;
         case 'expired':
-          return '#9e9e9e';
+          return brandColors.text.disabled;
         case 'available':
-          return '#2196f3';
+          return brandColors.accent.info;
         case 'purchased':
-          return '#4caf50';
+          return brandColors.accent.success;
         case 'evaluating':
-          return '#ff9800';
+          return brandColors.accent.warning;
         case 'contracted':
-          return '#2196f3';
+          return brandColors.accent.info;
         case 'active':
-          return '#4caf50';
+          return brandColors.accent.success;
         case 'terminated':
-          return '#f44336';
+          return brandColors.actions.error;
         default:
-          return '#9e9e9e';
+          return brandColors.text.disabled;
       }
     };
 
@@ -485,7 +486,7 @@ const PostClosingServices: React.FC = () => {
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <AssignmentIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <AssignmentIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h6" component="div">
                 {postClosingData.exemptions.length}
               </Typography>
@@ -497,7 +498,7 @@ const PostClosingServices: React.FC = () => {
 
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <PaymentIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+              <PaymentIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
               <Typography variant="h6" component="div">
                 {postClosingData.mortgagePayments.length}
               </Typography>
@@ -509,7 +510,7 @@ const PostClosingServices: React.FC = () => {
 
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <SecurityIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+              <SecurityIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
               <Typography variant="h6" component="div">
                 {postClosingData.warranties.filter(w => w.status === 'purchased').length}
               </Typography>
@@ -534,7 +535,7 @@ const PostClosingServices: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-          <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+          <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
             <Tab label="Tax Exemptions" />
             <Tab label="Mortgage Payments" />
             <Tab label="Home Warranties" />
@@ -565,7 +566,7 @@ const PostClosingServices: React.FC = () => {
                       <Card>
                         <CardContent>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                            <Avatar sx={{ backgroundColor: '#1976d2' }}>
+                            <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
                               {getExemptionTypeIcon(exemption.type)}
                             </Avatar>
                             <Box sx={{ flexGrow: 1 }}>
@@ -577,7 +578,7 @@ const PostClosingServices: React.FC = () => {
                                 size="small"
                                 sx={{ 
                                   backgroundColor: getStatusColor(exemption.status),
-                                  color: 'white'
+                                  color: brandColors.backgrounds.primary
                                 }}
                               />
                             </Box>
@@ -798,7 +799,7 @@ const PostClosingServices: React.FC = () => {
                           </Box>
 
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                            <CheckCircleIcon sx={{ color: '#4caf50' }} />
+                            <CheckCircleIcon sx={{ color: brandColors.accent.success }} />
                             <Typography variant="body2" color="text.secondary">
                               {warranty.rating} ({warranty.reviewCount} reviews)
                             </Typography>
@@ -852,7 +853,7 @@ const PostClosingServices: React.FC = () => {
                                 size="small"
                                 sx={{ 
                                   backgroundColor: getStatusColor(service.status),
-                                  color: 'white'
+                                  color: brandColors.backgrounds.primary
                                 }}
                               />
                             </Box>

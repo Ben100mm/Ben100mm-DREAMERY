@@ -4,6 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { brandColors } from "../theme";
 
 const Header: React.FC = () => {
   return (
@@ -34,7 +35,7 @@ const Header: React.FC = () => {
         <Button
           variant="text"
           sx={{
-            color: "#0d2340",
+            color: brandColors.secondary,
             fontWeight: 700,
             textTransform: "none",
             fontFamily: "Inter, sans-serif",

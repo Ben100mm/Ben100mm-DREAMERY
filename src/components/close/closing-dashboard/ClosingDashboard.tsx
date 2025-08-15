@@ -42,6 +42,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import styled from 'styled-components';
+import { brandColors } from "../../../theme";
 
 // Types
 interface TimelineEvent {
@@ -102,22 +103,22 @@ const StatusChip = styled(Chip)<{ status: 'completed' | 'in-progress' | 'pending
     switch (status) {
       case 'completed':
       case 'on-track':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'in-progress':
       case 'upcoming':
-        return '#2196f3';
+        return brandColors.accent.info;
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'blocked':
       case 'at-risk':
       case 'delayed':
       case 'overdue':
-        return '#f44336';
+        return brandColors.actions.error;
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   }};
-  color: white;
+  color: brandColors.backgrounds.primary;
   font-weight: 600;
 `;
 
@@ -128,14 +129,14 @@ const TimelineCard = styled(Card)`
 `;
 
 const DocumentPortal = styled(Card)`
-  border: 2px dashed #1976d2;
+  border: 2px dashed brandColors.actions.primary;
   border-radius: 16px;
-  background: #f8f9fa;
+  background: brandColors.backgrounds.secondary;
   transition: all 0.3s ease;
   
   &:hover {
     border-color: #1565c0;
-    background: #e3f2fd;
+    background: brandColors.backgrounds.selected;
   }
 `;
 
@@ -362,7 +363,7 @@ const ClosingDashboard: React.FC = () => {
         <Box>
           <MetricCard>
             <CardContent>
-              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
+              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: brandColors.actions.primary }}>
                 {closingData.status.length}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -382,7 +383,7 @@ const ClosingDashboard: React.FC = () => {
         <Box>
           <MetricCard>
             <CardContent>
-              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
+              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: brandColors.actions.primary }}>
                 {closingData.milestones.filter(m => m.status === 'completed').length}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -402,7 +403,7 @@ const ClosingDashboard: React.FC = () => {
         <Box>
           <MetricCard>
             <CardContent>
-              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
+              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: brandColors.actions.primary }}>
                 {closingData.timeline.filter(t => t.status === 'completed').length}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -422,7 +423,7 @@ const ClosingDashboard: React.FC = () => {
         <Box>
           <MetricCard>
             <CardContent>
-              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
+              <Typography variant="h4" component="div" sx={{ fontWeight: 700, mb: 1, color: brandColors.actions.primary }}>
                 {closingData.status.filter(s => s.status === 'at-risk' || s.status === 'delayed').length}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -448,14 +449,14 @@ const ClosingDashboard: React.FC = () => {
           <TimelineCard>
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                   Closing Timeline
                 </Typography>
                 <Button
                   size="small"
                   startIcon={<AddIcon />}
                   variant="outlined"
-                  sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+                  sx={{ color: brandColors.actions.primary, borderColor: brandColors.actions.primary }}
                 >
                   Add Event
                 </Button>
@@ -476,10 +477,10 @@ const ClosingDashboard: React.FC = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: getTimelineColor(event.status) === 'success' ? '#4caf50' : 
-                                       getTimelineColor(event.status) === 'info' ? '#2196f3' : 
-                                       getTimelineColor(event.status) === 'warning' ? '#ff9800' : '#9e9e9e',
-                        color: 'white',
+                        backgroundColor: getTimelineColor(event.status) === 'success' ? brandColors.accent.success : 
+                                       getTimelineColor(event.status) === 'info' ? brandColors.accent.info : 
+                                       getTimelineColor(event.status) === 'warning' ? brandColors.accent.warning : brandColors.text.disabled,
+                        color: brandColors.backgrounds.primary,
                         mb: 1
                       }}>
                         {getTimelineIcon(event.status)}
@@ -488,7 +489,7 @@ const ClosingDashboard: React.FC = () => {
                         <Box sx={{ 
                           width: 2, 
                           height: 40, 
-                          backgroundColor: '#e0e0e0',
+                          backgroundColor: brandColors.borders.secondary,
                           borderRadius: 1
                         }} />
                       )}
@@ -522,12 +523,12 @@ const ClosingDashboard: React.FC = () => {
         <Box>
           <Card>
             <CardContent>
-              <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2, color: '#1976d2' }}>
+              <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2, color: brandColors.actions.primary }}>
                 Key Milestones
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {closingData.milestones.map((milestone) => (
-                  <Box key={milestone.id} sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                  <Box key={milestone.id} sx={{ p: 2, border: '1px solid brandColors.borders.secondary', borderRadius: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                         {milestone.title}
@@ -563,7 +564,7 @@ const ClosingDashboard: React.FC = () => {
       {/* Status Updates Table */}
       <Card sx={{ mb: 4 }}>
         <CardContent>
-          <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2, color: '#1976d2' }}>
+          <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2, color: brandColors.actions.primary }}>
             Closing Status Updates
           </Typography>
           <Table>
@@ -657,8 +658,8 @@ const ClosingDashboard: React.FC = () => {
       <DocumentPortal>
         <CardContent>
           <Box sx={{ textAlign: 'center', py: 3 }}>
-            <DescriptionIcon sx={{ fontSize: 60, color: '#1976d2', mb: 2 }} />
-            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 2, color: '#1976d2' }}>
+            <DescriptionIcon sx={{ fontSize: 60, color: brandColors.actions.primary, mb: 2 }} />
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 2, color: brandColors.actions.primary }}>
               Document Portal & E-Sign
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
@@ -670,7 +671,7 @@ const ClosingDashboard: React.FC = () => {
                 variant="contained"
                 startIcon={<UploadIcon />}
                 component="label"
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Upload Document
                 <input
@@ -684,7 +685,7 @@ const ClosingDashboard: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<SendIcon />}
-                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+                sx={{ color: brandColors.actions.primary, borderColor: brandColors.actions.primary }}
               >
                 Send for E-Sign
               </Button>
@@ -692,7 +693,7 @@ const ClosingDashboard: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<DownloadIcon />}
-                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+                sx={{ color: brandColors.actions.primary, borderColor: brandColors.actions.primary }}
               >
                 Download All
               </Button>
@@ -723,7 +724,7 @@ const ClosingDashboard: React.FC = () => {
             </FormControl>
             
             {selectedFile && (
-              <Box sx={{ mt: 2, p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ mt: 2, p: 2, border: '1px solid brandColors.borders.secondary', borderRadius: 2 }}>
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Selected File: {selectedFile.name}
                 </Typography>
@@ -740,7 +741,7 @@ const ClosingDashboard: React.FC = () => {
             onClick={handleDocumentUpload}
             variant="contained"
             disabled={!selectedFile || !documentType}
-            sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+            sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
           >
             Upload
           </Button>

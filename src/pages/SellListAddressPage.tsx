@@ -13,17 +13,18 @@ import { ArrowBack, AttachMoney } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import housesImage from "../houses-watercolor.png";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -102,7 +103,7 @@ const SellListAddressPage: React.FC = () => {
           }}
         >
           <Box sx={{ width: 200 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Progress
             </Typography>
             <LinearProgress
@@ -111,9 +112,9 @@ const SellListAddressPage: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -123,7 +124,7 @@ const SellListAddressPage: React.FC = () => {
           <Button
             onClick={handleExit}
             sx={{
-              color: "#1a365d",
+              color: brandColors.primary,
               textTransform: "none",
               fontWeight: 600,
               "&:hover": {
@@ -145,7 +146,7 @@ const SellListAddressPage: React.FC = () => {
               variant="h3"
               sx={{
                 fontWeight: 700,
-                color: "#1a365d",
+                color: brandColors.primary,
                 mb: 2,
                 fontSize: { xs: "2rem", md: "2.5rem" },
               }}
@@ -156,7 +157,7 @@ const SellListAddressPage: React.FC = () => {
             <Typography
               variant="h6"
               sx={{
-                color: "#666",
+                color: brandColors.neutral.dark,
                 mb: 3,
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -178,16 +179,16 @@ const SellListAddressPage: React.FC = () => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "12px",
-                    backgroundColor: "#f0f8ff",
-                    border: "2px solid #e0e0e0",
+                    backgroundColor: brandColors.backgrounds.hover,
+                    border: "2px solid brandColors.borders.secondary",
                     fontSize: "1.1rem",
                     padding: "12px 16px",
                     "&:hover": {
-                      borderColor: "#1a365d",
+                      borderColor: brandColors.primary,
                     },
                     "&.Mui-focused": {
-                      borderColor: "#1a365d",
-                      backgroundColor: "white",
+                      borderColor: brandColors.primary,
+                      backgroundColor: brandColors.backgrounds.primary,
                     },
                   },
                   "& .MuiOutlinedInput-input": {
@@ -208,9 +209,9 @@ const SellListAddressPage: React.FC = () => {
                       checked={sellChecked}
                       onChange={(e) => setSellChecked(e.target.checked)}
                       sx={{
-                        color: "#1a365d",
+                        color: brandColors.primary,
                         "&.Mui-checked": {
-                          color: "#1a365d",
+                          color: brandColors.primary,
                         },
                       }}
                     />
@@ -219,7 +220,7 @@ const SellListAddressPage: React.FC = () => {
                   sx={{
                     "& .MuiFormControlLabel-label": {
                       fontSize: "16px",
-                      color: "#333333",
+                      color: brandColors.text.primary,
                       fontWeight: 500,
                     },
                   }}
@@ -230,9 +231,9 @@ const SellListAddressPage: React.FC = () => {
                       checked={listChecked}
                       onChange={(e) => setListChecked(e.target.checked)}
                       sx={{
-                        color: "#1a365d",
+                        color: brandColors.primary,
                         "&.Mui-checked": {
-                          color: "#1a365d",
+                          color: brandColors.primary,
                         },
                       }}
                     />
@@ -241,7 +242,7 @@ const SellListAddressPage: React.FC = () => {
                   sx={{
                     "& .MuiFormControlLabel-label": {
                       fontSize: "16px",
-                      color: "#333333",
+                      color: brandColors.text.primary,
                       fontWeight: 500,
                     },
                   }}
@@ -263,7 +264,7 @@ const SellListAddressPage: React.FC = () => {
         sx={{
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "1rem", md: "2rem" },
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           display: "flex",
           justifyContent: "flex-end",
         }}
@@ -273,8 +274,8 @@ const SellListAddressPage: React.FC = () => {
           onClick={handleNext}
           disabled={!address.trim()}
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             px: 4,
             py: 1.5,
             borderRadius: "8px",
@@ -282,10 +283,10 @@ const SellListAddressPage: React.FC = () => {
             fontSize: "1.1rem",
             textTransform: "none",
             "&:hover": {
-              backgroundColor: "#0d2340",
+              backgroundColor: brandColors.secondary,
             },
             "&:disabled": {
-              backgroundColor: "#e0e0e0",
+              backgroundColor: brandColors.borders.secondary,
               color: "#999",
             },
           }}

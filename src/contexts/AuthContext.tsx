@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { User } from "firebase/auth";
 import { onAuthChange } from "../firebase/services";
+import { brandColors } from "../theme";
 
 interface AuthContextType {
   currentUser: User | null;

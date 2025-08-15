@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { brandColors } from "../theme";
 
 const NavContainer = styled.nav`
   width: 100%;
@@ -30,20 +31,20 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
   a {
-    color: #0d2340;
+    color: white;
     text-decoration: none;
     font-weight: 800;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
     transition: all 0.2s ease;
     font-size: 1rem;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
     letter-spacing: 0.5px;
     cursor: pointer;
     &:hover {
-      background: rgba(255, 255, 255, 0.6);
-      color: #000000;
-      text-shadow: 0 2px 4px rgba(255, 255, 255, 1);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
       font-weight: 900;
     }
   }

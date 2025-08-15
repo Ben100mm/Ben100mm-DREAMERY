@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import styled from "styled-components";
+import { theme } from "./theme";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Navigation from "./components/Navigation";
@@ -14,16 +15,6 @@ import SellListAddressPage from "./pages/SellListAddressPage";
 import SellListMovingDetailsPage from "./pages/SellListMovingDetailsPage";
 import SellListPage from "./pages/SellListPage";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1a365d",
-    },
-  },
-  typography: {
-    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
-  },
-});
 
 const AppContainer = styled.div`
   width: 100%;

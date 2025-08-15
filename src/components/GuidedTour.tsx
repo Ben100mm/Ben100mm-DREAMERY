@@ -11,6 +11,7 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import {
   HelpOutline as HelpIcon,
   Close as CloseIcon,
@@ -156,7 +157,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
 
   const getStepIcon = (stepIndex: number) => {
     if (isStepCompleted(stepIndex)) {
-      return <CheckIcon sx={{ color: "#2e7d32" }} />;
+      return <CheckIcon sx={{ color: brandColors.accent.success }} />;
     }
     return <Typography variant="h6">{steps[stepIndex].icon}</Typography>;
   };
@@ -171,7 +172,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
         sx: {
           borderRadius: 3,
           minHeight: "70vh",
-          background: "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+          background: "linear-gradient(135deg, brandColors.backgrounds.secondary 0%, brandColors.backgrounds.primary 100%)",
         },
       }}
     >
@@ -181,8 +182,8 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "linear-gradient(135deg, #1a365d 0%, #0f2027 100%)",
-          color: "white",
+          background: `linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.secondary} 100%)`,
+          color: brandColors.backgrounds.primary,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -191,7 +192,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
             Guided Tour
           </Typography>
         </Box>
-        <IconButton onClick={onClose} sx={{ color: "white" }}>
+        <IconButton onClick={onClose} sx={{ color: brandColors.backgrounds.primary }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -203,14 +204,14 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
             sx={{
               width: 300,
               borderRight: 1,
-              borderColor: "#e0e0e0",
-              backgroundColor: "#fafbfc",
+              borderColor: brandColors.borders.secondary,
+              backgroundColor: brandColors.backgrounds.secondary,
               p: 2,
             }}
           >
             <Typography
               variant="h6"
-              sx={{ mb: 2, color: "#1a365d", fontWeight: 600 }}
+              sx={{ mb: 2, color: brandColors.primary, fontWeight: 600 }}
             >
               Tour Steps
             </Typography>
@@ -228,15 +229,15 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                     borderRadius: 2,
                     cursor: "pointer",
                     backgroundColor:
-                      activeStep === index ? "#e3f2fd" : "transparent",
+                      activeStep === index ? brandColors.backgrounds.selected : "transparent",
                     border:
                       activeStep === index
-                        ? "2px solid #1a365d"
-                        : "1px solid #e0e0e0",
+                        ? `2px solid ${brandColors.primary}`
+                        : `1px solid ${brandColors.borders.secondary}`,
                     transition: "all 0.2s ease",
                     "&:hover": {
                       backgroundColor:
-                        activeStep === index ? "#e3f2fd" : "#f5f5f5",
+                        activeStep === index ? brandColors.backgrounds.selected : brandColors.neutral.light,
                       transform: "translateX(4px)",
                     },
                   }}
@@ -250,9 +251,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                       height: 32,
                       borderRadius: "50%",
                       backgroundColor: isStepCompleted(index)
-                        ? "#2e7d32"
-                        : "#1a365d",
-                      color: "white",
+                        ? brandColors.accent.success
+                        : brandColors.primary,
+                      color: brandColors.backgrounds.primary,
                     }}
                   >
                     {getStepIcon(index)}
@@ -263,7 +264,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                       variant="subtitle2"
                       sx={{
                         fontWeight: 600,
-                        color: activeStep === index ? "#1a365d" : "#666",
+                        color: activeStep === index ? brandColors.primary : brandColors.neutral.dark,
                         mb: 0.5,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -278,8 +279,8 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                         label="Completed"
                         size="small"
                         sx={{
-                          backgroundColor: "#e8f5e8",
-                          color: "#2e7d32",
+                                                  backgroundColor: brandColors.backgrounds.success,
+                        color: brandColors.accent.success,
                           fontSize: "0.7rem",
                         }}
                       />
@@ -295,14 +296,14 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
             <Box sx={{ flex: 1 }}>
               <Typography
                 variant="h4"
-                sx={{ mb: 2, color: "#1a365d", fontWeight: 700 }}
+                sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}
               >
                 {steps[activeStep].title}
               </Typography>
 
               <Typography
                 variant="body1"
-                sx={{ mb: 3, color: "#666", lineHeight: 1.6 }}
+                sx={{ mb: 3, color: brandColors.neutral.dark, lineHeight: 1.6 }}
               >
                 {steps[activeStep].description}
               </Typography>
@@ -324,7 +325,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                   >
                     Tip:
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "#666" }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                     Look for the highlighted element on the page:{" "}
                     <strong>{steps[activeStep].target.replace(".", "")}</strong>
                   </Typography>
@@ -333,14 +334,14 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
 
               {/* Progress Indicator */}
               <Box sx={{ mt: "auto", pt: 2 }}>
-                <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                   Step {activeStep + 1} of {steps.length}
                 </Typography>
                 <Box
                   sx={{
                     width: "100%",
                     height: 8,
-                    backgroundColor: "#e0e0e0",
+                    backgroundColor: brandColors.borders.secondary,
                     borderRadius: 4,
                     overflow: "hidden",
                   }}
@@ -349,7 +350,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                     sx={{
                       width: `${((activeStep + 1) / steps.length) * 100}%`,
                       height: "100%",
-                      backgroundColor: "#1a365d",
+                      backgroundColor: brandColors.primary,
                       transition: "width 0.3s ease",
                     }}
                   />
@@ -365,11 +366,11 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
           p: 3,
           pt: 2,
           borderTop: 1,
-          borderColor: "#e0e0e0",
-          backgroundColor: "#fafbfc",
+          borderColor: brandColors.borders.secondary,
+          backgroundColor: brandColors.backgrounds.secondary,
         }}
       >
-        <Button onClick={handleSkip} sx={{ color: "#666" }}>
+        <Button onClick={handleSkip} sx={{ color: brandColors.neutral.dark }}>
           Skip Tour
         </Button>
 
@@ -380,9 +381,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
           onClick={handleBack}
           startIcon={<PrevIcon />}
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
-            "&:hover": { borderColor: "#0f2027", bgcolor: "#f0f8ff" },
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
+            "&:hover": { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover },
           }}
         >
           Previous
@@ -395,9 +396,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
             activeStep === steps.length - 1 ? <CheckIcon /> : <NextIcon />
           }
           sx={{
-            bgcolor: "#1a365d",
-            "&:hover": { bgcolor: "#0f2027" },
-            color: "white",
+            bgcolor: brandColors.primary,
+            "&:hover": { bgcolor: brandColors.secondary },
+            color: brandColors.backgrounds.primary,
           }}
         >
           {activeStep === steps.length - 1 ? "Finish" : "Next"}

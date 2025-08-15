@@ -42,6 +42,7 @@ import {
   HelpOutline as HelpIcon,
 } from "@mui/icons-material";
 import { formatCurrency } from "./UXComponents";
+import { brandColors } from "../theme";
 
 interface RefinanceInputs {
   currentLoanBalance: number;
@@ -285,17 +286,17 @@ const ComprehensiveRefinanceCalculator: React.FC<{
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <Typography
         variant="h4"
-        sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
       >
         Comprehensive Refinance Analysis
       </Typography>
 
       {/* Input Section */}
-      <Card sx={{ borderRadius: 2, border: "1px solid #e0e0e0" }}>
+      <Card sx={{ borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
         <CardContent>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
           >
             Current Loan & Property Details
           </Typography>
@@ -454,11 +455,11 @@ const ComprehensiveRefinanceCalculator: React.FC<{
       </Card>
 
       {/* Refinance Scenarios */}
-      <Card sx={{ borderRadius: 2, border: "1px solid #e0e0e0" }}>
+      <Card sx={{ borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
         <CardContent>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
           >
             Refinance Scenarios Comparison
           </Typography>
@@ -485,15 +486,15 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                     gap: 1,
                     bgcolor:
                       activeScenario === scenario.type
-                        ? "#1a365d"
+                        ? brandColors.primary
                         : "transparent",
                     color:
-                      activeScenario === scenario.type ? "white" : "#1a365d",
+                      activeScenario === scenario.type ? brandColors.backgrounds.primary : brandColors.primary,
                     "&:hover": {
                       bgcolor:
                         activeScenario === scenario.type
-                          ? "#1a365d"
-                          : "#f5f5f5",
+                          ? brandColors.primary
+                          : brandColors.neutral.light,
                     },
                   }}
                 >
@@ -563,7 +564,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
                         <CheckCircleIcon
-                          sx={{ color: "#2e7d32", fontSize: 20 }}
+                          sx={{ color: brandColors.accent.success, fontSize: 20 }}
                         />
                         <Typography variant="body2">{pro}</Typography>
                       </Box>
@@ -610,14 +611,14 @@ const ComprehensiveRefinanceCalculator: React.FC<{
           <Card
             sx={{
               borderRadius: 2,
-              border: "1px solid #e0e0e0",
+              border: "1px solid brandColors.borders.secondary",
               height: "100%",
             }}
           >
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
               >
                 Financial Metrics
               </Typography>
@@ -635,7 +636,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                     variant="h6"
                     sx={{
                       fontWeight: 600,
-                      color: npv > 0 ? "#2e7d32" : "#d32f2f",
+                      color: npv > 0 ? brandColors.accent.success : "#d32f2f",
                     }}
                   >
                     {formatCurrency(npv.toString())}
@@ -654,7 +655,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                   </Typography>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, color: "#2e7d32" }}
+                    sx={{ fontWeight: 600, color: brandColors.accent.success }}
                   >
                     {formatCurrency(
                       (selectedScenario?.totalSavings || 0).toString(),
@@ -692,14 +693,14 @@ const ComprehensiveRefinanceCalculator: React.FC<{
           <Card
             sx={{
               borderRadius: 2,
-              border: "1px solid #e0e0e0",
+              border: "1px solid brandColors.borders.secondary",
               height: "100%",
             }}
           >
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+                sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
               >
                 Risk Analysis
               </Typography>
@@ -743,7 +744,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                           100 >
                         80
                           ? "#d32f2f"
-                          : "#2e7d32",
+                          : brandColors.accent.success,
                     }}
                   >
                     {(
@@ -789,11 +790,11 @@ const ComprehensiveRefinanceCalculator: React.FC<{
       </Box>
 
       {/* Market Intelligence & Strategy */}
-      <Card sx={{ borderRadius: 2, border: "1px solid #e0e0e0" }}>
+      <Card sx={{ borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
         <CardContent>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
           >
             Market Intelligence & Strategy
           </Typography>
@@ -859,14 +860,14 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                   </Alert>
                 )}
 
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Best time to refinance: When rates are 0.5%+ lower than
                   current
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Seasonal timing: Rates typically lowest in winter months
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Rate lock strategy: Lock rates when you're 30-45 days from
                   closing
                 </Typography>
@@ -877,11 +878,11 @@ const ComprehensiveRefinanceCalculator: React.FC<{
       </Card>
 
       {/* Documentation & Compliance */}
-      <Card sx={{ borderRadius: 2, border: "1px solid #e0e0e0" }}>
+      <Card sx={{ borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
         <CardContent>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
           >
             Documentation & Compliance Checklist
           </Typography>
@@ -910,7 +911,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                     key={index}
                     sx={{ display: "flex", alignItems: "center", gap: 1 }}
                   >
-                    <CheckCircleIcon sx={{ color: "#2e7d32", fontSize: 20 }} />
+                    <CheckCircleIcon sx={{ color: brandColors.accent.success, fontSize: 20 }} />
                     <Typography variant="body2">{doc}</Typography>
                   </Box>
                 ))}
@@ -922,16 +923,16 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 Timeline Planning:
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Application to approval: 2-3 weeks
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Rate lock period: 30-60 days
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Closing preparation: 1-2 weeks
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Total timeline: 4-6 weeks
                 </Typography>
               </Box>
@@ -940,13 +941,13 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                   Compliance Requirements:
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Owner-occupied: 6-month seasoning requirement
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Investment properties: 12-month seasoning requirement
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                   • Maximum LTV: 80% for investment properties
                 </Typography>
               </Box>

@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { DealState } from "../types/deal";
 import { defaultRiskFactors } from "../utils/advancedCalculations";
+import { brandColors } from "../theme";
 
 interface RiskAnalysisTabProps {
   dealState: DealState | null;
@@ -30,7 +31,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: "#666" }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -42,11 +43,11 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
     <Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
       >
         Risk Factor Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
         Configure risk factors to assess investment risk and generate risk
         scores
       </Typography>
@@ -150,25 +151,25 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
         <Box sx={{ mt: 3 }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
           >
             Risk Analysis Results
           </Typography>
 
           <Box
-            sx={{ p: 2, backgroundColor: "#f8f9fa", borderRadius: 1, mb: 2 }}
+            sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1, mb: 2 }}
           >
             <Typography
               variant="subtitle2"
-              sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+              sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}
             >
               Overall Risk Score: {dealState.riskScoreResults.overallRiskScore}
               /10
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Risk Level: {dealState.riskScoreResults.riskCategory}
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               {dealState.riskScoreResults.recommendations?.join(", ")}
             </Typography>
           </Box>
@@ -176,25 +177,25 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
           <Box
             sx={{
               p: 2,
-              backgroundColor: "#fff3cd",
+              backgroundColor: brandColors.backgrounds.warning,
               borderRadius: 1,
               border: "1px solid #ffeaa7",
             }}
           >
             <Typography
               variant="subtitle2"
-              sx={{ fontWeight: 600, mb: 1, color: "#856404" }}
+              sx={{ fontWeight: 600, mb: 1, color: brandColors.neutral.dark }}
             >
               Confidence Intervals (95%):
             </Typography>
-            <Typography variant="body2" sx={{ color: "#856404", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Based on market volatility of{" "}
               {dealState?.riskFactors?.marketVolatility || 5}/10
             </Typography>
-            <Typography variant="body2" sx={{ color: "#856404" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Higher volatility = wider confidence intervals
             </Typography>
-            <Typography variant="body2" sx={{ color: "#856404" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Lower volatility = more precise projections
             </Typography>
           </Box>

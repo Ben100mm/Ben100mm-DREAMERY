@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Card, CardContent, Typography, Button } from "@mui/material";
 import { StatusChip, HelpTooltip } from "./index";
+import { brandColors } from "../theme";
 
 interface ResultsSummaryProps {
   allResults: any;
@@ -14,16 +15,16 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
   }
 
   return (
-    <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+    <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
       <CardContent sx={{ p: 3 }}>
         <Typography
           variant="h5"
           gutterBottom
-          sx={{ fontWeight: 700, color: "#1a365d" }}
+          sx={{ fontWeight: 700, color: brandColors.primary }}
         >
           Summary of All Calculations
         </Typography>
-        <Typography variant="body2" sx={{ mb: 3, color: "#666" }}>
+        <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral.dark }}>
           Overview of results from all completed calculations
         </Typography>
 
@@ -44,9 +45,9 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
             }}
             data-testid="export-all-results-csv-button"
             sx={{
-              bgcolor: "#1a365d",
-              "&:hover": { bgcolor: "#0f2027" },
-              color: "white",
+              bgcolor: brandColors.primary,
+              "&:hover": { bgcolor: brandColors.secondary },
+              color: brandColors.backgrounds.primary,
             }}
           >
             Export All Results as CSV
@@ -67,9 +68,9 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
             }}
             data-testid="export-all-results-json-button"
             sx={{
-              borderColor: "#1a365d",
-              color: "#1a365d",
-              "&:hover": { borderColor: "#0f2027", bgcolor: "#f0f8ff" },
+              borderColor: brandColors.primary,
+              color: brandColors.primary,
+              "&:hover": { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover },
             }}
           >
             Export as JSON
@@ -99,8 +100,8 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
             }}
             data-testid="export-all-results-report-button"
             sx={{
-              borderColor: "#2e7d32",
-              color: "#2e7d32",
+              borderColor: brandColors.accent.success,
+              color: brandColors.accent.success,
               "&:hover": { borderColor: "#1b5e20", bgcolor: "#f1f8e9" },
             }}
           >
@@ -125,8 +126,8 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
                 sx={{
                   p: 2,
                   height: "100%",
-                  border: "1px solid #e8eaed",
-                  bgcolor: "#fafbfc",
+                  border: "1px solid brandColors.borders.secondary",
+                  bgcolor: brandColors.backgrounds.secondary,
                 }}
               >
                 <Box
@@ -140,7 +141,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
                   <HelpTooltip title={`Results from ${type} calculations`} />
                 </Box>
 
-                <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                   {type === "seasonal" &&
                     "Seasonal adjustments for vacancy rates and maintenance costs"}
                   {type === "market" &&
@@ -164,12 +165,12 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
                   sx={{
                     mt: 2,
                     p: 2,
-                    bgcolor: "#ffffff",
+                    bgcolor: brandColors.backgrounds.primary,
                     borderRadius: 1,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: "#666" }}>
+                  <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
                     Results available
                   </Typography>
                 </Box>

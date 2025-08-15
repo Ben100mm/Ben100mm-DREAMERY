@@ -32,16 +32,17 @@ import {
   Clear,
 } from "@mui/icons-material";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: #f8f9fa;
+  background: brandColors.backgrounds.secondary;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 1rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -49,18 +50,18 @@ const HeaderSection = styled.div`
 
 const FilterButton = styled(Button)`
   text-transform: none;
-  color: #333;
-  border: 1px solid #e0e0e0;
-  background: white;
+  color: brandColors.text.primary;
+  border: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
   padding: 8px 16px;
   min-width: 120px;
   &:hover {
-    background: #f8f9fa;
+    background: brandColors.backgrounds.secondary;
     border-color: #c0c0c0;
   }
   &.active {
-    border-color: #1a365d;
-    color: #1a365d;
+    border-color: brandColors.primary;
+    color: brandColors.primary;
   }
 `;
 
@@ -76,7 +77,7 @@ const MapContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: brandColors.backgrounds.primary;
   font-size: 1.2rem;
   position: relative;
 `;
@@ -88,17 +89,17 @@ const MapOverlay = styled.div`
   background: rgba(255, 255, 255, 0.9);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: #333;
+  color: brandColors.text.primary;
   font-weight: 600;
 `;
 
 const PropertiesContainer = styled.div`
   padding: 2rem;
-  background: white;
+  background: brandColors.backgrounds.primary;
 `;
 
 const PropertyCard = styled(Card)`
-  border: 1px solid #e0e0e0;
+  border: 1px solid brandColors.borders.secondary;
   border-radius: 8px;
   margin-bottom: 1rem;
   transition: all 0.2s ease;
@@ -934,7 +935,7 @@ const RentPage: React.FC = () => {
       {/* Top Search Section */}
       <Box
         sx={{
-          background: "white",
+          background: brandColors.backgrounds.primary,
           py: 2,
         }}
       >
@@ -943,11 +944,11 @@ const RentPage: React.FC = () => {
             <Button
               startIcon={<ArrowBack />}
               onClick={() => window.history.back()}
-              sx={{ color: "#666", textTransform: "none" }}
+              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
             >
               Back
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: "#1a365d" }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Real Estate & Homes For Rent
             </Typography>
           </Box>
@@ -962,13 +963,13 @@ const RentPage: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search sx={{ color: "#666" }} />
+                      <Search sx={{ color: brandColors.neutral.dark }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton size="small">
-                        <Clear sx={{ color: "#666" }} />
+                        <Clear sx={{ color: brandColors.neutral.dark }} />
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -984,15 +985,15 @@ const RentPage: React.FC = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#1a365d",
-                color: "white",
+                backgroundColor: brandColors.primary,
+                color: brandColors.backgrounds.primary,
                 textTransform: "uppercase",
                 fontWeight: 600,
                 px: 3,
                 py: 1,
                 borderRadius: "8px",
                 "&:hover": {
-                  backgroundColor: "#0d2340",
+                  backgroundColor: brandColors.secondary,
                 },
               }}
             >
@@ -1004,10 +1005,10 @@ const RentPage: React.FC = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                border: "1px solid #e0e0e0",
+                border: "1px solid brandColors.borders.secondary",
                 borderRadius: "6px",
                 padding: "6px 12px",
-                backgroundColor: "#f8f9fa",
+                backgroundColor: brandColors.backgrounds.secondary,
                 cursor: "pointer",
                 "&:hover": {
                   backgroundColor: "#e9ecef",
@@ -1017,7 +1018,7 @@ const RentPage: React.FC = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ fontWeight: 600, color: "#333" }}
+                sx={{ fontWeight: 600, color: brandColors.text.primary }}
               >
                 500
               </Typography>
@@ -1149,7 +1150,7 @@ const RentPage: React.FC = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
+              color: brandColors.backgrounds.primary,
               fontSize: "1.2rem",
               position: "relative",
               borderRadius: "8px",
@@ -1164,7 +1165,7 @@ const RentPage: React.FC = () => {
                 background: "rgba(255, 255, 255, 0.9)",
                 padding: "0.5rem 1rem",
                 borderRadius: "4px",
-                color: "#333",
+                color: brandColors.text.primary,
                 fontWeight: 600,
               }}
             >
@@ -1175,7 +1176,7 @@ const RentPage: React.FC = () => {
         </Box>
 
         <Box
-          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid #e0e0e0" }}
+          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid brandColors.borders.secondary" }}
         >
           <Container maxWidth="xl" sx={{ p: 2 }}>
             <Box
@@ -1213,7 +1214,7 @@ const RentPage: React.FC = () => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#666",
+                        color: brandColors.neutral.dark,
                       }}
                     >
                       {property.image}
@@ -1229,7 +1230,7 @@ const RentPage: React.FC = () => {
                       >
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 700, color: "#1a365d" }}
+                          sx={{ fontWeight: 700, color: brandColors.primary }}
                         >
                           {property.price}
                         </Typography>
@@ -1288,14 +1289,14 @@ const RentPage: React.FC = () => {
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         {property.beds} bds | {property.baths} ba |{" "}
                         {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>
 
                       <Typography
                         variant="body2"
-                        sx={{ color: "#333", fontWeight: 500 }}
+                        sx={{ color: brandColors.text.primary, fontWeight: 500 }}
                       >
                         {property.address}
                       </Typography>

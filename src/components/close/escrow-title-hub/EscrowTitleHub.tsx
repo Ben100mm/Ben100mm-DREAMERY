@@ -31,6 +31,7 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material';
+import { brandColors } from '../../../theme';
 import {
   Security as SecurityIcon,
   Search as SearchIcon,
@@ -93,15 +94,15 @@ const getStatusColor = (status: 'completed' | 'in-progress' | 'error' | 'active'
   switch (status) {
     case 'completed':
     case 'active':
-      return '#4caf50';
+      return brandColors.accent.success;
     case 'in-progress':
     case 'pending':
-      return '#2196f3';
+      return brandColors.accent.info;
     case 'error':
     case 'expired':
-      return '#f44336';
+      return brandColors.actions.error;
     default:
-      return '#9e9e9e';
+      return brandColors.text.disabled;
   }
 };
 
@@ -355,7 +356,7 @@ const EscrowTitleHub: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <AccountBalanceIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {escrowAccounts.length}
               </Typography>
@@ -377,7 +378,7 @@ const EscrowTitleHub: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <SearchIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <SearchIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {titleData.searchResults.filter(s => s.status === 'completed').length}
               </Typography>
@@ -399,7 +400,7 @@ const EscrowTitleHub: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <InsuranceIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <InsuranceIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {titleData.insuranceQuote.status === 'active' ? 1 : 0}
               </Typography>
@@ -421,7 +422,7 @@ const EscrowTitleHub: React.FC = () => {
             }
           }}>
             <CardContent sx={{ textAlign: 'center' }}>
-              <SecurityIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+              <SecurityIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {formatCurrency(escrowAccounts.reduce((sum, acc) => sum + acc.amount, 0))}
               </Typography>
@@ -435,7 +436,7 @@ const EscrowTitleHub: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#f5f5f5' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: brandColors.neutral.light }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
@@ -447,7 +448,7 @@ const EscrowTitleHub: React.FC = () => {
                 minHeight: 64,
                 fontSize: '0.9rem',
                 fontWeight: 600,
-                color: '#1976d2',
+                color: brandColors.actions.primary,
               },
             }}
           >
@@ -499,14 +500,14 @@ const EscrowTitleHub: React.FC = () => {
           {/* Title Search Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Title Search
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenTitleSearchDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 New Search
               </Button>
@@ -529,7 +530,7 @@ const EscrowTitleHub: React.FC = () => {
                     startIcon={<SearchIcon />}
                     onClick={handleTitleSearch}
                     disabled={!searchQuery.trim()}
-                    sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                    sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
                   >
                     Search
                   </Button>
@@ -573,7 +574,7 @@ const EscrowTitleHub: React.FC = () => {
                              size="small"
                              sx={{
                                backgroundColor: getStatusColor(search.status),
-                               color: 'white',
+                               color: brandColors.backgrounds.primary,
                                fontWeight: 600
                              }}
                            />
@@ -629,14 +630,14 @@ const EscrowTitleHub: React.FC = () => {
           {/* Title Insurance Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Title Insurance
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenInsuranceDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 New Policy
               </Button>
@@ -683,7 +684,7 @@ const EscrowTitleHub: React.FC = () => {
                          size="small"
                          sx={{
                            backgroundColor: getStatusColor(titleData.insuranceQuote.status),
-                           color: 'white',
+                           color: brandColors.backgrounds.primary,
                            fontWeight: 600
                          }}
                        />
@@ -706,7 +707,7 @@ const EscrowTitleHub: React.FC = () => {
                   variant="contained"
                   startIcon={<InsuranceIcon />}
                   onClick={handleInsuranceOrder}
-                  sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                  sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
                 >
                   Get Insurance Quote
                 </Button>
@@ -719,14 +720,14 @@ const EscrowTitleHub: React.FC = () => {
           {/* Escrow Accounts Tab */}
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: brandColors.actions.primary }}>
                 Escrow Accounts
               </Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenEscrowDialog(true)}
-                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
               >
                 Add Account
               </Button>
@@ -784,7 +785,7 @@ const EscrowTitleHub: React.FC = () => {
                                size="small"
                                sx={{
                                  backgroundColor: getStatusColor(account.status),
-                                 color: 'white',
+                                 color: brandColors.backgrounds.primary,
                                  fontWeight: 600
                                }}
                              />
@@ -818,7 +819,7 @@ const EscrowTitleHub: React.FC = () => {
                     <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
                       Total Escrow Balance
                     </Typography>
-                    <Typography variant="h3" component="div" sx={{ fontWeight: 700, color: '#1976d2', mb: 2 }}>
+                    <Typography variant="h3" component="div" sx={{ fontWeight: 700, color: brandColors.actions.primary, mb: 2 }}>
                       {formatCurrency(escrowAccounts.reduce((sum, acc) => sum + acc.amount, 0))}
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -845,20 +846,20 @@ const EscrowTitleHub: React.FC = () => {
         <TabPanelComponent value={activeTab} index={3}>
           {/* Secure Messaging Tab */}
           <Box>
-            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 3, color: '#1976d2' }}>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 3, color: brandColors.actions.primary }}>
               Secure Messaging
             </Typography>
 
                          {/* Send New Message */}
              <Box sx={{ 
-               border: '2px solid #1976d2',
+               border: '2px solid brandColors.actions.primary',
                borderRadius: '12px',
                padding: '1rem',
-               background: '#f8f9fa',
+               background: brandColors.backgrounds.secondary,
                position: 'relative',
                mb: 4
              }}>
-               <Typography variant="h6" component="h4" sx={{ fontWeight: 600, mb: 2, color: '#1976d2' }}>
+               <Typography variant="h6" component="h4" sx={{ fontWeight: 600, mb: 2, color: brandColors.actions.primary }}>
                  Send Encrypted Message
                </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -888,7 +889,7 @@ const EscrowTitleHub: React.FC = () => {
                   rows={4}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#1976d2' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: brandColors.actions.primary }}>
                     <LockIcon fontSize="small" />
                     <Typography variant="caption">
                       Message will be encrypted using AES-256
@@ -899,7 +900,7 @@ const EscrowTitleHub: React.FC = () => {
                     startIcon={<SendIcon />}
                     onClick={handleSendMessage}
                     disabled={!newMessage.to || !newMessage.subject || !newMessage.content}
-                    sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                    sx={{ backgroundColor: brandColors.actions.primary, '&:hover': { backgroundColor: '#1565c0' } }}
                   >
                     Send Message
                   </Button>
@@ -915,7 +916,7 @@ const EscrowTitleHub: React.FC = () => {
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {messages.map((message) => (
-                    <Box key={message.id} sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box key={message.id} sx={{ p: 2, border: '1px solid brandColors.borders.secondary', borderRadius: 2 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                           {message.subject}

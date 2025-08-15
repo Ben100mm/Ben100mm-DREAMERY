@@ -32,16 +32,17 @@ import {
   Clear,
 } from "@mui/icons-material";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: #f8f9fa;
+  background: brandColors.backgrounds.secondary;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 1rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -49,18 +50,18 @@ const HeaderSection = styled.div`
 
 const FilterButton = styled(Button)`
   text-transform: none;
-  color: #333;
-  border: 1px solid #e0e0e0;
-  background: white;
+  color: brandColors.text.primary;
+  border: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
   padding: 8px 16px;
   min-width: 120px;
   &:hover {
-    background: #f8f9fa;
+    background: brandColors.backgrounds.secondary;
     border-color: #c0c0c0;
   }
   &.active {
-    border-color: #1a365d;
-    color: #1a365d;
+    border-color: brandColors.primary;
+    color: brandColors.primary;
   }
 `;
 
@@ -76,7 +77,7 @@ const MapContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: brandColors.backgrounds.primary;
   font-size: 1.2rem;
   position: relative;
 `;
@@ -88,13 +89,13 @@ const MapOverlay = styled.div`
   background: rgba(255, 255, 255, 0.9);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: #333;
+  color: brandColors.text.primary;
   font-weight: 600;
 `;
 
 const PropertiesContainer = styled.div`
   padding: 2rem;
-  background: white;
+  background: brandColors.backgrounds.primary;
 `;
 
 const PropertyCard = styled(Card)`
@@ -122,7 +123,7 @@ const PropertyImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: brandColors.neutral.dark;
   font-size: 0.9rem;
 `;
 
@@ -493,7 +494,7 @@ const BuyPage: React.FC = () => {
             </Box>
             {priceType === "monthly-payment" && (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                   Includes estimated principal and interest, mortgage insurance,
                   property taxes, home insurance and HOA fees.
                 </Typography>
@@ -517,12 +518,12 @@ const BuyPage: React.FC = () => {
                     mt: 2,
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: "#666" }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                     Save this monthly payment info to your Dreamery account.
                     (See our{" "}
                     <Link
                       href="#"
-                      sx={{ color: "#1a365d", textDecoration: "none" }}
+                      sx={{ color: brandColors.primary, textDecoration: "none" }}
                     >
                       privacy policy
                     </Link>
@@ -532,12 +533,12 @@ const BuyPage: React.FC = () => {
                     variant="outlined"
                     size="small"
                     sx={{
-                      borderColor: "#1a365d",
-                      color: "#1a365d",
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
                       textTransform: "none",
                       fontWeight: 600,
                       "&:hover": {
-                        borderColor: "#1a365d",
+                        borderColor: brandColors.primary,
                         backgroundColor: "rgba(26, 54, 93, 0.04)",
                       },
                     }}
@@ -1034,11 +1035,11 @@ const BuyPage: React.FC = () => {
             <Button
               startIcon={<ArrowBack />}
               onClick={() => window.history.back()}
-              sx={{ color: "#666", textTransform: "none" }}
+              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
             >
               Back
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: "#1a365d" }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Real Estate & Homes For Sale
             </Typography>
           </Box>
@@ -1063,7 +1064,7 @@ const BuyPage: React.FC = () => {
                 ),
               }}
             />
-            <Button variant="contained" sx={{ bgcolor: "#1a365d" }}>
+            <Button variant="contained" sx={{ bgcolor: brandColors.primary }}>
               Save search
             </Button>
             <Box
@@ -1071,10 +1072,10 @@ const BuyPage: React.FC = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                border: "1px solid #e0e0e0",
+                border: "1px solid brandColors.borders.secondary",
                 borderRadius: "6px",
                 padding: "6px 12px",
-                backgroundColor: "#f8f9fa",
+                backgroundColor: brandColors.backgrounds.secondary,
                 cursor: "pointer",
                 "&:hover": {
                   backgroundColor: "#e9ecef",
@@ -1084,7 +1085,7 @@ const BuyPage: React.FC = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ fontWeight: 600, color: "#333" }}
+                sx={{ fontWeight: 600, color: brandColors.text.primary }}
               >
                 500
               </Typography>
@@ -1200,7 +1201,7 @@ const BuyPage: React.FC = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
+              color: brandColors.backgrounds.primary,
               fontSize: "1.2rem",
               position: "relative",
               borderRadius: "8px",
@@ -1215,7 +1216,7 @@ const BuyPage: React.FC = () => {
                 background: "rgba(255, 255, 255, 0.9)",
                 padding: "0.5rem 1rem",
                 borderRadius: "4px",
-                color: "#333",
+                color: brandColors.text.primary,
                 fontWeight: 600,
               }}
             >
@@ -1226,7 +1227,7 @@ const BuyPage: React.FC = () => {
         </Box>
 
         <Box
-          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid #e0e0e0" }}
+          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid brandColors.borders.secondary" }}
         >
           <Container maxWidth="xl" sx={{ p: 2 }}>
             <Box
@@ -1264,7 +1265,7 @@ const BuyPage: React.FC = () => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#666",
+                        color: brandColors.neutral.dark,
                       }}
                     >
                       {property.image}
@@ -1280,7 +1281,7 @@ const BuyPage: React.FC = () => {
                       >
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 700, color: "#1a365d" }}
+                          sx={{ fontWeight: 700, color: brandColors.primary }}
                         >
                           {property.price}
                         </Typography>
@@ -1339,14 +1340,14 @@ const BuyPage: React.FC = () => {
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: "#666" }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
                         {property.beds} bds | {property.baths} ba |{" "}
                         {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>
 
                       <Typography
                         variant="body2"
-                        sx={{ color: "#333", fontWeight: 500 }}
+                        sx={{ color: brandColors.text.primary, fontWeight: 500 }}
                       >
                         {property.address}
                       </Typography>

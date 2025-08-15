@@ -12,6 +12,7 @@ import {
   InputAdornment,
   CircularProgress,
 } from "@mui/material";
+import { brandColors } from "../theme";
 import {
   LineChart,
   LineSeriesType,
@@ -45,7 +46,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: "#666" }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -57,11 +58,11 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
     <Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
       >
         Exit Strategy Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
         Configure exit strategy parameters and view projected returns over
         different timeframes
       </Typography>
@@ -175,7 +176,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
             size="small"
             aria-label="Exit Strategies Results"
             data-testid="exit-strategies-results-table"
-            sx={{ mt: 2, border: 1, borderColor: "#e0e0e0" }}
+            sx={{ mt: 2, border: 1, borderColor: brandColors.borders.secondary }}
           >
             <TableHead>
               <TableRow>
@@ -193,7 +194,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                   <TableCell>
                     ${result.projectedValue.toLocaleString()}
                     <br />
-                    <Typography variant="caption" sx={{ color: "#666" }}>
+                    <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
                       ±$
                       {(
                         calculateConfidenceIntervals(
@@ -206,13 +207,13 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                   </TableCell>
                   <TableCell>${result.netProceeds.toLocaleString()}</TableCell>
                   <TableCell
-                    sx={{ color: result.roi > 0 ? "#2e7d32" : "#d32f2f" }}
+                    sx={{ color: result.roi > 0 ? brandColors.accent.success : "#d32f2f" }}
                   >
                     {result.roi.toFixed(1)}%
                   </TableCell>
                   <TableCell
                     sx={{
-                      color: result.annualizedRoi > 0 ? "#2e7d32" : "#d32f2f",
+                      color: result.annualizedRoi > 0 ? brandColors.accent.success : "#d32f2f",
                     }}
                   >
                     {result.annualizedRoi.toFixed(1)}%
@@ -224,22 +225,22 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
 
           {/* Confidence Intervals Summary for Exit Strategies */}
           <Box
-            sx={{ mt: 2, p: 2, backgroundColor: "#f8f9fa", borderRadius: 1 }}
+            sx={{ mt: 2, p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}
           >
             <Typography
               variant="subtitle2"
-              sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+              sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}
             >
               Statistical Confidence (95%):
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Based on market volatility of{" "}
               {dealState?.riskFactors?.marketVolatility || 5}/10
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Higher volatility = wider confidence intervals
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Lower volatility = more precise projections
             </Typography>
           </Box>
@@ -258,7 +259,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                 variant="h6"
                 sx={{
                   fontWeight: 600,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                 }}
@@ -274,7 +275,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                   {
                     data: dealState.exitStrategyResults.map((r) => r.roi),
                     label: "ROI (%)",
-                    color: "#1a365d",
+                    color: brandColors.primary,
                     type: "line",
                   } as LineSeriesType,
                 ]}
@@ -308,7 +309,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                 variant="h6"
                 sx={{
                   fontWeight: 600,
-                  color: "#1a365d",
+                  color: brandColors.primary,
                   mb: 2,
                   textAlign: "center",
                 }}
@@ -326,7 +327,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                       (r) => r.projectedValue / 1000,
                     ),
                     label: "Value ($K)",
-                    color: "#2e7d32",
+                    color: brandColors.accent.success,
                     type: "bar",
                   } as BarSeriesType,
                 ]}

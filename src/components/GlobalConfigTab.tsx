@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Alert, Typography } from "@mui/material";
 import { DealState } from "../types/deal";
 import { ConfigCards } from "./ConfigCards";
+import { brandColors } from "../theme";
 
 interface GlobalConfigTabProps {
   dealState: DealState | null;
@@ -44,11 +45,11 @@ export const GlobalConfigTab: React.FC<GlobalConfigTabProps> = ({
     <Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+        sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
       >
         Global Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
         Configure market conditions, exit strategies, risk factors, and manage
         scenarios
       </Typography>

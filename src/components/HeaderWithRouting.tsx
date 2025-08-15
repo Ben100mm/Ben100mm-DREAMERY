@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { brandColors } from "../theme";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const Header: React.FC = () => {
           onClick={handleAuthClick}
           variant="text"
           sx={{
-            color: "#0d2340",
+            color: brandColors.secondary,
             fontWeight: 700,
             textTransform: "none",
             fontFamily: "Inter, sans-serif",

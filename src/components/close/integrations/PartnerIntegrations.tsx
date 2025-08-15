@@ -51,6 +51,7 @@ import {
   LocalGasStation as GasIcon,
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import { brandColors } from "../../../theme";
 
 // Types
 interface LenderStatus {
@@ -485,20 +486,20 @@ const PartnerIntegrations: React.FC = () => {
       case 'connected':
       case 'completed':
       case 'active':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'syncing':
       case 'in-progress':
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'disconnected':
       case 'failed':
       case 'expired':
       case 'cancelled':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'error':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -527,15 +528,15 @@ const PartnerIntegrations: React.FC = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'medium':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'high':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'critical':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -587,7 +588,7 @@ const PartnerIntegrations: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <LenderIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <LenderIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               {integrationData.lender.length}
             </Typography>
@@ -599,7 +600,7 @@ const PartnerIntegrations: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <TitleIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <TitleIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               {integrationData.title.length}
             </Typography>
@@ -611,7 +612,7 @@ const PartnerIntegrations: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <InsuranceIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <InsuranceIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               {integrationData.insurance.length}
             </Typography>
@@ -641,7 +642,7 @@ const PartnerIntegrations: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <LenderIcon sx={{ fontSize: 32, color: '#1976d2' }} />
+                <LenderIcon sx={{ fontSize: 32, color: brandColors.actions.primary }} />
                 <Typography variant="h6">
                   Lender Integrations
                 </Typography>
@@ -698,7 +699,7 @@ const PartnerIntegrations: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <TitleIcon sx={{ fontSize: 32, color: '#4caf50' }} />
+                <TitleIcon sx={{ fontSize: 32, color: brandColors.accent.success }} />
                 <Typography variant="h6">
                   Title Updates
                 </Typography>
@@ -727,7 +728,7 @@ const PartnerIntegrations: React.FC = () => {
                               size="small"
                               sx={{ 
                                 backgroundColor: getStatusColor(update.status),
-                                color: 'white'
+                                color: brandColors.backgrounds.primary
                               }}
                             />
                             <Chip 
@@ -735,7 +736,7 @@ const PartnerIntegrations: React.FC = () => {
                               size="small"
                               sx={{ 
                                 backgroundColor: getPriorityColor(update.priority),
-                                color: 'white'
+                                color: brandColors.backgrounds.primary
                               }}
                             />
                           </Box>
@@ -761,7 +762,7 @@ const PartnerIntegrations: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <InsuranceIcon sx={{ fontSize: 32, color: '#ff9800' }} />
+                <InsuranceIcon sx={{ fontSize: 32, color: brandColors.accent.warning }} />
                 <Typography variant="h6">
                   Insurance Status
                 </Typography>

@@ -53,6 +53,7 @@ import {
   Visibility as ViewIcon,
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import { brandColors } from "../../../theme";
 
 // Types
 interface InsuranceQuote {
@@ -509,19 +510,19 @@ const InsuranceUtilities: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'quoted':
-        return '#2196f3';
+        return brandColors.accent.info;
       case 'bound':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'expired':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'active':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'transferred':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -562,7 +563,7 @@ const InsuranceUtilities: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <SecurityIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <SecurityIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               {insuranceUtilitiesData.insuranceQuotes.length}
             </Typography>
@@ -574,7 +575,7 @@ const InsuranceUtilities: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <BoltIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <BoltIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               {insuranceUtilitiesData.utilityProviders.length}
             </Typography>
@@ -586,7 +587,7 @@ const InsuranceUtilities: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <MovingIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <MovingIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               {insuranceUtilitiesData.serviceProviders.length}
             </Typography>
@@ -611,7 +612,7 @@ const InsuranceUtilities: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="Insurance Quotes" />
           <Tab label="Utility Transfers" />
           <Tab label="Service Providers" />
@@ -651,7 +652,7 @@ const InsuranceUtilities: React.FC = () => {
                               size="small"
                               sx={{ 
                                 backgroundColor: getStatusColor(quote.status),
-                                color: 'white'
+                                color: brandColors.backgrounds.primary
                               }}
                             />
                           </Box>
@@ -746,7 +747,7 @@ const InsuranceUtilities: React.FC = () => {
                     <Card>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                          <Avatar sx={{ backgroundColor: '#1976d2' }}>
+                          <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
                             {getUtilityTypeIcon(provider.type)}
                           </Avatar>
                           <Box sx={{ flexGrow: 1 }}>
@@ -764,7 +765,7 @@ const InsuranceUtilities: React.FC = () => {
                             size="small"
                             sx={{ 
                               backgroundColor: getStatusColor(provider.status),
-                              color: 'white'
+                              color: brandColors.backgrounds.primary
                             }}
                           />
                         </Box>

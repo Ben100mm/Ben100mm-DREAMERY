@@ -13,19 +13,20 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
   flex-shrink: 0;
 `;
 
@@ -50,8 +51,8 @@ const QuestionCard = styled(Card)`
 `;
 
 const OptionCard = styled(Box)<{ $selected?: boolean }>`
-  border: 2px solid ${(props) => (props.$selected ? "#1a365d" : "#e0e0e0")};
-  background-color: ${(props) => (props.$selected ? "#f0f4f8" : "white")};
+  border: 2px solid ${(props) => (props.$selected ? brandColors.primary : brandColors.borders.secondary)};
+  background-color: ${(props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.primary)};
   border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
@@ -59,8 +60,8 @@ const OptionCard = styled(Box)<{ $selected?: boolean }>`
   margin-bottom: 0.5rem;
 
   &:hover {
-    border-color: #1a365d;
-    background-color: ${(props) => (props.$selected ? "#f0f4f8" : "#f8f9fa")};
+    border-color: brandColors.primary;
+    background-color: ${(props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.secondary)};
   }
 `;
 
@@ -134,13 +135,13 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
               Dreamery Home Loans
             </Typography>
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Back
           </Button>
@@ -162,21 +163,21 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                   mb: 2,
                   height: 6,
                   borderRadius: 1,
-                  backgroundColor: "#e0e0e0",
+                  backgroundColor: brandColors.borders.secondary,
                 }}
               />
 
               {/* Question */}
               <Typography
                 variant="h5"
-                sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+                sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
               >
                 {currentQuestion.title} *
               </Typography>
 
               {/* Description */}
               {currentQuestion.description && (
-                <Typography variant="body2" sx={{ color: "#666", mb: 3 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
                   {currentQuestion.description}
                 </Typography>
               )}
@@ -202,7 +203,7 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                   >
                     <FormControlLabel
                       value={option}
-                      control={<Radio sx={{ color: "#1a365d" }} />}
+                      control={<Radio sx={{ color: brandColors.primary }} />}
                       label={option}
                       sx={{
                         width: "100%",
@@ -210,7 +211,7 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                         "& .MuiFormControlLabel-label": {
                           fontSize: "1rem",
                           fontWeight: 500,
-                          color: "#333",
+                          color: brandColors.text.primary,
                         },
                       }}
                     />
@@ -225,8 +226,8 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                     variant="outlined"
                     onClick={handleBackStep}
                     sx={{
-                      borderColor: "#1a365d",
-                      color: "#1a365d",
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
                       textTransform: "none",
                     }}
                   >
@@ -238,12 +239,12 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                   onClick={handleNext}
                   disabled={isNextDisabled}
                   sx={{
-                    backgroundColor: "#1a365d",
-                    color: "white",
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.backgrounds.primary,
                     textTransform: "none",
                     flex: 1,
                     "&:disabled": {
-                      backgroundColor: "#e0e0e0",
+                      backgroundColor: brandColors.borders.secondary,
                       color: "#999",
                     },
                   }}

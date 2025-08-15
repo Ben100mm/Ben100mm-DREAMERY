@@ -26,10 +26,11 @@ import {
   KeyboardArrowDown,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import { brandColors } from "../theme";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: "#ffffff",
-  border: "1px solid #e0e0e0",
+  background: brandColors.backgrounds.primary,
+  border: "1px solid brandColors.borders.secondary",
   borderRadius: "8px",
   boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   maxWidth: "600px",
@@ -84,7 +85,7 @@ const BusinessSignupPage: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "#ffffff",
+        background: brandColors.backgrounds.primary,
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "center",
@@ -132,7 +133,7 @@ const BusinessSignupPage: React.FC = () => {
               {/* Account Information Section */}
               <Typography
                 variant="h6"
-                sx={{ color: "#333333", fontWeight: 700, mb: 2 }}
+                sx={{ color: brandColors.text.primary, fontWeight: 700, mb: 2 }}
               >
                 Account Information
               </Typography>
@@ -147,9 +148,9 @@ const BusinessSignupPage: React.FC = () => {
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -159,7 +160,7 @@ const BusinessSignupPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -178,9 +179,9 @@ const BusinessSignupPage: React.FC = () => {
                 sx={{
                   mb: 1,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -190,7 +191,7 @@ const BusinessSignupPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -203,7 +204,7 @@ const BusinessSignupPage: React.FC = () => {
                       <IconButton
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
-                        sx={{ color: "#666666" }}
+                        sx={{ color: brandColors.neutral.dark }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -215,21 +216,21 @@ const BusinessSignupPage: React.FC = () => {
               {/* Password Requirements */}
               <Box sx={{ mb: 3, pl: 2 }}>
                 <Typography
-                  sx={{ color: "#666666", fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
                 >
                   - At least 8 characters
                 </Typography>
                 <Typography
-                  sx={{ color: "#666666", fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
                 >
                   - Mix of letters and numbers
                 </Typography>
                 <Typography
-                  sx={{ color: "#666666", fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
                 >
                   - At least 1 special character
                 </Typography>
-                <Typography sx={{ color: "#666666", fontSize: "12px" }}>
+                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
                   - At least 1 lowercase letter and 1 uppercase letter
                 </Typography>
               </Box>
@@ -237,13 +238,13 @@ const BusinessSignupPage: React.FC = () => {
               {/* Business Information Section */}
               <Typography
                 variant="h6"
-                sx={{ color: "#333333", fontWeight: 700, mb: 2, mt: 3 }}
+                sx={{ color: brandColors.text.primary, fontWeight: 700, mb: 2, mt: 3 }}
               >
                 Business Information
               </Typography>
 
               <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel sx={{ color: "#666666", fontWeight: 600 }}>
+                <InputLabel sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}>
                   Business type
                 </InputLabel>
                 <Select
@@ -252,7 +253,7 @@ const BusinessSignupPage: React.FC = () => {
                   IconComponent={KeyboardArrowDown}
                   sx={{
                     "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover .MuiOutlinedInput-notchedOutline": {
                       borderColor: "#c0c0c0",
@@ -265,8 +266,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -294,8 +295,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -310,8 +311,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -331,8 +332,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -352,8 +353,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -373,8 +374,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -396,8 +397,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -416,8 +417,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -436,8 +437,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -455,8 +456,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -471,8 +472,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -490,8 +491,8 @@ const BusinessSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: "#666666",
-                      backgroundColor: "#f5f5f5",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
                   >
@@ -515,9 +516,9 @@ const BusinessSignupPage: React.FC = () => {
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -527,7 +528,7 @@ const BusinessSignupPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -545,9 +546,9 @@ const BusinessSignupPage: React.FC = () => {
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    color: "#333333",
+                    color: brandColors.text.primary,
                     "& fieldset": {
-                      borderColor: "#e0e0e0",
+                      borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
                       borderColor: "#c0c0c0",
@@ -557,7 +558,7 @@ const BusinessSignupPage: React.FC = () => {
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -569,7 +570,7 @@ const BusinessSignupPage: React.FC = () => {
               <Box sx={{ mb: 3 }}>
                 <Typography
                   sx={{
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     fontWeight: 600,
                     mb: 1,
                     fontSize: "14px",
@@ -586,9 +587,9 @@ const BusinessSignupPage: React.FC = () => {
                     sx={{
                       width: "80px",
                       "& .MuiOutlinedInput-root": {
-                        color: "#333333",
+                        color: brandColors.text.primary,
                         "& fieldset": {
-                          borderColor: "#e0e0e0",
+                          borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
                           borderColor: "#c0c0c0",
@@ -607,9 +608,9 @@ const BusinessSignupPage: React.FC = () => {
                     sx={{
                       width: "80px",
                       "& .MuiOutlinedInput-root": {
-                        color: "#333333",
+                        color: brandColors.text.primary,
                         "& fieldset": {
-                          borderColor: "#e0e0e0",
+                          borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
                           borderColor: "#c0c0c0",
@@ -628,9 +629,9 @@ const BusinessSignupPage: React.FC = () => {
                     sx={{
                       width: "80px",
                       "& .MuiOutlinedInput-root": {
-                        color: "#333333",
+                        color: brandColors.text.primary,
                         "& fieldset": {
-                          borderColor: "#e0e0e0",
+                          borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
                           borderColor: "#c0c0c0",
@@ -644,7 +645,7 @@ const BusinessSignupPage: React.FC = () => {
                   <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                     <Typography
                       sx={{
-                        color: "#666666",
+                        color: brandColors.neutral.dark,
                         fontWeight: 600,
                         fontSize: "14px",
                       }}
@@ -659,9 +660,9 @@ const BusinessSignupPage: React.FC = () => {
                       sx={{
                         width: "80px",
                         "& .MuiOutlinedInput-root": {
-                          color: "#333333",
+                          color: brandColors.text.primary,
                           "& fieldset": {
-                            borderColor: "#e0e0e0",
+                            borderColor: brandColors.borders.secondary,
                           },
                           "&:hover fieldset": {
                             borderColor: "#c0c0c0",
@@ -691,7 +692,7 @@ const BusinessSignupPage: React.FC = () => {
                   />
                 }
                 label={
-                  <Typography sx={{ color: "#333333", fontSize: "14px" }}>
+                  <Typography sx={{ color: brandColors.text.primary, fontSize: "14px" }}>
                     By checking the box, I consent to receive emails from
                     Dreamery, including newsletters, alerts, updates,
                     invitations, promotions and other news and notifications
@@ -723,7 +724,7 @@ const BusinessSignupPage: React.FC = () => {
 
               {/* Terms of Use */}
               <Box sx={{ textAlign: "center", mb: 3 }}>
-                <Typography sx={{ color: "#666666", fontSize: "12px" }}>
+                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
                   By submitting, I accept Dreamery's{" "}
                   <Link
                     sx={{
@@ -745,11 +746,11 @@ const BusinessSignupPage: React.FC = () => {
                   startIcon={<ArrowBack />}
                   onClick={() => window.history.back()}
                   sx={{
-                    color: "#666666",
+                    color: brandColors.neutral.dark,
                     textTransform: "none",
                     fontSize: "14px",
                     "&:hover": {
-                      color: "#333333",
+                      color: brandColors.text.primary,
                     },
                   }}
                 >

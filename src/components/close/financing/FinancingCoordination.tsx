@@ -46,6 +46,7 @@ import {
 import { toast } from 'react-hot-toast';
 import CryptoJS from 'crypto-js';
 import jsPDF from 'jspdf';
+import { brandColors } from "../../../theme";
 
 // Types
 interface LoanStatus {
@@ -211,30 +212,30 @@ const FinancingCoordination: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pre-approved':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'approved':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'conditional':
-        return '#2196f3';
+        return brandColors.accent.info;
       case 'funded':
         return '#9c27b0';
       case 'closed':
         return '#607d8b';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
   const getCostStatusColor = (status: string) => {
     switch (status) {
       case 'paid':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'pending':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'waived':
-        return '#2196f3';
+        return brandColors.accent.info;
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -393,7 +394,7 @@ const FinancingCoordination: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <AccountBalanceIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               {loanData.status.status.charAt(0).toUpperCase() + loanData.status.status.slice(1)}
             </Typography>
@@ -405,7 +406,7 @@ const FinancingCoordination: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <LockIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <LockIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               {loanData.rateLock.rate}%
             </Typography>
@@ -417,7 +418,7 @@ const FinancingCoordination: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <ScheduleIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <ScheduleIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               {loanData.rateLock.daysRemaining}
             </Typography>
@@ -429,7 +430,7 @@ const FinancingCoordination: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <CalculateIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
+            <CalculateIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
             <Typography variant="h6" component="div">
               ${loanData.costs.reduce((sum, cost) => sum + cost.amount, 0).toLocaleString()}
             </Typography>
@@ -450,7 +451,7 @@ const FinancingCoordination: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="Loan Status" />
           <Tab label="Document Management" />
           <Tab label="Closing Costs" />
@@ -481,7 +482,7 @@ const FinancingCoordination: React.FC = () => {
                   sx={{ 
                     height: 8, 
                     borderRadius: 4,
-                    backgroundColor: '#e0e0e0',
+                    backgroundColor: brandColors.borders.secondary,
                     '& .MuiLinearProgress-bar': {
                       backgroundColor: getStatusColor(loanData.status.status),
                     }
@@ -615,7 +616,7 @@ const FinancingCoordination: React.FC = () => {
                           size="small"
                           sx={{ 
                             backgroundColor: getCostStatusColor(cost.status),
-                            color: 'white'
+                            color: brandColors.backgrounds.primary
                           }}
                         />
                       </TableCell>
@@ -631,7 +632,7 @@ const FinancingCoordination: React.FC = () => {
                 </TableBody>
               </Table>
 
-              <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+              <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
                 <Typography variant="h6" gutterBottom>
                   Total Closing Costs: ${loanData.costs.reduce((sum, cost) => sum + cost.amount, 0).toLocaleString()}
                 </Typography>

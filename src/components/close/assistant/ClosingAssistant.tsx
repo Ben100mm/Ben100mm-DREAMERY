@@ -51,6 +51,7 @@ import {
   Security as SecurityIcon,
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import { brandColors } from "../../../theme";
 
 // Types
 interface Message {
@@ -512,43 +513,43 @@ const ClosingAssistant: React.FC = () => {
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'medium':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'high':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'critical':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'medium':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'high':
-        return '#f44336';
+        return brandColors.actions.error;
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'medium':
-        return '#ff9800';
+        return brandColors.accent.warning;
       case 'high':
-        return '#f44336';
+        return brandColors.actions.error;
       case 'critical':
         return '#9c27b0';
       default:
-        return '#9e9e9e';
+        return brandColors.text.disabled;
     }
   };
 
@@ -568,7 +569,7 @@ const ClosingAssistant: React.FC = () => {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <TrendingIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
+            <TrendingIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
               {assistantData.predictions.length}
             </Typography>
@@ -580,7 +581,7 @@ const ClosingAssistant: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <DocumentIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+            <DocumentIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
               {assistantData.summaries.length}
             </Typography>
@@ -592,7 +593,7 @@ const ClosingAssistant: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <NotificationsIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+            <NotificationsIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
               {assistantData.reminders.filter(r => !r.completed).length}
             </Typography>
@@ -617,7 +618,7 @@ const ClosingAssistant: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ backgroundColor: '#f5f5f5' }}>
+        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ backgroundColor: brandColors.neutral.light }}>
           <Tab label="AI Chat" />
           <Tab label="Predictions" />
           <Tab label="Document Analysis" />
@@ -634,11 +635,11 @@ const ClosingAssistant: React.FC = () => {
               </Typography>
 
               {/* Chat Messages */}
-              <Box sx={{ height: 400, overflowY: 'auto', mb: 2, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+              <Box sx={{ height: 400, overflowY: 'auto', mb: 2, p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
                 {assistantData.chatHistory.map((message) => (
                   <Box key={message.id} sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                      <Avatar sx={{ backgroundColor: message.type === 'assistant' ? '#1976d2' : '#4caf50' }}>
+                      <Avatar sx={{ backgroundColor: message.type === 'assistant' ? brandColors.actions.primary : brandColors.accent.success }}>
                         {message.type === 'assistant' ? <AssistantIcon /> : <HomeIcon />}
                       </Avatar>
                       <Box sx={{ flexGrow: 1 }}>
@@ -650,7 +651,7 @@ const ClosingAssistant: React.FC = () => {
                             {message.timestamp.toLocaleTimeString()}
                           </Typography>
                         </Box>
-                        <Paper sx={{ p: 2, backgroundColor: message.type === 'assistant' ? 'white' : '#e3f2fd' }}>
+                        <Paper sx={{ p: 2, backgroundColor: message.type === 'assistant' ? brandColors.backgrounds.primary : brandColors.backgrounds.selected }}>
                           <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
                             {message.content}
                           </Typography>
@@ -675,10 +676,10 @@ const ClosingAssistant: React.FC = () => {
                 ))}
                 {isTyping && (
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                    <Avatar sx={{ backgroundColor: '#1976d2' }}>
+                    <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
                       <AssistantIcon />
                     </Avatar>
-                    <Paper sx={{ p: 2, backgroundColor: 'white' }}>
+                    <Paper sx={{ p: 2, backgroundColor: brandColors.backgrounds.primary }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <CircularProgress size={16} />
                         <Typography variant="body2" color="text.secondary">
@@ -807,7 +808,7 @@ const ClosingAssistant: React.FC = () => {
                               size="small"
                               sx={{ 
                                 backgroundColor: getImpactColor(prediction.impact),
-                                color: 'white'
+                                color: brandColors.backgrounds.primary
                               }}
                             />
                           </Box>
@@ -947,7 +948,7 @@ const ClosingAssistant: React.FC = () => {
                             size="small"
                             sx={{ 
                               backgroundColor: getRiskColor(summary.riskLevel),
-                              color: 'white'
+                              color: brandColors.backgrounds.primary
                             }}
                           />
                           {summary.actionRequired && (
@@ -1008,7 +1009,7 @@ const ClosingAssistant: React.FC = () => {
                               size="small"
                               sx={{ 
                                 backgroundColor: getPriorityColor(reminder.priority),
-                                color: 'white'
+                                color: brandColors.backgrounds.primary
                               }}
                             />
                           </Box>

@@ -22,11 +22,12 @@ import {
 import { Edit as EditIcon, Check as CheckIcon } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   padding-bottom: 96px; /* reserve space for fixed footer */
@@ -36,7 +37,7 @@ const PageContainer = styled.div`
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -52,11 +53,11 @@ const SummarySection = styled.div`
 
 const SummaryCard = styled(Card)`
   margin-bottom: 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid brandColors.borders.secondary;
 `;
 
 const EditButton = styled(IconButton)`
-  color: #1a365d;
+  color: brandColors.primary;
   &:hover {
     background-color: rgba(26, 54, 93, 0.04);
   }
@@ -217,14 +218,14 @@ const SellListSummaryPage: React.FC = () => {
               <Button
                 size="small"
                 onClick={handleCancel}
-                sx={{ color: "#666666" }}
+                sx={{ color: brandColors.neutral.dark }}
               >
                 Cancel
               </Button>
             </Box>
           ) : (
             <>
-              <Typography variant="body2" sx={{ color: "#6b7280", mr: 2 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mr: 2 }}>
                 {formatValue(getValueByPath(editedData, fieldPath) ?? value)}
               </Typography>
               <EditButton size="small" onClick={() => handleEdit(fieldPath)}>
@@ -248,7 +249,7 @@ const SellListSummaryPage: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Review & Confirm
             </Typography>
             <LinearProgress
@@ -257,9 +258,9 @@ const SellListSummaryPage: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -267,7 +268,7 @@ const SellListSummaryPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -277,14 +278,14 @@ const SellListSummaryPage: React.FC = () => {
       <MainContent>
         <Typography
           variant="h4"
-          sx={{ fontWeight: 800, color: "#1a365d", mb: 3, textAlign: "center" }}
+          sx={{ fontWeight: 800, color: brandColors.primary, mb: 3, textAlign: "center" }}
         >
           Review Your Information
         </Typography>
 
         <Typography
           variant="body1"
-          sx={{ color: "#6b7280", mb: 4, textAlign: "center" }}
+          sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
         >
           Please review all the information below. You can edit any section by
           clicking the edit icon.
@@ -294,7 +295,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Property Information
           </Typography>
@@ -329,7 +330,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Moving Details
           </Typography>
@@ -373,7 +374,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Home Details
           </Typography>
@@ -494,7 +495,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Home Quality
           </Typography>
@@ -560,7 +561,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Additional Information
           </Typography>
@@ -624,7 +625,7 @@ const SellListSummaryPage: React.FC = () => {
         <SummarySection>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Contact Information
           </Typography>
@@ -645,12 +646,12 @@ const SellListSummaryPage: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "white",
+          backgroundColor: brandColors.backgrounds.primary,
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "0.75rem", md: "1rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           zIndex: 10,
         }}
       >
@@ -658,12 +659,12 @@ const SellListSummaryPage: React.FC = () => {
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
             "&:hover": {
-              borderColor: "#0d2340",
+              borderColor: brandColors.secondary,
               backgroundColor: "rgba(26, 54, 93, 0.04)",
             },
           }}
@@ -675,12 +676,12 @@ const SellListSummaryPage: React.FC = () => {
           onClick={handleNext}
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#0d2340",
+              backgroundColor: brandColors.secondary,
             },
           }}
         >

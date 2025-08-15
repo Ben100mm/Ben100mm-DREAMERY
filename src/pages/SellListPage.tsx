@@ -42,14 +42,15 @@ import {
   Schedule,
 } from "@mui/icons-material";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: #f8f9fa;
+  background: brandColors.backgrounds.secondary;
 `;
 
 const HeaderSection = styled.div`
-  background: white;
+  background: brandColors.backgrounds.primary;
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -58,18 +59,18 @@ const HeaderSection = styled.div`
 
 const FilterButton = styled(Button)`
   text-transform: none;
-  color: #333;
-  border: 1px solid #e0e0e0;
-  background: white;
+  color: brandColors.text.primary;
+  border: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
   padding: 8px 16px;
   min-width: 120px;
   &:hover {
-    background: #f8f9fa;
+    background: brandColors.backgrounds.secondary;
     border-color: #c0c0c0;
   }
   &.active {
-    border-color: #1a365d;
-    color: #1a365d;
+    border-color: brandColors.primary;
+    color: brandColors.primary;
   }
 `;
 
@@ -80,17 +81,17 @@ const FilterPopover = styled(Paper)`
 `;
 
 const ServiceCard = styled(Card)`
-  border: 1px solid #e0e0e0;
+  border: 1px solid brandColors.borders.secondary;
   border-radius: 12px;
   transition: all 0.3s ease;
   cursor: pointer;
   &:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     transform: translateY(-4px);
-    border-color: #1a365d;
+    border-color: brandColors.primary;
   }
   &.selected {
-    border-color: #1a365d;
+    border-color: brandColors.primary;
     background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
   }
 `;
@@ -133,7 +134,7 @@ const SellListPage: React.FC = () => {
       id: "sell-home",
       title: "Sell Your Home",
       description: "List your property for sale with professional marketing",
-      icon: <Home sx={{ fontSize: 40, color: "#1a365d" }} />,
+      icon: <Home sx={{ fontSize: 40, color: brandColors.primary }} />,
       features: [
         "Professional photography",
         "Virtual tours",
@@ -148,7 +149,7 @@ const SellListPage: React.FC = () => {
       id: "list-rental",
       title: "List Your Rental",
       description: "Find quality tenants for your rental property",
-      icon: <Business sx={{ fontSize: 40, color: "#1a365d" }} />,
+      icon: <Business sx={{ fontSize: 40, color: brandColors.primary }} />,
       features: [
         "Tenant screening",
         "Property marketing",
@@ -163,7 +164,7 @@ const SellListPage: React.FC = () => {
       id: "agent-services",
       title: "Agent Services",
       description: "Professional real estate agent assistance",
-      icon: <Person sx={{ fontSize: 40, color: "#1a365d" }} />,
+      icon: <Person sx={{ fontSize: 40, color: brandColors.primary }} />,
       features: [
         "Market analysis",
         "Pricing strategy",
@@ -178,7 +179,7 @@ const SellListPage: React.FC = () => {
       id: "property-management",
       title: "Property Management",
       description: "Complete property management services",
-      icon: <Description sx={{ fontSize: 40, color: "#1a365d" }} />,
+      icon: <Description sx={{ fontSize: 40, color: brandColors.primary }} />,
       features: [
         "Rent collection",
         "Maintenance coordination",
@@ -391,7 +392,7 @@ const SellListPage: React.FC = () => {
       {/* Top Search Section */}
       <Box
         sx={{
-          background: "white",
+          background: brandColors.backgrounds.primary,
           py: 2,
         }}
       >
@@ -400,15 +401,15 @@ const SellListPage: React.FC = () => {
             <Button
               startIcon={<ArrowBack />}
               onClick={() => window.history.back()}
-              sx={{ color: "#666", textTransform: "none" }}
+              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
             >
               Back
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: "#1a365d" }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               Sell / List Your Property
             </Typography>
             {address && (
-              <Typography variant="body2" sx={{ color: "#666", mt: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mt: 1 }}>
                 Property: {address}
               </Typography>
             )}
@@ -425,13 +426,13 @@ const SellListPage: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LocationOn sx={{ color: "#666" }} />
+                      <LocationOn sx={{ color: brandColors.neutral.dark }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton size="small">
-                        <Clear sx={{ color: "#666" }} />
+                        <Clear sx={{ color: brandColors.neutral.dark }} />
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -447,15 +448,15 @@ const SellListPage: React.FC = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#1a365d",
-                color: "white",
+                backgroundColor: brandColors.primary,
+                color: brandColors.backgrounds.primary,
                 textTransform: "uppercase",
                 fontWeight: 600,
                 px: 3,
                 py: 1,
                 borderRadius: "8px",
                 "&:hover": {
-                  backgroundColor: "#0d2340",
+                  backgroundColor: brandColors.secondary,
                 },
               }}
             >
@@ -568,11 +569,11 @@ const SellListPage: React.FC = () => {
         <Box sx={{ mb: 4 }}>
           <Typography
             variant="h4"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
           >
             Choose Your Service
           </Typography>
-          <Typography variant="body1" sx={{ color: "#666", mb: 3 }}>
+          <Typography variant="body1" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
             Select the service that best fits your needs. Our professionals will
             help you get the best value for your property.
           </Typography>
@@ -600,12 +601,12 @@ const SellListPage: React.FC = () => {
 
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, mb: 1, color: "#1a365d" }}
+                    sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}
                   >
                     {service.title}
                   </Typography>
 
-                  <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
                     {service.description}
                   </Typography>
 
@@ -614,7 +615,7 @@ const SellListPage: React.FC = () => {
                   <Box sx={{ mb: 2 }}>
                     <Typography
                       variant="subtitle2"
-                      sx={{ fontWeight: 600, color: "#1a365d" }}
+                      sx={{ fontWeight: 600, color: brandColors.primary }}
                     >
                       What's included:
                     </Typography>
@@ -623,7 +624,7 @@ const SellListPage: React.FC = () => {
                         <Typography
                           key={index}
                           variant="body2"
-                          sx={{ color: "#666", mb: 0.5 }}
+                          sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                         >
                           - {feature}
                         </Typography>
@@ -643,11 +644,11 @@ const SellListPage: React.FC = () => {
                     <Box>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                        sx={{ fontWeight: 600, color: brandColors.primary }}
                       >
                         {service.price}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: "#666" }}>
+                      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
                         {service.estimatedTime}
                       </Typography>
                     </Box>
@@ -662,16 +663,16 @@ const SellListPage: React.FC = () => {
                       sx={{
                         backgroundColor:
                           selectedService === service.id
-                            ? "#1a365d"
+                            ? brandColors.primary
                             : "transparent",
                         color:
-                          selectedService === service.id ? "white" : "#1a365d",
-                        borderColor: "#1a365d",
+                          selectedService === service.id ? brandColors.backgrounds.primary : brandColors.primary,
+                        borderColor: brandColors.primary,
                         "&:hover": {
                           backgroundColor:
                             selectedService === service.id
-                              ? "#0d2340"
-                              : "#f8f9fa",
+                              ? brandColors.secondary
+                              : brandColors.backgrounds.secondary,
                         },
                       }}
                     >
@@ -689,14 +690,14 @@ const SellListPage: React.FC = () => {
             sx={{
               mt: 4,
               p: 3,
-              bgcolor: "white",
+              bgcolor: brandColors.backgrounds.primary,
               borderRadius: 2,
-              border: "1px solid #e0e0e0",
+              border: "1px solid brandColors.borders.secondary",
             }}
           >
             <Typography
               variant="h6"
-              sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+              sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
             >
               Next Steps
             </Typography>
@@ -716,11 +717,11 @@ const SellListPage: React.FC = () => {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      bgcolor: "#1a365d",
+                      bgcolor: brandColors.primary,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "white",
+                      color: brandColors.backgrounds.primary,
                       fontWeight: 600,
                     }}
                   >
@@ -730,7 +731,7 @@ const SellListPage: React.FC = () => {
                     Property Assessment
                   </Typography>
                 </Box>
-                <Typography variant="body2" sx={{ color: "#666", ml: 6 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, ml: 6 }}>
                   Schedule a free property evaluation with our experts
                 </Typography>
               </Box>
@@ -744,11 +745,11 @@ const SellListPage: React.FC = () => {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      bgcolor: "#1a365d",
+                      bgcolor: brandColors.primary,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "white",
+                      color: brandColors.backgrounds.primary,
                       fontWeight: 600,
                     }}
                   >
@@ -758,7 +759,7 @@ const SellListPage: React.FC = () => {
                     Marketing Strategy
                   </Typography>
                 </Box>
-                <Typography variant="body2" sx={{ color: "#666", ml: 6 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, ml: 6 }}>
                   Professional photography and marketing materials
                 </Typography>
               </Box>
@@ -772,11 +773,11 @@ const SellListPage: React.FC = () => {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      bgcolor: "#1a365d",
+                      bgcolor: brandColors.primary,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "white",
+                      color: brandColors.backgrounds.primary,
                       fontWeight: 600,
                     }}
                   >
@@ -786,7 +787,7 @@ const SellListPage: React.FC = () => {
                     Listing & Showings
                   </Typography>
                 </Box>
-                <Typography variant="body2" sx={{ color: "#666", ml: 6 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, ml: 6 }}>
                   Property listed and showings coordinated
                 </Typography>
               </Box>
@@ -800,11 +801,11 @@ const SellListPage: React.FC = () => {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      bgcolor: "#1a365d",
+                      bgcolor: brandColors.primary,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "white",
+                      color: brandColors.backgrounds.primary,
                       fontWeight: 600,
                     }}
                   >
@@ -814,7 +815,7 @@ const SellListPage: React.FC = () => {
                     Closing Support
                   </Typography>
                 </Box>
-                <Typography variant="body2" sx={{ color: "#666", ml: 6 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, ml: 6 }}>
                   Negotiation and closing coordination
                 </Typography>
               </Box>
@@ -825,14 +826,14 @@ const SellListPage: React.FC = () => {
                 variant="contained"
                 size="large"
                 sx={{
-                  backgroundColor: "#1a365d",
-                  color: "white",
+                  backgroundColor: brandColors.primary,
+                  color: brandColors.backgrounds.primary,
                   px: 4,
                   py: 1.5,
                   borderRadius: "8px",
                   fontWeight: 600,
                   "&:hover": {
-                    backgroundColor: "#0d2340",
+                    backgroundColor: brandColors.secondary,
                   },
                 }}
               >
@@ -842,15 +843,15 @@ const SellListPage: React.FC = () => {
                 variant="outlined"
                 size="large"
                 sx={{
-                  borderColor: "#1a365d",
-                  color: "#1a365d",
+                  borderColor: brandColors.primary,
+                  color: brandColors.primary,
                   px: 4,
                   py: 1.5,
                   borderRadius: "8px",
                   fontWeight: 600,
                   "&:hover": {
-                    backgroundColor: "#f8f9fa",
-                    borderColor: "#0d2340",
+                    backgroundColor: brandColors.backgrounds.secondary,
+                    borderColor: brandColors.secondary,
                   },
                 }}
               >

@@ -1401,11 +1401,11 @@ function variableMonthlyFromPercentages(
 
 function Kpi(props: { label: string; value: string }) {
   return (
-    <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, p: 1 }}>
-      <Typography variant="caption" sx={{ color: "#666" }}>
+    <Box sx={{ border: "1px solid brandColors.borders.secondary", borderRadius: 1, p: 1 }}>
+      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
         {props.label}
       </Typography>
-      <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+      <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
         {props.value}
       </Typography>
     </Box>
@@ -3899,7 +3899,7 @@ const UnderwritePage: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "#ffffff",
+        background: brandColors.backgrounds.primary,
         transition: "all 0.3s ease-in-out",
       }}
     >
@@ -3910,7 +3910,7 @@ const UnderwritePage: React.FC = () => {
         <Card
           sx={{
             borderRadius: 2,
-            border: "1px solid #e0e0e0",
+            border: "1px solid brandColors.borders.secondary",
             transition: "all 0.3s ease-in-out",
             minHeight: "fit-content",
           }}
@@ -3945,7 +3945,7 @@ const UnderwritePage: React.FC = () => {
         />
 
         {/* Basic Info Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
@@ -4151,7 +4151,7 @@ const UnderwritePage: React.FC = () => {
         {(state.offerType === "Subject To Existing Mortgage" ||
           state.offerType === "Hybrid") &&
           state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -4182,7 +4182,7 @@ const UnderwritePage: React.FC = () => {
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      <Typography variant="subtitle2" sx={{ color: "#666" }}>
+                      <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
                         Existing Loans
                       </Typography>
                       <Box
@@ -4539,13 +4539,13 @@ const UnderwritePage: React.FC = () => {
                         sx={{
                           mt: 2,
                           p: 2,
-                          bgcolor: "#f5f5f5",
+                          bgcolor: brandColors.neutral.light,
                           borderRadius: 1,
                         }}
                       >
                         <Typography
                           variant="subtitle2"
-                          sx={{ mb: 2, color: "#666" }}
+                          sx={{ mb: 2, color: brandColors.neutral.dark }}
                         >
                           Auto-calculated Totals
                         </Typography>
@@ -4601,7 +4601,7 @@ const UnderwritePage: React.FC = () => {
         {/* Subject-To Amortization Schedule Section */}
         {state.offerType === "Subject To Existing Mortgage" &&
           state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -4623,7 +4623,7 @@ const UnderwritePage: React.FC = () => {
                       >
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 600, color: "#666" }}
+                          sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
                         >
                           Loan {loanIndex + 1} Amortization Schedule
                         </Typography>
@@ -4685,7 +4685,7 @@ const UnderwritePage: React.FC = () => {
                               <Typography
                                 variant="caption"
                                 align="center"
-                                sx={{ color: "#666" }}
+                                sx={{ color: brandColors.neutral.dark }}
                               >
                                 Showing next 60 payments (5 years) of{" "}
                                 {loan.originalTermYears * 12 -
@@ -4705,7 +4705,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Seller Finance Section - available even for arbitrage if selected */}
         {state.offerType === "Seller Finance" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
@@ -4736,7 +4736,7 @@ const UnderwritePage: React.FC = () => {
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                   >
-                    <Typography variant="subtitle2" sx={{ color: "#666" }}>
+                    <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
                       Seller Finance Loan
                     </Typography>
                     <Box
@@ -4858,11 +4858,11 @@ const UnderwritePage: React.FC = () => {
                   </Box>
 
                   <Box
-                    sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}
+                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
                   >
                     <Typography
                       variant="subtitle2"
-                      sx={{ mb: 2, color: "#666" }}
+                      sx={{ mb: 2, color: brandColors.neutral.dark }}
                     >
                       Auto-calculated Results
                     </Typography>
@@ -4910,7 +4910,7 @@ const UnderwritePage: React.FC = () => {
         {/* Seller Finance Amortization Schedule Section */}
         {state.offerType === "Seller Finance" &&
           state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -4998,7 +4998,7 @@ const UnderwritePage: React.FC = () => {
                           <Typography
                             variant="caption"
                             align="center"
-                            sx={{ color: "#666" }}
+                            sx={{ color: brandColors.neutral.dark }}
                           >
                             Showing next 60 payments (5 years) of{" "}
                             {state.loan.amortizationYears * 12} total payments
@@ -5014,7 +5014,7 @@ const UnderwritePage: React.FC = () => {
         {/* Hybrid Financing Section - Moved to appear after Seller Finance */}
         {state.offerType === "Hybrid" &&
           state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -5028,7 +5028,7 @@ const UnderwritePage: React.FC = () => {
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      <Typography variant="subtitle2" sx={{ color: "#666" }}>
+                      <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
                         New Note (Loan 3)
                       </Typography>
                       <Box
@@ -5177,11 +5177,11 @@ const UnderwritePage: React.FC = () => {
                     />
 
                     <Box
-                      sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}
+                      sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
                     >
                       <Typography
                         variant="subtitle2"
-                        sx={{ mb: 2, color: "#666" }}
+                        sx={{ mb: 2, color: brandColors.neutral.dark }}
                       >
                         Combined Financing Summary
                       </Typography>
@@ -5231,7 +5231,7 @@ const UnderwritePage: React.FC = () => {
           )}
         {/* Hybrid Amortization Schedule Section - Combined Schedule for All Loans */}
         {state.offerType === "Cash" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
@@ -5242,7 +5242,7 @@ const UnderwritePage: React.FC = () => {
                   <Box>
                     <Typography
                       variant="subtitle2"
-                      sx={{ mb: 2, color: "#666" }}
+                      sx={{ mb: 2, color: brandColors.neutral.dark }}
                     >
                       Basic Costs
                     </Typography>
@@ -5317,7 +5317,7 @@ const UnderwritePage: React.FC = () => {
                     <Box>
                       <Typography
                         variant="subtitle2"
-                        sx={{ mb: 2, color: "#666" }}
+                        sx={{ mb: 2, color: brandColors.neutral.dark }}
                       >
                         Property Preparation Costs
                       </Typography>
@@ -5446,7 +5446,7 @@ const UnderwritePage: React.FC = () => {
                     <Box>
                       <Typography
                         variant="subtitle2"
-                        sx={{ mb: 2, color: "#666" }}
+                        sx={{ mb: 2, color: brandColors.neutral.dark }}
                       >
                         Rental Arbitrage Costs
                       </Typography>
@@ -5480,8 +5480,8 @@ const UnderwritePage: React.FC = () => {
                   )}
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: "#666" }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
                     Total Cash Required
                   </Typography>
                   <Box
@@ -5549,7 +5549,7 @@ const UnderwritePage: React.FC = () => {
         {state.offerType !== "Subject To Existing Mortgage" &&
           state.offerType !== "Hybrid" &&
           state.offerType !== "Cash" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -5671,7 +5671,7 @@ const UnderwritePage: React.FC = () => {
                     </Box>
                   ) : state.offerType === "Seller Finance" ? (
                     // For seller finance, the dedicated section above handles loan fields
-                    <Box sx={{ color: "#666" }}>
+                    <Box sx={{ color: brandColors.neutral.dark }}>
                       Seller Finance terms are configured in the Seller Finance
                       section above.
                     </Box>
@@ -5764,7 +5764,7 @@ const UnderwritePage: React.FC = () => {
             (state.offerType !== "Subject To Existing Mortgage" &&
               state.offerType !== "Hybrid" &&
               state.offerType !== "Cash")) && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>
@@ -5845,7 +5845,7 @@ const UnderwritePage: React.FC = () => {
                     <Typography
                       variant="caption"
                       align="center"
-                      sx={{ color: "#666" }}
+                      sx={{ color: brandColors.neutral.dark }}
                     >
                       Showing {state.loan.amortizationYears * 12} payments over{" "}
                       {state.loan.amortizationYears} years
@@ -5858,7 +5858,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Appreciation Calculator Section */}
         {state.operationType !== "Rental Arbitrage" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>
@@ -5886,18 +5886,18 @@ const UnderwritePage: React.FC = () => {
                         mb: 3,
                         p: 2,
                         bgcolor: state.appreciation?.manuallyOverridden
-                          ? "#e8f5e8"
-                          : "#fff3cd",
+                          ? brandColors.backgrounds.success
+                          : brandColors.backgrounds.warning,
                         borderRadius: 1,
-                        border: `1px solid ${state.appreciation?.manuallyOverridden ? "#2e7d32" : "#ffc107"}`,
+                        border: `1px solid ${state.appreciation?.manuallyOverridden ? brandColors.accent.success : brandColors.accent.warning}`,
                       }}
                     >
                       <Typography
                         variant="subtitle2"
                         sx={{
                           color: state.appreciation?.manuallyOverridden
-                            ? "#2e7d32"
-                            : "#856404",
+                            ? brandColors.accent.success
+                            : brandColors.neutral.dark,
                           fontWeight: 600,
                           mb: 1,
                         }}
@@ -5911,8 +5911,8 @@ const UnderwritePage: React.FC = () => {
                         variant="body2"
                         sx={{
                           color: state.appreciation?.manuallyOverridden
-                            ? "#2e7d32"
-                            : "#856404",
+                            ? brandColors.accent.success
+                            : brandColors.neutral.dark,
                           fontSize: "0.875rem",
                         }}
                       >
@@ -5980,8 +5980,8 @@ const UnderwritePage: React.FC = () => {
                   />
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: "#666" }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
                     Auto-calculated Results
                   </Typography>
                   <Box
@@ -6024,11 +6024,11 @@ const UnderwritePage: React.FC = () => {
                     border: "1px solid #bdbdbd",
                     bgcolor: "inherit",
                   }}
-                  style={{ backgroundColor: "#f5f5f5" }}
+                  style={{ backgroundColor: brandColors.neutral.light }}
                 >
                   <Typography
                     variant="subtitle2"
-                    sx={{ mb: 2, color: "#666", fontWeight: 600 }}
+                    sx={{ mb: 2, color: brandColors.neutral.dark, fontWeight: 600 }}
                   >
                     Refinance Analysis (70% LTV Constraint)
                   </Typography>
@@ -6073,14 +6073,14 @@ const UnderwritePage: React.FC = () => {
                       mt: 2,
                       p: 2,
                       borderRadius: 1,
-                      border: "1px solid #9e9e9e",
+                      border: "1px solid brandColors.text.disabled",
                       bgcolor: "inherit",
                     }}
                     style={{ backgroundColor: "#eeeeee" }}
                   >
                     <Typography
                       variant="subtitle2"
-                      sx={{ mb: 2, color: "#666", fontWeight: 600 }}
+                      sx={{ mb: 2, color: brandColors.neutral.dark, fontWeight: 600 }}
                     >
                       Refinance Potential
                     </Typography>
@@ -6128,11 +6128,11 @@ const UnderwritePage: React.FC = () => {
                         border: "1px solid #757575",
                         bgcolor: "inherit",
                       }}
-                      style={{ backgroundColor: "#e0e0e0" }}
+                      style={{ backgroundColor: brandColors.borders.secondary }}
                     >
                       <Typography
                         variant="subtitle2"
-                        sx={{ mb: 2, color: "#666", fontWeight: 600 }}
+                        sx={{ mb: 2, color: brandColors.neutral.dark, fontWeight: 600 }}
                       >
                         Refinance Timing
                       </Typography>
@@ -6184,7 +6184,7 @@ const UnderwritePage: React.FC = () => {
         )}
         {/* Income Section */}
         {state.operationType !== "Fix & Flip" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Income</Typography>
@@ -6450,7 +6450,7 @@ const UnderwritePage: React.FC = () => {
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      <Typography variant="subtitle2" sx={{ color: "#666" }}>
+                      <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
                         {state.propertyType} Income Inputs
                       </Typography>
                       <Box
@@ -6536,7 +6536,7 @@ const UnderwritePage: React.FC = () => {
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      <Typography variant="subtitle2" sx={{ color: "#666" }}>
+                      <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
                         Land Inputs
                       </Typography>
                       <Box
@@ -6672,7 +6672,7 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Operating Expenses Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>
@@ -6680,7 +6680,7 @@ const UnderwritePage: React.FC = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="subtitle2" sx={{ mb: 2, color: "#666" }}>
+              <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
                 Fixed Monthly Expenses
               </Typography>
               <Box
@@ -6881,7 +6881,7 @@ const UnderwritePage: React.FC = () => {
 
               <Typography
                 variant="subtitle2"
-                sx={{ mt: 4, mb: 2, color: "#666" }}
+                sx={{ mt: 4, mb: 2, color: brandColors.neutral.dark }}
               >
                 Variable Expenses (% of Income)
               </Typography>
@@ -6974,7 +6974,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
         {state.operationType !== "Fix & Flip" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -6997,13 +6997,13 @@ const UnderwritePage: React.FC = () => {
                       p: 2,
                       backgroundColor: "#f0f4ff",
                       borderRadius: 1,
-                      border: "1px solid #1a365d",
+                      border: "1px solid brandColors.primary",
                       fontSize: "0.875rem",
                     }}
                   >
                     <Typography
                       variant="body2"
-                      sx={{ color: "#1a365d", fontWeight: 500 }}
+                      sx={{ color: brandColors.primary, fontWeight: 500 }}
                     >
                       <strong>
                         Financial Projections & Cash Flow Analysis:
@@ -7038,20 +7038,20 @@ const UnderwritePage: React.FC = () => {
                           fontSize: "0.875rem",
                           fontWeight: 600,
                           textTransform: "none",
-                          color: "#666",
+                          color: brandColors.neutral.dark,
                           "&.Mui-selected": {
-                            color: "#1a365d",
+                            color: brandColors.primary,
                             fontWeight: 700,
                             backgroundColor: "#f0f4ff",
                             borderRadius: "4px 4px 0 0",
                           },
                           "&:hover": {
-                            backgroundColor: "#f8f9fa",
-                            color: "#1a365d",
+                            backgroundColor: brandColors.backgrounds.secondary,
+                            color: brandColors.primary,
                           },
                         },
                         "& .MuiTabs-indicator": {
-                          backgroundColor: "#1a365d",
+                          backgroundColor: brandColors.primary,
                           height: 3,
                         },
                       }}
@@ -7095,11 +7095,11 @@ const UnderwritePage: React.FC = () => {
                           sx={{
                             mt: 1,
                             p: 2,
-                            backgroundColor: "#f8f9fa",
+                            backgroundColor: brandColors.backgrounds.secondary,
                             borderRadius: 1,
-                            border: "1px solid #e0e0e0",
+                            border: "1px solid brandColors.borders.secondary",
                             fontSize: "0.875rem",
-                            color: "#666",
+                            color: brandColors.neutral.dark,
                           }}
                         >
                           <Typography
@@ -7124,7 +7124,7 @@ const UnderwritePage: React.FC = () => {
                           mb: 2,
                         }}
                       >
-                        <Typography sx={{ fontWeight: 600, color: "#1a365d" }}>
+                        <Typography sx={{ fontWeight: 600, color: brandColors.primary }}>
                           Pro Forma:
                         </Typography>
 
@@ -7166,7 +7166,7 @@ const UnderwritePage: React.FC = () => {
                           alignItems: "center",
                           gap: 3,
                           fontSize: "0.8rem",
-                          color: "#666",
+                          color: brandColors.neutral.dark,
                         }}
                       >
                         <Typography>
@@ -7208,7 +7208,7 @@ const UnderwritePage: React.FC = () => {
                           mb: 2,
                         }}
                       >
-                        <Typography sx={{ fontWeight: 600, color: "#1a365d" }}>
+                        <Typography sx={{ fontWeight: 600, color: brandColors.primary }}>
                           Custom Pro Forma Values:
                         </Typography>
                         <Button
@@ -7337,14 +7337,14 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: "#f5f5f5",
+                          backgroundColor: brandColors.neutral.light,
                           borderRadius: 1,
                           mb: 3,
                         }}
                       >
                         <Typography
                           variant="body2"
-                          sx={{ color: "#666", mb: 1 }}
+                          sx={{ color: brandColors.neutral.dark, mb: 1 }}
                         >
                           <strong>Current Pro Forma Values:</strong>
                         </Typography>
@@ -7361,7 +7361,7 @@ const UnderwritePage: React.FC = () => {
                         <Box>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                           >
                             Saved Custom Presets:
                           </Typography>
@@ -7409,7 +7409,7 @@ const UnderwritePage: React.FC = () => {
                                   <Typography
                                     variant="caption"
                                     sx={{
-                                      color: "#666",
+                                      color: brandColors.neutral.dark,
                                       mb: 1,
                                       display: "block",
                                     }}
@@ -7449,7 +7449,7 @@ const UnderwritePage: React.FC = () => {
                         <Box>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", fontStyle: "italic" }}
+                            sx={{ color: brandColors.neutral.dark, fontStyle: "italic" }}
                           >
                             No custom presets saved yet. Adjust the values above
                             and use the "Save Current" button to save your
@@ -7478,7 +7478,7 @@ const UnderwritePage: React.FC = () => {
                           mb: 2,
                         }}
                       >
-                        <Typography sx={{ fontWeight: 600, color: "#1a365d" }}>
+                        <Typography sx={{ fontWeight: 600, color: brandColors.primary }}>
                           Sensitivity Analysis:
                         </Typography>
                       </Box>
@@ -7535,7 +7535,7 @@ const UnderwritePage: React.FC = () => {
 
                         <Table
                           size="small"
-                          sx={{ border: 1, borderColor: "#e0e0e0" }}
+                          sx={{ border: 1, borderColor: brandColors.borders.secondary }}
                         >
                           <TableHead>
                             <TableRow>
@@ -7557,7 +7557,7 @@ const UnderwritePage: React.FC = () => {
                                 sx={{
                                   backgroundColor:
                                     row.multiplier === "100%"
-                                      ? "#f5f5f5"
+                                      ? brandColors.neutral.light
                                       : "inherit",
                                   fontWeight:
                                     row.multiplier === "100%"
@@ -7597,7 +7597,7 @@ const UnderwritePage: React.FC = () => {
                           mb: 2,
                         }}
                       >
-                        <Typography sx={{ fontWeight: 600, color: "#1a365d" }}>
+                        <Typography sx={{ fontWeight: 600, color: brandColors.primary }}>
                           Industry Benchmarks:
                         </Typography>
                       </Box>
@@ -7605,7 +7605,7 @@ const UnderwritePage: React.FC = () => {
                       <Box>
                         <Typography
                           variant="body2"
-                          sx={{ color: "#666", mb: 2 }}
+                          sx={{ color: brandColors.neutral.dark, mb: 2 }}
                         >
                           Comparing your assumptions to industry averages for{" "}
                           {state.propertyType} + {state.operationType}
@@ -7613,7 +7613,7 @@ const UnderwritePage: React.FC = () => {
 
                         <Table
                           size="small"
-                          sx={{ border: 1, borderColor: "#e0e0e0" }}
+                          sx={{ border: 1, borderColor: brandColors.borders.secondary }}
                         >
                           <TableHead>
                             <TableRow>
@@ -7640,7 +7640,7 @@ const UnderwritePage: React.FC = () => {
                                       color:
                                         data.variance > 0
                                           ? "#d32f2f"
-                                          : "#2e7d32",
+                                          : brandColors.accent.success,
                                       fontWeight: "bold",
                                     }}
                                   >
@@ -7673,11 +7673,11 @@ const UnderwritePage: React.FC = () => {
                           sx={{
                             mt: 2,
                             p: 2,
-                            backgroundColor: "#f5f5f5",
+                            backgroundColor: brandColors.neutral.light,
                             borderRadius: 1,
                           }}
                         >
-                          <Typography variant="body2" sx={{ color: "#666" }}>
+                          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                             <strong>Note:</strong> Industry benchmarks are based
                             on aggregated data from real estate professionals.
                             Your specific market conditions may vary
@@ -7701,7 +7701,7 @@ const UnderwritePage: React.FC = () => {
                           }}
                         >
                           <Typography
-                            sx={{ fontWeight: 600, color: "#1a365d" }}
+                            sx={{ fontWeight: 600, color: brandColors.primary }}
                           >
                             Revenue Projections:
                           </Typography>
@@ -7815,7 +7815,7 @@ const UnderwritePage: React.FC = () => {
                         <Box sx={{ mb: 3 }}>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                           >
                             Seasonal Occupancy Multipliers:
                           </Typography>
@@ -7912,13 +7912,13 @@ const UnderwritePage: React.FC = () => {
                         <Box sx={{ mb: 3 }}>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                           >
                             Revenue Projections (33 Rooms):
                           </Typography>
                           <Table
                             size="small"
-                            sx={{ border: 1, borderColor: "#e0e0e0" }}
+                            sx={{ border: 1, borderColor: brandColors.borders.secondary }}
                           >
                             <TableHead>
                               <TableRow>
@@ -7961,7 +7961,7 @@ const UnderwritePage: React.FC = () => {
                                           </Typography>
                                           <Typography
                                             variant="caption"
-                                            sx={{ color: "#666" }}
+                                            sx={{ color: brandColors.neutral.dark }}
                                           >
                                             ${monthlyRevenue.toLocaleString()}
                                             /mo
@@ -7980,13 +7980,13 @@ const UnderwritePage: React.FC = () => {
                         <Box
                           sx={{
                             p: 2,
-                            backgroundColor: "#f5f5f5",
+                            backgroundColor: brandColors.neutral.light,
                             borderRadius: 1,
                           }}
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 1 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 1 }}
                           >
                             <strong>Fixed Costs Summary:</strong>
                           </Typography>
@@ -8014,7 +8014,7 @@ const UnderwritePage: React.FC = () => {
                           }}
                         >
                           <Typography
-                            sx={{ fontWeight: 600, color: "#1a365d" }}
+                            sx={{ fontWeight: 600, color: brandColors.primary }}
                           >
                             Break-Even Analysis:
                           </Typography>
@@ -8032,19 +8032,19 @@ const UnderwritePage: React.FC = () => {
                             mb: 3,
                           }}
                         >
-                          <Card sx={{ p: 2, backgroundColor: "#e3f2fd" }}>
+                          <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.selected }}>
                             <Typography
                               variant="subtitle2"
-                              sx={{ fontWeight: 600, color: "#1976d2", mb: 1 }}
+                              sx={{ fontWeight: 600, color: brandColors.actions.primary, mb: 1 }}
                             >
                               Break-Even Occupancy
                             </Typography>
-                            <Typography variant="h6" sx={{ color: "#1976d2" }}>
+                            <Typography variant="h6" sx={{ color: brandColors.actions.primary }}>
                               {calculateBreakEvenOccupancy().toFixed(1)}%
                             </Typography>
                             <Typography
                               variant="caption"
-                              sx={{ color: "#666" }}
+                              sx={{ color: brandColors.neutral.dark }}
                             >
                               Minimum occupancy needed to cover costs
                             </Typography>
@@ -8062,13 +8062,13 @@ const UnderwritePage: React.FC = () => {
                             </Typography>
                             <Typography
                               variant="caption"
-                              sx={{ color: "#666" }}
+                              sx={{ color: brandColors.neutral.dark }}
                             >
                               Minimum daily rate needed to cover costs
                             </Typography>
                           </Card>
 
-                          <Card sx={{ p: 2, backgroundColor: "#e8f5e8" }}>
+                          <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.success }}>
                             <Typography
                               variant="subtitle2"
                               sx={{ fontWeight: 600, color: "#388e3c", mb: 1 }}
@@ -8080,7 +8080,7 @@ const UnderwritePage: React.FC = () => {
                             </Typography>
                             <Typography
                               variant="caption"
-                              sx={{ color: "#666" }}
+                              sx={{ color: brandColors.neutral.dark }}
                             >
                               Current occupancy above break-even
                             </Typography>
@@ -8091,13 +8091,13 @@ const UnderwritePage: React.FC = () => {
                         <Box sx={{ mb: 3 }}>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight: 600, color: "#1a365d", mb: 2 }}
+                            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
                           >
                             Break-Even Analysis by Occupancy:
                           </Typography>
                           <Table
                             size="small"
-                            sx={{ border: 1, borderColor: "#e0e0e0" }}
+                            sx={{ border: 1, borderColor: brandColors.borders.secondary }}
                           >
                             <TableHead>
                               <TableRow>
@@ -8153,7 +8153,7 @@ const UnderwritePage: React.FC = () => {
                                       <TableCell
                                         sx={{
                                           color: isProfitable
-                                            ? "#2e7d32"
+                                            ? brandColors.accent.success
                                             : "#d32f2f",
                                           fontWeight: "bold",
                                         }}
@@ -8214,7 +8214,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
         {/* Risk Assessment Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -8277,7 +8277,7 @@ const UnderwritePage: React.FC = () => {
                       />
                       <Typography
                         variant="body1"
-                        sx={{ color: "#666", fontWeight: 500 }}
+                        sx={{ color: brandColors.neutral.dark, fontWeight: 500 }}
                       >
                         {state.riskScoreResults.riskCategory}
                       </Typography>
@@ -8305,14 +8305,14 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: "#f8f9fa",
+                          backgroundColor: brandColors.backgrounds.secondary,
                           borderRadius: 1,
                           textAlign: "center",
                         }}
                       >
                         <Typography
                           variant="h6"
-                          sx={{ color: "#1a365d", mb: 1 }}
+                          sx={{ color: brandColors.primary, mb: 1 }}
                         >
                           Market Risk
                         </Typography>
@@ -8326,14 +8326,14 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: "#f8f9fa",
+                          backgroundColor: brandColors.backgrounds.secondary,
                           borderRadius: 1,
                           textAlign: "center",
                         }}
                       >
                         <Typography
                           variant="h6"
-                          sx={{ color: "#1a365d", mb: 1 }}
+                          sx={{ color: brandColors.primary, mb: 1 }}
                         >
                           Property Risk
                         </Typography>
@@ -8347,14 +8347,14 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: "#f8f9fa",
+                          backgroundColor: brandColors.backgrounds.secondary,
                           borderRadius: 1,
                           textAlign: "center",
                         }}
                       >
                         <Typography
                           variant="h6"
-                          sx={{ color: "#1a365d", mb: 1 }}
+                          sx={{ color: brandColors.primary, mb: 1 }}
                         >
                           Tenant Risk
                         </Typography>
@@ -8368,14 +8368,14 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: "#f8f9fa",
+                          backgroundColor: brandColors.backgrounds.secondary,
                           borderRadius: 1,
                           textAlign: "center",
                         }}
                       >
                         <Typography
                           variant="h6"
-                          sx={{ color: "#1a365d", mb: 1 }}
+                          sx={{ color: brandColors.primary, mb: 1 }}
                         >
                           Financing Risk
                         </Typography>
@@ -8434,7 +8434,7 @@ const UnderwritePage: React.FC = () => {
                       }));
                     }}
                     sx={{
-                      backgroundColor: "#1a365d",
+                      backgroundColor: brandColors.primary,
                       "&:hover": { backgroundColor: "#2d3748" },
                     }}
                   >
@@ -8450,7 +8450,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Advanced Analysis Section */}
         {/* Advanced Analysis Summary + CTA */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -8470,9 +8470,9 @@ const UnderwritePage: React.FC = () => {
               <Box
                 sx={{
                   p: 2,
-                  backgroundColor: "#e3f2fd",
+                  backgroundColor: brandColors.backgrounds.selected,
                   borderRadius: 1,
-                  border: "1px solid #2196f3",
+                  border: "1px solid brandColors.accent.info",
                   fontSize: "0.875rem",
                   mb: 3,
                 }}
@@ -8500,23 +8500,23 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: "#f8f9fa",
+                    backgroundColor: brandColors.backgrounds.secondary,
                     borderRadius: 1,
                     textAlign: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ color: "#666", mb: 1 }}>
+                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                     Exit Strategies
                   </Typography>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, color: "#1a365d" }}
+                    sx={{ fontWeight: 600, color: brandColors.primary }}
                   >
                     Available
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: "#666", fontSize: "0.8rem" }}
+                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
                   >
                     Refinance, Sale, 1031 Exchange
                   </Typography>
@@ -8526,23 +8526,23 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: "#f8f9fa",
+                    backgroundColor: brandColors.backgrounds.secondary,
                     borderRadius: 1,
                     textAlign: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ color: "#666", mb: 1 }}>
+                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                     Tax Analysis
                   </Typography>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, color: "#1a365d" }}
+                    sx={{ fontWeight: 600, color: brandColors.primary }}
                   >
                     Available
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: "#666", fontSize: "0.8rem" }}
+                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
                   >
                     Depreciation, deductions, gains
                   </Typography>
@@ -8552,23 +8552,23 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: "#f8f9fa",
+                    backgroundColor: brandColors.backgrounds.secondary,
                     borderRadius: 1,
                     textAlign: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ color: "#666", mb: 1 }}>
+                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                     Seasonal Analysis
                   </Typography>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, color: "#1a365d" }}
+                    sx={{ fontWeight: 600, color: brandColors.primary }}
                   >
                     Available
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: "#666", fontSize: "0.8rem" }}
+                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
                   >
                     Monthly occupancy patterns
                   </Typography>
@@ -8578,9 +8578,9 @@ const UnderwritePage: React.FC = () => {
               <Box
                 sx={{
                   p: 2,
-                  backgroundColor: "#e3f2fd",
+                  backgroundColor: brandColors.backgrounds.selected,
                   borderRadius: 1,
-                  border: "1px solid #2196f3",
+                  border: "1px solid brandColors.accent.info",
                   mb: 3,
                 }}
               >
@@ -8590,7 +8590,7 @@ const UnderwritePage: React.FC = () => {
                 >
                   Unlock Advanced Modeling & Analysis
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
                   Access specialized tools for exit strategies, tax
                   implications, confidence intervals, seasonal adjustments,
                   market analysis, and stress testing - separate from basic
@@ -8608,7 +8608,7 @@ const UnderwritePage: React.FC = () => {
                     navigate("/advanced-calculations");
                   }}
                   sx={{
-                    backgroundColor: "#1a365d",
+                    backgroundColor: brandColors.primary,
                     "&:hover": { backgroundColor: "#2d3748" },
                   }}
                   startIcon={<TrendingUpIcon />}
@@ -8624,7 +8624,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Fix & Flip Section */}
         {state.operationType === "Fix & Flip" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Fix & Flip</Typography>
@@ -8725,8 +8725,8 @@ const UnderwritePage: React.FC = () => {
                   />
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: "#666" }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
                     Auto-calculated Results
                   </Typography>
                   <Box
@@ -8811,37 +8811,37 @@ const UnderwritePage: React.FC = () => {
                             p: 2,
                             bgcolor: "#fff",
                             borderRadius: 1,
-                            border: "1px solid #e0e0e0",
+                            border: "1px solid brandColors.borders.secondary",
                           }}
                         >
                           <Typography
                             variant="subtitle2"
-                            sx={{ color: "#1a365d", mb: 1, fontWeight: 600 }}
+                            sx={{ color: brandColors.primary, mb: 1, fontWeight: 600 }}
                           >
                             {strategy.timeframe} Year Exit
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             Projected Value:{" "}
                             {formatCurrency(strategy.projectedValue)}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             Net Proceeds: {formatCurrency(strategy.netProceeds)}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             ROI: {strategy.roi.toFixed(1)}%
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", fontWeight: 600 }}
+                            sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}
                           >
                             Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
                           </Typography>
@@ -8857,7 +8857,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* BRRRR Section */}
         {state.operationType === "BRRRR" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>BRRRR</Typography>
@@ -8955,8 +8955,8 @@ const UnderwritePage: React.FC = () => {
                   />
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: "#666" }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
                     Auto-calculated Results
                   </Typography>
                   <Box
@@ -9055,38 +9055,38 @@ const UnderwritePage: React.FC = () => {
                             p: 2,
                             bgcolor: "#fff",
                             borderRadius: 1,
-                            border: "1px solid #e0e0e0",
+                            border: "1px solid brandColors.borders.secondary",
                           }}
                         >
                           <Typography
                             variant="subtitle2"
-                            sx={{ color: "#1a365d", mb: 1, fontWeight: 600 }}
+                            sx={{ color: brandColors.primary, mb: 1, fontWeight: 600 }}
                           >
                             {strategy.timeframe} Year Exit
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             Projected Value:{" "}
                             {formatCurrency(strategy.projectedValue)}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             Net Proceeds:{" "}
                             {formatCurrency(strategy.projectedValue)}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mb: 0.5 }}
+                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
                           >
                             ROI: {strategy.roi.toFixed(1)}%
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", fontWeight: 600 }}
+                            sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}
                           >
                             Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
                           </Typography>
@@ -9100,7 +9100,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
         {/* At a Glance Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid #e0e0e0" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
@@ -9111,16 +9111,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -9176,16 +9176,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -9708,16 +9708,16 @@ const UnderwritePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      bgcolor: "#fafbfc",
+                      bgcolor: brandColors.backgrounds.secondary,
                       borderRadius: 2,
-                      border: "1px solid #e8eaed",
+                      border: "1px solid brandColors.borders.secondary",
                     }}
                   >
                     <Typography
                       sx={{
                         fontWeight: 600,
                         mb: 2,
-                        color: "#1a365d",
+                        color: brandColors.primary,
                         fontSize: "0.9rem",
                       }}
                     >
@@ -9804,16 +9804,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -9879,16 +9879,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -10046,16 +10046,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -10134,16 +10134,16 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    bgcolor: "#fafbfc",
+                    bgcolor: brandColors.backgrounds.secondary,
                     borderRadius: 2,
-                    border: "1px solid #e8eaed",
+                    border: "1px solid brandColors.borders.secondary",
                   }}
                 >
                   <Typography
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#1a365d",
+                      color: brandColors.primary,
                       fontSize: "0.9rem",
                     }}
                   >
@@ -10230,7 +10230,7 @@ const UnderwritePage: React.FC = () => {
           <Button
             variant="outlined"
             onClick={() => navigate("/")}
-            sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
             Back to Home
           </Button>
@@ -10238,21 +10238,21 @@ const UnderwritePage: React.FC = () => {
           <Button
             variant="outlined"
             onClick={exportToPDF}
-            sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
             Export PDF
           </Button>
           <Button
             variant="outlined"
             onClick={exportToExcel}
-            sx={{ borderColor: "#1a365d", color: "#1a365d" }}
+            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
             Email PDF
           </Button>
           <Button
             variant="contained"
             onClick={() => setState(defaultState)}
-            sx={{ bgcolor: "#1a365d", color: "white" }}
+            sx={{ bgcolor: brandColors.primary, color: brandColors.backgrounds.primary }}
           >
             Reset
           </Button>

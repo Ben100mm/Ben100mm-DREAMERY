@@ -13,11 +13,12 @@ import { Info as InfoIcon } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import finalSellListImage from "../final sell:list.png";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
   height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -25,7 +26,7 @@ const PageContainer = styled.div`
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+          border-bottom: 1px solid ${brandColors.borders.secondary};
 `;
 
 const MainContent = styled.div`
@@ -102,12 +103,12 @@ const SellListServicesPage: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h6" sx={{ color: "#1a365d", fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
             Dreamery
           </Typography>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -121,27 +122,27 @@ const SellListServicesPage: React.FC = () => {
 
         <Typography
           variant="h4"
-          sx={{ fontWeight: 800, color: "#1a365d", mb: 1, textAlign: "center" }}
+          sx={{ fontWeight: 800, color: brandColors.primary, mb: 1, textAlign: "center" }}
         >
           {address}
         </Typography>
 
         <Typography
           variant="h5"
-          sx={{ fontWeight: 700, color: "#1a365d", mb: 4, textAlign: "center" }}
+          sx={{ fontWeight: 700, color: brandColors.primary, mb: 4, textAlign: "center" }}
         >
           Your selling options
         </Typography>
 
         <Typography
           variant="body1"
-          sx={{ color: "#666666", mb: 4, textAlign: "center" }}
+          sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
         >
           Here are your tailored selling options (based on the info you
           provided).
         </Typography>
 
-        <Card sx={{ border: "2px solid #1a365d", borderRadius: 3, mb: 3 }}>
+        <Card sx={{ border: "2px solid brandColors.primary", borderRadius: 3, mb: 3 }}>
           <CardContent sx={{ p: 3 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -163,7 +164,7 @@ const SellListServicesPage: React.FC = () => {
                   >
                     <path
                       d="M6 18L10 14L14 18L18 14L22 18L24 16V6L22 4H8L6 6V18Z"
-                      stroke="#1a365d"
+                      stroke={brandColors.primary}
                       strokeWidth="1.5"
                       fill="none"
                       strokeLinecap="round"
@@ -171,7 +172,7 @@ const SellListServicesPage: React.FC = () => {
                     />
                     <path
                       d="M10 14V8H20V14"
-                      stroke="#1a365d"
+                      stroke={brandColors.primary}
                       strokeWidth="1.5"
                       fill="none"
                       strokeLinecap="round"
@@ -179,7 +180,7 @@ const SellListServicesPage: React.FC = () => {
                     />
                     <path
                       d="M12 10H18"
-                      stroke="#1a365d"
+                      stroke={brandColors.primary}
                       strokeWidth="1.5"
                       strokeLinecap="round"
                     />
@@ -189,7 +190,7 @@ const SellListServicesPage: React.FC = () => {
                   variant="h6"
                   sx={{
                     fontWeight: 700,
-                    color: "#1a365d",
+                    color: brandColors.primary,
                     letterSpacing: "0.1em",
                   }}
                 >
@@ -207,13 +208,13 @@ const SellListServicesPage: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Updated Aug 15, 2025
             </Typography>
 
             <Typography
               variant="body1"
-              sx={{ fontWeight: 600, color: "#1a365d", mb: 3 }}
+              sx={{ fontWeight: 600, color: brandColors.primary, mb: 3 }}
             >
               Maximize sales price
             </Typography>
@@ -223,7 +224,7 @@ const SellListServicesPage: React.FC = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ color: "#1a365d", fontWeight: 500 }}
+                sx={{ color: brandColors.primary, fontWeight: 500 }}
               >
                 Have any questions? Speak to a Dreamery specialist.
               </Typography>
@@ -231,32 +232,32 @@ const SellListServicesPage: React.FC = () => {
 
             <Typography
               variant="h6"
-              sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+              sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
             >
               How it works
             </Typography>
 
-            <Typography variant="body2" sx={{ color: "#666666", mb: 3 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
               Connect with a local Dreamery partner agent and get a Showcase
               listing at no additional cost. Sell when you're ready.
             </Typography>
 
             <Typography
               variant="h6"
-              sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+              sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
             >
               Highlights
             </Typography>
 
             <Box sx={{ mb: 3 }}>
-              <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                 - Get prime exposure on Dreamery resulting in 75% more views.
               </Typography>
-              <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                 - Helps maximize your sale price by reaching more buyers on
                 Dreamery.
               </Typography>
-              <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
                 - Sell for 2% more when using a premium Showcase listing.
               </Typography>
             </Box>
@@ -266,7 +267,7 @@ const SellListServicesPage: React.FC = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ color: "#1a365d", fontWeight: 500 }}
+                sx={{ color: brandColors.primary, fontWeight: 500 }}
               >
                 Get Showcase for free when you sell with a Dreamery partner
                 agent.
@@ -280,7 +281,7 @@ const SellListServicesPage: React.FC = () => {
                 <Box sx={{ flex: 1 }}>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 700, color: "#1a365d", mb: 2 }}
+                    sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
                   >
                     Get Showcase for free when you sell with a Dreamery partner
                     agent
@@ -294,7 +295,7 @@ const SellListServicesPage: React.FC = () => {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#1a365d",
+                          backgroundColor: brandColors.primary,
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
@@ -305,14 +306,14 @@ const SellListServicesPage: React.FC = () => {
                           sx={{
                             width: 12,
                             height: 12,
-                            backgroundColor: "white",
+                            backgroundColor: brandColors.backgrounds.primary,
                             borderRadius: "50%",
                           }}
                         />
                       </Box>
                       <Typography
                         variant="body2"
-                        sx={{ color: "#1a365d", fontWeight: 500 }}
+                        sx={{ color: brandColors.primary, fontWeight: 500 }}
                       >
                         Higher search ranking
                       </Typography>
@@ -323,7 +324,7 @@ const SellListServicesPage: React.FC = () => {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#1a365d",
+                          backgroundColor: brandColors.primary,
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
@@ -334,14 +335,14 @@ const SellListServicesPage: React.FC = () => {
                           sx={{
                             width: 12,
                             height: 12,
-                            backgroundColor: "white",
+                            backgroundColor: brandColors.backgrounds.primary,
                             borderRadius: "50%",
                           }}
                         />
                       </Box>
                       <Typography
                         variant="body2"
-                        sx={{ color: "#1a365d", fontWeight: 500 }}
+                        sx={{ color: brandColors.primary, fontWeight: 500 }}
                       >
                         High resolution photos
                       </Typography>
@@ -352,7 +353,7 @@ const SellListServicesPage: React.FC = () => {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#1a365d",
+                          backgroundColor: brandColors.primary,
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
@@ -363,14 +364,14 @@ const SellListServicesPage: React.FC = () => {
                           sx={{
                             width: 12,
                             height: 12,
-                            backgroundColor: "white",
+                            backgroundColor: brandColors.backgrounds.primary,
                             borderRadius: "50%",
                           }}
                         />
                       </Box>
                       <Typography
                         variant="body2"
-                        sx={{ color: "#1a365d", fontWeight: 500 }}
+                        sx={{ color: brandColors.primary, fontWeight: 500 }}
                       >
                         Interactive floor plan
                       </Typography>
@@ -381,7 +382,7 @@ const SellListServicesPage: React.FC = () => {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#1a365d",
+                          backgroundColor: brandColors.primary,
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
@@ -392,14 +393,14 @@ const SellListServicesPage: React.FC = () => {
                           sx={{
                             width: 12,
                             height: 12,
-                            backgroundColor: "white",
+                            backgroundColor: brandColors.backgrounds.primary,
                             borderRadius: "50%",
                           }}
                         />
                       </Box>
                       <Typography
                         variant="body2"
-                        sx={{ color: "#1a365d", fontWeight: 500 }}
+                        sx={{ color: brandColors.primary, fontWeight: 500 }}
                       >
                         AI-powered virtual tours
                       </Typography>
@@ -412,7 +413,7 @@ const SellListServicesPage: React.FC = () => {
                     sx={{
                       width: "100%",
                       height: 200,
-                      backgroundColor: "#e5e7eb",
+                      backgroundColor: brandColors.borders.secondary,
                       borderRadius: 2,
                       position: "relative",
                       overflow: "hidden",
@@ -424,7 +425,7 @@ const SellListServicesPage: React.FC = () => {
                         top: 10,
                         left: 10,
                         backgroundColor: "#dc2626",
-                        color: "white",
+                        color: brandColors.backgrounds.primary,
                         px: 2,
                         py: 0.5,
                         borderRadius: 2,
@@ -465,20 +466,20 @@ const SellListServicesPage: React.FC = () => {
                         bottom: 10,
                         left: 10,
                         right: 10,
-                        backgroundColor: "white",
+                        backgroundColor: brandColors.backgrounds.primary,
                         p: 1,
                         borderRadius: 1,
                       }}
                     >
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, color: "#1a365d" }}
+                        sx={{ fontWeight: 600, color: brandColors.primary }}
                       >
                         3 bds | 3 ba | 3,240 sqft - Active
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: "#666666", fontSize: "0.875rem" }}
+                        sx={{ color: brandColors.neutral.dark, fontSize: "0.875rem" }}
                       >
                         255 Mathewson Pl SW Atlanta, GA
                       </Typography>
@@ -492,8 +493,8 @@ const SellListServicesPage: React.FC = () => {
               variant="contained"
               fullWidth
               sx={{
-                backgroundColor: "#1a365d",
-                color: "white",
+                backgroundColor: brandColors.primary,
+                color: brandColors.backgrounds.primary,
                 textTransform: "none",
                 fontWeight: 600,
                 py: 1.5,
@@ -507,7 +508,7 @@ const SellListServicesPage: React.FC = () => {
 
         <Typography
           variant="h6"
-          sx={{ fontWeight: 700, color: "#1a365d", mb: 3 }}
+          sx={{ fontWeight: 700, color: brandColors.primary, mb: 3 }}
         >
           Estimated costs and fees
         </Typography>
@@ -529,7 +530,7 @@ const SellListServicesPage: React.FC = () => {
                 title="Estimated market value based on recent sales and property details"
                 arrow
               >
-                <IconButton size="small" sx={{ color: "#1a365d", p: 0 }}>
+                <IconButton size="small" sx={{ color: brandColors.primary, p: 0 }}>
                   <InfoIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -556,7 +557,7 @@ const SellListServicesPage: React.FC = () => {
                 title="Standard real estate agent commission rates"
                 arrow
               >
-                <IconButton size="small" sx={{ color: "#1a365d", p: 0 }}>
+                <IconButton size="small" sx={{ color: brandColors.primary, p: 0 }}>
                   <InfoIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -583,7 +584,7 @@ const SellListServicesPage: React.FC = () => {
                 title="Estimated closing costs including title insurance, escrow fees, and other transaction costs"
                 arrow
               >
-                <IconButton size="small" sx={{ color: "#1a365d", p: 0 }}>
+                <IconButton size="small" sx={{ color: brandColors.primary, p: 0 }}>
                   <InfoIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -609,14 +610,14 @@ const SellListServicesPage: React.FC = () => {
                 title="Estimated repair costs based on property condition assessment"
                 arrow
               >
-                <IconButton size="small" sx={{ color: "#1a365d", p: 0 }}>
+                <IconButton size="small" sx={{ color: brandColors.primary, p: 0 }}>
                   <InfoIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>
             <Typography
               variant="body1"
-              sx={{ fontWeight: 600, color: "#666666" }}
+              sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
             >
               Pending walkthrough
             </Typography>
@@ -631,7 +632,7 @@ const SellListServicesPage: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "#1a365d" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
               Est. cash proceeds
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 700, color: "#22c55e" }}>
@@ -645,8 +646,8 @@ const SellListServicesPage: React.FC = () => {
           variant="contained"
           fullWidth
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
             py: 1.5,
@@ -659,22 +660,22 @@ const SellListServicesPage: React.FC = () => {
         <Box sx={{ mt: 6, p: 3, backgroundColor: "#f8fafc", borderRadius: 3 }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 3 }}
           >
             Why choose Dreamery?
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Trusted by millions of homeowners nationwide
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Local expertise with national reach
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Transparent pricing and no hidden fees
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               - Dedicated support throughout your selling journey
             </Typography>
           </Box>
@@ -683,22 +684,22 @@ const SellListServicesPage: React.FC = () => {
         <Box sx={{ mt: 4, p: 3, backgroundColor: "#f0f9ff", borderRadius: 3 }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, color: "#1a365d", mb: 3 }}
+            sx={{ fontWeight: 700, color: brandColors.primary, mb: 3 }}
           >
             Next steps
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               1. Connect with your local Dreamery partner agent
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               2. Schedule a free home evaluation
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               3. Get your personalized selling strategy
             </Typography>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
               4. List your home with maximum exposure
             </Typography>
           </Box>

@@ -11,17 +11,18 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: brandColors.backgrounds.primary;
   display: flex;
   flex-direction: column;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const MainContent = styled.div`
@@ -45,7 +46,7 @@ const PlaceholderImage: React.FC = () => (
     sx={{
       width: "100%",
       height: { xs: 140, md: 180 },
-      background: "#e5e7eb",
+      background: brandColors.borders.secondary,
       borderRadius: 1,
     }}
   />
@@ -95,7 +96,7 @@ const SellListHomeQuality4Page: React.FC = () => {
           }}
         >
           <Box sx={{ width: 260 }}>
-            <Typography variant="body2" sx={{ color: "#666666", mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
               Home quality
             </Typography>
             <LinearProgress
@@ -104,9 +105,9 @@ const SellListHomeQuality4Page: React.FC = () => {
               sx={{
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#e0e0e0",
+                backgroundColor: brandColors.borders.secondary,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#1a365d",
+                  backgroundColor: brandColors.primary,
                   borderRadius: 4,
                 },
               }}
@@ -114,7 +115,7 @@ const SellListHomeQuality4Page: React.FC = () => {
           </Box>
           <Button
             onClick={handleExit}
-            sx={{ color: "#666666", textTransform: "none" }}
+            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
           >
             Exit
           </Button>
@@ -125,7 +126,7 @@ const SellListHomeQuality4Page: React.FC = () => {
         <ContentWrapper>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 800, color: "#1a365d", mb: 2 }}
+            sx={{ fontWeight: 800, color: brandColors.primary, mb: 2 }}
           >
             How would you describe your kitchen?
           </Typography>
@@ -153,8 +154,8 @@ const SellListHomeQuality4Page: React.FC = () => {
                   sx={{
                     border:
                       selected === opt.value
-                        ? "2px solid #1a365d"
-                        : "1px solid #e5e7eb",
+                        ? "2px solid brandColors.primary"
+                        : "1px solid brandColors.borders.secondary",
                     borderRadius: 2,
                     minHeight: { xs: CARD_MIN_HEIGHT, md: CARD_MIN_HEIGHT },
                   }}
@@ -174,15 +175,15 @@ const SellListHomeQuality4Page: React.FC = () => {
                         checked={selected === opt.value}
                         value={opt.value}
                         sx={{
-                          color: "#1a365d",
-                          "&.Mui-checked": { color: "#1a365d" },
+                          color: brandColors.primary,
+                          "&.Mui-checked": { color: brandColors.primary },
                         }}
                       />
                       <Box>
-                        <Typography sx={{ fontWeight: 700, color: "#111827" }}>
+                        <Typography sx={{ fontWeight: 700, color: brandColors.text.primary }}>
                           {opt.title}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: "#6b7280" }}>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
                           {opt.subtitle}
                         </Typography>
                       </Box>
@@ -199,12 +200,12 @@ const SellListHomeQuality4Page: React.FC = () => {
         sx={{
           position: "sticky",
           bottom: 0,
-          backgroundColor: "white",
+          backgroundColor: brandColors.backgrounds.primary,
           px: { xs: "1rem", md: "2rem" },
           py: { xs: "0.75rem", md: "1rem" },
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid brandColors.borders.secondary",
           zIndex: 5,
         }}
       >
@@ -212,8 +213,8 @@ const SellListHomeQuality4Page: React.FC = () => {
           onClick={handleBack}
           variant="outlined"
           sx={{
-            borderColor: "#1a365d",
-            color: "#1a365d",
+            borderColor: brandColors.primary,
+            color: brandColors.primary,
             textTransform: "none",
             fontWeight: 600,
           }}
@@ -225,8 +226,8 @@ const SellListHomeQuality4Page: React.FC = () => {
           disabled={!selected}
           variant="contained"
           sx={{
-            backgroundColor: "#1a365d",
-            color: "white",
+            backgroundColor: brandColors.primary,
+            color: brandColors.backgrounds.primary,
             textTransform: "none",
             fontWeight: 600,
           }}

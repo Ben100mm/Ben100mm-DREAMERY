@@ -14,6 +14,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { signIn, signUp } from "../firebase/services";
+import { brandColors } from "../theme";
 
 interface AuthModalProps {
   open: boolean;
@@ -146,7 +147,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         <TabPanel value={tabValue} index={0}>
-          <Typography variant="body2" sx={{ mb: 2, color: "#666" }}>
+          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
             Sign in to access your saved deals and calculations
           </Typography>
 
@@ -172,7 +173,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <Typography variant="body2" sx={{ mb: 2, color: "#666" }}>
+          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
             Create an account to save and sync your deals across devices
           </Typography>
 
@@ -217,10 +218,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClick={() => handleSubmit(tabValue === 1)}
           variant="contained"
           disabled={loading}
-          sx={{ bgcolor: "#1a365d", "&:hover": { bgcolor: "#0f2027" } }}
+          sx={{ bgcolor: brandColors.primary, "&:hover": { bgcolor: brandColors.secondary } }}
         >
           {loading ? (
-            <CircularProgress size={20} sx={{ color: "white" }} />
+            <CircularProgress size={20} sx={{ color: brandColors.backgrounds.primary }} />
           ) : tabValue === 0 ? (
             "Sign In"
           ) : (

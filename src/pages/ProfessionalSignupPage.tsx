@@ -17,6 +17,7 @@ import {
   IconButton,
   InputAdornment,
   Alert,
+  ListSubheader,
 } from '@mui/material';
 import {
   Visibility,
@@ -233,7 +234,9 @@ const ProfessionalSignupPage: React.FC = () => {
                     },
                   }}
                 >
-                  {/* Real Estate Agents / Brokers */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Real Estate Agents / Brokers
+                  </ListSubheader>
                   <MenuItem value="real-estate-agent">Real Estate Agent</MenuItem>
                   <MenuItem value="real-estate-broker">Real Estate Broker</MenuItem>
                   <MenuItem value="realtor">Realtor</MenuItem>
@@ -243,34 +246,48 @@ const ProfessionalSignupPage: React.FC = () => {
                   <MenuItem value="luxury-agent">Luxury Real Estate Agent</MenuItem>
                   <MenuItem value="new-construction-agent">New Construction Agent</MenuItem>
                   
-                  {/* Wholesalers */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Wholesalers
+                  </ListSubheader>
                   <MenuItem value="wholesaler">Wholesaler</MenuItem>
+                  <MenuItem value="disposition-agent">Disposition Agent</MenuItem>
                   
-                  {/* Title Companies */}
-                  <MenuItem value="title-company">Title Company</MenuItem>
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Title
+                  </ListSubheader>
                   <MenuItem value="title-agent">Title Agent</MenuItem>
                   <MenuItem value="escrow-officer">Escrow Officer</MenuItem>
                   <MenuItem value="notary">Notary Public</MenuItem>
                   
-                  {/* Appraisers */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Appraisers
+                  </ListSubheader>
                   <MenuItem value="appraiser">Appraiser</MenuItem>
                   <MenuItem value="residential-appraiser">Residential Appraiser</MenuItem>
                   <MenuItem value="commercial-appraiser">Commercial Appraiser</MenuItem>
                   
-                  {/* Inspectors */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Inspectors
+                  </ListSubheader>
                   <MenuItem value="home-inspector">Home Inspector</MenuItem>
                   <MenuItem value="commercial-inspector">Commercial Inspector</MenuItem>
                   <MenuItem value="energy-inspector">Energy Inspector</MenuItem>
                   
-                  {/* Surveyors */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Surveyors
+                  </ListSubheader>
                   <MenuItem value="surveyor">Surveyor</MenuItem>
                   <MenuItem value="land-surveyor">Land Surveyor</MenuItem>
                   
-                  {/* Insurance Agents */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Insurance Agents
+                  </ListSubheader>
                   <MenuItem value="insurance-agent">Insurance Agent</MenuItem>
                   <MenuItem value="title-insurance-agent">Title Insurance Agent</MenuItem>
                   
-                  {/* Mortgage Lenders / Brokers */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Mortgage Lenders / Brokers
+                  </ListSubheader>
                   <MenuItem value="mortgage-broker">Mortgage Broker</MenuItem>
                   <MenuItem value="mortgage-lender">Mortgage Lender</MenuItem>
                   <MenuItem value="loan-officer">Loan Officer</MenuItem>
@@ -279,13 +296,11 @@ const ProfessionalSignupPage: React.FC = () => {
                   <MenuItem value="private-lender">Private Lender</MenuItem>
                   <MenuItem value="lp">Limited Partner (LP)</MenuItem>
                   <MenuItem value="seller-finance-specialist">Seller Finance Specialist</MenuItem>
-                  <MenuItem value="banking-partner">Banking Partner</MenuItem>
+                  <MenuItem value="banking-advisor">Banking Advisor</MenuItem>
                   
-                  {/* Syndication & Crowdfunding */}
-                  <MenuItem value="syndication-platform">Syndication Platform</MenuItem>
-                  <MenuItem value="crowdfunding-platform">Crowdfunding Platform</MenuItem>
-                  
-                  {/* Contractors / GC */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Contractors / GC
+                  </ListSubheader>
                   <MenuItem value="general-contractor">General Contractor</MenuItem>
                   <MenuItem value="contractor">Contractor</MenuItem>
                   <MenuItem value="electrical-contractor">Electrical Contractor</MenuItem>
@@ -298,16 +313,9 @@ const ProfessionalSignupPage: React.FC = () => {
                   <MenuItem value="kitchen-contractor">Kitchen Contractor</MenuItem>
                   <MenuItem value="bathroom-contractor">Bathroom Contractor</MenuItem>
                   
-                  {/* Handymen */}
-                  <MenuItem value="handyman">Handyman</MenuItem>
-                  
-                  {/* Builders / Developers */}
-                  <MenuItem value="builder">Builder</MenuItem>
-                  <MenuItem value="developer">Developer</MenuItem>
-                  <MenuItem value="property-developer">Property Developer</MenuItem>
-                  <MenuItem value="land-developer">Land Developer</MenuItem>
-                  
-                  {/* Design & Architecture */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Design & Architecture
+                  </ListSubheader>
                   <MenuItem value="interior-designer">Interior Designer</MenuItem>
                   <MenuItem value="architect">Architect</MenuItem>
                   <MenuItem value="landscape-architect">Landscape Architect</MenuItem>
@@ -317,66 +325,76 @@ const ProfessionalSignupPage: React.FC = () => {
                   <MenuItem value="furniture-designer">Furniture Designer</MenuItem>
                   <MenuItem value="color-consultant">Color Consultant</MenuItem>
                   
-                  {/* Permit Expeditors */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Permit Expeditors
+                  </ListSubheader>
                   <MenuItem value="permit-expeditor">Permit Expeditor</MenuItem>
                   
-                  {/* Energy Consultants */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Energy Consultants
+                  </ListSubheader>
                   <MenuItem value="energy-consultant">Energy Consultant</MenuItem>
                   
-                  {/* Property Managers */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Property Managers
+                  </ListSubheader>
                   <MenuItem value="property-manager">Property Manager</MenuItem>
                   <MenuItem value="ltr-property-manager">Long-term Rental Property Manager</MenuItem>
                   <MenuItem value="str-property-manager">Short-term Rental Property Manager</MenuItem>
-                  <MenuItem value="str-setup-management">STR Setup & Management Company</MenuItem>
+                  <MenuItem value="str-setup-manager">STR Setup & Manager</MenuItem>
                   
-                  {/* Cleaning & Turnover */}
-                  <MenuItem value="cleaning-team">Cleaning & Turnover Team</MenuItem>
-                  <MenuItem value="maintenance-vendor">Maintenance Vendor</MenuItem>
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Cleaning & Maintenance
+                  </ListSubheader>
+                  <MenuItem value="housekeeper">Housekeeper</MenuItem>
+                  <MenuItem value="landscape-cleaner">Landscape Cleaner</MenuItem>
+                  <MenuItem value="turnover-specialist">Turnover Specialist</MenuItem>
+                  <MenuItem value="handyman">Handyman</MenuItem>
+                  <MenuItem value="landscaper">Landscaper</MenuItem>
+                  <MenuItem value="arborist">Arborist</MenuItem>
                   
-                  {/* Tenant Services */}
-                  <MenuItem value="tenant-screening">Tenant Screening Service</MenuItem>
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Tenant Services
+                  </ListSubheader>
+                  <MenuItem value="tenant-screening-agent">Tenant Screening Agent</MenuItem>
                   <MenuItem value="leasing-agent">Leasing Agent</MenuItem>
                   
-                  {/* CRM Providers */}
-                  <MenuItem value="crm-provider">CRM Provider</MenuItem>
-                  
-                  {/* Accounting Platforms */}
-                  <MenuItem value="accounting-platform">Accounting Platform</MenuItem>
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Accounting
+                  </ListSubheader>
                   <MenuItem value="bookkeeper">Bookkeeper</MenuItem>
                   <MenuItem value="cpa">Certified Public Accountant (CPA)</MenuItem>
                   <MenuItem value="accountant">Accountant</MenuItem>
                   
-                  {/* Document Services */}
-                  <MenuItem value="document-signing">Document Signing Service</MenuItem>
-                  <MenuItem value="document-storage">Document Storage Service</MenuItem>
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Marketing & Advertisement
+                  </ListSubheader>
+                  <MenuItem value="photographer">Photographer</MenuItem>
+                  <MenuItem value="videographer">Videographer</MenuItem>
+                  <MenuItem value="ar-vr-developer">AR/VR Developer</MenuItem>
+                  <MenuItem value="digital-twins-developer">Digital Twins Developer</MenuItem>
                   
-                  {/* APIs & Tools */}
-                  <MenuItem value="valuation-api">Valuation API</MenuItem>
-                  <MenuItem value="lead-gen-api">Lead Generation API</MenuItem>
-                  <MenuItem value="ai-underwriting">AI Underwriting Tool</MenuItem>
-                  <MenuItem value="ai-analysis">AI Analysis Tool</MenuItem>
-                  <MenuItem value="ar-vr-digital-twins">AR/VR & Digital Twins</MenuItem>
-                  <MenuItem value="property-measurement">Property Measurement Tool</MenuItem>
-                  
-                  {/* Legal Services */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Legal Services
+                  </ListSubheader>
                   <MenuItem value="real-estate-attorney">Real Estate Attorney</MenuItem>
                   <MenuItem value="estate-planning-attorney">Estate Planning Attorney</MenuItem>
                   <MenuItem value="1031-exchange-intermediary">1031 Exchange Intermediary</MenuItem>
-                  <MenuItem value="entity-formation">Entity Formation Service</MenuItem>
-                  <MenuItem value="escrow-service">Escrow Service</MenuItem>
-                  <MenuItem value="notary-service">Notary Service</MenuItem>
+                  <MenuItem value="entity-formation-service-provider">Entity Formation Service Provider</MenuItem>
+                  <MenuItem value="escrow-service-provider">Escrow Service Provider</MenuItem>
+                  <MenuItem value="legal-notary-service-provider">Legal Notary Service Provider</MenuItem>
                   
-                  {/* Buyers & Investors */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Buyers & Investors
+                  </ListSubheader>
                   <MenuItem value="investor-buyer">Investor Buyer</MenuItem>
-                  <MenuItem value="retail-buyer">Retail Buyer (MLS)</MenuItem>
+                  <MenuItem value="retail-buyer">Retail Buyer</MenuItem>
                   <MenuItem value="ibuyer">iBuyer</MenuItem>
-                  <MenuItem value="reit">REIT</MenuItem>
-                  <MenuItem value="auction-platform">Auction Platform</MenuItem>
-                  <MenuItem value="property-investor">Property Investor</MenuItem>
-                  <MenuItem value="flipper">Property Flipper</MenuItem>
-                  <MenuItem value="landlord">Landlord</MenuItem>
+                  <MenuItem value="property-flipper">Property Flipper</MenuItem>
                   
-                  {/* Other */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Other
+                  </ListSubheader>
                   <MenuItem value="consultant">Real Estate Consultant</MenuItem>
                   <MenuItem value="educator">Real Estate Educator</MenuItem>
                   <MenuItem value="trainer">Real Estate Trainer</MenuItem>

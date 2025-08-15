@@ -2635,7 +2635,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Basic Info Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
               </AccordionSummary>
@@ -2755,7 +2755,7 @@ const UnderwritePage: React.FC = () => {
         {/* Subject-To Existing Mortgage Section - shown for Subject-To or as part of Hybrid when not arbitrage */}
         {(state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && state.operationType !== 'Rental Arbitrage' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Subject-To Existing Mortgage</Typography>
               </AccordionSummary>
@@ -3034,7 +3034,7 @@ const UnderwritePage: React.FC = () => {
         {/* Seller Finance Section - available even for arbitrage if selected */}
         {state.offerType === 'Seller Finance' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
               </AccordionSummary>
@@ -3214,7 +3214,7 @@ const UnderwritePage: React.FC = () => {
         {/* Hybrid Financing Section - Moved to appear after Seller Finance */}
         {state.offerType === 'Hybrid' && state.operationType !== 'Rental Arbitrage' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>Hybrid Financing</Typography>
               </AccordionSummary>
@@ -3464,7 +3464,7 @@ const UnderwritePage: React.FC = () => {
         {/* Costs Section - For Cash financing only */}
         {state.offerType === 'Cash' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
               </AccordionSummary>
@@ -3615,7 +3615,7 @@ const UnderwritePage: React.FC = () => {
         {/* Loan & Costs Section - Hidden for Subject To Existing Mortgage, Hybrid, and Cash */}
         {state.offerType !== 'Subject To Existing Mortgage' && state.offerType !== 'Hybrid' && state.offerType !== 'Cash' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>
                 {state.operationType === 'Rental Arbitrage' ? 'Startup Costs' : 'Loan & Costs'}
@@ -3827,7 +3827,7 @@ const UnderwritePage: React.FC = () => {
         {/* Income Section */}
         {state.operationType !== 'Fix & Flip' && (
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <Accordion defaultExpanded>
+          <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ fontWeight: 700 }}>Income</Typography>
             </AccordionSummary>
@@ -4084,7 +4084,7 @@ const UnderwritePage: React.FC = () => {
 
             {/* Operating Expenses Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Operating Expenses</Typography>
               </AccordionSummary>
@@ -4265,19 +4265,30 @@ const UnderwritePage: React.FC = () => {
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={{ fontWeight: 700 }}>Pro Forma Analysis</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontWeight: 700 }}>Pro Forma Analysis</Typography>
+                <Chip 
+                  label="Premium Feature"
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                {/* Debug Info - Remove this after fixing */}
+                {/* Section Description */}
                 <Box sx={{ 
-                  p: 1, 
-                  backgroundColor: '#f5f5f5', 
+                  p: 2, 
+                  backgroundColor: '#f0f4ff', 
                   borderRadius: 1, 
-                  fontSize: '0.75rem',
-                  border: '1px solid #ddd'
+                  border: '1px solid #1a365d',
+                  fontSize: '0.875rem'
                 }}>
-                  {/* Production: removed debug text */}
+                  <Typography variant="body2" sx={{ color: '#1a365d', fontWeight: 500 }}>
+                    <strong>Financial Projections & Cash Flow Analysis:</strong> Create detailed pro forma statements, 
+                    analyze cash flow scenarios, perform sensitivity analysis, and compare against industry benchmarks.
+                  </Typography>
                 </Box>
 
                 {/* Tab Navigation */}
@@ -4988,7 +4999,7 @@ const UnderwritePage: React.FC = () => {
 
         {/* Risk Assessment Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <Accordion defaultExpanded>
+          <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ fontWeight: 700 }}>Risk Assessment</Typography>
@@ -5002,6 +5013,21 @@ const UnderwritePage: React.FC = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Section Description */}
+                <Box sx={{ 
+                  p: 2, 
+                  backgroundColor: '#fff3e0', 
+                  borderRadius: 1, 
+                  border: '1px solid #ffb74d',
+                  fontSize: '0.875rem',
+                  mb: 2
+                }}>
+                  <Typography variant="body2" sx={{ color: '#e65100', fontWeight: 500 }}>
+                    <strong>Risk Scoring & Mitigation:</strong> Comprehensive risk assessment across market, property, 
+                    tenant, and financing factors with actionable recommendations for risk mitigation.
+                  </Typography>
+                </Box>
+                
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Overall Risk Score:
@@ -5105,7 +5131,7 @@ const UnderwritePage: React.FC = () => {
         {/* Advanced Analysis Section */}
         {/* Advanced Analysis Summary + CTA */}
         <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-          <Accordion defaultExpanded>
+          <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ fontWeight: 700 }}>Advanced Analysis</Typography>
@@ -5118,64 +5144,69 @@ const UnderwritePage: React.FC = () => {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              {/* Section Description */}
+              <Box sx={{ 
+                p: 2, 
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 1, 
+                border: '1px solid #2196f3',
+                fontSize: '0.875rem',
+                mb: 3
+              }}>
+                <Typography variant="body2" sx={{ color: '#1565c0', fontWeight: 500 }}>
+                  <strong>Advanced Modeling & Specialized Analysis:</strong> Access sophisticated tools for exit strategies, 
+                  tax implications, seasonal adjustments, and market analysis beyond basic financial projections.
+                </Typography>
+              </Box>
+              
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 3 }}>
-                {/* Risk Score Summary */}
+                {/* Exit Strategies Summary */}
                 <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
                   <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
-                    Risk Score
-                  </Typography>
-                  {state.riskScoreResults ? (
-                    <Chip 
-                      label={`${state.riskScoreResults.overallRiskScore}/10`}
-                      color={
-                        state.riskScoreResults.overallRiskScore <= 3 ? 'success' :
-                        state.riskScoreResults.overallRiskScore <= 5 ? 'warning' : 'error'
-                      }
-                      variant="filled"
-                      sx={{ fontSize: '1.1rem', fontWeight: 600 }}
-                    />
-                  ) : (
-                    <Typography variant="body2" sx={{ color: '#999' }}>
-                      Not calculated
-                    </Typography>
-                  )}
-                </Box>
-                
-                {/* Market Conditions Summary */}
-                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
-                    Market Type
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d', textTransform: 'capitalize' }}>
-                    {state.marketType}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
-                    {state.marketType === 'hot' ? 'Higher inflation' : 
-                     state.marketType === 'stable' ? 'Moderate inflation' : 'Lower inflation'}
-                  </Typography>
-                </Box>
-                
-                {/* Inflation Rate Summary */}
-                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
-                    Inflation Rate
+                    Exit Strategies
                   </Typography>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
-                    {(state.marketConditions?.inflationRate * 100).toFixed(1)}%
+                    Available
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
-                    Annual rate
+                    Refinance, Sale, 1031 Exchange
+                  </Typography>
+                </Box>
+                
+                {/* Tax Implications Summary */}
+                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
+                    Tax Analysis
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                    Available
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
+                    Depreciation, deductions, gains
+                  </Typography>
+                </Box>
+                
+                {/* Seasonal Adjustments Summary */}
+                <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ color: '#666', mb: 1 }}>
+                    Seasonal Analysis
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a365d' }}>
+                    Available
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
+                    Monthly occupancy patterns
                   </Typography>
                 </Box>
               </Box>
               
               <Box sx={{ p: 2, backgroundColor: '#e3f2fd', borderRadius: 1, border: '1px solid #2196f3', mb: 3 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1565c0', mb: 1 }}>
-                  Unlock Full Advanced Analysis Suite
+                  Unlock Advanced Modeling & Analysis
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-                  Access comprehensive tools including exit strategies, tax implications, confidence intervals, 
-                  inflation projections, seasonal adjustments, market analysis, and stress testing.
+                  Access specialized tools for exit strategies, tax implications, confidence intervals, 
+                  seasonal adjustments, market analysis, and stress testing - separate from basic financial projections.
                 </Typography>
                 <Button 
                   variant="contained" 
@@ -5191,7 +5222,7 @@ const UnderwritePage: React.FC = () => {
                   }}
                   startIcon={<TrendingUpIcon />}
                 >
-                  Open Advanced Analysis
+                  Open Advanced Modeling
                 </Button>
               </Box>
             </AccordionDetails>
@@ -5203,7 +5234,7 @@ const UnderwritePage: React.FC = () => {
         {/* Fix & Flip Section */}
             {state.operationType === 'Fix & Flip' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>Fix & Flip</Typography>
               </AccordionSummary>
@@ -5336,7 +5367,7 @@ const UnderwritePage: React.FC = () => {
         {/* BRRRR Section */}
             {state.operationType === 'BRRRR' && (
           <Card sx={{ mt: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-              <Accordion defaultExpanded>
+              <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography sx={{ fontWeight: 700 }}>BRRRR</Typography>
                 </AccordionSummary>
@@ -5546,6 +5577,372 @@ const UnderwritePage: React.FC = () => {
                     </Box>
                   </Box>
 
+                  {/* Key Financial Metrics */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Key Financial Metrics
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="Total Acquisition Cost"
+                        value={formatCurrency(state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0))}
+                        InputProps={{ readOnly: true }}
+                        helperText="Purchase + Closing + Immediate CapEx"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Project Cost"
+                        value={formatCurrency((state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0)) + (state.loan.rehabCosts || 0))}
+                        InputProps={{ readOnly: true }}
+                        helperText="Acquisition + Rehab"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Price per Unit"
+                        value={state.propertyType === 'Multi Family' && state.multi?.unitRents ? formatCurrency(state.purchasePrice / state.multi.unitRents.length) : 'N/A'}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Price per SF"
+                        value={(() => {
+                          const sf = state.officeRetail?.squareFootage || 0;
+                          return sf > 0 ? formatCurrency(state.purchasePrice / sf) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="ARV (if value-add/flip)"
+                        value={state.fixFlip?.arv ? formatCurrency(state.fixFlip.arv) : 'N/A'}
+                        InputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Equity at Purchase"
+                        value={state.fixFlip?.arv ? formatCurrency(state.fixFlip.arv - ((state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0)) + (state.loan.rehabCosts || 0))) : 'N/A'}
+                        InputProps={{ readOnly: true }}
+                        helperText="ARV - Total Project Cost"
+                      />
+                      <TextField
+                        fullWidth
+                        label="LTV"
+                        value={(() => {
+                          const loanAmount = computeLoanAmount(state);
+                          return state.purchasePrice > 0 ? ((loanAmount / state.purchasePrice) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Loan Amount ÷ Purchase Price"
+                      />
+                      <TextField
+                        fullWidth
+                        label="LTC"
+                        value={(() => {
+                          const loanAmount = computeLoanAmount(state);
+                          const totalProjectCost = (state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0)) + (state.loan.rehabCosts || 0);
+                          return totalProjectCost > 0 ? ((loanAmount / totalProjectCost) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Loan Amount ÷ Total Project Cost"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Debt Yield"
+                        value={(() => {
+                          const annualNOI = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12;
+                          const loanAmount = computeLoanAmount(state);
+                          return loanAmount > 0 ? ((annualNOI / loanAmount) * 100).toFixed(2) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="NOI ÷ Loan Amount"
+                      />
+                      <TextField
+                        fullWidth
+                        label="DSCR (Y1)"
+                        value={(() => {
+                          const annualNOI = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12;
+                          const annualDebtService = totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          }) * 12;
+                          return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="NOI ÷ Annual Debt Service"
+                      />
+                      <TextField
+                        fullWidth
+                        label="DSCR (Stabilized)"
+                        value={(() => {
+                          // Assume 5% rent growth and 3% expense growth for stabilized
+                          const stabilizedAnnualNOI = (computeIncome(state) * 1.05 - computeFixedMonthlyOps(state.ops) * 1.03 - variableMonthlyFromPercentages(computeIncome(state) * 1.05, state.ops)) * 12;
+                          const annualDebtService = totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          }) * 12;
+                          return annualDebtService > 0 ? (stabilizedAnnualNOI / annualDebtService).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Stabilized NOI ÷ Annual Debt Service"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Expense Ratio"
+                        value={(() => {
+                          const grossIncome = computeIncome(state) * 12;
+                          const operatingExpenses = (computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12;
+                          return grossIncome > 0 ? ((operatingExpenses / grossIncome) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Operating Expenses ÷ EGI"
+                      />
+                      <TextField
+                        fullWidth
+                        label="NOI Margin"
+                        value={(() => {
+                          const grossIncome = computeIncome(state) * 12;
+                          const annualNOI = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12;
+                          return grossIncome > 0 ? ((annualNOI / grossIncome) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="NOI ÷ EGI"
+                      />
+                      <TextField
+                        fullWidth
+                        label="GRM"
+                        value={(() => {
+                          const grossAnnualIncome = computeIncome(state) * 12;
+                          return grossAnnualIncome > 0 ? (state.purchasePrice / grossAnnualIncome).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Purchase Price ÷ Gross Annual Income"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Break-even Occupancy (No Debt)"
+                        value={(() => {
+                          try {
+                            const monthlyRevenue = (state.propertyType === 'Office' || state.propertyType === 'Retail')
+                              ? ((state.officeRetail?.squareFootage || 0) * (state.officeRetail?.rentPerSFMonthly || 0)) + (state.officeRetail?.extraMonthlyIncome || 0)
+                              : computeIncome(state);
+                            
+                            if (monthlyRevenue > 0) {
+                              const expenses = computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(monthlyRevenue, state.ops);
+                              return ((expenses / monthlyRevenue) * 100).toFixed(1) + '%';
+                            } else {
+                              return '0.0%';
+                            }
+                          } catch (error) {
+                            return '0.0%';
+                          }
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Expenses ÷ GPR"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Break-even Occupancy (With Debt)"
+                        value={(() => {
+                          try {
+                            const monthlyRevenue = (state.propertyType === 'Office' || state.propertyType === 'Retail')
+                              ? ((state.officeRetail?.squareFootage || 0) * (state.officeRetail?.rentPerSFMonthly || 0)) + (state.officeRetail?.extraMonthlyIncome || 0)
+                              : computeIncome(state);
+                            
+                            if (monthlyRevenue > 0) {
+                              const expenses = computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(monthlyRevenue, state.ops);
+                              const debtService = totalMonthlyDebtService({
+                                newLoanMonthly: state.loan.monthlyPayment || 0,
+                                subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                                hybridMonthly: state.hybrid?.monthlyPayment
+                              });
+                              return (((expenses + debtService) / monthlyRevenue) * 100).toFixed(1) + '%';
+                            } else {
+                              return '0.0%';
+                            }
+                          } catch (error) {
+                            return '0.0%';
+                          }
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="(Expenses + Debt Service) ÷ GPR"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Payback Period (Years)"
+                        value={(() => {
+                          const totalCashInvested = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                          const annualCashFlow = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          })) * 12;
+                          return annualCashFlow > 0 ? (totalCashInvested / annualCashFlow).toFixed(1) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Total Cash Invested ÷ Annual Cash Flow"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Equity Multiple (MOIC)"
+                        value={(() => {
+                          // Simplified calculation - can be enhanced with actual distribution tracking
+                          const totalCashInvested = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                          const annualCashFlow = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          })) * 12;
+                          // Assume 5-year hold period for MOIC calculation
+                          const totalDistributions = annualCashFlow * 5;
+                          return totalCashInvested > 0 ? (totalDistributions / totalCashInvested).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Total Distributions ÷ Total Cash Invested"
+                      />
+                      <TextField
+                        fullWidth
+                        label="IRR (Levered)"
+                        value={(() => {
+                          // Simplified IRR calculation - can be enhanced with actual cash flow projections
+                          const totalCashInvested = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                          const annualCashFlow = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          })) * 12;
+                          // Assume 5-year hold and 3% annual appreciation
+                          const futureValue = state.purchasePrice * Math.pow(1.03, 5);
+                          const totalReturn = (annualCashFlow * 5) + futureValue - totalCashInvested;
+                          const irr = totalCashInvested > 0 ? Math.pow((totalReturn + totalCashInvested) / totalCashInvested, 1/5) - 1 : 0;
+                          return (irr * 100).toFixed(1) + '%';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Internal Rate of Return (Levered)"
+                      />
+                      <TextField
+                        fullWidth
+                        label="IRR (Unlevered)"
+                        value={(() => {
+                          // Simplified unlevered IRR calculation
+                          const totalCashInvested = state.purchasePrice + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                          const annualCashFlow = (computeIncome(state) - computeFixedMonthlyOps(state.ops)) * 12;
+                          // Assume 5-year hold and 3% annual appreciation
+                          const futureValue = state.purchasePrice * Math.pow(1.03, 5);
+                          const totalReturn = (annualCashFlow * 5) + futureValue - totalCashInvested;
+                          const irr = totalCashInvested > 0 ? Math.pow((totalReturn + totalCashInvested) / totalCashInvested, 1/5) - 1 : 0;
+                          return (irr * 100).toFixed(1) + '%';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Internal Rate of Return (Unlevered)"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Return on Equity (Current)"
+                        value={(() => {
+                          const equity = state.purchasePrice - computeLoanAmount(state);
+                          const annualCashFlow = (computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          })) * 12;
+                          return equity > 0 ? ((annualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Annual Cash Flow ÷ Current Equity"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Return on Equity (Stabilized)"
+                        value={(() => {
+                          const equity = state.purchasePrice - computeLoanAmount(state);
+                          // Assume 5% rent growth and 3% expense growth for stabilized
+                          const stabilizedAnnualCashFlow = (computeIncome(state) * 1.05 - computeFixedMonthlyOps(state.ops) * 1.03 - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          })) * 12;
+                          return equity > 0 ? ((stabilizedAnnualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Stabilized Annual Cash Flow ÷ Current Equity"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Cash Reserve Months on Hand"
+                        value={(() => {
+                          const monthlyCashFlow = computeIncome(state) - computeFixedMonthlyOps(state.ops) - totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          });
+                          // Assume 6 months of cash flow as cash reserve
+                          const cashReserve = monthlyCashFlow * 6;
+                          return monthlyCashFlow > 0 ? (cashReserve / monthlyCashFlow).toFixed(1) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Cash Reserve ÷ Monthly Cash Flow"
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* STR/Hotel Specific Metrics */}
+                  {(state.propertyType === 'Hotel' || state.operationType === 'Short Term Rental') && (
+                    <Box sx={{ 
+                      p: 2, 
+                      bgcolor: '#fafbfc', 
+                      borderRadius: 2, 
+                      border: '1px solid #e8eaed'
+                    }}>
+                      <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                        STR/Hotel Specific Metrics
+                      </Typography>
+                      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                        <TextField
+                          fullWidth
+                          label="ADR"
+                          value={state.revenueInputs?.averageDailyRate ? formatCurrency(state.revenueInputs.averageDailyRate) : 'N/A'}
+                          InputProps={{ readOnly: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Occupancy Rate"
+                          value={state.revenueInputs?.occupancyRate ? (state.revenueInputs.occupancyRate * 100).toFixed(1) + '%' : 'N/A'}
+                          InputProps={{ readOnly: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="RevPAR"
+                          value={(() => {
+                            const adr = state.revenueInputs?.averageDailyRate || 0;
+                            const occupancy = state.revenueInputs?.occupancyRate || 0;
+                            return adr > 0 ? formatCurrency(adr * occupancy) : 'N/A';
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="ADR × Occupancy Rate"
+                        />
+                        <TextField
+                          fullWidth
+                          label="GOP Margin"
+                          value={(() => {
+                            const grossRevenue = (state.revenueInputs?.averageDailyRate || 0) * (state.revenueInputs?.totalRooms || 0) * (state.revenueInputs?.occupancyRate || 0) * 365;
+                            const operatingExpenses = (computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 12;
+                            return grossRevenue > 0 ? (((grossRevenue - operatingExpenses) / grossRevenue) * 100).toFixed(1) + '%' : 'N/A';
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="(Gross Revenue - Operating Expenses) ÷ Gross Revenue"
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
                   {/* Financial Terms */}
                   <Box sx={{ 
                     p: 2, 
@@ -5589,9 +5986,14 @@ const UnderwritePage: React.FC = () => {
                       />
                       <TextField
                         fullWidth
-                        label="Monthly Payment"
-                        value={formatCurrency(state.loan.monthlyPayment || 0)}
+                        label="Total Monthly Debt Service"
+                        value={formatCurrency(totalMonthlyDebtService({
+                          newLoanMonthly: state.loan.monthlyPayment || 0,
+                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                          hybridMonthly: state.hybrid?.monthlyPayment
+                        }))}
                         InputProps={{ readOnly: true }}
+                        helperText="Consolidated monthly payment to all lenders"
                       />
                     </Box>
                   </Box>
@@ -5620,16 +6022,6 @@ const UnderwritePage: React.FC = () => {
                           computeFixedMonthlyOps(state.ops) +
                           variableMonthlyFromPercentages(computeIncome(state), state.ops)
                         )}
-                        InputProps={{ readOnly: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Monthly Debt Service"
-                        value={formatCurrency(totalMonthlyDebtService({
-                          newLoanMonthly: state.loan.monthlyPayment || 0,
-                          subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-                          hybridMonthly: state.hybrid?.monthlyPayment
-                        }))}
                         InputProps={{ readOnly: true }}
                       />
                       <TextField
@@ -5762,12 +6154,56 @@ const UnderwritePage: React.FC = () => {
                       />
                     </Box>
                   </Box>
+
+                  {/* Sensitivities */}
+                  <Box sx={{ 
+                    p: 2, 
+                    bgcolor: '#fafbfc', 
+                    borderRadius: 2, 
+                    border: '1px solid #e8eaed'
+                  }}>
+                    <Typography sx={{ fontWeight: 600, mb: 2, color: '#1a365d', fontSize: '0.9rem' }}>
+                      Sensitivities
+                    </Typography>
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                      <TextField
+                        fullWidth
+                        label="DSCR at -10% Rent"
+                        value={(() => {
+                          const reducedIncome = computeIncome(state) * 0.9;
+                          const annualNOI = (reducedIncome - computeFixedMonthlyOps(state.ops) - variableMonthlyFromPercentages(reducedIncome, state.ops)) * 12;
+                          const annualDebtService = totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          }) * 12;
+                          return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="DSCR with 10% rent reduction"
+                      />
+                      <TextField
+                        fullWidth
+                        label="DSCR at +10% Expenses"
+                        value={(() => {
+                          const increasedExpenses = (computeFixedMonthlyOps(state.ops) + variableMonthlyFromPercentages(computeIncome(state), state.ops)) * 1.1;
+                          const annualNOI = (computeIncome(state) - increasedExpenses) * 12;
+                          const annualDebtService = totalMonthlyDebtService({
+                            newLoanMonthly: state.loan.monthlyPayment || 0,
+                            subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+                            hybridMonthly: state.hybrid?.monthlyPayment
+                          }) * 12;
+                          return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="DSCR with 10% expense increase"
+                      />
+                    </Box>
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
         </Card>
-
-
 
         {/* Action Buttons */}
         <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>

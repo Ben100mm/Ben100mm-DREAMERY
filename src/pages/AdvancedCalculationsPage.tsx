@@ -349,111 +349,10 @@ const AdvancedCalculationsPage: React.FC = () => {
     };
   };
 
-  // Real estate celebration effect for configuration completion
-  const createRealEstateCelebration = () => {
-    // Create a "SOLD" sign that appears and bounces
-    const soldSign = document.createElement('div');
-         soldSign.innerHTML = 'SOLD!';
-    soldSign.style.position = 'fixed';
-    soldSign.style.left = '50%';
-    soldSign.style.top = '50%';
-    soldSign.style.transform = 'translate(-50%, -50%)';
-    soldSign.style.fontSize = '48px';
-    soldSign.style.fontWeight = 'bold';
-    soldSign.style.color = '#2e7d32';
-    soldSign.style.backgroundColor = '#e8f5e8';
-    soldSign.style.padding = '20px 40px';
-    soldSign.style.borderRadius = '15px';
-    soldSign.style.border = '4px solid #2e7d32';
-    soldSign.style.boxShadow = '0 8px 32px rgba(46, 125, 50, 0.3)';
-    soldSign.style.pointerEvents = 'none';
-    soldSign.style.zIndex = '9999';
-    soldSign.style.animation = 'realEstateCelebration 3s ease-out forwards';
-    
-    // Add celebration animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes realEstateCelebration {
-        0% {
-          transform: translate(-50%, -50%) scale(0) rotate(-10deg);
-          opacity: 0;
-        }
-        20% {
-          transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
-          opacity: 1;
-        }
-        40% {
-          transform: translate(-50%, -50%) scale(1) rotate(0deg);
-          opacity: 1;
-        }
-        60% {
-          transform: translate(-50%, -50%) scale(1.1) rotate(2deg);
-          opacity: 1;
-        }
-        80% {
-          transform: translate(-50%, -50%) scale(1) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(soldSign);
-    
-    // Add floating house keys
-    for (let i = 0; i < 3; i++) {
-      setTimeout(() => {
-        const key = document.createElement('div');
-                 key.innerHTML = 'KEY';
-        key.style.position = 'fixed';
-        key.style.left = Math.random() * 80 + 10 + 'vw';
-        key.style.top = '100vh';
-        key.style.fontSize = '32px';
-        key.style.pointerEvents = 'none';
-        key.style.zIndex = '9998';
-        key.style.animation = `keyFloat ${Math.random() * 2 + 3}s ease-out forwards`;
-        
-        document.body.appendChild(key);
-        
-        // Remove key after animation
-        setTimeout(() => {
-          if (key.parentNode) {
-            key.parentNode.removeChild(key);
-          }
-        }, 5000);
-      }, i * 500);
-    }
-    
-    // Add key floating animation
-    const keyStyle = document.createElement('style');
-    keyStyle.textContent = `
-      @keyframes keyFloat {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 1;
-        }
-        50% {
-          transform: translateY(-60vh) rotate(180deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(-80vh) rotate(360deg);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(keyStyle);
-    
-    // Remove sold sign after animation
-    setTimeout(() => {
-      if (soldSign.parentNode) {
-        soldSign.parentNode.removeChild(soldSign);
-      }
-    }, 3000);
+    // Simple notification for configuration completion
+  const showConfigurationSuccess = () => {
+    // Just log the success - no visual effects
+    console.log('Configuration completed successfully!');
   };
 
   // Check if basic configurations are complete to enable progressive disclosure
@@ -707,8 +606,8 @@ const AdvancedCalculationsPage: React.FC = () => {
           setShowConfigSuccess(true);
           setTimeout(() => setShowConfigSuccess(false), 5000); // Hide after 5 seconds
           
-          // Add real estate celebration effect
-          createRealEstateCelebration();
+          // Show simple configuration success notification
+          showConfigurationSuccess();
           
           // Show success snackbar
           setSnackbar({ 

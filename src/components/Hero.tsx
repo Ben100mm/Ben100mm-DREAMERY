@@ -6,7 +6,7 @@ import MapIcon from '@mui/icons-material/Map';
 
 const HeroContainer = styled.div`
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -134,9 +134,56 @@ const SearchButton = styled.button`
   }
 `;
 
-const SparkleIcon = () => (
-  <span style={{ fontSize: '1.6rem', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', filter: 'contrast(1.5)' }}>*</span>
-);
+const SparkleIcon = () => {
+  // Get the background color at the logo's position to determine logo color
+  const [logoColor, setLogoColor] = React.useState('#1a365d'); // Default navy blue
+  
+  React.useEffect(() => {
+    const updateLogoColor = () => {
+      // Create a canvas to sample the background color
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Get the search bar element position
+        const searchBar = document.querySelector('[data-testid="search-container"]');
+        if (searchBar) {
+          const rect = searchBar.getBoundingClientRect();
+          const x = rect.left + rect.width / 2; // Center of search bar
+          const y = rect.top + rect.height / 2; // Center of search bar
+          
+          // Sample the background color
+          const imageData = ctx.getImageData(x, y, 1, 1);
+          const r = imageData.data[0];
+          const g = imageData.data[1];
+          const b = imageData.data[2];
+          
+          // Calculate brightness to determine if background is light or dark
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+          
+          // Set logo color based on background brightness
+          setLogoColor(brightness > 128 ? '#1a365d' : '#ffffff');
+        }
+      }
+    };
+    
+    updateLogoColor();
+    window.addEventListener('resize', updateLogoColor);
+    return () => window.removeEventListener('resize', updateLogoColor);
+  }, []);
+  
+  return (
+    <img 
+      src="/logo.png" 
+      alt="Dreamery Logo" 
+      style={{ 
+        width: '65px', 
+        height: '65px', 
+        objectFit: 'contain',
+        filter: logoColor === '#ffffff' ? 'brightness(0) invert(1)' : 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)'
+      }} 
+    />
+  );
+};
 
 const Hero: React.FC = () => {
   return (
@@ -144,7 +191,7 @@ const Hero: React.FC = () => {
       <Overlay />
       <Content>
         <Title>It Starts with a Home.</Title>
-        <SearchContainer>
+        <SearchContainer data-testid="search-container">
           <StyledTextField
             variant="standard"
             placeholder="Enter an address, neighborhood, city, or ZIP code"

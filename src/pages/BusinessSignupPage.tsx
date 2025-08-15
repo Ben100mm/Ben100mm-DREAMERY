@@ -17,6 +17,7 @@ import {
   IconButton,
   InputAdornment,
   Alert,
+  ListSubheader,
 } from '@mui/material';
 import {
   Visibility,
@@ -233,81 +234,97 @@ const BusinessSignupPage: React.FC = () => {
                     },
                   }}
                 >
-                  {/* Real Estate Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Real Estate Companies
+                  </ListSubheader>
                   <MenuItem value="real-estate-company">Real Estate Company</MenuItem>
                   <MenuItem value="brokerage-firm">Brokerage Firm</MenuItem>
                   <MenuItem value="real-estate-team">Real Estate Team</MenuItem>
                   <MenuItem value="real-estate-office">Real Estate Office</MenuItem>
+                  <MenuItem value="investment-firm">Investment Firm</MenuItem>
+                  <MenuItem value="syndication-company">Syndication Company</MenuItem>
+                  <MenuItem value="crowdfunding-platform">Crowdfunding Platform</MenuItem>
+                  <MenuItem value="reit">Real Estate Investment Trust (REIT)</MenuItem>
                   
-                  {/* Title & Escrow Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Title & Escrow Companies
+                  </ListSubheader>
                   <MenuItem value="title-company">Title Company</MenuItem>
                   <MenuItem value="escrow-company">Escrow Company</MenuItem>
                   <MenuItem value="title-insurance-company">Title Insurance Company</MenuItem>
                   
-                  {/* Mortgage Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Mortgage Companies
+                  </ListSubheader>
                   <MenuItem value="mortgage-company">Mortgage Company</MenuItem>
                   <MenuItem value="mortgage-brokerage">Mortgage Brokerage</MenuItem>
                   <MenuItem value="hard-money-lending-company">Hard Money Lending Company</MenuItem>
                   <MenuItem value="private-lending-company">Private Lending Company</MenuItem>
                   
-                  {/* Property Management Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Property Management Companies
+                  </ListSubheader>
                   <MenuItem value="property-management-company">Property Management Company</MenuItem>
                   <MenuItem value="str-management-company">STR Management Company</MenuItem>
                   <MenuItem value="maintenance-company">Maintenance Company</MenuItem>
                   <MenuItem value="cleaning-company">Cleaning Company</MenuItem>
                   
-                  {/* Construction & Development Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Construction & Development Companies
+                  </ListSubheader>
                   <MenuItem value="construction-company">Construction Company</MenuItem>
                   <MenuItem value="development-company">Development Company</MenuItem>
                   <MenuItem value="building-company">Building Company</MenuItem>
                   <MenuItem value="renovation-company">Renovation Company</MenuItem>
                   
-                  {/* Design & Architecture Firms */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Design & Architecture Firms
+                  </ListSubheader>
                   <MenuItem value="architecture-firm">Architecture Firm</MenuItem>
                   <MenuItem value="interior-design-firm">Interior Design Firm</MenuItem>
                   <MenuItem value="landscape-design-firm">Landscape Design Firm</MenuItem>
                   <MenuItem value="design-consulting-firm">Design Consulting Firm</MenuItem>
                   
-                  {/* Inspection & Appraisal Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Inspection & Appraisal Companies
+                  </ListSubheader>
                   <MenuItem value="inspection-company">Inspection Company</MenuItem>
                   <MenuItem value="appraisal-company">Appraisal Company</MenuItem>
                   <MenuItem value="surveying-company">Surveying Company</MenuItem>
                   
-                  {/* Insurance Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Insurance Companies
+                  </ListSubheader>
                   <MenuItem value="insurance-company">Insurance Company</MenuItem>
                   <MenuItem value="title-insurance-company">Title Insurance Company</MenuItem>
                   <MenuItem value="property-insurance-company">Property Insurance Company</MenuItem>
                   
-                  {/* Legal & Professional Services */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Legal & Professional Services
+                  </ListSubheader>
                   <MenuItem value="law-firm">Law Firm</MenuItem>
                   <MenuItem value="accounting-firm">Accounting Firm</MenuItem>
                   <MenuItem value="tax-consulting-firm">Tax Consulting Firm</MenuItem>
                   <MenuItem value="1031-exchange-company">1031 Exchange Company</MenuItem>
                   
-                  {/* Technology Companies */}
-                  <MenuItem value="crm-company">CRM Company</MenuItem>
-                  <MenuItem value="software-company">Software Company</MenuItem>
-                  <MenuItem value="api-provider">API Provider</MenuItem>
-                  <MenuItem value="tech-consulting-firm">Technology Consulting Firm</MenuItem>
-                  
-                  {/* Investment Companies */}
-                  <MenuItem value="investment-company">Investment Company</MenuItem>
-                  <MenuItem value="syndication-company">Syndication Company</MenuItem>
-                  <MenuItem value="crowdfunding-platform">Crowdfunding Platform</MenuItem>
-                  <MenuItem value="reit">Real Estate Investment Trust (REIT)</MenuItem>
-                  
-                  {/* Auction & iBuyer Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Auction & iBuyer Companies
+                  </ListSubheader>
                   <MenuItem value="auction-company">Auction Company</MenuItem>
                   <MenuItem value="ibuyer-company">iBuyer Company</MenuItem>
                   <MenuItem value="wholesaling-company">Wholesaling Company</MenuItem>
                   
-                  {/* Marketing & Media Companies */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Marketing & Media Companies
+                  </ListSubheader>
                   <MenuItem value="marketing-agency">Marketing Agency</MenuItem>
                   <MenuItem value="photography-company">Photography Company</MenuItem>
                   <MenuItem value="virtual-tour-company">Virtual Tour Company</MenuItem>
                   <MenuItem value="staging-company">Staging Company</MenuItem>
                   
-                  {/* Other Business Types */}
+                  <ListSubheader sx={{ fontWeight: 'bold', color: '#666666', backgroundColor: '#f5f5f5', fontSize: '14px' }}>
+                    Other Business Types
+                  </ListSubheader>
                   <MenuItem value="consulting-firm">Consulting Firm</MenuItem>
                   <MenuItem value="training-company">Training Company</MenuItem>
                   <MenuItem value="education-company">Education Company</MenuItem>

@@ -42,6 +42,7 @@ import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
 import UnderwritePage from './pages/UnderwritePage';
 import UXDemoPage from './pages/UXDemoPage';
 import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
+import ClosePage from './pages/ClosePage';
 
 const theme = createTheme({
   palette: {
@@ -112,6 +113,7 @@ function App() {
             <Route path="/underwrite" element={<UnderwritePage />} />
             <Route path="/ux-demo" element={<UXDemoPage />} />
             <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
+            <Route path="/close" element={<ClosePage />} />
           </Routes>
         </Router>
       </ThemeProvider>

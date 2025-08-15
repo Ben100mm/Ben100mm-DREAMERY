@@ -4,6 +4,20 @@ export interface HybridInputs {
   annualInterestRate: number;
   monthlyPayment: number;
   annualPayment: number;
+  balloonDue?: number; // Years until balloon payment is due
+  interestOnly?: boolean; // Whether this is an interest-only loan
+  subjectToLoans?: Array<{
+    id: string;
+    balance: number;
+    monthlyPayment: number;
+    annualInterestRate: number;
+    remainingTermMonths: number;
+    balloonDue?: number;
+    interestOnly?: boolean;
+  }>;
+  totalLoanBalance?: number;
+  totalMonthlyPayment?: number;
+  totalAnnualPayment?: number;
   amortizationSchedule: Array<{
     month: number;
     payment: number;
@@ -53,6 +67,8 @@ export interface LoanTerms {
   annualPayment: number;
   totalInterest: number;
   totalPayment: number;
+  balloonDue?: number; // Years until balloon payment is due
+  interestOnly?: boolean; // Whether this is an interest-only loan
   amortizationSchedule: Array<{
     month: number;
     payment: number;
@@ -141,6 +157,9 @@ export interface DealState {
   city: string;
   state: string;
   
+  // Financing Type
+  offerType?: 'Cash' | 'Conventional' | 'FHA' | 'DSCR' | 'Seller Finance' | 'Hard Money' | 'Private' | 'Subject To Existing Mortgage' | 'Hybrid' | 'Line of Credit';
+  
   // Market Type
   marketType: 'hot' | 'stable' | 'slow';
   
@@ -155,6 +174,8 @@ export interface DealState {
       monthlyPayment: number;
       annualInterestRate: number;
       remainingTermMonths: number;
+      balloonDue?: number; // Years until balloon payment is due
+      interestOnly?: boolean; // Whether this is an interest-only loan
     }>;
     totalBalance: number;
     totalMonthlyPayment: number;

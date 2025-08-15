@@ -4,6 +4,8 @@ import {
   Typography,
   Card,
   CardContent,
+  Chip,
+  Divider,
 } from '@mui/material';
 import { AdvancedAnalysisDashboard } from './AdvancedCalculations';
 
@@ -22,6 +24,102 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ dealState, allResults 
       </Box>
     );
   }
+
+  // Helper function to render financing details
+  const renderFinancingDetails = () => {
+    if (!dealState.offerType) return null;
+
+    const hasBalloonPayment = (loan: any) => {
+      return loan?.balloonDue && loan.balloonDue > 0;
+    };
+
+    const getBalloonPaymentInfo = (loan: any, label: string) => {
+      if (!hasBalloonPayment(loan)) return null;
+      return (
+        <Box key={label} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <Chip 
+            label={`${label}: Balloon in ${loan.balloonDue} years`} 
+            size="small" 
+            color="warning" 
+            variant="outlined"
+          />
+        </Box>
+      );
+    };
+
+    switch (dealState.offerType) {
+      case 'Seller Finance':
+        return (
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+              Seller Finance Details
+            </Typography>
+            <Box sx={{ display: 'grid', gap: 1 }}>
+              <Typography variant="body2">
+                <strong>Loan Amount:</strong> ${dealState.loan?.loanAmount?.toLocaleString() || 0}
+              </Typography>
+              <Typography variant="body2">
+                <strong>Interest Rate:</strong> {dealState.loan?.annualInterestRate || 0}%
+              </Typography>
+              <Typography variant="body2">
+                <strong>Monthly Payment:</strong> ${dealState.loan?.monthlyPayment?.toLocaleString() || 0}
+              </Typography>
+              {dealState.loan?.interestOnly && (
+                <Chip label="Interest Only" size="small" color="info" variant="outlined" />
+              )}
+              {getBalloonPaymentInfo(dealState.loan, 'Seller Finance')}
+            </Box>
+          </Box>
+        );
+
+      case 'Subject To Existing Mortgage':
+        return (
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+              Subject-To Financing Details
+            </Typography>
+            <Box sx={{ display: 'grid', gap: 1 }}>
+              <Typography variant="body2">
+                <strong>Total Balance:</strong> ${dealState.subjectTo?.totalLoanBalance?.toLocaleString() || 0}
+              </Typography>
+              <Typography variant="body2">
+                <strong>Total Monthly Payment:</strong> ${dealState.subjectTo?.totalMonthlyPayment?.toLocaleString() || 0}
+              </Typography>
+              {dealState.subjectTo?.loans?.map((loan: any, index: number) => (
+                getBalloonPaymentInfo(loan, `Loan ${index + 1}`)
+              ))}
+            </Box>
+          </Box>
+        );
+
+      case 'Hybrid':
+        return (
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+              Hybrid Financing Details
+            </Typography>
+            <Box sx={{ display: 'grid', gap: 1 }}>
+              <Typography variant="body2">
+                <strong>Total Loan Balance:</strong> ${dealState.hybrid?.totalLoanBalance?.toLocaleString() || 0}
+              </Typography>
+              <Typography variant="body2">
+                <strong>Total Monthly Payment:</strong> ${dealState.hybrid?.totalMonthlyPayment?.toLocaleString() || 0}
+              </Typography>
+              {dealState.hybrid?.interestOnly && (
+                <Chip label="Interest Only" size="small" color="info" variant="outlined" />
+              )}
+              {getBalloonPaymentInfo(dealState.hybrid, 'Hybrid Loan 3')}
+              {dealState.hybrid?.subjectToLoans?.map((loan: any, index: number) => (
+                getBalloonPaymentInfo(loan, `Subject-To Loan ${index + 1}`)
+              ))}
+            </Box>
+          </Box>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <Box>
@@ -52,6 +150,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ dealState, allResults 
                 <Typography variant="body2">
                   <strong>Operation Type:</strong> {dealState.operationType}
                 </Typography>
+                {dealState.offerType && (
+                  <Typography variant="body2">
+                    <strong>Financing Type:</strong> {dealState.offerType}
+                  </Typography>
+                )}
               </Box>
             </CardContent>
           </Card>
@@ -80,6 +183,24 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ dealState, allResults 
           </Card>
         </Box>
       </Box>
+
+      {/* Financing Details Section */}
+      {dealState.offerType && ['Seller Finance', 'Subject To Existing Mortgage', 'Hybrid'].includes(dealState.offerType) && (
+        <Box sx={{ mt: 3 }}>
+          <Card sx={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#856404', mb: 2 }}>
+                Financing Details & Balloon Payment Information
+              </Typography>
+              {renderFinancingDetails()}
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="caption" sx={{ color: '#856404', fontStyle: 'italic' }}>
+                Balloon payment terms are now integrated for advanced financial modeling and risk analysis.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
       
       <Box sx={{ mt: 3 }}>
         <AdvancedAnalysisDashboard allResults={allResults} />

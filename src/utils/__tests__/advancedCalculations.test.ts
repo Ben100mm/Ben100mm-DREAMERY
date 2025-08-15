@@ -8,6 +8,8 @@ import {
   calculateSensitivityAnalysis,
   calculateStressTest,
   calculateRiskScore,
+  calculateYearsUntilRefinance,
+  calculateRefinancePotential,
   defaultMarketConditions,
   defaultSeasonalFactors,
 } from '../advancedCalculations';
@@ -47,19 +49,59 @@ describe('advancedCalculations', () => {
   });
 
   test('calculateRefinanceScenarios returns meaningful savings and break-even', () => {
-    const currentLoan = { balance: 250000, rate: 6.5, term: 30, monthlyPayment: 1580 };
-    const propertyValue = 350000;
+    const currentLoan = {
+      balance: 200000,
+      rate: 6.5,
+      term: 30,
+      monthlyPayment: 1264.14
+    };
+
     const scenarios = [
-      { timing: 2, newRate: 5.5, newTerm: 30, refinanceCosts: 5000, cashOutAmount: 0 },
-      { timing: 5, newRate: 5.0, newTerm: 25, refinanceCosts: 5000, cashOutAmount: 25000 },
+      { timing: 2, newRate: 5.0, newTerm: 30, refinanceCosts: 5000, cashOutAmount: 0 },
+      { timing: 5, newRate: 4.5, newTerm: 25, refinanceCosts: 5000, cashOutAmount: 25000 }
     ];
+
+    const propertyValue = 250000;
     const res = calculateRefinanceScenarios(currentLoan, scenarios, propertyValue);
-    expect(res.length).toBe(2);
-    res.forEach((r) => {
-      expect(Number.isFinite(r.newMonthlyPayment)).toBe(true);
-      expect(Number.isFinite(r.monthlySavings)).toBe(true);
-      expect(Number.isFinite(r.breakEvenMonths)).toBe(true);
-    });
+
+    expect(res).toHaveLength(2);
+    expect(res[0].monthlySavings).toBeGreaterThan(0);
+    expect(res[0].breakEvenMonths).toBeGreaterThan(0);
+  });
+
+  // Test new refinance calculation functions
+  test('calculateYearsUntilRefinance returns correct years', () => {
+    // Test case: $200k loan, $250k purchase price, 4% annual appreciation, 70% LTV
+    const years = calculateYearsUntilRefinance(200000, 250000, 4, 70);
+
+    // At 70% LTV, we need property value to be: 200k / 0.7 = $285,714
+    // Starting from $250k, at 4% annual: 250k * (1.04)^years = 285,714
+    // years = log(285,714/250,000) / log(1.04) ≈ 3.3 years
+    expect(years).toBe(4); // Should round up to 4 years
+  });
+
+  test('calculateYearsUntilRefinance returns 0 when already possible', () => {
+    // Test case: $150k loan, $250k purchase price, 4% annual appreciation, 70% LTV
+    // At 70% LTV, we need property value to be: 150k / 0.7 = $214,286
+    // Since purchase price is already $250k, refinance is immediately possible
+    const years = calculateYearsUntilRefinance(150000, 250000, 4, 70);
+    expect(years).toBe(0);
+  });
+
+  test('calculateRefinancePotential returns correct amount', () => {
+    // Test case: $300k future value, $200k current loan, 70% LTV
+    // Max refinance loan: 300k * 0.7 = $210k
+    // Refinance potential: 210k - 200k = $10k
+    const potential = calculateRefinancePotential(300000, 200000, 70);
+    expect(potential).toBe(10000);
+  });
+
+  test('calculateRefinancePotential returns 0 when no equity available', () => {
+    // Test case: $200k future value, $200k current loan, 70% LTV
+    // Max refinance loan: 200k * 0.7 = $140k
+    // Refinance potential: 140k - 200k = -$60k, but capped at 0
+    const potential = calculateRefinancePotential(200000, 200000, 70);
+    expect(potential).toBe(0);
   });
 
   test('calculateTaxImplications respects deductions', () => {

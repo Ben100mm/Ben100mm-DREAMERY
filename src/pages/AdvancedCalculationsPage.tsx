@@ -278,11 +278,17 @@ const AdvancedCalculationsPage: React.FC = () => {
   // Auto-calculate Risk Score when risk factors, market conditions, or property age changes
   useEffect(() => {
     if (dealState) {
-      const results = calculateRiskScore(dealState?.riskFactors || defaultRiskFactors, dealState?.marketConditions || defaultMarketConditionsSimple, dealState?.propertyAge || defaultPropertyAgeFactors);
+      const financingDetails = getFinancingDetails() || undefined;
+      const results = calculateRiskScore(
+        dealState?.riskFactors || defaultRiskFactors, 
+        dealState?.marketConditions || defaultMarketConditionsSimple, 
+        dealState?.propertyAge || defaultPropertyAgeFactors,
+        financingDetails
+      );
       updateDealState({ riskScoreResults: results });
       handleResultsChange('risk', results);
     }
-  }, [dealState?.riskFactors, dealState?.marketConditions, dealState?.propertyAge]);
+  }, [dealState?.riskFactors, dealState?.marketConditions, dealState?.propertyAge, dealState?.offerType, dealState?.loan, dealState?.subjectTo, dealState?.hybrid]);
 
   // Auto-calculate Tax Implications when tax implications, purchase price, or revenue inputs change
   useEffect(() => {
@@ -347,6 +353,68 @@ const AdvancedCalculationsPage: React.FC = () => {
         hasTaxImplications
       }
     };
+  };
+
+  // Helper function to get financing details including balloon payment terms
+  const getFinancingDetails = () => {
+    if (!dealState) return null;
+
+    const hasBalloonPayment = (loan: any) => {
+      return loan?.balloonDue && loan.balloonDue > 0;
+    };
+
+    switch (dealState.offerType) {
+      case 'Seller Finance':
+        return {
+          type: 'Seller Finance',
+          monthlyPayment: dealState.loan?.monthlyPayment || 0,
+          annualPayment: (dealState.loan?.monthlyPayment || 0) * 12,
+          balloonPayment: hasBalloonPayment(dealState.loan) ? dealState.loan.loanAmount : 0,
+          balloonDueYears: dealState.loan?.balloonDue || 0,
+          interestOnly: dealState.loan?.interestOnly || false,
+          totalLoanAmount: dealState.loan?.loanAmount || 0
+        };
+
+      case 'Subject To Existing Mortgage':
+        const subjectToLoans = dealState.subjectTo?.loans || [];
+        const totalBalloonPayment = subjectToLoans.reduce((total, loan) => {
+          return total + (hasBalloonPayment(loan) ? loan.balance : 0);
+        }, 0);
+        const maxBalloonDueYears = Math.max(...subjectToLoans.map(loan => loan.balloonDue || 0));
+        
+        return {
+          type: 'Subject To Existing Mortgage',
+          monthlyPayment: dealState.subjectTo?.totalMonthlyPayment || 0,
+          annualPayment: (dealState.subjectTo?.totalMonthlyPayment || 0) * 12,
+          balloonPayment: totalBalloonPayment,
+          balloonDueYears: maxBalloonDueYears,
+          interestOnly: false, // Subject to loans are typically amortizing
+          totalLoanAmount: dealState.subjectTo?.totalBalance || 0
+        };
+
+      case 'Hybrid':
+        const hybridLoans = dealState.hybrid?.subjectToLoans || [];
+        const hybridBalloonPayment = dealState.hybrid?.balloonDue && dealState.hybrid.balloonDue > 0 
+          ? dealState.hybrid.loanAmount 
+          : 0;
+        const hybridMaxBalloonDueYears = Math.max(
+          ...hybridLoans.map((loan: any) => loan.balloonDue || 0),
+          dealState.hybrid?.balloonDue || 0
+        );
+
+        return {
+          type: 'Hybrid',
+          monthlyPayment: dealState.hybrid?.totalMonthlyPayment || dealState.hybrid?.monthlyPayment || 0,
+          annualPayment: (dealState.hybrid?.totalMonthlyPayment || dealState.hybrid?.monthlyPayment || 0) * 12,
+          balloonPayment: hybridBalloonPayment,
+          balloonDueYears: hybridMaxBalloonDueYears,
+          interestOnly: dealState.hybrid?.interestOnly || false,
+          totalLoanAmount: dealState.hybrid?.totalLoanBalance || dealState.hybrid?.loanAmount || 0
+        };
+
+      default:
+        return null;
+    }
   };
 
     // Simple notification for configuration completion
@@ -516,11 +584,12 @@ const AdvancedCalculationsPage: React.FC = () => {
       exit: 'Exit Strategies',
       risk: 'Risk Analysis',
       tax: 'Tax Implications',
+      refinance: 'Refinance Analysis',
       seasonal: 'Seasonal Adjustments',
       market: 'Market Conditions',
       sensitivity: 'Sensitivity Analysis',
       inflation: 'Inflation Adjustments',
-      refinance: 'Refinance Scenarios',
+      'comprehensive-refinance': 'Comprehensive Refinance',
       scenario: 'Scenario Comparison'
     };
     
@@ -1253,6 +1322,58 @@ const AdvancedCalculationsPage: React.FC = () => {
                   Comprehensive financial analysis tools with seasonal adjustments, market factors, exit strategies, 
                   tax implications, refinance scenarios, sensitivity analysis, stress testing, and inflation adjustments.
                 </Typography>
+
+                {/* Financing Details Section */}
+                {dealState && getFinancingDetails() && (
+                  <Box sx={{ mb: 3, p: 2, bgcolor: '#fff3cd', borderRadius: 1, border: '1px solid #ffc107' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#856404', mb: 2 }}>
+                      Financing Details & Balloon Payment Integration
+                    </Typography>
+                    {(() => {
+                      const financing = getFinancingDetails();
+                      if (!financing) return null;
+                      
+                      return (
+                        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+                          <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#856404' }}>
+                              {financing.type}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#856404' }}>
+                              <strong>Monthly Payment:</strong> ${financing.monthlyPayment.toLocaleString()}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#856404' }}>
+                              <strong>Total Loan Amount:</strong> ${financing.totalLoanAmount.toLocaleString()}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            {financing.balloonPayment > 0 && (
+                              <>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#d32f2f' }}>
+                                  ⚠️ Balloon Payment Due
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#d32f2f' }}>
+                                  <strong>Balloon Amount:</strong> ${financing.balloonPayment.toLocaleString()}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#d32f2f' }}>
+                                  <strong>Due In:</strong> {financing.balloonDueYears} years
+                                </Typography>
+                              </>
+                            )}
+                            {financing.interestOnly && (
+                              <Typography variant="body2" sx={{ color: '#856404' }}>
+                                <strong>Interest Only:</strong> Yes
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                      );
+                    })()}
+                    <Typography variant="caption" sx={{ color: '#856404', fontStyle: 'italic', display: 'block', mt: 1 }}>
+                      Balloon payment terms are now fully integrated for advanced financial modeling, risk analysis, and exit strategy planning.
+                    </Typography>
+                  </Box>
+                )}
                 
                 {/* Configuration Guide */}
                 {!configsComplete && (

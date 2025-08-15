@@ -72,7 +72,7 @@ const FilterPopover = styled(Paper)`
 
 const MapContainer = styled.div`
   height: 70vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1002,7 +1002,7 @@ const RentPage: React.FC = () => {
         <Box sx={{ flex: '2', position: 'relative', p: 2 }}>
           <Box sx={{
             height: '100%',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

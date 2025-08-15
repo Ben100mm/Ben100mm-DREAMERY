@@ -392,7 +392,14 @@ export const calculateStressTest = (
 export const calculateRiskScore = (
   riskFactors: RiskFactors,
   marketConditions: MarketConditions,
-  propertyAge: PropertyAgeFactors
+  propertyAge: PropertyAgeFactors,
+  financingDetails?: {
+    type: string;
+    balloonPayment: number;
+    balloonDueYears: number;
+    interestOnly: boolean;
+    totalLoanAmount: number;
+  }
 ): {
   overallRiskScore: number; // 1-10 scale
   riskBreakdown: {
@@ -408,7 +415,23 @@ export const calculateRiskScore = (
   const marketRisk = (riskFactors.marketVolatility + (marketConditions.type === 'slow' ? 3 : marketConditions.type === 'stable' ? 1 : 0)) / 2;
   const propertyRisk = (riskFactors.propertyCondition + (propertyAge.age > 30 ? 3 : propertyAge.age > 20 ? 2 : propertyAge.age > 10 ? 1 : 0)) / 2;
   const tenantRisk = riskFactors.tenantQuality;
-  const financingRisk = riskFactors.financingRisk;
+  
+  // Enhanced financing risk calculation including balloon payment risk
+  let financingRisk = riskFactors.financingRisk;
+  
+  if (financingDetails) {
+    // Add balloon payment risk
+    if (financingDetails.balloonPayment > 0) {
+      const balloonRiskMultiplier = Math.max(1, (financingDetails.balloonPayment / financingDetails.totalLoanAmount) * 2);
+      const timeRiskMultiplier = Math.max(1, (10 - financingDetails.balloonDueYears) / 5); // Shorter time = higher risk
+      financingRisk = Math.min(10, financingRisk * balloonRiskMultiplier * timeRiskMultiplier);
+    }
+    
+    // Add interest-only risk
+    if (financingDetails.interestOnly) {
+      financingRisk = Math.min(10, financingRisk * 1.3);
+    }
+  }
   
   // Weighted average for overall risk score
   const overallRiskScore = (
@@ -444,6 +467,25 @@ export const calculateRiskScore = (
   }
   if (financingRisk > 5) {
     recommendations.push('Consider more conservative financing terms');
+  }
+  
+  // Add balloon payment specific recommendations
+  if (financingDetails?.balloonPayment && financingDetails.balloonPayment > 0) {
+    if (financingDetails.balloonDueYears <= 3) {
+      recommendations.push('High balloon payment risk: Plan exit strategy within 3 years');
+    } else if (financingDetails.balloonDueYears <= 5) {
+      recommendations.push('Medium balloon payment risk: Ensure sufficient cash flow for balloon payment');
+    } else {
+      recommendations.push('Balloon payment due: Plan refinancing or sale strategy');
+    }
+    
+    if (financingDetails.balloonPayment > (financingDetails.totalLoanAmount || 0) * 0.5) {
+      recommendations.push('Large balloon payment: Consider refinancing before balloon due date');
+    }
+  }
+  
+  if (financingDetails?.interestOnly) {
+    recommendations.push('Interest-only loan: Plan for principal payments or refinancing');
   }
   
   return {
@@ -607,3 +649,40 @@ export const defaultExitStrategies: ExitStrategy[] = [
     marketAppreciation: 0.04,
   },
 ];
+
+// Calculate years until refinance is possible based on appreciation and LTV constraints
+export const calculateYearsUntilRefinance = (
+  currentLoanBalance: number,
+  purchasePrice: number,
+  annualAppreciationRate: number,
+  refinanceLtv: number
+): number => {
+  if (currentLoanBalance <= 0 || purchasePrice <= 0 || annualAppreciationRate <= 0 || refinanceLtv <= 0) {
+    return 0;
+  }
+  
+  // Calculate the property value needed to support the current loan balance at the target LTV
+  const targetPropertyValue = currentLoanBalance / (refinanceLtv / 100);
+  
+  // Calculate years needed for the property to appreciate to that value
+  if (targetPropertyValue <= purchasePrice) {
+    return 0; // Already possible to refinance
+  }
+  
+  const years = Math.log(targetPropertyValue / purchasePrice) / Math.log(1 + annualAppreciationRate / 100);
+  return Math.max(0, Math.ceil(years));
+};
+
+// Calculate refinance potential based on future property value and LTV
+export const calculateRefinancePotential = (
+  futurePropertyValue: number,
+  currentLoanBalance: number,
+  refinanceLtv: number
+): number => {
+  if (futurePropertyValue <= 0 || refinanceLtv <= 0) {
+    return 0;
+  }
+  
+  const maxRefinanceLoan = futurePropertyValue * (refinanceLtv / 100);
+  return Math.max(0, maxRefinanceLoan - currentLoanBalance);
+};

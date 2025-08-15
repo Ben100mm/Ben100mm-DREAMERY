@@ -34,6 +34,7 @@ import {
   SensitivityAnalysisCalculator,
   StressTestingCalculator,
   InflationAdjustmentsCalculator,
+  ComprehensiveRefinanceCalculator,
 } from '../components';
 
 // Color constants
@@ -132,22 +133,23 @@ export const createTabConfig = (
     ),
   },
   {
-    label: 'Tax & Refinance',
+    label: 'Tax',
     icon: <AccountBalanceIcon aria-label="Account Balance" />,
     className: 'tax-implications-tab',
     component: (
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-        <Box>
-          <TaxImplicationsCalculator
-            onResultsChange={(results: any) => handleResultsChange('tax', results)}
-          />
-        </Box>
-        <Box>
-          <RefinanceScenariosCalculator
-            onResultsChange={(results: any) => handleResultsChange('refinance', results)}
-          />
-        </Box>
-      </Box>
+      <TaxImplicationsCalculator
+        onResultsChange={(results: any) => handleResultsChange('tax', results)}
+      />
+    ),
+  },
+  {
+    label: 'Refinance',
+    icon: <AccountBalanceIcon aria-label="Account Balance" />,
+    className: 'refinance-tab',
+    component: (
+      <ComprehensiveRefinanceCalculator
+        onResultsChange={(results: any) => handleResultsChange('refinance', results)}
+      />
     ),
   },
   {
@@ -209,7 +211,8 @@ export const TAB_LABELS = {
   GLOBAL_CONFIG: 'Global Configuration',
   SEASONAL_MARKET: 'Seasonal & Market',
   EXIT_STRATEGIES: 'Exit Strategies',
-  TAX_REFINANCE: 'Tax & Refinance',
+  TAX: 'Tax',
+  REFINANCE: 'Refinance',
   RISK_ANALYSIS: 'Risk Analysis',
   SENSITIVITY_INFLATION: 'Sensitivity & Inflation',
   SCENARIO_COMPARISON: 'Scenario Comparison',
@@ -220,7 +223,8 @@ export const TAB_CLASSES = {
   OVERVIEW: 'overview-tab',
   GLOBAL_CONFIG: 'global-config-tab',
   EXIT_STRATEGIES: 'exit-strategies-tab',
-  TAX_IMPLICATIONS: 'tax-implications-tab',
+  TAX: 'tax-implications-tab',
+  REFINANCE: 'refinance-tab',
   RISK_ANALYSIS: 'risk-analysis-tab',
   SENSITIVITY_ANALYSIS: 'sensitivity-analysis-tab',
   SCENARIO_COMPARISON: 'scenario-comparison-tab',

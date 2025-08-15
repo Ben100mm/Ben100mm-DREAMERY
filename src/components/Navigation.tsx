@@ -77,6 +77,7 @@ const Navigation: React.FC = () => {
       case '/sell':
       case '/mortgage':
       case '/underwrite':
+      case '/close':
         navigate(path);
         break;
       default:

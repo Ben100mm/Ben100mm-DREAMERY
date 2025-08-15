@@ -5,3 +5,4 @@ export { NavigationProgress, SectionStatusList, ProgressBar } from './Navigation
 export { useSaveProgress, SaveProgressComponent, AutoSaveStatus, SaveProgressBar } from './SaveProgress';
 export { AdvancedAnalysisDashboard, SeasonalAdjustmentsCalculator, MarketConditionsCalculator, ExitStrategiesCalculator, RiskAnalysisCalculator } from './AdvancedCalculations';
 export { TaxImplicationsCalculator, RefinanceScenariosCalculator, SensitivityAnalysisCalculator, StressTestingCalculator, InflationAdjustmentsCalculator } from './AdvancedCalculationsExtended';
+export { default as ComprehensiveRefinanceCalculator } from './ComprehensiveRefinanceCalculator';

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Container,
   Typography,
   Paper,
   Switch,
@@ -218,7 +217,7 @@ const NotificationsPage: React.FC = () => {
 
       {/* Secondary Navigation */}
       <Box sx={{ backgroundColor: 'white', borderBottom: '1px solid #e0e0e0' }}>
-        <Container maxWidth="lg">
+        <Box sx={{ px: 4 }}>
           <Box sx={{ display: 'flex', gap: 1 }}>
             {['NOTIFICATIONS', 'PERSONAL INFORMATION', 'SIGNATURE', 'CHANGE PASSWORD', 'DIRECTORY', 'UPLOAD LOGO'].map((tab) => (
               <Box
@@ -236,11 +235,11 @@ const NotificationsPage: React.FC = () => {
               </Box>
             ))}
           </Box>
-        </Container>
+        </Box>
       </Box>
 
       {/* Main Content */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ py: 4, px: 4 }}>
         <Paper sx={{ p: 4, position: 'relative' }}>
           {/* Navigation Arrows */}
           <IconButton
@@ -709,7 +708,7 @@ const NotificationsPage: React.FC = () => {
             </Button>
           </Box>
         </Paper>
-      </Container>
+      </Box>
 
 
 
@@ -741,12 +740,10 @@ const NotificationsPage: React.FC = () => {
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleUserMenuClose}>
-          <MenuItem onClick={handleUserMenuClose}>
-            <ListItemIcon>
-              <CloseIcon fontSize="small" />
-            </ListItemIcon>
-            Sign Out
-          </MenuItem>
+          <ListItemIcon>
+            <CloseIcon fontSize="small" />
+          </ListItemIcon>
+          Sign Out
         </MenuItem>
       </Menu>
     </Box>

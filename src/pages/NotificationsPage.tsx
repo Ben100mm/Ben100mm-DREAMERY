@@ -152,10 +152,10 @@ const NotificationsPage: React.FC = () => {
       {/* Header */}
       <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
         <Toolbar>
-          {/* SKYSLOPE Logo */}
+          {/* Dreamery Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
             <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 700, mr: 1 }}>
-              SKYSLOPE
+              DREAMERY
             </Typography>
           </Box>
 
@@ -209,7 +209,7 @@ const NotificationsPage: React.FC = () => {
               <Avatar sx={{ width: 32, height: 32, bgcolor: brandColors.primary }}>
                 <PersonIcon />
               </Avatar>
-              <Typography variant="body2">Justin Henderson</Typography>
+              <Typography variant="body2">User Account</Typography>
               <KeyboardArrowDownIcon fontSize="small" />
             </Box>
           </Box>

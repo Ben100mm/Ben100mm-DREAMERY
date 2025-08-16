@@ -32,9 +32,6 @@ import {
   ChevronRight as ChevronRightIcon,
   Notifications as NotificationsIcon,
   Close as CloseIcon,
-  Facebook as FacebookIcon,
-  Instagram as InstagramIcon,
-  Twitter as TwitterIcon,
   Description as DescriptionIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
@@ -714,35 +711,7 @@ const NotificationsPage: React.FC = () => {
         </Paper>
       </Container>
 
-      {/* Footer */}
-      <Box sx={{ backgroundColor: 'white', borderTop: '1px solid #e0e0e0', py: 3, mt: 'auto' }}>
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              Made with ❤️ in Sacramento by SkySlope
-            </Typography>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer' }}>
-                Terms of use
-              </Typography>
-              <Divider orientation="vertical" flexItem />
-              <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer' }}>
-                Privacy Policy
-              </Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <IconButton size="small" sx={{ color: '#1877f2' }}>
-                <FacebookIcon />
-              </IconButton>
-              <IconButton size="small" sx={{ color: '#1da1f2' }}>
-                <TwitterIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
+
 
       {/* User Menu */}
       <Menu

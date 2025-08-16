@@ -632,7 +632,10 @@ const ClosePage: React.FC = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Tooltip title="Notifications">
-              <IconButton color="inherit">
+              <IconButton 
+                color="inherit"
+                onClick={() => navigate('/notifications')}
+              >
                 <Badge badgeContent={closeState.notifications} color="error">
                   <NotificationsIcon />
                 </Badge>

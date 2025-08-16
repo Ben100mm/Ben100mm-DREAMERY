@@ -283,8 +283,7 @@ export const theme = createTheme({
     '0 105px 210px rgba(0,0,0,0.25), 0 100px 100px rgba(0,0,0,0.22)',
     '0 110px 220px rgba(0,0,0,0.25), 0 105px 105px rgba(0,0,0,0.22)',
     '0 115px 230px rgba(0,0,0,0.25), 0 110px 110px rgba(0,0,0,0.22)',
-    '0 120px 240px rgba(0,0,0,0.25), 0 115px 115px rgba(0,0,0,0.22)',
-    '0 125px 250px rgba(0,0,0,0.25), 0 120px 120px rgba(0,0,0,0.22)',
+
   ],
 });
 

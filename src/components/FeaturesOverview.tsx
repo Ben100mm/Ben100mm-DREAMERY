@@ -7,11 +7,17 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Chip,
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { brandColors } from "../theme";
+import { type DealState } from "../types/deal";
 
-export const FeaturesOverview: React.FC = () => {
+interface FeaturesOverviewProps {
+  dealState?: DealState | null;
+}
+
+export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState }) => {
   return (
     <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
       <CardContent sx={{ p: 3 }}>
@@ -83,6 +89,47 @@ export const FeaturesOverview: React.FC = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
+                {/* Risk Score Display with Color Coding */}
+                {dealState?.riskScoreResults && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      mb: 2,
+                      p: 2,
+                      bgcolor: brandColors.backgrounds.warning,
+                      borderRadius: 1,
+                      border: `1px solid ${brandColors.accent.warning}`,
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.neutral.dark }}>
+                      Overall Risk Score:
+                    </Typography>
+                    <Chip
+                      label={`${dealState.riskScoreResults.overallRiskScore}/10`}
+                      color={
+                        dealState.riskScoreResults.overallRiskScore <= 3
+                          ? "success"
+                          : dealState.riskScoreResults.overallRiskScore <= 5
+                            ? "warning"
+                            : "error"
+                      }
+                      variant="filled"
+                      sx={{
+                        color:
+                          dealState.riskScoreResults.overallRiskScore > 5
+                            ? "#d32f2f"
+                            : brandColors.accent.success,
+                        fontWeight: 700,
+                        fontSize: "1rem",
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                      {dealState.riskScoreResults.riskCategory}
+                    </Typography>
+                  </Box>
+                )}
                 <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
                   - Sensitivity analysis for key variables
                 </Typography>

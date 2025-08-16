@@ -31,7 +31,6 @@ import {
   Tab,
 } from '@mui/material';
 import {
-  SmartToy as AssistantIcon,
   Send as SendIcon,
   Schedule as ScheduleIcon,
   Description as DocumentIcon,
@@ -52,6 +51,103 @@ import {
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 import { brandColors } from "../../../theme";
+
+// Custom Atom Icon Component
+const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
+  <Box
+    sx={{
+      width: 24,
+      height: 24,
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...sx
+    }}
+  >
+    {/* Nucleus */}
+    <Box
+      sx={{
+        width: 8,
+        height: 8,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        zIndex: 2,
+      }}
+    />
+    
+    {/* Electron orbits */}
+    <Box
+      sx={{
+        width: 20,
+        height: 20,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(0deg)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 16,
+        height: 16,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(45deg)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 18,
+        height: 18,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(-30deg)',
+      }}
+    />
+    
+    {/* Electrons */}
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: 1,
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        bottom: 1,
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: '50%',
+        right: 1,
+        transform: 'translateY(-50%)',
+      }}
+    />
+  </Box>
+);
 
 // Types
 interface Message {
@@ -264,8 +360,8 @@ const mockReminders: Reminder[] = [
 const mockChatHistory: Message[] = [
   {
     id: '1',
-    type: 'assistant',
-    content: 'Hello! I\'m your AI Closing Assistant. I can help you with timeline predictions, document summaries, and personalized reminders. What would you like to know about your closing process?',
+          type: 'assistant',
+      content: 'Hello! I\'m Lumina your Closing Assistant. I can help you with timeline predictions, document summaries, and personalized reminders. What would you like to know about your closing process?',
     timestamp: new Date(Date.now() - 3600000),
     actions: [
       { id: '1', label: 'What\'s next?', type: 'button', action: 'timeline' },
@@ -378,7 +474,7 @@ const ClosingAssistant: React.FC = () => {
       };
     } else {
       return {
-        content: 'I\'m here to help with your closing process! I can:\n\n• Predict potential delays and issues\n• Summarize and analyze documents\n• Set personalized reminders\n• Answer questions about next steps\n\nWhat would you like to know?',
+        content: 'I\'m Lumina, your closing assistant! I can:\n\n• Predict potential delays and issues\n• Summarize and analyze documents\n• Set personalized reminders\n• Answer questions about next steps\n\nWhat would you like to know?',
         actions: [
           { id: '1', label: 'What\'s next?', type: 'button', action: 'timeline' },
           { id: '2', label: 'Document help', type: 'button', action: 'documents' },
@@ -558,7 +654,7 @@ const ClosingAssistant: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          AI-Powered Closing Assistant
+          Lumina - Dreamery's Closing Assistant
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Get intelligent insights, predictions, and personalized guidance for your closing process
@@ -574,7 +670,7 @@ const ClosingAssistant: React.FC = () => {
               {assistantData.predictions.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              AI Predictions
+              Lumina Predictions
             </Typography>
           </CardContent>
         </Card>
@@ -605,7 +701,7 @@ const ClosingAssistant: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <AssistantIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+            <AtomIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
             <Typography variant="h6" component="div">
               {assistantData.chatHistory.length}
             </Typography>
@@ -619,7 +715,7 @@ const ClosingAssistant: React.FC = () => {
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
         <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ backgroundColor: brandColors.neutral.light }}>
-          <Tab label="AI Chat" />
+          <Tab label="Lumina Chat" />
           <Tab label="Predictions" />
           <Tab label="Document Analysis" />
           <Tab label="Reminders" />
@@ -627,11 +723,11 @@ const ClosingAssistant: React.FC = () => {
 
         {/* Tab Content */}
         <Box sx={{ p: 3 }}>
-          {/* AI Chat Tab */}
+          {/* Lumina Chat Tab */}
           {activeTab === 0 && (
             <Box>
               <Typography variant="h6" gutterBottom>
-                Chat with AI Assistant
+                Chat with Lumina
               </Typography>
 
               {/* Chat Messages */}
@@ -640,12 +736,12 @@ const ClosingAssistant: React.FC = () => {
                   <Box key={message.id} sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                       <Avatar sx={{ backgroundColor: message.type === 'assistant' ? brandColors.actions.primary : brandColors.accent.success }}>
-                        {message.type === 'assistant' ? <AssistantIcon /> : <HomeIcon />}
+                        {message.type === 'assistant' ? <AtomIcon /> : <HomeIcon />}
                       </Avatar>
                       <Box sx={{ flexGrow: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                           <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                            {message.type === 'assistant' ? 'AI Assistant' : 'You'}
+                            {message.type === 'assistant' ? 'Lumina' : 'You'}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             {message.timestamp.toLocaleTimeString()}
@@ -677,13 +773,13 @@ const ClosingAssistant: React.FC = () => {
                 {isTyping && (
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                     <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
-                      <AssistantIcon />
+                      <AtomIcon />
                     </Avatar>
                     <Paper sx={{ p: 2, backgroundColor: brandColors.backgrounds.primary }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <CircularProgress size={16} />
                         <Typography variant="body2" color="text.secondary">
-                          AI is thinking...
+                          Lumina is thinking...
                         </Typography>
                       </Box>
                     </Paper>
@@ -752,7 +848,7 @@ const ClosingAssistant: React.FC = () => {
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6">
-                  AI Predictions & Insights
+                  Lumina Predictions & Insights
                 </Typography>
                 <Button
                   variant="contained"

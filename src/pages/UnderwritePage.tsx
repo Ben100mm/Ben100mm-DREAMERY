@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { brandColors } from "../theme";
 import {
   Box,
   Card,
@@ -3830,7 +3831,7 @@ const UnderwritePage: React.FC = () => {
     }
   }, [state.riskFactors, state.marketConditions, state.propertyAge]);
 
-  // ✅ Auto-update inflation projections when key inputs change
+  // Auto-update inflation projections when key inputs change
   useEffect(() => {
     if (state.purchasePrice > 0 && state.ops && state.marketConditions) {
       updateInflationProjections(state, setState);
@@ -3845,7 +3846,7 @@ const UnderwritePage: React.FC = () => {
     state.marketConditions,
   ]);
 
-  // ✅ Auto-sync balloon payment terms with appreciation calculator "Years to Hold"
+  // Auto-sync balloon payment terms with appreciation calculator "Years to Hold"
   useEffect(() => {
     if (
       state.offerType &&
@@ -8120,7 +8121,7 @@ const UnderwritePage: React.FC = () => {
                                     365;
                                   const fixedCosts =
                                     state.revenueInputs.fixedAnnualCosts;
-                                  // ✅ Use centralized utility function to eliminate redundant calculation
+                                  // Use centralized utility function to eliminate redundant calculation
                                   const variableCosts =
                                     (revenue *
                                       computeVariableMonthlyOpsPct(state.ops)) /

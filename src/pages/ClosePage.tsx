@@ -631,14 +631,12 @@ const ClosePage: React.FC = () => {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title="Notifications">
+            <Tooltip title="Profile">
               <IconButton 
                 color="inherit"
-                onClick={() => navigate('/notifications')}
+                onClick={() => navigate('/profile')}
               >
-                <Badge badgeContent={closeState.notifications} color="error">
-                  <NotificationsIcon />
-                </Badge>
+                <PersonIcon />
               </IconButton>
             </Tooltip>
             
@@ -886,38 +884,7 @@ const ClosePage: React.FC = () => {
                     gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(5, 1fr)' }, 
                     gap: 3 
                   }}>
-                    {/* Top Row */}
-                    <Box sx={{ textAlign: "center" }}>
-                      <Box 
-                        onClick={() => {
-                          console.log("Notifications icon clicked");
-                          navigate('/notifications');
-                        }}
-                        sx={{ 
-                          width: 80, 
-                          height: 80, 
-                          backgroundColor: brandColors.primary, 
-                          borderRadius: "50%", 
-                          display: "flex", 
-                          alignItems: "center", 
-                          justifyContent: "center",
-                          margin: "0 auto 1rem",
-                          color: "white",
-                          fontSize: "2rem",
-                          cursor: "pointer",
-                          "&:hover": {
-                            backgroundColor: brandColors.actions.primary,
-                            transform: "scale(1.05)",
-                            transition: "all 0.2s ease-in-out"
-                          }
-                        }}
-                      >
-                        <NotificationsIcon sx={{ fontSize: "2rem" }} />
-                      </Box>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        Notifications
-                      </Typography>
-                    </Box>                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ textAlign: 'center' }}>
                       <Box 
                         onClick={() => setShowChecklistPage(true)}
                         sx={{ 
@@ -3245,6 +3212,36 @@ const ClosePage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* User Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        sx={{ mt: 1 }}
+      >
+        <MenuItem onClick={() => { navigate('/profile'); handleMenuClose(); }}>
+          <ListItemIcon>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon>
+            <CloseIcon fontSize="small" />
+          </ListItemIcon>
+          Sign Out
+        </MenuItem>
+      </Menu>
     </Box>
   );
 };

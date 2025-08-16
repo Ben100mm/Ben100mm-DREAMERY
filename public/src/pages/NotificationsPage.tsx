@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
+  Container,
   Typography,
   Paper,
   Switch,
@@ -31,6 +32,9 @@ import {
   ChevronRight as ChevronRightIcon,
   Notifications as NotificationsIcon,
   Close as CloseIcon,
+  Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
+  Twitter as TwitterIcon,
   Description as DescriptionIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
@@ -151,10 +155,10 @@ const NotificationsPage: React.FC = () => {
       {/* Header */}
       <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
         <Toolbar>
-          {/* Dreamery Logo */}
+          {/* SKYSLOPE Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
             <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 700, mr: 1 }}>
-              DREAMERY
+              SKYSLOPE
             </Typography>
           </Box>
 
@@ -208,7 +212,7 @@ const NotificationsPage: React.FC = () => {
               <Avatar sx={{ width: 32, height: 32, bgcolor: brandColors.primary }}>
                 <PersonIcon />
               </Avatar>
-              <Typography variant="body2">User Account</Typography>
+              <Typography variant="body2">Justin Henderson</Typography>
               <KeyboardArrowDownIcon fontSize="small" />
             </Box>
           </Box>
@@ -217,7 +221,7 @@ const NotificationsPage: React.FC = () => {
 
       {/* Secondary Navigation */}
       <Box sx={{ backgroundColor: 'white', borderBottom: '1px solid #e0e0e0' }}>
-        <Box sx={{ px: 4 }}>
+        <Container maxWidth="lg">
           <Box sx={{ display: 'flex', gap: 1 }}>
             {['NOTIFICATIONS', 'PERSONAL INFORMATION', 'SIGNATURE', 'CHANGE PASSWORD', 'DIRECTORY', 'UPLOAD LOGO'].map((tab) => (
               <Box
@@ -235,11 +239,11 @@ const NotificationsPage: React.FC = () => {
               </Box>
             ))}
           </Box>
-        </Box>
+        </Container>
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ py: 4, px: 4 }}>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
         <Paper sx={{ p: 4, position: 'relative' }}>
           {/* Navigation Arrows */}
           <IconButton
@@ -275,9 +279,9 @@ const NotificationsPage: React.FC = () => {
             Notification Settings
           </Typography>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 4 }}>
+          <Grid container spacing={4}>
             {/* Left Column */}
-            <Box>
+            <Grid item xs={12} md={6}>
               {/* Listing Notifications */}
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}>
@@ -504,10 +508,10 @@ const NotificationsPage: React.FC = () => {
                   </Box>
                 </Box>
               </Box>
-            </Box>
+            </Grid>
 
             {/* Right Column */}
-            <Box>
+            <Grid item xs={12} md={6}>
               {/* Company Wide Notifications */}
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}>
@@ -671,8 +675,8 @@ const NotificationsPage: React.FC = () => {
                   </Box>
                 </Box>
               </Box>
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
 
           {/* Action Buttons */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
@@ -708,9 +712,40 @@ const NotificationsPage: React.FC = () => {
             </Button>
           </Box>
         </Paper>
+      </Container>
+
+      {/* Footer */}
+      <Box sx={{ backgroundColor: 'white', borderTop: '1px solid #e0e0e0', py: 3, mt: 'auto' }}>
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              Made with ❤️ in Sacramento by SkySlope
+            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer' }}>
+                Terms of use
+              </Typography>
+              <Divider orientation="vertical" flexItem />
+              <Typography variant="body2" color="text.secondary" sx={{ cursor: 'pointer' }}>
+                Privacy Policy
+              </Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <IconButton size="small" sx={{ color: '#1877f2' }}>
+                <FacebookIcon />
+              </IconButton>
+              <IconButton size="small" sx={{ color: '#e4405f' }}>
+                <InstagramIcon />
+              </IconButton>
+              <IconButton size="small" sx={{ color: '#1da1f2' }}>
+                <TwitterIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </Container>
       </Box>
-
-
 
       {/* User Menu */}
       <Menu

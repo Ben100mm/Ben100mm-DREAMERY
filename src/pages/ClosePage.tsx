@@ -888,7 +888,7 @@ const ClosePage: React.FC = () => {
                       <Box 
                         onClick={() => {
                           console.log("Notifications icon clicked");
-                          // Add notifications functionality here
+                          navigate('/notifications');
                         }}
                         sx={{ 
                           width: 80, 
@@ -2921,7 +2921,10 @@ const ClosePage: React.FC = () => {
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
+        <MenuItem onClick={() => {
+          handleMenuClose();
+          navigate('/notifications');
+        }}>
           <ListItemIcon>
             <NotificationsIcon fontSize="small" />
           </ListItemIcon>

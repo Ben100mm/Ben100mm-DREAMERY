@@ -43,6 +43,7 @@ import UnderwritePage from './pages/UnderwritePage';
 import UXDemoPage from './pages/UXDemoPage';
 import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
 import ClosePage from './pages/ClosePage';
+import NotificationsPage from './pages/NotificationsPage';
 import { theme } from "./theme";
 
 const AppContainer = styled.div`
@@ -104,6 +105,7 @@ function App() {
             <Route path="/ux-demo" element={<UXDemoPage />} />
             <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
             <Route path="/close" element={<ClosePage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
           </Routes>
         </Router>
       </ThemeProvider>

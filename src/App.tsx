@@ -14,7 +14,6 @@ import RentPage from "./pages/RentPage";
 import SellListAddressPage from "./pages/SellListAddressPage";
 import SellListMovingDetailsPage from "./pages/SellListMovingDetailsPage";
 import SellListPage from "./pages/SellListPage";
-import Profile from "./components/Profile";
 
 
 const AppContainer = styled.div`
@@ -54,7 +53,6 @@ function App() {
               element={<SellListMovingDetailsPage />}
             />
             <Route path="/sell-services" element={<SellListPage />} />
-            <Route path="/profile" element={<Profile />} />
           </Routes>
         </AppContainer>
       </Router>

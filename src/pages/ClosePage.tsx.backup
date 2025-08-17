@@ -80,7 +80,6 @@ import FinalWalkthroughHandover from '../components/close/walkthrough/FinalWalkt
 import PostClosingServices from '../components/close/post-closing/PostClosingServices';
 import AIClosingAssistant from '../components/close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../components/close/integrations/PartnerIntegrations';
-import NotificationsPage from './NotificationsPage';
 import { brandColors } from "../theme";
 
 // Custom Atom Icon Component
@@ -450,7 +449,6 @@ const ClosePage: React.FC = () => {
   const [showDocumentsPage, setShowDocumentsPage] = useState(false);
   const [showTransactionsPage, setShowTransactionsPage] = useState(false);
   const [showListingsPage, setShowListingsPage] = useState(false);
-  const [showNotificationsPage, setShowNotificationsPage] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
   const [documentsView, setDocumentsView] = useState<'pending' | 'reviewed' | 'approved'>('pending');
 
@@ -793,7 +791,6 @@ const ClosePage: React.FC = () => {
                 </Box>
               </Paper>
             </Box>
-          ) : isAgentView && !showChecklistPage && !showDocumentsPage && !showTransactionsPage && !showListingsPage && !showNotificationsPage ? (
             // Agent Dashboard
             <Box>
               {/* Agent Dashboard Header */}
@@ -811,7 +808,6 @@ const ClosePage: React.FC = () => {
                   Professional listing management and offer oversight
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.7, color: 'white', mt: 1 }}>
-                  Debug: showChecklistPage = {showChecklistPage.toString()}, showDocumentsPage = {showDocumentsPage.toString()}, showTransactionsPage = {showTransactionsPage.toString()}, showListingsPage = {showListingsPage.toString()}, showNotificationsPage = {showNotificationsPage.toString()}
                 </Typography>
 
 
@@ -1162,6 +1158,7 @@ const ClosePage: React.FC = () => {
                   </Box>
                 </Box>
               </Paper>
+          )
             </Box>
           ) : isAgentView && showChecklistPage ? (
             // Full-Page Checklist View - SKYSLOPE Style
@@ -1739,7 +1736,6 @@ const ClosePage: React.FC = () => {
 
 
             </Box>
-          ) : isAgentView && showNotificationsPage ? (
             // Full-Page Notifications View
             <Box>
               {/* Notifications Header */}

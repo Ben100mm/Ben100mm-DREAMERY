@@ -42,30 +42,25 @@ import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
 import UnderwritePage from './pages/UnderwritePage';
 import UXDemoPage from './pages/UXDemoPage';
 import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
+import ClosePage from './pages/ClosePage';
+import ProfilePage from './pages/ProfilePage';
+import NotificationsSettingsPage from './pages/NotificationsSettingsPage';
 
 import { theme } from "./theme";
 
-const AppContainer = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
-
 const HomePage = () => (
-  <AppContainer>
-    <Header />
+  <div>
     <Hero />
     <Navigation />
-  </AppContainer>
+  </div>
 );
 
-function App() {
+const AppWithRouting = () => {
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
         <Router>
+          <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/auth" element={<AuthPage />} />
@@ -103,12 +98,15 @@ function App() {
             <Route path="/underwrite" element={<UnderwritePage />} />
             <Route path="/ux-demo" element={<UXDemoPage />} />
             <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
+            <Route path="/close" element={<ClosePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/notifications" element={<NotificationsSettingsPage />} />
 
           </Routes>
         </Router>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
-}
+};
 
-export default App;
+export default AppWithRouting;

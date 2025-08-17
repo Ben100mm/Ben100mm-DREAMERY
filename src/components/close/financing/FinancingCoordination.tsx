@@ -47,7 +47,7 @@ import { toast } from 'react-hot-toast';
 import CryptoJS from 'crypto-js';
 import jsPDF from 'jspdf';
 import { brandColors } from "../../../theme";
-import ProfileHeader from '../../ProfileHeader';
+
 
 // Types
 interface LoanStatus {
@@ -380,9 +380,7 @@ const FinancingCoordination: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <ProfileHeader title="Financing Coordination" subtitle="Manage loan processing and closing cost coordination" />
-      <Box sx={{ p: 3, marginTop: '80px' }}>
+    <Box sx={{ p: 3 }}>
         {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
@@ -790,8 +788,7 @@ const FinancingCoordination: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-        </Box>
-      </>
+      </Box>
     );
   };
 

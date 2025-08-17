@@ -27,7 +27,7 @@ import {
   Paper,
 } from '@mui/material';
 import { brandColors } from '../../../theme';
-import ProfileHeader from '../../ProfileHeader';
+
 import {
   Search as SearchIcon,
   Edit as EditIcon,
@@ -445,9 +445,7 @@ const DueDiligenceTools: React.FC = () => {
   }
 
   return (
-    <>
-      <ProfileHeader title="Due Diligence Tools" subtitle="Comprehensive property research and inspection management" />
-      <Box sx={{ padding: '1rem', marginTop: '80px' }}>
+    <Box sx={{ padding: '1rem' }}>
         {/* Quick Stats */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
         <Box>
@@ -1303,8 +1301,7 @@ const DueDiligenceTools: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-        </Box>
-      </>
+      </Box>
     );
   };
 

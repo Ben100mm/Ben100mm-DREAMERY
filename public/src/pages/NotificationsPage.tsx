@@ -10,6 +10,8 @@ import {
   IconButton,
   Tooltip,
   Divider,
+  AppBar,
+  Toolbar,
   Avatar,
   Menu,
   MenuItem,
@@ -26,6 +28,8 @@ import {
   Print as PrintIcon,
   Apps as AppsIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
   Notifications as NotificationsIcon,
   Close as CloseIcon,
   Facebook as FacebookIcon,
@@ -35,7 +39,6 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../theme/theme';
-import ProfileHeader from '../components/ProfileHeader';
 
 interface NotificationSettings {
   // Listing Notifications
@@ -102,24 +105,24 @@ const NotificationsPage: React.FC = () => {
     listingWithdrawn: true,
     
     // Company Wide Notifications
-    agentSummaryBeforeClosing: true,
-    agentSummaryBeforeClosingDays: 3,
-    agentSummaryWhenClosing: true,
-    agentListingExpirationReminder: true,
-    agentListingExpirationDays: 3,
-    agentUploadFlaggedDocs: true,
-    agentUploadFlaggedDocsInitialDays: 3,
-    agentUploadFlaggedDocsRepeatDays: 7,
+    agentSummaryBeforeClosing: false,
+    agentSummaryBeforeClosingDays: 0,
+    agentSummaryWhenClosing: false,
+    agentListingExpirationReminder: false,
+    agentListingExpirationDays: 0,
+    agentUploadFlaggedDocs: false,
+    agentUploadFlaggedDocsInitialDays: 0,
+    agentUploadFlaggedDocsRepeatDays: 0,
     
     // Task Email Notifications
-    newTaskAssigned: true,
-    taskAccepted: true,
-    taskDeclined: true,
-    dailyTaskSummary: true,
+    newTaskAssigned: false,
+    taskAccepted: false,
+    taskDeclined: false,
+    dailyTaskSummary: false,
   });
 
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const handleSettingChange = (setting: keyof NotificationSettings, value: boolean | number) => {
     setNotificationSettings(prev => ({
@@ -134,16 +137,7 @@ const NotificationsPage: React.FC = () => {
   };
 
   const handleUserMenuClose = () => {
-    setAnchorEl(null);
     setUserMenuOpen(false);
-  };
-
-  const handlePreviousSection = () => {
-    // TODO: Implement navigation to previous section
-  };
-
-  const handleNextSection = () => {
-    // TODO: Implement navigation to next section
   };
 
   const handleSave = () => {
@@ -158,16 +152,75 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      {/* Profile Header with Back Arrow */}
-      <ProfileHeader 
-        title="Notification Settings"
-        subtitle="Manage your notification preferences"
-        showBackArrow={true}
-        showNotificationsButton={false}
-      />
+      {/* Header */}
+      <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <Toolbar>
+          {/* SKYSLOPE Logo */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+            <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 700, mr: 1 }}>
+              SKYSLOPE
+            </Typography>
+          </Box>
+
+          {/* Main Navigation Tabs */}
+          <Box sx={{ display: 'flex', gap: 2, mr: 'auto' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1, 
+              px: 2, 
+              py: 1, 
+              borderBottom: '2px solid #e0e0e0',
+              cursor: 'pointer'
+            }}>
+              <DescriptionIcon fontSize="small" />
+              <Typography variant="body2">DOCUMENTS TO REVIEW</Typography>
+            </Box>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1, 
+              px: 2, 
+              py: 1,
+              cursor: 'pointer'
+            }}>
+              <EditIcon fontSize="small" />
+              <Typography variant="body2">WORKING DOCUMENTS</Typography>
+            </Box>
+          </Box>
+
+          {/* Right Side Icons */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Tooltip title="Search">
+              <IconButton size="small">
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Print">
+              <IconButton size="small">
+                <PrintIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Apps">
+              <IconButton size="small">
+                <AppsIcon />
+              </IconButton>
+            </Tooltip>
+            
+            {/* User Profile */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2, cursor: 'pointer' }} onClick={handleUserMenuClick}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: brandColors.primary }}>
+                <PersonIcon />
+              </Avatar>
+              <Typography variant="body2">Justin Henderson</Typography>
+              <KeyboardArrowDownIcon fontSize="small" />
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       {/* Secondary Navigation */}
-      <Box sx={{ backgroundColor: 'white', borderBottom: '1px solid #e0e0e0', mt: 8 }}>
+      <Box sx={{ backgroundColor: 'white', borderBottom: '1px solid #e0e0e0' }}>
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', gap: 1 }}>
             {['NOTIFICATIONS', 'PERSONAL INFORMATION', 'SIGNATURE', 'CHANGE PASSWORD', 'DIRECTORY', 'UPLOAD LOGO'].map((tab) => (
@@ -192,6 +245,35 @@ const NotificationsPage: React.FC = () => {
       {/* Main Content */}
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Paper sx={{ p: 4, position: 'relative' }}>
+          {/* Navigation Arrows */}
+          <IconButton
+            sx={{
+              position: 'absolute',
+              left: -20,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'white',
+              border: '1px solid #e0e0e0',
+              '&:hover': { backgroundColor: '#f5f5f5' }
+            }}
+          >
+            <ChevronLeftIcon sx={{ color: brandColors.primary }} />
+          </IconButton>
+          
+          <IconButton
+            sx={{
+              position: 'absolute',
+              right: -20,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'white',
+              border: '1px solid #e0e0e0',
+              '&:hover': { backgroundColor: '#f5f5f5' }
+            }}
+          >
+            <ChevronRightIcon sx={{ color: brandColors.primary }} />
+          </IconButton>
+
           {/* Page Title */}
           <Typography variant="h4" sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}>
             Notification Settings

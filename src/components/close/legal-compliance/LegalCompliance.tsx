@@ -62,7 +62,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { brandColors } from "../../../theme";
-import ProfileHeader from '../../ProfileHeader';
+
 
 // Types
 interface ChecklistItem {
@@ -524,9 +524,7 @@ const LegalCompliance: React.FC = () => {
   const completionPercentage = (completedItems / totalItems) * 100;
 
   return (
-    <>
-      <ProfileHeader title="Legal & Compliance" subtitle="Manage legal requirements and compliance checklists" />
-      <Box sx={{ p: 3, marginTop: '80px' }}>
+    <Box sx={{ p: 3 }}>
         {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
@@ -1166,8 +1164,7 @@ const LegalCompliance: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-        </Box>
-      </>
+      </Box>
     );
   };
 

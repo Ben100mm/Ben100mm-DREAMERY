@@ -881,7 +881,7 @@ const ClosePage: React.FC = () => {
                   {/* Main Content Icons Grid */}
                   <Box sx={{ 
                     display: 'grid', 
-                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(5, 1fr)' }, 
+                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(4, 1fr)' }, 
                     gap: 3 
                   }}>
                     <Box sx={{ textAlign: 'center' }}>
@@ -3212,36 +3212,6 @@ const ClosePage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* User Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        sx={{ mt: 1 }}
-      >
-        <MenuItem onClick={() => { navigate('/profile'); handleMenuClose(); }}>
-          <ListItemIcon>
-            <PersonIcon fontSize="small" />
-          </ListItemIcon>
-          Profile
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleMenuClose}>
-          <ListItemIcon>
-            <CloseIcon fontSize="small" />
-          </ListItemIcon>
-          Sign Out
-        </MenuItem>
-      </Menu>
     </Box>
   );
 };

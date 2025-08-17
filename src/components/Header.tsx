@@ -1,12 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
+import { Person, Notifications, Close } from "@mui/icons-material";
 
 const Header: React.FC = () => {
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setUserMenuOpen(true);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleProfileClick = () => {
+    handleUserMenuClose();
+    navigate('/profile');
+  };
+
+  const handleNotificationsClick = () => {
+    handleUserMenuClose();
+    navigate('/profile?tab=notifications');
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -32,19 +63,15 @@ const Header: React.FC = () => {
           px: 3,
         }}
       >
-        <Button
-          variant="text"
+        <Box
           sx={{
-            color: brandColors.secondary,
-            fontWeight: 700,
-            textTransform: "none",
-            fontFamily: "Inter, sans-serif",
-            fontSize: "0.95rem",
-            letterSpacing: "0.3px",
-            textShadow: "0 1px 1px rgba(255, 255, 255, 0.5)",
             position: "absolute",
             right: 32,
             top: -8,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            cursor: "pointer",
             backgroundColor: "rgba(255, 255, 255, 0.4)",
             padding: "8px 20px",
             borderRadius: "6px",
@@ -55,9 +82,25 @@ const Header: React.FC = () => {
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
             },
           }}
+          onClick={handleUserMenuClick}
         >
-          Sign Up / Sign In
-        </Button>
+          <Avatar sx={{ bgcolor: brandColors.secondary, width: 24, height: 24 }}>
+            <Person sx={{ fontSize: 16 }} />
+          </Avatar>
+          <Typography
+            sx={{
+              color: brandColors.secondary,
+              fontWeight: 700,
+              textTransform: "none",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "0.95rem",
+              letterSpacing: "0.3px",
+              textShadow: "0 1px 1px rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            User Account
+          </Typography>
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -95,6 +138,44 @@ const Header: React.FC = () => {
           </Typography>
         </Box>
       </Toolbar>
+
+      {/* User Profile Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={userMenuOpen}
+        onClose={handleUserMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        sx={{
+          mt: 1,
+        }}
+      >
+        <MenuItem onClick={handleProfileClick}>
+          <ListItemIcon>
+            <Person fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={handleNotificationsClick}>
+          <ListItemIcon>
+            <Notifications fontSize="small" />
+          </ListItemIcon>
+          Notifications
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleUserMenuClose}>
+          <ListItemIcon>
+            <Close fontSize="small" />
+          </ListItemIcon>
+          Sign Out
+        </MenuItem>
+      </Menu>
     </AppBar>
   );
 };

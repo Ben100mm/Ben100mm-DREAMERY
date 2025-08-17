@@ -27,7 +27,6 @@ import {
   Paper,
 } from '@mui/material';
 import { brandColors } from '../../../theme';
-
 import {
   Search as SearchIcon,
   Edit as EditIcon,
@@ -446,7 +445,7 @@ const DueDiligenceTools: React.FC = () => {
 
   return (
     <Box sx={{ padding: '1rem' }}>
-        {/* Quick Stats */}
+      {/* Quick Stats */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
         <Box>
           <Card sx={{ 
@@ -1301,8 +1300,8 @@ const DueDiligenceTools: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      </Box>
-    );
-  };
+    </Box>
+  );
+};
 
 export default DueDiligenceTools;

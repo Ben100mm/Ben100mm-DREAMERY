@@ -28,7 +28,6 @@ import {
   MenuItem,
   CircularProgress,
 } from '@mui/material';
-
 import {
   Timeline as TimelineIcon,
   CheckCircle as CheckCircleIcon,
@@ -359,7 +358,7 @@ const ClosingDashboard: React.FC = () => {
 
   return (
     <DashboardContainer>
-        {/* Key Metrics */}
+      {/* Key Metrics */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
         <Box>
           <MetricCard>
@@ -748,8 +747,8 @@ const ClosingDashboard: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      </DashboardContainer>
-    );
-  };
+    </DashboardContainer>
+  );
+};
 
 export default ClosingDashboard;

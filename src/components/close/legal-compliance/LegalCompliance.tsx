@@ -63,7 +63,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { brandColors } from "../../../theme";
 
-
 // Types
 interface ChecklistItem {
   id: string;
@@ -525,7 +524,7 @@ const LegalCompliance: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-        {/* Header */}
+      {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
           Legal & Compliance
@@ -1164,8 +1163,8 @@ const LegalCompliance: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      </Box>
-    );
-  };
+    </Box>
+  );
+};
 
 export default LegalCompliance;

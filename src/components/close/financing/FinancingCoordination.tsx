@@ -48,7 +48,6 @@ import CryptoJS from 'crypto-js';
 import jsPDF from 'jspdf';
 import { brandColors } from "../../../theme";
 
-
 // Types
 interface LoanStatus {
   id: string;
@@ -381,7 +380,7 @@ const FinancingCoordination: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-        {/* Header */}
+      {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
           Financing Coordination
@@ -788,8 +787,8 @@ const FinancingCoordination: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      </Box>
-    );
-  };
+    </Box>
+  );
+};
 
 export default FinancingCoordination;

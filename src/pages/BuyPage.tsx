@@ -33,6 +33,7 @@ import {
 } from "@mui/icons-material";
 import styled from "styled-components";
 import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -44,8 +45,9 @@ const HeaderSection = styled.div`
   padding: 1rem 0;
   border-bottom: 1px solid brandColors.borders.secondary;
   position: sticky;
-  top: 0;
+  top: 64px;
   z-index: 100;
+  margin-top: 64px;
 `;
 
 const FilterButton = styled(Button)`
@@ -1027,18 +1029,12 @@ const BuyPage: React.FC = () => {
     }
   };
 
-  return (
+    return (
     <PageContainer>
+      <PageAppBar title="Dreamery - Buy Properties" />
       <HeaderSection>
         <Container maxWidth="xl">
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-            <Button
-              startIcon={<ArrowBack />}
-              onClick={() => window.history.back()}
-              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
-            >
-              Back
-            </Button>
             <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Real Estate & Homes For Sale
             </Typography>

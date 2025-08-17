@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
 import {
   Box,
   Card,
@@ -3897,13 +3898,16 @@ const UnderwritePage: React.FC = () => {
     state.hybrid?.subjectToLoans,
   ]);
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: brandColors.backgrounds.primary,
-        transition: "all 0.3s ease-in-out",
-      }}
-    >
+    <>
+              <PageAppBar title="Underwrite Properties with Dreamery" />
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background: brandColors.backgrounds.primary,
+          transition: "all 0.3s ease-in-out",
+          marginTop: "64px", // Add margin to account for fixed AppBar
+        }}
+      >
       <Container
         maxWidth="lg"
         sx={{ py: 2, minHeight: "100vh", transition: "all 0.3s ease-in-out" }}
@@ -10230,14 +10234,6 @@ const UnderwritePage: React.FC = () => {
         >
           <Button
             variant="outlined"
-            onClick={() => navigate("/")}
-            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
-          >
-            Back to Home
-          </Button>
-
-          <Button
-            variant="outlined"
             onClick={exportToPDF}
             sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
@@ -10259,7 +10255,8 @@ const UnderwritePage: React.FC = () => {
           </Button>
         </Box>
       </Container>
-    </Box>
+      </Box>
+    </>
   );
 };
 

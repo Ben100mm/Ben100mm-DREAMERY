@@ -299,7 +299,8 @@ const CloseBuyerPage: React.FC = () => {
         position="fixed" 
         sx={{ 
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: brandColors.primary
+          backgroundColor: brandColors.primary,
+          borderRadius: 0,
         }}
       >
         <Toolbar>
@@ -355,12 +356,20 @@ const CloseBuyerPage: React.FC = () => {
             boxSizing: 'border-box',
             marginTop: '64px',
             background: brandColors.backgrounds.secondary,
+            height: 'calc(100vh - 64px)',
+            overflow: 'hidden',
           },
         }}
       >
-        <Box sx={{ overflow: 'auto', py: 2 }}>
+        <Box sx={{ 
+          overflow: 'auto', 
+          py: 2, 
+          height: 'calc(100vh - 64px)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
           {/* Station Button */}
-          <Box sx={{ px: 2, mb: 2 }}>
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
             <Button
               variant="contained"
               fullWidth
@@ -379,7 +388,8 @@ const CloseBuyerPage: React.FC = () => {
             </Button>
           </Box>
 
-          <List>
+          {/* Navigation Tabs - Scrollable */}
+          <Box sx={{ flex: 1, overflow: 'auto' }}>
             {tabs.map((tab) => (
               <Box
                 key={tab.value}
@@ -412,7 +422,7 @@ const CloseBuyerPage: React.FC = () => {
                 </Box>
               </Box>
             ))}
-          </List>
+          </Box>
         </Box>
       </Drawer>
 
@@ -459,7 +469,7 @@ const CloseBuyerPage: React.FC = () => {
             </Paper>
 
             {/* Overview Cards */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4, ml: 3 }}>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', color: brandColors.primary, mb: 1 }}>
                   3
@@ -539,7 +549,7 @@ const CloseBuyerPage: React.FC = () => {
               </Paper>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', ml: 3 }}>
             {/* Closing Timeline */}
             <Paper elevation={2} sx={{ p: 3, flex: '1 1 400px', minWidth: '400px' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -981,14 +991,23 @@ const CloseBuyerPage: React.FC = () => {
         }}
       >
         <MenuItem onClick={() => navigate('/profile')}>
-          <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-            J
-          </Avatar>
+          <ListItemIcon>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
           Profile
         </MenuItem>
         <MenuItem>
-          <SupportIcon sx={{ mr: 1 }} />
-          Help
+          <ListItemIcon>
+            <SupportIcon fontSize="small" />
+          </ListItemIcon>
+          Support
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={() => navigate('/')}>
+          <ListItemIcon>
+            <CloseIcon fontSize="small" />
+          </ListItemIcon>
+          Sign Out
         </MenuItem>
       </Menu>
     </Box>

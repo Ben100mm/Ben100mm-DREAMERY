@@ -46,12 +46,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
 
 const PageContainer = styled.div`
   height: 100vh;
   background: brandColors.backgrounds.primary;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  margin-top: 64px; /* Account for fixed AppBar */
 
   /* Ensure scrollbar appears on the far right */
   &::-webkit-scrollbar {
@@ -223,9 +225,7 @@ const MortgagePage: React.FC = () => {
     return (points / 100) * LOAN_AMOUNT;
   };
 
-  const handleBack = () => {
-    navigate("/");
-  };
+
 
   const handleNavigateToPreApproval = () => {
     navigate("/pre-approval");
@@ -1201,29 +1201,18 @@ const MortgagePage: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
+    <>
+              <PageAppBar title="Dreamery Home Loans" />
+      <PageContainer>
       {/* Header */}
       <HeaderSection>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
-              Dreamery Home Loans
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              onClick={handleBack}
-              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
-            >
-              Back to Home
-            </Button>
-          </Box>
         </Box>
       </HeaderSection>
 
@@ -3408,8 +3397,9 @@ const MortgagePage: React.FC = () => {
           onClose={() => setShowError(false)}
         />
       )}
-    </PageContainer>
-  );
-};
+        </PageContainer>
+      </>
+    );
+  };
 
 export default MortgagePage;

@@ -46,6 +46,7 @@ const Header: React.FC = () => {
         pt: 3,
         pb: 2,
         zIndex: 9999,
+        borderRadius: 0,
       }}
     >
       <Toolbar

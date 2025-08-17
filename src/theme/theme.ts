@@ -154,6 +154,13 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

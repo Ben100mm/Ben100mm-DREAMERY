@@ -20,6 +20,8 @@ import {
   Menu,
   MenuItem,
   Chip,
+  ListItemIcon,
+  Divider,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -33,6 +35,8 @@ import {
   Settings as SettingsIcon,
   IntegrationInstructions as IntegrationIcon,
   CheckCircle as CheckCircleIcon,
+  Person as PersonIcon,
+  Close as CloseIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -250,7 +254,8 @@ const CloseAgentPage: React.FC = () => {
         position="fixed" 
         sx={{ 
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: brandColors.primary
+          backgroundColor: brandColors.primary,
+          borderRadius: 0,
         }}
       >
         <Toolbar>
@@ -695,14 +700,23 @@ const CloseAgentPage: React.FC = () => {
         }}
       >
         <MenuItem onClick={() => navigate('/profile')}>
-          <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-            S
-          </Avatar>
+          <ListItemIcon>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
           Profile
         </MenuItem>
         <MenuItem>
-          <SupportIcon sx={{ mr: 1 }} />
-          Help
+          <ListItemIcon>
+            <SupportIcon fontSize="small" />
+          </ListItemIcon>
+          Support
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={() => navigate('/')}>
+          <ListItemIcon>
+            <CloseIcon fontSize="small" />
+          </ListItemIcon>
+          Sign Out
         </MenuItem>
       </Menu>
     </Box>

@@ -33,6 +33,7 @@ import {
 } from "@mui/icons-material";
 import styled from "styled-components";
 import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -44,8 +45,9 @@ const HeaderSection = styled.div`
   padding: 1rem 0;
   border-bottom: 1px solid brandColors.borders.secondary;
   position: sticky;
-  top: 0;
+  top: 64px;
   z-index: 100;
+  margin-top: 64px;
 `;
 
 const FilterButton = styled(Button)`
@@ -930,8 +932,9 @@ const RentPage: React.FC = () => {
     }
   };
 
-  return (
+      return (
     <PageContainer>
+      <PageAppBar title="Dreamery - Rent Properties" />
       {/* Top Search Section */}
       <Box
         sx={{

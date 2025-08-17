@@ -8,8 +8,22 @@ import {
   LinearProgress,
   Checkbox,
   FormControlLabel,
+  IconButton,
+  Badge,
+  Avatar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Divider,
 } from "@mui/material";
-import { ArrowBack, AttachMoney } from "@mui/icons-material";
+import { 
+  ArrowBack, 
+  AttachMoney,
+  Notifications as NotificationsIcon,
+  Person,
+  Support as SupportIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import housesImage from "../houses-watercolor.png";
@@ -75,6 +89,23 @@ const SellListAddressPage: React.FC = () => {
   const [listChecked, setListChecked] = useState(false);
   const navigate = useNavigate();
 
+  // AppBar state
+  const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+
+  const handleNotificationsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationsMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setNotificationsMenuAnchor(null);
+    setUserMenuAnchor(null);
+  };
+
   const handleNext = () => {
     if (address.trim()) {
       navigate("/sell-moving-details", {
@@ -87,18 +118,122 @@ const SellListAddressPage: React.FC = () => {
     }
   };
 
-  const handleExit = () => {
-    navigate("/");
-  };
+
 
   return (
     <PageContainer>
-      {/* Header with Progress Bar and Exit Button */}
+      {/* APP BAR */}
+      <Box
+        sx={{
+          backgroundColor: brandColors.primary,
+          color: 'white',
+          py: 2,
+          px: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          Dreamery - Sell Properties
+        </Typography>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton
+            onClick={handleNotificationsClick}
+            sx={{ 
+              color: 'white',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' }
+            }}
+          >
+            <Badge badgeContent={3} color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          
+          <IconButton
+            onClick={handleUserMenuClick}
+            sx={{ 
+              color: 'white',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' }
+            }}
+          >
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255, 255, 255, 0.2)' }}>
+              J
+            </Avatar>
+          </IconButton>
+          
+          <IconButton
+            onClick={() => window.history.back()}
+            sx={{ 
+              color: 'white',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' }
+            }}
+          >
+            <ArrowBack />
+          </IconButton>
+        </Box>
+
+        {/* Notifications Menu */}
+        <Menu
+          anchorEl={notificationsMenuAnchor}
+          open={Boolean(notificationsMenuAnchor)}
+          onClose={handleCloseMenu}
+          PaperProps={{
+            sx: { mt: 1, minWidth: 300 }
+          }}
+        >
+          <Box sx={{ p: 2, borderBottom: `1px solid ${brandColors.borders.secondary}` }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Notifications
+            </Typography>
+          </Box>
+          <MenuItem onClick={handleCloseMenu}>
+            <Typography variant="body2">No new notifications</Typography>
+          </MenuItem>
+        </Menu>
+
+        {/* User Menu */}
+        <Menu
+          anchorEl={userMenuAnchor}
+          open={Boolean(userMenuAnchor)}
+          onClose={handleCloseMenu}
+          PaperProps={{
+            sx: { mt: 1, minWidth: 200 }
+          }}
+        >
+          <MenuItem onClick={handleCloseMenu}>
+            <ListItemIcon>
+              <Person fontSize="small" />
+            </ListItemIcon>
+            Profile
+          </MenuItem>
+          <MenuItem onClick={handleCloseMenu}>
+            <ListItemIcon>
+              <SupportIcon fontSize="small" />
+            </ListItemIcon>
+            Support
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={handleCloseMenu}>
+            <ListItemIcon>
+              <CloseIcon fontSize="small" />
+            </ListItemIcon>
+            Sign Out
+          </MenuItem>
+        </Menu>
+      </Box>
+
+      {/* Header with Progress Bar */}
       <HeaderSection>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
@@ -120,21 +255,6 @@ const SellListAddressPage: React.FC = () => {
               }}
             />
           </Box>
-
-          <Button
-            onClick={handleExit}
-            sx={{
-              color: brandColors.primary,
-              textTransform: "none",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "transparent",
-                textDecoration: "underline",
-              },
-            }}
-          >
-            Exit
-          </Button>
         </Box>
       </HeaderSection>
 

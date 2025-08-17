@@ -547,7 +547,8 @@ const ClosePage: React.FC = () => {
         sx={{ 
           zIndex: theme.zIndex.drawer + 1,
           backgroundColor: brandColors.primary,
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 0,
         }}
       >
         <Toolbar>

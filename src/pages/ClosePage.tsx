@@ -17,8 +17,10 @@ import {
   Business as BusinessIcon,
   Support as SupportIcon,
   AccountBalance as AccountBalanceIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
 
 // Types
 interface CloseOption {
@@ -88,7 +90,11 @@ const ClosePage: React.FC = () => {
   const selectedOptionData = closeOptions.find(opt => opt.value === selectedOption);
 
     return (
-    <Container maxWidth="md" sx={{ py: 8 }}>
+      <>
+        <PageAppBar title="Dreamery Closing Hub" showBackButton={true} />
+        <Container maxWidth="md" sx={{ py: 8, marginTop: "64px" }}>
+
+
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography 
           variant="h2" 
@@ -212,8 +218,9 @@ const ClosePage: React.FC = () => {
           Need help? Contact our support team for assistance
                         </Typography>
                       </Box>
-    </Container>
-  );
-};
+        </Container>
+      </>
+    );
+  };
 
 export default ClosePage;

@@ -233,7 +233,7 @@ const SellListAddressPage: React.FC = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >

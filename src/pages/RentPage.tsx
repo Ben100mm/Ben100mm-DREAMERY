@@ -940,6 +940,7 @@ const RentPage: React.FC = () => {
         sx={{
           background: brandColors.backgrounds.primary,
           py: 2,
+          marginTop: "64px",
         }}
       >
         <Container maxWidth="xl">

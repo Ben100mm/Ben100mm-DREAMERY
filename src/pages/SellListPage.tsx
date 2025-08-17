@@ -70,12 +70,12 @@ const SellListPage: React.FC = () => {
       >
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
           Dreamery - Sell Properties
-        </Typography>
+              </Typography>
         
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
           <IconButton
             onClick={handleNotificationsClick}
-            sx={{ 
+                sx={{
               color: 'white',
               backgroundColor: 'rgba(255,255,255,0.2)',
               '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' }
@@ -88,7 +88,7 @@ const SellListPage: React.FC = () => {
           
           <IconButton
             onClick={handleUserMenuClick}
-            sx={{ 
+            sx={{
               color: 'white',
               backgroundColor: 'rgba(255,255,255,0.2)',
               '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' }
@@ -124,7 +124,7 @@ const SellListPage: React.FC = () => {
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Notifications
             </Typography>
-          </Box>
+                  </Box>
           <MenuItem onClick={handleCloseMenu}>
             <Typography variant="body2">No new notifications</Typography>
           </MenuItem>
@@ -159,18 +159,18 @@ const SellListPage: React.FC = () => {
             Sign Out
           </MenuItem>
         </Menu>
-      </Box>
+              </Box>
 
       {/* SIMPLE CONTENT */}
       <Container maxWidth="md" sx={{ py: 6 }}>
         <Typography variant="h3" sx={{ textAlign: 'center', mb: 4, color: brandColors.primary }}>
           Tell us a bit about your home
-        </Typography>
+                  </Typography>
         
         <Typography variant="h6" sx={{ textAlign: 'center', mb: 4, color: brandColors.text.secondary }}>
           Discover your home's potential selling price with our Showcase listing in just 3 minutes. 
           Start by entering your property's address below.
-        </Typography>
+                </Typography>
 
         <Box sx={{ mb: 4 }}>
           <TextField
@@ -204,15 +204,15 @@ const SellListPage: React.FC = () => {
               }
               label="List"
             />
-          </Box>
+            </Box>
 
           <Box sx={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              size="large"
+              <Button
+                variant="contained"
+                size="large"
               onClick={handleNext}
-              sx={{
-                backgroundColor: brandColors.primary,
+                sx={{
+                  backgroundColor: brandColors.primary,
                 px: 6,
                 py: 2,
                 fontSize: '1.1rem',
@@ -220,9 +220,9 @@ const SellListPage: React.FC = () => {
               }}
             >
               Next
-            </Button>
+              </Button>
+            </Box>
           </Box>
-        </Box>
       </Container>
     </Box>
   );

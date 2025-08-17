@@ -80,6 +80,7 @@ import FinalWalkthroughHandover from '../components/close/walkthrough/FinalWalkt
 import PostClosingServices from '../components/close/post-closing/PostClosingServices';
 import AIClosingAssistant from '../components/close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../components/close/integrations/PartnerIntegrations';
+import NotificationsPage from './NotificationsPage';
 import { brandColors } from "../theme";
 
 // Custom Atom Icon Component
@@ -449,6 +450,7 @@ const ClosePage: React.FC = () => {
   const [showDocumentsPage, setShowDocumentsPage] = useState(false);
   const [showTransactionsPage, setShowTransactionsPage] = useState(false);
   const [showListingsPage, setShowListingsPage] = useState(false);
+  const [showNotificationsPage, setShowNotificationsPage] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
   const [documentsView, setDocumentsView] = useState<'pending' | 'reviewed' | 'approved'>('pending');
 
@@ -632,10 +634,7 @@ const ClosePage: React.FC = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Tooltip title="Notifications">
-              <IconButton 
-                color="inherit"
-                onClick={() => navigate('/notifications')}
-              >
+              <IconButton color="inherit">
                 <Badge badgeContent={closeState.notifications} color="error">
                   <NotificationsIcon />
                 </Badge>
@@ -794,7 +793,7 @@ const ClosePage: React.FC = () => {
                 </Box>
               </Paper>
             </Box>
-          ) : isAgentView && !showChecklistPage && !showDocumentsPage && !showTransactionsPage && !showListingsPage ? (
+          ) : isAgentView && !showChecklistPage && !showDocumentsPage && !showTransactionsPage && !showListingsPage && !showNotificationsPage ? (
             // Agent Dashboard
             <Box>
               {/* Agent Dashboard Header */}
@@ -812,7 +811,7 @@ const ClosePage: React.FC = () => {
                   Professional listing management and offer oversight
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.7, color: 'white', mt: 1 }}>
-                  Debug: showChecklistPage = {showChecklistPage.toString()}, showDocumentsPage = {showDocumentsPage.toString()}, showTransactionsPage = {showTransactionsPage.toString()}, showListingsPage = {showListingsPage.toString()}
+                  Debug: showChecklistPage = {showChecklistPage.toString()}, showDocumentsPage = {showDocumentsPage.toString()}, showTransactionsPage = {showTransactionsPage.toString()}, showListingsPage = {showListingsPage.toString()}, showNotificationsPage = {showNotificationsPage.toString()}
                 </Typography>
 
 
@@ -891,7 +890,7 @@ const ClosePage: React.FC = () => {
                       <Box 
                         onClick={() => {
                           console.log("Notifications icon clicked");
-                          navigate('/notifications');
+                          // Add notifications functionality here
                         }}
                         sx={{ 
                           width: 80, 
@@ -1739,6 +1738,44 @@ const ClosePage: React.FC = () => {
               </Paper>
 
 
+            </Box>
+          ) : isAgentView && showNotificationsPage ? (
+            // Full-Page Notifications View
+            <Box>
+              {/* Notifications Header */}
+              <Box sx={{ 
+                backgroundColor: 'white',
+                borderBottom: '2px solid #e0e0e0',
+                p: 2
+              }}>
+                {/* Header with Back Button */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Left Side - Back Button and Title */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IconButton
+                      onClick={() => {
+                        setShowNotificationsPage(false);
+                      }}
+                      sx={{ color: brandColors.primary }}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Notifications Settings
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              
+              {/* Notifications Content */}
+              <Box sx={{ p: 3 }}>
+                <NotificationsPage />
+              </Box>
             </Box>
           ) : isAgentView && showDocumentsPage ? (
             // Full-Page Documents View - SKYSLOPE Style
@@ -2925,8 +2962,8 @@ const ClosePage: React.FC = () => {
           Profile
         </MenuItem>
         <MenuItem onClick={() => {
+          setShowNotificationsPage(true);
           handleMenuClose();
-          navigate('/notifications');
         }}>
           <ListItemIcon>
             <NotificationsIcon fontSize="small" />

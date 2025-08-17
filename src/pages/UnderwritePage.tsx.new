@@ -1,0 +1,886 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Container,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Switch,
+  FormControlLabel,
+  Button,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  LinearProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  ToggleButton,
+  ToggleButtonGroup,
+  InputAdornment,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  pmt,
+  totalMonthlyDebtService,
+  computeFixedMonthlyOps,
+  computeVariableMonthlyOpsPct,
+  breakEvenOccupancy as financeBreakEvenOccupancy,
+  remainingPrincipalAfterPayments,
+  brrrrAnnualCashFlowPostRefi,
+} from '../utils/finance';
+
+// Updated type definitions
+type PropertyType = 'Single Family' | 'Multi Family / Hospitality' | 'Hotel';
+type OperationType = 'Buy & Hold' | 'Fix & Flip' | 'Short Term Rental' | 'Rental Arbitrage' | 'BRRRR';
+type OfferType =
+  | 'Cash'
+  | 'FHA'
+  | 'Seller Finance'
+  | 'Conventional'
+  | 'SBA'
+  | 'DSCR'
+  | 'Hard Money'
+  | 'Private'
+  | 'Line of Credit'
+  | 'Subject To Existing Mortgage'
+  | 'Hybrid';
+
+interface LoanTerms {
+  downPayment: number;
+  loanAmount: number;
+  annualInterestRate: number;
+  monthlyPayment: number;
+  annualPayment: number;
+  interestOnly: boolean;
+  balloonDue: number;
+  amortizationAmount: number;
+  amortizationYears: number;
+  closingCosts?: number;
+  rehabCosts?: number;
+}
+
+interface SubjectToLoan {
+  amount: number;
+  annualInterestRate: number;
+  monthlyPayment: number;
+}
+
+interface SubjectToInputs {
+  paymentToSeller: number;
+  loans: SubjectToLoan[];
+  totalLoanBalance: number;
+  totalMonthlyPayment: number;
+  totalAnnualPayment: number;
+}
+
+interface HybridInputs {
+  downPayment: number;
+  loan3Amount: number;
+  annualInterestRate: number;
+  monthlyPayment: number;
+  annualPayment: number;
+  interestOnly: boolean;
+  balloonDue: number;
+  paymentToSeller: number;
+  subjectToLoans: SubjectToLoan[];
+  totalLoanBalance: number;
+  totalMonthlyPayment: number;
+  totalAnnualPayment: number;
+  loanBalance?: number;
+}
+
+interface FixFlipInputs {
+  arv: number;
+  holdingPeriodMonths: number;
+  holdingCosts: number;
+  sellingCostsPercent: number;
+  targetPercent: number;
+  rehabCost: number;
+  maximumAllowableOffer: number;
+  projectedProfit: number;
+  roiDuringHold: number;
+  annualizedRoi: number;
+}
+
+interface BRRRRInputs {
+  arv: number;
+  refinanceLtv: number;
+  refinanceInterestRate: number;
+  loanTerm: number;
+  newMonthlyPayment: number;
+  originalCashInvested: number;
+  cashOutAmount: number;
+  remainingCashInDeal: number;
+  newCashOnCashReturn: number;
+}
+
+interface AppreciationInputs {
+  appreciationPercentPerYear: number;
+  yearsOfAppreciation: number;
+  futurePropertyValue: number;
+  refinanceLtv: number;
+  refinancePotential: number;
+  remainingBalanceAfterRefi: number;
+}
+
+interface IncomeInputsSfr {
+  monthlyRent: number;
+  grossMonthlyIncome: number;
+  grossYearlyIncome: number;
+}
+
+interface IncomeInputsMulti {
+  unitRents: number[];
+  grossMonthlyIncome: number;
+  grossYearlyIncome: number;
+}
+
+interface IncomeInputsStr {
+  unitDailyRents: number[];
+  unitMonthlyRents: number[];
+  dailyCleaningFee: number;
+  laundry: number;
+  activities: number;
+  avgNightsPerMonth: number;
+  grossDailyIncome: number;
+  grossMonthlyIncome: number;
+  grossYearlyIncome: number;
+}
+
+interface ArbitrageInputs {
+  deposit: number;
+  monthlyRentToLandlord: number;
+  estimateCostOfRepairs: number;
+  furnitureCost: number;
+  otherStartupCosts: number;
+  startupCostsTotal: number;
+}
+
+interface OperatingInputsCommon {
+  principalAndInterest: number;
+  totalSubtoLoans: number;
+  taxes: number;
+  insurance: number;
+  gasElectric: number;
+  internet: number;
+  hoa: number;
+  cleaner: number;
+  waterSewer: number;
+  heat: number;
+  lawnSnow: number;
+  phoneBill: number;
+  extra: number;
+  maintenance: number;
+  vacancy: number;
+  management: number;
+  capEx: number;
+  opEx: number;
+  utilitiesPct?: number;
+  expensesWithoutMortgage: number;
+  monthlyExpenses: number;
+  monthlyExpensesPercent: number;
+  yearlyExpenses: number;
+  expensesWithMortgage: number;
+  monthlyExpensesWithMortgage: number;
+  yearlyExpensesWithMortgage: number;
+}
+
+interface DealState {
+  propertyType: PropertyType;
+  operationType: OperationType;
+  offerType: OfferType;
+  propertyAddress: string;
+  agentOwner: string;
+  call: string;
+  email: string;
+  analysisDate: string;
+  listedPrice: number;
+  purchasePrice: number;
+  percentageDifference: number;
+  loan: LoanTerms;
+  subjectTo?: SubjectToInputs;
+  hybrid?: HybridInputs;
+  fixFlip?: FixFlipInputs;
+  brrrr?: BRRRRInputs;
+  ops: OperatingInputsCommon;
+  sfr?: IncomeInputsSfr;
+  multi?: IncomeInputsMulti;
+  str?: IncomeInputsStr;
+  arbitrage?: ArbitrageInputs;
+  appreciation: AppreciationInputs;
+  // Settings
+  showBothPaybackMethods: boolean;
+  paybackCalculationMethod: 'initial' | 'remaining';
+  reservesCalculationMethod: 'months' | 'fixed';
+  reservesMonths: number;
+  reservesFixedAmount: number;
+  includeVariableExpensesInBreakEven: boolean;
+  includeVariablePctInBreakeven?: boolean;
+};
+
+function parseCurrency(input: string): number {
+  const numeric = Number(String(input).replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(numeric) ? numeric : 0;
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+    Number.isFinite(value) ? value : 0,
+  );
+}
+
+// Returns today's date formatted for an HTML input[type="date"] (YYYY-MM-DD) using local time
+function currentDateInputValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function monthlyPayment(loanAmount: number, annualRatePct: number, years: number, interestOnly: boolean): number {
+  if (loanAmount <= 0 || years <= 0) return 0;
+  const monthlyRate = annualRatePct / 100 / 12;
+  const n = Math.round(years * 12);
+  if (interestOnly) return loanAmount * monthlyRate;
+  if (monthlyRate === 0) return loanAmount / n;
+  const factor = Math.pow(1 + monthlyRate, n);
+  return (loanAmount * monthlyRate * factor) / (factor - 1);
+}
+
+function buildAmortization(
+  loanAmount: number,
+  annualRatePct: number,
+  years: number,
+  interestOnly: boolean,
+  startBalance?: number,
+): Array<{ index: number; payment: number; interest: number; principal: number; balance: number }> {
+  const schedule: Array<{ index: number; payment: number; interest: number; principal: number; balance: number }> = [];
+  const n = Math.min(600, Math.round(years * 12)); // cap at 50 years
+  let balance = startBalance ?? loanAmount;
+  const monthlyRate = annualRatePct / 100 / 12;
+  const pmt = interestOnly ? balance * monthlyRate : monthlyPayment(balance, annualRatePct, years, false);
+  for (let i = 1; i <= n; i += 1) {
+    const interest = balance * monthlyRate;
+    const principal = interestOnly ? 0 : Math.max(0, pmt - interest);
+    balance = Math.max(0, interestOnly ? balance : balance - principal);
+    schedule.push({ index: i, payment: pmt, interest, principal, balance });
+  }
+  return schedule;
+}
+
+function computeIncome(state: DealState): number {
+  const { propertyType, operationType } = state;
+  if (operationType === 'Short Term Rental' || operationType === 'Rental Arbitrage') {
+    const nights = state.str?.avgNightsPerMonth ?? 0;
+    const nightly = state.str?.unitDailyRents?.[0] ?? 0; // Assuming first unit for nightly rate
+    const rent = nights * nightly;
+    const fees = (state.str?.dailyCleaningFee ?? 0) * (nights > 0 ? Math.ceil(nights) : 0);
+    const extra =
+      (state.str?.laundry ?? 0) + (state.str?.activities ?? 0) + (state.str?.grossMonthlyIncome ?? 0);
+    return rent + fees + extra;
+  }
+  if (propertyType === 'Single Family') {
+    return (state.sfr?.monthlyRent ?? 0) + (state.sfr?.grossMonthlyIncome ?? 0);
+  }
+  if (propertyType === 'Multi Family / Hospitality') {
+    const rents = state.multi?.unitRents ?? [];
+    const rentTotal = rents.reduce((a, b) => a + b, 0);
+    return rentTotal + (state.multi?.grossMonthlyIncome ?? 0);
+  }
+  // Fix & Flip / Arbitrage / BRRRR default monthly income 0 for calculator primary tab
+  return 0;
+}
+
+function computeLoanAmount(state: DealState): number {
+  if (state.operationType === 'Rental Arbitrage') return 0;
+  const base = Math.max(0, state.purchasePrice - state.loan.downPayment);
+  if (state.offerType === 'Subject To Existing Mortgage') {
+    const existing = state.subjectTo?.totalLoanBalance ?? 0;
+    // In Subject-To, buyer may assume existing balance and add new financing only if purchase price exceeds down payment + existing
+    const delta = Math.max(0, base - existing);
+    return delta;
+  }
+  return base;
+}
+
+function computeCocAnnual(state: DealState, annualCashFlow: number): number {
+  const invested =
+    state.operationType === 'Rental Arbitrage'
+      ? (state.arbitrage?.deposit ?? 0) + (state.arbitrage?.estimateCostOfRepairs ?? 0) + (state.arbitrage?.furnitureCost ?? 0) + (state.arbitrage?.otherStartupCosts ?? 0)
+      : state.loan.downPayment + state.loan.amortizationAmount + state.loan.balloonDue;
+  if (invested <= 0) return 0;
+  return (annualCashFlow / invested) * 100;
+}
+
+function computeFixFlipCalculations(state: DealState): {
+  maximumAllowableOffer: number;
+  projectedProfit: number;
+  roiDuringHold: number;
+  annualizedRoi: number;
+} {
+  const arv = state.fixFlip?.arv ?? 0;
+  const targetPercent = state.fixFlip?.targetPercent ?? 70;
+  const rehabCost = state.fixFlip?.rehabCost ?? 0;
+  const holdingCosts = state.fixFlip?.holdingCosts ?? 0;
+  const holdingPeriodMonths = state.fixFlip?.holdingPeriodMonths ?? 0;
+  const sellingCostsPercent = state.fixFlip?.sellingCostsPercent ?? 0;
+  
+  // Calculate MAO (Maximum Allowable Offer)
+  const targetPrice = arv * (targetPercent / 100);
+  const sellingCosts = arv * (sellingCostsPercent / 100);
+  const totalHoldingCosts = holdingCosts * holdingPeriodMonths;
+  const maximumAllowableOffer = Math.max(0, targetPrice - rehabCost - totalHoldingCosts - sellingCosts);
+  
+  // Calculate Projected Profit
+  const totalCosts = maximumAllowableOffer + rehabCost + totalHoldingCosts + sellingCosts;
+  const projectedProfit = Math.max(0, arv - totalCosts);
+  
+  // Calculate ROI During Hold
+  const totalCashInvested = maximumAllowableOffer + rehabCost;
+  const roiDuringHold = totalCashInvested > 0 ? (projectedProfit / totalCashInvested) * 100 : 0;
+  
+  // Calculate Annualized ROI
+  const annualizedRoi = holdingPeriodMonths > 0 ? (roiDuringHold / holdingPeriodMonths) * 12 : 0;
+  
+  return {
+    maximumAllowableOffer,
+    projectedProfit,
+    roiDuringHold,
+    annualizedRoi
+  };
+}
+
+function computeBRRRRCalculations(state: DealState): {
+  cashOutAmount: number;
+  remainingCashInDeal: number;
+  newCashOnCashReturn: number;
+} {
+  const arv = state.brrrr?.arv ?? 0;
+  const refinanceLtv = state.brrrr?.refinanceLtv ?? 0;
+  const originalCashInvested = state.brrrr?.originalCashInvested ?? 0;
+  const newMonthlyPayment = state.brrrr?.newMonthlyPayment ?? 0;
+
+  // Cash-out amount based on LTV (simplified). Payoff logic can be extended with remaining principal if needed.
+  const refinanceLoan = arv * (refinanceLtv / 100);
+  const cashOutAmount = Math.max(0, refinanceLoan - originalCashInvested);
+
+  // Remaining cash in deal after refi proceeds
+  const remainingCashInDeal = Math.max(0, originalCashInvested - cashOutAmount);
+
+  // Compute post-refi annual cash flow using current operating assumptions
+  const monthlyRevenue = computeIncome(state);
+  const fixedMonthlyOps = computeFixedMonthlyOps({
+    taxes: state.ops.taxes || 0,
+    insurance: state.ops.insurance || 0,
+    hoa: state.ops.hoa || 0,
+    gasElectric: state.ops.gasElectric || 0,
+    internet: state.ops.internet || 0,
+    waterSewer: state.ops.waterSewer || 0,
+    heat: state.ops.heat || 0,
+    lawnSnow: state.ops.lawnSnow || 0,
+    phone: state.ops.phoneBill || 0,
+    cleaner: state.ops.cleaner || 0,
+    extras: state.ops.extra || 0,
+  });
+  const variablePct = computeVariableMonthlyOpsPct({
+    mgmtPct: (state.ops.management || 0) / 100,
+    repairsPct: (state.ops.maintenance || 0) / 100,
+    utilitiesPct: (state.ops.utilitiesPct || 0) / 100,
+    capExPct: (state.ops.capEx || 0) / 100,
+    opExPct: (state.ops.opEx || 0) / 100,
+  });
+  const annualCashFlow = brrrrAnnualCashFlowPostRefi({
+    monthlyRevenue,
+    fixedMonthlyOps,
+    variablePct,
+    newLoanMonthly: newMonthlyPayment,
+  });
+  const newCashOnCashReturn = remainingCashInDeal > 0 ? (annualCashFlow / remainingCashInDeal) * 100 : 0;
+
+  return {
+    cashOutAmount,
+    remainingCashInDeal,
+    newCashOnCashReturn,
+  };
+};
+
+function getOperationTypeOptions(propertyType: PropertyType): OperationType[] {
+  if (propertyType === 'Hotel') {
+    return ['Buy & Hold', 'Rental Arbitrage'];
+  }
+  return ['Buy & Hold', 'Fix & Flip', 'Short Term Rental', 'Rental Arbitrage', 'BRRRR'];
+}
+
+function getOfferTypeOptions(propertyType: PropertyType, operationType: OperationType): OfferType[] {
+  if (operationType === 'Rental Arbitrage') {
+    if (propertyType === 'Single Family' || propertyType === 'Multi Family / Hospitality') {
+      return ['Private', 'Line of Credit', 'SBA'];
+    }
+    return [];
+  }
+  if (operationType === 'Fix & Flip' || operationType === 'BRRRR') {
+    return ['Seller Finance', 'SBA', 'Hard Money', 'Private'];
+  }
+  if (operationType === 'Buy & Hold' && (propertyType === 'Single Family' || propertyType === 'Multi Family / Hospitality')) {
+    return ['FHA', 'Cash', 'Seller Finance', 'Conventional', 'SBA', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid'];
+  }
+  return ['Cash', 'Seller Finance', 'Conventional', 'SBA', 'DSCR', 'Subject To Existing Mortgage', 'Hybrid'];
+}
+
+function saveDeal() {
+  localStorage.setItem('underwrite:last', JSON.stringify(state));
+}
+
+function update<K extends keyof DealState>(key: K, value: DealState[K]) {
+  setState((prev) => ({ ...prev, [key]: value }));
+}
+
+function updateLoan<K extends keyof LoanTerms>(key: K, value: LoanTerms[K]) {
+  setState((prev) => ({ ...prev, loan: { ...prev.loan, [key]: value } }));
+}
+
+function updateOps<K extends keyof OperatingInputsCommon>(key: K, value: OperatingInputsCommon[K]) {
+  setState((prev) => ({ ...prev, ops: { ...prev.ops, [key]: value } }));
+}
+
+function updateAppreciation<K extends keyof AppreciationInputs>(key: K, value: AppreciationInputs[K]) {
+  setState((prev) => ({ ...prev, appreciation: { ...prev.appreciation, [key]: value } }));
+}
+
+function updateSfr<K extends keyof IncomeInputsSfr>(key: K, value: IncomeInputsSfr[K]) {
+  setState((prev) => ({ 
+    ...prev, 
+    sfr: { 
+      monthlyRent: 0,
+      grossMonthlyIncome: 0,
+      grossYearlyIncome: 0,
+      [key]: value 
+    } 
+  }));
+}
+
+function updateMulti<K extends keyof IncomeInputsMulti>(key: K, value: IncomeInputsMulti[K]) {
+  setState((prev) => ({ 
+    ...prev, 
+    multi: { 
+      unitRents: [],
+      grossMonthlyIncome: 0,
+      grossYearlyIncome: 0,
+      [key]: value 
+    } 
+  }));
+}
+
+function updateStr<K extends keyof IncomeInputsStr>(key: K, value: IncomeInputsStr[K]) {
+  setState((prev) => ({ 
+    ...prev, 
+    str: { 
+      unitDailyRents: [],
+      unitMonthlyRents: [],
+      dailyCleaningFee: 0,
+      laundry: 0,
+      activities: 0,
+      avgNightsPerMonth: 0,
+      grossDailyIncome: 0,
+      grossMonthlyIncome: 0,
+      grossYearlyIncome: 0,
+      [key]: value 
+    } 
+  }));
+}
+
+function updateArbitrage<K extends keyof ArbitrageInputs>(key: K, value: ArbitrageInputs[K]) {
+  setState((prev) => ({
+    ...prev,
+    arbitrage: {
+      ...(prev.arbitrage ?? {
+        deposit: 0,
+        monthlyRentToLandlord: 0,
+        estimateCostOfRepairs: 0,
+        furnitureCost: 0,
+        otherStartupCosts: 0,
+        startupCostsTotal: 0,
+      }),
+      [key]: value,
+    },
+  }));
+}
+
+function updateSubjectTo<K extends keyof SubjectToInputs>(key: K, value: SubjectToInputs[K]) {
+  setState((prev) => ({
+    ...prev,
+    subjectTo: {
+      ...(prev.subjectTo ?? {
+        paymentToSeller: 0,
+        loans: [],
+        totalLoanBalance: 0,
+        totalMonthlyPayment: 0,
+        totalAnnualPayment: 0,
+      }),
+      [key]: value,
+    },
+  }));
+}
+
+function updateHybrid<K extends keyof HybridInputs>(key: K, value: HybridInputs[K]) {
+  setState((prev) => ({
+    ...prev,
+    hybrid: {
+      ...(prev.hybrid ?? {
+        downPayment: 0,
+        loan3Amount: 0,
+        annualInterestRate: 0,
+        monthlyPayment: 0,
+        annualPayment: 0,
+        interestOnly: false,
+        balloonDue: 0,
+        paymentToSeller: 0,
+        subjectToLoans: [],
+        totalLoanBalance: 0,
+        totalMonthlyPayment: 0,
+        totalAnnualPayment: 0,
+      }),
+      [key]: value,
+    },
+  }));
+}
+
+function updateFixFlip<K extends keyof FixFlipInputs>(key: K, value: FixFlipInputs[K]) {
+  setState((prev) => ({
+    ...prev,
+    fixFlip: {
+      ...(prev.fixFlip ?? {
+        arv: 0,
+        holdingPeriodMonths: 0,
+        holdingCosts: 0,
+        sellingCostsPercent: 0,
+        targetPercent: 70,
+        rehabCost: 0,
+        maximumAllowableOffer: 0,
+        projectedProfit: 0,
+        roiDuringHold: 0,
+        annualizedRoi: 0,
+      }),
+      [key]: value,
+    },
+  }));
+}
+
+function updateBRRRR<K extends keyof BRRRRInputs>(key: K, value: BRRRRInputs[K]) {
+  setState((prev) => ({
+    ...prev,
+    brrrr: {
+      ...(prev.brrrr ?? {
+        arv: 0,
+        refinanceLtv: 0,
+        refinanceInterestRate: 0,
+        loanTerm: 0,
+        newMonthlyPayment: 0,
+        originalCashInvested: 0,
+        cashOutAmount: 0,
+        remainingCashInDeal: 0,
+        newCashOnCashReturn: 0,
+      }),
+      [key]: value,
+    },
+  }));
+}
+
+function updateSubjectToLoan(index: number, key: keyof SubjectToLoan, value: number) {
+  setState((prev) => {
+    const newLoans = [...(prev.subjectTo?.loans ?? [])];
+    if (!newLoans[index]) {
+      newLoans[index] = { amount: 0, annualInterestRate: 0, monthlyPayment: 0 };
+    }
+    newLoans[index] = { ...newLoans[index], [key]: value };
+    return {
+      ...prev,
+      subjectTo: {
+        ...(prev.subjectTo ?? {
+          paymentToSeller: 0,
+          loans: [],
+          totalLoanBalance: 0,
+          totalMonthlyPayment: 0,
+          totalAnnualPayment: 0,
+        }),
+        loans: newLoans,
+      },
+    };
+  });
+}
+
+function updateHybridSubjectToLoan(index: number, key: keyof SubjectToLoan, value: number) {
+  setState((prev) => {
+    const newLoans = [...(prev.hybrid?.subjectToLoans ?? [])];
+    if (!newLoans[index]) {
+      newLoans[index] = { amount: 0, annualInterestRate: 0, monthlyPayment: 0 };
+    }
+    newLoans[index] = { ...newLoans[index], [key]: value };
+    return {
+      ...prev,
+      hybrid: {
+        ...(prev.hybrid ?? {
+          downPayment: 0,
+          loan3Amount: 0,
+          annualInterestRate: 0,
+          monthlyPayment: 0,
+          annualPayment: 0,
+          interestOnly: false,
+          balloonDue: 0,
+          paymentToSeller: 0,
+          subjectToLoans: [],
+          totalLoanBalance: 0,
+          totalMonthlyPayment: 0,
+          totalAnnualPayment: 0,
+        }),
+        subjectToLoans: newLoans,
+      },
+    };
+  });
+}
+
+function exportToPDF() {
+  // TODO: Implement PDF export with jsPDF
+  alert('PDF export coming soon! This will include your deal analysis with Dreamery branding.');
+}
+
+function exportToExcel() {
+  // TODO: Implement Excel export with xlsx
+  alert('Excel export coming soon! This will include your deal analysis in an editable spreadsheet format.');
+};
+
+const UnderwritePage: React.FC = () => {
+  // ... keep all state and calculations ...
+
+  return (
+    <Box sx={{ minHeight: '100vh', background: '#ffffff', transition: 'all 0.3s ease-in-out' }}>
+      <Container maxWidth="lg" sx={{ py: 2, minHeight: '100vh', transition: 'all 0.3s ease-in-out' }}>
+        <Card sx={{ borderRadius: 2, border: '1px solid #e0e0e0', transition: 'all 0.3s ease-in-out', minHeight: 'fit-content' }}>
+          <CardContent>
+            {/* 1. Dreamery Calculator (title + description) */}
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a365d', mb: 1 }}>
+              Dreamery Calculator
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+              Fill the red inputs. Sections expand based on your Property Type and Finance Type selections. Amortization
+              schedule supports up to 50 years.
+            </Typography>
+
+            {/* 2. Basic Info (accordion) */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Basic Info content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 3. Income (accordion) */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Income</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Income content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 4. Operating Expenses (accordion) */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Operating Expenses</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Operating Expenses content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 5. Income & Operating (accordion) */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Income & Operating</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Income & Operating content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 6. Pro Forma Presets (inline buttons) */}
+            <Box sx={{ mb: 2, p: 2, bgcolor: '#f8f9fa', borderRadius: 1, border: '1px solid #e9ecef' }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1a365d', mb: 1 }}>
+                Pro Forma Presets
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                {/* Pro Forma Presets inline buttons content */}
+              </Box>
+            </Box>
+
+            {/* 7. Pro Forma Presets (accordion) */}
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Pro Forma Presets</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Pro Forma Presets accordion content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 8. Loan & Costs (accordion) */}
+            <Accordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>{state.operationType === 'Rental Arbitrage' ? 'Startup Costs' : 'Loan & Costs'}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Loan & Costs content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 9. Subject-To Existing Mortgage (conditional accordion) */}
+            {state.operationType !== 'Rental Arbitrage' &&
+              (state.offerType === 'Subject To Existing Mortgage' || state.offerType === 'Hybrid') && (
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>Subject-To Existing Mortgage</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Subject-To content */}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* 10. Hybrid Financing (conditional accordion) */}
+            {state.operationType !== 'Rental Arbitrage' && state.offerType === 'Hybrid' && (
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>Hybrid Financing</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Hybrid Financing content */}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* 11. Fix & Flip (conditional accordion) */}
+            {state.operationType === 'Fix & Flip' && (
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>Fix & Flip</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Fix & Flip content */}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* 12. BRRRR (conditional accordion) */}
+            {state.operationType === 'BRRRR' && (
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>BRRRR</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* BRRRR content */}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* 13. Amortization Schedule (accordion) */}
+            {state.operationType !== 'Rental Arbitrage' && (
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography sx={{ fontWeight: 700 }}>Amortization Schedule ({state.loan.amortizationYears} years)</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* Amortization Schedule content */}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* 14. Appreciation Calculator (accordion) */}
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Appreciation Calculator</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Appreciation Calculator content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 15. KPIs (grid layout) */}
+            <Box sx={{ mt: 2, display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(5, 1fr)' }, gap: 1.5 }}>
+              {/* KPIs content */}
+            </Box>
+
+            {/* 16. Secondary KPIs (grid layout) */}
+            <Box sx={{ mt: 1, display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 1.5 }}>
+              {/* Secondary KPIs content */}
+            </Box>
+
+            {/* 17. At a Glance (accordion) */}
+            <Accordion defaultExpanded sx={{ mt: 2 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* At a Glance content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 18. Export & Reports (accordion) */}
+            <Accordion sx={{ mt: 2 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>Export & Reports</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* Export & Reports content */}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* 19. Save Locally + Reset buttons */}
+            <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
+              <Button variant="outlined" onClick={() => saveDeal()} sx={{ textTransform: 'none', borderColor: '#1a365d', color: '#1a365d' }}>
+                Save Locally
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  localStorage.removeItem('underwrite:last');
+                  setState(defaultState);
+                }}
+                sx={{ textTransform: 'none', background: '#1a365d' }}
+              >
+                Reset
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
+  );
+};
+
+function Kpi(props: { label: string; value: string }) {
+  return (
+    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 1 }}>
+      <Typography variant="caption" sx={{ color: '#666' }}>
+        {props.label}
+      </Typography>
+      <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a365d' }}>
+        {props.value}
+      </Typography>
+    </Box>
+  );
+}
+
+export default UnderwritePage;

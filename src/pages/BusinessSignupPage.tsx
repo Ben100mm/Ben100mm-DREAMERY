@@ -1,0 +1,768 @@
+import React, { useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Container,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  Alert,
+  ListSubheader,
+} from "@mui/material";
+import {
+  Visibility,
+  VisibilityOff,
+  ArrowBack,
+  KeyboardArrowDown,
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import { brandColors } from "../theme";
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  background: brandColors.backgrounds.primary,
+  border: "1px solid brandColors.borders.secondary",
+  borderRadius: "8px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  maxWidth: "600px",
+  width: "100%",
+  margin: "0 auto",
+}));
+
+const BusinessSignupPage: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [firstName, setFirstName] = useState("");
+
+  const [zipPostal, setZipPostal] = useState("");
+  const [phoneArea, setPhoneArea] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState("");
+  const [phoneLine, setPhoneLine] = useState("");
+  const [extension, setExtension] = useState("");
+  const [consentChecked, setConsentChecked] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (
+      !email ||
+      !password ||
+      !businessType ||
+      !firstName ||
+      !zipPostal ||
+      !phoneArea ||
+      !phonePrefix ||
+      !phoneLine
+    ) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    if (!consentChecked) {
+      setError("Please accept the consent to receive emails");
+      return;
+    }
+
+    setSuccess("Business account created successfully!");
+  };
+
+  return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: brandColors.backgrounds.primary,
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        overflowY: "auto",
+        py: 4,
+      }}
+    >
+      <Container maxWidth="md" sx={{ my: 2 }}>
+        <StyledCard>
+          <CardContent
+            sx={{ padding: 4, maxHeight: "80vh", overflowY: "auto" }}
+          >
+            {/* Header */}
+            <Box sx={{ textAlign: "center", mb: 4 }}>
+              <Typography
+                variant="h4"
+                component="h1"
+                sx={{
+                  color: "#1e3a8a",
+                  fontWeight: 700,
+                  mb: 1,
+                  fontSize: "2rem",
+                  fontFamily: "serif",
+                }}
+              >
+                Welcome to Dreamery
+              </Typography>
+            </Box>
+
+            {/* Error/Success Messages */}
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert severity="success" sx={{ mb: 2 }}>
+                {success}
+              </Alert>
+            )}
+
+            {/* Form */}
+            <Box component="form" onSubmit={handleSubmit}>
+              {/* Account Information Section */}
+              <Typography
+                variant="h6"
+                sx={{ color: brandColors.text.primary, fontWeight: 700, mb: 2 }}
+              >
+                Account Information
+              </Typography>
+
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email"
+                sx={{
+                  mb: 2,
+                  "& .MuiOutlinedInput-root": {
+                    color: brandColors.text.primary,
+                    "& fieldset": {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#c0c0c0",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1e3a8a",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: brandColors.neutral.dark,
+                    fontWeight: 600,
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#1e3a8a",
+                  },
+                }}
+              />
+
+              <TextField
+                fullWidth
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create password"
+                sx={{
+                  mb: 1,
+                  "& .MuiOutlinedInput-root": {
+                    color: brandColors.text.primary,
+                    "& fieldset": {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#c0c0c0",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1e3a8a",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: brandColors.neutral.dark,
+                    fontWeight: 600,
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#1e3a8a",
+                  },
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        sx={{ color: brandColors.neutral.dark }}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              {/* Password Requirements */}
+              <Box sx={{ mb: 3, pl: 2 }}>
+                <Typography
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                >
+                  - At least 8 characters
+                </Typography>
+                <Typography
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                >
+                  - Mix of letters and numbers
+                </Typography>
+                <Typography
+                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                >
+                  - At least 1 special character
+                </Typography>
+                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
+                  - At least 1 lowercase letter and 1 uppercase letter
+                </Typography>
+              </Box>
+
+              {/* Business Information Section */}
+              <Typography
+                variant="h6"
+                sx={{ color: brandColors.text.primary, fontWeight: 700, mb: 2, mt: 3 }}
+              >
+                Business Information
+              </Typography>
+
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}>
+                  Business type
+                </InputLabel>
+                <Select
+                  value={businessType}
+                  onChange={(e) => setBusinessType(e.target.value)}
+                  IconComponent={KeyboardArrowDown}
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#c0c0c0",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#1e3a8a",
+                    },
+                  }}
+                >
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Real Estate Companies
+                  </ListSubheader>
+                  <MenuItem value="real-estate-company">
+                    Real Estate Company
+                  </MenuItem>
+                  <MenuItem value="brokerage-firm">Brokerage Firm</MenuItem>
+                  <MenuItem value="real-estate-team">Real Estate Team</MenuItem>
+                  <MenuItem value="real-estate-office">
+                    Real Estate Office
+                  </MenuItem>
+                  <MenuItem value="investment-firm">Investment Firm</MenuItem>
+                  <MenuItem value="syndication-company">
+                    Syndication Company
+                  </MenuItem>
+                  <MenuItem value="crowdfunding-platform">
+                    Crowdfunding Platform
+                  </MenuItem>
+                  <MenuItem value="reit">
+                    Real Estate Investment Trust (REIT)
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Title & Escrow Companies
+                  </ListSubheader>
+                  <MenuItem value="title-company">Title Company</MenuItem>
+                  <MenuItem value="escrow-company">Escrow Company</MenuItem>
+                  <MenuItem value="title-insurance-company">
+                    Title Insurance Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Mortgage Companies
+                  </ListSubheader>
+                  <MenuItem value="mortgage-company">Mortgage Company</MenuItem>
+                  <MenuItem value="mortgage-brokerage">
+                    Mortgage Brokerage
+                  </MenuItem>
+                  <MenuItem value="hard-money-lending-company">
+                    Hard Money Lending Company
+                  </MenuItem>
+                  <MenuItem value="private-lending-company">
+                    Private Lending Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Property Management Companies
+                  </ListSubheader>
+                  <MenuItem value="property-management-company">
+                    Property Management Company
+                  </MenuItem>
+                  <MenuItem value="str-management-company">
+                    STR Management Company
+                  </MenuItem>
+                  <MenuItem value="maintenance-company">
+                    Maintenance Company
+                  </MenuItem>
+                  <MenuItem value="cleaning-company">Cleaning Company</MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Construction & Development Companies
+                  </ListSubheader>
+                  <MenuItem value="construction-company">
+                    Construction Company
+                  </MenuItem>
+                  <MenuItem value="development-company">
+                    Development Company
+                  </MenuItem>
+                  <MenuItem value="building-company">Building Company</MenuItem>
+                  <MenuItem value="renovation-company">
+                    Renovation Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Design & Architecture Firms
+                  </ListSubheader>
+                  <MenuItem value="architecture-firm">
+                    Architecture Firm
+                  </MenuItem>
+                  <MenuItem value="interior-design-firm">
+                    Interior Design Firm
+                  </MenuItem>
+                  <MenuItem value="landscape-design-firm">
+                    Landscape Design Firm
+                  </MenuItem>
+                  <MenuItem value="design-consulting-firm">
+                    Design Consulting Firm
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Inspection & Appraisal Companies
+                  </ListSubheader>
+                  <MenuItem value="inspection-company">
+                    Inspection Company
+                  </MenuItem>
+                  <MenuItem value="appraisal-company">
+                    Appraisal Company
+                  </MenuItem>
+                  <MenuItem value="surveying-company">
+                    Surveying Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Insurance Companies
+                  </ListSubheader>
+                  <MenuItem value="insurance-company">
+                    Insurance Company
+                  </MenuItem>
+                  <MenuItem value="title-insurance-company">
+                    Title Insurance Company
+                  </MenuItem>
+                  <MenuItem value="property-insurance-company">
+                    Property Insurance Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Legal & Professional Services
+                  </ListSubheader>
+                  <MenuItem value="law-firm">Law Firm</MenuItem>
+                  <MenuItem value="accounting-firm">Accounting Firm</MenuItem>
+                  <MenuItem value="tax-consulting-firm">
+                    Tax Consulting Firm
+                  </MenuItem>
+                  <MenuItem value="1031-exchange-company">
+                    1031 Exchange Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Auction & iBuyer Companies
+                  </ListSubheader>
+                  <MenuItem value="auction-company">Auction Company</MenuItem>
+                  <MenuItem value="ibuyer-company">iBuyer Company</MenuItem>
+                  <MenuItem value="wholesaling-company">
+                    Wholesaling Company
+                  </MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Marketing & Media Companies
+                  </ListSubheader>
+                  <MenuItem value="marketing-agency">Marketing Agency</MenuItem>
+                  <MenuItem value="photography-company">
+                    Photography Company
+                  </MenuItem>
+                  <MenuItem value="virtual-tour-company">
+                    Virtual Tour Company
+                  </MenuItem>
+                  <MenuItem value="staging-company">Staging Company</MenuItem>
+
+                  <ListSubheader
+                    sx={{
+                      fontWeight: "bold",
+                      color: brandColors.neutral.dark,
+                      backgroundColor: brandColors.neutral.light,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Other Business Types
+                  </ListSubheader>
+                  <MenuItem value="consulting-firm">Consulting Firm</MenuItem>
+                  <MenuItem value="training-company">Training Company</MenuItem>
+                  <MenuItem value="education-company">
+                    Education Company
+                  </MenuItem>
+                  <MenuItem value="other-business">Other Business</MenuItem>
+                </Select>
+              </FormControl>
+
+              <TextField
+                fullWidth
+                label="Business name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Business name"
+                sx={{
+                  mb: 2,
+                  "& .MuiOutlinedInput-root": {
+                    color: brandColors.text.primary,
+                    "& fieldset": {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#c0c0c0",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1e3a8a",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: brandColors.neutral.dark,
+                    fontWeight: 600,
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#1e3a8a",
+                  },
+                }}
+              />
+
+              <TextField
+                fullWidth
+                label="Zip/Postal"
+                value={zipPostal}
+                onChange={(e) => setZipPostal(e.target.value)}
+                placeholder="Zip/Postal"
+                sx={{
+                  mb: 2,
+                  "& .MuiOutlinedInput-root": {
+                    color: brandColors.text.primary,
+                    "& fieldset": {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#c0c0c0",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1e3a8a",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: brandColors.neutral.dark,
+                    fontWeight: 600,
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#1e3a8a",
+                  },
+                }}
+              />
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    color: brandColors.neutral.dark,
+                    fontWeight: 600,
+                    mb: 1,
+                    fontSize: "14px",
+                  }}
+                >
+                  Phone number
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <TextField
+                    size="small"
+                    placeholder="Area"
+                    value={phoneArea}
+                    onChange={(e) => setPhoneArea(e.target.value)}
+                    sx={{
+                      width: "80px",
+                      "& .MuiOutlinedInput-root": {
+                        color: brandColors.text.primary,
+                        "& fieldset": {
+                          borderColor: brandColors.borders.secondary,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#c0c0c0",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#1e3a8a",
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    size="small"
+                    placeholder="Prefix"
+                    value={phonePrefix}
+                    onChange={(e) => setPhonePrefix(e.target.value)}
+                    sx={{
+                      width: "80px",
+                      "& .MuiOutlinedInput-root": {
+                        color: brandColors.text.primary,
+                        "& fieldset": {
+                          borderColor: brandColors.borders.secondary,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#c0c0c0",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#1e3a8a",
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    size="small"
+                    placeholder="Line"
+                    value={phoneLine}
+                    onChange={(e) => setPhoneLine(e.target.value)}
+                    sx={{
+                      width: "80px",
+                      "& .MuiOutlinedInput-root": {
+                        color: brandColors.text.primary,
+                        "& fieldset": {
+                          borderColor: brandColors.borders.secondary,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#c0c0c0",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#1e3a8a",
+                        },
+                      },
+                    }}
+                  />
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    <Typography
+                      sx={{
+                        color: brandColors.neutral.dark,
+                        fontWeight: 600,
+                        fontSize: "14px",
+                      }}
+                    >
+                      Ext
+                    </Typography>
+                    <TextField
+                      size="small"
+                      placeholder="Ext"
+                      value={extension}
+                      onChange={(e) => setExtension(e.target.value)}
+                      sx={{
+                        width: "80px",
+                        "& .MuiOutlinedInput-root": {
+                          color: brandColors.text.primary,
+                          "& fieldset": {
+                            borderColor: brandColors.borders.secondary,
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#c0c0c0",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#1e3a8a",
+                          },
+                        },
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Consent Checkbox */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={consentChecked}
+                    onChange={(e) => setConsentChecked(e.target.checked)}
+                    sx={{
+                      color: "#1e3a8a",
+                      "&.Mui-checked": {
+                        color: "#1e3a8a",
+                      },
+                    }}
+                  />
+                }
+                label={
+                  <Typography sx={{ color: brandColors.text.primary, fontSize: "14px" }}>
+                    By checking the box, I consent to receive emails from
+                    Dreamery, including newsletters, alerts, updates,
+                    invitations, promotions and other news and notifications
+                  </Typography>
+                }
+                sx={{ mb: 3, alignItems: "flex-start" }}
+              />
+
+              {/* Continue Button */}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  height: "48px",
+                  borderRadius: "8px",
+                  background: "#1e3a8a",
+                  textTransform: "none",
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  mb: 2,
+                  "&:hover": {
+                    background: "#1d4ed8",
+                  },
+                }}
+              >
+                Continue
+              </Button>
+
+              {/* Terms of Use */}
+              <Box sx={{ textAlign: "center", mb: 3 }}>
+                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
+                  By submitting, I accept Dreamery's{" "}
+                  <Link
+                    sx={{
+                      color: "#1e3a8a",
+                      textDecoration: "none",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    terms of use
+                  </Link>
+                </Typography>
+              </Box>
+
+              {/* Back to Home */}
+              <Box sx={{ textAlign: "center" }}>
+                <Button
+                  startIcon={<ArrowBack />}
+                  onClick={() => window.history.back()}
+                  sx={{
+                    color: brandColors.neutral.dark,
+                    textTransform: "none",
+                    fontSize: "14px",
+                    "&:hover": {
+                      color: brandColors.text.primary,
+                    },
+                  }}
+                >
+                  Go Back
+                </Button>
+              </Box>
+            </Box>
+          </CardContent>
+        </StyledCard>
+      </Container>
+    </Box>
+  );
+};
+
+export default BusinessSignupPage;

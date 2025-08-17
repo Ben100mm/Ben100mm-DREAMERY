@@ -1,0 +1,3285 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+  Chip,
+  AppBar,
+  Toolbar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Divider,
+  Avatar,
+  Menu,
+  MenuItem,
+  Badge,
+  Tooltip,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Checkbox,
+  FormControlLabel,
+  LinearProgress,
+  TextField,
+  FormControl,
+  Select,
+} from '@mui/material';
+import {
+  Dashboard as DashboardIcon,
+  Security as SecurityIcon,
+  Search as SearchIcon,
+  AccountBalance as AccountBalanceIcon,
+  Gavel as GavelIcon,
+  Calculate as CalculateIcon,
+  Home as HomeIcon,
+  CheckCircle as CheckCircleIcon,
+  Support as SupportIcon,
+  Business as BusinessIcon,
+  Flag as FlagIcon,
+  IntegrationInstructions as IntegrationIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  AccountCircle as AccountCircleIcon,
+  Close as CloseIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ArrowBack as ArrowBackIcon,
+  Person as PersonIcon,
+  Print as PrintIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  Visibility as VisibilityIcon,
+  Delete as DeleteIcon,
+  ContentCopy as ContentCopyIcon,
+  Edit as EditIcon,
+  Refresh as RefreshIcon,
+  Add as AddIcon,
+} from '@mui/icons-material';
+
+// Import the actual components
+import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
+import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
+import DueDiligenceTools from '../components/close/due-diligence/DueDiligenceTools';
+import FinancingCoordination from '../components/close/financing/FinancingCoordination';
+import LegalCompliance from '../components/close/legal-compliance/LegalCompliance';
+import SettlementClosingCosts from '../components/close/settlement/SettlementClosingCosts';
+import InsuranceUtilities from '../components/close/insurance-utilities/InsuranceUtilities';
+import FinalWalkthroughHandover from '../components/close/walkthrough/FinalWalkthroughHandover';
+import PostClosingServices from '../components/close/post-closing/PostClosingServices';
+import AIClosingAssistant from '../components/close/assistant/ClosingAssistant';
+import PartnerIntegrations from '../components/close/integrations/PartnerIntegrations';
+import { brandColors } from "../theme";
+
+// Custom Atom Icon Component
+const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
+  <Box
+    sx={{
+      width: 24,
+      height: 24,
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...sx
+    }}
+  >
+    {/* Nucleus */}
+    <Box
+      sx={{
+        width: 8,
+        height: 8,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        zIndex: 2,
+      }}
+    />
+    
+    {/* Electron orbits */}
+    <Box
+      sx={{
+        width: 20,
+        height: 20,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(0deg)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 16,
+        height: 16,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(45deg)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 18,
+        height: 18,
+        border: `1.5px solid ${brandColors.actions.primary}`,
+        borderRadius: '50%',
+        position: 'absolute',
+        transform: 'rotate(-30deg)',
+      }}
+    />
+    
+    {/* Electrons */}
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: 1,
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        bottom: 1,
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    />
+    <Box
+      sx={{
+        width: 4,
+        height: 4,
+        backgroundColor: brandColors.actions.primary,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: '50%',
+        right: 1,
+        transform: 'translateY(-50%)',
+      }}
+    />
+  </Box>
+);
+
+// Types
+interface UserRole {
+  id: string;
+  name: string;
+  permissions: string[];
+  level: 'admin' | 'agent' | 'lender' | 'buyer' | 'seller' | 'attorney';
+}
+
+interface CloseState {
+  activeTab: string;
+  userRole: UserRole;
+  drawerOpen: boolean;
+  notifications: number;
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+// User role types and their configurations
+type UserRoleType = 'buyer' | 'buying-agent' | 'listing-agent' | 'broker' | 'brand-manager' | 'enterprise';
+
+interface UserRoleConfig {
+  id: UserRoleType;
+  label: string;
+  description: string;
+  icon: string;
+  hasAgentDashboard: boolean;
+  hasBrokerDashboard: boolean;
+  hasEnterpriseDashboard: boolean;
+  features: string[];
+}
+
+const userRoleConfigs: UserRoleConfig[] = [
+  {
+    id: 'buyer',
+    label: 'Buyer',
+    description: 'Individual homebuyer',
+    icon: 'Home',
+    hasAgentDashboard: false,
+    hasBrokerDashboard: false,
+    hasEnterpriseDashboard: false,
+    features: ['offers', 'agreements', 'notifications', 'search']
+  },
+  {
+    id: 'buying-agent',
+    label: 'Buying Agent',
+    description: 'Agent representing buyers (same view as buyer)',
+    icon: 'Person',
+    hasAgentDashboard: false, // Changed to false since they use buyer view
+    hasBrokerDashboard: false,
+    hasEnterpriseDashboard: false,
+    features: ['offers', 'agreements', 'notifications', 'search', 'transactions', 'documents']
+  },
+  {
+    id: 'listing-agent',
+    label: 'Listing Agent',
+    description: 'Agent representing sellers',
+    icon: 'Business',
+    hasAgentDashboard: true,
+    hasBrokerDashboard: false,
+    hasEnterpriseDashboard: false,
+    features: ['listings', 'offers', 'documents', 'commission']
+  },
+  {
+    id: 'broker',
+    label: 'Broker',
+    description: 'Office-level oversight',
+    icon: 'AccountBalance',
+    hasAgentDashboard: false,
+    hasBrokerDashboard: true,
+    hasEnterpriseDashboard: false,
+    features: ['compliance', 'reports', 'agent-management', 'financials']
+  },
+  {
+    id: 'brand-manager',
+    label: 'Brand Manager',
+    description: 'Multi-office brand oversight',
+    icon: 'Flag',
+    hasAgentDashboard: false,
+    hasBrokerDashboard: true,
+    hasEnterpriseDashboard: true,
+    features: ['multi-office', 'branding', 'recruiting', 'analytics']
+  },
+  {
+    id: 'enterprise',
+    label: 'Enterprise',
+    description: 'Large brokerage with multiple brands',
+    icon: 'Business',
+    hasAgentDashboard: false,
+    hasBrokerDashboard: true,
+    hasEnterpriseDashboard: true,
+    features: ['enterprise-tools', 'marketplace', 'integrations', 'ai-insights']
+  }
+];
+
+// Mock user authentication hook (replace with actual useAuth)
+const useAuth = () => {
+  const [user, setUser] = useState<UserRole | null>({
+    id: '1',
+    name: 'John Doe',
+    permissions: ['view', 'edit', 'delete'],
+    level: 'agent'
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Simulate auth check
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  return { user, loading, setUser };
+};
+
+function TabPanelComponent(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+  
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`close-tabpanel-${index}`}
+      aria-labelledby={`close-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ padding: '2rem', '@media (max-width: 600px)': { padding: '1rem' } }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+// Feature categories configuration with role-based access
+const featureCategories = [
+  {
+    id: 'dashboard',
+    name: 'Closing Dashboard',
+    icon: <DashboardIcon />,
+    description: 'Centralized overview of all closing activities and progress tracking',
+    status: 'active' as const,
+    roles: ['admin', 'agent', 'lender', 'buyer', 'seller', 'attorney'],
+    permissions: ['view'],
+  },
+  {
+    id: 'escrow-title',
+    name: 'Escrow & Title Hub',
+    icon: <SecurityIcon />,
+    description: 'Manage escrow accounts, title searches, and title insurance',
+    status: 'pending' as const,
+    roles: ['admin', 'agent', 'attorney'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'due-diligence',
+    name: 'Due Diligence Tools',
+    icon: <SearchIcon />,
+    description: 'Comprehensive property and legal research tools',
+    status: 'active' as const,
+    roles: ['admin', 'agent', 'buyer', 'attorney'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'financing',
+    name: 'Financing Coordination',
+    icon: <AccountBalanceIcon />,
+    description: 'Coordinate with lenders and manage funding processes',
+    status: 'pending' as const,
+    roles: ['admin', 'agent', 'lender', 'buyer'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'legal',
+    name: 'Legal & Compliance',
+    icon: <GavelIcon />,
+    description: 'Legal document preparation and regulatory compliance',
+    status: 'active' as const,
+    roles: ['admin', 'agent', 'attorney'],
+    permissions: ['view', 'edit', 'delete'],
+  },
+  {
+    id: 'settlement',
+    name: 'Settlement & Closing Costs',
+    icon: <CalculateIcon />,
+    description: 'Calculate and track all closing costs and settlement amounts',
+    status: 'completed' as const,
+    roles: ['admin', 'agent', 'buyer', 'seller'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'insurance',
+    name: 'Insurance & Utilities',
+    icon: <HomeIcon />,
+    description: 'Manage property insurance and utility transfers',
+    status: 'pending' as const,
+    roles: ['admin', 'agent', 'buyer', 'seller'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'walkthrough',
+    name: 'Final Walkthrough & Handover',
+    icon: <CheckCircleIcon />,
+    description: 'Final property inspection and key handover process',
+    status: 'pending' as const,
+    roles: ['admin', 'agent', 'buyer', 'seller'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'post-closing',
+    name: 'Post-Closing Services',
+    icon: <SupportIcon />,
+    description: 'Ongoing support and services after closing',
+    status: 'active' as const,
+    roles: ['admin', 'agent', 'buyer', 'seller'],
+    permissions: ['view', 'edit'],
+  },
+  {
+    id: 'ai-assistant',
+    name: 'Lumina - AI Closing Assistant',
+    icon: <AtomIcon />,
+    description: 'Intelligent assistance for closing processes and decision making',
+    status: 'active' as const,
+    roles: ['admin', 'agent', 'lender', 'buyer', 'seller', 'attorney'],
+    permissions: ['view'],
+  },
+  {
+    id: 'integrations',
+    name: 'Partner Integrations',
+    icon: <IntegrationIcon />,
+    description: 'Connect with third-party services and platforms',
+    status: 'pending' as const,
+    roles: ['admin', 'agent'],
+    permissions: ['view', 'edit'],
+  },
+];
+
+const ClosePage: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  
+  const [closeState, setCloseState] = useState<CloseState>({
+    activeTab: 'dashboard',
+    userRole: user || {
+      id: '1',
+      name: 'Guest',
+      permissions: ['view'],
+      level: 'buyer'
+    },
+    drawerOpen: false,
+    notifications: 3,
+  });
+
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedUserRole, setSelectedUserRole] = useState<UserRoleType>('buyer');
+  const [checklistModalOpen, setChecklistModalOpen] = useState(false);
+  const [checklistView, setChecklistView] = useState<'incomplete' | 'complete'>('incomplete');
+  const [showChecklistPage, setShowChecklistPage] = useState(false);
+  const [showDocumentsPage, setShowDocumentsPage] = useState(false);
+  const [showTransactionsPage, setShowTransactionsPage] = useState(false);
+  const [showListingsPage, setShowListingsPage] = useState(false);
+  const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
+  const [documentsView, setDocumentsView] = useState<'pending' | 'reviewed' | 'approved'>('pending');
+
+  // Get current user role configuration
+  const currentUserRole = userRoleConfigs.find(role => role.id === selectedUserRole) || userRoleConfigs[0];
+
+  // Computed properties for different dashboard types
+  const isBuyerView = selectedUserRole === 'buyer' || selectedUserRole === 'buying-agent'; // Both buyer and buying-agent see buyer view
+  const isAgentView = selectedUserRole === 'listing-agent'; // Only listing agents see agent dashboard
+  const isBrokerView = selectedUserRole === 'broker';
+  const isEnterpriseView = selectedUserRole === 'brand-manager' || selectedUserRole === 'enterprise';
+
+  useEffect(() => {
+    if (user) {
+      setCloseState(prev => ({ ...prev, userRole: user }));
+    }
+  }, [user]);
+
+  // Filter features based on user role
+  const accessibleFeatures = featureCategories.filter(feature =>
+    feature.roles.includes(closeState.userRole.level)
+  );
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTabIndex(newValue);
+    setCloseState(prev => ({ ...prev, activeTab: accessibleFeatures[newValue]?.id || 'dashboard' }));
+  };
+
+  const handleDrawerToggle = () => {
+    setCloseState(prev => ({ ...prev, drawerOpen: !prev.drawerOpen }));
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
+  const renderTabContent = () => {
+    try {
+      const currentFeature = accessibleFeatures[activeTabIndex];
+      if (!currentFeature) return <ClosingDashboard />;
+
+      switch (currentFeature.id) {
+        case 'dashboard':
+          return <ClosingDashboard />;
+        case 'escrow-title':
+          return <EscrowTitleHub />;
+        case 'due-diligence':
+          return <DueDiligenceTools />;
+        case 'financing':
+          return <FinancingCoordination />;
+        case 'legal':
+          return <LegalCompliance />;
+        case 'settlement':
+          return <SettlementClosingCosts />;
+        case 'insurance':
+          return <InsuranceUtilities />;
+        case 'walkthrough':
+          return <FinalWalkthroughHandover />;
+        case 'post-closing':
+          return <PostClosingServices />;
+        case 'ai-assistant':
+          return <AIClosingAssistant />;
+        case 'integrations':
+          return <PartnerIntegrations />;
+        default:
+          return <ClosingDashboard />;
+      }
+    } catch (error) {
+      console.error('[ERROR] Failed to render component for tab:', activeTabIndex, error);
+      return <div>Error rendering component: {error instanceof Error ? error.message : 'Unknown error'}</div>;
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <Typography>Loading...</Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ minHeight: '100vh', background: brandColors.backgrounds.secondary }}>
+      
+      {/* AppBar */}
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          zIndex: theme.zIndex.drawer + 1,
+          backgroundColor: brandColors.primary,
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+            Dreamery Closing Hub
+            <Typography variant="caption" sx={{ display: 'block', opacity: 0.8, fontSize: '0.7rem' }}>
+              {isBuyerView ? 'Buyer View' : currentUserRole.label + ' View'}
+            </Typography>
+          </Typography>
+
+          {/* User Role Selector */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <Select
+                value={selectedUserRole}
+                onChange={(e: any) => setSelectedUserRole(e.target.value as UserRoleType)}
+                displayEmpty
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: 1,
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: 'white',
+                  },
+                  '& .MuiSelect-select': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    py: 0.5,
+                  }
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      mt: 1,
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                      borderRadius: 2,
+                    }
+                  }
+                }}
+              >
+                {userRoleConfigs.map((role) => (
+                  <MenuItem key={role.id} value={role.id} sx={{ py: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, width: '100%' }}>
+                      <Box sx={{ fontSize: '1.2rem' }}>
+                        {role.icon === 'Home' && <HomeIcon />}
+                        {role.icon === 'Person' && <PersonIcon />}
+                        {role.icon === 'Business' && <BusinessIcon />}
+                        {role.icon === 'AccountBalance' && <AccountBalanceIcon />}
+                        {role.icon === 'Flag' && <FlagIcon />}
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {role.label}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+                          {role.description}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Tooltip title="Notifications">
+              <IconButton color="inherit">
+                <Badge badgeContent={closeState.notifications} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            
+            <Tooltip title="Account">
+              <IconButton
+                color="inherit"
+                onClick={handleMenuOpen}
+              >
+                <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255, 255, 255, 0.2)' }}>
+                  {closeState.userRole.name.charAt(0)}
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Back to Home">
+              <IconButton
+                color="inherit"
+                onClick={handleBackToHome}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* Drawer */}
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        open={closeState.drawerOpen}
+        onClose={handleDrawerToggle}
+        sx={{
+          width: isBuyerView ? 320 : 0, // Only show sidebar for buyer and buying-agent views
+          flexShrink: 0,
+          transition: theme.transitions.create(['width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          '& .MuiDrawer-paper': {
+            width: isBuyerView ? 320 : 0, // Only show sidebar for buyer and buying-agent views
+            boxSizing: 'border-box',
+            backgroundColor: brandColors.backgrounds.secondary,
+            borderRight: '1px solid brandColors.borders.secondary',
+            marginTop: '80px', // Add space below header
+            marginLeft: '2mm', // Add 2mm gap on left side
+            marginRight: '2mm', // Add 2mm gap on right side
+            overflow: isBuyerView ? 'visible' : 'hidden', // Only show for buyer views
+            transition: theme.transitions.create(['width'], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
+          },
+        }}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+      >
+        {isMobile && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, borderBottom: '1px solid brandColors.borders.secondary' }}>
+            <IconButton onClick={handleDrawerToggle}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        )}
+        
+        {/* Header Section in Sidebar */}
+        <Box sx={{ 
+          background: '#1a365d',
+          color: brandColors.backgrounds.primary,
+          padding: '2rem 1.5rem', // Increased padding from 1.5rem 1rem
+          margin: '1rem 0.75rem 1.5rem 0.75rem', // Increased margins
+          borderRadius: 1
+        }}>
+          <Typography variant="h6" component="h2" sx={{ fontWeight: 700, fontSize: '1.1rem', textAlign: 'center', color: 'white' }}>
+            Station
+          </Typography>
+        </Box>
+        
+        <List sx={{ pt: 2, px: 1 }}> {/* Increased top padding and added horizontal padding */}
+          {accessibleFeatures.map((feature, index) => (
+            <ListItem
+              key={feature.id}
+              onClick={() => handleTabChange({} as React.SyntheticEvent, index)}
+              sx={{
+                mx: 0.5, // Reduced from 1 to 0.5 for better spacing
+                mb: 1, // Increased from 0.5 to 1 for more space between items
+                borderRadius: 1,
+                cursor: 'pointer',
+                backgroundColor: activeTabIndex === index ? brandColors.backgrounds.hover : 'transparent',
+                color: activeTabIndex === index ? brandColors.primary : 'inherit',
+                padding: '0.75rem 1rem', // Added explicit padding
+                '&:hover': {
+                  backgroundColor: activeTabIndex === index ? brandColors.backgrounds.selected : brandColors.neutral.light,
+                },
+              }}
+            >
+                             <ListItemIcon sx={{ 
+                 color: activeTabIndex === index ? brandColors.primary : 'inherit',
+                 minWidth: 40 
+               }}>
+                {feature.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={feature.name}
+                primaryTypographyProps={{
+                  fontSize: '0.9rem',
+                  fontWeight: activeTabIndex === index ? 600 : 400,
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+
+      {/* Main Content */}
+      <Box sx={{ 
+        marginLeft: { xs: 0, md: isBuyerView ? '344px' : 0 }, // Only margin for buyer and buying-agent views
+        marginTop: '80px', // Increased from 64px to 80px for more space below header
+        paddingLeft: '0.5rem', // Reduced from 2rem to 0.5rem for less left spacing
+        paddingRight: '0.5rem', // Reduced from 2rem to 0.5rem for less right spacing
+        transition: theme.transitions.create(['margin'], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+      }}>
+        <Container maxWidth={false} sx={{ mb: 4, px: 1 }}>
+          {/* Render different dashboards based on user role */}
+          {currentUserRole.hasBrokerDashboard ? (
+            // Broker/Enterprise Dashboard
+            <Box>
+              <Box sx={{ 
+                backgroundColor: brandColors.primary,
+                padding: '2rem',
+                borderRadius: '16px 16px 0 0',
+                marginBottom: 0,
+                color: 'white'
+              }}>
+                <Typography variant="h4" sx={{ fontWeight: 600, mb: 1, color: 'white' }}>
+                  {currentUserRole.label} Dashboard
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
+                  {currentUserRole.description} - Compliance & oversight management
+                </Typography>
+              </Box>
+              <Paper sx={{ borderRadius: '0 0 16px 16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
+                <Box sx={{ p: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Broker/Enterprise Features Coming Soon
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This dashboard will include compliance oversight, agent management, financial reporting, and enterprise tools.
+                  </Typography>
+                </Box>
+              </Paper>
+            </Box>
+            // Agent Dashboard
+            <Box>
+              {/* Agent Dashboard Header */}
+              <Box sx={{ 
+                backgroundColor: brandColors.primary,
+                padding: '2rem',
+                borderRadius: '16px 16px 0 0',
+                marginBottom: 0,
+                color: 'white'
+              }}>
+                <Typography variant="h4" sx={{ fontWeight: 600, mb: 1, color: 'white' }}>
+                  Dreamery's Listing Agents Hub
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
+                  Professional listing management and offer oversight
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.7, color: 'white', mt: 1 }}>
+                </Typography>
+
+
+              </Box>
+
+              {/* Metrics Section */}
+              <Paper sx={{ borderRadius: '0 0 16px 16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
+                <Box sx={{ p: 3 }}>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' }, 
+                    gap: 2, 
+                    mb: 4,
+                    '& > div:not(:last-child)': {
+                      borderRight: '1px solid #e0e0e0'
+                    }
+                  }}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        5
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Scheduled Closing This Month
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        1980
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Active
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        5119
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Pending
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        1
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Closed This Month
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        2
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Expired Escrow(s) This Month
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+                        1
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Expired Listing(s) This Month
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Main Content Icons Grid */}
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(5, 1fr)' }, 
+                    gap: 3 
+                  }}>
+                    {/* Top Row */}
+                    <Box sx={{ textAlign: "center" }}>
+                      <Box 
+                        onClick={() => {
+                          console.log("Notifications icon clicked");
+                          // Add notifications functionality here
+                        }}
+                        sx={{ 
+                          width: 80, 
+                          height: 80, 
+                          backgroundColor: brandColors.primary, 
+                          borderRadius: "50%", 
+                          display: "flex", 
+                          alignItems: "center", 
+                          justifyContent: "center",
+                          margin: "0 auto 1rem",
+                          color: "white",
+                          fontSize: "2rem",
+                          cursor: "pointer",
+                          "&:hover": {
+                            backgroundColor: brandColors.actions.primary,
+                            transform: "scale(1.05)",
+                            transition: "all 0.2s ease-in-out"
+                          }
+                        }}
+                      >
+                        <NotificationsIcon sx={{ fontSize: "2rem" }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Notifications
+                      </Typography>
+                    </Box>                    <Box sx={{ textAlign: 'center' }}>
+                      <Box 
+                        onClick={() => setShowChecklistPage(true)}
+                        sx={{ 
+                          width: 80, 
+                          height: 80, 
+                          backgroundColor: brandColors.primary, 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          margin: '0 auto 1rem',
+                          color: 'white',
+                          fontSize: '2rem',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            backgroundColor: brandColors.actions.primary,
+                            transform: 'scale(1.05)',
+                            transition: 'all 0.2s ease-in-out'
+                          }
+                        }}
+                      >
+                        <CheckCircleIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Checklists
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                                          <Box 
+                      onClick={() => {
+                        console.log('Documents icon clicked - setting showDocumentsPage to true');
+                        setShowDocumentsPage(true);
+                      }}
+                      sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: brandColors.actions.primary,
+                          transform: 'scale(1.05)',
+                          transition: 'all 0.2s ease-in-out'
+                        }
+                      }}
+                    >
+                      <EditIcon sx={{ fontSize: '2rem' }} />
+                    </Box>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      Documents to Review
+                    </Typography>
+                    </Box>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                          <Box 
+                      onClick={() => {
+                        console.log('Transactions icon clicked - setting showTransactionsPage to true');
+                        setShowTransactionsPage(true);
+                      }}
+                      sx={{ 
+                        width: 80, 
+                        height: 80, 
+                          backgroundColor: brandColors.primary, 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          margin: '0 auto 1rem',
+                          color: 'white',
+                          fontSize: '2rem',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            backgroundColor: brandColors.actions.primary,
+                            transform: 'scale(1.05)',
+                            transition: 'all 0.2s ease-in-out'
+                          }
+                        }}
+                      >
+                        <AccountBalanceIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Manage Transactions
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                                          <Box 
+                      onClick={() => {
+                        console.log('Listings icon clicked - setting showListingsPage to true');
+                        setShowListingsPage(true);
+                      }}
+                      sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: brandColors.actions.primary,
+                          transform: 'scale(1.05)',
+                          transition: 'all 0.2s ease-in-out'
+                        }
+                      }}
+                    >
+                      <HomeIcon sx={{ fontSize: '2rem' }} />
+                    </Box>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      Manage Listings
+                    </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Box sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem'
+                      }}>
+                        <CloseIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Canceled Contracts
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Box sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem'
+                      }}>
+                        <SearchIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Access Archives
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Box sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem'
+                      }}>
+                        <NotificationsIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Tasks & Reminders
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Box sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem'
+                      }}>
+                        <EditIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Working Documents
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Box sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        margin: '0 auto 1rem',
+                        color: 'white',
+                        fontSize: '2rem'
+                      }}>
+                        <PersonIcon sx={{ fontSize: '2rem' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Digital Signature
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Office Selection */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 2, 
+                    mt: 4, 
+                    justifyContent: 'flex-end' 
+                  }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Select Office:
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: 1, 
+                      px: 2, 
+                      py: 1,
+                      backgroundColor: 'white',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1
+                    }}>
+                      <Typography variant="body2">ALL</Typography>
+                      <Typography variant="body2">▼</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+          )
+            </Box>
+          ) : isAgentView && showChecklistPage ? (
+            // Full-Page Checklist View - SKYSLOPE Style
+            <Box>
+              {/* SKYSLOPE Style Header */}
+              <Box sx={{ 
+                backgroundColor: 'white',
+                borderBottom: '2px solid #e0e0e0',
+                p: 2
+              }}>
+                {/* Header with Back Button */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Left Side - Back Button and Title */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IconButton
+                      onClick={() => {
+                        console.log('Back button clicked - before state change:', { isAgentView, showChecklistPage });
+                        setShowChecklistPage(false);
+                        // Ensure we stay in agent dashboard mode
+                        setSelectedUserRole('buying-agent');
+                        console.log('Back button clicked - after state change:', { isAgentView: true, showChecklistPage: false });
+                      }}
+                      sx={{ 
+                        color: brandColors.primary,
+                        backgroundColor: '#f5f5f5',
+                        '&:hover': { backgroundColor: '#e0e0e0' }
+                      }}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
+                      Transaction Checklists
+                    </Typography>
+                  </Box>
+
+                  {/* Right Side - Utility Icons */}
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <SearchIcon />
+                    </IconButton>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <PersonIcon />
+                    </IconButton>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <PrintIcon />
+                    </IconButton>
+                    <Box sx={{ 
+                      width: 1, 
+                      height: 20, 
+                      backgroundColor: '#e0e0e0',
+                      mx: 1
+                    }} />
+                    <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                      Broker
+                    </Typography>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <AccountCircleIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+
+                {/* Document Management Header */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Document Tabs */}
+                  <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1,
+                      cursor: 'pointer',
+                      '&:hover': { opacity: 0.8 }
+                    }}>
+                      <Box sx={{ 
+                        width: 20, 
+                        height: 20, 
+                        backgroundColor: '#e3f2fd', 
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#1976d2',
+                        fontSize: '14px'
+                      }}>
+                        <SearchIcon sx={{ fontSize: '14px' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ 
+                        color: '#1976d2', 
+                        fontWeight: 500,
+                        fontSize: '14px'
+                      }}>
+                        DOCUMENTS TO REVIEW
+                      </Typography>
+                    </Box>
+                    
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1,
+                      cursor: 'pointer',
+                      '&:hover': { opacity: 0.8 }
+                    }}>
+                      <Box sx={{ 
+                        width: 20, 
+                        height: 20, 
+                        backgroundColor: brandColors.primary, 
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '14px'
+                      }}>
+                        <EditIcon sx={{ fontSize: '14px' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ 
+                        color: brandColors.primary, 
+                        fontWeight: 600,
+                        fontSize: '14px'
+                      }}>
+                        WORKING DOCUMENTS
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Property Address and Status */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Property Address
+                    </Typography>
+                    <Chip 
+                      label="Pending" 
+                      size="small" 
+                      sx={{ 
+                        backgroundColor: '#fff3e0', 
+                        color: '#e65100',
+                        fontWeight: 500
+                      }} 
+                    />
+                  </Box>
+                  <Button variant="outlined" size="small">
+                    Transaction Actions
+                  </Button>
+                </Box>
+
+                {/* Navigation Tabs */}
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  {['TRANSACTION', 'CONTACTS', 'COMMISSION', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS', 'PROPERTY'].map((tab, index) => (
+                    <Box
+                      key={tab}
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        backgroundColor: tab === 'CHECKLIST' ? brandColors.primary : 'transparent',
+                        color: tab === 'CHECKLIST' ? 'white' : '#666',
+                        borderRadius: 1,
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: tab === 'CHECKLIST' ? 600 : 400,
+                        '&:hover': {
+                          backgroundColor: tab === 'CHECKLIST' ? brandColors.primary : '#f5f5f5'
+                        }
+                      }}
+                    >
+                      {tab}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+
+              {/* Transaction Details Grid */}
+              <Paper sx={{ m: 2, p: 3, backgroundColor: '#f8f9fa' }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4 }}>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">ADDRESS</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Property Address</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">ACCEPTANCE DATE</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>06/13/2018</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">YEAR BUILT</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>1998</Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">AGENT</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Lauren Thompson</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">ESCROW NUMBER</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>-</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">TYPE</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Purchase / Tenant</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4, mt: 2 }}>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">CLOSE OF ESCROW</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>06/18/2015</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">EMAIL</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>agent@example.com</Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">CHECKLIST TYPE</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Commercial Lease</Typography>
+                    </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">PRICE PER SF</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>$230.00</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4, mt: 2 }}>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">SELLER</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Seller One</Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary">BUYER</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>Buyer One</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Action Buttons */}
+              <Box sx={{ m: 2, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                  <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>
+                    Order Home Warranty
+                  </Button>
+                  <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>
+                    Order NHD
+                  </Button>
+                  <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>
+                    Get Paid Now! ✓
+                  </Button>
+                  <Button variant="outlined" size="small">
+                    Checked
+                  </Button>
+                  <Button variant="outlined" size="small">
+                    Update Agent
+                  </Button>
+                  <Button variant="outlined" size="small">
+                    Docs to Review
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Documentation Section */}
+              <Paper sx={{ m: 2, p: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6">Documentation</Typography>
+                  <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>
+                    + Add New
+                  </Button>
+                </Box>
+
+                {/* Checklist Table */}
+                <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, overflow: 'hidden' }}>
+                  {/* Table Header */}
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                    backgroundColor: '#f5f5f5',
+                    p: 2,
+                    borderBottom: 1,
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Documentation</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Status</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Docs</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Comments</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Actions</Typography>
+                  </Box>
+
+                  {/* Checklist Items */}
+                  <Box>
+                    {/* Item 1: Purchase Contract */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                      p: 2,
+                      borderBottom: 1,
+                      borderColor: 'divider',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>1. Purchase Contract</Typography>
+                      <Chip 
+                        label="Pending" 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: '#ffebee', 
+                          color: '#c62828',
+                          fontWeight: 500,
+                          width: 'fit-content'
+                        }} 
+                      />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '12px'
+                        }}>
+                          <EditIcon sx={{ fontSize: '12px' }} />
+                        </Box>
+                      </Box>
+                      <TextField 
+                        size="small" 
+                        placeholder="Add comment..." 
+                        variant="outlined"
+                        sx={{ '& .MuiOutlinedInput-root': { height: 32 } }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton size="small" sx={{ color: brandColors.primary }}>
+                          →
+                        </IconButton>
+                        <Button size="small" variant="outlined">Save</Button>
+                        <Button size="small" variant="outlined">Cancel</Button>
+                      </Box>
+                    </Box>
+
+                    {/* Item 2: Listing Agreement */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                      p: 2,
+                      borderBottom: 1,
+                      borderColor: 'divider',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>2. Listing Agreement</Typography>
+                      <Chip 
+                        label="Completed" 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: '#e8f5e8', 
+                          color: '#2e7d32',
+                          fontWeight: 500,
+                          width: 'fit-content'
+                        }} 
+                      />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '12px'
+                        }}>
+                          <EditIcon sx={{ fontSize: '12px' }} />
+                        </Box>
+                      </Box>
+                      <TextField 
+                        size="small" 
+                        placeholder="Add comment..." 
+                        variant="outlined"
+                        sx={{ '& .MuiOutlinedInput-root': { height: 32 } }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button size="small" variant="outlined">Attach</Button>
+                        <Button size="small" variant="outlined">Unaccept</Button>
+                      </Box>
+                    </Box>
+
+                    {/* Item 3: EMD */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                      p: 2,
+                      borderBottom: 1,
+                      borderColor: 'divider',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>3. EMD (Earnest Money Deposit)</Typography>
+                      <Chip 
+                        label="Pending" 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: '#ffebee', 
+                          color: '#c62828',
+                          fontWeight: 500,
+                          width: 'fit-content'
+                        }} 
+                      />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '12px'
+                        }}>
+                          <EditIcon sx={{ fontSize: '12px' }} />
+                        </Box>
+                      </Box>
+                      <TextField 
+                        size="small" 
+                        placeholder="Add comment..." 
+                        variant="outlined"
+                        sx={{ '& .MuiOutlinedInput-root': { height: 32 } }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton size="small" sx={{ color: brandColors.primary }}>
+                          →
+                        </IconButton>
+                        <Button size="small" variant="outlined">Save</Button>
+                        <Button size="small" variant="outlined">Cancel</Button>
+                      </Box>
+                    </Box>
+
+                    {/* Item 4: Disclosures */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                      p: 2,
+                      borderBottom: 1,
+                      borderColor: 'divider',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>4. Disclosures</Typography>
+                      <Chip 
+                        label="Pending" 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: '#ffebee', 
+                          color: '#c62828',
+                          fontWeight: 500,
+                          width: 'fit-content'
+                        }} 
+                      />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#ffebee', 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: '#c62828',
+                          fontSize: '12px',
+                          position: 'relative'
+                        }}>
+                          <EditIcon sx={{ fontSize: '12px' }} />
+                          <Box sx={{ 
+                            position: 'absolute',
+                            top: -2,
+                            right: -2,
+                            width: 12,
+                            height: 12,
+                            backgroundColor: '#1976d2',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: '8px',
+                            fontWeight: 'bold'
+                          }}>
+                            ×
+                          </Box>
+                        </Box>
+                      </Box>
+                      <TextField 
+                        size="small" 
+                        placeholder="Add comment..." 
+                        variant="outlined"
+                        sx={{ '& .MuiOutlinedInput-root': { height: 32 } }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button size="small" variant="outlined">Attach</Button>
+                        <Button size="small" variant="outlined">Accept</Button>
+                        <Button size="small" variant="outlined">Reject</Button>
+                      </Box>
+                    </Box>
+
+                    {/* Item 5: Inspections */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 1fr 80px 1fr 200px',
+                      p: 2,
+                      borderBottom: 1,
+                      borderColor: 'divider',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>5. Inspections</Typography>
+                      <Chip 
+                        label="Pending" 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: '#ffebee', 
+                          color: '#c62828',
+                          fontWeight: 500,
+                          width: 'fit-content'
+                        }} 
+                      />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '50%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '12px'
+                        }}>
+                          <EditIcon sx={{ fontSize: '12px' }} />
+                        </Box>
+                      </Box>
+                      <TextField 
+                        size="small" 
+                        placeholder="Add comment..." 
+                        variant="outlined"
+                        sx={{ '& .MuiOutlinedInput-root': { height: 32 } }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button size="small" variant="outlined">Attach</Button>
+                        <Button size="small" variant="outlined">Accept</Button>
+                        <Button size="small" variant="outlined">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+
+
+            </Box>
+            // Full-Page Notifications View
+            <Box>
+              {/* Notifications Header */}
+              <Box sx={{ 
+                backgroundColor: 'white',
+                borderBottom: '2px solid #e0e0e0',
+                p: 2
+              }}>
+                {/* Header with Back Button */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Left Side - Back Button and Title */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IconButton
+                      onClick={() => {
+                        setShowNotificationsPage(false);
+                      }}
+                      sx={{ color: brandColors.primary }}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Notifications Settings
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              
+              {/* Notifications Content */}
+              <Box sx={{ p: 3 }}>
+                <NotificationsPage />
+              </Box>
+            </Box>
+          ) : isAgentView && showDocumentsPage ? (
+            // Full-Page Documents View - SKYSLOPE Style
+            <Box>
+              {/* SKYSLOPE Style Header */}
+              <Box sx={{ 
+                backgroundColor: 'white',
+                borderBottom: '2px solid #e0e0e0',
+                p: 2
+              }}>
+                {/* Header with Back Button */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Left Side - Back Button and Title */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IconButton
+                      onClick={() => {
+                        setShowDocumentsPage(false);
+                        // Ensure we stay in agent dashboard mode
+                        setSelectedUserRole('buying-agent');
+                      }}
+                      sx={{ 
+                        color: brandColors.primary,
+                        backgroundColor: '#f5f5f5',
+                        '&:hover': { backgroundColor: '#e0e0e0' }
+                      }}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
+                      Documents to Review
+                    </Typography>
+                  </Box>
+
+                  {/* Right Side - Utility Icons */}
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <SearchIcon />
+                    </IconButton>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <PersonIcon />
+                    </IconButton>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <PrintIcon />
+                    </IconButton>
+                    <Box sx={{ 
+                      width: 1, 
+                      height: 20, 
+                      backgroundColor: '#e0e0e0',
+                      mx: 1
+                    }} />
+                    <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                      Broker
+                    </Typography>
+                    <IconButton size="small" sx={{ color: '#666' }}>
+                      <AccountCircleIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+
+                {/* Document Management Header */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  {/* Document Tabs */}
+                  <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1,
+                      cursor: 'pointer',
+                      '&:hover': { opacity: 0.8 }
+                    }}>
+                      <Box sx={{ 
+                        width: 20, 
+                        height: 20, 
+                        backgroundColor: '#e3f2fd', 
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#1976d2',
+                        fontSize: '14px'
+                      }}>
+                        <EditIcon sx={{ fontSize: '14px' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                        DOCUMENTS TO REVIEW
+                      </Typography>
+                    </Box>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1,
+                      cursor: 'pointer',
+                      '&:hover': { opacity: 0.8 }
+                    }}>
+                      <Box sx={{ 
+                        width: 20, 
+                        height: 20, 
+                        backgroundColor: '#f5f5f5', 
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#666',
+                        fontSize: '14px'
+                      }}>
+                        📋
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: '#666' }}>
+                        WORKING DOCUMENTS
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Listing Details Header */}
+              <Box sx={{ 
+                backgroundColor: '#f8f9fa',
+                borderBottom: '1px solid #e0e0e0',
+                p: 3
+              }}>
+                {/* Listing Header */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  mb: 3
+                }}>
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 600, mb: 1 }}>
+                      Property Transaction
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      Property Address
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Chip label="Active" sx={{ backgroundColor: '#e8f5e8', color: '#2e7d32' }} />
+                    <Button 
+                      variant="outlined" 
+                      startIcon={<CloseIcon />}
+                      sx={{ borderColor: '#d32f2f', color: '#d32f2f' }}
+                    >
+                      Withdraw Listing
+                    </Button>
+                  </Box>
+                </Box>
+
+                {/* Navigation Tabs */}
+                <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+                  {['LISTING', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'].map((tab) => (
+                    <Box
+                      key={tab}
+                                              onClick={() => {
+                          if (tab === 'CHECKLIST') {
+                            setShowChecklistPage(true);
+                            setShowDocumentsPage(false);
+                          } else if (tab === 'DOCUMENTS') {
+                            setShowDocumentsPage(true);
+                            setShowChecklistPage(false);
+                          }
+                        }}
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        borderRadius: 1,
+                        backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : 'transparent',
+                        color: tab === 'DOCUMENTS' ? 'white' : '#666',
+                        cursor: (tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? 'pointer' : 'default',
+                        fontWeight: tab === 'DOCUMENTS' ? 600 : 400,
+                        '&:hover': {
+                          backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : ((tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? '#f0f0f0' : 'transparent')
+                        }
+                      }}
+                    >
+                      {tab}
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* Key Listing Information */}
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>ADDRESS:</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>Property Address</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>AGENT:</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>Agent Name</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>EMAIL:</Typography>
+                    <Typography variant="body1">agent@email.com</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>LIST PRICE:</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>$0.00</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>SELLER:</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>Seller Name</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>YEAR BUILT:</Typography>
+                    <Typography variant="body1">2024</Typography>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Document Actions Section */}
+              <Box sx={{ 
+                backgroundColor: 'white',
+                borderBottom: '1px solid #e0e0e0',
+                p: 3
+              }}>
+                {/* Document View Tabs */}
+                <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+                  {['DOCUMENTS LIST', 'SHARED BUNDLES'].map((tab) => (
+                    <Box
+                      key={tab}
+                      sx={{
+                        px: 3,
+                        py: 1.5,
+                        borderRadius: 1,
+                        backgroundColor: tab === 'DOCUMENTS LIST' ? brandColors.primary : 'transparent',
+                        color: tab === 'DOCUMENTS LIST' ? 'white' : '#666',
+                        cursor: 'pointer',
+                        fontWeight: tab === 'DOCUMENTS LIST' ? 600 : 400,
+                        '&:hover': {
+                          backgroundColor: tab === 'DOCUMENTS LIST' ? brandColors.primary : '#f0f0f0'
+                        }
+                      }}
+                    >
+                      {tab}
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* Action Buttons */}
+                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                  {['Assign', 'Unassign', 'Fax Cover', 'Share Docs', 'Move', 'DigiSign', 'Email'].map((action) => (
+                    <Button
+                      key={action}
+                      variant="outlined"
+                      size="small"
+                      sx={{ 
+                        borderColor: '#ccc',
+                        color: '#666',
+                        '&:hover': { borderColor: '#999' }
+                      }}
+                    >
+                      {action}
+                      {action === 'Move' && <KeyboardArrowDownIcon sx={{ ml: 0.5 }} />}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="contained"
+                    sx={{ 
+                      backgroundColor: brandColors.primary,
+                      ml: 'auto'
+                    }}
+                  >
+                    UPLOAD DOCUMENT
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Document Table */}
+              <Box sx={{ backgroundColor: 'white', p: 3 }}>
+                <Box sx={{ 
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto auto auto auto',
+                  gap: 2,
+                  alignItems: 'center',
+                  p: 2,
+                  borderBottom: '1px solid #e0e0e0',
+                  fontWeight: 600,
+                  color: '#666'
+                }}>
+                  <Box>✓</Box>
+                  <Box>Document Name</Box>
+                  <Box>Assigned</Box>
+                  <Box>Preview</Box>
+                  <Box>Date Uploaded</Box>
+                  <Box>Views</Box>
+                  <Box></Box>
+                </Box>
+
+                {/* Document Rows */}
+                {[
+                  { name: 'Residential_Purchase_Contract.pdf', date: '6/22/2021 1:09:20 PM', views: '0' },
+                  { name: 'Addendum.pdf', date: '4/6/2021 12:34:15 PM', views: '0' },
+                  { name: 'Property_Details.pdf', date: '4/6/2021 12:34:15 PM', views: '0' }
+                ].map((doc, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr auto auto auto auto',
+                      gap: 2,
+                      alignItems: 'center',
+                      p: 2,
+                      borderBottom: '1px solid #f0f0f0',
+                      '&:hover': { backgroundColor: '#f8f9fa' }
+                    }}
+                  >
+                    <Checkbox size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ color: '#d32f2f', fontSize: '1.2rem' }}>📄</Box>
+                      <Typography variant="body2">{doc.name}</Typography>
+                    </Box>
+                    <Box>-</Box>
+                    <IconButton size="small" sx={{ color: brandColors.primary }}>
+                      <VisibilityIcon />
+                    </IconButton>
+                    <Box>{doc.date}</Box>
+                    <Box>{doc.views}</Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <ContentCopyIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: 'small' }}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <RefreshIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                ))}
+
+                {/* Folders */}
+                <Box sx={{ mt: 3 }}>
+                  {['Admin', 'Trash'].map((folder) => (
+                    <Box
+                      key={folder}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        p: 2,
+                        cursor: 'pointer',
+                        '&:hover': { backgroundColor: '#f8f9fa' }
+                      }}
+                    >
+                      <AddIcon sx={{ color: '#666' }} />
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {folder}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+                          </Box>
+            ) : isAgentView && showTransactionsPage ? (
+              // Full-Page Transactions View - SKYSLOPE Style
+              <Box>
+                {/* SKYSLOPE Style Header */}
+                <Box sx={{ 
+                  backgroundColor: 'white',
+                  borderBottom: '2px solid #e0e0e0',
+                  p: 2
+                }}>
+                  {/* Header with Back Button */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2
+                  }}>
+                    {/* Left Side - Back Button and Title */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <IconButton
+                        onClick={() => {
+                          setShowTransactionsPage(false);
+                          // Ensure we stay in agent dashboard mode
+                          setSelectedUserRole('buying-agent');
+                        }}
+                        sx={{ 
+                          color: brandColors.primary,
+                          backgroundColor: '#f5f5f5',
+                          '&:hover': { backgroundColor: '#e0e0e0' }
+                        }}
+                      >
+                        <ArrowBackIcon />
+                      </IconButton>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
+                        Manage Transactions
+                      </Typography>
+                    </Box>
+
+                    {/* Right Side - Utility Icons */}
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <SearchIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <PersonIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <PrintIcon />
+                      </IconButton>
+                      <Box sx={{ 
+                        width: 1, 
+                        height: 20, 
+                        backgroundColor: '#e0e0e0',
+                        mx: 1
+                      }} />
+                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                        Broker
+                      </Typography>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <AccountCircleIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+
+                  {/* Document Management Header */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2
+                  }}>
+                    {/* Document Tabs */}
+                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 1,
+                        cursor: 'pointer',
+                        '&:hover': { opacity: 0.8 }
+                      }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '14px'
+                        }}>
+                          📄
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          DOCUMENTS TO REVIEW
+                        </Typography>
+                      </Box>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 1,
+                        cursor: 'pointer',
+                        '&:hover': { opacity: 0.8 }
+                      }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#f5f5f5', 
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#666',
+                          fontSize: '14px'
+                        }}>
+                          📋
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: '#666' }}>
+                          WORKING DOCUMENTS
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Page Title */}
+                <Box sx={{ p: 3, backgroundColor: 'white' }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#333' }}>
+                    Manage Transactions
+                  </Typography>
+                </Box>
+
+                                  {/* Property Transaction Header */}
+                  <Box sx={{ 
+                    backgroundColor: '#f8f9fa',
+                    borderBottom: '1px solid #e0e0e0',
+                    p: 3
+                  }}>
+                    {/* Listing Header */}
+                    <Box sx={{ 
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      mb: 3
+                    }}>
+                      <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 600, mb: 1 }}>
+                          Property Transaction
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                          Property Address
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Chip label="Active" sx={{ backgroundColor: '#e8f5e8', color: '#2e7d32' }} />
+                      </Box>
+                    </Box>
+
+                    {/* Navigation Tabs */}
+                    <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+                      {['LISTING', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'].map((tab) => (
+                        <Box
+                          key={tab}
+                          onClick={() => {
+                            if (tab === 'CHECKLIST') {
+                              setShowChecklistPage(true);
+                              setShowTransactionsPage(false);
+                            } else if (tab === 'DOCUMENTS') {
+                              setShowDocumentsPage(true);
+                              setShowTransactionsPage(false);
+                            }
+                          }}
+                          sx={{
+                            px: 2,
+                            py: 1,
+                            borderRadius: 1,
+                            backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : 'transparent',
+                            color: tab === 'DOCUMENTS' ? 'white' : '#666',
+                            cursor: (tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? 'pointer' : 'default',
+                            fontWeight: tab === 'DOCUMENTS' ? 600 : 400,
+                            '&:hover': {
+                              backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : ((tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? '#f0f0f0' : 'transparent')
+                            }
+                          }}
+                        >
+                          {tab}
+                        </Box>
+                      ))}
+                    </Box>
+
+                  {/* Key Transaction Information */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>ADDRESS:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Property Address</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>AGENT:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Agent Name</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>EMAIL:</Typography>
+                      <Typography variant="body1">agent@email.com</Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>LIST PRICE:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>$0.00</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>SELLER:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Seller Name</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>YEAR BUILT:</Typography>
+                      <Typography variant="body1">2024</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Search and Filter Section */}
+                <Box sx={{ 
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #e0e0e0',
+                  p: 3
+                }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 3 }}>
+                    <Box sx={{ flex: 1, mr: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>
+                        SEARCH
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        placeholder="Search transactions..."
+                        variant="outlined"
+                        size="small"
+                        sx={{ mb: 2 }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button variant="outlined" sx={{ color: '#666', borderColor: '#ccc' }}>
+                          Search
+                        </Button>
+                        <Button variant="outlined" sx={{ color: '#666', borderColor: '#ccc' }}>
+                          Show All
+                        </Button>
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      {/* Filter Icons */}
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton size="small" sx={{ 
+                          color: brandColors.primary, 
+                          borderBottom: '2px solid ' + brandColors.primary 
+                        }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>☰</Box>
+                        </IconButton>
+                        <IconButton size="small" sx={{ color: '#666' }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>☰</Box>
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Dropdowns */}
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Box sx={{ 
+                          border: '1px solid #ccc',
+                          borderRadius: 1,
+                          px: 2,
+                          py: 1,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          '&:hover': { borderColor: '#999' }
+                        }}>
+                          <Typography variant="body2">Office</Typography>
+                          <KeyboardArrowDownIcon sx={{ fontSize: '1rem' }} />
+                        </Box>
+                        <Box sx={{ 
+                          border: '1px solid #ccc',
+                          borderRadius: 1,
+                          px: 2,
+                          py: 1,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          '&:hover': { borderColor: '#999' }
+                        }}>
+                          <Typography variant="body2">Stage Filter</Typography>
+                          <KeyboardArrowDownIcon sx={{ fontSize: '1rem' }} />
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                  
+                  {/* Create Transaction Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="contained"
+                      sx={{ 
+                        backgroundColor: '#4caf50',
+                        color: 'white',
+                        px: 3,
+                        py: 1.5,
+                        '&:hover': { backgroundColor: '#45a049' }
+                      }}
+                    >
+                      Create Transaction
+                    </Button>
+                  </Box>
+                </Box>
+
+                {/* Transactions Table */}
+                <Box sx={{ backgroundColor: 'white', p: 3 }}>
+                  <Box sx={{ 
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr auto',
+                    gap: 2,
+                    alignItems: 'center',
+                    p: 2,
+                    borderBottom: '2px solid #e0e0e0',
+                    fontWeight: 600,
+                    color: '#666',
+                    backgroundColor: '#f8f9fa'
+                  }}>
+                    <Box>Property Address</Box>
+                    <Box>Status</Box>
+                    <Box>Agent</Box>
+                    <Box>Office</Box>
+                    <Box>Incomplete Items</Box>
+                    <Box>Closing Date</Box>
+                    <Box>Stage</Box>
+                    <Box></Box>
+                  </Box>
+
+                  {/* Transaction Rows */}
+                  {[
+                    { address: '550 Front Street, Beverly Hills, CA 90210', agent: 'Michael Renfroe', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '739 Front Street, Beverly Hills, CA 90210', agent: 'Angela Davis', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '67 Front Street, Beverly Hills, CA 90210', agent: 'Clarence King', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '123 Front Street, Beverly Hills, CA 90210', agent: 'Sean Magpie', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '456 Front Street, Beverly Hills, CA 90210', agent: 'Justin Henderson', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '789 Front Street, Beverly Hills, CA 90210', agent: 'Holly Frazier', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '321 Front Street, Beverly Hills, CA 90210', agent: 'Mark Coffee', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '654 Front Street, Beverly Hills, CA 90210', agent: 'Hazel Archies', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '987 Front Street, Beverly Hills, CA 90210', agent: 'Molly Bishop', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' },
+                    { address: '147 Front Street, Beverly Hills, CA 90210', agent: 'William Jacobs', office: 'Eric Office', incomplete: '1', closing: '06/14/2015', stage: 'Checked' }
+                  ].map((transaction, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr auto',
+                        gap: 2,
+                        alignItems: 'center',
+                        p: 2,
+                        borderBottom: '1px solid #f0f0f0',
+                        '&:hover': { backgroundColor: '#f8f9fa' }
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {transaction.address}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Chip label="Pending" sx={{ backgroundColor: '#fff3e0', color: '#f57c00' }} />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{transaction.agent}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{transaction.office}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{transaction.incomplete}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{transaction.closing}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{transaction.stage}</Typography>
+                      </Box>
+                      <Box>
+                        <IconButton size="small" sx={{ color: '#666' }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>🚫</Box>
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            ) : isAgentView && showListingsPage ? (
+              // Full-Page Listings View - SKYSLOPE Style
+              <Box>
+                {/* SKYSLOPE Style Header */}
+                <Box sx={{ 
+                  backgroundColor: 'white',
+                  borderBottom: '2px solid #e0e0e0',
+                  p: 2
+                }}>
+                  {/* Header with Back Button */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2
+                  }}>
+                    {/* Left Side - Back Button and Title */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <IconButton
+                        onClick={() => {
+                          setShowListingsPage(false);
+                          // Ensure we stay in agent dashboard mode
+                          setSelectedUserRole('buying-agent');
+                        }}
+                        sx={{ 
+                          color: brandColors.primary,
+                          backgroundColor: '#f5f5f5',
+                          '&:hover': { backgroundColor: '#e0e0e0' }
+                        }}
+                      >
+                        <ArrowBackIcon />
+                      </IconButton>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
+                        Manage Listings
+                      </Typography>
+                    </Box>
+
+                    {/* Right Side - Utility Icons */}
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <SearchIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <PersonIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <PrintIcon />
+                      </IconButton>
+                      <Box sx={{ 
+                        width: 1, 
+                        height: 20, 
+                        backgroundColor: '#e0e0e0',
+                        mx: 1
+                      }} />
+                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                        Broker
+                      </Typography>
+                      <IconButton size="small" sx={{ color: '#666' }}>
+                        <AccountCircleIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+
+                  {/* Document Management Header */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2
+                  }}>
+                    {/* Document Tabs */}
+                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 1,
+                        cursor: 'pointer',
+                        '&:hover': { opacity: 0.8 }
+                      }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#e3f2fd', 
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#1976d2',
+                          fontSize: '14px'
+                        }}>
+                          📄
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          DOCUMENTS TO REVIEW
+                        </Typography>
+                      </Box>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 1,
+                        cursor: 'pointer',
+                        '&:hover': { opacity: 0.8 }
+                      }}>
+                        <Box sx={{ 
+                          width: 20, 
+                          height: 20, 
+                          backgroundColor: '#f5f5f5', 
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#666',
+                          fontSize: '14px'
+                        }}>
+                          📋
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: '#666' }}>
+                          WORKING DOCUMENTS
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Page Title */}
+                <Box sx={{ p: 3, backgroundColor: 'white' }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#333' }}>
+                    Manage Listings
+                  </Typography>
+                </Box>
+
+                {/* Property Transaction Header */}
+                <Box sx={{ 
+                  backgroundColor: '#f8f9fa',
+                  borderBottom: '1px solid #e0e0e0',
+                  p: 3
+                }}>
+                  {/* Listing Header */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    mb: 3
+                  }}>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 600, mb: 1 }}>
+                        Property Transaction
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Property Address
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Chip label="Active" sx={{ backgroundColor: '#e8f5e8', color: '#2e7d32' }} />
+                    </Box>
+                  </Box>
+
+                                      {/* Navigation Tabs */}
+                    <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+                      {['LISTING', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'].map((tab) => (
+                        <Box
+                          key={tab}
+                          onClick={() => {
+                            if (tab === 'CHECKLIST') {
+                              setShowChecklistPage(true);
+                              setShowListingsPage(false);
+                            } else if (tab === 'DOCUMENTS') {
+                              setShowDocumentsPage(true);
+                              setShowListingsPage(false);
+                            }
+                          }}
+                          sx={{
+                            px: 2,
+                            py: 1,
+                            borderRadius: 1,
+                            backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : 'transparent',
+                            color: tab === 'DOCUMENTS' ? 'white' : '#666',
+                            cursor: (tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? 'pointer' : 'default',
+                            fontWeight: tab === 'DOCUMENTS' ? 600 : 400,
+                            '&:hover': {
+                              backgroundColor: tab === 'DOCUMENTS' ? brandColors.primary : ((tab === 'CHECKLIST' || tab === 'DOCUMENTS') ? '#f0f0f0' : 'transparent')
+                            }
+                          }}
+                        >
+                          {tab}
+                        </Box>
+                      ))}
+                    </Box>
+
+                  {/* Key Listing Information */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>ADDRESS:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Property Address</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>AGENT:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Agent Name</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>EMAIL:</Typography>
+                      <Typography variant="body1">agent@email.com</Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>LIST PRICE:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>$0.00</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>SELLER:</Typography>
+                      <Typography variant="body1" sx={{ mb: 2 }}>Seller Name</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>YEAR BUILT:</Typography>
+                      <Typography variant="body1">2024</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Search and Filter Section */}
+                <Box sx={{ 
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #e0e0e0',
+                  p: 3
+                }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 3 }}>
+                    <Box sx={{ flex: 1, mr: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>
+                        SEARCH
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        placeholder="Search listings..."
+                        variant="outlined"
+                        size="small"
+                        sx={{ mb: 2 }}
+                      />
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button variant="outlined" sx={{ color: '#666', borderColor: '#ccc' }}>
+                          Search
+                        </Button>
+                        <Button variant="outlined" sx={{ color: '#666', borderColor: '#ccc' }}>
+                          Show All
+                        </Button>
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      {/* Filter Icons */}
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton size="small" sx={{ 
+                          color: brandColors.primary, 
+                          borderBottom: '2px solid ' + brandColors.primary 
+                        }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>☰</Box>
+                        </IconButton>
+                        <IconButton size="small" sx={{ color: '#666' }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>☰</Box>
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Dropdowns */}
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Box sx={{ 
+                          border: '1px solid #ccc',
+                          borderRadius: 1,
+                          px: 2,
+                          py: 1,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          '&:hover': { borderColor: '#999' }
+                        }}>
+                          <Typography variant="body2">Status</Typography>
+                          <KeyboardArrowDownIcon sx={{ fontSize: '1rem' }} />
+                        </Box>
+                        <Box sx={{ 
+                          border: '1px solid #ccc',
+                          borderRadius: 1,
+                          px: 2,
+                          py: 1,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          '&:hover': { borderColor: '#999' }
+                        }}>
+                          <Typography variant="body2">Stage Filter</Typography>
+                          <KeyboardArrowDownIcon sx={{ fontSize: '1rem' }} />
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                  
+                  {/* Create Listing Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="contained"
+                      sx={{ 
+                        backgroundColor: '#4caf50',
+                        color: 'white',
+                        px: 3,
+                        py: 1.5,
+                        '&:hover': { backgroundColor: '#45a049' }
+                      }}
+                    >
+                      Create Listing
+                    </Button>
+                  </Box>
+                </Box>
+
+                {/* Listings Table */}
+                <Box sx={{ backgroundColor: 'white', p: 3 }}>
+                  <Box sx={{ 
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr auto',
+                    gap: 2,
+                    alignItems: 'center',
+                    p: 2,
+                    borderBottom: '2px solid #e0e0e0',
+                    fontWeight: 600,
+                    color: '#666',
+                    backgroundColor: '#f8f9fa'
+                  }}>
+                    <Box>MLS#</Box>
+                    <Box>Property Address</Box>
+                    <Box>Status</Box>
+                    <Box>Listing Agent</Box>
+                    <Box>Office</Box>
+                    <Box>Expiration Date</Box>
+                    <Box>Listing Price</Box>
+                    <Box>Stage</Box>
+                    <Box></Box>
+                  </Box>
+
+                  {/* Listing Rows */}
+                  {[
+                    { mls: '6654893', address: '123 Armadillo Street, Sacramento, CA 95820', agent: 'Thompson, Aly', office: 'East Office', expiration: '07/01/2023', price: '$344,444.00', stage: 'Checked' },
+                    { mls: '5464565', address: '1255 University Ave, Sacramento, CA 95825', agent: 'White, Pat', office: 'Sunset Office', expiration: '08/19/2021', price: '$546,452.00', stage: 'Checked' },
+                    { mls: '8945612', address: '2340 Maritime Dr, Elk Grove, CA 95758', agent: 'Testing, Aly', office: 'East Office', expiration: '09/05/2021', price: '$288,888.00', stage: 'Checked' },
+                    { mls: '4562187', address: '55624 OR-204, Weston, OR 97886', agent: 'White, Pat', office: 'New Space', expiration: '06/23/2022', price: '$368,354.00', stage: 'Checked' },
+                    { mls: '6325896', address: '546 Woodland Rd, Goldendale, WA 98620', agent: 'Cook, Bob', office: 'Eric Office', expiration: '02/24/2022', price: '$999,999.00', stage: 'Checked' },
+                    { mls: '1489645', address: '4534 A Pkwy, Sacramento, CA 95823', agent: 'Cassanova, Charly', office: 'West Office', expiration: '08/26/2021', price: '$3,423,532.00', stage: 'Checked' },
+                    { mls: '1532847', address: '2230 Auburn Blvd, Sacramento, CA 95821', agent: 'Cranberry, Diane', office: 'East Office', expiration: '08/13/2021', price: '$3,423,423.00', stage: 'Checked' },
+                    { mls: '4971246', address: '5462 Carlson Dr, Sacramento, CA 95819', agent: 'Manning, Sarah', office: 'West Office', expiration: '07/31/2021', price: '$879,456.00', stage: 'Checked' }
+                  ].map((listing, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr auto',
+                        gap: 2,
+                        alignItems: 'center',
+                        p: 2,
+                        borderBottom: '1px solid #f0f0f0',
+                        '&:hover': { backgroundColor: '#f8f9fa' }
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {listing.mls}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {listing.address}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Chip label="Active" sx={{ backgroundColor: '#e0e0e0', color: '#333' }} />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{listing.agent}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{listing.office}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{listing.expiration}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {listing.price}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2">{listing.stage}</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton size="small" sx={{ color: '#666' }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>🚫</Box>
+                        </IconButton>
+                        <IconButton size="small" sx={{ color: '#666' }}>
+                          <Box sx={{ fontSize: '1.2rem' }}>✅</Box>
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            ) : (
+            // Buyer Dashboard (Default View - Individual buyers and agents with sidebar)
+          <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
+            {/* Header for selected topic */}
+            <Box sx={{ 
+              backgroundColor: brandColors.primary,
+              padding: '1.5rem 2rem',
+              borderBottom: '1px solid brandColors.borders.secondary'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ color: brandColors.backgrounds.primary }}>
+                  {accessibleFeatures[activeTabIndex]?.icon}
+                </Box>
+                <Typography variant="h5" sx={{ color: brandColors.backgrounds.primary, fontWeight: 600 }}>
+                  {accessibleFeatures[activeTabIndex]?.name}
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)', marginTop: 1 }}>
+                {accessibleFeatures[activeTabIndex]?.description}
+              </Typography>
+            </Box>
+
+            {/* Content for selected topic */}
+            <Box sx={{ padding: '2rem' }}>
+              {renderTabContent()}
+            </Box>
+          </Paper>
+          )}
+        </Container>
+      </Box>
+
+      {/* User Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => {
+          setShowNotificationsPage(true);
+          handleMenuClose();
+        }}>
+          <ListItemIcon>
+            <NotificationsIcon fontSize="small" />
+          </ListItemIcon>
+          Notifications
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon>
+            <CloseIcon fontSize="small" />
+          </ListItemIcon>
+          Sign Out
+        </MenuItem>
+      </Menu>
+
+
+
+      {/* Documents Review Modal */}
+      <Dialog
+        open={documentsModalOpen}
+        onClose={() => setDocumentsModalOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+            maxHeight: '90vh'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          backgroundColor: brandColors.primary, 
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Typography variant="h6">Documents to Review</Typography>
+          <IconButton
+            onClick={() => setDocumentsModalOpen(false)}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent sx={{ p: 0 }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={documentsView} 
+              onChange={(e, newValue) => setDocumentsView(newValue as 'pending' | 'reviewed' | 'approved')}
+              sx={{ px: 2 }}
+            >
+              <Tab 
+                label="Pending Review (12)" 
+                value="pending"
+                sx={{ 
+                  textTransform: 'none',
+                  fontWeight: 500
+                }}
+              />
+              <Tab 
+                label="Reviewed (8)" 
+                value="reviewed"
+                sx={{ 
+                  textTransform: 'none',
+                  fontWeight: 500
+                }}
+              />
+              <Tab 
+                label="Approved (15)" 
+                value="approved"
+                sx={{ 
+                  textTransform: 'none',
+                  fontWeight: 500
+                }}
+              />
+            </Tabs>
+          </Box>
+
+          <Box sx={{ p: 3 }}>
+            {documentsView === 'pending' ? (
+              <Box>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Documents Pending Review
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    12 documents require your attention
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'grid', gap: 2 }}>
+                  {/* Document Item 1 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Purchase Agreement - 123 Main St
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Buyer: John Smith | Seller: Jane Doe | Due: Today
+                        </Typography>
+                        <Chip label="High Priority" color="error" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Document Item 2 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Title Commitment Report
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Property: 456 Oak Ave | Due: Tomorrow
+                        </Typography>
+                        <Chip label="Medium Priority" color="warning" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Document Item 3 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Home Inspection Report
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Property: 789 Pine St | Due: 2 days
+                        </Typography>
+                        <Chip label="Low Priority" color="info" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Document Item 4 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Loan Approval Letter
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Buyer: Sarah Johnson | Due: 3 days
+                        </Typography>
+                        <Chip label="High Priority" color="error" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Document Item 5 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Property Survey
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Property: 321 Elm St | Due: 4 days
+                        </Typography>
+                        <Chip label="Medium Priority" color="warning" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Box>
+              </Box>
+            ) : documentsView === 'reviewed' ? (
+              <Box>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Reviewed Documents
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    8 documents have been reviewed and are pending final approval
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'grid', gap: 2 }}>
+                  {/* Reviewed Document Item 1 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2, backgroundColor: '#f8f9fa' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Property Appraisal Report
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Property: 123 Main St | Reviewed: Yesterday
+                        </Typography>
+                        <Chip label="Reviewed" color="info" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Reviewed Document Item 2 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2, backgroundColor: '#f8f9fa' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Credit Report
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Buyer: John Smith | Reviewed: 2 days ago
+                        </Typography>
+                        <Chip label="Reviewed" color="info" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="contained" size="small" sx={{ backgroundColor: brandColors.primary }}>Approve</Button>
+                        <Button variant="outlined" size="small" color="error">Reject</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Box>
+              </Box>
+            ) : (
+              <Box>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Approved Documents
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    15 documents have been approved and processed
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'grid', gap: 2 }}>
+                  {/* Approved Document Item 1 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2, backgroundColor: '#e8f5e8' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Initial Contract
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Property: 123 Main St | Approved: 1 week ago
+                        </Typography>
+                        <Chip label="Approved" color="success" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="outlined" size="small">Download</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Approved Document Item 2 */}
+                  <Paper sx={{ p: 2, border: '1px solid #e0e0e0', borderRadius: 2, backgroundColor: '#e8f5e8' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                          Earnest Money Receipt
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Buyer: John Smith | Approved: 1 week ago
+                        </Typography>
+                        <Chip label="Approved" color="success" size="small" />
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant="outlined" size="small">View</Button>
+                        <Button variant="outlined" size="small">Download</Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+          <Button 
+            onClick={() => setDocumentsModalOpen(false)}
+            variant="outlined"
+          >
+            Close
+          </Button>
+          <Button 
+            variant="contained"
+            sx={{ backgroundColor: brandColors.primary }}
+          >
+            Manage Documents
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default ClosePage;

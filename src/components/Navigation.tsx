@@ -1,10 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { brandColors } from "../theme";
 
 const NavContainer = styled.nav`
   width: 100%;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.25);
   padding: 0.75rem 0;
   position: absolute;
   bottom: 5%;
@@ -13,7 +14,7 @@ const NavContainer = styled.nav`
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   &:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.35);
   }
 `;
 
@@ -30,27 +31,32 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
   a {
-    color: #1a365d;
+    color: white;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 800;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
     transition: all 0.2s ease;
     font-size: 1rem;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    letter-spacing: 0.5px;
+    cursor: pointer;
     &:hover {
-      background: rgba(255, 255, 255, 0.4);
-      color: #0d2340;
-      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+      font-weight: 900;
     }
   }
 `;
 
 const Navigation: React.FC = () => {
+  const navigate = useNavigate();
+
   const navItems = [
     { name: 'Buy', path: '/buy' },
     { name: 'Rent', path: '/rent' },
-    { name: 'Sell', path: '/sell' },
+    { name: 'Sell / List', path: '/sell' },
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Analyze', path: '/analyze' },
@@ -64,12 +70,34 @@ const Navigation: React.FC = () => {
     { name: 'Advertise', path: '/advertise' }
   ];
 
+  const handleNavClick = (path: string) => {
+    console.log('Navigation clicked:', path); // Debug log
+    // Navigate to any declared route; non-declared paths will log for now
+    switch (path) {
+      case '/buy':
+      case '/rent':
+      case '/sell':
+      case '/mortgage':
+      case '/underwrite':
+      case '/close':
+        console.log('Navigating to:', path); // Debug log
+        navigate(path);
+        break;
+      default:
+        console.log('Route not implemented:', path); // Debug log
+        // Route not implemented yet
+        break;
+    }
+  };
+
   return (
     <NavContainer>
       <NavList>
         {navItems.map((item, index) => (
           <NavItem key={index}>
-            <Link to={item.path}>{item.name}</Link>
+            <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick(item.path); }}>
+              {item.name}
+            </a>
           </NavItem>
         ))}
       </NavList>
@@ -77,4 +105,4 @@ const Navigation: React.FC = () => {
   );
 };
 
-export default Navigation; 
+export default Navigation;

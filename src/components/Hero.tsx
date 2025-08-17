@@ -1,34 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { 
-  TextField, 
-  IconButton, 
-  Autocomplete, 
-  CircularProgress,
-  Snackbar,
-  Alert,
-  useMediaQuery,
-  useTheme,
-  Box,
-  Chip,
-  Popper,
-  Paper
-} from '@mui/material';
-
-import MapIcon from '@mui/icons-material/Map';
-import HistoryIcon from '@mui/icons-material/History';
-import CloseIcon from '@mui/icons-material/Close';
-import { Button } from '@mui/material';
+import React from "react";
+import styled from "styled-components";
+import { TextField, IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import MapIcon from "@mui/icons-material/Map";
+import { brandColors } from "../theme";
 
 const HeroContainer = styled.div`
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('/hero-background.jpg');
+  background-image: url("/hero-background.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -36,7 +21,7 @@ const HeroContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: brandColors.backgrounds.primary;
   padding: 0 2rem;
   z-index: 1;
 `;
@@ -63,6 +48,7 @@ const Title = styled.h1`
   margin-bottom: 1.5rem;
   font-weight: 700;
   margin-top: -5%;
+  color: white;
 `;
 
 const SearchContainer = styled.div`
@@ -71,8 +57,8 @@ const SearchContainer = styled.div`
   background: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
   padding: 0.75rem;
-  max-width: 700px;
-  min-width: 500px;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -82,34 +68,19 @@ const SearchContainer = styled.div`
   }
 `;
 
-interface SearchResult {
-  id: string;
-  description: string;
-  type: 'address' | 'neighborhood' | 'city' | 'zip';
-  mainText: string;
-  secondaryText: string;
-}
-
-interface SearchHistory {
-  timestamp: number;
-  query: string;
-  type: SearchResult['type'];
-}
-
-const StyledAutocomplete = styled(Autocomplete<SearchResult | string, false, false, true, "div">)`
+const StyledTextField = styled(TextField)`
   flex-grow: 1;
-  min-width: 300px;
   .MuiInputBase-root {
-    color: #1a365d;
+    color: brandColors.primary;
     font-weight: 600;
-    padding-right: 65px !important;
-    &::before, &::after {
+    &::before,
+    &::after {
       display: none;
     }
     input {
       font-size: 1.1rem;
       &::placeholder {
-        color: #1a365d;
+        color: brandColors.primary;
         opacity: 1;
         font-weight: 500;
       }
@@ -117,261 +88,132 @@ const StyledAutocomplete = styled(Autocomplete<SearchResult | string, false, fal
   }
 `;
 
-const LocationButton = styled(IconButton)`
-  color: #1a365d;
-  opacity: 0.9;
+const SparkleButton = styled(IconButton)`
+  color: brandColors.primary;
+  opacity: 1;
+  margin-right: 0.25rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
   &:hover {
     opacity: 1;
-    background-color: rgba(26, 54, 93, 0.1);
+    background-color: rgba(26, 54, 93, 1);
+    color: brandColors.backgrounds.primary;
   }
 `;
 
-const SearchButton = styled(Button)`
-  background-color: #1a365d !important;
-  color: white !important;
-  text-transform: none !important;
-  font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 6px !important;
+const MapButton = styled(IconButton)`
+  color: brandColors.primary;
+  opacity: 1;
+  margin-right: 0.25rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
   &:hover {
-    background-color: #0f2444 !important;
+    opacity: 1;
+    background-color: rgba(26, 54, 93, 1);
+    color: brandColors.backgrounds.primary;
   }
 `;
 
-const SearchHistoryContainer = styled(Paper)`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 8px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-`;
-
-const HistoryChip = styled(Chip)`
-  margin: 4px;
-  background: rgba(26, 54, 93, 0.1);
+const SearchButton = styled.button`
+  background: #1a365d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
   &:hover {
-    background: rgba(26, 54, 93, 0.2);
+    background: #0d2340;
   }
 `;
 
-// Mock data for demonstration
-const mockSearchResults: SearchResult[] = [
-  { id: '1', description: 'New York, NY', type: 'city', mainText: 'New York', secondaryText: 'NY' },
-  { id: '2', description: 'Los Angeles, CA', type: 'city', mainText: 'Los Angeles', secondaryText: 'CA' },
-  { id: '3', description: 'Chicago, IL', type: 'city', mainText: 'Chicago', secondaryText: 'IL' },
-  { id: '4', description: '90210, Beverly Hills', type: 'zip', mainText: '90210', secondaryText: 'Beverly Hills' },
-  { id: '5', description: 'Manhattan, New York', type: 'neighborhood', mainText: 'Manhattan', secondaryText: 'New York' },
-];
+const SparkleIcon = () => {
+  // Get the background color at the logo's position to determine logo color
+  const [logoColor, setLogoColor] = React.useState(brandColors.primary); // Default navy blue
+
+  React.useEffect(() => {
+    const updateLogoColor = () => {
+      // Create a canvas to sample the background color
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        // Get the search bar element position
+        const searchBar = document.querySelector(
+          '[data-testid="search-container"]',
+        );
+        if (searchBar) {
+          const rect = searchBar.getBoundingClientRect();
+          const x = rect.left + rect.width / 2; // Center of search bar
+          const y = rect.top + rect.height / 2; // Center of search bar
+
+          // Sample the background color
+          const imageData = ctx.getImageData(x, y, 1, 1);
+          const r = imageData.data[0];
+          const g = imageData.data[1];
+          const b = imageData.data[2];
+
+          // Calculate brightness to determine if background is light or dark
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+          // Set logo color based on background brightness
+          setLogoColor(brightness > 128 ? brandColors.primary : brandColors.backgrounds.primary);
+        }
+      }
+    };
+
+    updateLogoColor();
+    window.addEventListener("resize", updateLogoColor);
+    return () => window.removeEventListener("resize", updateLogoColor);
+  }, []);
+
+  return (
+    <img
+      src="/logo.png"
+      alt="Dreamery Logo"
+      style={{
+        width: "65px",
+        height: "65px",
+        objectFit: "contain",
+        filter:
+          logoColor === brandColors.backgrounds.primary
+            ? "brightness(0) invert(1)"
+            : "brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)",
+      }}
+    />
+  );
+};
 
 const Hero: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [searchValue, setSearchValue] = useState('');
-  const [options, setOptions] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>(() => {
-    const saved = localStorage.getItem('searchHistory');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [geoLocationError, setGeoLocationError] = useState<string | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-  }, [searchHistory]);
-
-  const handleSearch = async (value: string) => {
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const filtered = mockSearchResults.filter(result =>
-        result.description.toLowerCase().includes(value.toLowerCase())
-      );
-      setOptions(filtered);
-    } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchValue(value);
-    if (value.length >= 2) {
-      handleSearch(value);
-    } else {
-      setOptions([]);
-    }
-  };
-
-  const handleLocationClick = () => {
-    if (!navigator.geolocation) {
-      setGeoLocationError('Geolocation is not supported by your browser');
-      return;
-    }
-
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          // Simulate reverse geocoding API call
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          setSearchValue('Current Location');
-          setGeoLocationError(null);
-        } catch (error) {
-          setGeoLocationError('Failed to get location details');
-        } finally {
-          setLoading(false);
-        }
-      },
-      (error) => {
-        setGeoLocationError('Failed to get your location');
-        setLoading(false);
-      }
-    );
-  };
-
-  const addToHistory = (query: string, type: SearchResult['type']) => {
-    const newHistory = [{
-      timestamp: Date.now(),
-      query,
-      type
-    }, ...searchHistory.slice(0, 4)];
-    setSearchHistory(newHistory);
-  };
-
-  const clearHistory = () => {
-    setSearchHistory([]);
-    localStorage.removeItem('searchHistory');
-  };
-
   return (
     <HeroContainer>
       <Overlay />
       <Content>
         <Title>It Starts with a Home.</Title>
-        <SearchContainer style={{ position: 'relative' }}>
-          <StyledAutocomplete
-            freeSolo
-            options={options}
-            loading={loading}
-            inputValue={searchValue}
-            onInputChange={(event, value) => setSearchValue(value)}
-            onChange={(event, newValue: SearchResult | string | null) => {
-              if (newValue) {
-                if (typeof newValue === 'string') {
-                  addToHistory(newValue, 'address');
-                } else {
-                  addToHistory(newValue.description, newValue.type);
-                }
-              }
-            }}
-            filterOptions={(x) => x}
-            getOptionLabel={(option: SearchResult | string) => 
-              typeof option === 'string' ? option : option.description
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                placeholder={isMobile ? "Search location..." : "Enter an address, neighborhood, city, or ZIP code"}
-                onChange={handleInputChange}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </React.Fragment>
-                  ),
-                }}
-              />
-            )}
-            renderOption={(props, option: SearchResult | string) => {
-              if (typeof option === 'string') {
-                return (
-                  <Box component="li" {...props}>
-                    <MapIcon style={{ marginRight: 8 }} />
-                    {option}
-                  </Box>
-                );
-              }
-              return (
-                <Box component="li" {...props}>
-                  <MapIcon style={{ marginRight: 8 }} />
-                  <Box>
-                    <Box component="span" sx={{ fontWeight: 600 }}>{option.mainText}</Box>
-                    <Box component="span" sx={{ ml: 1, color: 'text.secondary' }}>
-                      {option.secondaryText}
-                    </Box>
-                  </Box>
-                </Box>
-              );
-            }}
-            PopperComponent={(props) => (
-              <Popper {...props} style={{ width: '100%' }} placement="bottom-start" />
-            )}
+        <SearchContainer data-testid="search-container">
+          <StyledTextField
+            variant="standard"
+            placeholder="Enter an address, neighborhood, city, or ZIP code"
+            fullWidth
           />
-          <LocationButton 
-            onClick={handleLocationClick}
-            disabled={loading}
-          >
+          <SparkleButton>
+            <SparkleIcon />
+          </SparkleButton>
+          <MapButton>
             <MapIcon />
-          </LocationButton>
-          <SearchButton 
-            onClick={() => {
-              if (searchValue.trim()) {
-                addToHistory(searchValue.trim(), 'address');
-                // Here you would typically trigger the search
-                console.log('Searching for:', searchValue.trim());
-              }
-            }}
-            disabled={!searchValue.trim()}
-          >
-            Search
-          </SearchButton>
-          {showHistory && searchHistory.length > 0 && (
-            <SearchHistoryContainer>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Box component="span" sx={{ fontWeight: 600 }}>Recent Searches</Box>
-                <IconButton size="small" onClick={clearHistory}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {searchHistory.map((item, index) => (
-                  <HistoryChip
-                    key={index}
-                    label={item.query}
-                    onClick={() => setSearchValue(item.query)}
-                    icon={<HistoryIcon />}
-                  />
-                ))}
-              </Box>
-            </SearchHistoryContainer>
-          )}
+          </MapButton>
+          <SearchButton>Search</SearchButton>
         </SearchContainer>
       </Content>
-      <Snackbar
-        open={!!geoLocationError}
-        autoHideDuration={6000}
-        onClose={() => setGeoLocationError(null)}
-      >
-        <Alert 
-          onClose={() => setGeoLocationError(null)} 
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          {geoLocationError}
-        </Alert>
-      </Snackbar>
     </HeroContainer>
   );
 };

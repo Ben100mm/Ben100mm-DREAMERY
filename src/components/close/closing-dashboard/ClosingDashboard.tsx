@@ -28,6 +28,7 @@ import {
   MenuItem,
   CircularProgress,
 } from '@mui/material';
+import ProfileHeader from '../../ProfileHeader';
 import {
   Timeline as TimelineIcon,
   CheckCircle as CheckCircleIcon,
@@ -84,6 +85,7 @@ interface ClosingData {
 // Styled components
 const DashboardContainer = styled.div`
   padding: 1rem;
+  margin-top: 80px; /* Account for fixed header */
 `;
 
 const MetricCard = styled(Card)`
@@ -357,8 +359,10 @@ const ClosingDashboard: React.FC = () => {
   }
 
   return (
-    <DashboardContainer>
-      {/* Key Metrics */}
+    <>
+      <ProfileHeader title="Closing Dashboard" subtitle="Track your closing progress and milestones" />
+      <DashboardContainer>
+        {/* Key Metrics */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
         <Box>
           <MetricCard>
@@ -747,8 +751,9 @@ const ClosingDashboard: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </DashboardContainer>
-  );
-};
+        </DashboardContainer>
+      </>
+    );
+  };
 
 export default ClosingDashboard;

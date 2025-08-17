@@ -32,6 +32,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { brandColors } from '../../../theme';
+import ProfileHeader from '../../ProfileHeader';
 import {
   Security as SecurityIcon,
   Search as SearchIcon,
@@ -341,8 +342,10 @@ const EscrowTitleHub: React.FC = () => {
   }
 
   return (
-    <Box sx={{ padding: '1rem' }}>
-      {/* Quick Stats */}
+    <>
+      <ProfileHeader title="Escrow & Title Hub" subtitle="Manage escrow accounts and title services" />
+      <Box sx={{ padding: '1rem', marginTop: '80px' }}>
+        {/* Quick Stats */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
         <Box>
           <Card sx={{ 
@@ -1098,8 +1101,9 @@ const EscrowTitleHub: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
-  );
-};
+        </Box>
+      </>
+    );
+  };
 
 export default EscrowTitleHub;

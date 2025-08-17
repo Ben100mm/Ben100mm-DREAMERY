@@ -552,15 +552,6 @@ const FinalWalkthroughHandover: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Final Walkthrough & Handover
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Complete final inspections, verify repairs, and coordinate property handover
-        </Typography>
-      </Box>
 
       {/* Progress Overview */}
       <Box sx={{ mb: 3 }}>

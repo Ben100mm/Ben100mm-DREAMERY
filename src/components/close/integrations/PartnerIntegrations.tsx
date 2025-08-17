@@ -574,15 +574,6 @@ const PartnerIntegrations: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Partner Integrations
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Monitor integration statuses and book services with our trusted partners
-        </Typography>
-      </Box>
 
       {/* Quick Stats */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>

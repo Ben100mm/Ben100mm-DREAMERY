@@ -524,15 +524,6 @@ const LegalCompliance: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Legal & Compliance
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Manage legal requirements, compliance checklists, and document execution
-        </Typography>
-      </Box>
 
       {/* State Selection */}
       <Card sx={{ mb: 3 }}>

@@ -654,7 +654,7 @@ const ClosingAssistant: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Lumina - Dreamery's Closing Assistant
+          Dreamery's Closing Assistant
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Get intelligent insights, predictions, and personalized guidance for your closing process

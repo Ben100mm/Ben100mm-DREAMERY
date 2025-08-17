@@ -380,15 +380,6 @@ const FinancingCoordination: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Financing Coordination
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Manage loan processing, document collection, and closing cost coordination
-        </Typography>
-      </Box>
 
       {/* Quick Stats */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>

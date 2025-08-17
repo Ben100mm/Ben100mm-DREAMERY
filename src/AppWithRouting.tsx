@@ -42,6 +42,13 @@ import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
 import UnderwritePage from './pages/UnderwritePage';
 import UXDemoPage from './pages/UXDemoPage';
 import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
+import ClosePage from './pages/ClosePage';
+import CloseBuyerPage from './pages/CloseBuyerPage';
+import CloseAgentPage from './pages/CloseAgentPage';
+import CloseBrokeragesPage from './pages/CloseBrokeragesPage';
+import CloseProfessionalSupportPage from './pages/CloseProfessionalSupportPage';
+import CloseBusinessesPage from './pages/CloseBusinessesPage';
+import ProfilePage from './pages/ProfilePage';
 
 import { theme } from "./theme";
 
@@ -101,6 +108,13 @@ function App() {
             <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
             <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
             <Route path="/underwrite" element={<UnderwritePage />} />
+            <Route path="/close" element={<ClosePage />} />
+            <Route path="/close/buyer" element={<CloseBuyerPage />} />
+            <Route path="/close/agent" element={<CloseAgentPage />} />
+            <Route path="/close/brokerages" element={<CloseBrokeragesPage />} />
+            <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
+            <Route path="/close/businesses" element={<CloseBusinessesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/ux-demo" element={<UXDemoPage />} />
             <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
 

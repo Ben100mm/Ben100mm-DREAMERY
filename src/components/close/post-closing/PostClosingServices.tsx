@@ -472,15 +472,6 @@ const PostClosingServices: React.FC = () => {
 
     return (
       <Box sx={{ p: 3 }}>
-        {/* Header */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-            Post-Closing Services
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage exemptions, mortgage payments, warranties, and property management services
-          </Typography>
-        </Box>
 
         {/* Quick Stats */}
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>

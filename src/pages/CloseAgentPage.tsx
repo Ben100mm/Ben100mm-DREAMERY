@@ -51,6 +51,9 @@ import {
   Create as CreateIcon,
   Receipt as ReceiptIcon,
   AssignmentTurnedIn as AssignmentTurnedInIcon,
+  FilterList as FilterListIcon,
+  VisibilityOff as VisibilityOffIcon,
+  Visibility as VisibilityIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -838,8 +841,132 @@ const CloseAgentPage: React.FC = () => {
               </Typography>
             </Paper>
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Manage Transactions Content</Typography>
-              <Typography variant="body1">This section will contain advanced transaction management tools.</Typography>
+              {/* Header Actions */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.accent.success }}>
+                    Create Transaction
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Search and Filter Bar */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: '200px' }}>
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                      SEARCH
+                    </Typography>
+                    <input 
+                      type="text" 
+                      placeholder="Search transactions..." 
+                      style={{ 
+                        padding: '8px 12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Button variant="outlined">Search</Button>
+                  <Button variant="outlined">Show All</Button>
+                  <IconButton sx={{ border: '1px solid #ccc', backgroundColor: brandColors.backgrounds.selected }}>
+                    <ListAltIcon />
+                  </IconButton>
+                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                    <FilterListIcon />
+                  </IconButton>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <option value="">Office</option>
+                      <option value="eric">Eric Office</option>
+                      <option value="main">Main Office</option>
+                      <option value="north">North Office</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <option value="">Stage Filter</option>
+                      <option value="checked">Checked</option>
+                      <option value="pending">Pending</option>
+                      <option value="review">Under Review</option>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+
+              {/* Transactions Table */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Box sx={{ overflowX: 'auto' }}>
+                  {/* Table Header */}
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '2fr 100px 1.5fr 1fr 120px 120px 100px 80px', 
+                    gap: 2, 
+                    p: 2, 
+                    backgroundColor: 'grey.50', 
+                    borderRadius: 1, 
+                    mb: 2,
+                    fontWeight: 600,
+                    fontSize: '0.875rem'
+                  }}>
+                    <Typography variant="subtitle2">Property Address</Typography>
+                    <Typography variant="subtitle2">Status</Typography>
+                    <Typography variant="subtitle2">Agent</Typography>
+                    <Typography variant="subtitle2">Office</Typography>
+                    <Typography variant="subtitle2">Incomplete Items</Typography>
+                    <Typography variant="subtitle2">Closing Date</Typography>
+                    <Typography variant="subtitle2">Stage</Typography>
+                    <Typography variant="subtitle2">Action</Typography>
+                  </Box>
+                  
+                  {/* Table Rows */}
+                  {[
+                    { address: '550 Front Street, Beverly Hills, CA 90210', agent: 'Michael Renfroe' },
+                    { address: '739 Front Street, Beverly Hills, CA 90210', agent: 'Angela Davis' },
+                    { address: '67 Front Street, Beverly Hills, CA 90210', agent: 'Clarence King' },
+                    { address: '135 Front Street, Beverly Hills, CA 90210', agent: 'Sean Magpie' },
+                    { address: '744 Front Street, Beverly Hills, CA 90210', agent: 'Justin Henderson' },
+                    { address: '66 Front Street, Beverly Hills, CA 90210', agent: 'Holly Frazier' },
+                    { address: '759 Front Street, Beverly Hills, CA 90210', agent: 'Mark Coffee' },
+                    { address: '75 Front Street, Beverly Hills, CA 90210', agent: 'Hazel Archies' },
+                    { address: '629 Front Street, Beverly Hills, CA 90210', agent: 'Molly Bishop' },
+                    { address: '631 Front Street, Beverly Hills, CA 90210', agent: 'William Jacobs' }
+                  ].map((transaction, index) => (
+                    <Box key={index} sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2fr 100px 1.5fr 1fr 120px 120px 100px 80px', 
+                      gap: 2, 
+                      p: 2, 
+                      borderBottom: '1px solid', 
+                      borderColor: 'grey.200', 
+                      alignItems: 'center',
+                      '&:hover': { backgroundColor: 'grey.50' }
+                    }}>
+                      <Typography variant="body2">{transaction.address}</Typography>
+                      <Chip label="Pending" color="warning" size="small" />
+                      <Typography variant="body2">{transaction.agent}</Typography>
+                      <Typography variant="body2">Eric Office</Typography>
+                      <Typography variant="body2">1</Typography>
+                      <Typography variant="body2">06/14/2015</Typography>
+                      <Typography variant="body2">Checked</Typography>
+                      <IconButton size="small" sx={{ color: 'grey.500' }}>
+                        <VisibilityOffIcon />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
             </Box>
           </>
         )}
@@ -867,8 +994,208 @@ const CloseAgentPage: React.FC = () => {
               </Typography>
             </Paper>
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Manage Listings Content</Typography>
-              <Typography variant="body1">This section will contain listing management tools.</Typography>
+              {/* Header Actions */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.accent.success }}>
+                    Create Listing
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Search and Filter Bar */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', gap: 1, flex: 1, minWidth: '300px' }}>
+                    <input 
+                      type="text" 
+                      placeholder="Search listings..." 
+                      style={{ 
+                        flex: 1, 
+                        padding: '8px 12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                    <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                      Search
+                    </Button>
+                  </Box>
+                  <Button variant="outlined">Show All</Button>
+                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                    <ListAltIcon />
+                  </IconButton>
+                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                    <FilterListIcon />
+                  </IconButton>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <option value="">Status</option>
+                      <option value="active">Active</option>
+                      <option value="pending">Pending</option>
+                      <option value="expired">Expired</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <option value="">Stage Filter</option>
+                      <option value="checked">Checked</option>
+                      <option value="pending">Pending</option>
+                      <option value="review">Under Review</option>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+
+              {/* Listings Table */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Box sx={{ overflowX: 'auto' }}>
+                  {/* Table Header */}
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '100px 2fr 100px 1.5fr 1fr 120px 120px 100px 80px 80px', 
+                    gap: 2, 
+                    p: 2, 
+                    backgroundColor: 'grey.50', 
+                    borderRadius: 1, 
+                    mb: 2,
+                    fontWeight: 600,
+                    fontSize: '0.875rem'
+                  }}>
+                    <Typography variant="subtitle2">MLS#</Typography>
+                    <Typography variant="subtitle2">Property Address</Typography>
+                    <Typography variant="subtitle2">Status</Typography>
+                    <Typography variant="subtitle2">Listing Agent</Typography>
+                    <Typography variant="subtitle2">Office</Typography>
+                    <Typography variant="subtitle2">Expiration Date</Typography>
+                    <Typography variant="subtitle2">Listing Price</Typography>
+                    <Typography variant="subtitle2">Stage</Typography>
+                    <Typography variant="subtitle2">View</Typography>
+                    <Typography variant="subtitle2">Action</Typography>
+                  </Box>
+                  
+                  {/* Table Rows */}
+                  {[
+                    {
+                      mls: '6654893',
+                      address: '123 Armadillo Street, Sacramento, CA 95820',
+                      status: 'Active',
+                      agent: 'Thompson, Aly',
+                      office: 'East Office',
+                      expiration: '07/01/2023',
+                      price: '$344,444.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654894',
+                      address: '1255 University Ave, Sacramento, CA 95825',
+                      status: 'Active',
+                      agent: 'Johnson, Mike',
+                      office: 'Main Office',
+                      expiration: '08/15/2023',
+                      price: '$288,888.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654895',
+                      address: '2340 Maritime Dr, Elk Grove, CA 95758',
+                      status: 'Active',
+                      agent: 'Smith, Sarah',
+                      office: 'North Office',
+                      expiration: '09/20/2023',
+                      price: '$456,789.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654896',
+                      address: '55624 OR-204, Weston, OR 97886',
+                      status: 'Active',
+                      agent: 'Davis, Lisa',
+                      office: 'West Office',
+                      expiration: '10/10/2023',
+                      price: '$789,123.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654897',
+                      address: '546 Woodland Rd, Goldendale, WA 98620',
+                      status: 'Active',
+                      agent: 'Wilson, Tom',
+                      office: 'South Office',
+                      expiration: '11/05/2023',
+                      price: '$1,234,567.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654898',
+                      address: '4534 A Pkwy, Sacramento, CA 95823',
+                      status: 'Active',
+                      agent: 'Brown, Jennifer',
+                      office: 'East Office',
+                      expiration: '12/01/2023',
+                      price: '$2,345,678.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654899',
+                      address: '2230 Auburn Blvd, Sacramento, CA 95281',
+                      status: 'Active',
+                      agent: 'Miller, David',
+                      office: 'Main Office',
+                      expiration: '01/15/2024',
+                      price: '$2,987,654.00',
+                      stage: 'Checked'
+                    },
+                    {
+                      mls: '6654900',
+                      address: '5462 Carlson Dr, Sacramento, CA 95819',
+                      status: 'Active',
+                      agent: 'Garcia, Maria',
+                      office: 'North Office',
+                      expiration: '02/20/2024',
+                      price: '$3,423,532.00',
+                      stage: 'Checked'
+                    }
+                  ].map((listing, index) => (
+                    <Box key={index} sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '100px 2fr 100px 1.5fr 1fr 120px 120px 100px 80px 80px', 
+                      gap: 2, 
+                      p: 2, 
+                      borderBottom: '1px solid', 
+                      borderColor: 'grey.200', 
+                      alignItems: 'center',
+                      '&:hover': { backgroundColor: 'grey.50' }
+                    }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>{listing.mls}</Typography>
+                      <Typography variant="body2">{listing.address}</Typography>
+                      <Chip label={listing.status} color="default" size="small" />
+                      <Typography variant="body2">{listing.agent}</Typography>
+                      <Typography variant="body2">{listing.office}</Typography>
+                      <Typography variant="body2">{listing.expiration}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>{listing.price}</Typography>
+                      <Typography variant="body2">{listing.stage}</Typography>
+                      <IconButton size="small" sx={{ color: brandColors.actions.primary }}>
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: brandColors.accent.success }}>
+                        <CheckCircleIcon />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
             </Box>
           </>
         )}
@@ -896,8 +1223,342 @@ const CloseAgentPage: React.FC = () => {
               </Typography>
             </Paper>
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Write A Listing Content</Typography>
-              <Typography variant="body1">This section will contain the listing creation form.</Typography>
+              {/* Navigation Tabs */}
+              <Paper elevation={2} sx={{ p: 0, mb: 3 }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'grey.300' }}>
+                  <Box sx={{ display: 'flex' }}>
+                    {['LISTING', 'PHOTOS', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'].map((tab) => (
+                      <Box
+                        key={tab}
+                        sx={{
+                          px: 3,
+                          py: 2,
+                          cursor: 'pointer',
+                          borderBottom: tab === 'LISTING' ? 2 : 0,
+                          borderColor: tab === 'LISTING' ? brandColors.primary : 'transparent',
+                          backgroundColor: tab === 'LISTING' ? brandColors.primary : 'transparent',
+                          color: tab === 'LISTING' ? 'white' : 'text.secondary',
+                          fontWeight: tab === 'LISTING' ? 600 : 400,
+                          '&:hover': {
+                            backgroundColor: tab === 'LISTING' ? brandColors.primary : 'grey.50',
+                            color: tab === 'LISTING' ? 'white' : 'text.primary',
+                          },
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {tab}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Property Details Form */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Property Information
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Property Address *</Typography>
+                    <input 
+                      type="text" 
+                      placeholder="Enter full property address" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>City *</Typography>
+                    <input 
+                      type="text" 
+                      placeholder="Enter city" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>State *</Typography>
+                    <select 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }}
+                    >
+                      <option value="">Select State</option>
+                      <option value="CA">California</option>
+                      <option value="NY">New York</option>
+                      <option value="TX">Texas</option>
+                      <option value="FL">Florida</option>
+                      <option value="WA">Washington</option>
+                    </select>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>ZIP Code *</Typography>
+                    <input 
+                      type="text" 
+                      placeholder="Enter ZIP code" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Property Type *</Typography>
+                    <select 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }}
+                    >
+                      <option value="">Select Property Type</option>
+                      <option value="single-family">Single Family</option>
+                      <option value="multi-family">Multi Family</option>
+                      <option value="condo">Condo</option>
+                      <option value="townhouse">Townhouse</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="land">Land</option>
+                    </select>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Year Built</Typography>
+                    <input 
+                      type="number" 
+                      placeholder="Enter year built" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Listing Details Form */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Listing Details
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Listing Price *</Typography>
+                    <input 
+                      type="number" 
+                      placeholder="Enter listing price" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Square Footage</Typography>
+                    <input 
+                      type="number" 
+                      placeholder="Enter square footage" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Bedrooms</Typography>
+                    <input 
+                      type="number" 
+                      placeholder="Number of bedrooms" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Bathrooms</Typography>
+                    <input 
+                      type="number" 
+                      placeholder="Number of bathrooms" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Lot Size (Acres)</Typography>
+                    <input 
+                      type="number" 
+                      step="0.01"
+                      placeholder="Enter lot size" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Listing Status</Typography>
+                    <select 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }}
+                    >
+                      <option value="active">Active</option>
+                      <option value="pending">Pending</option>
+                      <option value="contingent">Contingent</option>
+                      <option value="sold">Sold</option>
+                    </select>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Agent and Contact Information */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Agent & Contact Information
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Listing Agent *</Typography>
+                    <select 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }}
+                    >
+                      <option value="">Select Agent</option>
+                      <option value="agent1">Aly Testing</option>
+                      <option value="agent2">Michael Renfroe</option>
+                      <option value="agent3">Angela Davis</option>
+                      <option value="agent4">Clarence King</option>
+                    </select>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Office *</Typography>
+                    <select 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }}
+                    >
+                      <option value="">Select Office</option>
+                      <option value="eric">Eric Office</option>
+                      <option value="main">Main Office</option>
+                      <option value="north">North Office</option>
+                      <option value="east">East Office</option>
+                    </select>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Seller Name</Typography>
+                    <input 
+                      type="text" 
+                      placeholder="Enter seller name" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>Seller Email</Typography>
+                    <input 
+                      type="email" 
+                      placeholder="Enter seller email" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '12px', 
+                        border: '1px solid #ccc', 
+                        borderRadius: '4px', 
+                        fontSize: '14px' 
+                      }} 
+                    />
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Property Description */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Property Description
+                </Typography>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>Description</Typography>
+                  <textarea 
+                    placeholder="Enter detailed property description..." 
+                    rows={4}
+                    style={{ 
+                      width: '100%', 
+                      padding: '12px', 
+                      border: '1px solid #ccc', 
+                      borderRadius: '4px', 
+                      fontSize: '14px',
+                      resize: 'vertical'
+                    }} 
+                  />
+                </Box>
+              </Paper>
+
+              {/* Action Buttons */}
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4 }}>
+                <Button variant="outlined" size="large">
+                  Save Draft
+                </Button>
+                <Button variant="contained" size="large" sx={{ backgroundColor: brandColors.accent.success }}>
+                  Create Listing
+                </Button>
+              </Box>
             </Box>
           </>
         )}

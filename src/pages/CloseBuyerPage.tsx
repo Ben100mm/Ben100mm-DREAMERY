@@ -293,7 +293,7 @@ const CloseBuyerPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 
@@ -344,30 +344,17 @@ const CloseBuyerPage: React.FC = () => {
       </AppBar>
 
       {/* Sidebar Navigation */}
-      <Drawer
-        variant={isMobile ? "temporary" : "permanent"}
-        open={isMobile ? state.drawerOpen : true}
-        onClose={toggleDrawer}
+      <Box
         sx={{
           width: 280,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 280,
-            boxSizing: 'border-box',
-            marginTop: '64px',
-            background: brandColors.backgrounds.secondary,
-            height: 'calc(100vh - 64px)',
-            overflow: 'hidden',
-          },
+          background: brandColors.backgrounds.secondary,
+          marginTop: '64px',
+          height: 'calc(100vh - 64px)',
+          overflow: 'auto',
         }}
       >
-        <Box sx={{ 
-          overflow: 'auto', 
-          py: 2, 
-          height: 'calc(100vh - 64px)',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
+        <Box sx={{ py: 2 }}>
           {/* Station Button */}
           <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
             <Button
@@ -424,7 +411,7 @@ const CloseBuyerPage: React.FC = () => {
             ))}
           </Box>
         </Box>
-      </Drawer>
+      </Box>
 
              {/* Main Content */}
        <Box
@@ -432,14 +419,11 @@ const CloseBuyerPage: React.FC = () => {
          sx={{
            flexGrow: 1,
            pt: 3,
+           pl: 3,
            pr: 3,
            pb: 3,
            marginTop: '64px',
-           marginLeft: 0,
-           transition: theme.transitions.create('margin', {
-             easing: theme.transitions.easing.sharp,
-             duration: theme.transitions.duration.leavingScreen,
-           }),
+           overflow: 'auto',
          }}
        >
         {/* Tab Content */}

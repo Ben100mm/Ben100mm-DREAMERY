@@ -248,7 +248,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 
@@ -299,22 +299,17 @@ const CloseProfessionalSupportPage: React.FC = () => {
       </AppBar>
 
       {/* Sidebar Navigation */}
-      <Drawer
-        variant={isMobile ? "temporary" : "permanent"}
-        open={isMobile ? state.drawerOpen : true}
-        onClose={toggleDrawer}
+      <Box
         sx={{
           width: 280,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 280,
-            boxSizing: 'border-box',
-            marginTop: '64px',
-            background: brandColors.backgrounds.secondary,
-          },
+          background: brandColors.backgrounds.secondary,
+          marginTop: '64px',
+          height: 'calc(100vh - 64px)',
+          overflow: 'auto',
         }}
       >
-        <Box sx={{ overflow: 'auto', py: 2 }}>
+        <Box sx={{ py: 2 }}>
           {/* Station Button */}
           <Box sx={{ px: 2, mb: 2 }}>
             <Button
@@ -369,7 +364,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
             ))}
           </List>
         </Box>
-      </Drawer>
+      </Box>
 
       {/* Main Content */}
       <Box
@@ -377,14 +372,11 @@ const CloseProfessionalSupportPage: React.FC = () => {
         sx={{
           flexGrow: 1,
           pt: 3,
+          pl: 3,
           pr: 3,
           pb: 3,
           marginTop: '64px',
-          marginLeft: isMobile ? 0 : '280px',
-          transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
+          overflow: 'auto',
         }}
       >
         {state.activeTab === 'dashboard' && (

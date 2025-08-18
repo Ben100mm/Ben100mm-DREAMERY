@@ -22,6 +22,9 @@ import {
   Chip,
   ListItemIcon,
   Divider,
+  FormControl,
+  Select,
+  InputLabel,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -37,6 +40,17 @@ import {
   CheckCircle as CheckCircleIcon,
   Person as PersonIcon,
   Close as CloseIcon,
+  Checklist as ChecklistIcon,
+  Description as DescriptionIcon,
+  ManageAccounts as ManageAccountsIcon,
+  ListAlt as ListAltIcon,
+  Cancel as CancelIcon,
+  Archive as ArchiveIcon,
+  Task as TaskIcon,
+  Edit as EditIcon,
+  Create as CreateIcon,
+  Receipt as ReceiptIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -171,12 +185,39 @@ const CloseAgentPage: React.FC = () => {
 
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedOffice, setSelectedOffice] = useState('ALL');
 
   const tabs = [
+    // Core Dashboard & Overview
     { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+    
+    // Client & Transaction Management
     { value: 'clients', label: 'Client Management', icon: <PeopleIcon /> },
     { value: 'transactions', label: 'Transactions', icon: <AssignmentIcon /> },
+    { value: 'manage-transactions', label: 'Manage Transactions', icon: <ManageAccountsIcon /> },
+    
+    // Listing & Offer Management
+    { value: 'manage-listings', label: 'Manage Listings', icon: <ListAltIcon /> },
+    { value: 'write-listing', label: 'Write A Listing', icon: <CreateIcon /> },
+    { value: 'write-offer', label: 'Write An Offer', icon: <ReceiptIcon /> },
+    
+    // Document & Task Management
+    { value: 'documents-review', label: 'Documents to Review', icon: <DescriptionIcon /> },
+    { value: 'working-documents', label: 'Working Documents', icon: <AssignmentTurnedInIcon /> },
+    { value: 'incomplete-checklist', label: 'Checklists', icon: <ChecklistIcon /> },
+    { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <TaskIcon /> },
+    
+    // Digital Tools
+    { value: 'digital-signature', label: 'Digital Signature', icon: <EditIcon /> },
+    
+    // Contract & Archive Management
+    { value: 'canceled-contracts', label: 'Canceled Contracts', icon: <CancelIcon /> },
+    { value: 'access-archives', label: 'Access Archives', icon: <ArchiveIcon /> },
+    
+    // Reports & Analytics
     { value: 'reports', label: 'Reports & Analytics', icon: <BusinessIcon /> },
+    
+    // Support & Configuration
     { value: 'support', label: 'Support', icon: <SupportIcon /> },
     { value: 'settings', label: 'Settings', icon: <SettingsIcon /> },
     { value: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
@@ -330,6 +371,46 @@ const CloseAgentPage: React.FC = () => {
             </Button>
           </Box>
 
+          {/* Office Selection */}
+          <Box sx={{ px: 2, mb: 2 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.secondary', 
+                mb: 1, 
+                fontWeight: 500,
+                fontSize: '0.875rem'
+              }}
+            >
+              Select Office:
+            </Typography>
+            <FormControl fullWidth size="small">
+              <Select
+                value={selectedOffice}
+                onChange={(e) => setSelectedOffice(e.target.value)}
+                sx={{
+                  backgroundColor: 'white',
+                  border: '1px solid',
+                  borderColor: 'grey.300',
+                  '& .MuiSelect-select': {
+                    fontWeight: 600,
+                    color: 'text.primary',
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    border: 'none',
+                  },
+                }}
+              >
+                <MenuItem value="ALL">ALL</MenuItem>
+                <MenuItem value="MAIN">Main Office</MenuItem>
+                <MenuItem value="NORTH">North Branch</MenuItem>
+                <MenuItem value="SOUTH">South Branch</MenuItem>
+                <MenuItem value="EAST">East Branch</MenuItem>
+                <MenuItem value="WEST">West Branch</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
           <List>
             {tabs.map((tab) => (
               <Box
@@ -403,33 +484,118 @@ const CloseAgentPage: React.FC = () => {
               </Typography>
             </Paper>
 
-            {/* Overview Cards */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <PeopleIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
+            {/* Overview Cards - Row 1 */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <PeopleIcon sx={{ fontSize: 32, color: brandColors.actions.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   12
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                   Active Clients
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <AssignmentIcon sx={{ fontSize: 40, color: brandColors.actions.warning, mb: 1 }} />
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <AssignmentIcon sx={{ fontSize: 32, color: brandColors.actions.warning, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.warning }}>
                   8
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                   Pending Transactions
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <CheckCircleIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   24
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                   Completed This Month
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <ChecklistIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
+                  5
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Incomplete Checklists
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <DescriptionIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
+                  3
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Documents to Review
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <AssignmentTurnedInIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
+                  7
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Working Documents
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Overview Cards - Row 2 */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <TaskIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                  9
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Tasks & Reminders
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <ListAltIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                  15
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Active Listings
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <ReceiptIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
+                  4
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Pending Offers
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <ManageAccountsIcon sx={{ fontSize: 32, color: brandColors.accent.warning, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.warning }}>
+                  6
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Manage Transactions
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <CancelIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
+                  2
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Canceled Contracts
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <EditIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                  8
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Digital Signatures
                 </Typography>
               </Paper>
             </Box>
@@ -644,6 +810,520 @@ const CloseAgentPage: React.FC = () => {
             <Box sx={{ pl: 0, ml: 3 }}>
               <Typography variant="h6">Integrations Content</Typography>
               <Typography variant="body1">This section will contain integration tools and settings.</Typography>
+            </Box>
+          </>
+        )}
+
+        {/* New Tab Content Sections */}
+        {state.activeTab === 'manage-transactions' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ManageAccountsIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Manage Transactions
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Comprehensive transaction management and oversight tools
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Manage Transactions Content</Typography>
+              <Typography variant="body1">This section will contain advanced transaction management tools.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'manage-listings' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ListAltIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Manage Listings
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage and update your property listings
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Manage Listings Content</Typography>
+              <Typography variant="body1">This section will contain listing management tools.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'write-listing' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <CreateIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Write A Listing
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Create new property listings with our guided form
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Write A Listing Content</Typography>
+              <Typography variant="body1">This section will contain the listing creation form.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'write-offer' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ReceiptIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Write An Offer
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Create and submit property offers for your clients
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Write An Offer Content</Typography>
+              <Typography variant="body1">This section will contain the offer creation form.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'documents-review' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <DescriptionIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Documents to Review
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Review and approve pending documents
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Documents to Review Content</Typography>
+              <Typography variant="body1">This section will contain documents awaiting review.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'working-documents' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssignmentTurnedInIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Working Documents
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Access and edit documents in progress
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Working Documents Content</Typography>
+              <Typography variant="body1">This section will contain documents currently being worked on.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'incomplete-checklist' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ChecklistIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Checklists
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage transaction checklists and track completion status
+              </Typography>
+            </Paper>
+
+            {/* Checklist Content */}
+            <Box sx={{ pl: 0, ml: 3 }}>
+              {/* Transaction Details */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Transaction Details
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>ADDRESS</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>164 Front Street, Beverly Hills, CA 90210</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>AGENT</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Lauren Thompson</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>ACCEPTANCE DATE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>06/13/2018</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>CLOSE OF ESCROW</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>06/18/2015</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>CHECKLIST TYPE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Commercial Lease</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>TYPE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Purchase / Tenant</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>PRICE PER SF</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>$230.00</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>SELLER</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Seller One</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>BUYER</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Buyer One</Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Action Buttons */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Quick Actions
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Order Home Warranty
+                  </Button>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Order NHD
+                  </Button>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Get Paid Now!
+                  </Button>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <MenuItem value="">Checked</MenuItem>
+                      <MenuItem value="yes">Yes</MenuItem>
+                      <MenuItem value="no">No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <MenuItem value="">Update Agent</MenuItem>
+                      <MenuItem value="agent1">Agent 1</MenuItem>
+                      <MenuItem value="agent2">Agent 2</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+
+              {/* Documentation Section */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary }}>
+                    Documentation
+                  </Typography>
+                  <Button variant="outlined" sx={{ borderColor: brandColors.primary, color: brandColors.primary }}>
+                    + Add New
+                  </Button>
+                </Box>
+                
+                {/* Documentation Table */}
+                <Box sx={{ overflowX: 'auto' }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, backgroundColor: 'grey.50', borderRadius: 1, mb: 2 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Documentation</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Status</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Docs</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Comments</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Actions</Typography>
+                  </Box>
+                  
+                  {/* Purchase Contract Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Purchase Contract</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                      <Typography sx={{ color: 'grey.500' }}>&gt;</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Save</Button>
+                      <Button size="small" variant="outlined">Cancel</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Listing Agreement Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Listing Agreement</Typography>
+                    <Chip label="Completed" color="success" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Unaccept</Button>
+                    </Box>
+                  </Box>
+
+                  {/* EMD Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">EMD</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                      <Typography sx={{ color: 'grey.500' }}>&gt;</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Save</Button>
+                      <Button size="small" variant="outlined">Cancel</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Disclosures Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Disclosures</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                      <CloseIcon sx={{ fontSize: 16, color: 'error.main' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Accept</Button>
+                      <Button size="small" variant="outlined">Reject</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Inspections Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Inspections</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: 'none' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Accept</Button>
+                      <Button size="small" variant="outlined">Reject</Button>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'tasks-reminders' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <TaskIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Tasks & Reminders
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage your tasks and set important reminders
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Tasks & Reminders Content</Typography>
+              <Typography variant="body1">This section will contain task management and reminder tools.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'digital-signature' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <EditIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Digital Signature
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Sign documents electronically with secure digital signatures
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Digital Signature Content</Typography>
+              <Typography variant="body1">This section will contain digital signature tools.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'canceled-contracts' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <CancelIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Canceled Contracts
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                View and manage canceled or terminated contracts
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Canceled Contracts Content</Typography>
+              <Typography variant="body1">This section will contain canceled contract information.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'access-archives' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ArchiveIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Access Archives
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Access historical documents and completed transactions
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Access Archives Content</Typography>
+              <Typography variant="body1">This section will contain archived documents and records.</Typography>
             </Box>
           </>
         )}

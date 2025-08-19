@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import styled from 'styled-components';
 import { ReactComponent as GoogleLogo } from '../../assets/social-logos/google.svg';
 import { ReactComponent as AppleLogo } from '../../assets/social-logos/apple.svg';
@@ -38,38 +38,40 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ mode }) => {
   const actionText = mode === 'signin' ? 'Continue with' : 'Sign up with';
   
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12} component="div">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box>
         <SocialButton variant="outlined" fullWidth>
           <GoogleLogo className="logo" />
           {actionText} Google
         </SocialButton>
-      </Grid>
-      <Grid item xs={12} component="div">
+      </Box>
+      <Box>
         <SocialButton variant="outlined" fullWidth>
           <AppleLogo className="logo" />
           {actionText} Apple
         </SocialButton>
-      </Grid>
-      <Grid item xs={12} component="div">
+      </Box>
+      <Box>
         <SocialButton variant="outlined" fullWidth>
           <MicrosoftLogo className="logo" />
           {actionText} Microsoft
         </SocialButton>
-      </Grid>
-      <Grid item xs={6} component="div">
-        <SocialButton variant="outlined" fullWidth>
-          <FacebookLogo className="logo" />
-          Facebook
-        </SocialButton>
-      </Grid>
-      <Grid item xs={6} component="div">
-        <SocialButton variant="outlined" fullWidth>
-          <TwitterLogo className="logo" />
-          Twitter
-        </SocialButton>
-      </Grid>
-    </Grid>
+      </Box>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ flex: 1 }}>
+          <SocialButton variant="outlined" fullWidth>
+            <FacebookLogo className="logo" />
+            Facebook
+          </SocialButton>
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <SocialButton variant="outlined" fullWidth>
+            <TwitterLogo className="logo" />
+            Twitter
+          </SocialButton>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

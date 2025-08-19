@@ -28,6 +28,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Modal,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -66,6 +67,13 @@ import {
   Sort as SortIcon,
   Schedule as ScheduleIcon,
   Refresh as RefreshIcon,
+  MoreVert as MoreVertIcon,
+  Search as SearchIcon,
+  TrendingUp as TrendingUpIcon,
+  Event as EventIcon,
+  AttachMoney as AttachMoneyIcon,
+  AccountBalance as AccountBalanceIcon,
+  Warning as WarningIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -179,6 +187,7 @@ interface CloseState {
   userRole: UserRole;
   drawerOpen: boolean;
   notifications: number;
+  showImportSuccess?: boolean;
 }
 
 const CloseAgentPage: React.FC = () => {
@@ -203,7 +212,9 @@ const CloseAgentPage: React.FC = () => {
   const [selectedOffice, setSelectedOffice] = useState('ALL');
   const [listingTab, setListingTab] = useState('LISTING');
   const [propertyType, setPropertyType] = useState('');
+  const [propertyPurpose, setPropertyPurpose] = useState('sale'); // 'sale' or 'rent'
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDocCategory, setSelectedDocCategory] = useState('All');
 
   // Tab completion tracking for guided navigation
   const [tabCompletion, setTabCompletion] = useState({
@@ -226,7 +237,7 @@ const CloseAgentPage: React.FC = () => {
 
   // Function to get next suggested tab
   const getNextSuggestedTab = () => {
-    const tabOrder = ['LISTING', 'PHOTOS', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'];
+    const tabOrder = ['LISTING', 'CONTACTS', 'PHOTOS', 'DOCUMENTS', 'CHECKLIST', 'TASKS', 'LOG'];
     const currentIndex = tabOrder.indexOf(listingTab);
     
     // Find next incomplete tab
@@ -257,14 +268,59 @@ const CloseAgentPage: React.FC = () => {
   // Check if all tabs are complete
   const allTabsComplete = Object.values(tabCompletion).every(complete => complete);
 
+  // MLS Modal State
+  const [mlsModalOpen, setMlsModalOpen] = useState(false);
+  const [mlsSearchQuery, setMlsSearchQuery] = useState('');
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+
+  // MLS Functions
+  const handlePropertySelect = (property: any) => {
+    setSelectedProperty(property);
+  };
+
+  const handleImportProperty = () => {
+    if (selectedProperty) {
+      // Here you would populate the form fields with the selected property data
+      console.log('Importing property:', selectedProperty);
+      
+      // Show success message
+      setState(prev => ({
+        ...prev,
+        showImportSuccess: true
+      }));
+      
+      // Auto-close modal after a delay
+      setTimeout(() => {
+        setMlsModalOpen(false);
+        setSelectedProperty(null);
+        setState(prev => ({
+          ...prev,
+          showImportSuccess: false
+        }));
+      }, 2000);
+    }
+  };
 
 
-  // Auto-mark LISTING tab as complete when property type is selected
+
+  // Property Purpose Functions
+  const handlePropertyPurposeChange = (purpose: 'sale' | 'rent') => {
+    setPropertyPurpose(purpose);
+    // Reset property type when switching purpose
+    setPropertyType('');
+    // Reset tab completion for LISTING tab
+    setTabCompletion(prev => ({
+      ...prev,
+      LISTING: false
+    }));
+  };
+
+  // Auto-mark LISTING tab as complete when property type and purpose are selected
   useEffect(() => {
-    if (propertyType && !tabCompletion.LISTING) {
+    if (propertyType && propertyPurpose && !tabCompletion.LISTING) {
       markTabComplete('LISTING');
     }
-  }, [propertyType, tabCompletion.LISTING]);
+  }, [propertyType, propertyPurpose, tabCompletion.LISTING]);
 
   const tabs = [
     // Core Dashboard & Overview
@@ -282,7 +338,7 @@ const CloseAgentPage: React.FC = () => {
     
     // Document & Task Management
     { value: 'documents-review', label: 'Documents to Review', icon: <DescriptionIcon /> },
-    { value: 'working-documents', label: 'Working Documents', icon: <AssignmentTurnedInIcon /> },
+    { value: 'working-documents', label: 'Templates', icon: <AssignmentTurnedInIcon /> },
     { value: 'incomplete-checklist', label: 'Checklists', icon: <ChecklistIcon /> },
     { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <TaskIcon /> },
     
@@ -622,7 +678,7 @@ const CloseAgentPage: React.FC = () => {
             </Box>
 
             {/* Overview Cards - Row 2 */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
               <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
                 <TaskIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
@@ -675,6 +731,64 @@ const CloseAgentPage: React.FC = () => {
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                   Digital Signatures
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Overview Cards - Row 3 */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <TrendingUpIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
+                  $2.4M
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Pipeline Value
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <EventIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
+                  7
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Scheduled Closing This Month
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <AttachMoneyIcon sx={{ fontSize: 32, color: brandColors.accent.warning, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.warning }}>
+                  $18.5K
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Pending Commission
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <AccountBalanceIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
+                  $32.1K
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Commission Earned This Month
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <ScheduleIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
+                  3
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Expired Listings This Month
+                </Typography>
+              </Paper>
+              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+                <WarningIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
+                  1
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                  Expired Escrow(s) This Month
                 </Typography>
               </Paper>
             </Box>
@@ -770,10 +884,622 @@ const CloseAgentPage: React.FC = () => {
                 Track and manage all your closing transactions
               </Typography>
             </Paper>
+
+            {/* Transactions Content */}
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Transactions Content</Typography>
-              <Typography variant="body1">This section will contain transaction tracking and management tools.</Typography>
+              {/* Create Your File Form */}
+              <Paper elevation={2} sx={{ p: 4, mb: 4 }}>
+                <Typography variant="h5" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                  Create Your File
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                  Let's capture a few details to make your workflow faster.
+                </Typography>
+
+                                  {/* Form Sections */}
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {/* 0. Transaction Type Section */}
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                        Transaction Type
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                        {['Purchase', 'Sale', 'Lease', 'Refinance'].map((type) => (
+                          <Box key={type} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <input
+                              type="radio"
+                              id={`transaction-${type.toLowerCase()}`}
+                              name="transactionType"
+                              value={type.toLowerCase()}
+                              style={{ marginRight: '8px' }}
+                            />
+                            <label htmlFor={`transaction-${type.toLowerCase()}`}>
+                              <Typography variant="body1">{type}</Typography>
+                            </label>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    {/* 1. Who's your client? Section */}
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                        Who's your client?
+                      </Typography>
+                    
+                    {/* Representation */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                        Representation
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                        {['Buyer', 'Tenant', 'Seller', 'Landlord'].map((type) => (
+                          <Box key={type} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <input
+                              type="radio"
+                              id={type.toLowerCase()}
+                              name="representation"
+                              value={type.toLowerCase()}
+                              style={{ marginRight: '8px' }}
+                            />
+                            <label htmlFor={type.toLowerCase()}>
+                              <Typography variant="body1">{type}</Typography>
+                            </label>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    {/* Primary Client */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                        Primary Client
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'flex-start' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 0 } }}>
+                          <input
+                            type="checkbox"
+                            id="company-trust"
+                            style={{ marginRight: '8px' }}
+                          />
+                          <label htmlFor="company-trust">
+                            <Typography variant="body1">My client is a company, trust</Typography>
+                          </label>
+                        </Box>
+                      </Box>
+                      
+                      {/* Client Name Fields */}
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3, mt: 2 }}>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            First Name
+                          </Typography>
+                          <input
+                            type="text"
+                            placeholder="Enter first name"
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Last Name
+                          </Typography>
+                          <input
+                            type="text"
+                            placeholder="Enter last name"
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                      
+                      {/* Client Contact Fields */}
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3, mt: 2 }}>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Email
+                          </Typography>
+                          <input
+                            type="email"
+                            placeholder="Enter email address"
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Phone
+                          </Typography>
+                          <input
+                            type="tel"
+                            placeholder="Enter phone number"
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Additional Contact */}
+                    <Box>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: brandColors.primary,
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          '&:hover': { opacity: 0.8 }
+                        }}
+                      >
+                        + Additional Contact
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* 2. Property Information Section */}
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                      Property Information
+                    </Typography>
+                    
+                    {/* MLS Integration Notice */}
+                    <Box sx={{ 
+                      p: 2, 
+                      mb: 3, 
+                      backgroundColor: '#e3f2fd', 
+                      border: '1px solid #2196f3',
+                      borderRadius: '8px'
+                    }}>
+                      <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500 }}>
+                        💡 Tip: Use MLS Search to auto-fill property details for accuracy
+                      </Typography>
+                    </Box>
+                    
+                    {/* Property Fields */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          Street Address
+                        </Typography>
+                        <input
+                          type="text"
+                          placeholder="Enter street address"
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          City
+                        </Typography>
+                        <input
+                          type="text"
+                          placeholder="Enter city"
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          State
+                        </Typography>
+                        <select
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        >
+                          <option value="">Select State</option>
+                          <option value="CA">California</option>
+                          <option value="TX">Texas</option>
+                          <option value="FL">Florida</option>
+                          <option value="NY">New York</option>
+                          <option value="IL">Illinois</option>
+                        </select>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          ZIP Code
+                        </Typography>
+                        <input
+                          type="text"
+                          placeholder="Enter ZIP code"
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* MLS Search Button */}
+                    <Button
+                      variant="outlined"
+                      startIcon={<SearchIcon />}
+                      onClick={() => setMlsModalOpen(true)}
+                      sx={{
+                        borderColor: brandColors.primary,
+                        color: brandColors.primary,
+                        '&:hover': {
+                          borderColor: brandColors.primary,
+                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                        }
+                      }}
+                    >
+                      Search MLS Data
+                    </Button>
+                    
+                    {/* Additional Property Details */}
+                    <Box sx={{ mt: 3 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                        Additional Details
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Property Type
+                          </Typography>
+                          <select
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          >
+                            <option value="">Select Property Type</option>
+                            <option value="single-family">Single Family</option>
+                            <option value="multi-family">Multi Family</option>
+                            <option value="condo">Condo</option>
+                            <option value="townhouse">Townhouse</option>
+                            <option value="land">Land</option>
+                          </select>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Estimated Value
+                          </Typography>
+                          <input
+                            type="text"
+                            placeholder="Enter estimated value"
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontSize: '14px'
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* 3. Transaction Timeline Section */}
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                      Transaction Timeline
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          Target Closing Date
+                        </Typography>
+                        <input
+                          type="date"
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          Priority Level
+                        </Typography>
+                        <select
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                          }}
+                        >
+                          <option value="">Select Priority</option>
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                          <option value="urgent">Urgent</option>
+                        </select>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Form Actions */}
+                  <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, pt: 2, alignItems: { xs: 'stretch', sm: 'center' } }}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        backgroundColor: brandColors.primary,
+                        '&:hover': { backgroundColor: brandColors.primary, opacity: 0.9 },
+                        py: 1.5,
+                        px: 4
+                      }}
+                    >
+                      Create File
+                    </Button>
+                    <Button 
+                      variant="outlined" 
+                      size="large"
+                      sx={{ py: 1.5, px: 4 }}
+                    >
+                      Save Draft
+                    </Button>
+                  </Box>
+                  
+                  {/* Form Status */}
+                  <Box sx={{ 
+                    p: 2, 
+                    mt: 2, 
+                    backgroundColor: '#f8f9fa', 
+                    border: '1px solid #e9ecef',
+                    borderRadius: '8px'
+                  }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                      💡 This form creates a new transaction file. Use MLS Search for accurate property data.
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Existing Transactions List */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
+                  Active Transactions
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Your active transactions will appear here.
+                </Typography>
+              </Paper>
             </Box>
+
+            {/* MLS Data Search Modal */}
+            <Modal
+              open={mlsModalOpen}
+              onClose={() => setMlsModalOpen(false)}
+              aria-labelledby="mls-search-modal"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 2
+              }}
+            >
+              <Paper
+                elevation={24}
+                sx={{
+                  width: { xs: '95%', sm: '600px', md: '800px' },
+                  maxHeight: '90vh',
+                  overflow: 'auto',
+                  p: 3,
+                  borderRadius: '12px'
+                }}
+              >
+                {/* Modal Header */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    Search for MLS data
+                  </Typography>
+                  <IconButton onClick={() => setMlsModalOpen(false)}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+
+                {/* Search Input */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+                    Search by MLS #
+                  </Typography>
+                  <input
+                    type="text"
+                    placeholder="Enter MLS number"
+                    value={mlsSearchQuery}
+                    onChange={(e) => setMlsSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </Box>
+
+                {/* Results Section */}
+                <Box>
+                  <Divider sx={{ mb: 2 }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                    RESULTS:
+                  </Typography>
+                  
+                  {/* MLS Results */}
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {[
+                      {
+                        mlsNumber: '22-290',
+                        address: '4319 Brookins Rd, Leesville, LA 41446',
+                        agent: 'Susan Pillard',
+                        date: '11/25/2020',
+                        price: '$200,000',
+                        propertyType: 'Single Family',
+                        sqft: '1,850',
+                        beds: '3',
+                        baths: '2',
+                        yearBuilt: '1995'
+                      },
+                      {
+                        mlsNumber: '22-295',
+                        address: '2654 Shadow Lark Rd, Leesville, LA 41597',
+                        agent: 'Charlotte Brunswick',
+                        date: '6/11/2020',
+                        price: '$250,000',
+                        propertyType: 'Multi Family',
+                        sqft: '2,200',
+                        beds: '4',
+                        baths: '3',
+                        yearBuilt: '1998'
+                      },
+                      {
+                        mlsNumber: '22-296',
+                        address: '2654 Monarch Ave, Leesville, LA 41366',
+                        agent: 'Caroline Cruz',
+                        date: '3/16/2020',
+                        price: '$219,000',
+                        propertyType: 'Condo',
+                        sqft: '1,600',
+                        beds: '2',
+                        baths: '2',
+                        yearBuilt: '2000'
+                      }
+                    ].map((property, index) => (
+                      <Paper
+                        key={index}
+                        elevation={1}
+                        sx={{
+                          p: 2,
+                          border: selectedProperty?.mlsNumber === property.mlsNumber ? `2px solid ${brandColors.primary}` : '1px solid #e0e0e0',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          backgroundColor: selectedProperty?.mlsNumber === property.mlsNumber ? '#f0f8ff' : 'white',
+                          '&:hover': {
+                            backgroundColor: selectedProperty?.mlsNumber === property.mlsNumber ? '#f0f8ff' : '#f5f5f5',
+                            borderColor: brandColors.primary
+                          }
+                        }}
+                        onClick={() => handlePropertySelect(property)}
+                      >
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                              MLS#: {property.mlsNumber}
+                            </Typography>
+                            <Typography variant="body2" sx={{ mb: 1 }}>
+                              {property.address}
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
+                              <Chip label={property.propertyType} size="small" variant="outlined" />
+                              <Chip label={`${property.beds} bed`} size="small" variant="outlined" />
+                              <Chip label={`${property.baths} bath`} size="small" variant="outlined" />
+                              <Chip label={`${property.sqft} sqft`} size="small" variant="outlined" />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary">
+                              Listed by: {property.agent} • {property.date} • {property.price}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ 
+                            width: 80, 
+                            height: 60, 
+                            backgroundColor: '#f0f0f0',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '1px solid #ddd'
+                          }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
+                              PHOTO NOT AVAILABLE
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Paper>
+                    ))}
+                  </Box>
+                </Box>
+
+                {/* Success Message */}
+                {state.showImportSuccess && (
+                  <Box sx={{ 
+                    p: 2, 
+                    mt: 2, 
+                    backgroundColor: '#e8f5e8', 
+                    border: '1px solid #4caf50',
+                    borderRadius: '8px',
+                    textAlign: 'center'
+                  }}>
+                    <Typography variant="body1" sx={{ color: '#2e7d32', fontWeight: 500 }}>
+                      ✅ Property data imported successfully!
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#388e3c', mt: 1 }}>
+                      Property details have been added to your form.
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Modal Actions */}
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setMlsModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleImportProperty}
+                    disabled={!selectedProperty}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      '&:hover': { backgroundColor: brandColors.primary, opacity: 0.9 }
+                    }}
+                  >
+                    Import
+                  </Button>
+                </Box>
+              </Paper>
+            </Modal>
           </>
         )}
 
@@ -1301,22 +2027,13 @@ const CloseAgentPage: React.FC = () => {
             <Box sx={{ pl: 0, ml: 3 }}>
 
               
-              {/* Workflow Guidance */}
-              <Box sx={{ mb: 3, p: 3, backgroundColor: '#f3e5f5', borderRadius: 1, border: '1px solid #9c27b0' }}>
-                <Typography variant="body1" color="primary" sx={{ fontWeight: 600, mb: 1 }}>
-                  📋 Workflow Guide
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Complete each tab at your own pace. Use the "Next" button for guidance, or click any tab to work on it directly. 
-                  Mark tabs as complete when you're satisfied with the content. Submit when all tabs are finished.
-                </Typography>
-              </Box>
+
               
               {/* Navigation Tabs */}
               <Paper elevation={2} sx={{ p: 0, mb: 3 }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'grey.300' }}>
                   <Box sx={{ display: 'flex' }}>
-                    {['LISTING', 'PHOTOS', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'].map((tab) => (
+                    {['LISTING', 'CONTACTS', 'PHOTOS', 'DOCUMENTS', 'CHECKLIST', 'TASKS', 'LOG'].map((tab) => (
                       <Box
                         key={tab}
                         onClick={() => setListingTab(tab)}
@@ -1393,6 +2110,57 @@ const CloseAgentPage: React.FC = () => {
               {/* Tab Content */}
               {listingTab === 'LISTING' && (
                 <>
+                  {/* Property Purpose Toggle - Sale vs Rent */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                      Property Purpose
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        I'm creating a listing for:
+                      </Typography>
+                      <Box sx={{ display: 'flex', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+                        <Box
+                          onClick={() => handlePropertyPurposeChange('sale')}
+                          sx={{
+                            px: 3,
+                            py: 1.5,
+                            cursor: 'pointer',
+                            backgroundColor: propertyPurpose === 'sale' ? brandColors.primary : 'white',
+                            color: propertyPurpose === 'sale' ? 'white' : 'text.primary',
+                            borderRight: '1px solid #ccc',
+                            transition: 'all 0.2s ease',
+                            '&:hover': {
+                              backgroundColor: propertyPurpose === 'sale' ? brandColors.primary : '#f5f5f5'
+                            }
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            For Sale
+                          </Typography>
+                        </Box>
+                        <Box
+                          onClick={() => handlePropertyPurposeChange('rent')}
+                          sx={{
+                            px: 3,
+                            py: 1.5,
+                            cursor: 'pointer',
+                            backgroundColor: propertyPurpose === 'rent' ? brandColors.primary : 'white',
+                            color: propertyPurpose === 'rent' ? 'white' : 'text.primary',
+                            transition: 'all 0.2s ease',
+                            '&:hover': {
+                              backgroundColor: propertyPurpose === 'rent' ? brandColors.primary : '#f5f5f5'
+                            }
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            For Rent
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Paper>
+
                   {/* Property Type Selection - Above Property Information */}
                   <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -1413,12 +2181,24 @@ const CloseAgentPage: React.FC = () => {
                           }}
                         >
                           <option value="">Select Property Type</option>
-                          <option value="single-family">Single Family</option>
-                          <option value="multi-family">Multi Family</option>
-                          <option value="hotel">Hotel</option>
-                          <option value="land">Land</option>
-                          <option value="office">Office</option>
-                          <option value="retail">Retail</option>
+                          {propertyPurpose === 'sale' ? (
+                            <>
+                              <option value="single-family">Single Family</option>
+                              <option value="multi-family">Multi Family</option>
+                              <option value="condo">Condo</option>
+                              <option value="townhouse">Townhouse</option>
+                              <option value="land">Land</option>
+                              <option value="commercial">Commercial</option>
+                            </>
+                          ) : (
+                            <>
+                              <option value="apartment">Apartment</option>
+                              <option value="house">House</option>
+                              <option value="condo">Condo</option>
+                              <option value="room">Room</option>
+                              <option value="commercial">Commercial Space</option>
+                            </>
+                          )}
                         </select>
                       </Box>
                     </Box>
@@ -1511,14 +2291,16 @@ const CloseAgentPage: React.FC = () => {
                   {/* Listing Details Form */}
                   <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
-                      Listing Details
+                      {propertyPurpose === 'sale' ? 'Listing Details' : 'Rental Details'}
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
                       <Box>
-                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Listing Price *</Typography>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          {propertyPurpose === 'sale' ? 'Listing Price *' : 'Monthly Rent *'}
+                        </Typography>
                         <input 
                           type="number" 
-                          placeholder="Enter listing price" 
+                          placeholder={propertyPurpose === 'sale' ? 'Enter listing price' : 'Enter monthly rent'} 
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
@@ -1604,6 +2386,100 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                     </Box>
                   </Paper>
+
+                  {/* Rental-Specific Details */}
+                  {propertyPurpose === 'rent' && (
+                    <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                      <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                        Rental Details
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                        <Box>
+                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Security Deposit</Typography>
+                          <input 
+                            type="number" 
+                            placeholder="Enter security deposit amount" 
+                            style={{ 
+                              width: '100%', 
+                              padding: '12px', 
+                              border: '1px solid #ccc', 
+                              borderRadius: '4px', 
+                              fontSize: '14px' 
+                            }} 
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Lease Duration</Typography>
+                          <select 
+                            style={{ 
+                              width: '100%', 
+                              padding: '12px', 
+                              border: '1px solid #ccc', 
+                              borderRadius: '4px', 
+                              fontSize: '14px' 
+                            }}
+                          >
+                            <option value="">Select lease duration</option>
+                            <option value="6-months">6 Months</option>
+                            <option value="1-year">1 Year</option>
+                            <option value="2-years">2 Years</option>
+                            <option value="month-to-month">Month-to-Month</option>
+                          </select>
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Available Date</Typography>
+                          <input 
+                            type="date" 
+                            style={{ 
+                              width: '100%', 
+                              padding: '12px', 
+                              border: '1px solid #ccc', 
+                              borderRadius: '4px', 
+                              fontSize: '14px' 
+                            }} 
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Utilities Included</Typography>
+                          <select 
+                            style={{ 
+                              width: '100%', 
+                              padding: '12px', 
+                              border: '1px solid #ccc', 
+                              borderRadius: '4px', 
+                              fontSize: '14px' 
+                            }}
+                          >
+                            <option value="">Select utilities included</option>
+                            <option value="all">All Utilities</option>
+                            <option value="partial">Partial Utilities</option>
+                            <option value="none">No Utilities</option>
+                            <option value="heat-water">Heat & Water</option>
+                            <option value="water-only">Water Only</option>
+                          </select>
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Pet Policy</Typography>
+                          <select 
+                            style={{ 
+                              width: '100%', 
+                              padding: '12px', 
+                              border: '1px solid #ccc', 
+                              borderRadius: '4px', 
+                              fontSize: '14px' 
+                            }}
+                          >
+                            <option value="">Select pet policy</option>
+                            <option value="allowed">Pets Allowed</option>
+                            <option value="cats-only">Cats Only</option>
+                            <option value="dogs-only">Dogs Only</option>
+                            <option value="no-pets">No Pets</option>
+                            <option value="case-by-case">Case by Case</option>
+                          </select>
+                        </Box>
+                      </Box>
+                    </Paper>
+                  )}
 
                   {/* Dynamic Income Section based on Property Type */}
                   {propertyType && propertyType !== 'land' && (
@@ -2019,7 +2895,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </>
@@ -2328,7 +3204,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </Paper>
@@ -2531,7 +3407,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </Paper>
@@ -2819,9 +3695,9 @@ const CloseAgentPage: React.FC = () => {
 
                   {/* Listing Agreement & Addendum Section */}
                   <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Legal') ? 'block' : 'none' }}>
-                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
-                      📄 Listing Agreement & Addendum
-                    </Typography>
+                                          <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                        Listing Agreement & Addendum
+                      </Typography>
                     <Box sx={{ 
                       border: '1px solid #e0e0e0', 
                       borderRadius: '4px', 
@@ -2956,7 +3832,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </Paper>
@@ -2965,8 +3841,30 @@ const CloseAgentPage: React.FC = () => {
               {listingTab === 'DOCUMENTS' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
-                    Documents
+                    {propertyPurpose === 'sale' ? 'Documents' : 'Rental Documents'}
                   </Typography>
+                  
+                  {/* Filter by Document Category */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
+                      Filter by Document Category
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {(propertyPurpose === 'sale' ? 
+                        ['All', 'Contracts', 'Addendums', 'Disclosures', 'Financial', 'Legal', 'Property', 'Marketing', 'Other'] :
+                        ['All', 'Rental Agreements', 'Lease Documents', 'Tenant Forms', 'Financial', 'Legal', 'Property', 'Marketing', 'Other']
+                      ).map((category) => (
+                        <Chip 
+                          key={category}
+                          label={category} 
+                          onClick={() => setSelectedDocCategory(category)}
+                          variant={selectedDocCategory === category ? 'filled' : 'outlined'}
+                          color={selectedDocCategory === category ? 'primary' : 'default'}
+                          sx={{ cursor: 'pointer' }}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
                   
                   {/* Document Upload */}
                   <Box sx={{ mb: 4 }}>
@@ -2999,14 +3897,16 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
                       Document Categories
                     </Typography>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 2 }}>
                       {[
-                        { name: 'Property Documents', count: 5, color: 'primary' },
-                        { name: 'Legal Documents', count: 3, color: 'secondary' },
-                        { name: 'Financial Documents', count: 2, color: 'success' },
-                        { name: 'Marketing Materials', count: 4, color: 'info' },
-                        { name: 'Contracts', count: 1, color: 'warning' },
-                        { name: 'Other', count: 2, color: 'default' }
+                        { name: 'Contracts', count: propertyPurpose === 'sale' ? 4 : 4, color: 'primary' },
+                        { name: 'Disclosures', count: propertyPurpose === 'sale' ? 4 : 4, color: 'secondary' },
+                        { name: 'Financial Documents', count: propertyPurpose === 'sale' ? 4 : 4, color: 'success' },
+                        { name: 'Property Documents', count: propertyPurpose === 'sale' ? 5 : 5, color: 'info' },
+                        { name: 'Legal Documents', count: propertyPurpose === 'sale' ? 5 : 5, color: 'warning' },
+                        { name: 'Marketing Materials', count: propertyPurpose === 'sale' ? 5 : 5, color: 'error' },
+                        { name: 'Addendums', count: propertyPurpose === 'sale' ? 5 : 5, color: 'default' },
+                        { name: 'Other Documents', count: propertyPurpose === 'sale' ? 5 : 5, color: 'primary' }
                       ].map((category) => (
                         <Box key={category.name} sx={{ 
                           border: '1px solid #e0e0e0', 
@@ -3025,67 +3925,400 @@ const CloseAgentPage: React.FC = () => {
                     </Box>
                   </Box>
 
-                  {/* Document List */}
+                  {/* Document Workflow Actions */}
+                  <Box sx={{ mb: 4 }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Document Workflow Actions
+                    </Typography>
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, 
+                      gap: 2 
+                    }}>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<AssignmentIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        Assign
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<CancelIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        Unassign
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<DescriptionIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        Fax Cover
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<ShareIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        Share Docs
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<EditIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        DigiSign
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<VisibilityIcon />}
+                        size="small"
+                        sx={{ py: 1.5 }}
+                      >
+                        Email
+                      </Button>
+                    </Box>
+                  </Box>
+
+                  {/* Enhanced Document Categories and Lists */}
                   <Box>
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
-                      Document List
+                      Document Management
                     </Typography>
                     
-                    {/* Sample Documents Table */}
-                    <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
-                      borderRadius: '4px', 
-                      overflow: 'hidden' 
-                    }}>
-                      {/* Table Header */}
-                      <Box sx={{ 
-                        display: 'grid', 
-                        gridTemplateColumns: '2fr 1fr 1fr 1fr 100px', 
-                        gap: 2, 
-                        p: 2, 
-                        backgroundColor: 'grey.50', 
-                        fontWeight: 600,
-                        fontSize: '0.875rem'
-                      }}>
-                        <Typography variant="subtitle2">Document Name</Typography>
-                        <Typography variant="subtitle2">Category</Typography>
-                        <Typography variant="subtitle2">Upload Date</Typography>
-                        <Typography variant="subtitle2">Status</Typography>
-                        <Typography variant="subtitle2">Actions</Typography>
+                    {/* Contracts Section */}
+                    <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Contracts' || selectedDocCategory === 'Rental Agreements') ? 'block' : 'none' }}>
+                      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                        {propertyPurpose === 'sale' ? 'Contracts' : 'Rental Agreements'}
+                      </Typography>
+                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                        {(propertyPurpose === 'sale' ? [
+                          { name: 'Purchase Agreement', status: 'Required', date: '', size: '', type: 'PDF', category: 'Contracts' },
+                          { name: 'Listing Agreement', status: 'Required', date: '2024-01-15', size: '2.1 MB', type: 'PDF', category: 'Contracts' },
+                          { name: 'Counter Offer', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Contracts' },
+                          { name: 'Backup Offer', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Contracts' }
+                        ] : [
+                          { name: 'Rental Agreement', status: 'Required', date: '2024-01-15', size: '1.8 MB', type: 'PDF', category: 'Rental Agreements' },
+                          { name: 'Lease Addendum', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Rental Agreements' },
+                          { name: 'Pet Agreement', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Rental Agreements' },
+                          { name: 'Sublease Agreement', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Rental Agreements' }
+                        ]).map((doc, index) => (
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                            <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                            <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
+                            <Chip label={doc.category} size="small" color="primary" variant="outlined" />
+                            {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                            {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <IconButton size="small"><VisibilityIcon /></IconButton>
+                              <IconButton size="small"><DownloadIcon /></IconButton>
+                            </Box>
+                          </Box>
+                        ))}
                       </Box>
-                      
-                      {/* Sample Document Rows */}
-                      {[
-                        { name: 'Property Photos.zip', category: 'Photos', date: '2024-01-15', status: 'Uploaded' },
-                        { name: 'Title Report.pdf', category: 'Legal', date: '2024-01-14', status: 'Pending Review' },
-                        { name: 'Inspection Report.pdf', category: 'Property', date: '2024-01-13', status: 'Approved' }
-                      ].map((doc, index) => (
-                        <Box key={index} sx={{ 
-                          display: 'grid', 
-                          gridTemplateColumns: '2fr 1fr 1fr 1fr 100px', 
-                          gap: 2, 
-                          p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' }
-                        }}>
-                          <Typography variant="body2" sx={{ fontWeight: 500 }}>{doc.name}</Typography>
-                          <Chip label={doc.category} size="small" color="primary" />
-                          <Typography variant="body2">{doc.date}</Typography>
-                          <Chip 
-                            label={doc.status} 
-                            size="small" 
-                            color={
-                              doc.status === 'Approved' ? 'success' : 
-                              doc.status === 'Pending Review' ? 'warning' : 'default'
-                            } 
-                          />
+                    </Box>
+
+                    {/* Disclosures Section */}
+                    <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Disclosures' || selectedDocCategory === 'Tenant Forms') ? 'block' : 'none' }}>
+                      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                        {propertyPurpose === 'sale' ? 'Disclosures' : 'Tenant Forms'}
+                      </Typography>
+                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                        {(propertyPurpose === 'sale' ? [
+                          { name: 'Seller Property Disclosure', status: 'Required', date: '2024-01-14', size: '1.2 MB', type: 'PDF', category: 'Disclosures' },
+                          { name: 'Lead Paint Disclosure', status: 'Required', date: '', size: '', type: 'PDF', category: 'Disclosures' },
+                          { name: 'Natural Hazard Disclosure', status: 'Required', date: '', size: '', type: 'PDF', category: 'Disclosures' },
+                          { name: 'HOA Disclosure', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Disclosures' }
+                        ] : [
+                          { name: 'Rental Application', status: 'Required', date: '2024-01-14', size: '0.8 MB', type: 'PDF', category: 'Tenant Forms' },
+                          { name: 'Credit Check Authorization', status: 'Required', date: '', size: '', type: 'PDF', category: 'Tenant Forms' },
+                          { name: 'Employment Verification', status: 'Required', date: '', size: '', type: 'PDF', category: 'Tenant Forms' },
+                          { name: 'References Form', status: 'Required', date: '', size: '', type: 'PDF', category: 'Tenant Forms' }
+                        ]).map((doc, index) => (
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                            <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                            <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
+                            <Chip label={doc.category} size="small" color="secondary" variant="outlined" />
+                            {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                            {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <IconButton size="small"><VisibilityIcon /></IconButton>
+                              <IconButton size="small"><DownloadIcon /></IconButton>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    {/* Financial Documents Section */}
+                    <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Financial') ? 'block' : 'none' }}>
+                      <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                        Financial Documents
+                      </Typography>
+                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                        {(propertyPurpose === 'sale' ? [
+                          { name: 'Pre-approval Letter', status: 'Required', date: '2024-01-13', size: '0.5 MB', type: 'PDF', category: 'Financial' },
+                          { name: 'Proof of Funds', status: 'Required', date: '', size: '', type: 'PDF', category: 'Financial' },
+                          { name: 'Loan Estimate', status: 'Pending', date: '', size: '', type: 'PDF', category: 'Financial' },
+                          { name: 'Closing Disclosure', status: 'Pending', date: '', size: '', type: 'PDF', category: 'Financial' }
+                        ] : [
+                          { name: 'Income Verification', status: 'Required', date: '2024-01-13', size: '0.7 MB', type: 'PDF', category: 'Financial' },
+                          { name: 'Bank Statements', status: 'Required', date: '', size: '', type: 'PDF', category: 'Financial' },
+                          { name: 'Pay Stubs', status: 'Required', date: '', size: '', type: 'PDF', category: 'Financial' },
+                          { name: 'Tax Returns', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Financial' }
+                        ]).map((doc, index) => (
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                            <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                            <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Pending' ? 'warning' : 'default'} variant="outlined" />
+                            <Chip label={doc.category} size="small" color="success" variant="outlined" />
+                            {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                            {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <IconButton size="small"><VisibilityIcon /></IconButton>
+                              <IconButton size="small"><DownloadIcon /></IconButton>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Property Documents Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Property') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Property Documents
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(propertyPurpose === 'sale' ? [
+                        { name: 'Property Photos', status: 'Required', date: '2024-01-12', size: '15.2 MB', type: 'JPG', category: 'Property' },
+                        { name: 'Inspection Report', status: 'Required', date: '2024-01-11', size: '2.8 MB', type: 'PDF', category: 'Property' },
+                        { name: 'Appraisal Report', status: 'Required', date: '2024-01-10', size: '1.5 MB', type: 'PDF', category: 'Property' },
+                        { name: 'Property Survey', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Property' },
+                        { name: 'HOA Documents', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Property' }
+                      ] : [
+                        { name: 'Property Photos', status: 'Required', date: '2024-01-12', size: '12.8 MB', type: 'JPG', category: 'Property' },
+                        { name: 'Property Condition Report', status: 'Required', date: '2024-01-11', size: '1.2 MB', type: 'PDF', category: 'Property' },
+                        { name: 'Rental Property Inspection', status: 'Required', date: '2024-01-10', size: '0.9 MB', type: 'PDF', category: 'Property' },
+                        { name: 'Property Maintenance Records', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Property' },
+                        { name: 'Utility Setup Instructions', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Property' }
+                      ]).map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="info" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
                           <Box sx={{ display: 'flex', gap: 1 }}>
-                            <IconButton size="small" sx={{ color: brandColors.actions.primary }}>
-                              <VisibilityIcon />
-                            </IconButton>
-                            <IconButton size="small" sx={{ color: 'error.main' }}>
-                              <DeleteIcon />
-                            </IconButton>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Legal Documents Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Legal') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Legal Documents
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(propertyPurpose === 'sale' ? [
+                        { name: 'Title Report', status: 'Required', date: '2024-01-09', size: '3.2 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Insurance Certificate', status: 'Required', date: '2024-01-08', size: '0.8 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Legal Opinion Letter', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Legal' },
+                        { name: 'Compliance Certificate', status: 'Required', date: '2024-01-07', size: '1.1 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Zoning Verification', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Legal' }
+                      ] : [
+                        { name: 'Landlord Insurance Certificate', status: 'Required', date: '2024-01-09', size: '0.9 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Property Tax Records', status: 'Required', date: '2024-01-08', size: '1.2 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Rental License', status: 'Required', date: '2024-01-07', size: '0.6 MB', type: 'PDF', category: 'Legal' },
+                        { name: 'Building Code Compliance', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Legal' },
+                        { name: 'Tenant Rights Notice', status: 'Required', date: '2024-01-06', size: '0.4 MB', type: 'PDF', category: 'Legal' }
+                      ]).map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="secondary" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Marketing Materials Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Marketing') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Marketing Materials
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(propertyPurpose === 'sale' ? [
+                        { name: 'Property Brochure', status: 'Required', date: '2024-01-12', size: '8.5 MB', type: 'PDF', category: 'Marketing' },
+                        { name: 'Virtual Tour Video', status: 'Optional', date: '2024-01-11', size: '45.2 MB', type: 'MP4', category: 'Marketing' },
+                        { name: 'Professional Photos', status: 'Required', date: '2024-01-10', size: '22.1 MB', type: 'JPG', category: 'Marketing' },
+                        { name: 'Marketing Flyer', status: 'Optional', date: '2024-01-09', size: '3.8 MB', type: 'PDF', category: 'Marketing' },
+                        { name: 'Property Description', status: 'Required', date: '2024-01-08', size: '0.3 MB', type: 'DOCX', category: 'Marketing' }
+                      ] : [
+                        { name: 'Rental Listing Photos', status: 'Required', date: '2024-01-12', size: '18.7 MB', type: 'JPG', category: 'Marketing' },
+                        { name: 'Virtual Tour', status: 'Optional', date: '2024-01-11', size: '38.9 MB', type: 'MP4', category: 'Marketing' },
+                        { name: 'Rental Description', status: 'Required', date: '2024-01-10', size: '0.4 MB', type: 'DOCX', category: 'Marketing' },
+                        { name: 'Amenities List', status: 'Required', date: '2024-01-09', size: '0.2 MB', type: 'DOCX', category: 'Marketing' },
+                        { name: 'Neighborhood Guide', status: 'Optional', date: '2024-01-08', size: '1.1 MB', type: 'PDF', category: 'Marketing' }
+                      ]).map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="info" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Lease Documents Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Lease Documents') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Lease Documents
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {[
+                        { name: 'Standard Lease Agreement', status: 'Required', date: '2024-01-12', size: '2.1 MB', type: 'PDF', category: 'Lease Documents' },
+                        { name: 'Lease Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Lease Documents' },
+                        { name: 'Security Deposit Receipt', status: 'Required', date: '2024-01-11', size: '0.8 MB', type: 'PDF', category: 'Lease Documents' },
+                        { name: 'Move-in Checklist', status: 'Required', date: '2024-01-10', size: '0.5 MB', type: 'PDF', category: 'Lease Documents' },
+                        { name: 'Rent Payment Schedule', status: 'Required', date: '2024-01-09', size: '0.3 MB', type: 'DOCX', category: 'Lease Documents' }
+                      ].map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'warning'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="secondary" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Addendums Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Addendums') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Addendums
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(propertyPurpose === 'sale' ? [
+                        { name: 'Financing Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Inspection Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Appraisal Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'HOA Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Repair Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' }
+                      ] : [
+                        { name: 'Pet Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Parking Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Furniture Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Utilities Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
+                        { name: 'Maintenance Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' }
+                      ]).map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="warning" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Tenant Forms Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Tenant Forms') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Tenant Forms
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {[
+                        { name: 'Rental Application Form', status: 'Required', date: '2024-01-12', size: '1.2 MB', type: 'PDF', category: 'Tenant Forms' },
+                        { name: 'Credit Check Authorization', status: 'Required', date: '2024-01-11', size: '0.8 MB', type: 'PDF', category: 'Tenant Forms' },
+                        { name: 'Employment Verification', status: 'Required', date: '2024-01-10', size: '0.6 MB', type: 'PDF', category: 'Tenant Forms' },
+                        { name: 'References Form', status: 'Required', date: '2024-01-09', size: '0.4 MB', type: 'PDF', category: 'Tenant Forms' },
+                        { name: 'Income Verification', status: 'Required', date: '2024-01-08', size: '0.7 MB', type: 'PDF', category: 'Tenant Forms' }
+                      ].map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="info" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Other Documents Section */}
+                  <Box sx={{ mb: 4, display: (selectedDocCategory === 'All' || selectedDocCategory === 'Other') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Other Documents
+                    </Typography>
+                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(propertyPurpose === 'sale' ? [
+                        { name: 'Third Party Reports', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Other' },
+                        { name: 'Custom Forms', status: 'Optional', date: '', size: '', type: 'DOCX', category: 'Other' },
+                        { name: 'Miscellaneous Documents', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Other' },
+                        { name: 'Agent Notes', status: 'Optional', date: '2024-01-05', size: '0.2 MB', type: 'DOCX', category: 'Other' },
+                        { name: 'Client Communications', status: 'Optional', date: '2024-01-04', size: '0.1 MB', type: 'PDF', category: 'Other' }
+                      ] : [
+                        { name: 'Tenant Screening Reports', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Other' },
+                        { name: 'Custom Rental Forms', status: 'Optional', date: '', size: '', type: 'DOCX', category: 'Other' },
+                        { name: 'Property Management Docs', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Other' },
+                        { name: 'Agent Notes', status: 'Optional', date: '2024-01-05', size: '0.2 MB', type: 'DOCX', category: 'Other' },
+                        { name: 'Landlord Communications', status: 'Optional', date: '2024-01-04', size: '0.1 MB', type: 'PDF', category: 'Other' }
+                      ]).map((doc, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
+                          <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
+                          <Chip label={doc.status} size="small" color={doc.status === 'Optional' ? 'default' : 'primary'} variant="outlined" />
+                          <Chip label={doc.category} size="small" color="default" variant="outlined" />
+                          {doc.date && <Typography variant="caption" color="text.secondary">{doc.date}</Typography>}
+                          {doc.size && <Typography variant="caption" color="text.secondary">{doc.size}</Typography>}
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton size="small"><VisibilityIcon /></IconButton>
+                            <IconButton size="small"><DownloadIcon /></IconButton>
                           </Box>
                         </Box>
                       ))}
@@ -3118,7 +4351,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </Paper>
@@ -3273,7 +4506,7 @@ const CloseAgentPage: React.FC = () => {
                       onClick={goToNextTab}
                       disabled={!getNextSuggestedTab()}
                     >
-                      Next: {getNextSuggestedTab() || 'Complete'}
+                      Next
                     </Button>
                   </Box>
                 </Paper>
@@ -4128,16 +5361,275 @@ const CloseAgentPage: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <AssignmentTurnedInIcon sx={{ fontSize: 28, color: 'white' }} />
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
-                  Working Documents
+                  Templates
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Access and edit documents in progress
+                Manage document templates and form collections
               </Typography>
             </Paper>
+
+            {/* Templates Content */}
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Working Documents Content</Typography>
-              <Typography variant="body1">This section will contain documents currently being worked on.</Typography>
+              {/* Template Management Header */}
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    My Templates
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <DescriptionIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      12 TEMPLATES
+                    </Typography>
+                  </Box>
+                </Box>
+                <Button 
+                  variant="contained" 
+                  startIcon={<CreateIcon />}
+                  sx={{ 
+                    backgroundColor: brandColors.primary,
+                    '&:hover': { backgroundColor: brandColors.primary, opacity: 0.9 }
+                  }}
+                >
+                  + Create Template
+                </Button>
+              </Box>
+
+              {/* Template Grid - 3x1 Layout */}
+              <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+                gap: 3,
+                mb: 4
+              }}>
+                {/* Template Cards */}
+                {[
+                  {
+                    name: 'Starter Agent Template',
+                    formsCount: 108,
+                    category: 'Starter Agent',
+                    description: 'Complete template for new agents with all essential forms',
+                    lastUpdated: '2 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'MPE Form Template',
+                    formsCount: 1,
+                    category: 'MPE Forms',
+                    description: 'Master Purchase Agreement template',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Special Cases Only',
+                    formsCount: 1,
+                    category: 'Special Cases',
+                    description: 'Template for unique transaction scenarios',
+                    lastUpdated: '3 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Condo Form Template',
+                    formsCount: 1,
+                    category: 'Condo',
+                    description: 'Specialized forms for condominium transactions',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Arizona Agents',
+                    formsCount: 2,
+                    category: 'State-Specific',
+                    description: 'Arizona-specific forms and disclosures',
+                    lastUpdated: '5 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'California Agents',
+                    formsCount: 2,
+                    category: 'State-Specific',
+                    description: 'California-specific forms and disclosures',
+                    lastUpdated: '4 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Brokerage Wide Template',
+                    formsCount: 2,
+                    category: 'Brokerage',
+                    description: 'Standard forms for entire brokerage',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Burbank Client Template',
+                    formsCount: 1,
+                    category: 'Client-Specific',
+                    description: 'Custom template for Burbank clients',
+                    lastUpdated: '2 weeks ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Essential Forms v1',
+                    formsCount: 3,
+                    category: 'Essential',
+                    description: 'Core forms every agent needs',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Luxury Property Template',
+                    formsCount: 5,
+                    category: 'Luxury',
+                    description: 'Specialized forms for high-value properties',
+                    lastUpdated: '3 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Investment Property Template',
+                    formsCount: 4,
+                    category: 'Investment',
+                    description: 'Forms for investment property transactions',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'New Construction Template',
+                    formsCount: 6,
+                    category: 'New Construction',
+                    description: 'Forms for new construction projects',
+                    lastUpdated: '5 days ago',
+                    status: 'active'
+                  }
+                ].map((template, index) => (
+                  <Paper 
+                    key={index}
+                    elevation={2} 
+                    sx={{ 
+                      p: 3, 
+                      height: '100%',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                      cursor: 'pointer',
+                      '&:hover': { 
+                        transform: 'translateY(-2px)',
+                        boxShadow: 4
+                      }
+                    }}
+                  >
+                    {/* Template Header */}
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                          {template.name}
+                        </Typography>
+                        <Chip 
+                          label={template.category} 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                      {/* Quick Actions Menu */}
+                      <IconButton size="small">
+                        <MoreVertIcon />
+                      </IconButton>
+                    </Box>
+
+                    {/* Template Info */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        {template.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <VisibilityIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {template.formsCount} Forms
+                        </Typography>
+                      </Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Last updated: {template.lastUpdated}
+                      </Typography>
+                    </Box>
+
+                    {/* Template Actions */}
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        startIcon={<EditIcon />}
+                        sx={{ flex: 1 }}
+                      >
+                        Edit
+                      </Button>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        startIcon={<AssignmentIcon />}
+                        sx={{ flex: 1 }}
+                      >
+                        Use
+                      </Button>
+                    </Box>
+                  </Paper>
+                ))}
+              </Box>
+
+              {/* Template Categories Summary */}
+              <Paper elevation={1} sx={{ p: 3, backgroundColor: '#f8f9fa' }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                  Template Categories
+                </Typography>
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)', md: 'repeat(6, 1fr)' },
+                  gap: 2 
+                }}>
+                  {[
+                    { name: 'Starter Agent', count: 1, color: '#4caf50' },
+                    { name: 'State-Specific', count: 2, color: '#2196f3' },
+                    { name: 'MPE Forms', count: 1, color: '#ff9800' },
+                    { name: 'Special Cases', count: 1, color: '#9c27b0' },
+                    { name: 'Condo', count: 1, color: '#f44336' },
+                    { name: 'Brokerage', count: 1, color: '#795548' },
+                    { name: 'Client-Specific', count: 1, color: '#607d8b' },
+                    { name: 'Essential', count: 1, color: '#00bcd4' },
+                    { name: 'Luxury', count: 1, color: '#e91e63' },
+                    { name: 'Investment', count: 1, color: '#8bc34a' },
+                    { name: 'New Construction', count: 1, color: '#ff5722' }
+                  ].map((category, index) => (
+                    <Box 
+                      key={index}
+                      sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        p: 2,
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                        border: '1px solid #e0e0e0'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ 
+                          width: 8, 
+                          height: 8, 
+                          backgroundColor: category.color, 
+                          borderRadius: '50%' 
+                        }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {category.name}
+                        </Typography>
+                      </Box>
+                      <Chip 
+                        label={category.count} 
+                        size="small" 
+                        color="primary" 
+                        variant="outlined"
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
             </Box>
           </>
         )}

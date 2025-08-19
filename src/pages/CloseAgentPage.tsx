@@ -59,6 +59,13 @@ import {
   FilterList as FilterListIcon,
   VisibilityOff as VisibilityOffIcon,
   ExpandMore as ExpandMoreIcon,
+  Download as DownloadIcon,
+  Share as ShareIcon,
+  Print as PrintIcon,
+  Comment as CommentIcon,
+  Sort as SortIcon,
+  Schedule as ScheduleIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -196,15 +203,68 @@ const CloseAgentPage: React.FC = () => {
   const [selectedOffice, setSelectedOffice] = useState('ALL');
   const [listingTab, setListingTab] = useState('LISTING');
   const [propertyType, setPropertyType] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Debug logging for Write A Listing tab
-  useEffect(() => {
-    if (state.activeTab === 'write-listing') {
-      console.log('Write A Listing tab selected');
-      console.log('Current listingTab:', listingTab);
-      console.log('Current propertyType:', propertyType);
+  // Tab completion tracking for guided navigation
+  const [tabCompletion, setTabCompletion] = useState({
+    LISTING: false,
+    PHOTOS: false,
+    CONTACTS: false,
+    CHECKLIST: false,
+    DOCUMENTS: false,
+    LOG: false,
+    TASKS: false
+  });
+
+  // Function to mark tab as completed
+  const markTabComplete = (tabName: string) => {
+    setTabCompletion(prev => ({
+      ...prev,
+      [tabName]: true
+    }));
+  };
+
+  // Function to get next suggested tab
+  const getNextSuggestedTab = () => {
+    const tabOrder = ['LISTING', 'PHOTOS', 'CONTACTS', 'CHECKLIST', 'DOCUMENTS', 'LOG', 'TASKS'];
+    const currentIndex = tabOrder.indexOf(listingTab);
+    
+    // Find next incomplete tab
+    for (let i = currentIndex + 1; i < tabOrder.length; i++) {
+      if (!tabCompletion[tabOrder[i] as keyof typeof tabCompletion]) {
+        return tabOrder[i];
+      }
     }
-  }, [state.activeTab, listingTab, propertyType]);
+    
+    // If all tabs after current are complete, suggest first incomplete tab
+    for (let i = 0; i < tabOrder.length; i++) {
+      if (!tabCompletion[tabOrder[i] as keyof typeof tabCompletion]) {
+        return tabOrder[i];
+      }
+    }
+    
+    return null; // All tabs complete
+  };
+
+  // Function to navigate to next suggested tab
+  const goToNextTab = () => {
+    const nextTab = getNextSuggestedTab();
+    if (nextTab) {
+      setListingTab(nextTab);
+    }
+  };
+
+  // Check if all tabs are complete
+  const allTabsComplete = Object.values(tabCompletion).every(complete => complete);
+
+
+
+  // Auto-mark LISTING tab as complete when property type is selected
+  useEffect(() => {
+    if (propertyType && !tabCompletion.LISTING) {
+      markTabComplete('LISTING');
+    }
+  }, [propertyType, tabCompletion.LISTING]);
 
   const tabs = [
     // Core Dashboard & Overview
@@ -1239,10 +1299,16 @@ const CloseAgentPage: React.FC = () => {
               </Typography>
             </Paper>
             <Box sx={{ pl: 0, ml: 3 }}>
-              {/* Debug Info */}
-              <Box sx={{ mb: 2, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1, border: '1px solid #2196f3' }}>
-                <Typography variant="body2" color="primary">
-                  Debug: Current tab: {listingTab} | Property Type: {propertyType || 'None selected'}
+
+              
+              {/* Workflow Guidance */}
+              <Box sx={{ mb: 3, p: 3, backgroundColor: '#f3e5f5', borderRadius: 1, border: '1px solid #9c27b0' }}>
+                <Typography variant="body1" color="primary" sx={{ fontWeight: 600, mb: 1 }}>
+                  📋 Workflow Guide
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Complete each tab at your own pace. Use the "Next" button for guidance, or click any tab to work on it directly. 
+                  Mark tabs as complete when you're satisfied with the content. Submit when all tabs are finished.
                 </Typography>
               </Box>
               
@@ -1263,17 +1329,63 @@ const CloseAgentPage: React.FC = () => {
                           backgroundColor: tab === listingTab ? brandColors.primary : 'transparent',
                           color: tab === listingTab ? 'white' : 'text.secondary',
                           fontWeight: tab === listingTab ? 600 : 400,
+                          position: 'relative',
                           '&:hover': {
                             backgroundColor: tab === listingTab ? brandColors.primary : 'grey.50',
                             color: tab === listingTab ? 'white' : 'text.primary',
                           },
                         }}
                       >
-                        <Typography variant="subtitle2">
-                          {tab}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="subtitle2">
+                            {tab}
+                          </Typography>
+                          {/* Completion indicator */}
+                          {tabCompletion[tab as keyof typeof tabCompletion] && (
+                            <Box
+                              sx={{
+                                width: 16,
+                                height: 16,
+                                borderRadius: '50%',
+                                backgroundColor: brandColors.accent.success,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                ml: 1
+                              }}
+                            >
+                              <CheckCircleIcon sx={{ fontSize: 12, color: 'white' }} />
+                            </Box>
+                          )}
+                        </Box>
                       </Box>
                     ))}
+                  </Box>
+                </Box>
+                
+                {/* Progress Bar */}
+                <Box sx={{ p: 2, backgroundColor: 'grey.50' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Progress: {Object.values(tabCompletion).filter(Boolean).length} of 7 tabs completed
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      ({Math.round((Object.values(tabCompletion).filter(Boolean).length / 7) * 100)}%)
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: 8, 
+                    backgroundColor: 'grey.300', 
+                    borderRadius: 4,
+                    overflow: 'hidden'
+                  }}>
+                    <Box sx={{ 
+                      width: `${(Object.values(tabCompletion).filter(Boolean).length / 7) * 100}%`,
+                      height: '100%',
+                      backgroundColor: brandColors.accent.success,
+                      transition: 'width 0.3s ease'
+                    }} />
                   </Box>
                 </Box>
               </Paper>
@@ -1893,13 +2005,21 @@ const CloseAgentPage: React.FC = () => {
                     </Box>
                   </Paper>
 
-                  {/* Action Buttons */}
-                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4 }}>
+                  {/* Action Buttons for LISTING tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center' }}>
                     <Button variant="outlined" size="large">
                       Save Draft
                     </Button>
-                    <Button variant="contained" size="large" sx={{ backgroundColor: brandColors.accent.success }}>
-                      Next
+                    
+                    {/* Next Button for LISTING tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
                     </Button>
                   </Box>
                 </>
@@ -1951,6 +2071,18 @@ const CloseAgentPage: React.FC = () => {
                         Supported formats: JPG, PNG, GIF (Max 10MB per file)
                       </Typography>
                     </Box>
+                  </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('PHOTOS')}
+                      disabled={tabCompletion.PHOTOS}
+                      startIcon={tabCompletion.PHOTOS ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.PHOTOS ? 'Photos Complete' : 'Mark Photos Complete'}
+                    </Button>
                   </Box>
 
                   {/* Dynamic Photo Categories based on Property Type */}
@@ -2181,6 +2313,24 @@ const CloseAgentPage: React.FC = () => {
                       )}
                     </Box>
                   </Box>
+
+                  {/* Action Buttons for PHOTOS tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Next Button for PHOTOS tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
+                    </Button>
+                  </Box>
                 </Paper>
               )}
 
@@ -2300,6 +2450,8 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
                       Contact List
                     </Typography>
+                    
+                    {/* Sample Contacts Table */}
                     <Box sx={{ 
                       border: '1px solid #e0e0e0', 
                       borderRadius: '4px', 
@@ -2308,7 +2460,7 @@ const CloseAgentPage: React.FC = () => {
                       {/* Table Header */}
                       <Box sx={{ 
                         display: 'grid', 
-                        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 80px', 
+                        gridTemplateColumns: '1fr 1fr 1fr 1fr 100px', 
                         gap: 2, 
                         p: 2, 
                         backgroundColor: 'grey.50', 
@@ -2319,19 +2471,18 @@ const CloseAgentPage: React.FC = () => {
                         <Typography variant="subtitle2">Type</Typography>
                         <Typography variant="subtitle2">Email</Typography>
                         <Typography variant="subtitle2">Phone</Typography>
-                        <Typography variant="subtitle2">Company</Typography>
                         <Typography variant="subtitle2">Actions</Typography>
                       </Box>
                       
-                      {/* Sample Contacts */}
+                      {/* Sample Contact Rows */}
                       {[
-                        { name: 'John Smith', type: 'Seller', email: 'john@email.com', phone: '(555) 123-4567', company: 'Smith Properties' },
-                        { name: 'Sarah Johnson', type: 'Buyer', email: 'sarah@email.com', phone: '(555) 987-6543', company: 'Johnson Corp' },
-                        { name: 'Mike Wilson', type: 'Agent', email: 'mike@realty.com', phone: '(555) 456-7890', company: 'Wilson Realty' }
+                        { name: 'John Smith', type: 'Seller', email: 'john@email.com', phone: '(555) 123-4567' },
+                        { name: 'Sarah Johnson', type: 'Buyer Agent', email: 'sarah@agency.com', phone: '(555) 987-6543' },
+                        { name: 'Mike Wilson', type: 'Lender', email: 'mike@bank.com', phone: '(555) 456-7890' }
                       ].map((contact, index) => (
                         <Box key={index} sx={{ 
                           display: 'grid', 
-                          gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 80px', 
+                          gridTemplateColumns: '1fr 1fr 1fr 1fr 100px', 
                           gap: 2, 
                           p: 2, 
                           borderBottom: '1px solid #e0e0e0',
@@ -2341,7 +2492,6 @@ const CloseAgentPage: React.FC = () => {
                           <Chip label={contact.type} size="small" color="primary" />
                           <Typography variant="body2">{contact.email}</Typography>
                           <Typography variant="body2">{contact.phone}</Typography>
-                          <Typography variant="body2">{contact.company}</Typography>
                           <Box sx={{ display: 'flex', gap: 1 }}>
                             <IconButton size="small" sx={{ color: brandColors.actions.primary }}>
                               <EditIcon />
@@ -2354,6 +2504,36 @@ const CloseAgentPage: React.FC = () => {
                       ))}
                     </Box>
                   </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('CONTACTS')}
+                      disabled={tabCompletion.CONTACTS}
+                      startIcon={tabCompletion.CONTACTS ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.CONTACTS ? 'Contacts Complete' : 'Mark Contacts Complete'}
+                    </Button>
+                  </Box>
+
+                  {/* Action Buttons for CONTACTS tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Next Button for CONTACTS tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
+                    </Button>
+                  </Box>
                 </Paper>
               )}
 
@@ -2363,136 +2543,421 @@ const CloseAgentPage: React.FC = () => {
                     Listing Checklist
                   </Typography>
                   
-                  {/* Checklist Categories */}
+                  {/* Checklist Categories Filter */}
                   <Box sx={{ mb: 4 }}>
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
-                      Checklist Categories
+                      Filter by Category
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
+                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                       {['All', 'Property', 'Legal', 'Marketing', 'Financial', 'Closing'].map((category) => (
                         <Chip 
                           key={category}
                           label={category} 
-                          variant={category === 'All' ? 'filled' : 'outlined'}
-                          color={category === 'All' ? 'primary' : 'default'}
+                          variant={category === selectedCategory ? 'filled' : 'outlined'}
+                          color={category === selectedCategory ? 'primary' : 'default'}
                           sx={{ cursor: 'pointer' }}
+                          onClick={() => setSelectedCategory(category)}
                         />
                       ))}
                     </Box>
                   </Box>
 
-                  {/* Checklist Items */}
-                  <Box>
-                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
-                      Checklist Items
+                  {/* Property Preparation Checklist */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Property') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Property Preparation
                     </Typography>
-                    
-                    {/* Property Section */}
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" gutterBottom sx={{ mb: 2, color: brandColors.primary, fontWeight: 600 }}>
-                        Property Preparation
-                      </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
                       {[
-                        'Property photos taken and uploaded',
-                        'Property description written',
-                        'Property measurements verified',
-                        'Property condition assessed',
-                        'Repairs completed (if needed)'
-                      ].map((item, index) => (
+                        { item: 'Property inspection completed', category: 'Property', status: 'completed' },
+                        { item: 'Repairs and maintenance addressed', category: 'Property', status: 'completed' },
+                        { item: 'Property photos taken and uploaded', category: 'Property', status: 'completed' },
+                        { item: 'Property measurements verified', category: 'Property', status: 'completed' },
+                        { item: 'Utilities and systems tested', category: 'Property', status: 'pending' },
+                        { item: 'Landscaping and curb appeal assessed', category: 'Property', status: 'pending' }
+                      ].map((checkItem, index) => (
                         <Box key={index} sx={{ 
                           display: 'flex', 
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          border: '1px solid #e0e0e0', 
-                          borderRadius: '4px', 
-                          mb: 1,
-                          backgroundColor: '#fafafa'
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
                         }}>
-                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
-                          <Typography variant="body2" sx={{ flex: 1 }}>{item}</Typography>
-                          <Chip label="Pending" size="small" color="warning" />
-                          <IconButton size="small">
-                            <EditIcon />
-                          </IconButton>
-                        </Box>
-                      ))}
-                    </Box>
-
-                    {/* Legal Section */}
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" gutterBottom sx={{ mb: 2, color: brandColors.primary, fontWeight: 600 }}>
-                        Legal & Documentation
-                      </Typography>
-                      {[
-                        'Title search completed',
-                        'Property tax information verified',
-                        'HOA documents reviewed',
-                        'Disclosure forms prepared',
-                        'Contract templates ready'
-                      ].map((item, index) => (
-                        <Box key={index} sx={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: 2, 
-                          p: 2, 
-                          border: '1px solid #e0e0e0', 
-                          borderRadius: '4px', 
-                          mb: 1,
-                          backgroundColor: '#fafafa'
-                        }}>
-                          <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
-                          <Typography variant="body2" sx={{ flex: 1 }}>{item}</Typography>
-                          <Chip label="Not Started" size="small" color="default" />
-                          <IconButton size="small">
-                            <EditIcon />
-                          </IconButton>
-                        </Box>
-                      ))}
-                    </Box>
-
-                    {/* Add New Item */}
-                    <Box sx={{ mt: 4, p: 3, border: '1px dashed #ccc', borderRadius: '4px' }}>
-                      <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
-                        Add New Checklist Item
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="caption" color="text.secondary" gutterBottom>Item Description</Typography>
                           <input 
-                            type="text" 
-                            placeholder="Enter checklist item description" 
-                            style={{ 
-                              width: '100%', 
-                              padding: '8px 12px', 
-                              border: '1px solid #ccc', 
-                              borderRadius: '4px', 
-                              fontSize: '14px' 
-                            }} 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
                           />
                         </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary" gutterBottom>Category</Typography>
-                          <select 
-                            style={{ 
-                              padding: '8px 12px', 
-                              border: '1px solid #ccc', 
-                              borderRadius: '4px', 
-                              fontSize: '14px' 
-                            }}
-                          >
-                            <option value="property">Property</option>
-                            <option value="legal">Legal</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="financial">Financial</option>
-                            <option value="closing">Closing</option>
-                          </select>
-                        </Box>
-                        <Button variant="outlined" size="small">
-                          Add Item
-                        </Button>
-                      </Box>
+                      ))}
                     </Box>
+                  </Box>
+
+                  {/* Legal & Documentation Checklist */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Legal') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Legal & Documentation
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
+                      {[
+                        { item: 'Title report obtained and reviewed', category: 'Legal', status: 'completed' },
+                        { item: 'Property survey completed', category: 'Legal', status: 'completed' },
+                        { item: 'HOA documents and restrictions reviewed', category: 'Legal', status: 'pending' },
+                        { item: 'Zoning compliance verified', category: 'Legal', status: 'pending' },
+                        { item: 'Property tax information current', category: 'Legal', status: 'completed' },
+                        { item: 'Easements and restrictions documented', category: 'Legal', status: 'pending' }
+                      ].map((checkItem, index) => (
+                        <Box key={index} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 2, 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
+                        }}>
+                          <input 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Marketing & Presentation Checklist */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Marketing') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Marketing & Presentation
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
+                      {[
+                        { item: 'Professional photos taken', category: 'Marketing', status: 'completed' },
+                        { item: 'Virtual tour created', category: 'Marketing', status: 'pending' },
+                        { item: 'Property description written', category: 'Marketing', status: 'completed' },
+                        { item: 'Marketing materials designed', category: 'Marketing', status: 'pending' },
+                        { item: 'Social media campaign planned', category: 'Marketing', status: 'pending' },
+                        { item: 'Open house scheduled', category: 'Marketing', status: 'pending' }
+                      ].map((checkItem, index) => (
+                        <Box key={index} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 2, 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
+                        }}>
+                          <input 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Financial & Pricing Checklist */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Financial') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Financial & Pricing
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
+                      {[
+                        { item: 'Comparative market analysis completed', category: 'Financial', status: 'completed' },
+                        { item: 'Listing price determined', category: 'Financial', status: 'completed' },
+                        { item: 'Seller\'s net sheet prepared', category: 'Financial', status: 'pending' },
+                        { item: 'Financing options researched', category: 'Financial', status: 'pending' },
+                        { item: 'Closing cost estimates prepared', category: 'Financial', status: 'pending' },
+                        { item: 'Property value assessment obtained', category: 'Financial', status: 'completed' }
+                      ].map((checkItem, index) => (
+                        <Box key={index} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 2, 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
+                        }}>
+                          <input 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Closing & Transaction Checklist */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Closing') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      Closing & Transaction
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
+                      {[
+                        { item: 'Escrow account opened', category: 'Closing', status: 'pending' },
+                        { item: 'Title company selected', category: 'Closing', status: 'pending' },
+                        { item: 'Closing date scheduled', category: 'Closing', status: 'pending' },
+                        { item: 'Final walkthrough planned', category: 'Closing', status: 'pending' },
+                        { item: 'Transfer documents prepared', category: 'Closing', status: 'pending' },
+                        { item: 'Keys and access arrangements planned', category: 'Closing', status: 'pending' }
+                      ].map((checkItem, index) => (
+                        <Box key={index} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 2, 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
+                        }}>
+                          <input 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Listing Agreement & Addendum Section */}
+                  <Box sx={{ mb: 4, display: (selectedCategory === 'All' || selectedCategory === 'Legal') ? 'block' : 'none' }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                      📄 Listing Agreement & Addendum
+                    </Typography>
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
+                      {[
+                        { item: 'Listing agreement drafted', category: 'Legal', status: 'completed' },
+                        { item: 'Commission structure defined', category: 'Legal', status: 'completed' },
+                        { item: 'Listing period established', category: 'Legal', status: 'completed' },
+                        { item: 'Seller disclosures prepared', category: 'Legal', status: 'pending' },
+                        { item: 'Addendum for special conditions', category: 'Legal', status: 'pending' },
+                        { item: 'Contingency clauses reviewed', category: 'Legal', status: 'pending' },
+                        { item: 'Legal review completed', category: 'Legal', status: 'pending' },
+                        { item: 'Seller signature obtained', category: 'Legal', status: 'pending' }
+                      ].map((checkItem, index) => (
+                        <Box key={index} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 2, 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
+                        }}>
+                          <input 
+                            type="checkbox" 
+                            checked={checkItem.status === 'completed'}
+                            style={{ transform: 'scale(1.2)' }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {checkItem.item}
+                          </Typography>
+                          <Chip 
+                            label={checkItem.category} 
+                            size="small" 
+                            color="primary" 
+                            variant="outlined"
+                          />
+                          <Chip 
+                            label={checkItem.status} 
+                            size="small" 
+                            color={checkItem.status === 'completed' ? 'success' : 'warning'}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Add New Item */}
+                  <Box sx={{ mb: 4 }}>
+                    <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
+                      Add New Checklist Item
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr auto', gap: 2, alignItems: 'end' }}>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Item Description</Typography>
+                        <input 
+                          type="text" 
+                          placeholder="Enter checklist item" 
+                          style={{ 
+                            width: '100%', 
+                            padding: '12px', 
+                            border: '1px solid #ccc', 
+                            borderRadius: '4px', 
+                            fontSize: '14px' 
+                          }} 
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Category</Typography>
+                        <select 
+                          style={{ 
+                            width: '100%', 
+                            padding: '12px', 
+                            border: '1px solid #ccc', 
+                            borderRadius: '4px', 
+                            fontSize: '14px' 
+                          }}
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Property">Property</option>
+                          <option value="Legal">Legal</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Financial">Financial</option>
+                          <option value="Closing">Closing</option>
+                        </select>
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Priority</Typography>
+                        <select 
+                          style={{ 
+                            width: '100%', 
+                            padding: '12px', 
+                            border: '1px solid #ccc', 
+                            borderRadius: '4px', 
+                            fontSize: '14px' 
+                          }}
+                        >
+                          <option value="">Select Priority</option>
+                          <option value="high">High</option>
+                          <option value="medium">Medium</option>
+                          <option value="low">Low</option>
+                        </select>
+                      </Box>
+                      <Button variant="outlined">Add Item</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('CHECKLIST')}
+                      disabled={tabCompletion.CHECKLIST}
+                      startIcon={tabCompletion.CHECKLIST ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.CHECKLIST ? 'Checklist Complete' : 'Mark Checklist Complete'}
+                    </Button>
+                  </Box>
+
+                  {/* Action Buttons for CHECKLIST tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Next Button for CHECKLIST tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
+                    </Button>
                   </Box>
                 </Paper>
               )}
@@ -2565,6 +3030,8 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
                       Document List
                     </Typography>
+                    
+                    {/* Sample Documents Table */}
                     <Box sx={{ 
                       border: '1px solid #e0e0e0', 
                       borderRadius: '4px', 
@@ -2573,7 +3040,7 @@ const CloseAgentPage: React.FC = () => {
                       {/* Table Header */}
                       <Box sx={{ 
                         display: 'grid', 
-                        gridTemplateColumns: '2fr 1fr 1fr 1fr 80px', 
+                        gridTemplateColumns: '2fr 1fr 1fr 1fr 100px', 
                         gap: 2, 
                         p: 2, 
                         backgroundColor: 'grey.50', 
@@ -2587,31 +3054,29 @@ const CloseAgentPage: React.FC = () => {
                         <Typography variant="subtitle2">Actions</Typography>
                       </Box>
                       
-                      {/* Sample Documents */}
+                      {/* Sample Document Rows */}
                       {[
-                        { name: 'Property_Photos.pdf', category: 'Property Documents', date: '2024-01-15', status: 'Approved' },
-                        { name: 'Title_Report.pdf', category: 'Legal Documents', date: '2024-01-14', status: 'Pending Review' },
-                        { name: 'Financial_Statement.xlsx', category: 'Financial Documents', date: '2024-01-13', status: 'Approved' },
-                        { name: 'Marketing_Brochure.pdf', category: 'Marketing Materials', date: '2024-01-12', status: 'Draft' }
+                        { name: 'Property Photos.zip', category: 'Photos', date: '2024-01-15', status: 'Uploaded' },
+                        { name: 'Title Report.pdf', category: 'Legal', date: '2024-01-14', status: 'Pending Review' },
+                        { name: 'Inspection Report.pdf', category: 'Property', date: '2024-01-13', status: 'Approved' }
                       ].map((doc, index) => (
                         <Box key={index} sx={{ 
                           display: 'grid', 
-                          gridTemplateColumns: '2fr 1fr 1fr 1fr 80px', 
+                          gridTemplateColumns: '2fr 1fr 1fr 1fr 100px', 
                           gap: 2, 
                           p: 2, 
                           borderBottom: '1px solid #e0e0e0',
                           '&:hover': { backgroundColor: '#f5f5f5' }
                         }}>
                           <Typography variant="body2" sx={{ fontWeight: 500 }}>{doc.name}</Typography>
-                          <Typography variant="body2">{doc.category}</Typography>
+                          <Chip label={doc.category} size="small" color="primary" />
                           <Typography variant="body2">{doc.date}</Typography>
                           <Chip 
                             label={doc.status} 
                             size="small" 
                             color={
                               doc.status === 'Approved' ? 'success' : 
-                              doc.status === 'Pending Review' ? 'warning' : 
-                              doc.status === 'Draft' ? 'default' : 'error'
+                              doc.status === 'Pending Review' ? 'warning' : 'default'
                             } 
                           />
                           <Box sx={{ display: 'flex', gap: 1 }}>
@@ -2625,6 +3090,36 @@ const CloseAgentPage: React.FC = () => {
                         </Box>
                       ))}
                     </Box>
+                  </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('DOCUMENTS')}
+                      disabled={tabCompletion.DOCUMENTS}
+                      startIcon={tabCompletion.DOCUMENTS ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.DOCUMENTS ? 'Documents Complete' : 'Mark Documents Complete'}
+                    </Button>
+                  </Box>
+
+                  {/* Action Buttons for DOCUMENTS tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Next Button for DOCUMENTS tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
+                    </Button>
                   </Box>
                 </Paper>
               )}
@@ -2686,126 +3181,100 @@ const CloseAgentPage: React.FC = () => {
                   {/* Activity Timeline */}
                   <Box>
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
-                      Recent Activity
+                      Activity Timeline
                     </Typography>
                     
-                    {/* Timeline Items */}
-                    <Box sx={{ position: 'relative' }}>
-                      {/* Timeline Line */}
-                      <Box sx={{ 
-                        position: 'absolute', 
-                        left: '20px', 
-                        top: 0, 
-                        bottom: 0, 
-                        width: '2px', 
-                        backgroundColor: '#e0e0e0' 
-                      }} />
-                      
-                      {/* Activity Items */}
+                    {/* Sample Activities */}
+                    <Box sx={{ 
+                      border: '1px solid #e0e0e0', 
+                      borderRadius: '4px', 
+                      overflow: 'hidden' 
+                    }}>
                       {[
                         { 
-                          time: '2:30 PM', 
-                          date: 'Today', 
-                          action: 'Property photos uploaded', 
+                          activity: 'Property photos uploaded', 
                           user: 'Sarah Johnson', 
-                          type: 'upload',
-                          details: '5 photos added to Exterior category'
+                          time: '2 hours ago', 
+                          type: 'upload' 
                         },
                         { 
-                          time: '1:45 PM', 
-                          date: 'Today', 
-                          action: 'Listing description updated', 
-                          user: 'Sarah Johnson', 
-                          type: 'edit',
-                          details: 'Updated property description with new amenities'
+                          activity: 'Title report reviewed', 
+                          user: 'Mike Wilson', 
+                          time: '4 hours ago', 
+                          type: 'review' 
                         },
                         { 
-                          time: '11:20 AM', 
-                          date: 'Today', 
-                          action: 'New contact added', 
-                          user: 'Sarah Johnson', 
-                          type: 'add',
-                          details: 'Added buyer contact: Mike Wilson'
+                          activity: 'Inspection scheduled', 
+                          user: 'John Smith', 
+                          time: '1 day ago', 
+                          type: 'schedule' 
                         },
                         { 
-                          time: '9:15 AM', 
-                          date: 'Today', 
-                          action: 'Listing status changed', 
-                          user: 'System', 
-                          type: 'status',
-                          details: 'Status changed from Draft to Active'
-                        },
-                        { 
-                          time: '3:45 PM', 
-                          date: 'Yesterday', 
-                          action: 'Document uploaded', 
+                          activity: 'Listing created', 
                           user: 'Sarah Johnson', 
-                          type: 'upload',
-                          details: 'Title report uploaded to Legal Documents'
+                          time: '2 days ago', 
+                          type: 'create' 
                         }
                       ].map((activity, index) => (
                         <Box key={index} sx={{ 
-                          display: 'flex', 
-                          gap: 3, 
-                          mb: 3, 
-                          position: 'relative' 
+                          p: 2, 
+                          borderBottom: '1px solid #e0e0e0',
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          '&:last-child': { borderBottom: 'none' }
                         }}>
-                          {/* Timeline Dot */}
-                          <Box sx={{ 
-                            width: '40px', 
-                            height: '40px', 
-                            borderRadius: '50%', 
-                            backgroundColor: 
-                              activity.type === 'upload' ? brandColors.accent.success :
-                              activity.type === 'edit' ? brandColors.actions.primary :
-                              activity.type === 'add' ? brandColors.accent.info :
-                              activity.type === 'status' ? brandColors.accent.warning : brandColors.primary,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                            zIndex: 1
-                          }}>
-                            {activity.type === 'upload' ? 'UP' :
-                             activity.type === 'edit' ? 'ED' :
-                             activity.type === 'add' ? 'AD' :
-                             activity.type === 'status' ? 'ST' : 'AC'}
-                          </Box>
-                          
-                          {/* Activity Content */}
-                          <Box sx={{ flex: 1 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                                {activity.action}
-                              </Typography>
-                              <Chip 
-                                label={activity.type.toUpperCase()} 
-                                size="small" 
-                                color={
-                                  activity.type === 'upload' ? 'success' : 
-                                  activity.type === 'edit' ? 'primary' : 
-                                  activity.type === 'add' ? 'info' : 
-                                  activity.type === 'status' ? 'warning' : 'default'
-                                } 
-                              />
-                            </Box>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {activity.details}
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                              <Typography variant="caption" color="text.secondary">
-                                {activity.time} • {activity.date}
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{ 
+                              width: 8, 
+                              height: 8, 
+                              borderRadius: '50%', 
+                              backgroundColor: 
+                                activity.type === 'upload' ? brandColors.accent.success :
+                                activity.type === 'review' ? brandColors.accent.warning :
+                                activity.type === 'schedule' ? brandColors.primary :
+                                brandColors.accent.info
+                            }} />
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                {activity.activity}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
-                                by {activity.user}
+                                by {activity.user} • {activity.time}
                               </Typography>
                             </Box>
                           </Box>
                         </Box>
                       ))}
                     </Box>
+                  </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('LOG')}
+                      disabled={tabCompletion.LOG}
+                      startIcon={tabCompletion.LOG ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.LOG ? 'Log Complete' : 'Mark Log Complete'}
+                    </Button>
+                  </Box>
+
+                  {/* Action Buttons for LOG tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Next Button for LOG tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ backgroundColor: brandColors.accent.success }}
+                      onClick={goToNextTab}
+                      disabled={!getNextSuggestedTab()}
+                    >
+                      Next: {getNextSuggestedTab() || 'Complete'}
+                    </Button>
                   </Box>
                 </Paper>
               )}
@@ -3022,9 +3491,73 @@ const CloseAgentPage: React.FC = () => {
                       ))}
                     </Box>
                   </Box>
+
+                  {/* Completion Button */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button 
+                      variant="outlined"
+                      onClick={() => markTabComplete('TASKS')}
+                      disabled={tabCompletion.TASKS}
+                      startIcon={tabCompletion.TASKS ? <CheckCircleIcon /> : undefined}
+                    >
+                      {tabCompletion.TASKS ? 'Tasks Complete' : 'Mark Tasks Complete'}
+                    </Button>
+                  </Box>
+
+                  {/* Action Buttons for TASKS tab */}
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 4, alignItems: 'center', mt: 3 }}>
+                    <Button variant="outlined" size="large">
+                      Save Draft
+                    </Button>
+                    
+                    {/* Submit Button for TASKS tab */}
+                    <Button 
+                      variant="contained" 
+                      size="large" 
+                      sx={{ 
+                        backgroundColor: brandColors.primary,
+                        '&:hover': { backgroundColor: brandColors.primary }
+                      }}
+                    >
+                      Submit Listing
+                    </Button>
+                  </Box>
                 </Paper>
               )}
             </Box>
+
+            {/* Global Submit Button - Appears when all tabs are complete */}
+            {allTabsComplete && (
+              <Box sx={{ 
+                mt: 4, 
+                p: 3, 
+                backgroundColor: '#f8f9fa', 
+                borderRadius: 2, 
+                border: '2px solid', 
+                borderColor: brandColors.accent.success,
+                textAlign: 'center'
+              }}>
+                <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
+                  🎉 All Tabs Complete!
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  You've completed all sections. Ready to submit your listing?
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  size="large" 
+                  sx={{ 
+                    backgroundColor: brandColors.primary,
+                    fontSize: '1.1rem',
+                    px: 4,
+                    py: 1.5,
+                    '&:hover': { backgroundColor: brandColors.primary }
+                  }}
+                >
+                  Submit Final Listing
+                </Button>
+              </Box>
+            )}
           </>
         )}
 
@@ -3076,12 +3609,506 @@ const CloseAgentPage: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Review and approve pending documents
+                Review and approve pending documents for your transactions and listings
               </Typography>
             </Paper>
+
+            {/* Documents to Review Content */}
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Documents to Review Content</Typography>
-              <Typography variant="body1">This section will contain documents awaiting review.</Typography>
+              {/* Review Statistics Dashboard */}
+              <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { 
+                  xs: 'repeat(2, 1fr)', 
+                  sm: 'repeat(3, 1fr)', 
+                  md: 'repeat(4, 1fr)', 
+                  lg: 'repeat(6, 1fr)' 
+                }, 
+                gap: { xs: 2, md: 3 }, 
+                mb: 4 
+              }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#fff3e0' }}>
+                  <Typography variant="h4" sx={{ color: '#f57c00', fontWeight: 700 }}>18</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">Pending Review</Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e8' }}>
+                  <Typography variant="h4" sx={{ color: '#388e3c', fontWeight: 700 }}>12</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">Approved Today</Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
+                  <Typography variant="h4" sx={{ color: '#1976d2', fontWeight: 700 }}>6</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">Rejected Today</Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#fce4ec' }}>
+                  <Typography variant="h4" sx={{ color: '#c2185b', fontWeight: 700 }}>4</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">Overdue Reviews</Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#f3e5f5' }}>
+                  <Typography variant="h4" sx={{ color: '#7b1fa2', fontWeight: 700 }}>8</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">High Priority</Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e0f2f1' }}>
+                  <Typography variant="h4" sx={{ color: '#00695c', fontWeight: 700 }}>24</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">Total This Week</Typography>
+                </Paper>
+              </Box>
+
+              {/* Main Review Interface */}
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: 3, 
+                mt: 3 
+              }}>
+                {/* Document Viewer - Full Width */}
+                <Box sx={{ width: '100%' }}>
+                  <Paper elevation={2} sx={{ p: 2 }}>
+                    {/* Document Viewer Header */}
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      alignItems: { xs: 'stretch', sm: 'center' }, 
+                      justifyContent: 'space-between', 
+                      mb: 3,
+                      p: 2,
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '8px',
+                      gap: { xs: 2, sm: 0 }
+                    }}>
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          residential_purchase_agreement.pdf
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Purchase Contract • 2.3 MB • PDF • Added 2 hours ago • High Priority
+                        </Typography>
+                      </Box>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        gap: 1 
+                      }}>
+                        <Button variant="outlined" size="small" startIcon={<DownloadIcon />}>
+                          Download
+                        </Button>
+                        <Button variant="outlined" size="small" startIcon={<ShareIcon />}>
+                          Share
+                        </Button>
+                        <Button variant="outlined" size="small" startIcon={<PrintIcon />}>
+                          Print
+                        </Button>
+                      </Box>
+                    </Box>
+
+                    {/* Document Content Preview */}
+                    <Box sx={{ 
+                      backgroundColor: 'white',
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      p: { xs: 2, md: 4 },
+                      height: '600px',
+                      overflow: 'auto'
+                    }}>
+                      {/* Document Header */}
+                      <Box sx={{ textAlign: 'center', mb: 4 }}>
+                        <Typography variant="h4" sx={{ 
+                          fontWeight: 700, 
+                          color: '#1a365d',
+                          mb: 2
+                        }}>
+                          CALIFORNIA ASSOCIATION OF REALTORS®
+                        </Typography>
+                        <Typography variant="h5" sx={{ 
+                          fontWeight: 600, 
+                          color: '#2d3748',
+                          lineHeight: 1.3
+                        }}>
+                          CALIFORNIA RESIDENTIAL PURCHASE AGREEMENT<br/>
+                          AND JOINT ESCROW INSTRUCTIONS
+                        </Typography>
+                      </Box>
+
+                      {/* Document Sections */}
+                      <Box sx={{ mb: 4 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#2d3748' }}>
+                          1. OFFER:
+                        </Typography>
+                        <Box sx={{ ml: 3 }}>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            A. THIS IS AN OFFER FROM: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            B. THE REAL PROPERTY TO BE ACQUIRED: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            C. THE PURCHASE PRICE: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            D. CLOSE OF ESCROW: _________________________
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ mb: 4 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#2d3748' }}>
+                          2. AGENCY:
+                        </Typography>
+                        <Box sx={{ ml: 3 }}>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            A. DISCLOSURE: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            B. POTENTIALLY COMPETING BUYERS AND SELLERS: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            C. CONFIRMATION: _________________________
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ mb: 4 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#2d3748' }}>
+                          3. FINANCE TERMS:
+                        </Typography>
+                        <Box sx={{ ml: 3 }}>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            A. INITIAL DEPOSIT: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            B. INCREASED DEPOSIT: _________________________
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            C. LOAN(S): _________________________
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Box>
+
+                {/* Side Panels - Below Document Viewer */}
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+                  gap: 3
+                }}>
+                  {/* Left Panel - Document Categories & Lists */}
+                  <Box>
+                    <Paper elevation={2} sx={{ p: 2 }}>
+                      {/* Document Categories */}
+                      <Box sx={{ mb: 3 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                          Document Categories
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {[
+                            { name: 'Purchase Contracts', count: 6, status: 'pending', color: '#ff9800', priority: 'high' },
+                            { name: 'Listing Agreements', count: 4, status: 'pending', color: '#2196f3', priority: 'medium' },
+                            { name: 'Addendums', count: 3, status: 'pending', color: '#9c27b0', priority: 'medium' },
+                            { name: 'Disclosures', count: 2, status: 'pending', color: '#f44336', priority: 'high' },
+                            { name: 'Financial Documents', count: 2, status: 'pending', color: '#4caf50', priority: 'low' },
+                            { name: 'Legal Documents', count: 1, status: 'pending', color: '#795548', priority: 'high' }
+                          ].map((category, index) => (
+                            <Box 
+                              key={index}
+                              sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'space-between',
+                                p: 2,
+                                backgroundColor: '#f8f9fa',
+                                borderRadius: '8px',
+                                border: '1px solid #e0e0e0',
+                                cursor: 'pointer',
+                                '&:hover': { backgroundColor: '#e3f2fd' }
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Box sx={{ 
+                                  width: 12, 
+                                  height: 12, 
+                                  backgroundColor: category.color, 
+                                  borderRadius: '50%' 
+                                }} />
+                                <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                                  {category.name}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Chip 
+                                  label={category.count} 
+                                  size="small" 
+                                  color="primary" 
+                                  variant="outlined"
+                                />
+                                <Chip 
+                                  label={category.priority} 
+                                  size="small" 
+                                  color={category.priority === 'high' ? 'error' : category.priority === 'medium' ? 'warning' : 'default'} 
+                                  variant="outlined"
+                                />
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+
+                      {/* Recent Documents */}
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                          Recent Documents
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {[
+                            { name: 'residential_purchase_agreement.pdf', status: 'Pending Review', date: '2 hours ago', priority: 'High', category: 'Purchase Contracts' },
+                            { name: 'listing_agreement_addendum.pdf', status: 'Pending Review', date: '4 hours ago', priority: 'Medium', category: 'Listing Agreements' },
+                            { name: 'seller_disclosure_form.pdf', status: 'Pending Review', date: '6 hours ago', priority: 'High', category: 'Disclosures' },
+                            { name: 'financing_addendum.pdf', status: 'Pending Review', date: '1 day ago', priority: 'Medium', category: 'Addendums' },
+                            { name: 'title_report.pdf', status: 'Pending Review', date: '1 day ago', priority: 'Low', category: 'Legal Documents' }
+                          ].map((doc, index) => (
+                            <Box 
+                              key={index}
+                              sx={{ 
+                                p: 2,
+                                backgroundColor: '#f8f9fa',
+                                borderRadius: '6px',
+                                border: '1px solid #e0e0e0',
+                                cursor: 'pointer',
+                                '&:hover': { backgroundColor: '#e3f2fd' }
+                              }}
+                            >
+                              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                                {doc.name}
+                              </Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                <Chip 
+                                  label={doc.status} 
+                                  size="small" 
+                                  color="warning" 
+                                  variant="outlined"
+                                />
+                                <Chip 
+                                  label={doc.priority} 
+                                  size="small" 
+                                  color={doc.priority === 'High' ? 'error' : doc.priority === 'Medium' ? 'warning' : 'default'} 
+                                  variant="outlined"
+                                />
+                              </Box>
+                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                                {doc.category}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {doc.date}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+                    </Paper>
+                  </Box>
+
+                  {/* Right Panel - Review Actions & Details */}
+                  <Box>
+                    <Paper elevation={2} sx={{ p: 2 }}>
+                      {/* Review Actions */}
+                      <Box sx={{ mb: 3 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                          Review Actions
+                        </Typography>
+                        <Box sx={{ 
+                          display: 'grid', 
+                          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                          gap: 2 
+                        }}>
+                          <Button 
+                            variant="contained" 
+                            fullWidth
+                            size="large"
+                            sx={{ 
+                              backgroundColor: '#4caf50', 
+                              color: 'white',
+                              py: 1.5,
+                              '&:hover': { backgroundColor: '#45a049' }
+                            }}
+                            startIcon={<CheckCircleIcon />}
+                          >
+                            Approve Document
+                          </Button>
+                          <Button 
+                            variant="contained" 
+                            fullWidth
+                            size="large"
+                            sx={{ 
+                              backgroundColor: '#f44336', 
+                              color: 'white',
+                              py: 1.5,
+                              '&:hover': { backgroundColor: '#d32f2f' }
+                            }}
+                            startIcon={<CancelIcon />}
+                          >
+                            Reject Document
+                          </Button>
+                          <Button 
+                            variant="outlined" 
+                            fullWidth
+                            size="large"
+                            startIcon={<EditIcon />}
+                          >
+                            Request Changes
+                          </Button>
+                          <Button 
+                            variant="outlined" 
+                            fullWidth
+                            size="large"
+                            startIcon={<CommentIcon />}
+                          >
+                            Add Comments
+                          </Button>
+                          <Button 
+                            variant="outlined" 
+                            fullWidth
+                            size="large"
+                            startIcon={<AssignmentIcon />}
+                          >
+                            Assign to Agent
+                          </Button>
+                        </Box>
+                      </Box>
+
+                      {/* Document Details */}
+                      <Box sx={{ mb: 3 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                          Document Details
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">STATUS</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: '#ff9800' }}>
+                              Pending Review
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">PRIORITY</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: '#f44336' }}>
+                              High
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">ASSIGNED TO</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              Michael Johnson
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">DUE DATE</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              Today, 5:00 PM
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">TRANSACTION</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              1011 Riverside Ave
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">DOCUMENT TYPE</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              Purchase Contract
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">UPLOADED BY</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              Sarah Smith
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+
+                      {/* Review History */}
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                          Review History
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          {[
+                            { action: 'Document Uploaded', user: 'Sarah Smith', time: '2 hours ago', status: 'Completed' },
+                            { action: 'Assigned for Review', user: 'System', time: '2 hours ago', status: 'Completed' },
+                            { action: 'Review Started', user: 'Michael Johnson', time: '1 hour ago', status: 'In Progress' }
+                          ].map((item, index) => (
+                            <Box key={index} sx={{ 
+                              p: 2, 
+                              backgroundColor: '#f8f9fa', 
+                              borderRadius: '6px',
+                              border: '1px solid #e0e0e0'
+                            }}>
+                              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                                {item.action}
+                              </Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  by {item.user} • {item.time}
+                                </Typography>
+                                <Chip 
+                                  label={item.status} 
+                                  size="small" 
+                                  color={item.status === 'Completed' ? 'success' : 'warning'} 
+                                  variant="outlined"
+                                />
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+                    </Paper>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Quick Actions Bar */}
+              <Paper elevation={1} sx={{ p: 2, mt: 3, backgroundColor: '#f8f9fa' }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  alignItems: { xs: 'stretch', sm: 'center' }, 
+                  justifyContent: 'space-between',
+                  gap: { xs: 2, sm: 0 }
+                }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'stretch', sm: 'center' }, 
+                    gap: 2 
+                  }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                      Quick Actions:
+                    </Typography>
+                    <Button size="small" variant="outlined" startIcon={<FilterListIcon />}>
+                      Filter Documents
+                    </Button>
+                    <Button size="small" variant="outlined" startIcon={<SortIcon />}>
+                      Sort by Priority
+                    </Button>
+                    <Button size="small" variant="outlined" startIcon={<ScheduleIcon />}>
+                      Set Reminders
+                    </Button>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'stretch', sm: 'center' }, 
+                    gap: 2 
+                  }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Last updated: 2 minutes ago
+                    </Typography>
+                    <Button size="small" variant="contained" startIcon={<RefreshIcon />}>
+                      Refresh
+                    </Button>
+                  </Box>
+                </Box>
+              </Paper>
             </Box>
           </>
         )}

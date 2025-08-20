@@ -447,6 +447,7 @@ const CloseAgentPage: React.FC = () => {
         return 'default';
     }
   };
+
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       {/* Top App Bar */}
@@ -885,6 +886,7 @@ const CloseAgentPage: React.FC = () => {
             </Box>
           </>
         )}
+
         {state.activeTab === 'transactions' && (
           <>
             <Paper 
@@ -939,7 +941,7 @@ const CloseAgentPage: React.FC = () => {
                             <label htmlFor={`transaction-${type.toLowerCase()}`}>
                               <Typography variant="body1">{type}</Typography>
                             </label>
-            </Box>
+                          </Box>
                         ))}
                       </Box>
                     </Box>
@@ -1525,6 +1527,7 @@ const CloseAgentPage: React.FC = () => {
             </Modal>
           </>
         )}
+
         {state.activeTab === 'reports' && (
           <>
             <Paper 
@@ -1640,6 +1643,7 @@ const CloseAgentPage: React.FC = () => {
             </Box>
           </>
         )}
+
         {/* New Tab Content Sections */}
         {state.activeTab === 'manage-transactions' && (
           <>
@@ -2022,6 +2026,7 @@ const CloseAgentPage: React.FC = () => {
             </Box>
           </>
         )}
+
         {state.activeTab === 'write-listing' && (
           <>
             <Paper 
@@ -2653,6 +2658,7 @@ const CloseAgentPage: React.FC = () => {
                       )}
                     </Paper>
                   )}
+
                   {/* Dynamic Operating Expenses Section */}
                   {propertyType && propertyType !== 'land' && (
                     <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
@@ -2804,6 +2810,7 @@ const CloseAgentPage: React.FC = () => {
                       )}
                     </Paper>
                   )}
+
                   {/* Agent and Contact Information */}
                   <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -3227,6 +3234,7 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Paper>
               )}
+
               {listingTab === 'CONTACTS' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -3429,6 +3437,7 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Paper>
               )}
+
               {listingTab === 'CHECKLIST' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -3853,6 +3862,7 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Paper>
               )}
+
               {listingTab === 'DOCUMENTS' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -4371,72 +4381,13 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Paper>
               )}
+
               {listingTab === 'LOG' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
                     Activity Log
                   </Typography>
                   
-                  {/* Tab Navigation */}
-                  <Box sx={{ mb: 3 }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        {[
-                          { value: 'overview', label: 'OVERVIEW', icon: <DashboardIcon /> },
-                          { value: 'offers', label: 'OFFERS', icon: <ListAltIcon /> },
-                          { value: 'comparison', label: 'COMPARISON', icon: <CompareArrowsIcon /> }
-                        ].map((tab) => (
-                          <Button
-                            key={tab.value}
-                            onClick={() => setReviewOffersTab(tab.value)}
-                            variant={reviewOffersTab === tab.value ? 'contained' : 'text'}
-                            startIcon={tab.icon}
-                            sx={{
-                              borderRadius: 0,
-                              borderBottom: reviewOffersTab === tab.value ? 2 : 0,
-                              borderColor: brandColors.primary,
-                              backgroundColor: reviewOffersTab === tab.value ? brandColors.primary : 'transparent',
-                              color: reviewOffersTab === tab.value ? 'white' : 'text.primary',
-                              '&:hover': {
-                                backgroundColor: reviewOffersTab === tab.value ? brandColors.secondary : 'rgba(0,0,0,0.04)'
-                              }
-                            }}
-                          >
-                            {tab.label}
-                          </Button>
-                        ))}
-                      </Box>
-                    </Box>
-                  </Box>
-
-                  {/* Tab Content */}
-                  {reviewOffersTab === 'overview' && (
-                    <>
-                      {/* Property Context Header & Workflow Stages */}
-                      <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
-                        {/* Your existing property context content */}
-                      </Paper>
-                    </>
-                  )}
-
-                  {reviewOffersTab === 'offers' && (
-                    <>
-                      {/* Active Offers Management */}
-                      <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
-                        {/* Your offers management content */}
-                      </Paper>
-                    </>
-                  )}
-
-                  {reviewOffersTab === 'comparison' && (
-                    <>
-                      {/* Offer Comparison Matrix */}
-                      <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
-                        {/* Your comparison content */}
-                      </Paper>
-                    </>
-                  )}
-
                   {/* Log Filters */}
                   <Box sx={{ mb: 4 }}>
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -4585,6 +4536,7 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Paper>
               )}
+
               {listingTab === 'TASKS' && (
                 <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
@@ -4895,6 +4847,7 @@ const CloseAgentPage: React.FC = () => {
             </Box>
           </>
         )}
+
         {state.activeTab === 'review-offers' && (
           <>
             <Paper 
@@ -5456,6 +5409,7 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                 </Box>
               </Paper>
+
               {/* Main Content Area */}
               <Box sx={{ display: 'flex', gap: 3 }}>
                 {/* Enhanced Left Sidebar - Advanced Comparison & Analysis */}
@@ -6530,6 +6484,1684 @@ const CloseAgentPage: React.FC = () => {
           </Paper>
         </Box>
       </Box>
+    </Box>
+  </>
+        )}
+
+                {state.activeTab === 'payments-finance' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Payments & Finance
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Professional payment processing, commission management, and financial reporting
+              </Typography>
+            </Paper>
+
+            {/* Professional Payment & Finance Interface */}
+            <Box sx={{ pl: 0, ml: 3 }}>
+              {/* Tab Navigation */}
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    {[
+                      { value: 'dashboard', label: 'DASHBOARD', icon: <AssessmentIcon /> },
+                      { value: 'payments', label: 'PAYMENTS', icon: <PaymentIcon /> },
+                      { value: 'invoices', label: 'INVOICES', icon: <ReceiptLongIcon /> }
+                    ].map((tab) => (
+                      <Button
+                        key={tab.value}
+                        onClick={() => setFinanceTab(tab.value)}
+                        variant={financeTab === tab.value ? 'contained' : 'text'}
+                        startIcon={tab.icon}
+                        sx={{
+                          borderRadius: 0,
+                          borderBottom: financeTab === tab.value ? 2 : 0,
+                          borderColor: brandColors.primary,
+                          backgroundColor: financeTab === tab.value ? brandColors.primary : 'transparent',
+                          color: financeTab === tab.value ? 'white' : 'text.primary',
+                          '&:hover': {
+                            backgroundColor: financeTab === tab.value ? brandColors.secondary : 'rgba(0,0,0,0.04)'
+                          }
+                        }}
+                      >
+                        {tab.label}
+                      </Button>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Tab Content */}
+              {financeTab === 'dashboard' && (
+                <>
+                  {/* Financial Overview Dashboard */}
+                  <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Financial Overview
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3 }}>
+                      {/* Total Commissions */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <MonetizationOnIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                          $24,850
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Total Commissions
+                        </Typography>
+                        <Typography variant="caption" color="success.main">
+                          +12% this month
+                        </Typography>
+                      </Box>
+                      
+                      {/* Pending Payments */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          $8,420
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Pending Payments
+                        </Typography>
+                        <Typography variant="caption" color="warning.main">
+                          3 transactions
+                        </Typography>
+                      </Box>
+                      
+                      {/* Monthly Revenue */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <TrendingUpIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                          $16,430
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Monthly Revenue
+                        </Typography>
+                        <Typography variant="caption" color="success.main">
+                          +8% vs last month
+                        </Typography>
+                      </Box>
+                      
+                      {/* Processing Speed */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
+                        <SpeedIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          2.4 days
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Avg Payment Time
+                        </Typography>
+                        <Typography variant="caption" color="success.main">
+                          Industry leading
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Business Intelligence & Reports */}
+                  <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Business Intelligence & Reports
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      {/* Sales Performance */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                          Sales Performance
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                            $24,850
+                          </Typography>
+                          <Chip label="+12%" color="success" size="small" />
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          Total sales this month
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" startIcon={<TrendingUpIcon />}>
+                            View Details
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            Generate Report
+                          </Button>
+                        </Box>
+                      </Box>
+
+                      {/* Payment Analytics */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                          Payment Analytics
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 700 }}>
+                            87%
+                          </Typography>
+                          <Chip label="+5%" color="success" size="small" />
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          On-time payment rate
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            View Analytics
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<DownloadIcon />}>
+                            Export Data
+                          </Button>
+                        </Box>
+                      </Box>
+
+                      {/* Cash Flow Overview */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                          Cash Flow Overview
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>
+                            $16,430
+                          </Typography>
+                          <Chip label="+8%" color="success" size="small" />
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          Net cash flow this month
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" startIcon={<TrendingUpIcon />}>
+                            View Cash Flow
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            Forecast
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Financial Reports */}
+                  <Paper elevation={1} sx={{ p: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Financial Reports
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
+                      {/* Commission Reports */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Commission Reports
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            Generate Report
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<DownloadIcon />}>
+                            Export to Excel
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Detailed commission tracking and analysis
+                        </Typography>
+                      </Box>
+                      
+                      {/* Revenue Analytics */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Revenue Analytics
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<TrendingUpIcon />}>
+                            View Trends
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            Performance Metrics
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Revenue growth and performance analysis
+                        </Typography>
+                      </Box>
+                      
+                      {/* Tax Reports */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Tax Reports
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<ReceiptLongIcon />}>
+                            Generate Tax Report
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<DownloadIcon />}>
+                            Export for Tax Filing
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Tax preparation and reporting tools
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {financeTab === 'payments' && (
+                <>
+                  {/* Payment Processing Center */}
+                  <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Payment Processing Center
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      {/* Commission Payments */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Commission Payments
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<PaymentIcon />}>
+                            Process Commission
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<ReceiptLongIcon />}>
+                            View Commission History
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Handle agent commission payments and tracking
+                        </Typography>
+                      </Box>
+                      
+                      {/* Client Payments */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Client Payments
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<CreditCardIcon />}>
+                            Process Client Payment
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<ReceiptLongIcon />}>
+                            View Payment History
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Manage deposits, closing costs, and fees
+                        </Typography>
+                      </Box>
+                      
+                      {/* Escrow Management */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Escrow Management
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+                          <Button size="small" variant="outlined" startIcon={<SecurityIcon />}>
+                            Manage Escrow
+                          </Button>
+                          <Button size="small" variant="outlined" startIcon={<AssessmentIcon />}>
+                            Escrow Reports
+                          </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Secure escrow account management and reporting
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Payment Methods & Integration */}
+                  <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Payment Methods & Integration
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
+                      {/* Direct Deposit */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Direct Deposit
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#4caf50' }} />
+                          <Typography variant="caption">Connected</Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Send payments directly to bank accounts
+                        </Typography>
+                      </Box>
+                      
+                      {/* Financial Transfer */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Financial Transfer
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#4caf50' }} />
+                          <Typography variant="caption">Connected</Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Secure wire transfers and ACH payments
+                        </Typography>
+                      </Box>
+                      
+                      {/* Credit Card Processing */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Credit Card Processing
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#ff9800' }} />
+                          <Typography variant="caption">Pending</Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Accept credit card payments from clients
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+
+                  {/* Recent Transactions */}
+                  <Paper elevation={1} sx={{ p: 3, backgroundColor: 'white' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                      Recent Transactions
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {[
+                        {
+                          id: 'TXN001',
+                          type: 'Commission Payment',
+                          amount: '$2,400',
+                          status: 'Completed',
+                          date: '2024-01-15',
+                          property: '123 Main St, Anytown, USA',
+                          client: 'John Smith'
+                        },
+                        {
+                          id: 'TXN002',
+                          type: 'Client Deposit',
+                          amount: '$15,000',
+                          status: 'Pending',
+                          date: '2024-01-14',
+                          property: '456 Oak Ave, Somewhere, USA',
+                          client: 'Sarah Johnson'
+                        },
+                        {
+                          id: 'TXN003',
+                          type: 'Closing Cost',
+                          amount: '$8,500',
+                          status: 'Completed',
+                          date: '2024-01-13',
+                          property: '789 Pine Rd, Elsewhere, USA',
+                          client: 'Mike Chen'
+                        },
+                        {
+                          id: 'TXN004',
+                          type: 'Commission Payment',
+                          amount: '$3,200',
+                          status: 'Processing',
+                          date: '2024-01-12',
+                          property: '321 Elm Dr, Nowhere, USA',
+                          client: 'Lisa Rodriguez'
+                        }
+                      ].map((transaction) => (
+                        <Box key={transaction.id} sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center',
+                          p: 2, 
+                          backgroundColor: '#f8f9fa', 
+                          borderRadius: 1 
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: '50%',
+                              backgroundColor: 
+                                transaction.status === 'Completed' ? '#4caf50' :
+                                transaction.status === 'Pending' ? '#ff9800' :
+                                transaction.status === 'Processing' ? '#2196f3' : '#9e9e9e',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontSize: '12px',
+                              fontWeight: 600
+                            }}>
+                              {transaction.status === 'Completed' ? '✓' :
+                               transaction.status === 'Pending' ? '⏳' :
+                               transaction.status === 'Processing' ? '⚡' : '?'}
+                            </Box>
+                            <Box>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                                {transaction.type}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {transaction.property} • {transaction.client}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box sx={{ textAlign: 'right' }}>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                              {transaction.amount}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {transaction.date}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {financeTab === 'invoices' && (
+                <>
+                  {/* Enhanced Invoice Management System */}
+                  <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: 'white' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        Invoice Management
+                      </Typography>
+                      <Button 
+                        variant="contained" 
+                        startIcon={<AddIcon />}
+                        sx={{ 
+                          backgroundColor: brandColors.primary, 
+                          color: 'white',
+                          '&:hover': { backgroundColor: brandColors.secondary }
+                        }}
+                      >
+                        + Create Invoice
+                      </Button>
+                    </Box>
+
+                    {/* Invoice Filters & Search */}
+                    <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+                      <TextField
+                        size="small"
+                        label="Date From"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ minWidth: 150 }}
+                      />
+                      <TextField
+                        size="small"
+                        label="Date To"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ minWidth: 150 }}
+                      />
+                      <TextField
+                        size="small"
+                        label="Customer Name"
+                        placeholder="Search customers..."
+                        sx={{ minWidth: 200 }}
+                      />
+                      <FormControl size="small" sx={{ minWidth: 150 }}>
+                        <InputLabel>Filter</InputLabel>
+                        <Select label="Filter">
+                          <MenuItem value="all">All Invoices</MenuItem>
+                          <MenuItem value="overdue">Overdue</MenuItem>
+                          <MenuItem value="paid">Paid</MenuItem>
+                          <MenuItem value="pending">Pending</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+                    {/* Invoice Table */}
+                    <Box sx={{ overflowX: 'auto' }}>
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '40px 120px 100px 200px 150px 100px 120px 120px 120px 120px 80px',
+                        gap: 1,
+                        p: 2,
+                        backgroundColor: '#f8f9fa',
+                        borderRadius: 1,
+                        mb: 2,
+                        fontWeight: 600,
+                        fontSize: '0.875rem'
+                      }}>
+                        <Box>✓</Box>
+                        <Box>Invoice Date</Box>
+                        <Box>Invoice#</Box>
+                        <Box>Customer</Box>
+                        <Box>Reference</Box>
+                        <Box>Status</Box>
+                        <Box>Due Date</Box>
+                        <Box>Payment Status</Box>
+                        <Box>Total Amount</Box>
+                        <Box>Balance</Box>
+                        <Box>Action</Box>
+                      </Box>
+
+                      {/* Invoice Rows */}
+                      {[
+                        {
+                          id: 'INV001',
+                          date: '2024-01-15',
+                          number: 'INV-001',
+                          customer: 'Jaxon Garcia',
+                          reference: 'Property Sale',
+                          status: 'Overdue',
+                          dueDate: '2024-01-10',
+                          paymentStatus: 'Pending',
+                          totalAmount: '$2,400.00',
+                          balance: '$2,400.00'
+                        },
+                        {
+                          id: 'INV002',
+                          date: '2024-01-14',
+                          number: 'INV-002',
+                          customer: 'Shelby Block',
+                          reference: 'Commission',
+                          status: 'Overdue',
+                          dueDate: '2024-01-09',
+                          paymentStatus: 'Unpaid',
+                          totalAmount: '$1,800.00',
+                          balance: '$1,800.00'
+                        },
+                        {
+                          id: 'INV003',
+                          date: '2024-01-13',
+                          number: 'INV-003',
+                          customer: 'Presley Garcia',
+                          reference: 'Closing Services',
+                          status: 'Overdue',
+                          dueDate: '2024-01-08',
+                          paymentStatus: 'Pending',
+                          totalAmount: '$3,200.00',
+                          balance: '$3,200.00'
+                        },
+                        {
+                          id: 'INV004',
+                          date: '2024-01-12',
+                          number: 'INV-004',
+                          customer: 'Jon Smith',
+                          reference: 'Property Management',
+                          status: 'Overdue',
+                          dueDate: '2024-01-07',
+                          paymentStatus: 'Unpaid',
+                          totalAmount: '$950.00',
+                          balance: '$950.00'
+                        },
+                        {
+                          id: 'INV005',
+                          date: '2024-01-11',
+                          number: 'INV-005',
+                          customer: 'Rochelle Garcia',
+                          reference: 'Listing Services',
+                          status: 'Overdue',
+                          dueDate: '2024-01-06',
+                          paymentStatus: 'Pending',
+                          totalAmount: '$1,500.00',
+                          balance: '$1,500.00'
+                        },
+                        {
+                          id: 'INV006',
+                          date: '2024-01-10',
+                          number: 'INV-006',
+                          customer: 'Jesse Garcia',
+                          reference: 'Commission',
+                          status: 'Paid',
+                          dueDate: '2024-01-05',
+                          paymentStatus: 'Paid',
+                          totalAmount: '$2,100.00',
+                          balance: '$0.00'
+                        },
+                        {
+                          id: 'INV007',
+                          date: '2024-01-09',
+                          number: 'INV-007',
+                          customer: 'Axe Cap Title Company',
+                          reference: 'Title Services',
+                          status: 'Paid',
+                          dueDate: '2024-01-04',
+                          paymentStatus: 'Paid',
+                          totalAmount: '$850.00',
+                          balance: '$0.00'
+                        },
+                        {
+                          id: 'INV008',
+                          date: '2024-01-08',
+                          number: 'INV-008',
+                          customer: 'Shelby Zip',
+                          reference: 'Property Sale',
+                          status: 'Paid',
+                          dueDate: '2024-01-03',
+                          paymentStatus: 'Paid',
+                          totalAmount: '$3,600.00',
+                          balance: '$0.00'
+                        }
+                      ].map((invoice) => (
+                        <Box key={invoice.id} sx={{ 
+                          display: 'grid', 
+                          gridTemplateColumns: '40px 120px 100px 200px 150px 100px 120px 120px 120px 120px 80px',
+                          gap: 1,
+                          p: 2,
+                          borderBottom: '1px solid #e0e0e0',
+                          alignItems: 'center',
+                          '&:hover': { backgroundColor: '#f5f5f5' }
+                        }}>
+                          <Box>
+                            <input type="checkbox" />
+                          </Box>
+                          <Box sx={{ fontSize: '0.875rem' }}>{invoice.date}</Box>
+                          <Box sx={{ fontSize: '0.875rem', fontWeight: 500 }}>{invoice.number}</Box>
+                          <Box sx={{ fontSize: '0.875rem' }}>{invoice.customer}</Box>
+                          <Box sx={{ fontSize: '0.875rem' }}>{invoice.reference}</Box>
+                          <Box>
+                            <Chip 
+                              label={invoice.status} 
+                              size="small" 
+                              sx={{ 
+                                backgroundColor: invoice.status === 'Overdue' ? '#ffebee' : '#e8f5e8',
+                                color: invoice.status === 'Overdue' ? '#c62828' : '#2e7d32',
+                                fontWeight: 600
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ fontSize: '0.875rem' }}>{invoice.dueDate}</Box>
+                          <Box>
+                            <Chip 
+                              label={invoice.paymentStatus} 
+                              size="small" 
+                              sx={{ 
+                                backgroundColor: invoice.paymentStatus === 'Paid' ? '#e8f5e8' : 
+                                               invoice.paymentStatus === 'Pending' ? '#fff3cd' : '#ffebee',
+                                color: invoice.paymentStatus === 'Paid' ? '#2e7d32' : 
+                                       invoice.paymentStatus === 'Pending' ? '#856404' : '#c62828',
+                                fontWeight: 600
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ fontSize: '0.875rem', fontWeight: 600 }}>{invoice.totalAmount}</Box>
+                          <Box sx={{ 
+                            fontSize: '0.875rem', 
+                            fontWeight: 600,
+                            color: invoice.balance === '$0.00' ? '#2e7d32' : '#c62828'
+                          }}>
+                            {invoice.balance}
+                          </Box>
+                          <Box>
+                            <IconButton size="small">
+                              <MoreVertIcon />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'working-documents' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssignmentTurnedInIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Templates
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage document templates and form collections
+              </Typography>
+            </Paper>
+
+            {/* Templates Content */}
+            <Box sx={{ pl: 0, ml: 3 }}>
+              {/* Template Management Header */}
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    My Templates
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <DescriptionIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      12 TEMPLATES
+                    </Typography>
+                  </Box>
+                </Box>
+                <Button 
+                  variant="contained" 
+                  startIcon={<CreateIcon />}
+                  sx={{ 
+                    backgroundColor: brandColors.primary,
+                    '&:hover': { backgroundColor: brandColors.primary, opacity: 0.9 }
+                  }}
+                >
+                  + Create Template
+                </Button>
+              </Box>
+
+              {/* Template Grid - 3x1 Layout */}
+              <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+                gap: 3,
+                mb: 4
+              }}>
+                {/* Template Cards */}
+                {[
+                  {
+                    name: 'Starter Agent Template',
+                    formsCount: 108,
+                    category: 'Starter Agent',
+                    description: 'Complete template for new agents with all essential forms',
+                    lastUpdated: '2 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'MPE Form Template',
+                    formsCount: 1,
+                    category: 'MPE Forms',
+                    description: 'Master Purchase Agreement template',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Special Cases Only',
+                    formsCount: 1,
+                    category: 'Special Cases',
+                    description: 'Template for unique transaction scenarios',
+                    lastUpdated: '3 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Condo Form Template',
+                    formsCount: 1,
+                    category: 'Condo',
+                    description: 'Specialized forms for condominium transactions',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Arizona Agents',
+                    formsCount: 2,
+                    category: 'State-Specific',
+                    description: 'Arizona-specific forms and disclosures',
+                    lastUpdated: '5 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'California Agents',
+                    formsCount: 2,
+                    category: 'State-Specific',
+                    description: 'California-specific forms and disclosures',
+                    lastUpdated: '4 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Brokerage Wide Template',
+                    formsCount: 2,
+                    category: 'Brokerage',
+                    description: 'Standard forms for entire brokerage',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Burbank Client Template',
+                    formsCount: 1,
+                    category: 'Client-Specific',
+                    description: 'Custom template for Burbank clients',
+                    lastUpdated: '2 weeks ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Essential Forms v1',
+                    formsCount: 3,
+                    category: 'Essential',
+                    description: 'Core forms every agent needs',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Luxury Property Template',
+                    formsCount: 5,
+                    category: 'Luxury',
+                    description: 'Specialized forms for high-value properties',
+                    lastUpdated: '3 days ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'Investment Property Template',
+                    formsCount: 4,
+                    category: 'Investment',
+                    description: 'Forms for investment property transactions',
+                    lastUpdated: '1 week ago',
+                    status: 'active'
+                  },
+                  {
+                    name: 'New Construction Template',
+                    formsCount: 6,
+                    category: 'New Construction',
+                    description: 'Forms for new construction projects',
+                    lastUpdated: '5 days ago',
+                    status: 'active'
+                  }
+                ].map((template, index) => (
+                  <Paper 
+                    key={index}
+                    elevation={2} 
+                    sx={{ 
+                      p: 3, 
+                      height: '100%',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                      cursor: 'pointer',
+                      '&:hover': { 
+                        transform: 'translateY(-2px)',
+                        boxShadow: 4
+                      }
+                    }}
+                  >
+                    {/* Template Header */}
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                          {template.name}
+                        </Typography>
+                        <Chip 
+                          label={template.category} 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                      {/* Quick Actions Menu */}
+                      <IconButton size="small">
+                        <MoreVertIcon />
+                      </IconButton>
+                    </Box>
+
+                    {/* Template Info */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        {template.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <VisibilityIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {template.formsCount} Forms
+                        </Typography>
+                      </Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Last updated: {template.lastUpdated}
+                      </Typography>
+                    </Box>
+
+                    {/* Template Actions */}
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        startIcon={<EditIcon />}
+                        sx={{ flex: 1 }}
+                      >
+                        Edit
+                      </Button>
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        startIcon={<AssignmentIcon />}
+                        sx={{ flex: 1 }}
+                      >
+                        Use
+                      </Button>
+                    </Box>
+                  </Paper>
+                ))}
+              </Box>
+
+              {/* Template Categories Summary */}
+              <Paper elevation={1} sx={{ p: 3, backgroundColor: '#f8f9fa' }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                  Template Categories
+                </Typography>
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)', md: 'repeat(6, 1fr)' },
+                  gap: 2 
+                }}>
+                  {[
+                    { name: 'Starter Agent', count: 1, color: '#4caf50' },
+                    { name: 'State-Specific', count: 2, color: '#2196f3' },
+                    { name: 'MPE Forms', count: 1, color: '#ff9800' },
+                    { name: 'Special Cases', count: 1, color: '#9c27b0' },
+                    { name: 'Condo', count: 1, color: '#f44336' },
+                    { name: 'Brokerage', count: 1, color: '#795548' },
+                    { name: 'Client-Specific', count: 1, color: '#607d8b' },
+                    { name: 'Essential', count: 1, color: '#00bcd4' },
+                    { name: 'Luxury', count: 1, color: '#e91e63' },
+                    { name: 'Investment', count: 1, color: '#8bc34a' },
+                    { name: 'New Construction', count: 1, color: '#ff5722' }
+                  ].map((category, index) => (
+                    <Box 
+                      key={index}
+                      sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        p: 2,
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                        border: '1px solid #e0e0e0'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ 
+                          width: 8, 
+                          height: 8, 
+                          backgroundColor: category.color, 
+                          borderRadius: '50%' 
+                        }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {category.name}
+                        </Typography>
+                      </Box>
+                      <Chip 
+                        label={category.count} 
+                        size="small" 
+                        color="primary" 
+                        variant="outlined"
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'incomplete-checklist' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ChecklistIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Checklists
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage transaction checklists and track completion status
+              </Typography>
+            </Paper>
+
+            {/* Checklist Content */}
+            <Box sx={{ pl: 0, ml: 3 }}>
+              {/* Transaction Details */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Transaction Details
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>ADDRESS</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>164 Front Street, Beverly Hills, CA 90210</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>AGENT</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Lauren Thompson</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>ACCEPTANCE DATE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>06/13/2018</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>CLOSE OF ESCROW</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>06/18/2015</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>CHECKLIST TYPE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Commercial Lease</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>TYPE</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Purchase / Tenant</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>PRICE PER SF</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>$230.00</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>SELLER</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Seller One</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>BUYER</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>Buyer One</Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Action Buttons */}
+              <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mb: 3, color: brandColors.primary }}>
+                  Quick Actions
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Order Home Warranty
+                  </Button>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Order NHD
+                  </Button>
+                  <Button variant="contained" sx={{ backgroundColor: brandColors.actions.primary }}>
+                    Get Paid Now!
+                  </Button>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <MenuItem value="">Checked</MenuItem>
+                      <MenuItem value="yes">Yes</MenuItem>
+                      <MenuItem value="no">No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <Select
+                      value=""
+                      displayEmpty
+                      size="small"
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      <MenuItem value="">Update Agent</MenuItem>
+                      <MenuItem value="agent1">Agent 1</MenuItem>
+                      <MenuItem value="agent2">Agent 2</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+
+              {/* Documentation Section */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary }}>
+                    Documentation
+                  </Typography>
+                  <Button variant="outlined" sx={{ borderColor: brandColors.primary, color: brandColors.primary }}>
+                    + Add New
+                  </Button>
+                </Box>
+                
+                {/* Documentation Table */}
+                <Box sx={{ overflowX: 'auto' }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, backgroundColor: 'grey.50', borderRadius: 1, mb: 2 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Documentation</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Status</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Docs</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Comments</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Actions</Typography>
+                  </Box>
+                  
+                  {/* Purchase Contract Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Purchase Contract</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                      <Typography sx={{ color: 'grey.500' }}>&gt;</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Save</Button>
+                      <Button size="small" variant="outlined">Cancel</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Listing Agreement Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Listing Agreement</Typography>
+                    <Chip label="Completed" color="success" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Unaccept</Button>
+                    </Box>
+                  </Box>
+
+                  {/* EMD Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">EMD</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                      <Typography sx={{ color: 'grey.500' }}>&gt;</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Save</Button>
+                      <Button size="small" variant="outlined">Cancel</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Disclosures Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Disclosures</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                      <CloseIcon sx={{ fontSize: 16, color: 'error.main' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: '4px' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Accept</Button>
+                      <Button size="small" variant="outlined">Reject</Button>
+                    </Box>
+                  </Box>
+
+                  {/* Inspections Row */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 1fr', gap: 2, p: 2, borderBottom: '1px solid', borderColor: 'grey.200', alignItems: 'center' }}>
+                    <Typography variant="body1">Inspections</Typography>
+                    <Chip label="Pending" color="warning" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <AssignmentIcon sx={{ fontSize: 20, color: 'grey.600' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <input type="text" placeholder="Add comment..." style={{ border: 'none', outline: 'none', width: '100%', padding: 'none' }} />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined">Attach</Button>
+                      <Button size="small" variant="outlined">Accept</Button>
+                      <Button size="small" variant="outlined">Reject</Button>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'tasks-reminders' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <TaskIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Tasks & Reminders
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage your tasks and set important reminders
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Tasks & Reminders Content</Typography>
+              <Typography variant="body1">This section will contain task management and reminder tools.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'digital-signature' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <EditIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Digital Signature
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Sign documents electronically with secure digital signatures
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              {/* Professional Document Management & E-Signature Interface */}
+              <Box sx={{ display: 'flex', gap: 3, mb: 4 }}>
+                {/* Left Sidebar - Features & Security */}
+                <Paper elevation={2} sx={{ p: 3, width: 280, height: 'fit-content' }}>
+                  <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                    Dreamery D-Sign
+                  </Typography>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                      Robust Management
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      360° summary of all your envelopes
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                      Easy Form Prep
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Prepare forms to send for signature
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e8f5e8', borderRadius: 1, border: '2px solid #4caf50' }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#2e7d32' }}>
+                      Highly Secure
+                    </Typography>
+                                          <Typography variant="body2" color="#2e7d32">
+                        Dreamery D-Sign adheres to the most stringent security standards
+                      </Typography>
+                  </Box>
+                  
+                                      <Button 
+                      variant="contained" 
+                      sx={{ 
+                        backgroundColor: brandColors.primary, 
+                        color: 'white',
+                        width: '100%',
+                        '&:hover': { backgroundColor: brandColors.secondary }
+                      }}
+                    >
+                      Request Demo
+                    </Button>
+                </Paper>
+
+                {/* Main Content - Document Viewer */}
+                <Paper elevation={2} sx={{ flex: 1, p: 3 }}>
+                  {/* Top Bar */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pb: 2, borderBottom: '1px solid #e0e0e0' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                        DREAMERY D-SIGN
+                      </Typography>
+                      <Chip label="Doc 1/1: purchase_agreement_2_.pdf" size="small" />
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Page 1/5
+                      </Typography>
+                      <Chip 
+                        label="DigiSign Verified" 
+                        size="small" 
+                        sx={{ backgroundColor: '#e8f5e8', color: '#2e7d32' }}
+                      />
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconButton size="small">
+                          <RemoveIcon />
+                        </IconButton>
+                        <Typography variant="body2" sx={{ minWidth: 50, textAlign: 'center' }}>
+                          150%
+                        </Typography>
+                        <IconButton size="small">
+                          <AddIcon />
+                        </IconButton>
+                      </Box>
+                      <Button 
+                        variant="contained" 
+                        sx={{ 
+                          backgroundColor: brandColors.primary, 
+                          color: 'white',
+                          '&:hover': { backgroundColor: brandColors.secondary }
+                        }}
+                      >
+                        Start
+                      </Button>
+                    </Box>
+                  </Box>
+
+                  {/* Document Content */}
+                  <Box sx={{ 
+                    border: '2px solid #e0e0e0', 
+                    borderRadius: 2, 
+                    p: 4, 
+                    backgroundColor: '#fafafa',
+                    minHeight: 600,
+                    position: 'relative'
+                  }}>
+                    <Typography variant="h4" sx={{ textAlign: 'center', mb: 3, fontWeight: 700, color: '#1a1a1a' }}>
+                      PURCHASE AGREEMENT
+                    </Typography>
+                    
+                    <Typography variant="body1" sx={{ 
+                      textAlign: 'center', 
+                      mb: 4, 
+                      p: 2, 
+                      backgroundColor: '#fff3cd', 
+                      border: '1px solid #ffeaa7',
+                      borderRadius: 1,
+                      color: '#856404'
+                    }}>
+                      THIS IS A LEGALLY BINDING CONTRACT BETWEEN PURCHASER AND SELLER. IF YOU DO NOT UNDERSTAND IT, SEEK LEGAL ADVICE.
+                    </Typography>
+
+                    {/* Document Sections */}
+                    <Box sx={{ mb: 4 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                        1. PARTIES TO CONTRACT - PROPERTY
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <TextField 
+                            fullWidth 
+                            label="Broker" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="Enter broker name"
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField 
+                            fullWidth 
+                            label="Purchaser" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="Enter purchaser name"
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField 
+                            fullWidth 
+                            label="Seller" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="Enter seller name"
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField 
+                            fullWidth 
+                            label="Property Description" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="Enter property details"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+
+                    <Box sx={{ mb: 4 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                        2. EARNEST MONEY DEPOSIT
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                          <TextField 
+                            fullWidth 
+                            label="Amount" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="$0.00"
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <FormControl fullWidth size="small">
+                            <InputLabel>Payment Type</InputLabel>
+                            <Select label="Payment Type">
+                              <MenuItem value="cash">Cash</MenuItem>
+                              <MenuItem value="check">Check</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <TextField 
+                            fullWidth 
+                            label="Broker Details" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="Enter broker details"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+
+                    <Box sx={{ mb: 4 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                        3. PURCHASE PRICE
+                      </Typography>
+                      <TextField 
+                        fullWidth 
+                        label="Total Purchase Price" 
+                        variant="outlined" 
+                        size="small"
+                        placeholder="$0.00"
+                        sx={{ maxWidth: 300 }}
+                      />
+                    </Box>
+
+                    <Box sx={{ mb: 4 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                        4. FINANCING
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <FormControl fullWidth size="small">
+                            <InputLabel>Loan Type</InputLabel>
+                            <Select label="Loan Type">
+                              <MenuItem value="va">VA</MenuItem>
+                              <MenuItem value="fha">FHA</MenuItem>
+                              <MenuItem value="sdhda">SDHDA</MenuItem>
+                              <MenuItem value="conventional">Conventional</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField 
+                            fullWidth 
+                            label="Delivery Date" 
+                            variant="outlined" 
+                            size="small"
+                            placeholder="MM/DD/YYYY"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+
+                    {/* Signature Fields Placeholder */}
+                    <Box sx={{ 
+                      mt: 4, 
+                      p: 3, 
+                      backgroundColor: '#e3f2fd', 
+                      border: '2px dashed #2196f3',
+                      borderRadius: 2,
+                      textAlign: 'center'
+                    }}>
+                      <Typography variant="h6" sx={{ color: '#1976d2', mb: 1 }}>
+                        Digital Signature Fields
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Click "Start" to begin the digital signature process
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
+              </Box>
+
+              {/* Additional Features */}
+              <Box sx={{ display: 'flex', gap: 3, mb: 4 }}>
+                {/* Envelope Management */}
+                <Paper elevation={2} sx={{ flex: 1, p: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
+                    Envelope Management
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={4}>
+                      <Box sx={{ textAlign: 'center', p: 2 }}>
+                        <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 700 }}>12</Typography>
+                        <Typography variant="body2" color="text.secondary">Active Envelopes</Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Box sx={{ textAlign: 'center', p: 2 }}>
+                        <Typography variant="h4" sx={{ color: '#ff9800', fontWeight: 700 }}>5</Typography>
+                        <Typography variant="body2" color="text.secondary">Pending Signatures</Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Box sx={{ textAlign: 'center', p: 2 }}>
+                        <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>28</Typography>
+                        <Typography variant="body2" color="text.secondary">Completed This Month</Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Paper>
+
+                {/* Recent Activity */}
+                <Paper elevation={2} sx={{ flex: 1, p: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
+                    Recent Activity
+                  </Typography>
+                  <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                    {[
+                      { action: 'Document signed', client: 'John Smith', time: '2 hours ago', status: 'completed' },
+                      { action: 'Envelope sent', client: 'Sarah Johnson', time: '4 hours ago', status: 'pending' },
+                      { action: 'Document viewed', client: 'Mike Wilson', time: '6 hours ago', status: 'viewed' },
+                      { action: 'Signature completed', client: 'Lisa Brown', time: '1 day ago', status: 'completed' }
+                    ].map((activity, index) => (
+                      <Box key={index} sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        py: 1,
+                        borderBottom: index < 3 ? '1px solid #f0f0f0' : 'none'
+                      }}>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            {activity.action}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {activity.client} • {activity.time}
+                          </Typography>
+                        </Box>
+                        <Chip 
+                          label={activity.status} 
+                          size="small" 
+                          sx={{ 
+                            backgroundColor: activity.status === 'completed' ? '#e8f5e8' : 
+                                           activity.status === 'pending' ? '#fff3cd' : '#e3f2fd',
+                            color: activity.status === 'completed' ? '#2e7d32' : 
+                                   activity.status === 'pending' ? '#856404' : '#1976d2'
+                          }}
+                        />
+                      </Box>
+                    ))}
+                  </Box>
+                </Paper>
+              </Box>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'canceled-contracts' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <CancelIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Canceled Contracts
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                View and manage canceled or terminated contracts
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Canceled Contracts Content</Typography>
+              <Typography variant="body1">This section will contain canceled contract information.</Typography>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'access-archives' && (
+          <>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ArchiveIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Access Archives
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Access historical documents and completed transactions
+              </Typography>
+            </Paper>
+            <Box sx={{ pl: 0, ml: 3 }}>
+              <Typography variant="h6">Access Archives Content</Typography>
+              <Typography variant="body1">This section will contain archived documents and records.</Typography>
             </Box>
           </>
         )}

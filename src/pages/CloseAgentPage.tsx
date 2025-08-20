@@ -105,6 +105,8 @@ import {
   StrikethroughS as StrikethroughSIcon,
   Save as SaveIcon,
   Send as SendIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  CloudUpload as UploadIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 
@@ -311,6 +313,17 @@ const CloseAgentPage: React.FC = () => {
   const [reviewOffersTab, setReviewOffersTab] = useState('dashboard');
   const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
   const [digitalSignatureTab, setDigitalSignatureTab] = useState('dashboard');
+  
+  // Write Offer Tab State
+  const [writeOfferTab, setWriteOfferTab] = useState('offer-details');
+  
+  // Send Offers Modal State
+  const [sendOffersModalOpen, setSendOffersModalOpen] = useState(false);
+  const [selectedOffers, setSelectedOffers] = useState<number[]>([]);
+  const [recipients, setRecipients] = useState<string[]>(['beth.gilbert@seller.com', 'shawn.gilbert@seller.com']);
+  const [customMessage, setCustomMessage] = useState('Hi Beth and Shawn,\n\nYou have been invited to review your offers for 1235 H Street.\n\nThanks!');
+  const [attachCSV, setAttachCSV] = useState(true);
+  const [hideBuyerInfo, setHideBuyerInfo] = useState(true);
 
   // Sample offers data for comparison
   const offers = [
@@ -1412,14 +1425,158 @@ const CloseAgentPage: React.FC = () => {
                 </Box>
               </Paper>
 
-              {/* Existing Transactions List */}
+              {/* Activity Log Interface */}
               <Paper elevation={2} sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: brandColors.primary }}>
-                  Active Transactions
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Your active transactions will appear here.
-                </Typography>
+                {/* Header with Navigation and Property Address */}
+                <Box sx={{ 
+                  mb: 3, 
+                  p: 3, 
+                  background: 'linear-gradient(90deg, #e3f2fd 0%, #f3e5f5 100%)',
+                  borderRadius: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: 2
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Button
+                      variant="text"
+                      startIcon={<ArrowBackIcon />}
+                      sx={{ color: brandColors.primary, fontWeight: 600 }}
+                    >
+                      Back to Offers
+                    </Button>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      1235 H Street, Sacramento, CA 95824
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Activity Log Title and Controls */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                    Activity Log
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ position: 'relative' }}>
+                      <TextField
+                        placeholder="Search"
+                        size="small"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            pr: 6,
+                            backgroundColor: 'white'
+                          }
+                        }}
+                      />
+                      <SearchIcon sx={{ 
+                        position: 'absolute', 
+                        right: 12, 
+                        top: '50%', 
+                        transform: 'translateY(-50%)',
+                        color: 'text.secondary'
+                      }} />
+                    </Box>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DownloadIcon />}
+                      sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+                    >
+                      Download
+                    </Button>
+                  </Box>
+                </Box>
+
+                {/* Activity Log Table */}
+                <Paper elevation={1} sx={{ backgroundColor: 'white' }}>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr auto',
+                    borderBottom: '2px solid #e0e0e0',
+                    p: 2,
+                    backgroundColor: '#f8f9fa'
+                  }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                      Activity
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                        Date and Time
+                      </Typography>
+                      <ArrowUpwardIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                    </Box>
+                  </Box>
+
+                  {/* Activity Entries */}
+                  {[
+                    {
+                      activity: 'Kristen Turner has signed the accepted offer from **Beth Brown**.',
+                      dateTime: 'July 1, 2022, 1:30 PM PDT'
+                    },
+                    {
+                      activity: 'Kristen Turner has invited **Sally Seller** to review offers.',
+                      dateTime: 'July 4, 2022, 10:30 PM PDT'
+                    },
+                    {
+                      activity: 'Beth Brown has submitted a counter offer.',
+                      dateTime: 'July 4, 2022, 8:30 AM PDT'
+                    },
+                    {
+                      activity: 'Beth Brown has read the counter offer email.',
+                      dateTime: 'July 3, 2022, 4:30 PM PDT'
+                    },
+                    {
+                      activity: 'Kristen Turner has declined an offer from **James Harvey**.',
+                      dateTime: 'July 3, 2022, 2:30 PM PDT'
+                    },
+                    {
+                      activity: 'Sally Seller has signed counter documents.',
+                      dateTime: 'July 3, 2022, 1:30 PM PDT'
+                    },
+                    {
+                      activity: 'Kristen Turner has countered offer from **Beth Brown**.',
+                      dateTime: 'July 3, 2022, 10:00 AM PDT'
+                    },
+                    {
+                      activity: 'Sally Seller has opened email invite to review offers.',
+                      dateTime: 'July 2, 2022, 1:30 PM PDT'
+                    },
+                    {
+                      activity: 'Kristen Turner has invited **Sally Seller** to review offers.',
+                      dateTime: 'July 2, 2022, 10:30 PM PDT'
+                    },
+                    {
+                      activity: 'Kristen Turner has added a **new offer** from **James Harvey**.',
+                      dateTime: 'July 2, 2022, 10:20 AM PDT'
+                    }
+                  ].map((entry, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr auto',
+                        p: 2,
+                        borderBottom: '1px solid #e0e0e0',
+                        '&:hover': { backgroundColor: '#f8f9fa' },
+                        '&:last-child': { borderBottom: 'none' }
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                        {entry.activity.split('**').map((part, i) => 
+                          i % 2 === 0 ? part : (
+                            <Box key={i} component="span" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                              {part}
+                            </Box>
+                          )
+                        )}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+                        {entry.dateTime}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Paper>
               </Paper>
             </Box>
 
@@ -4933,9 +5090,618 @@ const CloseAgentPage: React.FC = () => {
                 Create and submit property offers for your clients
               </Typography>
             </Paper>
+            {/* Professional Offer Creation Interface */}
             <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Write An Offer Content</Typography>
-              <Typography variant="body1">This section will contain the offer creation form.</Typography>
+              {/* Tab Navigation */}
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    {[
+                      { value: 'offer-details', label: 'OFFER DETAILS', icon: <DescriptionIcon /> },
+                      { value: 'property-info', label: 'PROPERTY INFO', icon: <BusinessIcon /> },
+                      { value: 'buyer-details', label: 'BUYER DETAILS', icon: <PersonIcon /> },
+                      { value: 'financing', label: 'FINANCING', icon: <AccountBalanceIcon /> },
+                      { value: 'terms', label: 'TERMS & CONDITIONS', icon: <AssignmentIcon /> },
+                      { value: 'attachments', label: 'ATTACHMENTS', icon: <AttachMoneyIcon /> },
+                      { value: 'review', label: 'REVIEW & SUBMIT', icon: <CheckCircleIcon /> },
+                      { value: 'my-offers', label: 'MY OFFERS', icon: <ListAltIcon /> }
+                    ].map((tab) => (
+                      <Button
+                        key={tab.value}
+                        onClick={() => setWriteOfferTab(tab.value)}
+                        variant={writeOfferTab === tab.value ? 'contained' : 'text'}
+                        startIcon={tab.icon}
+                        sx={{
+                          borderRadius: 0,
+                          borderBottom: writeOfferTab === tab.value ? 2 : 0,
+                          borderColor: brandColors.primary,
+                          backgroundColor: writeOfferTab === tab.value ? brandColors.primary : 'transparent',
+                          color: writeOfferTab === tab.value ? 'white' : 'text.primary',
+                          '&:hover': {
+                            backgroundColor: writeOfferTab === tab.value ? brandColors.secondary : 'rgba(0,0,0,0.04)'
+                          }
+                        }}
+                      >
+                        {tab.label}
+                      </Button>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Tab Content */}
+              {writeOfferTab === 'offer-details' && (
+                <>
+                  {/* Offer Details Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Offer Details
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Offer Price"
+                        type="number"
+                        placeholder="$0.00"
+                        InputProps={{
+                          startAdornment: <Typography variant="body1" sx={{ mr: 1 }}>$</Typography>
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Earnest Money"
+                        type="number"
+                        placeholder="$0.00"
+                        InputProps={{
+                          startAdornment: <Typography variant="body1" sx={{ mr: 1 }}>$</Typography>
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Closing Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Offer Expiration"
+                        type="datetime-local"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'property-info' && (
+                <>
+                  {/* Property Information Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Property Information
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Property Address"
+                        placeholder="123 Main Street"
+                      />
+                      <TextField
+                        fullWidth
+                        label="MLS Number"
+                        placeholder="MLS #123456"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Property Type"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="single-family">Single Family</MenuItem>
+                        <MenuItem value="multi-family">Multi Family</MenuItem>
+                        <MenuItem value="condo">Condo</MenuItem>
+                        <MenuItem value="townhouse">Townhouse</MenuItem>
+                        <MenuItem value="land">Land</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        label="Square Footage"
+                        type="number"
+                        placeholder="0"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Bedrooms"
+                        type="number"
+                        placeholder="0"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Bathrooms"
+                        type="number"
+                        placeholder="0"
+                      />
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'buyer-details' && (
+                <>
+                  {/* Buyer Details Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Buyer Information
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Name"
+                        placeholder="John Doe"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Buyer Email"
+                        type="email"
+                        placeholder="john.doe@email.com"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Buyer Phone"
+                        placeholder="(555) 123-4567"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Buyer Agent"
+                        placeholder="Agent Name"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Buyer Agent Email"
+                        type="email"
+                        placeholder="agent@email.com"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Buyer Agent Phone"
+                        placeholder="(555) 987-6543"
+                      />
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'financing' && (
+                <>
+                  {/* Financing Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Financing Details
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Loan Type"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="conventional">Conventional</MenuItem>
+                        <MenuItem value="fha">FHA</MenuItem>
+                        <MenuItem value="va">VA</MenuItem>
+                        <MenuItem value="usda">USDA</MenuItem>
+                        <MenuItem value="cash">Cash</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        label="Down Payment"
+                        type="number"
+                        placeholder="$0.00"
+                        InputProps={{
+                          startAdornment: <Typography variant="body1" sx={{ mr: 1 }}>$</Typography>
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Interest Rate"
+                        type="number"
+                        placeholder="0.00"
+                        InputProps={{
+                          endAdornment: <Typography variant="body1" sx={{ ml: 1 }}>%</Typography>
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Term"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="15">15 Years</MenuItem>
+                        <MenuItem value="20">20 Years</MenuItem>
+                        <MenuItem value="30">30 Years</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        label="Pre-Approval Amount"
+                        type="number"
+                        placeholder="$0.00"
+                        InputProps={{
+                          startAdornment: <Typography variant="body1" sx={{ mr: 1 }}>$</Typography>
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Lender Name"
+                        placeholder="Bank or Lender Name"
+                      />
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'terms' && (
+                <>
+                  {/* Terms & Conditions Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Terms & Conditions
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Inspection Period (Days)"
+                        type="number"
+                        placeholder="0"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Appraisal Contingency"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="required">Required</MenuItem>
+                        <MenuItem value="waived">Waived</MenuItem>
+                        <MenuItem value="conditional">Conditional</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        label="Financing Contingency"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="required">Required</MenuItem>
+                        <MenuItem value="waived">Waived</MenuItem>
+                        <MenuItem value="conditional">Conditional</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        label="Sale of Buyer's Home"
+                        select
+                        defaultValue=""
+                      >
+                        <MenuItem value="not-required">Not Required</MenuItem>
+                        <MenuItem value="required">Required</MenuItem>
+                        <MenuItem value="conditional">Conditional</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        label="Additional Terms"
+                        placeholder="Enter any additional terms or conditions..."
+                      />
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'attachments' && (
+                <>
+                  {/* Attachments Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Required Documents & Attachments
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+                          Pre-Approval Letter
+                        </Typography>
+                        <Button variant="outlined" startIcon={<UploadIcon />}>
+                          Upload Document
+                        </Button>
+                      </Box>
+                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+                          Proof of Funds
+                        </Typography>
+                        <Button variant="outlined" startIcon={<UploadIcon />}>
+                          Upload Document
+                        </Button>
+                      </Box>
+                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+                          Buyer's Agent Agreement
+                        </Typography>
+                        <Button variant="outlined" startIcon={<UploadIcon />}>
+                          Upload Document
+                        </Button>
+                      </Box>
+                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
+                          + Add More Documents
+                        </Typography>
+                        <Button variant="text" startIcon={<AddIcon />}>
+                          Add Document Type
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'review' && (
+                <>
+                  {/* Review & Submit Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                      Review & Submit Offer
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3, mb: 3 }}>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
+                          Offer Summary
+                        </Typography>
+                        <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                          $450,000
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Offer Price
+                        </Typography>
+                      </Box>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
+                          Closing Date
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                          Dec 15, 2024
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Target Close
+                        </Typography>
+                      </Box>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
+                          Financing
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                          Conventional
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Loan Type
+                        </Typography>
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        startIcon={<SaveIcon />}
+                        sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+                      >
+                        Save Draft
+                      </Button>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<SendIcon />}
+                        sx={{ backgroundColor: brandColors.primary }}
+                      >
+                        Submit Offer
+                      </Button>
+                    </Box>
+                  </Paper>
+                </>
+              )}
+
+              {writeOfferTab === 'my-offers' && (
+                <>
+                  {/* My Offers Management Tab */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                    {/* Header with Navigation and Agent Info */}
+                    <Box sx={{ 
+                      mb: 3, 
+                      p: 3, 
+                      background: 'linear-gradient(90deg, #e3f2fd 0%, #f3e5f5 100%)',
+                      borderRadius: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: 2
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Button
+                          variant="text"
+                          startIcon={<ArrowBackIcon />}
+                          sx={{ color: brandColors.primary, fontWeight: 600 }}
+                        >
+                          Back
+                        </Button>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Tracy Lee
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>|</Typography>
+                        <Button
+                          variant="text"
+                          sx={{ color: brandColors.primary, textDecoration: 'underline' }}
+                        >
+                          Edit Details
+                        </Button>
+                      </Box>
+                    </Box>
+
+                    {/* Offers Summary and Actions */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                        All Offers (5)
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button
+                          variant="text"
+                          startIcon={<DownloadIcon />}
+                          sx={{ color: brandColors.primary }}
+                        >
+                          Download Offers
+                        </Button>
+                        <Button
+                          variant="text"
+                          startIcon={<DescriptionIcon />}
+                          sx={{ color: brandColors.primary }}
+                        >
+                          Activity Log
+                        </Button>
+                      </Box>
+                    </Box>
+
+                    {/* Offers Table */}
+                    <Paper elevation={1} sx={{ backgroundColor: 'white' }}>
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '2fr 1fr 1fr auto',
+                        borderBottom: '2px solid #e0e0e0',
+                        p: 2,
+                        backgroundColor: '#f8f9fa'
+                      }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                          Property Address
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                          Offer Amount
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                            Date Submitted
+                          </Typography>
+                          <ArrowUpwardIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                        </Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                          Actions
+                        </Typography>
+                      </Box>
+
+                      {/* Offer Rows */}
+                      {[
+                        {
+                          address: '11 Arcangelo Gate, Elder Mills, York, Ontario L4L 1A7',
+                          amount: '$1,295,000',
+                          date: '03/22/2023 04:32:00 P.M.',
+                          status: 'Countered',
+                          statusColor: '#e1bee7'
+                        },
+                        {
+                          address: '70 Simmons St, Elder Mills, York, Ontario L4L 1A7',
+                          amount: '$1,310,000',
+                          date: '03/22/2023 04:32:00 P.M.',
+                          status: 'In Review',
+                          statusColor: '#bbdefb'
+                        },
+                        {
+                          address: '163 Erb St W, Waterloo, Ontario N2L 1V2',
+                          amount: '$1,300,000',
+                          date: '03/22/2023 04:32:00 P.M.',
+                          status: 'In Review',
+                          statusColor: '#bbdefb'
+                        },
+                        {
+                          address: '11623 Dixie Rd, Sandringham-Wellington North, Peel, Ontario L6R 0B3',
+                          amount: '$1,400,000',
+                          date: '03/22/2023 04:32:00 P.M.',
+                          status: 'Declined',
+                          statusColor: '#e0e0e0'
+                        },
+                        {
+                          address: '8872 9 Line, Rural Halton Hills, Halton, Ontario L0P 1K0',
+                          amount: '$1,299,999',
+                          date: '03/22/2023 04:32:00 P.M.',
+                          status: 'Declined',
+                          statusColor: '#e0e0e0'
+                        }
+                      ].map((offer, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: '2fr 1fr 1fr auto',
+                            p: 2,
+                            borderBottom: '1px solid #e0e0e0',
+                            '&:hover': { backgroundColor: '#f8f9fa' },
+                            '&:last-child': { borderBottom: 'none' }
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
+                            {offer.address}
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                            {offer.amount}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+                            {offer.date}
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Chip
+                              label={offer.status}
+                              size="small"
+                              sx={{
+                                backgroundColor: offer.statusColor,
+                                color: 'text.primary',
+                                fontWeight: 600
+                              }}
+                            />
+                            {offer.status === 'Countered' && (
+                              <IconButton size="small">
+                                <ExpandMoreIcon />
+                              </IconButton>
+                            )}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Paper>
+                  </Paper>
+                </>
+              )}
+
+              {/* Navigation Buttons */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+                <Button
+                  variant="outlined"
+                  disabled={writeOfferTab === 'offer-details'}
+                  onClick={() => {
+                    const tabs = ['offer-details', 'property-info', 'buyer-details', 'financing', 'terms', 'attachments', 'review', 'my-offers'];
+                    const currentIndex = tabs.indexOf(writeOfferTab);
+                    if (currentIndex > 0) {
+                      setWriteOfferTab(tabs[currentIndex - 1]);
+                    }
+                  }}
+                  sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  disabled={writeOfferTab === 'review' || writeOfferTab === 'my-offers'}
+                  onClick={() => {
+                    const tabs = ['offer-details', 'property-info', 'buyer-details', 'financing', 'terms', 'attachments', 'review', 'my-offers'];
+                    const currentIndex = tabs.indexOf(writeOfferTab);
+                    if (currentIndex < tabs.length - 1) {
+                      setWriteOfferTab(tabs[currentIndex + 1]);
+                    }
+                  }}
+                  sx={{ backgroundColor: brandColors.primary }}
+                >
+                  {writeOfferTab === 'review' || writeOfferTab === 'my-offers' ? 'Submit' : 'Next'}
+                </Button>
+              </Box>
             </Box>
           </>
         )}
@@ -6421,6 +7187,17 @@ const CloseAgentPage: React.FC = () => {
                           >
                             Share
                           </Button>
+                          <Button
+                            variant="contained"
+                            startIcon={<SendIcon />}
+                            onClick={() => setSendOffersModalOpen(true)}
+                            sx={{
+                              backgroundColor: brandColors.primary,
+                              '&:hover': { backgroundColor: brandColors.secondary }
+                            }}
+                          >
+                            Send to Sellers
+                          </Button>
                         </Box>
 
                         {/* Notes & Attachments */}
@@ -6458,6 +7235,168 @@ const CloseAgentPage: React.FC = () => {
           </Paper>
         </>
       )}
+
+      {/* Send Offers Modal */}
+      <Modal
+        open={sendOffersModalOpen}
+        onClose={() => setSendOffersModalOpen(false)}
+        aria-labelledby="send-offers-modal-title"
+        aria-describedby="send-offers-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '95%', sm: 600, md: 700 },
+          maxHeight: '90vh',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 24,
+          p: 0,
+          overflow: 'hidden'
+        }}>
+          {/* Modal Header */}
+          <Box sx={{
+            p: 3,
+            backgroundColor: brandColors.primary,
+            color: 'white',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+              Share offers with Sellers
+            </Typography>
+            <IconButton
+              onClick={() => setSendOffersModalOpen(false)}
+              sx={{ color: 'white' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          {/* Modal Content */}
+          <Box sx={{ p: 3, maxHeight: 'calc(90vh - 140px)', overflow: 'auto' }}>
+            {/* Description */}
+            <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
+              Send an email to your recipients with a link to easily compare offers from their browser. 
+              Along with your selected offers, all offers will be visible to Sellers.
+              <Button
+                variant="text"
+                size="small"
+                sx={{ ml: 1, color: brandColors.primary, textDecoration: 'underline' }}
+              >
+                Preview
+              </Button>
+            </Typography>
+
+            {/* Recipients Section */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                Recipients
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+                    To
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, minHeight: 40, p: 1, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+                    {recipients.map((email, index) => (
+                      <Chip
+                        key={index}
+                        label={email}
+                        onDelete={() => setRecipients(prev => prev.filter((_, i) => i !== index))}
+                        sx={{ backgroundColor: '#e3f2fd', color: '#1976d2' }}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Button variant="text" size="small" sx={{ color: brandColors.primary }}>
+                    Bcc
+                  </Button>
+                  <Button variant="text" size="small" sx={{ color: brandColors.primary }}>
+                    Cc
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Custom Message Section */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                Custom Message - optional
+              </Typography>
+              <TextField
+                multiline
+                rows={4}
+                fullWidth
+                value={customMessage}
+                onChange={(e) => setCustomMessage(e.target.value)}
+                placeholder="Write your message here..."
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: '#f8f9fa'
+                  }
+                }}
+              />
+            </Box>
+
+            {/* Sharing Options */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                Sharing Options
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={attachCSV}
+                      onChange={(e) => setAttachCSV(e.target.checked)}
+                    />
+                  }
+                  label="Attach CSV of all offers to email"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={hideBuyerInfo}
+                      onChange={(e) => setHideBuyerInfo(e.target.checked)}
+                    />
+                  }
+                  label="Hide Buyer information (default)"
+                />
+                <Typography variant="caption" color="text.secondary" sx={{ ml: 4 }}>
+                  Reduce bias by hiding buyer names and offer documents when sharing.
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Action Buttons */}
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+              <Button
+                variant="outlined"
+                onClick={() => setSendOffersModalOpen(false)}
+                sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // Handle sending offers
+                  console.log('Sending offers:', { selectedOffers, recipients, customMessage, attachCSV, hideBuyerInfo });
+                  setSendOffersModalOpen(false);
+                }}
+                sx={{ backgroundColor: brandColors.primary }}
+              >
+                Send
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   </>
 )}
@@ -7096,15 +8035,8 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     {[
                       { value: 'dashboard', label: 'DASHBOARD', icon: <AssessmentIcon /> },
-                      { value: 'sales', label: 'SALES', icon: <AttachMoneyIcon /> },
-                      { value: 'purchases', label: 'PURCHASES', icon: <ReceiptIcon /> },
-                      { value: 'lending', label: 'LENDING', icon: <AccountBalanceIcon /> },
-                      { value: 'escrow', label: 'ESCROW DEPOSIT', icon: <SecurityIcon /> },
-                      { value: 'banking', label: 'BANKING', icon: <AccountBalanceIcon /> },
                       { value: 'payments', label: 'PAYMENTS', icon: <PaymentIcon /> },
-                      { value: 'invoices', label: 'INVOICES', icon: <ReceiptLongIcon /> },
-                      { value: 'reports', label: 'REPORTS', icon: <AssessmentIcon /> },
-                      { value: 'company', label: 'COMPANY', icon: <BusinessIcon /> }
+                      { value: 'invoices', label: 'INVOICES', icon: <ReceiptLongIcon /> }
                     ].map((tab) => (
                       <Button
                         key={tab.value}

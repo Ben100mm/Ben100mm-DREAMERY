@@ -194,74 +194,72 @@ const AdvertisePage: React.FC = () => {
             Manage and track your advertising campaigns across multiple platforms.
           </Typography>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
             {mockAdvertisingCampaigns.map((campaign) => (
-              <Grid item xs={12} md={6} lg={3} key={campaign.id}>
-                <CampaignCard>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                      <Box>
-                        <Typography variant="h6" gutterBottom>
-                          {campaign.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {campaign.type}
-                        </Typography>
-                      </Box>
-                      <Chip 
-                        label={campaign.status} 
-                        color={
-                          campaign.status === 'Active' ? 'success' : 
-                          campaign.status === 'Paused' ? 'warning' : 
-                          'error'
-                        }
-                        size="small"
-                      />
+              <CampaignCard key={campaign.id}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box>
+                      <Typography variant="h6" gutterBottom>
+                        {campaign.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {campaign.type}
+                      </Typography>
                     </Box>
+                    <Chip 
+                      label={campaign.status} 
+                      color={
+                        campaign.status === 'Active' ? 'success' : 
+                        campaign.status === 'Paused' ? 'warning' : 
+                        'error'
+                      }
+                      size="small"
+                    />
+                  </Box>
 
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Budget:</strong> {campaign.budget}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Spent:</strong> {campaign.spent}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Impressions:</strong> {campaign.impressions}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Clicks:</strong> {campaign.clicks}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Conversions:</strong> {campaign.conversions}
-                      </Typography>
-                    </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Budget:</strong> {campaign.budget}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Spent:</strong> {campaign.spent}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Impressions:</strong> {campaign.impressions}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Clicks:</strong> {campaign.clicks}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Conversions:</strong> {campaign.conversions}
+                    </Typography>
+                  </Box>
 
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>CTR:</strong> {campaign.ctr}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>CPC:</strong> {campaign.cpc}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Duration:</strong> {campaign.startDate} - {campaign.endDate}
-                      </Typography>
-                    </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>CTR:</strong> {campaign.ctr}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>CPC:</strong> {campaign.cpc}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Duration:</strong> {campaign.startDate} - {campaign.endDate}
+                    </Typography>
+                  </Box>
 
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button size="small" variant="outlined">
-                        View Details
-                      </Button>
-                      <Button size="small" variant="contained">
-                        Manage
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </CampaignCard>
-              </Grid>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button size="small" variant="outlined">
+                      View Details
+                    </Button>
+                    <Button size="small" variant="contained">
+                      Manage
+                    </Button>
+                  </Box>
+                </CardContent>
+              </CampaignCard>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
@@ -275,23 +273,22 @@ const AdvertisePage: React.FC = () => {
             Choose from professional ad templates designed for real estate marketing.
           </Typography>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 3 }}>
             {mockAdTemplates.map((template) => (
-              <Grid item xs={12} md={6} lg={4} key={template.id}>
-                <Card>
-                  <Box sx={{ position: 'relative' }}>
-                    <img 
-                      src={template.preview} 
-                      alt={template.name}
-                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                    />
-                    <Chip 
-                      label={template.type} 
-                      color="primary"
-                      size="small"
-                      sx={{ position: 'absolute', top: 8, right: 8 }}
-                    />
-                  </Box>
+              <Card key={template.id}>
+                <Box sx={{ position: 'relative' }}>
+                  <img 
+                    src={template.preview} 
+                    alt={template.name}
+                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                  />
+                  <Chip 
+                    label={template.type} 
+                    color="primary"
+                    size="small"
+                    sx={{ position: 'absolute', top: 8, right: 8 }}
+                  />
+                </Box>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       {template.name}
@@ -314,16 +311,15 @@ const AdvertisePage: React.FC = () => {
                     </Button>
                   </CardContent>
                 </Card>
-              </Grid>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
       {/* Analytics Tab */}
       {activeTab === 2 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 2' } }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -400,49 +396,46 @@ const AdvertisePage: React.FC = () => {
                 </TableContainer>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
-            <AnalyticsCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Overall Performance
+          <AnalyticsCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Overall Performance
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Total Impressions:</strong> {mockAnalyticsData.totalImpressions}
                 </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Total Impressions:</strong> {mockAnalyticsData.totalImpressions}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Total Clicks:</strong> {mockAnalyticsData.totalClicks}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Total Conversions:</strong> {mockAnalyticsData.totalConversions}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Average CTR:</strong> {mockAnalyticsData.averageCTR}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Average CPC:</strong> {mockAnalyticsData.averageCPC}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Total Spent:</strong> {mockAnalyticsData.totalSpent}
-                  </Typography>
-                </Box>
-                <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                  View Detailed Report
-                </Button>
-              </CardContent>
-            </AnalyticsCard>
-          </Grid>
-        </Grid>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Total Clicks:</strong> {mockAnalyticsData.totalClicks}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Total Conversions:</strong> {mockAnalyticsData.totalConversions}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Average CTR:</strong> {mockAnalyticsData.averageCTR}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Average CPC:</strong> {mockAnalyticsData.averageCPC}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Total Spent:</strong> {mockAnalyticsData.totalSpent}
+                </Typography>
+              </Box>
+              <Button variant="contained" fullWidth sx={{ mt: 2 }}>
+                View Detailed Report
+              </Button>
+            </CardContent>
+          </AnalyticsCard>
+        </Box>
       )}
 
       {/* Targeting Tab */}
       {activeTab === 3 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+          <Card>
+            <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Audience Targeting
                 </Typography>
@@ -450,61 +443,51 @@ const AdvertisePage: React.FC = () => {
                   Define your target audience for more effective advertising campaigns.
                 </Typography>
                 
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Age Range"
-                      margin="normal"
-                      defaultValue="25-45"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Income Level"
-                      margin="normal"
-                      defaultValue="$50K-$150K"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Location"
-                      margin="normal"
-                      defaultValue="Downtown, Suburban"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Interests"
-                      margin="normal"
-                      defaultValue="Real Estate, Investment"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Keywords"
-                      multiline
-                      rows={3}
-                      margin="normal"
-                      defaultValue="luxury homes, investment properties, downtown condos"
-                    />
-                  </Grid>
-                </Grid>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Age Range"
+                    margin="normal"
+                    defaultValue="25-45"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Income Level"
+                    margin="normal"
+                    defaultValue="$50K-$150K"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Location"
+                    margin="normal"
+                    defaultValue="Downtown, Suburban"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Interests"
+                    margin="normal"
+                    defaultValue="Real Estate, Investment"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Keywords"
+                    multiline
+                    rows={3}
+                    margin="normal"
+                    defaultValue="luxury homes, investment properties, downtown condos"
+                    sx={{ gridColumn: '1 / -1' }}
+                  />
+                </Box>
 
                 <Button variant="contained" fullWidth sx={{ mt: 2 }}>
                   Save Targeting
                 </Button>
               </CardContent>
             </Card>
-          </Grid>
+          </Card>
 
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
+          <Card>
+            <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Platform Selection
                 </Typography>
@@ -548,24 +531,23 @@ const AdvertisePage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Card>
+        </Box>
 
         {/* Placeholder Advertising Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Advertising Campaigns
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
           {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`advertise-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
+            <Card key={`advertise-placeholder-${index}`} sx={{ 
+              height: '100%', 
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              '&:hover': { 
+                transform: 'translateY(-4px)', 
+                boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+              }
+            }}>
                 <CardMedia
                   component="img"
                   height="200"
@@ -619,9 +601,8 @@ const AdvertisePage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
           ))}
-        </Grid>
+        </Box>
       )}
     </PageTemplate>
   );

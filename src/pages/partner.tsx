@@ -194,92 +194,90 @@ const PartnerPage: React.FC = () => {
             Discover potential partners and collaboration opportunities in the real estate industry.
           </Typography>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
             {mockPartnershipOpportunities.map((opportunity) => (
-              <Grid item xs={12} md={6} lg={3} key={opportunity.id}>
-                <PartnerCard>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                      <Box>
-                        <Typography variant="h6" gutterBottom>
-                          {opportunity.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {opportunity.type}
-                        </Typography>
-                      </Box>
-                      <Chip 
-                        label={opportunity.status} 
-                        color="success"
-                        size="small"
-                      />
-                    </Box>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                      <LocationIcon sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
+              <PartnerCard key={opportunity.id}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box>
+                      <Typography variant="h6" gutterBottom>
+                        {opportunity.name}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {opportunity.location}
+                        {opportunity.type}
                       </Typography>
                     </Box>
+                    <Chip 
+                      label={opportunity.status} 
+                      color="success"
+                      size="small"
+                    />
+                  </Box>
 
-                    <Typography variant="body2" paragraph>
-                      {opportunity.description}
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <LocationIcon sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {opportunity.location}
                     </Typography>
+                  </Box>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Rating value={opportunity.rating} readOnly size="small" />
-                      <Typography variant="body2" sx={{ ml: 1 }}>
-                        ({opportunity.rating})
-                      </Typography>
-                    </Box>
+                  <Typography variant="body2" paragraph>
+                    {opportunity.description}
+                  </Typography>
 
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Projects:</strong> {opportunity.projects}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Revenue:</strong> {opportunity.revenue}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Contact:</strong> {opportunity.contact}
-                      </Typography>
-                    </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Rating value={opportunity.rating} readOnly size="small" />
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      ({opportunity.rating})
+                    </Typography>
+                  </Box>
 
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        <strong>Specialties:</strong>
-                      </Typography>
-                      {opportunity.specialties.map((specialty, index) => (
-                        <Chip 
-                          key={index}
-                          label={specialty} 
-                          size="small"
-                          variant="outlined"
-                          sx={{ mr: 0.5, mb: 0.5 }}
-                        />
-                      ))}
-                    </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Projects:</strong> {opportunity.projects}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Revenue:</strong> {opportunity.revenue}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      <strong>Contact:</strong> {opportunity.contact}
+                    </Typography>
+                  </Box>
 
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button size="small" variant="outlined">
-                        View Profile
-                      </Button>
-                      <Button size="small" variant="contained">
-                        Contact
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </PartnerCard>
-              </Grid>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <strong>Specialties:</strong>
+                    </Typography>
+                    {opportunity.specialties.map((specialty, index) => (
+                      <Chip 
+                        key={index}
+                        label={specialty} 
+                        size="small"
+                        variant="outlined"
+                        sx={{ mr: 0.5, mb: 0.5 }}
+                      />
+                    ))}
+                  </Box>
+
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button size="small" variant="outlined">
+                      View Profile
+                    </Button>
+                    <Button size="small" variant="contained">
+                      Contact
+                    </Button>
+                  </Box>
+                </CardContent>
+              </PartnerCard>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
       {/* Active Partnerships Tab */}
       {activeTab === 1 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 2' } }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -360,20 +358,19 @@ const PartnerPage: React.FC = () => {
                 </TableContainer>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
-            <PartnershipCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Partnership Summary
+          <PartnershipCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Partnership Summary
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Total Partners:</strong> {mockPartnershipMetrics.totalPartners}
                 </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Total Partners:</strong> {mockPartnershipMetrics.totalPartners}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Active Partnerships:</strong> {mockPartnershipMetrics.activePartnerships}
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  <strong>Active Partnerships:</strong> {mockPartnershipMetrics.activePartnerships}
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     <strong>Total Revenue:</strong> {mockPartnershipMetrics.totalRevenue}
@@ -499,47 +496,38 @@ const PartnerPage: React.FC = () => {
                   Create and customize partnership agreements with our template system.
                 </Typography>
                 
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Partner Name"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Project Type"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Start Date"
-                      type="date"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="End Date"
-                      type="date"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Project Description"
-                      multiline
-                      rows={3}
-                      margin="normal"
-                    />
-                  </Grid>
-                </Grid>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Partner Name"
+                    margin="normal"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Project Type"
+                    margin="normal"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Start Date"
+                    type="date"
+                    margin="normal"
+                  />
+                  <TextField
+                    fullWidth
+                    label="End Date"
+                    type="date"
+                    margin="normal"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Project Description"
+                    multiline
+                    rows={3}
+                    margin="normal"
+                    sx={{ gridColumn: { xs: '1 / -1', sm: '1 / -1' } }}
+                  />
+                </Box>
 
                 <Button variant="contained" fullWidth sx={{ mt: 2 }}>
                   Generate Agreement
@@ -548,7 +536,6 @@ const PartnerPage: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -594,8 +581,7 @@ const PartnerPage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+        </Box>
 
         {/* Placeholder Partnership Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>

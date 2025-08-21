@@ -1,0 +1,995 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  IconButton,
+  Tooltip,
+  Avatar,
+  Badge,
+  AppBar,
+  Toolbar,
+  Drawer,
+  List,
+  Grid,
+  useTheme,
+  useMediaQuery,
+  Menu,
+  MenuItem,
+  Chip,
+  ListItemIcon,
+  Divider,
+  FormControl,
+  Select,
+  InputLabel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Modal,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Card,
+  CardContent,
+  CardMedia,
+  useMediaQuery as useMediaQueryHook
+} from '@mui/material';
+import {
+  Assessment as AssessmentIcon,
+  Edit as EditIcon,
+  Description as DescriptionIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
+  CheckCircle as CheckCircleIcon,
+  ContentCopy as ContentCopyIcon,
+  ContentPaste as ContentPasteIcon,
+  Delete as DeleteIcon,
+  Close as CloseIcon,
+  Remove as RemoveIcon,
+  Add as AddIcon,
+  Create as CreateIcon,
+  TextFields as TextFieldsIcon,
+  Person as PersonIcon,
+  Event as EventIcon,
+  Schedule as ScheduleIcon,
+  CheckBox as CheckBoxIcon,
+  Input as InputIcon,
+  StrikethroughS as StrikethroughSIcon,
+  Search as SearchIcon,
+  Business as BusinessIcon,
+  Save as SaveIcon,
+  Send as SendIcon,
+  ArrowBack as ArrowBackIcon,
+  MoreVert as MoreVertIcon,
+  Visibility as VisibilityIcon,
+  AccountBalance as AccountBalanceIcon,
+  AttachMoney as AttachMoneyIcon,
+  Receipt as ReceiptIcon,
+  Security as SecurityIcon,
+  Payment as PaymentIcon,
+  ReceiptLong as ReceiptLongIcon,
+  ListAlt as ListAltIcon,
+  CompareArrows as CompareArrowsIcon,
+  MonetizationOn as MonetizationOnIcon,
+  AccountBalanceWallet as AccountBalanceWalletIcon,
+  TrendingUp as TrendingUpIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  ExpandMore as ExpandMoreIcon,
+  CloudUpload as UploadIcon,
+  Download as DownloadIcon,
+  LocationOn as LocationOnIcon,
+  Phone as PhoneIcon,
+  Email as EmailIcon,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
+  FilterList as FilterListIcon,
+  Sort as SortIcon,
+  Refresh as RefreshIcon,
+  Print as PrintIcon,
+  Share as ShareIcon,
+  Notifications as NotificationsIcon,
+  Settings as SettingsIcon,
+  Help as HelpIcon,
+  ExitToApp as ExitToAppIcon,
+  Dashboard as DashboardIcon,
+  Group as GroupIcon,
+  Assignment as AssignmentIcon,
+  Timeline as TimelineIcon,
+  BarChart as BarChartIcon,
+  PieChart as PieChartIcon,
+  TableChart as TableChartIcon,
+  TrendingDown as TrendingDownIcon,
+  Speed as SpeedIcon,
+  EmojiEvents as EmojiEventsIcon,
+  School as SchoolIcon,
+  Book as BookIcon,
+  VideoLibrary as VideoLibraryIcon,
+  Article as ArticleIcon,
+  Policy as PolicyIcon,
+  Gavel as GavelIcon,
+  VerifiedUser as VerifiedUserIcon,
+  Warning as WarningIcon,
+  Error as ErrorIcon,
+  Info as InfoIcon,
+  Check as CheckIcon,
+  Cancel as CancelIcon,
+  Pending as PendingIcon,
+  CalendarToday as CalendarTodayIcon,
+  AccessTime as AccessTimeIcon,
+  LocationCity as LocationCityIcon,
+  Home as HomeIcon,
+  Apartment as ApartmentIcon,
+  BusinessCenter as BusinessCenterIcon,
+  Store as StoreIcon,
+  Hotel as HotelIcon,
+  Menu as MenuIcon,
+  Archive as ArchiveIcon
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+
+// Brand colors
+const brandColors = {
+  primary: '#1a365d',
+  secondary: '#2d3748',
+  accent: '#3182ce',
+  success: '#38a169',
+  warning: '#d69e2e',
+  error: '#e53e3e',
+  info: '#3182ce'
+};
+
+const CloseBrokeragePage: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
+
+  // State management
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [drawerOpen, setDrawerOpen] = useState(!isMobile);
+  const [financeTab, setFinanceTab] = useState('dashboard');
+  const [reviewOffersTab, setReviewOffersTab] = useState('dashboard');
+  const [writeOfferTab, setWriteOfferTab] = useState('offer-details');
+  const [digitalSignatureTab, setDigitalSignatureTab] = useState('dashboard');
+  const [sendOffersModalOpen, setSendOffersModalOpen] = useState(false);
+  const [selectedOffers, setSelectedOffers] = useState<number[]>([]);
+  const [recipients, setRecipients] = useState<string[]>(['brokerage@example.com']);
+  const [customMessage, setCustomMessage] = useState('Hi,\n\nYou have been invited to review offers for your property.\n\nBest regards,\nBrokerage Team');
+  const [attachCSV, setAttachCSV] = useState(true);
+  const [hideBuyerInfo, setHideBuyerInfo] = useState(false);
+
+  // Sample data
+  const agents = [
+    { id: 1, name: 'Sarah Johnson', avatar: 'SJ', performance: 95, transactions: 12, revenue: 45000 },
+    { id: 2, name: 'Mike Wilson', avatar: 'MW', performance: 87, transactions: 8, revenue: 32000 },
+    { id: 3, name: 'Lisa Brown', avatar: 'LB', performance: 92, transactions: 15, revenue: 58000 },
+    { id: 4, name: 'David Lee', avatar: 'DL', performance: 78, transactions: 6, revenue: 22000 },
+    { id: 5, name: 'Emily Davis', avatar: 'ED', performance: 89, transactions: 11, revenue: 41000 }
+  ];
+
+  const transactions = [
+    { id: 1, property: '123 Main St, Sacramento, CA', agent: 'Sarah Johnson', status: 'Active', value: 450000, progress: 75 },
+    { id: 2, property: '456 Oak Ave, Sacramento, CA', agent: 'Mike Wilson', status: 'Pending', value: 320000, progress: 45 },
+    { id: 3, property: '789 Pine Rd, Sacramento, CA', agent: 'Lisa Brown', status: 'Active', value: 580000, progress: 90 },
+    { id: 4, property: '321 Elm St, Sacramento, CA', agent: 'David Lee', status: 'Pending', value: 220000, progress: 30 },
+    { id: 5, property: '654 Maple Dr, Sacramento, CA', agent: 'Emily Davis', status: 'Active', value: 410000, progress: 60 }
+  ];
+
+  const offers = [
+    { id: 1, property: '123 Main St, Sacramento, CA', buyer: 'John Smith', amount: 450000, status: 'Countered', agent: 'Sarah Johnson', date: '2024-01-15' },
+    { id: 2, property: '456 Oak Ave, Sacramento, CA', buyer: 'Mary Johnson', amount: 320000, status: 'In Review', agent: 'Mike Wilson', date: '2024-01-14' },
+    { id: 3, property: '789 Pine Rd, Sacramento, CA', buyer: 'Robert Brown', amount: 580000, status: 'Accepted', agent: 'Lisa Brown', date: '2024-01-13' },
+    { id: 4, property: '321 Elm St, Sacramento, CA', buyer: 'Jennifer Lee', amount: 220000, status: 'Declined', agent: 'David Lee', date: '2024-01-12' },
+    { id: 5, property: '654 Maple Dr, Sacramento, CA', buyer: 'Michael Davis', amount: 410000, status: 'Pending', agent: 'Emily Davis', date: '2024-01-11' }
+  ];
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  return (
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <Drawer
+        variant={isMobile ? 'temporary' : 'permanent'}
+        open={drawerOpen}
+        onClose={handleDrawerToggle}
+        sx={{
+          width: 280,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 280,
+            boxSizing: 'border-box',
+            backgroundColor: brandColors.primary,
+            color: 'white'
+          }
+        }}
+      >
+        {/* Sidebar Header */}
+        <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+            Dreamery Brokerage
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 1 }}>
+            Management Portal
+          </Typography>
+        </Box>
+
+        {/* Sidebar Navigation */}
+        <List sx={{ pt: 2 }}>
+          {[
+            { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+            { value: 'transactions', label: 'Transactions', icon: <AssignmentIcon /> },
+            { value: 'agents', label: 'Agent Management', icon: <GroupIcon /> },
+            { value: 'listings', label: 'Listings', icon: <HomeIcon /> },
+            { value: 'offers', label: 'Offers', icon: <DescriptionIcon /> },
+            { value: 'documents', label: 'Documents', icon: <DescriptionIcon /> },
+            { value: 'templates', label: 'Templates', icon: <AssignmentIcon /> },
+            { value: 'digital-signature', label: 'D-Sign', icon: <CreateIcon /> },
+            { value: 'payments-finance', label: 'Payments & Finance', icon: <AccountBalanceIcon /> },
+            { value: 'tasks', label: 'Tasks & Reminders', icon: <AssignmentIcon /> },
+            { value: 'checklists', label: 'Checklists', icon: <CheckCircleIcon /> },
+            { value: 'working-documents', label: 'Working Documents', icon: <DescriptionIcon /> },
+            { value: 'archives', label: 'Access Archives', icon: <ArchiveIcon /> },
+            { value: 'compliance', label: 'Compliance', icon: <PolicyIcon /> },
+            { value: 'training', label: 'Training & Resources', icon: <SchoolIcon /> },
+            { value: 'reports', label: 'Reports & Analytics', icon: <AssessmentIcon /> }
+          ].map((item) => (
+            <Box key={item.value} sx={{ px: 2, py: 1 }}>
+              <Button
+                fullWidth
+                onClick={() => handleTabChange(item.value)}
+                variant={activeTab === item.value ? 'contained' : 'text'}
+                startIcon={item.icon}
+                sx={{
+                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                  color: activeTab === item.value ? 'white' : 'rgba(255,255,255,0.8)',
+                  backgroundColor: activeTab === item.value ? 'rgba(255,255,255,0.1)' : 'transparent',
+                  '&:hover': {
+                    backgroundColor: activeTab === item.value ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)'
+                  }
+                }}
+              >
+                {item.label}
+              </Button>
+            </Box>
+          ))}
+        </List>
+      </Drawer>
+
+      {/* Main Content */}
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Top Bar */}
+        <AppBar position="static" sx={{ backgroundColor: 'white', color: 'text.primary', boxShadow: 1 }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: 'none' } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ flexGrow: 1, color: brandColors.primary, fontWeight: 600 }}>
+              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1).replace('-', ' ')}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <IconButton color="inherit">
+                <NotificationsIcon />
+              </IconButton>
+              <IconButton color="inherit">
+                <SettingsIcon />
+              </IconButton>
+              <Avatar sx={{ bgcolor: brandColors.primary }}>B</Avatar>
+            </Box>
+          </Toolbar>
+        </AppBar>
+
+        {/* Content Area */}
+        <Box sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5' }}>
+          {/* Dashboard Tab */}
+          {activeTab === 'dashboard' && (
+            <>
+              <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                  <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />
+                  <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    Brokerage Dashboard
+                  </Typography>
+                </Box>
+                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                  Comprehensive overview of brokerage performance, agent activities, and key metrics
+                </Typography>
+              </Paper>
+
+              {/* Key Metrics */}
+              <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <MonetizationOnIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                      $198,000
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Revenue This Month
+                    </Typography>
+                    <Typography variant="caption" color="success.main">
+                      +15% vs last month
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <GroupIcon sx={{ fontSize: 40, color: brandColors.success, mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.success }}>
+                      5
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Active Agents
+                    </Typography>
+                    <Typography variant="caption" color="success.main">
+                      All performing well
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <AssignmentIcon sx={{ fontSize: 40, color: brandColors.warning, mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.warning }}>
+                      52
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Active Transactions
+                    </Typography>
+                    <Typography variant="caption" color="success.main">
+                      +8 this week
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <HomeIcon sx={{ fontSize: 40, color: brandColors.info, mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.info }}>
+                      28
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Active Listings
+                    </Typography>
+                    <Typography variant="caption" color="success.main">
+                      5 new this month
+                    </Typography>
+                  </Paper>
+                </Grid>
+              </Grid>
+
+              {/* Agent Performance Overview */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Agent Performance Overview
+                </Typography>
+                <Grid container spacing={3}>
+                  {agents.map((agent) => (
+                    <Grid item xs={12} sm={6} md={4} key={agent.id}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <Avatar sx={{ bgcolor: brandColors.primary, mr: 2 }}>
+                              {agent.avatar}
+                            </Avatar>
+                            <Box>
+                              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                {agent.name}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Performance: {agent.performance}%
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Transactions:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {agent.transactions}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Revenue:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.success }}>
+                              ${agent.revenue.toLocaleString()}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+
+              {/* Recent Activity */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Recent Activity
+                </Typography>
+                <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                  {[
+                    { action: 'New listing added', agent: 'Sarah Johnson', property: '123 Main St', time: '2 hours ago', status: 'completed' },
+                    { action: 'Offer submitted', agent: 'Mike Wilson', property: '456 Oak Ave', time: '4 hours ago', status: 'pending' },
+                    { action: 'Transaction closed', agent: 'Lisa Brown', property: '789 Pine Rd', time: '6 hours ago', status: 'completed' },
+                    { action: 'Document signed', agent: 'David Lee', property: '321 Elm St', time: '1 day ago', status: 'completed' },
+                    { action: 'New agent onboarded', agent: 'Emily Davis', property: 'N/A', time: '2 days ago', status: 'completed' }
+                  ].map((activity, index) => (
+                    <Box key={index} sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center', 
+                      py: 1,
+                      borderBottom: index < 4 ? '1px solid #f0f0f0' : 'none'
+                    }}>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {activity.action}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {activity.agent} • {activity.property !== 'N/A' ? activity.property : 'Onboarding'} • {activity.time}
+                        </Typography>
+                      </Box>
+                      <Chip 
+                        label={activity.status} 
+                        size="small" 
+                        sx={{ 
+                          backgroundColor: activity.status === 'completed' ? '#e8f5e8' : '#fff3cd',
+                          color: activity.status === 'completed' ? '#2e7d32' : '#856404'
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </>
+          )}
+
+          {/* Transactions Tab */}
+          {activeTab === 'transactions' && (
+            <>
+              <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                  <AssignmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                  <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    Transaction Management
+                  </Typography>
+                </Box>
+                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                  Monitor and manage all active transactions across the brokerage
+                </Typography>
+              </Paper>
+
+              {/* Transaction Summary */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Transaction Overview
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                        52
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Transactions
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.success, fontWeight: 700 }}>
+                        38
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Active
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.warning, fontWeight: 700 }}>
+                        14
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Pending
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.info, fontWeight: 700 }}>
+                        $18.2M
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Value
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Paper>
+
+              {/* Transactions List */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Active Transactions
+                </Typography>
+                <Box sx={{ maxHeight: 500, overflowY: 'auto' }}>
+                  {transactions.map((transaction) => (
+                    <Box
+                      key={transaction.id}
+                      sx={{
+                        p: 3,
+                        border: '1px solid #e0e0e0',
+                        borderRadius: 2,
+                        mb: 2,
+                        backgroundColor: 'white',
+                        '&:hover': { backgroundColor: '#f8f9fa' }
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          {transaction.property}
+                        </Typography>
+                        <Chip
+                          label={transaction.status}
+                          size="small"
+                          sx={{
+                            backgroundColor: transaction.status === 'Active' ? '#e8f5e8' : '#fff3cd',
+                            color: transaction.status === 'Active' ? '#2e7d32' : '#856404'
+                          }}
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Agent: {transaction.agent}
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.success }}>
+                          ${transaction.value.toLocaleString()}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Progress:
+                        </Typography>
+                        <Box sx={{ flexGrow: 1, bgcolor: '#e0e0e0', borderRadius: 1, height: 8 }}>
+                          <Box
+                            sx={{
+                              width: `${transaction.progress}%`,
+                              height: '100%',
+                              bgcolor: brandColors.primary,
+                              borderRadius: 1
+                            }}
+                          />
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          {transaction.progress}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </>
+          )}
+
+          {/* Agent Management Tab */}
+          {activeTab === 'agents' && (
+            <>
+              <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                  <GroupIcon sx={{ fontSize: 28, color: 'white' }} />
+                  <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    Agent Management
+                  </Typography>
+                </Box>
+                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                  Manage agent performance, assignments, and development
+                </Typography>
+              </Paper>
+
+              {/* Agent Performance Dashboard */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Agent Performance Dashboard
+                </Typography>
+                <Grid container spacing={3}>
+                  {agents.map((agent) => (
+                    <Grid item xs={12} sm={6} md={4} key={agent.id}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                            <Avatar sx={{ bgcolor: brandColors.primary, mr: 2, width: 56, height: 56 }}>
+                              {agent.avatar}
+                            </Avatar>
+                            <Box>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {agent.name}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Agent ID: {agent.id}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          
+                          <Box sx={{ mb: 3 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Performance Score:
+                              </Typography>
+                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                {agent.performance}%
+                              </Typography>
+                            </Box>
+                            <Box sx={{ bgcolor: '#e0e0e0', borderRadius: 1, height: 8, mb: 2 }}>
+                              <Box
+                                sx={{
+                                  width: `${agent.performance}%`,
+                                  height: '100%',
+                                  bgcolor: agent.performance >= 90 ? brandColors.success : 
+                                           agent.performance >= 80 ? brandColors.warning : brandColors.error,
+                                  borderRadius: 1
+                                }}
+                              />
+                            </Box>
+                          </Box>
+
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Active Transactions:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {agent.transactions}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Monthly Revenue:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.success }}>
+                              ${agent.revenue.toLocaleString()}
+                            </Typography>
+                          </Box>
+
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              startIcon={<VisibilityIcon />}
+                              sx={{ flex: 1 }}
+                            >
+                              View Details
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              startIcon={<EditIcon />}
+                              sx={{ flex: 1 }}
+                            >
+                              Edit
+                            </Button>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+
+              {/* Add New Agent */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Add New Agent
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Agent Name"
+                      variant="outlined"
+                      placeholder="Enter full name"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      variant="outlined"
+                      placeholder="Enter email address"
+                      type="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Phone"
+                      variant="outlined"
+                      placeholder="Enter phone number"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="License Number"
+                      variant="outlined"
+                      placeholder="Enter license number"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Add Agent
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </>
+          )}
+
+                     {/* Listings Tab */}
+           {activeTab === 'listings' && (
+             <>
+               <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                   <HomeIcon sx={{ fontSize: 28, color: 'white' }} />
+                   <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                     Listings Management
+                   </Typography>
+                 </Box>
+                 <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                   Manage all property listings across the brokerage
+                 </Typography>
+               </Paper>
+
+               {/* Listings Summary */}
+               <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                   Listings Overview
+                 </Typography>
+                 <Grid container spacing={3}>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                         28
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Total Listings
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.success, fontWeight: 700 }}>
+                         22
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Active
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.warning, fontWeight: 700 }}>
+                         6
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Pending
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.info, fontWeight: 700 }}>
+                         $12.8M
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Total Value
+                       </Typography>
+                     </Box>
+                   </Grid>
+                 </Grid>
+               </Paper>
+
+               {/* Listings Table */}
+               <Paper elevation={2} sx={{ p: 3 }}>
+                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                   Active Listings
+                 </Typography>
+                 <Box sx={{ maxHeight: 500, overflowY: 'auto' }}>
+                   {[
+                     { id: 1, address: '123 Main St, Sacramento, CA', price: 450000, agent: 'Sarah Johnson', status: 'Active', days: 15, views: 45 },
+                     { id: 2, address: '456 Oak Ave, Sacramento, CA', price: 320000, agent: 'Mike Wilson', status: 'Active', days: 8, views: 32 },
+                     { id: 3, address: '789 Pine Rd, Sacramento, CA', price: 580000, agent: 'Lisa Brown', status: 'Active', days: 22, views: 67 },
+                     { id: 4, address: '321 Elm St, Sacramento, CA', price: 220000, agent: 'David Lee', status: 'Pending', days: 3, views: 12 },
+                     { id: 5, address: '654 Maple Dr, Sacramento, CA', price: 410000, agent: 'Emily Davis', status: 'Active', days: 18, views: 38 }
+                   ].map((listing) => (
+                     <Box
+                       key={listing.id}
+                       sx={{
+                         p: 3,
+                         border: '1px solid #e0e0e0',
+                         borderRadius: 2,
+                         mb: 2,
+                         backgroundColor: 'white',
+                         '&:hover': { backgroundColor: '#f8f9fa' }
+                       }}
+                     >
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                         <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                           {listing.address}
+                         </Typography>
+                         <Chip
+                           label={listing.status}
+                           size="small"
+                           sx={{
+                             backgroundColor: listing.status === 'Active' ? '#e8f5e8' : '#fff3cd',
+                             color: listing.status === 'Active' ? '#2e7d32' : '#856404'
+                           }}
+                         />
+                       </Box>
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                         <Typography variant="body2" color="text.secondary">
+                           Agent: {listing.agent}
+                         </Typography>
+                         <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.success }}>
+                           ${listing.price.toLocaleString()}
+                         </Typography>
+                       </Box>
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                         <Typography variant="body2" color="text.secondary">
+                           Days on Market: {listing.days}
+                         </Typography>
+                         <Typography variant="body2" color="text.secondary">
+                           Views: {listing.views}
+                         </Typography>
+                       </Box>
+                     </Box>
+                   ))}
+                 </Box>
+               </Paper>
+             </>
+           )}
+
+           {/* Offers Tab */}
+           {activeTab === 'offers' && (
+             <>
+               <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                   <DescriptionIcon sx={{ fontSize: 28, color: 'white' }} />
+                   <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                     Offers Management
+                   </Typography>
+                 </Box>
+                 <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                   Review and manage all offers across brokerage listings
+                 </Typography>
+               </Paper>
+
+               {/* Offers Summary */}
+               <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                   Offers Overview
+                 </Typography>
+                 <Grid container spacing={3}>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>
+                         15
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Total Offers
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.success, fontWeight: 700 }}>
+                         8
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         In Review
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.warning, fontWeight: 700 }}>
+                         4
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Countered
+                       </Typography>
+                     </Box>
+                   </Grid>
+                   <Grid item xs={12} sm={6} md={3}>
+                     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center' }}>
+                       <Typography variant="h4" sx={{ color: brandColors.info, fontWeight: 700 }}>
+                         3
+                       </Typography>
+                       <Typography variant="body2" color="text.secondary">
+                         Accepted
+                       </Typography>
+                     </Box>
+                   </Grid>
+                 </Grid>
+               </Paper>
+
+               {/* Offers Table */}
+               <Paper elevation={2} sx={{ p: 3 }}>
+                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                   Recent Offers
+                 </Typography>
+                 <Box sx={{ maxHeight: 500, overflowY: 'auto' }}>
+                   {offers.map((offer) => (
+                     <Box
+                       key={offer.id}
+                       sx={{
+                         p: 3,
+                         border: '1px solid #e0e0e0',
+                         borderRadius: 2,
+                         mb: 2,
+                         backgroundColor: 'white',
+                         '&:hover': { backgroundColor: '#f8f9fa' }
+                       }}
+                     >
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                         <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                           {offer.property}
+                         </Typography>
+                         <Chip
+                           label={offer.status}
+                           size="small"
+                           sx={{
+                             backgroundColor: offer.status === 'Accepted' ? '#e8f5e8' : 
+                                            offer.status === 'Countered' ? '#fff3cd' : 
+                                            offer.status === 'In Review' ? '#e3f2fd' : '#ffebee',
+                             color: offer.status === 'Accepted' ? '#2e7d32' : 
+                                    offer.status === 'Countered' ? '#856404' : 
+                                    offer.status === 'In Review' ? '#1976d2' : '#c62828'
+                           }}
+                         />
+                       </Box>
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                         <Typography variant="body2" color="text.secondary">
+                           Buyer: {offer.buyer}
+                         </Typography>
+                         <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.success }}>
+                           ${offer.amount.toLocaleString()}
+                         </Typography>
+                       </Box>
+                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                         <Typography variant="body2" color="text.secondary">
+                           Agent: {offer.agent}
+                         </Typography>
+                         <Typography variant="body2" color="text.secondary">
+                           Date: {offer.date}
+                         </Typography>
+                       </Box>
+                     </Box>
+                   ))}
+                 </Box>
+               </Paper>
+             </>
+           )}
+
+           {/* Other tabs would continue here... */}
+         </Box>
+       </Box>
+     </Box>
+   );
+ };
+
+export default CloseBrokeragePage;

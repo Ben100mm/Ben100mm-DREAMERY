@@ -354,68 +354,60 @@ const RentPage: React.FC = () => {
                 Search & Filters
               </Typography>
               
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Search by location or property name"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    variant="outlined"
-                  />
-                </Grid>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                <TextField
+                  fullWidth
+                  label="Search by location or property name"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  variant="outlined"
+                />
                 
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth>
-                    <InputLabel>Property Type</InputLabel>
-                    <Select
-                      value={propertyType}
-                      onChange={(e) => setPropertyType(e.target.value)}
-                      label="Property Type"
-                    >
-                      <MenuItem value="all">All Types</MenuItem>
-                      <MenuItem value="Apartment">Apartment</MenuItem>
-                      <MenuItem value="Townhouse">Townhouse</MenuItem>
-                      <MenuItem value="Studio">Studio</MenuItem>
-                      <MenuItem value="Loft">Loft</MenuItem>
-                      <MenuItem value="Penthouse">Penthouse</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <FormControl fullWidth>
+                  <InputLabel>Property Type</InputLabel>
+                  <Select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                    label="Property Type"
+                  >
+                    <MenuItem value="all">All Types</MenuItem>
+                    <MenuItem value="Apartment">Apartment</MenuItem>
+                    <MenuItem value="Townhouse">Townhouse</MenuItem>
+                    <MenuItem value="Studio">Studio</MenuItem>
+                    <MenuItem value="Loft">Loft</MenuItem>
+                    <MenuItem value="Penthouse">Penthouse</MenuItem>
+                  </Select>
+                </FormControl>
                 
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth>
-                    <InputLabel>Bedrooms</InputLabel>
-                    <Select
-                      value={beds}
-                      onChange={(e) => setBeds(e.target.value)}
-                      label="Bedrooms"
-                    >
-                      <MenuItem value="all">Any</MenuItem>
-                      <MenuItem value="0">Studio</MenuItem>
-                      <MenuItem value="1">1+</MenuItem>
-                      <MenuItem value="2">2+</MenuItem>
-                      <MenuItem value="3">3+</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <FormControl fullWidth>
+                  <InputLabel>Bedrooms</InputLabel>
+                  <Select
+                    value={beds}
+                    onChange={(e) => setBeds(e.target.value)}
+                    label="Bedrooms"
+                  >
+                    <MenuItem value="all">Any</MenuItem>
+                    <MenuItem value="0">Studio</MenuItem>
+                    <MenuItem value="1">1+</MenuItem>
+                    <MenuItem value="2">2+</MenuItem>
+                    <MenuItem value="3">3+</MenuItem>
+                  </Select>
+                </FormControl>
                 
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth>
-                    <InputLabel>Sort By</InputLabel>
-                    <Select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      label="Sort By"
-                    >
-                      <MenuItem value="rent">Rent (Low to High)</MenuItem>
-                      <MenuItem value="rent-desc">Rent (High to Low)</MenuItem>
-                      <MenuItem value="rating">Rating</MenuItem>
-                      <MenuItem value="beds">Bedrooms</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
+                <FormControl fullWidth>
+                  <InputLabel>Sort By</InputLabel>
+                  <Select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    label="Sort By"
+                  >
+                    <MenuItem value="rent">Rent (Low to High)</MenuItem>
+                    <MenuItem value="rent-desc">Rent (High to Low)</MenuItem>
+                    <MenuItem value="rating">Rating</MenuItem>
+                    <MenuItem value="beds">Bedrooms</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
               
               <Box sx={{ mt: 2 }}>
                 <Typography gutterBottom>Rent Range: {formatRent(rentRange[0])} - {formatRent(rentRange[1])}</Typography>
@@ -438,103 +430,101 @@ const RentPage: React.FC = () => {
             </Box>
 
             {/* Rental Property Grid */}
-            <Grid container spacing={3}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
               {sortedRentals.map((property) => (
-                <Grid item xs={12} sm={6} md={4} key={property.id}>
-                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={property.image}
-                      alt={property.title}
-                    />
+                <Card key={property.id} sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={property.image}
+                    alt={property.title}
+                  />
+                  
+                  <IconButton
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' }
+                    }}
+                    onClick={() => handleFavorite(property.id)}
+                  >
+                    {property.isFavorite ? <Favorite color="error" /> : <FavoriteBorder />}
+                  </IconButton>
+                  
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: '#1a365d', fontWeight: 600 }}>
+                      {property.title}
+                    </Typography>
                     
-                    <IconButton
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' }
-                      }}
-                      onClick={() => handleFavorite(property.id)}
-                    >
-                      {property.isFavorite ? <Favorite color="error" /> : <FavoriteBorder />}
-                    </IconButton>
+                    <Typography variant="h5" sx={{ color: '#1a365d', fontWeight: 700, mb: 1 }}>
+                      {formatRent(property.rent)}/month
+                    </Typography>
                     
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography variant="h6" gutterBottom sx={{ color: '#1a365d', fontWeight: 600 }}>
-                        {property.title}
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <LocationOnIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                      <Typography variant="body2" color="text.secondary">
+                        {property.location}
                       </Typography>
-                      
-                      <Typography variant="h5" sx={{ color: '#1a365d', fontWeight: 700, mb: 1 }}>
-                        {formatRent(property.rent)}/month
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Rating value={property.rating} precision={0.1} size="small" readOnly />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        ({property.rating})
                       </Typography>
-                      
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <LocationOnIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
-                        <Typography variant="body2" color="text.secondary">
-                          {property.location}
-                        </Typography>
-                      </Box>
-                      
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Rating value={property.rating} precision={0.1} size="small" readOnly />
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                          ({property.rating})
-                        </Typography>
-                      </Box>
-                      
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <BedIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
-                        <Typography variant="body2" sx={{ mr: 2 }}>
-                          {property.beds === 0 ? 'Studio' : `${property.beds} beds`}
-                        </Typography>
-                        <BathtubIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
-                        <Typography variant="body2" sx={{ mr: 2 }}>
-                          {property.baths} baths
-                        </Typography>
-                        <SquareFootIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
-                        <Typography variant="body2">
-                          {property.sqft.toLocaleString()} sqft
-                        </Typography>
-                      </Box>
-                      
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        {property.description}
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <BedIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                      <Typography variant="body2" sx={{ mr: 2 }}>
+                        {property.beds === 0 ? 'Studio' : `${property.beds} beds`}
                       </Typography>
-                      
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                        {property.amenities.slice(0, 3).map((amenity, index) => (
-                          <Chip
-                            key={index}
-                            label={amenity}
-                            size="small"
-                            variant="outlined"
-                            sx={{ fontSize: '0.75rem' }}
-                          />
-                        ))}
-                      </Box>
-                      
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<Send />}
-                          onClick={() => handleApplyNow(property)}
-                          sx={{
-                            backgroundColor: '#1a365d',
-                            '&:hover': { backgroundColor: '#0d2340' }
-                          }}
-                        >
-                          Apply Now
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                      <BathtubIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                      <Typography variant="body2" sx={{ mr: 2 }}>
+                        {property.baths} baths
+                      </Typography>
+                      <SquareFootIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
+                      <Typography variant="body2">
+                        {property.sqft.toLocaleString()} sqft
+                      </Typography>
+                    </Box>
+                    
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {property.description}
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                      {property.amenities.slice(0, 3).map((amenity, index) => (
+                        <Chip
+                          key={index}
+                          label={amenity}
+                          size="small"
+                          variant="outlined"
+                          sx={{ fontSize: '0.75rem' }}
+                        />
+                      ))}
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        startIcon={<Send />}
+                        onClick={() => handleApplyNow(property)}
+                        sx={{
+                          backgroundColor: '#1a365d',
+                          '&:hover': { backgroundColor: '#0d2340' }
+                        }}
+                      >
+                        Apply Now
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
               ))}
-            </Grid>
+            </Box>
           </>
         )}
 
@@ -608,76 +598,74 @@ const RentPage: React.FC = () => {
       <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
         Featured Rentals
       </Typography>
-      <Grid container spacing={3}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
         {Array.from({ length: 10 }, (_, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={`rental-placeholder-${index}`}>
-            <Card sx={{ 
-              height: '100%', 
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              '&:hover': { 
-                transform: 'translateY(-4px)', 
-                boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-              }
-            }}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Rental+Property+${index + 1}`}
-                alt={`Rental Property ${index + 1}`}
-                sx={{ objectFit: 'cover' }}
-              />
-              <CardContent>
-                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                  Rental Property #{index + 1}
+          <Card key={`rental-placeholder-${index}`} sx={{ 
+            height: '100%', 
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            '&:hover': { 
+              transform: 'translateY(-4px)', 
+              boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+            }
+          }}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Rental+Property+${index + 1}`}
+              alt={`Rental Property ${index + 1}`}
+              sx={{ objectFit: 'cover' }}
+            />
+            <CardContent>
+              <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                Rental Property #{index + 1}
+              </Typography>
+              
+              <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
+                ${(1500 + index * 200)}/month
+              </Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                <Typography variant="body2" color="text.secondary">
+                  {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                 </Typography>
-                
-                <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                  ${(1500 + index * 200)}/month
-                </Typography>
-                
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+              </Box>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                  <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                   <Typography variant="body2" color="text.secondary">
-                    {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
+                    {2 + (index % 2)} beds
                   </Typography>
                 </Box>
-                
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {2 + (index % 2)} beds
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {1 + (index % 2)} baths
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {(800 + index * 50).toLocaleString()} sqft
-                    </Typography>
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                  <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {1 + (index % 2)} baths
+                  </Typography>
                 </Box>
-                
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    backgroundColor: '#1a365d',
-                    '&:hover': { backgroundColor: '#0d2340' }
-                  }}
-                >
-                  Apply Now
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {(800 + index * 50).toLocaleString()} sqft
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  backgroundColor: '#1a365d',
+                  '&:hover': { backgroundColor: '#0d2340' }
+                }}
+              >
+                Apply Now
+              </Button>
+            </CardContent>
+          </Card>
         ))}
-      </Grid>
+      </Box>
     </PageTemplate>
   );
 };

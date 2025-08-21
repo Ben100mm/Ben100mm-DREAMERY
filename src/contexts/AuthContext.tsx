@@ -13,6 +13,7 @@ interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isEmailVerified: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, fullName?: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -68,6 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     currentUser,
     loading,
     isAuthenticated: !!currentUser,
+    isEmailVerified: currentUser?.emailVerified || false,
     login,
     signup,
     logout,

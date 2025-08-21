@@ -194,37 +194,36 @@ const SSOForm: React.FC<SSOFormProps> = ({ onSuccess }) => {
         <Typography variant="subtitle1" fontWeight="600" gutterBottom>
           Social & Personal Accounts
         </Typography>
-        <Grid container spacing={1}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' }, gap: 1 }}>
           {oauthProviders.map((provider) => (
-            <Grid item xs={6} sm={4} key={provider.id}>
-              <ProviderCard
-                className={selectedProvider === provider.id ? 'selected' : ''}
-                onClick={() => handleProviderSelect(provider.id)}
-              >
-                <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
-                  <ProviderIcon
-                    sx={{
-                      backgroundColor: provider.color,
-                      width: 40,
-                      height: 40,
-                      fontSize: '1.25rem',
-                      mb: 1
-                    }}
-                  >
-                    {provider.icon}
-                  </ProviderIcon>
-                  
-                  <Typography variant="body2" fontWeight="600">
-                    {provider.name}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {provider.description}
-                  </Typography>
-                </CardContent>
-              </ProviderCard>
-            </Grid>
+            <ProviderCard
+              key={provider.id}
+              className={selectedProvider === provider.id ? 'selected' : ''}
+              onClick={() => handleProviderSelect(provider.id)}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
+                <ProviderIcon
+                  sx={{
+                    backgroundColor: provider.color,
+                    width: 40,
+                    height: 40,
+                    fontSize: '1.25rem',
+                    mb: 1
+                  }}
+                >
+                  {provider.icon}
+                </ProviderIcon>
+                
+                <Typography variant="body2" fontWeight="600">
+                  {provider.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {provider.description}
+                </Typography>
+              </CardContent>
+            </ProviderCard>
           ))}
-        </Grid>
+        </Box>
       </Box>
 
       <Divider sx={{ my: 2 }}>
@@ -236,37 +235,36 @@ const SSOForm: React.FC<SSOFormProps> = ({ onSuccess }) => {
         <Typography variant="subtitle1" fontWeight="600" gutterBottom>
           Enterprise & Business Accounts
         </Typography>
-        <Grid container spacing={1}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' }, gap: 1 }}>
           {enterpriseProviders.map((provider) => (
-            <Grid item xs={6} sm={4} key={provider.id}>
-              <ProviderCard
-                className={selectedProvider === provider.id ? 'selected' : ''}
-                onClick={() => handleProviderSelect(provider.id)}
-              >
-                <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
-                  <ProviderIcon
-                    sx={{
-                      backgroundColor: provider.color,
-                      width: 40,
-                      height: 40,
-                      fontSize: '1.25rem',
-                      mb: 1
-                    }}
-                  >
-                    {provider.icon}
-                  </ProviderIcon>
-                  
-                  <Typography variant="body2" fontWeight="600">
-                    {provider.name}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {provider.description}
-                  </Typography>
-                </CardContent>
-              </ProviderCard>
-            </Grid>
+            <ProviderCard
+              key={provider.id}
+              className={selectedProvider === provider.id ? 'selected' : ''}
+              onClick={() => handleProviderSelect(provider.id)}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
+                <ProviderIcon
+                  sx={{
+                    backgroundColor: provider.color,
+                    width: 40,
+                    height: 40,
+                    fontSize: '1.25rem',
+                    mb: 1
+                  }}
+                >
+                  {provider.icon}
+                </ProviderIcon>
+                
+                <Typography variant="body2" fontWeight="600">
+                  {provider.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {provider.description}
+                </Typography>
+              </CardContent>
+            </ProviderCard>
           ))}
-        </Grid>
+        </Box>
       </Box>
 
       {selectedProvider && (

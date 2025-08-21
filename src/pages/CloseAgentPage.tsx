@@ -1046,7 +1046,7 @@ const CloseAgentPage: React.FC = () => {
                             <label htmlFor={`transaction-${type.toLowerCase()}`}>
                               <Typography variant="body1">{type}</Typography>
                             </label>
-                          </Box>
+            </Box>
                         ))}
                       </Box>
                     </Box>

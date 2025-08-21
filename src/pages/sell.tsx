@@ -4,6 +4,7 @@ import {
   Grid,
   Card,
   CardContent,
+  CardMedia,
   Typography,
   Button,
   TextField,
@@ -123,97 +124,87 @@ const SellPage: React.FC = () => {
         )}
 
         {tabValue === 1 && (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
-                    <AnalyticsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                    Market Overview
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Current market trends and pricing data for your area.
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    <Chip label="Average Days on Market: 45" variant="outlined" />
-                    <Chip label="Price per sqft: $250" variant="outlined" />
-                    <Chip label="Market: Seller's Market" variant="outlined" />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                  <AnalyticsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                  Market Overview
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Current market trends and pricing data for your area.
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  <Chip label="Average Days on Market: 45" variant="outlined" />
+                  <Chip label="Price per sqft: $250" variant="outlined" />
+                  <Chip label="Market: Seller's Market" variant="outlined" />
+                </Box>
+              </CardContent>
+            </Card>
             
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
-                    Comparable Sales
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Recent sales in your neighborhood to help with pricing.
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    <Chip label="123 Main St: $450,000" variant="outlined" />
-                    <Chip label="456 Oak Ave: $475,000" variant="outlined" />
-                    <Chip label="789 Pine Rd: $425,000" variant="outlined" />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                  Comparable Sales
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Recent sales in your neighborhood to help with pricing.
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  <Chip label="123 Main St: $450,000" variant="outlined" />
+                  <Chip label="456 Oak Ave: $475,000" variant="outlined" />
+                  <Chip label="789 Pine Rd: $425,000" variant="outlined" />
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
         )}
 
         {tabValue === 2 && (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
-                    <SettingsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                    Pricing Calculator
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Get an accurate estimate of your property's value.
-                  </Typography>
-                  <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
-                    Calculate Value
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                  <SettingsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                  Pricing Calculator
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Get an accurate estimate of your property's value.
+                </Typography>
+                <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
+                  Calculate Value
+                </Button>
+              </CardContent>
+            </Card>
             
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
-                    Professional Photos
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Schedule professional photography for your listing.
-                  </Typography>
-                  <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
-                    Book Photographer
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                  Professional Photos
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Schedule professional photography for your listing.
+                </Typography>
+                <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
+                  Book Photographer
+                </Button>
+              </CardContent>
+            </Card>
             
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
-                    Virtual Tours
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Create immersive 3D tours of your property.
-                  </Typography>
-                  <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
-                    Create Tour
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: '#1a365d' }}>
+                  Virtual Tours
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Create immersive 3D tours of your property.
+                </Typography>
+                <Button variant="contained" sx={{ backgroundColor: '#1a365d' }}>
+                  Create Tour
+                </Button>
+              </CardContent>
+            </Card>
+          </Box>
         )}
 
         {tabValue === 3 && (
@@ -240,76 +231,74 @@ const SellPage: React.FC = () => {
       <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
         Featured Properties for Sale
       </Typography>
-      <Grid container spacing={3}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
         {Array.from({ length: 10 }, (_, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={`sell-placeholder-${index}`}>
-            <Card sx={{ 
-              height: '100%', 
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              '&:hover': { 
-                transform: 'translateY(-4px)', 
-                boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-              }
-            }}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Sale+Property+${index + 1}`}
-                alt={`Sale Property ${index + 1}`}
-                sx={{ objectFit: 'cover' }}
-              />
-              <CardContent>
-                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                  Sale Property #{index + 1}
+          <Card key={`sell-placeholder-${index}`} sx={{ 
+            height: '100%', 
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            '&:hover': { 
+              transform: 'translateY(-4px)', 
+              boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+            }
+          }}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Sale+Property+${index + 1}`}
+              alt={`Sale Property ${index + 1}`}
+              sx={{ objectFit: 'cover' }}
+            />
+            <CardContent>
+              <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                Sale Property #{index + 1}
+              </Typography>
+              
+              <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
+                ${(400000 + index * 75000).toLocaleString()}
+              </Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                <Typography variant="body2" color="text.secondary">
+                  {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                 </Typography>
-                
-                <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                  ${(400000 + index * 75000).toLocaleString()}
-                </Typography>
-                
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <LocationOnIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+              </Box>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                  <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
                   <Typography variant="body2" color="text.secondary">
-                    {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
+                    {3 + (index % 3)} beds
                   </Typography>
                 </Box>
-                
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <BedIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {3 + (index % 3)} beds
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                    <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {2 + (index % 2)} baths
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {(1800 + index * 150).toLocaleString()} sqft
-                    </Typography>
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                  <BathtubIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {2 + (index % 2)} baths
+                  </Typography>
                 </Box>
-                
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    backgroundColor: '#1a365d',
-                    '&:hover': { backgroundColor: '#0d2340' }
-                  }}
-                >
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <SquareFootIcon sx={{ color: '#718096', fontSize: 20, mr: 0.5 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {(1800 + index * 150).toLocaleString()} sqft
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  backgroundColor: '#1a365d',
+                  '&:hover': { backgroundColor: '#0d2340' }
+                }}
+              >
+                View Details
+              </Button>
+            </CardContent>
+          </Card>
         ))}
-      </Grid>
+      </Box>
     </PageTemplate>
   );
 };

@@ -4,6 +4,7 @@ import {
   Grid, 
   Card, 
   CardContent, 
+  CardMedia,
   Typography, 
   Button, 
   TextField,
@@ -38,7 +39,8 @@ import {
   Description as DocumentIcon,
   Person as PersonIcon,
   Home as HomeIcon,
-  AccountBalance as BankIcon
+  AccountBalance as BankIcon,
+  LocationOn
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
 
@@ -136,28 +138,26 @@ const UnderwritePage: React.FC = () => {
           <Typography variant="body1" paragraph>
             Analyze credit score, debt-to-income ratio, and loan-to-value ratio.
           </Typography>
-          <Grid container spacing={2}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
             {mockRiskFactors.map((factor, index) => (
-              <Grid item xs={12} sm={6} key={index}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6">{factor.factor}</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                      <Rating value={factor.score / 20} readOnly size="small" />
-                      <Typography variant="body2" sx={{ ml: 1 }}>
-                        {factor.score}/100
-                      </Typography>
-                    </Box>
-                    <Chip 
-                      label={factor.status} 
-                      color={factor.status === 'Excellent' ? 'success' : factor.status === 'Good' ? 'primary' : 'warning'}
-                      size="small"
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Card key={index}>
+                <CardContent>
+                  <Typography variant="h6">{factor.factor}</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Rating value={factor.score / 20} readOnly size="small" />
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      {factor.score}/100
+                    </Typography>
+                  </Box>
+                  <Chip 
+                    label={factor.status} 
+                    color={factor.status === 'Excellent' ? 'success' : factor.status === 'Good' ? 'primary' : 'warning'}
+                    size="small"
+                  />
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )
     },
@@ -169,38 +169,34 @@ const UnderwritePage: React.FC = () => {
           <Typography variant="body1" paragraph>
             Evaluate property value, condition, and market position.
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Property Analysis
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    Estimated Value: $450,000<br/>
-                    Appraised Value: $445,000<br/>
-                    Market Position: Strong<br/>
-                    Property Condition: Good
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Market Analysis
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    Market Trend: +3.2%<br/>
-                    Days on Market: 45<br/>
-                    Comparable Sales: 12<br/>
-                    Market Confidence: High
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Property Analysis
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  Estimated Value: $450,000<br/>
+                  Appraised Value: $445,000<br/>
+                  Market Position: Strong<br/>
+                  Property Condition: Good
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Market Analysis
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  Market Trend: +3.2%<br/>
+                  Days on Market: 45<br/>
+                  Comparable Sales: 12<br/>
+                  Market Confidence: High
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
         </Box>
       )
     },
@@ -366,55 +362,53 @@ const UnderwritePage: React.FC = () => {
 
       {/* Risk Assessment Tab */}
       {activeTab === 2 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 2' } }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Risk Assessment Dashboard
                 </Typography>
-                <Grid container spacing={3}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
                   {mockRiskFactors.map((factor, index) => (
-                    <Grid item xs={12} sm={6} key={index}>
-                      <RiskCard>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                            <Typography variant="h6">
-                              {factor.factor}
-                            </Typography>
-                            <Chip 
-                              label={factor.status} 
-                              color={
-                                factor.status === 'Excellent' ? 'success' : 
-                                factor.status === 'Good' ? 'primary' : 
-                                'warning'
-                              }
-                              size="small"
-                            />
-                          </Box>
-                          <Box sx={{ mb: 2 }}>
-                            <Typography variant="body2" color="text.secondary">
-                              Weight: {factor.weight}%
-                            </Typography>
-                            <LinearProgress 
-                              variant="determinate" 
-                              value={factor.score} 
-                              sx={{ height: 8, borderRadius: 4 }}
-                            />
-                            <Typography variant="body2" sx={{ mt: 1 }}>
-                              Score: {factor.score}/100
-                            </Typography>
-                          </Box>
-                        </CardContent>
-                      </RiskCard>
-                    </Grid>
+                    <RiskCard key={index}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h6">
+                            {factor.factor}
+                          </Typography>
+                          <Chip 
+                            label={factor.status} 
+                            color={
+                              factor.status === 'Excellent' ? 'success' : 
+                              factor.status === 'Good' ? 'primary' : 
+                              'warning'
+                            }
+                            size="small"
+                          />
+                        </Box>
+                        <Box sx={{ mb: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            Weight: {factor.weight}%
+                          </Typography>
+                          <LinearProgress 
+                            variant="determinate" 
+                            value={factor.score} 
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                          <Typography variant="body2" sx={{ mt: 1 }}>
+                            Score: {factor.score}/100
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </RiskCard>
                   ))}
-                </Grid>
+                </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 1' } }}>
             <ApprovalCard>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -435,8 +429,8 @@ const UnderwritePage: React.FC = () => {
                 </Button>
               </CardContent>
             </ApprovalCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Approvals Tab */}
@@ -445,61 +439,54 @@ const UnderwritePage: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Approval Summary
           </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h4" sx={{ color: '#4caf50' }}>
-                    12
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Approved This Month
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h4" sx={{ color: '#ff9800' }}>
-                    3
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Pending Review
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h4" sx={{ color: '#f44336' }}>
-                    1
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Declined This Month
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" sx={{ color: '#4caf50' }}>
+                  12
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Approved This Month
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" sx={{ color: '#4caf50' }}>
+                  3
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Pending Review
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" sx={{ color: '#f44336' }}>
+                  1
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Declined This Month
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
         </Box>
 
         {/* Placeholder Underwriting Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Underwriting Applications
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
           {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`underwrite-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
+            <Card key={`underwrite-placeholder-${index}`} sx={{ 
+              height: '100%', 
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              '&:hover': { 
+                transform: 'translateY(-4px)', 
+                boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+              }
+            }}>
                 <CardMedia
                   component="img"
                   height="200"
@@ -553,10 +540,9 @@ const UnderwritePage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+            ))}
+          </Box>
+        )}
     </PageTemplate>
   );
 };

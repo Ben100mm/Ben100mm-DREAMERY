@@ -26,6 +26,7 @@ import {
   Divider,
   Tabs,
   Tab,
+  LinearProgress,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -46,6 +47,13 @@ import {
   Add as AddIcon,
   Search as SearchIcon,
   Description as Description,
+  Assignment as AssignmentIcon,
+  Archive as ArchiveIcon,
+  Security as SecurityIcon,
+  School as SchoolIcon,
+  MoreVert as MoreVertIcon,
+  Send as SendIcon,
+  ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 import TemplatesComponent from '../components/TemplatesComponent';
@@ -157,30 +165,35 @@ interface UserRole {
 
 interface CloseState {
   activeTab: string;
+  dashboardTab: string;
   transactionTab: string;
   listingsTab: string;
   offersTab: string;
   documentsTab: string;
   templatesTab: string;
+  paymentsTab?: string;
+  reportsTab?: string;
+  trainingTab?: string;
   userRole: UserRole;
   drawerOpen: boolean;
   notifications: number;
-  paymentsTab?: string;
 }
 
-const CloseBrokeragesPage: React.FC = () => {
+const CloseBrokeragesPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [state, setState] = useState<CloseState>({
     activeTab: 'dashboard',
+    dashboardTab: 'overview',
     transactionTab: 'overview',
     listingsTab: 'overview',
     offersTab: 'overview',
     documentsTab: 'overview',
     templatesTab: 'overview',
     paymentsTab: 'sales',
+    reportsTab: 'reports',
+    trainingTab: 'overview',
     drawerOpen: false,
     notifications: 5,
     userRole: {
@@ -202,13 +215,12 @@ const CloseBrokeragesPage: React.FC = () => {
     { value: 'offers', label: 'Offers', icon: <AssessmentIcon /> },
     { value: 'documents', label: 'Documents', icon: <AssessmentIcon /> },
     { value: 'payments-finance', label: 'Payments & Finance', icon: <AssessmentIcon /> },
-    { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <AssessmentIcon /> },
+    { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <AssignmentIcon /> },
     { value: 'checklists', label: 'Checklists', icon: <CheckCircleIcon /> },
-    { value: 'working-documents', label: 'Templates', icon: <AssessmentIcon /> },
-    { value: 'templates', label: 'Working Documents', icon: <AssessmentIcon /> },
-    { value: 'access-archives', label: 'Access Archives', icon: <AssessmentIcon /> },
-    { value: 'compliance', label: 'Compliance', icon: <AssessmentIcon /> },
-    { value: 'training-resources', label: 'Training & Resources', icon: <AssessmentIcon /> },
+    { value: 'templates', label: 'Templates and Envelopes', icon: <AssessmentIcon /> },
+    { value: 'access-archives', label: 'Access Archives', icon: <ArchiveIcon /> },
+    { value: 'compliance', label: 'Compliance', icon: <SecurityIcon /> },
+    { value: 'training-resources', label: 'Training & Resources', icon: <SchoolIcon /> },
     { value: 'reports-analytics', label: 'Reports & Analytics', icon: <AssessmentIcon /> },
     { value: 'support', label: 'Support', icon: <SupportIcon /> },
     { value: 'settings', label: 'Settings', icon: <SettingsIcon /> },
@@ -406,7 +418,21 @@ const CloseBrokeragesPage: React.FC = () => {
               </Typography>
             </Paper>
 
-            {/* Overview Cards */}
+            {/* Dashboard Content */}
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.dashboardTab} onChange={(e, newValue) => setState(prev => ({ ...prev, dashboardTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="Insights" value="insights" />
+                  <Tab label="Performance" value="performance" />
+                  <Tab label="Activity" value="activity" />
+                </Tabs>
+              </Box>
+
+              {/* Tab Content */}
+              {state.dashboardTab === 'overview' && (
+                <>
+                  {/* Overview Cards */}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
                 <PeopleIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
@@ -468,99 +494,390 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               </Box>
             </Paper>
+                  </>
+                )}
 
-            {/* Agent Performance Overview */}
-            <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
-                Agent Performance Overview
-              </Typography>
-              <Grid container spacing={3}>
-                {[
-                  { id: 1, name: 'Sarah Johnson', avatar: 'SJ', performance: 95, transactions: 12, revenue: 45000 },
-                  { id: 2, name: 'Mike Wilson', avatar: 'MW', performance: 87, transactions: 8, revenue: 32000 },
-                  { id: 3, name: 'Lisa Brown', avatar: 'LB', performance: 92, transactions: 15, revenue: 58000 },
-                  { id: 4, name: 'David Lee', avatar: 'DL', performance: 78, transactions: 6, revenue: 22000 },
-                  { id: 5, name: 'Emily Davis', avatar: 'ED', performance: 89, transactions: 11, revenue: 41000 }
-                ].map((agent) => (
-                  <Grid component="div" xs={12} sm={6} md={4} key={agent.id}>
-                    <Card sx={{ height: '100%' }}>
-                      <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                          <Avatar sx={{ bgcolor: brandColors.primary, mr: 2 }}>
-                            {agent.avatar}
-                          </Avatar>
-                          <Box>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              {agent.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              Performance: {agent.performance}%
-                            </Typography>
-                          </Box>
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                          <Typography variant="body2" color="text.secondary">
-                            Transactions:
+                {state.dashboardTab === 'insights' && (
+                  <>
+                    {/* Insights Section */}
+                    <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Insights
+                        </Typography>
+                        <Button variant="outlined" size="small">
+                          Edit Dashboard
+                        </Button>
+                      </Box>
+                      
+                      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                        {/* Recent Average Deal Card */}
+                        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+                          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                            Recent Average Deal
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                            {agent.transactions}
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            for Current Quarter
                           </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" color="text.secondary">
-                            Revenue:
+                          <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                            GCI: $37,831.67
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
-                            ${agent.revenue.toLocaleString()}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
+                        </Paper>
 
-            {/* Recent Activity */}
-            <Paper elevation={2} sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
-                Recent Activity
+                        {/* Performance Card */}
+                        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+                          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                            Performance
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            for Current Year
+                          </Typography>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 2 }}>
+                            <Box sx={{ textAlign: 'center' }}>
+                              <Box sx={{ position: 'relative', display: 'inline-block', mb: 1 }}>
+                                <Box sx={{ 
+                                  width: 60, 
+                                  height: 60, 
+                                  borderRadius: '50%', 
+                                  border: '4px solid #e0e0e0',
+                                  position: 'relative',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}>
+                                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                                    25%
+                                  </Typography>
+                                </Box>
+                                <Box sx={{
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0,
+                                  width: '100%',
+                                  height: '100%',
+                                  borderRadius: '50%',
+                                  border: '4px solid transparent',
+                                  borderTop: '4px solid #4caf50',
+                                  transform: 'rotate(90deg)',
+                                  clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)'
+                                }} />
+                              </Box>
+                              <Typography variant="body2" sx={{ fontWeight: 600 }}>5</Typography>
+                              <Typography variant="caption" color="text.secondary">Units</Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'center' }}>
+                              <Box sx={{ position: 'relative', display: 'inline-block', mb: 1 }}>
+                <Box sx={{ 
+                  width: 60, 
+                  height: 60, 
+                  borderRadius: '50%', 
+                  border: '4px solid #e0e0e0',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
+                    10%
+                  </Typography>
+                </Box>
+                <Box sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                  border: '4px solid transparent',
+                  borderTop: '4px solid #4caf50',
+                  transform: 'rotate(36deg)',
+                  clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)'
+                }} />
+              </Box>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>$7,990,000</Typography>
+              <Typography variant="caption" color="text.secondary">Volume</Typography>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>20</Typography>
+              <Typography variant="caption" color="text.secondary">Target Units</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>$1,000,000</Typography>
+              <Typography variant="caption" color="text.secondary">Target Volume</Typography>
+            </Box>
+          </Box>
+        </Paper>
+
+        {/* Home Value Trend Bar Chart Card */}
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            Home Value Trend
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            for Current Year
+          </Typography>
+          <Box sx={{ height: 120, display: 'flex', alignItems: 'end', gap: 2, mb: 2 }}>
+            <Box sx={{ 
+              width: 40, 
+              height: 60, 
+              backgroundColor: '#8b0000', 
+              borderRadius: '4px 4px 0 0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Typography variant="caption" sx={{ color: 'white', transform: 'rotate(-90deg)' }}>
+                Buyer
               </Typography>
-              <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
-                {[
-                  { action: 'New listing added', agent: 'Sarah Johnson', property: '123 Main St', time: '2 hours ago', status: 'completed' },
-                  { action: 'Offer submitted', agent: 'Mike Wilson', property: '456 Oak Ave', time: '4 hours ago', status: 'pending' },
-                  { action: 'Transaction closed', agent: 'Lisa Brown', property: '789 Pine Rd', time: '6 hours ago', status: 'completed' },
-                  { action: 'Document signed', agent: 'David Lee', property: '321 Elm St', time: '1 day ago', status: 'completed' },
-                  { action: 'New agent onboarded', agent: 'Emily Davis', property: 'N/A', time: '2 days ago', status: 'completed' }
-                ].map((activity, index) => (
-                  <Box key={index} sx={{ 
-                    display: 'flex', alignItems: 'center', 
-                    py: 1,
-                    borderBottom: index < 4 ? '1px solid #f0f0f0' : 'none'
-                  }}>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {activity.action}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {activity.agent} • {activity.property !== 'N/A' ? activity.property : 'Onboarding'} • {activity.time}
-                      </Typography>
-                    </Box>
-                    <Chip 
-                      label={activity.status} 
-                      size="small" 
-                      sx={{ 
-                        backgroundColor: activity.status === 'completed' ? '#e8f5e8' : '#fff3cd',
-                        color: activity.status === 'completed' ? '#2e7d32' : '#856404'
-                      }}
-                    />
-                  </Box>
-                ))}
+            </Box>
+            <Box sx={{ 
+              width: 40, 
+              height: 120, 
+              backgroundColor: brandColors.primary, 
+              borderRadius: '4px 4px 0 0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Typography variant="caption" sx={{ color: 'white', transform: 'rotate(-90deg)' }}>
+                Seller
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ flex: 1, textAlign: 'center' }}>
+              <Box sx={{ 
+                width: '100%', 
+                height: 8, 
+                backgroundColor: '#8b0000', 
+                borderRadius: 4,
+                mb: 1
+              }} />
+              <Typography variant="caption">Buyer 20%</Typography>
+            </Box>
+            <Box sx={{ flex: 1, textAlign: 'center' }}>
+              <Box sx={{ 
+                width: '100%', 
+                height: 8, 
+                backgroundColor: brandColors.primary, 
+                borderRadius: 4,
+                mb: 1
+              }} />
+              <Typography variant="caption">Seller 80%</Typography>
+            </Box>
+          </Box>
+        </Paper>
+
+        {/* Home Value Trend Pie Chart Card */}
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            Home Value Trend
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            for Current Year and Lead, Active, Pending, Closed, Dead Deals
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              width: 80, 
+              height: 80, 
+              borderRadius: '50%',
+              background: 'conic-gradient(#8b0000 0deg 180deg, #1976d2 180deg 270deg, #9c27b0 270deg 300deg, #03a9f4 300deg 360deg)',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Box sx={{ 
+                width: 40, 
+                height: 40, 
+                borderRadius: '50%', 
+                backgroundColor: 'white' 
+              }} />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box sx={{ width: 12, height: 12, backgroundColor: '#8b0000', borderRadius: 2 }} />
+                <Typography variant="caption">Lead</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box sx={{ width: 12, height: 12, backgroundColor: '#1976d2', borderRadius: 2 }} />
+                <Typography variant="caption">Active</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box sx={{ width: 12, height: 12, backgroundColor: '#9c27b0', borderRadius: 2 }} />
+                <Typography variant="caption">Pending</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ width: 12, height: 12, backgroundColor: '#03a9f4', borderRadius: 2 }} />
+                <Typography variant="caption">Closed</Typography>
+              </Box>
+            </Box>
+            <IconButton size="small" sx={{ color: brandColors.primary }}>
+              <ArrowForwardIcon />
+            </IconButton>
+          </Box>
+        </Paper>
+
+        {/* Deals Card */}
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            Deals
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            for Current Year and Lead, Active, Pending, Closed, Dead Deals
+          </Typography>
+          <Box sx={{ 
+            height: 120, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            backgroundColor: '#f5f5f5',
+            borderRadius: 2
+          }}>
+            <Typography variant="body2" color="text.secondary">
+              Content coming soon
+            </Typography>
+          </Box>
+        </Paper>
+
+        {/* 2019 Realized Card */}
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            2019 Realized
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            for Current Year
+          </Typography>
+          <Box sx={{ 
+            height: 120, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            backgroundColor: '#f5f5f5',
+            borderRadius: 2
+          }}>
+            <Typography variant="body2" color="text.secondary">
+              Content coming soon
+            </Typography>
+          </Box>
+        </Paper>
+      </Box>
+    </Paper>
+  </>
+)}
+
+{state.dashboardTab === 'performance' && (
+  <>
+    {/* Agent Performance Overview */}
+    <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+      <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+        Agent Performance Overview
+      </Typography>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+        {[
+          { id: 1, name: 'Sarah Johnson', avatar: 'SJ', performance: 95, transactions: 12, revenue: 45000 },
+          { id: 2, name: 'Mike Wilson', avatar: 'MW', performance: 87, transactions: 8, revenue: 32000 },
+          { id: 3, name: 'Lisa Brown', avatar: 'LB', performance: 92, transactions: 15, revenue: 58000 },
+          { id: 4, name: 'David Lee', avatar: 'DL', performance: 78, transactions: 6, revenue: 22000 },
+          { id: 5, name: 'Emily Davis', avatar: 'ED', performance: 89, transactions: 11, revenue: 41000 }
+        ].map((agent) => (
+          <Paper key={agent.id} sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Avatar sx={{ bgcolor: brandColors.primary, mr: 2 }}>
+                {agent.avatar}
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {agent.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Performance: {agent.performance}%
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Transactions:
+              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {agent.transactions}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Revenue:
+              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
+                ${agent.revenue.toLocaleString()}
+              </Typography>
+            </Box>
+          </Paper>
+        ))}
+      </Box>
+    </Paper>
+  </>
+)}
+
+{state.dashboardTab === 'activity' && (
+  <>
+    {/* Recent Activity */}
+    <Paper elevation={2} sx={{ p: 3 }}>
+      <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+        Recent Activity
+      </Typography>
+      <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+        {[
+          { action: 'New listing added', agent: 'Sarah Johnson', property: '123 Main St', time: '2 hours ago', status: 'completed' },
+          { action: 'Offer submitted', agent: 'Mike Wilson', property: '456 Oak Ave', time: '4 hours ago', status: 'pending' },
+          { action: 'Transaction closed', agent: 'Lisa Brown', property: '789 Pine Rd', time: '6 hours ago', status: 'completed' },
+          { action: 'Document signed', agent: 'David Lee', property: '321 Elm St', time: '1 day ago', status: 'completed' },
+          { action: 'New agent onboarded', agent: 'Emily Davis', property: 'N/A', time: '2 days ago', status: 'completed' },
+          { action: 'Property inspection scheduled', agent: 'Sarah Johnson', property: '654 Maple Dr', time: '3 days ago', status: 'scheduled' },
+          { action: 'Contract negotiation', agent: 'Mike Wilson', property: '987 Cedar Ln', time: '4 days ago', status: 'in-progress' },
+          { action: 'Closing documents prepared', agent: 'Lisa Brown', property: '147 Oak St', time: '5 days ago', status: 'completed' }
+        ].map((activity, index) => (
+          <Box key={index} sx={{ 
+            display: 'flex', alignItems: 'center', 
+            py: 2,
+            borderBottom: index < 7 ? '1px solid #f0f0f0' : 'none'
+          }}>
+            <Box sx={{ 
+              width: 8, 
+              height: 8, 
+              borderRadius: '50%', 
+              backgroundColor: activity.status === 'completed' ? '#4caf50' : 
+                               activity.status === 'pending' ? '#ff9800' : 
+                               activity.status === 'scheduled' ? '#2196f3' : '#9c27b0',
+              mr: 2 
+            }} />
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                {activity.action}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {activity.agent} • {activity.property} • {activity.time}
+              </Typography>
+            </Box>
+            <Chip 
+              label={activity.status} 
+              size="small"
+              color={activity.status === 'completed' ? 'success' : 
+                     activity.status === 'pending' ? 'warning' : 
+                     activity.status === 'scheduled' ? 'info' : 'default'}
+            />
+          </Box>
+        ))}
               </Box>
             </Paper>
           </>
         )}
+
+        {/* Close Dashboard Content wrapper and fragment */}
+        </Box>
+      </>
+    )}
 
         {state.activeTab === 'agents' && (
           <>
@@ -589,7 +906,7 @@ const CloseBrokeragesPage: React.FC = () => {
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                 Agent Performance Dashboard
               </Typography>
-              <Grid container spacing={3}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
                 {[
                   { id: 1, name: 'Sarah Johnson', avatar: 'SJ', performance: 95, transactions: 12, revenue: 45000 },
                   { id: 2, name: 'Mike Wilson', avatar: 'MW', performance: 87, transactions: 8, revenue: 32000 },
@@ -597,7 +914,7 @@ const CloseBrokeragesPage: React.FC = () => {
                   { id: 4, name: 'David Lee', avatar: 'DL', performance: 78, transactions: 6, revenue: 22000 },
                   { id: 5, name: 'Emily Davis', avatar: 'ED', performance: 89, transactions: 11, revenue: 41000 }
                 ].map((agent) => (
-                  <Grid component="div" xs={12} sm={6} md={4} key={agent.id}>
+                  <Box key={agent.id}>
                     <Card sx={{ height: '100%' }}>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -673,9 +990,9 @@ const CloseBrokeragesPage: React.FC = () => {
                         </Box>
                       </CardContent>
                     </Card>
-                  </Grid>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             </Paper>
 
             {/* Add New Agent */}
@@ -683,16 +1000,16 @@ const CloseBrokeragesPage: React.FC = () => {
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                 Add New Agent
               </Typography>
-              <Grid container spacing={3}>
-                <Grid component="div" xs={12} sm={6}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
+                <Box>
                   <TextField
                     fullWidth
                     label="Agent Name"
                     variant="outlined"
                     placeholder="Enter full name"
                   />
-                </Grid>
-                <Grid component="div" xs={12} sm={6}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="Email"
@@ -700,24 +1017,24 @@ const CloseBrokeragesPage: React.FC = () => {
                     placeholder="Enter email address"
                     type="email"
                   />
-                </Grid>
-                <Grid component="div" xs={12} sm={6}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="Phone"
                     variant="outlined"
                     placeholder="Enter phone number"
                   />
-                </Grid>
-                <Grid component="div" xs={12} sm={6}>
+                </Box>
+                <Box>
                   <TextField
                     fullWidth
                     label="License Number"
                     variant="outlined"
                     placeholder="Enter license number"
                   />
-                </Grid>
-                <Grid component="div" xs={12}>
+                </Box>
+                <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
@@ -725,14 +1042,15 @@ const CloseBrokeragesPage: React.FC = () => {
                   >
                     Add Agent
                   </Button>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Paper>
           </>
         )}
 
         {state.activeTab === 'listings' && (
           <>
+            {/* Header */}
             <Paper 
               elevation={0} 
               sx={{ 
@@ -750,30 +1068,22 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Manage all property listings across the brokerage
+                Manage property listings, track status, and handle approval processes
               </Typography>
             </Paper>
-            
-            {/* Listings Management Tabs */}
-            <Box sx={{ pl: 0, ml: 3, mb: 4 }}>
-              <Tabs 
-                value={state.listingsTab || 'overview'} 
-                onChange={(e, newValue) => setState(prev => ({ ...prev, listingsTab: newValue }))}
-                sx={{ 
-                  borderBottom: 1, 
-                  borderColor: 'divider',
-                  mb: 3
-                }}
-              >
-                <Tab label="Overview" value="overview" />
-                <Tab label="Active Listings" value="active" />
-                <Tab label="Pending Approval" value="pending" />
-                <Tab label="Expired" value="expired" />
-                <Tab label="Create Listing" value="create" />
-              </Tabs>
 
-              {/* Overview Tab */}
-              {(!state.listingsTab || state.listingsTab === 'overview') && (
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.listingsTab} onChange={(e, newValue) => setState(prev => ({ ...prev, listingsTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="Active Listings" value="active" />
+                  <Tab label="Pending Approval" value="pending" />
+                  <Tab label="Expired" value="expired" />
+                  <Tab label="Create Listing" value="create" />
+                </Tabs>
+              </Box>
+
+              {state.listingsTab === 'overview' && (
                 <Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
                     <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
@@ -858,7 +1168,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Active Listings Tab */}
               {state.listingsTab === 'active' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -933,7 +1242,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Pending Approval Tab */}
               {state.listingsTab === 'pending' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -997,7 +1305,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Expired Tab */}
               {state.listingsTab === 'expired' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1063,7 +1370,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Create Listing Tab */}
               {state.listingsTab === 'create' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1152,6 +1458,7 @@ const CloseBrokeragesPage: React.FC = () => {
 
         {state.activeTab === 'offers' && (
           <>
+            {/* Header */}
             <Paper 
               elevation={0} 
               sx={{ 
@@ -1169,73 +1476,57 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Review and manage all offers across brokerage listings
+                Manage purchase offers, track negotiations, and handle offer comparisons
               </Typography>
             </Paper>
-            
-            {/* Offers Management Tabs */}
-            <Box sx={{ pl: 0, ml: 3, mb: 4 }}>
-              <Tabs 
-                value={state.offersTab || 'overview'} 
-                onChange={(e, newValue) => setState(prev => ({ ...prev, offersTab: newValue }))}
-                sx={{ 
-                  borderBottom: 1, 
-                  borderColor: 'divider',
-                  mb: 3
-                }}
-              >
-                <Tab label="Overview" value="overview" />
-                <Tab label="All Offers" value="all" />
-                <Tab label="Pending Review" value="pending" />
-                <Tab label="Negotiating" value="negotiating" />
-                <Tab label="Compare" value="compare" />
-              </Tabs>
 
-              {/* Overview Tab */}
-              {(!state.offersTab || state.offersTab === 'overview') && (
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.offersTab} onChange={(e, newValue) => setState(prev => ({ ...prev, offersTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="All Offers" value="all" />
+                  <Tab label="Pending Review" value="pending" />
+                  <Tab label="Negotiating" value="negotiating" />
+                  <Tab label="Compare" value="compare" />
+                </Tabs>
+              </Box>
+
+              {state.offersTab === 'overview' && (
                 <Box>
-                  <Grid container spacing={3} sx={{ mb: 4 }}>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                          47
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Offers
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
-                          12
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Pending Review
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                          8
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Under Negotiation
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
-                          $12.8M
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Offer Value
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        47
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Offers
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                        12
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Pending Review
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        8
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Under Negotiation
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        $12.8M
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Offer Value
+                      </Typography>
+                    </Paper>
+                  </Box>
 
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
@@ -1286,7 +1577,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* All Offers Tab */}
               {state.offersTab === 'all' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1366,7 +1656,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Pending Review Tab */}
               {state.offersTab === 'pending' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1433,7 +1722,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Negotiating Tab */}
               {state.offersTab === 'negotiating' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1491,7 +1779,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Compare Tab */}
               {state.offersTab === 'compare' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1524,12 +1811,12 @@ const CloseBrokeragesPage: React.FC = () => {
                     </Box>
 
                     {/* Comparison Grid */}
-                    <Grid container spacing={3}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
                       {[
                         { id: 1, property: '123 Main St, Los Angeles', buyer: 'John Smith', agent: 'Sarah Johnson', price: 850000, downPayment: 170000, closingDate: '2024-02-15', financing: 'Conventional', contingencies: ['Inspection', 'Appraisal'] },
                         { id: 2, property: '456 Oak Ave, San Francisco', buyer: 'Emily Davis', agent: 'Mike Wilson', price: 1200000, downPayment: 240000, closingDate: '2024-02-28', financing: 'FHA', contingencies: ['Inspection'] }
                       ].map((offer) => (
-                        <Grid item xs={12} md={6} key={offer.id}>
+                        <Box key={offer.id}>
                           <Card>
                             <CardContent>
                               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
@@ -1569,9 +1856,9 @@ const CloseBrokeragesPage: React.FC = () => {
                               </Box>
                             </CardContent>
                           </Card>
-                        </Grid>
+                        </Box>
                       ))}
-                    </Grid>
+                    </Box>
 
                     <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
                       <Button variant="contained" size="large">
@@ -1590,6 +1877,7 @@ const CloseBrokeragesPage: React.FC = () => {
 
         {state.activeTab === 'documents' && (
           <>
+            {/* Header */}
             <Paper 
               elevation={0} 
               sx={{ 
@@ -1607,73 +1895,57 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Review and manage all brokerage documents
+                Manage document workflow, categories, and review processes
               </Typography>
             </Paper>
-            
-            {/* Documents Management Tabs */}
-            <Box sx={{ pl: 0, ml: 3, mb: 4 }}>
-              <Tabs 
-                value={state.documentsTab || 'overview'} 
-                onChange={(e, newValue) => setState(prev => ({ ...prev, documentsTab: newValue }))}
-                sx={{ 
-                  borderBottom: 1, 
-                  borderColor: 'divider',
-                  mb: 3
-                }}
-              >
-                <Tab label="Overview" value="overview" />
-                <Tab label="Pending Review" value="pending" />
-                <Tab label="Document Categories" value="categories" />
-                <Tab label="Upload Documents" value="upload" />
-                <Tab label="Document Workflow" value="workflow" />
-              </Tabs>
 
-              {/* Overview Tab */}
-              {(!state.documentsTab || state.documentsTab === 'overview') && (
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.documentsTab} onChange={(e, newValue) => setState(prev => ({ ...prev, documentsTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="Pending Review" value="pending" />
+                  <Tab label="Document Categories" value="categories" />
+                  <Tab label="Upload Documents" value="upload" />
+                  <Tab label="Document Workflow" value="workflow" />
+                </Tabs>
+              </Box>
+
+              {state.documentsTab === 'overview' && (
                 <Box>
-                  <Grid container spacing={3} sx={{ mb: 4 }}>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                          156
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Documents
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
-                          23
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Pending Review
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                          89
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Approved
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
-                          44
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Rejected
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        156
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Documents
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                        23
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Pending Review
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        89
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Approved
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        44
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Rejected
+                      </Typography>
+                    </Paper>
+                  </Box>
 
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
@@ -1720,7 +1992,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Pending Review Tab */}
               {state.documentsTab === 'pending' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1795,7 +2066,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Document Categories Tab */}
               {state.documentsTab === 'categories' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1803,20 +2073,20 @@ const CloseBrokeragesPage: React.FC = () => {
                       Document Categories
                     </Typography>
                     
-                    <Grid container spacing={3}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
                       {[
                         { name: 'Legal Documents', count: 45, color: 'primary', examples: ['Purchase Agreements', 'Contracts', 'Addendums'] },
                         { name: 'Financial Documents', count: 38, color: 'success', examples: ['Loan Documents', 'Commission Agreements', 'Financial Statements'] },
                         { name: 'Property Documents', count: 42, color: 'info', examples: ['Title Reports', 'HOA Documents', 'Property Surveys'] },
                         { name: 'Transaction Documents', count: 31, color: 'warning', examples: ['Closing Statements', 'Settlement Documents', 'Transfer Records'] }
                       ].map((category) => (
-                        <Grid item xs={12} sm={6} md={3} key={category.name}>
+                        <Box key={category.name}>
                           <Card sx={{ height: '100%' }}>
                             <CardContent>
                               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                                 {category.name}
                               </Typography>
-                              <Typography variant="h4" sx={{ color: brandColors[category.color], fontWeight: 'bold', mb: 2 }}>
+                              <Typography variant="h4" sx={{ color: (brandColors as any)[category.color], fontWeight: 'bold', mb: 2 }}>
                                 {category.count}
                               </Typography>
                               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -1831,14 +2101,13 @@ const CloseBrokeragesPage: React.FC = () => {
                               </Box>
                             </CardContent>
                           </Card>
-                        </Grid>
+                        </Box>
                       ))}
-                    </Grid>
+                    </Box>
                   </Paper>
                 </Box>
               )}
 
-              {/* Upload Documents Tab */}
               {state.documentsTab === 'upload' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1846,8 +2115,8 @@ const CloseBrokeragesPage: React.FC = () => {
                       Upload New Documents
                     </Typography>
                     
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                      <Box>
                         <TextField
                           fullWidth
                           label="Document Name"
@@ -1879,9 +2148,9 @@ const CloseBrokeragesPage: React.FC = () => {
                           <MenuItem value="david">David Lee</MenuItem>
                           <MenuItem value="emily">Emily Davis</MenuItem>
                         </TextField>
-                      </Grid>
+                      </Box>
                       
-                      <Grid item xs={12} md={6}>
+                      <Box>
                         <TextField
                           fullWidth
                           label="Transaction Reference"
@@ -1907,8 +2176,8 @@ const CloseBrokeragesPage: React.FC = () => {
                           placeholder="Add any additional notes..."
                           sx={{ mb: 3 }}
                         />
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                     
                     <Box sx={{ border: '2px dashed #ccc', borderRadius: 2, p: 4, textAlign: 'center', mb: 3 }}>
                       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -1934,7 +2203,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Document Workflow Tab */}
               {state.documentsTab === 'workflow' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -1942,8 +2210,8 @@ const CloseBrokeragesPage: React.FC = () => {
                       Document Workflow Management
                     </Typography>
                     
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                      <Box>
                         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                           Workflow Actions
                         </Typography>
@@ -1961,9 +2229,9 @@ const CloseBrokeragesPage: React.FC = () => {
                             Assign Reviewers
                           </Button>
                         </Box>
-                      </Grid>
+                      </Box>
                       
-                      <Grid item xs={12} md={6}>
+                      <Box>
                         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                           Quick Stats
                         </Typography>
@@ -1993,8 +2261,8 @@ const CloseBrokeragesPage: React.FC = () => {
                             </Typography>
                           </Paper>
                         </Box>
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                   </Paper>
                 </Box>
               )}
@@ -2002,33 +2270,284 @@ const CloseBrokeragesPage: React.FC = () => {
           </>
         )}
 
-        {/* Templates Component */}
-        {state.activeTab === 'working-documents' && <TemplatesComponent />}
+        {state.activeTab === 'working-documents' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Description sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Working Documents
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage active working documents and collaborative editing
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h5" sx={{ mb: 3 }}>Working Documents Management</Typography>
+              <Typography variant="body1">
+                Working documents and collaborative editing system will be implemented here.
+              </Typography>
+            </Box>
+          </>
+        )}
 
         {state.activeTab === 'templates' && (
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" sx={{ color: brandColors.primary, mb: 3 }}>
-              Working Documents
-            </Typography>
-            <Typography variant="body1">
-              This section will contain working document management and editing tools.
-            </Typography>
-          </Box>
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Templates and Envelopes
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Create and manage document templates and digital signature envelopes
+              </Typography>
+            </Paper>
+
+            {/* Tabs Navigation */}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+              <Tabs value={state.templatesTab} onChange={(e, newValue) => setState(prev => ({ ...prev, templatesTab: newValue }))}>
+                <Tab label="Templates" value="templates" />
+                <Tab label="Envelopes" value="envelopes" />
+              </Tabs>
+            </Box>
+
+            {/* Tab Content */}
+            {state.templatesTab === 'templates' && (
+              <Box sx={{ p: 3 }}>
+                <Typography variant="h5" sx={{ mb: 3 }}>Document Templates</Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  Create and manage reusable document templates for common real estate transactions.
+                </Typography>
+                
+                {/* Create New Template Button */}
+                <Box sx={{ mb: 3 }}>
+                  <Button 
+                    variant="contained" 
+                    startIcon={<AddIcon />}
+                    sx={{ backgroundColor: brandColors.primary }}
+                  >
+                    Create New Template
+                  </Button>
+                </Box>
+                
+                {/* Template Management Interface */}
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                  {/* Existing Templates */}
+                  {[
+                    { title: "Real Estate Purchase Agreement", category: "Purchase", forms: 12 },
+                    { title: "Lease Agreement", category: "Lease", forms: 8 },
+                    { title: "Property Management Contract", category: "Management", forms: 5 },
+                    { title: "Offer to Purchase", category: "Purchase", forms: 15 },
+                    { title: "Rental Application", category: "Application", forms: 20 },
+                    { title: "Inspection Checklist", category: "Inspection", forms: 6 }
+                  ].map((template, index) => (
+                    <Paper key={index} sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                        <Chip label={template.category} color="primary" size="small" />
+                        <IconButton size="small">
+                          <MoreVertIcon />
+                        </IconButton>
+                      </Box>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        {template.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {template.forms} forms created
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button size="small" variant="outlined">Edit</Button>
+                        <Button size="small" variant="outlined">Duplicate</Button>
+                        <Button size="small" variant="outlined">Share</Button>
+                      </Box>
+                    </Paper>
+                  ))}
+                </Box>
+              </Box>
+            )}
+
+            {state.templatesTab === 'envelopes' && (
+              <Box sx={{ p: 3 }}>
+                <Typography variant="h5" sx={{ mb: 3 }}>Digital Signature Envelopes</Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  Manage digital signature envelopes and track signing progress for documents.
+                </Typography>
+                
+                {/* Create New Envelope Button */}
+                <Box sx={{ mb: 3 }}>
+                  <Button 
+                    variant="contained" 
+                    startIcon={<SendIcon />}
+                    sx={{ backgroundColor: brandColors.primary }}
+                  >
+                    Create New Envelope
+                  </Button>
+                </Box>
+
+                {/* Envelopes List */}
+                <Paper sx={{ borderRadius: 2, boxShadow: 2 }}>
+                  {/* List Header */}
+                  <Box sx={{ 
+                    p: 2, 
+                    borderBottom: 1, 
+                    borderColor: 'divider',
+                    backgroundColor: 'grey.50',
+                    borderRadius: '8px 8px 0 0'
+                  }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', gap: 2, alignItems: 'center' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Document Title</Typography>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Status</Typography>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Recipients</Typography>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Progress</Typography>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Actions</Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Envelopes List Items */}
+                  {[
+                    { title: "Purchase Agreement - 123 Main St", status: "Pending", recipients: 3, progress: 67 },
+                    { title: "Lease Agreement - 456 Oak Ave", status: "Completed", recipients: 2, progress: 100 },
+                    { title: "Property Management - 789 Pine St", status: "Draft", recipients: 1, progress: 0 },
+                    { title: "Offer Letter - 321 Elm St", status: "Pending", recipients: 4, progress: 50 },
+                    { title: "Inspection Report - 654 Maple Dr", status: "Completed", recipients: 2, progress: 100 },
+                    { title: "Disclosure Form - 987 Cedar Ln", status: "Draft", recipients: 3, progress: 0 }
+                  ].map((envelope, index) => (
+                    <Box 
+                      key={index} 
+                      sx={{ 
+                        p: 2, 
+                        borderBottom: 1, 
+                        borderColor: 'divider',
+                        '&:hover': { backgroundColor: 'grey.50' },
+                        '&:last-child': { borderBottom: 0 }
+                      }}
+                    >
+                      <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', gap: 2, alignItems: 'center' }}>
+                        {/* Document Title */}
+                        <Box>
+                          <Typography variant="body1" sx={{ fontWeight: 500, mb: 0.5 }}>
+                            {envelope.title}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Created {new Date().toLocaleDateString()}
+                          </Typography>
+                        </Box>
+
+                        {/* Status */}
+                        <Box>
+                          <Chip 
+                            label={envelope.status} 
+                            color={envelope.status === 'Completed' ? 'success' : envelope.status === 'Pending' ? 'warning' : 'default'} 
+                            size="small" 
+                            sx={{ minWidth: 80 }}
+                          />
+                        </Box>
+
+                        {/* Recipients */}
+                        <Box>
+                          <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box sx={{ 
+                              width: 8, 
+                              height: 8, 
+                              borderRadius: '50%', 
+                              backgroundColor: brandColors.primary 
+                            }} />
+                            {envelope.recipients} recipients
+                          </Typography>
+                        </Box>
+
+                        {/* Progress */}
+                        <Box sx={{ minWidth: 120 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                            <Typography variant="caption" color="text.secondary">{envelope.progress}%</Typography>
+                          </Box>
+                          <LinearProgress 
+                            variant="determinate" 
+                            value={envelope.progress} 
+                            sx={{ height: 6, borderRadius: 3 }}
+                          />
+                        </Box>
+
+                        {/* Actions */}
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" sx={{ minWidth: 'auto', px: 1 }}>
+                            View
+                          </Button>
+                          <Button size="small" variant="outlined" sx={{ minWidth: 'auto', px: 1 }}>
+                            Edit
+                          </Button>
+                          <IconButton size="small">
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Paper>
+              </Box>
+            )}
+          </>
         )}
 
         {state.activeTab === 'access-archives' && (
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" sx={{ color: brandColors.primary, mb: 3 }}>
-              Access Archives
-            </Typography>
-            <Typography variant="body1">
-              This section will contain access to brokerage archives.
-            </Typography>
-          </Box>
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <ArchiveIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Access Archives
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Access historical documents and archived records
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h5" sx={{ mb: 3 }}>Archive Management</Typography>
+              <Typography variant="body1">
+                Historical document access and archive management system will be implemented here.
+              </Typography>
+            </Box>
+          </>
         )}
 
         {state.activeTab === 'transactions' && (
           <>
+            {/* Header */}
             <Paper 
               elevation={0} 
               sx={{ 
@@ -2046,73 +2565,57 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Track and manage all brokerage transactions
+                Manage all transaction files, track progress, and handle closing processes
               </Typography>
             </Paper>
-            
-            {/* Transaction Management Tabs */}
-            <Box sx={{ pl: 0, ml: 3, mb: 4 }}>
-              <Tabs 
-                value={state.transactionTab || 'overview'} 
-                onChange={(e, newValue) => setState(prev => ({ ...prev, transactionTab: newValue }))}
-                sx={{ 
-                  borderBottom: 1, 
-                  borderColor: 'divider',
-                  mb: 3
-                }}
-              >
-                <Tab label="Overview" value="overview" />
-                <Tab label="Active Transactions" value="active" />
-                <Tab label="Pending Review" value="pending" />
-                <Tab label="Completed" value="completed" />
-                <Tab label="Create File" value="create" />
-              </Tabs>
 
-              {/* Overview Tab */}
-              {(!state.transactionTab || state.transactionTab === 'overview') && (
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.transactionTab} onChange={(e, newValue) => setState(prev => ({ ...prev, transactionTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="Active Transactions" value="active" />
+                  <Tab label="Pending Review" value="pending" />
+                  <Tab label="Completed" value="completed" />
+                  <Tab label="Create File" value="create" />
+                </Tabs>
+              </Box>
+
+              {state.transactionTab === 'overview' && (
                 <Box>
-                  <Grid container spacing={3} sx={{ mb: 4 }}>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                          156
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Active
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
-                          23
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Pending Review
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                          89
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Completed This Month
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
-                          $28.4M
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Volume
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        156
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Active
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                        23
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Pending Review
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        89
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Completed This Month
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        $28.4M
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Volume
+                      </Typography>
+                    </Paper>
+                  </Box>
 
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
@@ -2162,7 +2665,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Active Transactions Tab */}
               {state.transactionTab === 'active' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -2234,7 +2736,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Pending Review Tab */}
               {state.transactionTab === 'pending' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -2295,7 +2796,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Completed Tab */}
               {state.transactionTab === 'completed' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -2359,7 +2859,6 @@ const CloseBrokeragesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Create File Tab */}
               {state.transactionTab === 'create' && (
                 <Box>
                   <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
@@ -2367,8 +2866,8 @@ const CloseBrokeragesPage: React.FC = () => {
                       Create New Transaction File
                     </Typography>
                     
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                      <Box>
                         <TextField
                           fullWidth
                           label="Client Name"
@@ -2393,9 +2892,9 @@ const CloseBrokeragesPage: React.FC = () => {
                           <MenuItem value="refinance">Refinance</MenuItem>
                           <MenuItem value="lease">Lease</MenuItem>
                         </TextField>
-                      </Grid>
+                      </Box>
                       
-                      <Grid item xs={12} md={6}>
+                      <Box>
                         <TextField
                           fullWidth
                           label="Assigned Agent"
@@ -2421,8 +2920,8 @@ const CloseBrokeragesPage: React.FC = () => {
                           type="date"
                           sx={{ mb: 3 }}
                         />
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                     
                     <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
                       <Button variant="contained" size="large">
@@ -2468,34 +2967,7 @@ const CloseBrokeragesPage: React.FC = () => {
           </>
         )}
 
-        {state.activeTab === 'support' && (
-          <>
-            <Paper 
-              elevation={0} 
-              sx={{ 
-                mb: 4, 
-                p: 3, 
-                backgroundColor: brandColors.primary,
-                borderRadius: '16px 16px 0 0',
-                color: 'white'
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
-                  Support
-                </Typography>
-              </Box>
-              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                Get help and support for your brokerage operations
-              </Typography>
-            </Paper>
-            <Box sx={{ pl: 0, ml: 3 }}>
-              <Typography variant="h6">Support Content</Typography>
-              <Typography variant="body1">This section will contain support and help resources.</Typography>
-            </Box>
-          </>
-        )}
+        
 
         {state.activeTab === 'settings' && (
           <>
@@ -2556,86 +3028,2819 @@ const CloseBrokeragesPage: React.FC = () => {
         )}
 
         {state.activeTab === 'payments-finance' && (
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" sx={{ color: brandColors.primary, mb: 3 }}>
-              Payments & Finance
-            </Typography>
-            
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-              <Tabs value={state.paymentsTab} onChange={(e, newValue) => setState(prev => ({ ...prev, paymentsTab: newValue }))}>
-                <Tab label="Sales" value="sales" />
-                <Tab label="Purchases" value="purchases" />
-                <Tab label="Lending" value="lending" />
-                <Tab label="Escrow Deposit" value="escrow" />
-                <Tab label="Banking" value="banking" />
-              </Tabs>
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Payments & Finance
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage all financial transactions, invoices, and banking operations
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.paymentsTab} onChange={(e, newValue) => setState(prev => ({ ...prev, paymentsTab: newValue }))}>
+                  <Tab label="Sales" value="sales" />
+                  <Tab label="Purchases" value="purchases" />
+                  <Tab label="Lending" value="lending" />
+                  <Tab label="Escrow Deposit" value="escrow" />
+                  <Tab label="Banking" value="banking" />
+                </Tabs>
+              </Box>
+
+              {state.paymentsTab === 'sales' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Sales</Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Invoices</Typography>
+                      <Typography variant="body2" color="text.secondary">Manage and track all outgoing invoices</Typography>
+                    </Paper>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Payments Received</Typography>
+                      <Typography variant="body2" color="text.secondary">Track incoming payments from clients</Typography>
+                    </Paper>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Credit Notes</Typography>
+                      <Typography variant="body2" color="text.secondary">Handle credit notes and refunds</Typography>
+                    </Paper>
+                  </Box>
+                </Box>
+              )}
+
+              {state.paymentsTab === 'purchases' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Purchases</Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Bills</Typography>
+                      <Typography variant="body2" color="text.secondary">Manage vendor bills and expenses</Typography>
+                    </Paper>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Expenses</Typography>
+                      <Typography variant="body2" color="text.secondary">Track business expenses and costs</Typography>
+                    </Paper>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Payments Made</Typography>
+                      <Typography variant="body2" color="text.secondary">Record payments to vendors</Typography>
+                    </Paper>
+                    <Paper sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1 }}>Vendor Credits</Typography>
+                      <Typography variant="body2" color="text.secondary">Handle vendor credits and adjustments</Typography>
+                    </Paper>
+                  </Box>
+                </Box>
+              )}
+
+              {state.paymentsTab === 'lending' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Lending</Typography>
+                  <Typography variant="body1">Lending management and loan tracking features will be implemented here.</Typography>
+                </Box>
+              )}
+
+              {state.paymentsTab === 'escrow' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Escrow Deposit</Typography>
+                  <Typography variant="body1">Escrow deposit management and tracking features will be implemented here.</Typography>
+                </Box>
+              )}
+
+              {state.paymentsTab === 'banking' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Banking</Typography>
+                  <Typography variant="body1">Banking integration and account management features will be implemented here.</Typography>
+                </Box>
+              )}
             </Box>
+          </>
+        )}
 
-            {state.paymentsTab === 'sales' && (
-              <Box>
-                <Typography variant="h5" sx={{ mb: 2 }}>Sales</Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Invoices</Typography>
-                    <Typography variant="body2" color="text.secondary">Manage and track all outgoing invoices</Typography>
-                  </Paper>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Payments Received</Typography>
-                    <Typography variant="body2" color="text.secondary">Track incoming payments from clients</Typography>
-                  </Paper>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Credit Notes</Typography>
-                    <Typography variant="body2" color="text.secondary">Handle credit notes and refunds</Typography>
-                  </Paper>
+        {state.activeTab === 'reports-analytics' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Reports & Analytics
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Generate reports, analyze performance, and track business metrics
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.reportsTab} onChange={(e, newValue) => setState(prev => ({ ...prev, reportsTab: newValue }))}>
+                  <Tab label="Reports" value="reports" />
+                  <Tab label="Analytics" value="analytics" />
+                </Tabs>
+              </Box>
+
+              {state.reportsTab === 'reports' && (
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="h6">All Reports</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Typography variant="body2" color="text.secondary">▼</Typography>
+                      </Box>
+                    </Box>
+                    <Button 
+                      variant="contained" 
+                      sx={{ 
+                        backgroundColor: brandColors.primary,
+                        '&:hover': { backgroundColor: brandColors.actions.primary }
+                      }}
+                    >
+                      Create Report
+                    </Button>
+                  </Box>
+
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                    {/* N. Cal Income Statement */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        N. Cal Income Statement
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Income Statement</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* Kylee Report */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        Kylee Report
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Summary</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* Lathan Performance */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        Lathan Performance
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Agent-Performance</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* Jesse Performance */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        Jesse Performance
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Agent-Performance</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* Summary Transactions */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        Summary Transactions
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Summary</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* General Ledger YTD */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        General Ledger YTD
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: General Ledger</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+
+                    {/* 2022 Income Statement */}
+                    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        2022 Income Statement
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Type: Income Statement</Typography>
+                        <Box sx={{ width: 16, height: 16, backgroundColor: 'text.secondary', borderRadius: 1 }} />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: brandColors.primary, cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                          Edit Report
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          size="small"
+                          sx={{ 
+                            backgroundColor: brandColors.primary,
+                            '&:hover': { backgroundColor: brandColors.actions.primary }
+                          }}
+                        >
+                          Run
+                        </Button>
+                      </Box>
+                    </Paper>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
 
-            {state.paymentsTab === 'purchases' && (
-              <Box>
-                <Typography variant="h5" sx={{ mb: 2 }}>Purchases</Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Bills</Typography>
-                    <Typography variant="body2" color="text.secondary">Manage vendor bills and expenses</Typography>
-                  </Paper>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Expenses</Typography>
-                    <Typography variant="body2" color="text.secondary">Track business expenses and costs</Typography>
-                  </Paper>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Payments Made</Typography>
-                    <Typography variant="body2" color="text.secondary">Record payments to vendors</Typography>
-                  </Paper>
-                  <Paper sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>Vendor Credits</Typography>
-                    <Typography variant="body2" color="text.secondary">Handle vendor credits and adjustments</Typography>
-                  </Paper>
+              {state.reportsTab === 'analytics' && (
+                <Box>
+                  <Typography variant="h5" sx={{ mb: 2 }}>Analytics Dashboard</Typography>
+                  <Typography variant="body1">
+                    Advanced analytics and data visualization features will be implemented here.
+                  </Typography>
                 </Box>
+              )}
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'tasks-reminders' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <AssignmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Tasks & Reminders
+                </Typography>
               </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage tasks, set reminders, and track completion deadlines
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              {/* Quick Actions */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{ backgroundColor: brandColors.primary }}
+                >
+                  Create New Task
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<AssignmentIcon />}
+                >
+                  Import Tasks
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<CheckCircleIcon />}
+                >
+                  Bulk Complete
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<MoreVertIcon />}
+                >
+                  More Actions
+                </Button>
+              </Box>
+
+              {/* Task Statistics */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                    24
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Tasks
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                    8
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Due Today
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    12
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Completed
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.error, fontWeight: 'bold' }}>
+                    4
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Overdue
+                  </Typography>
+                </Paper>
+              </Box>
+
+              {/* Task Filters and Search */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <TextField
+                    size="small"
+                    placeholder="Search tasks..."
+                    InputProps={{
+                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 250 }}
+                  />
+                  <TextField
+                    size="small"
+                    select
+                    defaultValue="all"
+                    label="Status"
+                    sx={{ minWidth: 120 }}
+                  >
+                    <MenuItem value="all">All Status</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="in-progress">In Progress</MenuItem>
+                    <MenuItem value="completed">Completed</MenuItem>
+                    <MenuItem value="overdue">Overdue</MenuItem>
+                  </TextField>
+                  <TextField
+                    size="small"
+                    select
+                    defaultValue="all"
+                    label="Priority"
+                    sx={{ minWidth: 120 }}
+                  >
+                    <MenuItem value="all">All Priority</MenuItem>
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="low">Low</MenuItem>
+                  </TextField>
+                  <TextField
+                    size="small"
+                    select
+                    defaultValue="all"
+                    label="Assignee"
+                    sx={{ minWidth: 150 }}
+                  >
+                    <MenuItem value="all">All Assignees</MenuItem>
+                    <MenuItem value="sarah">Sarah Johnson</MenuItem>
+                    <MenuItem value="mike">Mike Wilson</MenuItem>
+                    <MenuItem value="lisa">Lisa Brown</MenuItem>
+                    <MenuItem value="david">David Lee</MenuItem>
+                    <MenuItem value="emily">Emily Davis</MenuItem>
+                  </TextField>
+                </Box>
+              </Paper>
+
+              {/* Task List */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Active Tasks
+                </Typography>
+                
+                <Box sx={{ maxHeight: 600, overflow: 'auto' }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Review Purchase Agreement for 123 Main St', 
+                      description: 'Review and approve the purchase agreement before sending to client',
+                      assignee: 'Sarah Johnson',
+                      priority: 'high',
+                      status: 'pending',
+                      dueDate: '2024-01-20',
+                      category: 'Legal Review',
+                      progress: 0
+                    },
+                    { 
+                      id: 2, 
+                      title: 'Schedule Property Inspection', 
+                      description: 'Coordinate with inspector and client for property inspection',
+                      assignee: 'Mike Wilson',
+                      priority: 'medium',
+                      status: 'in-progress',
+                      dueDate: '2024-01-22',
+                      category: 'Property',
+                      progress: 60
+                    },
+                    { 
+                      id: 3, 
+                      title: 'Prepare Closing Documents', 
+                      description: 'Gather and prepare all necessary closing documents',
+                      assignee: 'Lisa Brown',
+                      priority: 'high',
+                      status: 'pending',
+                      dueDate: '2024-01-19',
+                      category: 'Closing',
+                      progress: 25
+                    },
+                    { 
+                      id: 4, 
+                      title: 'Follow up on Loan Approval', 
+                      description: 'Check status of loan approval with lender',
+                      assignee: 'David Lee',
+                      priority: 'medium',
+                      status: 'in-progress',
+                      dueDate: '2024-01-25',
+                      category: 'Financing',
+                      progress: 80
+                    },
+                    { 
+                      id: 5, 
+                      title: 'Update MLS Listing', 
+                      description: 'Update property photos and description on MLS',
+                      assignee: 'Emily Davis',
+                      priority: 'low',
+                      status: 'pending',
+                      dueDate: '2024-01-28',
+                      category: 'Marketing',
+                      progress: 0
+                    },
+                    { 
+                      id: 6, 
+                      title: 'Client Meeting Preparation', 
+                      description: 'Prepare presentation materials for client meeting',
+                      assignee: 'Sarah Johnson',
+                      priority: 'high',
+                      status: 'pending',
+                      dueDate: '2024-01-18',
+                      category: 'Client Relations',
+                      progress: 40
+                    }
+                  ].map((task) => (
+                    <Card key={task.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {task.title}
+                              </Typography>
+                              <Chip 
+                                label={task.category} 
+                                size="small" 
+                                color="primary" 
+                                variant="outlined"
+                              />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                              {task.description}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Assignee: {task.assignee}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Due: {task.dueDate}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Progress: {task.progress}%
+                              </Typography>
+                            </Box>
+                            <Box sx={{ mb: 2 }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  Progress
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {task.progress}%
+                                </Typography>
+                              </Box>
+                              <LinearProgress 
+                                variant="determinate" 
+                                value={task.progress} 
+                                sx={{ height: 6, borderRadius: 3 }}
+                              />
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
+                            <Chip 
+                              label={task.priority} 
+                              color={
+                                task.priority === 'high' ? 'error' :
+                                task.priority === 'medium' ? 'warning' : 'default'
+                              }
+                              size="small"
+                            />
+                            <Chip 
+                              label={task.status} 
+                              color={
+                                task.status === 'completed' ? 'success' :
+                                task.status === 'in-progress' ? 'primary' :
+                                task.status === 'overdue' ? 'error' : 'default'
+                              }
+                              size="small"
+                            />
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                              <Button size="small" variant="outlined">
+                                Edit
+                              </Button>
+                              <Button size="small" variant="contained">
+                                {task.status === 'completed' ? 'Reopen' : 'Complete'}
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Reminders Section */}
+              <Paper elevation={2} sx={{ p: 3, mt: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Upcoming Reminders
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Client Follow-up Call', 
+                      time: '2024-01-20 10:00 AM',
+                      type: 'Phone Call',
+                      client: 'John Smith',
+                      property: '123 Main St'
+                    },
+                    { 
+                      id: 2, 
+                      title: 'Document Review Deadline', 
+                      time: '2024-01-21 5:00 PM',
+                      type: 'Deadline',
+                      client: 'Emily Davis',
+                      property: '456 Oak Ave'
+                    },
+                    { 
+                      id: 3, 
+                      title: 'Inspection Report Due', 
+                      time: '2024-01-22 2:00 PM',
+                      type: 'Report',
+                      client: 'Mike Wilson',
+                      property: '789 Pine Rd'
+                    },
+                    { 
+                      id: 4, 
+                      title: 'Closing Date Reminder', 
+                      time: '2024-01-25 9:00 AM',
+                      type: 'Closing',
+                      client: 'Lisa Brown',
+                      property: '321 Elm St'
+                    }
+                  ].map((reminder) => (
+                    <Card key={reminder.id} sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: brandColors.primary 
+                        }} />
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                            {reminder.title}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                            {reminder.time} • {reminder.type}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {reminder.client} • {reminder.property}
+                          </Typography>
+                        </Box>
+                        <IconButton size="small">
+                          <MoreVertIcon />
+                        </IconButton>
+                      </Box>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'checklists' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <CheckCircleIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Checklists
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Create and manage checklists for various business processes and transactions
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              {/* Quick Actions */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{ backgroundColor: brandColors.primary }}
+                >
+                  Create New Checklist
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<AssignmentIcon />}
+                >
+                  Import Templates
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<CheckCircleIcon />}
+                >
+                  Bulk Actions
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<MoreVertIcon />}
+                >
+                  More Actions
+                </Button>
+              </Box>
+
+              {/* Checklist Statistics */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                    18
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Checklists
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                    6
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Active Today
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    12
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Completed This Week
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                    95%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Completion Rate
+                  </Typography>
+                </Paper>
+              </Box>
+
+              {/* Checklist Categories */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Checklist Categories
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                  {[
+                    { name: 'Transaction Closing', count: 8, color: 'primary', icon: <BusinessIcon />, description: 'Complete closing process checklists' },
+                    { name: 'Property Management', count: 5, color: 'success', icon: <AssessmentIcon />, description: 'Property maintenance and management' },
+                    { name: 'Client Onboarding', count: 3, color: 'info', icon: <PeopleIcon />, description: 'New client setup and documentation' },
+                    { name: 'Compliance & Legal', count: 2, color: 'warning', icon: <SecurityIcon />, description: 'Regulatory compliance requirements' }
+                  ].map((category) => (
+                    <Box key={category.name}>
+                      <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Box sx={{ color: (brandColors as any)[category.color], mb: 2 }}>
+                            {category.icon}
+                          </Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                            {category.name}
+                          </Typography>
+                          <Typography variant="h4" sx={{ color: (brandColors as any)[category.color], fontWeight: 'bold', mb: 1 }}>
+                            {category.count}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Checklists
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {category.description}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Active Checklists */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    Active Checklists
+                  </Typography>
+                  <TextField
+                    size="small"
+                    placeholder="Search checklists..."
+                    InputProps={{
+                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 250 }}
+                  />
+                </Box>
+                
+                <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Property Closing Checklist - 123 Main St', 
+                      category: 'Transaction Closing',
+                      assignee: 'Sarah Johnson',
+                      progress: 75,
+                      totalItems: 24,
+                      completedItems: 18,
+                      dueDate: '2024-01-25',
+                      priority: 'high'
+                    },
+                    { 
+                      id: 2, 
+                      title: 'New Client Onboarding - John Smith', 
+                      category: 'Client Onboarding',
+                      assignee: 'Mike Wilson',
+                      progress: 45,
+                      totalItems: 18,
+                      completedItems: 8,
+                      dueDate: '2024-01-22',
+                      priority: 'medium'
+                    },
+                    { 
+                      id: 3, 
+                      title: 'Property Management - 456 Oak Ave', 
+                      category: 'Property Management',
+                      assignee: 'Lisa Brown',
+                      progress: 90,
+                      totalItems: 15,
+                      completedItems: 14,
+                      dueDate: '2024-01-20',
+                      priority: 'low'
+                    },
+                    { 
+                      id: 4, 
+                      title: 'Compliance Review - Q4 2024', 
+                      category: 'Compliance & Legal',
+                      assignee: 'David Lee',
+                      progress: 30,
+                      totalItems: 32,
+                      completedItems: 10,
+                      dueDate: '2024-01-31',
+                      priority: 'high'
+                    },
+                    { 
+                      id: 5, 
+                      title: 'Lease Renewal - 789 Pine Rd', 
+                      category: 'Property Management',
+                      assignee: 'Emily Davis',
+                      progress: 60,
+                      totalItems: 20,
+                      completedItems: 12,
+                      dueDate: '2024-01-28',
+                      priority: 'medium'
+                    }
+                  ].map((checklist) => (
+                    <Card key={checklist.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {checklist.title}
+                              </Typography>
+                              <Chip 
+                                label={checklist.category} 
+                                size="small" 
+                                color="primary" 
+                                variant="outlined"
+                              />
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Assignee: {checklist.assignee}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Due: {checklist.dueDate}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Items: {checklist.completedItems}/{checklist.totalItems}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ mb: 2 }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  Progress
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {checklist.progress}%
+                                </Typography>
+                              </Box>
+                              <LinearProgress 
+                                variant="determinate" 
+                                value={checklist.progress} 
+                                sx={{ height: 6, borderRadius: 3 }}
+                              />
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
+                            <Chip 
+                              label={checklist.priority} 
+                              color={
+                                checklist.priority === 'high' ? 'error' :
+                                checklist.priority === 'medium' ? 'warning' : 'default'
+                              }
+                              size="small"
+                            />
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                              <Button size="small" variant="outlined">
+                                View Details
+                              </Button>
+                              <Button size="small" variant="contained">
+                                Continue
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Checklist Templates */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Checklist Templates
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Standard Property Closing', 
+                      category: 'Transaction Closing',
+                      items: 24,
+                      estimatedTime: '2-3 hours',
+                      usage: 156,
+                      description: 'Complete checklist for standard property closing process'
+                    },
+                    { 
+                      title: 'New Agent Onboarding', 
+                      category: 'Client Onboarding',
+                      items: 18,
+                      estimatedTime: '1-2 days',
+                      usage: 23,
+                      description: 'Comprehensive onboarding checklist for new agents'
+                    },
+                    { 
+                      title: 'Property Management Monthly', 
+                      category: 'Property Management',
+                      items: 15,
+                      estimatedTime: '1-2 hours',
+                      usage: 89,
+                      description: 'Monthly property management and maintenance tasks'
+                    },
+                    { 
+                      title: 'Compliance Review Quarterly', 
+                      category: 'Compliance & Legal',
+                      items: 32,
+                      estimatedTime: '4-6 hours',
+                      usage: 12,
+                      description: 'Quarterly compliance and legal review checklist'
+                    },
+                    { 
+                      title: 'Lease Renewal Process', 
+                      category: 'Property Management',
+                      items: 20,
+                      estimatedTime: '2-3 hours',
+                      usage: 45,
+                      description: 'Complete lease renewal and negotiation checklist'
+                    },
+                    { 
+                      title: 'High-Value Transaction', 
+                      category: 'Transaction Closing',
+                      items: 28,
+                      estimatedTime: '3-4 hours',
+                      usage: 67,
+                      description: 'Enhanced checklist for high-value property transactions'
+                    }
+                  ].map((template, index) => (
+                    <Card key={index} sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Chip label={template.category} color="primary" size="small" />
+                          <IconButton size="small">
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Box>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                          {template.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          {template.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            {template.items} items
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {template.estimatedTime}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          Used {template.usage} times
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            Use Template
+                          </Button>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            Customize
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'compliance' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <SecurityIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Compliance
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Manage regulatory compliance, audit requirements, and risk monitoring
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              {/* Quick Actions */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<SecurityIcon />}
+                  sx={{ backgroundColor: brandColors.primary }}
+                >
+                  New Compliance Review
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<AssessmentIcon />}
+                >
+                  Generate Audit Report
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<CheckCircleIcon />}
+                >
+                  Risk Assessment
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<MoreVertIcon />}
+                >
+                  More Actions
+                </Button>
+              </Box>
+
+              {/* Compliance Overview Statistics */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    95%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Compliance Score
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                    3
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Pending Reviews
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.error, fontWeight: 'bold' }}>
+                    1
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    High Risk Items
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                    28
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Days to Next Audit
+                  </Typography>
+                </Paper>
+              </Box>
+
+              {/* Compliance Categories */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Compliance Categories
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                  {[
+                    { name: 'Real Estate Law', status: 'Compliant', score: 98, color: 'success', icon: <BusinessIcon />, lastReview: '2024-01-10' },
+                    { name: 'Financial Regulations', status: 'Under Review', score: 85, color: 'warning', icon: <AssessmentIcon />, lastReview: '2024-01-15' },
+                    { name: 'Data Privacy', status: 'Compliant', score: 92, color: 'success', icon: <SecurityIcon />, lastReview: '2024-01-08' },
+                    { name: 'Anti-Money Laundering', status: 'Compliant', score: 96, color: 'success', icon: <SecurityIcon />, lastReview: '2024-01-12' }
+                  ].map((category) => (
+                    <Box key={category.name}>
+                      <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Box sx={{ color: (brandColors as any)[category.color], mb: 2 }}>
+                            {category.icon}
+                          </Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                            {category.name}
+                          </Typography>
+                          <Typography variant="h4" sx={{ color: (brandColors as any)[category.color], fontWeight: 'bold', mb: 1 }}>
+                            {category.score}%
+                          </Typography>
+                          <Chip 
+                            label={category.status} 
+                            color={category.status === 'Compliant' ? 'success' : 'warning'}
+                            size="small"
+                            sx={{ mb: 1 }}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            Last Review: {category.lastReview}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Active Compliance Issues */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    Active Compliance Issues
+                  </Typography>
+                  <TextField
+                    size="small"
+                    placeholder="Search issues..."
+                    InputProps={{
+                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 250 }}
+                  />
+                </Box>
+                
+                <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Financial Disclosure Requirements Update', 
+                      category: 'Financial Regulations',
+                      priority: 'high',
+                      status: 'Under Review',
+                      assignee: 'David Lee',
+                      dueDate: '2024-01-25',
+                      description: 'New financial disclosure requirements need to be implemented across all transactions',
+                      riskLevel: 'High'
+                    },
+                    { 
+                      id: 2, 
+                      title: 'Data Retention Policy Review', 
+                      category: 'Data Privacy',
+                      priority: 'medium',
+                      status: 'Pending',
+                      assignee: 'Sarah Johnson',
+                      dueDate: '2024-01-30',
+                      description: 'Review and update data retention policies to ensure GDPR compliance',
+                      riskLevel: 'Medium'
+                    },
+                    { 
+                      id: 3, 
+                      title: 'AML Training Certification', 
+                      category: 'Anti-Money Laundering',
+                      priority: 'medium',
+                      status: 'In Progress',
+                      assignee: 'Mike Wilson',
+                      dueDate: '2024-01-28',
+                      description: 'Complete annual AML training certification for all agents',
+                      riskLevel: 'Medium'
+                    },
+                    { 
+                      id: 4, 
+                      title: 'Contract Template Updates', 
+                      category: 'Real Estate Law',
+                      priority: 'low',
+                      status: 'Pending',
+                      assignee: 'Lisa Brown',
+                      dueDate: '2024-02-05',
+                      description: 'Update contract templates to reflect recent legal changes',
+                      riskLevel: 'Low'
+                    }
+                  ].map((issue) => (
+                    <Card key={issue.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {issue.title}
+                              </Typography>
+                              <Chip 
+                                label={issue.category} 
+                                size="small" 
+                                color="primary" 
+                                variant="outlined"
+                              />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                              {issue.description}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Assignee: {issue.assignee}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Due: {issue.dueDate}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Risk Level: {issue.riskLevel}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
+                            <Chip 
+                              label={issue.priority} 
+                              color={
+                                issue.priority === 'high' ? 'error' :
+                                issue.priority === 'medium' ? 'warning' : 'default'
+                              }
+                              size="small"
+                            />
+                            <Chip 
+                              label={issue.status} 
+                              color={
+                                issue.status === 'Under Review' ? 'warning' :
+                                issue.status === 'In Progress' ? 'primary' :
+                                issue.status === 'Pending' ? 'default' : 'success'
+                              }
+                              size="small"
+                            />
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                              <Button size="small" variant="outlined">
+                                View Details
+                              </Button>
+                              <Button size="small" variant="contained">
+                                Take Action
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Audit Schedule */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Upcoming Audits & Reviews
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Annual Financial Compliance Audit', 
+                      type: 'External Audit',
+                      date: '2024-02-15',
+                      auditor: 'Deloitte & Associates',
+                      scope: 'Financial transactions, reporting, and compliance',
+                      status: 'Scheduled',
+                      preparationDays: 28
+                    },
+                    { 
+                      id: 2, 
+                      title: 'Real Estate License Renewal Review', 
+                      type: 'Regulatory Review',
+                      date: '2024-03-01',
+                      auditor: 'State Real Estate Commission',
+                      scope: 'License compliance, continuing education, and record keeping',
+                      status: 'Preparation Required',
+                      preparationDays: 42
+                    },
+                    { 
+                      id: 3, 
+                      title: 'Data Privacy Compliance Review', 
+                      type: 'Internal Review',
+                      date: '2024-01-30',
+                      auditor: 'Internal Compliance Team',
+                      scope: 'Data handling, privacy policies, and GDPR compliance',
+                      status: 'In Progress',
+                      preparationDays: 5
+                    },
+                    { 
+                      id: 4, 
+                      title: 'AML Program Assessment', 
+                      type: 'Regulatory Review',
+                      date: '2024-04-15',
+                      auditor: 'Federal Financial Institutions',
+                      scope: 'Anti-money laundering procedures and training',
+                      status: 'Scheduled',
+                      preparationDays: 88
+                    }
+                  ].map((audit) => (
+                    <Card key={audit.id} sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: 
+                            audit.status === 'Scheduled' ? brandColors.accent.info :
+                            audit.status === 'In Progress' ? brandColors.actions.warning :
+                            brandColors.actions.error
+                        }} />
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                            {audit.title}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                            {audit.type} • {audit.date} • {audit.auditor}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Scope: {audit.scope}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                          <Chip 
+                            label={audit.status} 
+                            size="small"
+                            color={
+                              audit.status === 'Scheduled' ? 'info' :
+                              audit.status === 'In Progress' ? 'warning' :
+                              'error'
+                            }
+                          />
+                          <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                            {audit.preparationDays} days to prepare
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Compliance Reports */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Compliance Reports & Documentation
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Q4 2024 Compliance Report', 
+                      type: 'Quarterly Report',
+                      status: 'Completed',
+                      date: '2024-01-05',
+                      size: '2.4 MB',
+                      description: 'Comprehensive quarterly compliance assessment and findings'
+                    },
+                    { 
+                      title: 'Annual Risk Assessment', 
+                      type: 'Risk Analysis',
+                      status: 'In Progress',
+                      date: '2024-01-15',
+                      size: '1.8 MB',
+                      description: 'Annual risk assessment and mitigation strategy report'
+                    },
+                    { 
+                      title: 'Data Privacy Impact Assessment', 
+                      type: 'Privacy Review',
+                      status: 'Pending Review',
+                      date: '2024-01-20',
+                      size: '3.1 MB',
+                      description: 'Assessment of data privacy practices and GDPR compliance'
+                    },
+                    { 
+                      title: 'AML Training Records', 
+                      type: 'Training Documentation',
+                      status: 'Completed',
+                      date: '2024-01-10',
+                      size: '0.9 MB',
+                      description: 'Complete records of AML training completion for all agents'
+                    },
+                    { 
+                      title: 'Regulatory Change Log', 
+                      type: 'Change Tracking',
+                      status: 'Updated',
+                      date: '2024-01-18',
+                      size: '0.5 MB',
+                      description: 'Log of regulatory changes and implementation status'
+                    },
+                    { 
+                      title: 'Compliance Policy Manual', 
+                      type: 'Policy Document',
+                      status: 'Under Review',
+                      date: '2024-01-22',
+                      size: '5.2 MB',
+                      description: 'Comprehensive compliance policy and procedure manual'
+                    }
+                  ].map((report, index) => (
+                    <Card key={index} sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Chip label={report.type} color="primary" size="small" />
+                          <IconButton size="small">
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Box>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                          {report.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          {report.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            {report.date}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {report.size}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            View
+                          </Button>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            Download
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'training-resources' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <SchoolIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Training & Resources
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Access training materials, resources, and professional development tools
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              {/* Tabs Navigation */}
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs value={state.trainingTab || 'overview'} onChange={(e, newValue) => setState(prev => ({ ...prev, trainingTab: newValue }))}>
+                  <Tab label="Overview" value="overview" />
+                  <Tab label="Courses" value="courses" />
+                  <Tab label="Resources" value="resources" />
+                  <Tab label="Development Paths" value="paths" />
+                  <Tab label="Achievements" value="achievements" />
+                  <Tab label="Management" value="management" />
+                </Tabs>
+              </Box>
+
+              {/* Tab Content */}
+              {(state.trainingTab === 'overview' || !state.trainingTab) && (
+                <>
+                  {/* Quick Actions */}
+                  <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                    <Button
+                      variant="contained"
+                      startIcon={<SchoolIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Enroll in Course
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<AssessmentIcon />}
+                    >
+                      Take Assessment
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<AssignmentIcon />}
+                    >
+                      Download Resources
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MoreVertIcon />}
+                    >
+                      More Actions
+                    </Button>
+                  </Box>
+
+              {/* Learning Progress Overview */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    78%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Overall Progress
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                    12
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Courses Completed
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                    3
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Active Courses
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                    156
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    CE Credits Earned
+                  </Typography>
+                </Paper>
+              </Box>
+
+              {/* Featured Courses */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Featured Courses
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Advanced Real Estate Law', 
+                      category: 'Legal',
+                      instructor: 'Prof. Sarah Johnson',
+                      duration: '8 weeks',
+                      level: 'Advanced',
+                      rating: 4.8,
+                      students: 245,
+                      progress: 0,
+                      description: 'Comprehensive course covering advanced real estate legal principles and case studies'
+                    },
+                    { 
+                      title: 'Digital Marketing for Real Estate', 
+                      category: 'Marketing',
+                      instructor: 'Mike Wilson',
+                      duration: '6 weeks',
+                      level: 'Intermediate',
+                      rating: 4.6,
+                      students: 189,
+                      progress: 65,
+                      description: 'Learn modern digital marketing strategies specifically for real estate professionals'
+                    },
+                    { 
+                      title: 'Financial Analysis & Investment', 
+                      category: 'Finance',
+                      instructor: 'Dr. Lisa Brown',
+                      duration: '10 weeks',
+                      level: 'Advanced',
+                      rating: 4.9,
+                      students: 156,
+                      progress: 0,
+                      description: 'Advanced financial analysis techniques for real estate investment decisions'
+                    },
+                    { 
+                      title: 'Client Relationship Management', 
+                      category: 'Sales',
+                      instructor: 'Emily Davis',
+                      duration: '4 weeks',
+                      level: 'Beginner',
+                      rating: 4.7,
+                      students: 312,
+                      progress: 0,
+                      description: 'Build and maintain strong client relationships for long-term success'
+                    },
+                    { 
+                      title: 'Property Management Essentials', 
+                      category: 'Management',
+                      instructor: 'David Lee',
+                      duration: '7 weeks',
+                      level: 'Intermediate',
+                      rating: 4.5,
+                      students: 178,
+                      progress: 0,
+                      description: 'Essential skills for effective property management and tenant relations'
+                    },
+                    { 
+                      title: 'Negotiation Mastery', 
+                      category: 'Sales',
+                      instructor: 'Robert Chen',
+                      duration: '5 weeks',
+                      level: 'Intermediate',
+                      rating: 4.8,
+                      students: 203,
+                      progress: 0,
+                      description: 'Master negotiation techniques for successful real estate transactions'
+                    }
+                  ].map((course, index) => (
+                    <Card key={index} sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Chip label={course.category} color="primary" size="small" />
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {course.rating}
+                            </Typography>
+                            <Box sx={{ color: '#ffc107', fontSize: 16 }}>★</Box>
+                          </Box>
+                        </Box>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                          {course.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          {course.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {course.instructor}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {course.duration}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {course.level}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {course.students} students enrolled
+                          </Typography>
+                          {course.progress > 0 && (
+                            <Typography variant="caption" color="text.secondary">
+                              {course.progress}% complete
+                            </Typography>
+                          )}
+                        </Box>
+                        {course.progress > 0 && (
+                          <Box sx={{ mb: 2 }}>
+                            <LinearProgress 
+                              variant="determinate" 
+                              value={course.progress} 
+                              sx={{ height: 6, borderRadius: 3 }}
+                            />
+                          </Box>
+                        )}
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="contained" sx={{ flex: 1 }}>
+                            {course.progress > 0 ? 'Continue' : 'Enroll'}
+                          </Button>
+                          <Button size="small" variant="outlined">
+                            Preview
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Resource Library */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    Resource Library
+                  </Typography>
+                  <TextField
+                    size="small"
+                    placeholder="Search resources..."
+                    InputProps={{
+                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 250 }}
+                  />
+                </Box>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      name: 'Contract Templates', 
+                      category: 'Legal',
+                      count: 45,
+                      color: 'primary',
+                      icon: <Description />,
+                      description: 'Standard contract templates and forms'
+                    },
+                    { 
+                      name: 'Marketing Materials', 
+                      category: 'Marketing',
+                      count: 32,
+                      color: 'success',
+                      icon: <AssessmentIcon />,
+                      description: 'Brochures, flyers, and presentation templates'
+                    },
+                    { 
+                      name: 'Training Videos', 
+                      category: 'Training',
+                      count: 78,
+                      color: 'info',
+                      icon: <SchoolIcon />,
+                      description: 'Video tutorials and training content'
+                    },
+                    { 
+                      name: 'Compliance Guides', 
+                      category: 'Compliance',
+                      count: 23,
+                      color: 'warning',
+                      icon: <SecurityIcon />,
+                      description: 'Regulatory compliance documentation'
+                    },
+                    { 
+                      name: 'Financial Calculators', 
+                      category: 'Tools',
+                      count: 15,
+                      color: 'error',
+                      icon: <BusinessIcon />,
+                      description: 'Financial analysis and calculation tools'
+                    },
+                    { 
+                      name: 'Best Practices', 
+                      category: 'Guidelines',
+                      count: 67,
+                      color: 'secondary',
+                      icon: <CheckCircleIcon />,
+                      description: 'Industry best practices and guidelines'
+                    },
+                    { 
+                      name: 'Case Studies', 
+                      category: 'Learning',
+                      count: 34,
+                      color: 'primary',
+                      icon: <AssessmentIcon />,
+                      description: 'Real-world case studies and examples'
+                    },
+                    { 
+                      name: 'Webinar Recordings', 
+                      category: 'Training',
+                      count: 89,
+                      color: 'info',
+                      icon: <SchoolIcon />,
+                      description: 'Recorded webinars and presentations'
+                    }
+                  ].map((resource) => (
+                    <Box key={resource.name}>
+                      <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Box sx={{ color: (brandColors as any)[resource.color], mb: 2 }}>
+                            {resource.icon}
+                          </Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                            {resource.name}
+                          </Typography>
+                          <Typography variant="h4" sx={{ color: (brandColors as any)[resource.color], fontWeight: 'bold', mb: 1 }}>
+                            {resource.count}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Resources
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {resource.description}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Professional Development Paths */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Professional Development Paths
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Real Estate Specialist', 
+                      level: 'Intermediate',
+                      courses: 8,
+                      duration: '6-8 months',
+                      description: 'Comprehensive path for real estate professionals looking to specialize',
+                      skills: ['Advanced Negotiation', 'Market Analysis', 'Client Management', 'Legal Compliance'],
+                      progress: 75
+                    },
+                    { 
+                      title: 'Property Management Expert', 
+                      level: 'Advanced',
+                      courses: 12,
+                      duration: '8-10 months',
+                      description: 'Advanced certification for property management professionals',
+                      skills: ['Portfolio Management', 'Financial Analysis', 'Tenant Relations', 'Maintenance Planning'],
+                      progress: 45
+                    },
+                    { 
+                      title: 'Investment Advisor', 
+                      level: 'Expert',
+                      courses: 15,
+                      duration: '10-12 months',
+                      description: 'Expert-level path for real estate investment professionals',
+                      skills: ['Investment Analysis', 'Risk Management', 'Portfolio Optimization', 'Market Forecasting'],
+                      progress: 30
+                    },
+                    { 
+                      title: 'Sales & Marketing Leader', 
+                      level: 'Advanced',
+                      courses: 10,
+                      duration: '7-9 months',
+                      description: 'Leadership path for sales and marketing professionals',
+                      skills: ['Team Leadership', 'Strategic Planning', 'Digital Marketing', 'Performance Management'],
+                      progress: 60
+                    }
+                  ].map((path, index) => (
+                    <Card key={index} sx={{ p: 3 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {path.title}
+                        </Typography>
+                        <Chip label={path.level} color="primary" size="small" />
+                      </Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {path.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
+                        <Typography variant="caption" color="text.secondary">
+                          {path.courses} courses
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {path.duration}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                          Key Skills:
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                          {path.skills.map((skill, skillIndex) => (
+                            <Chip key={skillIndex} label={skill} size="small" variant="outlined" />
+                          ))}
+                        </Box>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                          <Typography variant="caption" color="text.secondary">
+                            Progress
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {path.progress}%
+                          </Typography>
+                        </Box>
+                        <LinearProgress 
+                          variant="determinate" 
+                          value={path.progress} 
+                          sx={{ height: 6, borderRadius: 3 }}
+                        />
+                      </Box>
+                      <Button variant="contained" fullWidth>
+                        Continue Path
+                      </Button>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Recent Achievements */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Recent Achievements & Certifications
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Advanced Real Estate Law', 
+                      type: 'Course Completion',
+                      date: '2024-01-15',
+                      instructor: 'Prof. Sarah Johnson',
+                      ceCredits: 12,
+                      description: 'Successfully completed advanced legal principles course'
+                    },
+                    { 
+                      title: 'Digital Marketing Certification', 
+                      type: 'Professional Certification',
+                      date: '2024-01-10',
+                      instructor: 'Mike Wilson',
+                      ceCredits: 8,
+                      description: 'Earned professional certification in digital marketing'
+                    },
+                    { 
+                      title: 'Client Management Excellence', 
+                      type: 'Skill Badge',
+                      date: '2024-01-08',
+                      instructor: 'Emily Davis',
+                      ceCredits: 6,
+                      description: 'Demonstrated excellence in client relationship management'
+                    },
+                    { 
+                      title: 'Financial Analysis Mastery', 
+                      type: 'Course Completion',
+                      date: '2024-01-05',
+                      instructor: 'Dr. Lisa Brown',
+                      ceCredits: 15,
+                      description: 'Completed comprehensive financial analysis course'
+                    },
+                    { 
+                      title: 'Negotiation Skills', 
+                      type: 'Assessment Passed',
+                      date: '2024-01-03',
+                      instructor: 'Robert Chen',
+                      ceCredits: 4,
+                      description: 'Successfully passed advanced negotiation assessment'
+                    },
+                    { 
+                      title: 'Property Management Basics', 
+                      type: 'Course Completion',
+                      date: '2023-12-28',
+                      instructor: 'David Lee',
+                      ceCredits: 10,
+                      description: 'Completed foundational property management course'
+                    }
+                  ].map((achievement, index) => (
+                    <Card key={index} sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Chip label={achievement.type} color="success" size="small" />
+                          <IconButton size="small">
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Box>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                          {achievement.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          {achievement.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {achievement.instructor}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {achievement.date}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {achievement.ceCredits} CE Credits
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            View Certificate
+                          </Button>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            Share
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+              
+              {/* Close Overview tab fragment */}
+              </>
             )}
 
-            {state.paymentsTab === 'lending' && (
-              <Box>
-                <Typography variant="h5" sx={{ mb: 2 }}>Lending</Typography>
-                <Typography variant="body1">Lending management and loan tracking features will be implemented here.</Typography>
-              </Box>
-            )}
+            {/* Additional Tab Content Sections */}
+              {state.trainingTab === 'courses' && (
+                <>
+                  {/* Courses Management Header */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Course Management
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Add New Course
+                    </Button>
+                  </Box>
 
-            {state.paymentsTab === 'escrow' && (
-              <Box>
-                <Typography variant="h5" sx={{ mb: 2 }}>Escrow Deposit</Typography>
-                <Typography variant="body1">Escrow deposit management and tracking features will be implemented here.</Typography>
-              </Box>
-            )}
+                  {/* Course Statistics */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        24
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Courses
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        18
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Active Courses
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                        6
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Draft Courses
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        156
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Enrollments
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </>
+              )}
 
-            {state.paymentsTab === 'banking' && (
-              <Box>
-                <Typography variant="h5" sx={{ mb: 2 }}>Banking</Typography>
-                <Typography variant="body1">Banking integration and account management features will be implemented here.</Typography>
+              {state.trainingTab === 'resources' && (
+                <>
+                  {/* Resources Management Header */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Resource Library Management
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Upload Resource
+                    </Button>
+                  </Box>
+
+                  {/* Resource Statistics */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        456
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Resources
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        89
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Downloads This Month
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                        23
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        New This Week
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        8
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Categories
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+
+              {state.trainingTab === 'paths' && (
+                <>
+                  {/* Development Paths Management Header */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Professional Development Paths
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Create New Path
+                    </Button>
+                  </Box>
+
+                  {/* Path Statistics */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        8
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Paths
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                        45
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Active Learners
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        12
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Completed This Month
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                        67%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Average Completion
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+
+              {state.trainingTab === 'achievements' && (
+                <>
+                  {/* Achievements Management Header */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Achievements & Certifications
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<AssessmentIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Issue Certificate
+                    </Button>
+                  </Box>
+
+                  {/* Achievement Statistics */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        89
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Achievements
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        23
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        This Month
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        156
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        CE Credits Issued
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        12
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Certification Types
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+
+              {state.trainingTab === 'management' && (
+                <>
+                  {/* Training Management Header */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                      Training Program Management
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<SettingsIcon />}
+                      sx={{ backgroundColor: brandColors.primary }}
+                    >
+                      Program Settings
+                    </Button>
+                  </Box>
+
+                  {/* Management Statistics */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        24
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Active Learners
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        78%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Program Completion Rate
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        4.2
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Average Rating
+                      </Typography>
+                    </Paper>
+                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                        156
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total CE Credits
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+            </Box>
+          </>
+        )}
+
+        {state.activeTab === 'support' && (
+          <>
+            {/* Header */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  Support
+                </Typography>
               </Box>
-            )}
-          </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Get help and support for your brokerage operations
+              </Typography>
+            </Paper>
+
+            <Box sx={{ p: 3 }}>
+              {/* Quick Actions */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<SupportIcon />}
+                  sx={{ backgroundColor: brandColors.primary }}
+                >
+                  Create Support Ticket
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<SchoolIcon />}
+                >
+                  View Documentation
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<PeopleIcon />}
+                >
+                  Contact Support
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<MoreVertIcon />}
+                >
+                  More Actions
+                </Button>
+              </Box>
+
+              {/* Support Statistics */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                    12
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Open Tickets
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    89
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Resolved This Month
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
+                    2.3h
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Average Response Time
+                  </Typography>
+                </Paper>
+                <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
+                    98%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Satisfaction Rate
+                  </Typography>
+                </Paper>
+              </Box>
+
+              {/* Support Categories */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Support Categories
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                  {[
+                    { name: 'Technical Issues', count: 8, color: 'error', icon: <SettingsIcon />, description: 'Software and system problems' },
+                    { name: 'Account Management', count: 5, color: 'primary', icon: <PeopleIcon />, description: 'User accounts and permissions' },
+                    { name: 'Training & Onboarding', count: 12, color: 'success', icon: <SchoolIcon />, description: 'Learning and setup assistance' },
+                    { name: 'Billing & Payments', count: 3, color: 'warning', icon: <BusinessIcon />, description: 'Financial and payment issues' }
+                  ].map((category) => (
+                    <Box key={category.name}>
+                      <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Box sx={{ color: (brandColors as any)[category.color], mb: 2 }}>
+                            {category.icon}
+                          </Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                            {category.name}
+                          </Typography>
+                          <Typography variant="h4" sx={{ color: (brandColors as any)[category.color], fontWeight: 'bold', mb: 1 }}>
+                            {category.count}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Tickets
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {category.description}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Active Support Tickets */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                    Active Support Tickets
+                  </Typography>
+                  <TextField
+                    size="small"
+                    placeholder="Search tickets..."
+                    InputProps={{
+                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 250 }}
+                  />
+                </Box>
+                
+                <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+                  {[
+                    { 
+                      id: 1, 
+                      title: 'Login Authentication Error', 
+                      category: 'Technical Issues',
+                      priority: 'high',
+                      status: 'In Progress',
+                      assignee: 'Tech Support Team',
+                      submitted: '2024-01-15',
+                      description: 'Unable to log in to the system, getting authentication error'
+                    },
+                    { 
+                      id: 2, 
+                      title: 'New Agent Onboarding Request', 
+                      category: 'Training & Onboarding',
+                      priority: 'medium',
+                      status: 'Open',
+                      assignee: 'Training Team',
+                      submitted: '2024-01-14',
+                      description: 'Need assistance setting up new agent account and training materials'
+                    },
+                    { 
+                      id: 3, 
+                      title: 'Payment Processing Issue', 
+                      category: 'Billing & Payments',
+                      priority: 'high',
+                      status: 'Under Review',
+                      assignee: 'Billing Team',
+                      submitted: '2024-01-13',
+                      description: 'Credit card payment failed during transaction processing'
+                    },
+                    { 
+                      id: 4, 
+                      title: 'Report Generation Problem', 
+                      category: 'Technical Issues',
+                      priority: 'low',
+                      status: 'Open',
+                      assignee: 'Tech Support Team',
+                      submitted: '2024-01-12',
+                      description: 'Monthly performance report not generating properly'
+                    },
+                    { 
+                      id: 5, 
+                      title: 'Permission Access Request', 
+                      category: 'Account Management',
+                      priority: 'medium',
+                      status: 'In Progress',
+                      assignee: 'Admin Team',
+                      submitted: '2024-01-11',
+                      description: 'Need elevated permissions for financial reporting access'
+                    }
+                  ].map((ticket) => (
+                    <Card key={ticket.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {ticket.title}
+                              </Typography>
+                              <Chip 
+                                label={ticket.category} 
+                                size="small" 
+                                color="primary" 
+                                variant="outlined"
+                              />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                              {ticket.description}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Assignee: {ticket.assignee}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Submitted: {ticket.submitted}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Status: {ticket.status}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
+                            <Chip 
+                              label={ticket.priority} 
+                              color={
+                                ticket.priority === 'high' ? 'error' :
+                                ticket.priority === 'medium' ? 'warning' : 'default'
+                              }
+                              size="small"
+                            />
+                            <Chip 
+                              label={ticket.status} 
+                              color={
+                                ticket.status === 'In Progress' ? 'primary' :
+                                ticket.status === 'Open' ? 'warning' :
+                                ticket.status === 'Under Review' ? 'info' : 'success'
+                              }
+                              size="small"
+                            />
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                              <Button size="small" variant="outlined">
+                                View Details
+                              </Button>
+                              <Button size="small" variant="contained">
+                                Update Status
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Knowledge Base & Resources */}
+              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Knowledge Base & Resources
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+                  {[
+                    { 
+                      title: 'Getting Started Guide', 
+                      type: 'User Manual',
+                      category: 'Training',
+                      views: 156,
+                      lastUpdated: '2024-01-10',
+                      description: 'Complete guide for new users to get started with the platform'
+                    },
+                    { 
+                      title: 'Troubleshooting Common Issues', 
+                      type: 'FAQ',
+                      category: 'Technical',
+                      views: 89,
+                      lastUpdated: '2024-01-08',
+                      description: 'Solutions to frequently encountered problems and errors'
+                    },
+                    { 
+                      title: 'API Documentation', 
+                      type: 'Technical Guide',
+                      category: 'Development',
+                      views: 45,
+                      lastUpdated: '2024-01-05',
+                      description: 'Complete API reference and integration examples'
+                    },
+                    { 
+                      title: 'Best Practices Guide', 
+                      type: 'Guidelines',
+                      category: 'Operations',
+                      views: 234,
+                      lastUpdated: '2024-01-12',
+                      description: 'Recommended practices for optimal platform usage'
+                    },
+                    { 
+                      title: 'Video Tutorials', 
+                      type: 'Training',
+                      category: 'Learning',
+                      views: 178,
+                      lastUpdated: '2024-01-15',
+                      description: 'Step-by-step video guides for key platform features'
+                    },
+                    { 
+                      title: 'Release Notes', 
+                      type: 'Documentation',
+                      category: 'Updates',
+                      views: 67,
+                      lastUpdated: '2024-01-18',
+                      description: 'Latest platform updates and new feature announcements'
+                    }
+                  ].map((resource, index) => (
+                    <Card key={index} sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Chip label={resource.category} color="primary" size="small" />
+                          <IconButton size="small">
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Box>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                          {resource.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                          {resource.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            {resource.type}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {resource.views} views
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                          Last Updated: {resource.lastUpdated}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            View
+                          </Button>
+                          <Button size="small" variant="outlined" sx={{ flex: 1 }}>
+                            Download
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Contact Information */}
+              <Paper elevation={2} sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
+                  Contact Support
+                </Typography>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                      Support Channels
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: brandColors.primary 
+                        }} />
+                        <Typography variant="body2">
+                          Email: support@dreamery.com
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: brandColors.primary 
+                        }} />
+                        <Typography variant="body2">
+                          Phone: 1-800-DREAMERY
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: brandColors.primary 
+                        }} />
+                        <Typography variant="body2">
+                          Live Chat: Available 24/7
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ 
+                          width: 12, 
+                          height: 12, 
+                          borderRadius: '50%', 
+                          backgroundColor: brandColors.primary 
+                        }} />
+                        <Typography variant="body2">
+                          Response Time: Within 2 hours
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                      Business Hours
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Typography variant="body2">
+                        Monday - Friday: 8:00 AM - 8:00 PM EST
+                      </Typography>
+                      <Typography variant="body2">
+                        Saturday: 9:00 AM - 5:00 PM EST
+                      </Typography>
+                      <Typography variant="body2">
+                        Sunday: 10:00 AM - 4:00 PM EST
+                      </Typography>
+                      <Typography variant="body2" sx={{ mt: 1, fontWeight: 600 }}>
+                        Emergency Support: Available 24/7
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          </>
         )}
       </Box>
 

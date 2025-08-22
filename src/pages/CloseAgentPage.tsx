@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -109,6 +109,7 @@ import {
   CloudUpload as UploadIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
+import { RoleContext } from "../context/RoleContext";
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -227,6 +228,19 @@ const CloseAgentPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Role-based access guard (no early returns to satisfy hooks rule)
+  const { userRole } = (useContext(RoleContext) as any) || {};
+  const buyingRoles = ['Real Estate Agent', 'Buyer’s Agent', 'Wholesaler', 'Realtor'];
+  const listingRoles = ['Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent', 'Disposition Agent'];
+  const isAgentAuthorized = !!userRole && (buyingRoles.includes(userRole) || listingRoles.includes(userRole));
+  
+  console.log('CloseAgentPage - userRole:', userRole, 'isAgentAuthorized:', isAgentAuthorized, 'buyingRoles:', buyingRoles, 'listingRoles:', listingRoles);
+  
+  // Debug effect to log role changes
+  useEffect(() => {
+    console.log('CloseAgentPage - userRole changed to:', userRole);
+  }, [userRole]);
 
   const [state, setState] = useState<CloseState>({
     activeTab: 'dashboard',
@@ -555,6 +569,7 @@ const CloseAgentPage: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
+      {!isAgentAuthorized && userRole && <Navigate to="/" />}
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 

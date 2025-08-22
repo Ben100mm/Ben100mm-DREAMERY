@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -85,6 +85,7 @@ import PartnerIntegrations from '../components/close/integrations/PartnerIntegra
 import NotificationsSettingsPage from './NotificationsSettingsPage';
 import { brandColors } from "../theme";
 import ClosingAssistantIcon from '../components/close/ai-closing-assistant/ClosingAssistantIcon';
+import { RoleContext } from '../context/RoleContext';
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -208,6 +209,16 @@ const CloseBuyerPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { userRole } = useContext(RoleContext as any) || {};
+  const allowedRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
+  const isBuyerAuthorized = allowedRoles.includes(userRole);
+  
+  console.log('CloseBuyerPage - userRole:', userRole, 'isBuyerAuthorized:', isBuyerAuthorized, 'allowedRoles:', allowedRoles);
+
+  // Debug effect to log role changes
+  useEffect(() => {
+    console.log('CloseBuyerPage - userRole changed to:', userRole);
+  }, [userRole]);
 
   const [state, setState] = useState<CloseState>({
     activeTab: 'dashboard',
@@ -292,8 +303,13 @@ const CloseBuyerPage: React.FC = () => {
     }
   };
 
+  // If role is not yet known, render nothing until RoleContext resolves (RoleProvider shows loader)
+  // Only redirect if we definitively know role is not allowed
+  // Keep guard duplicated in rendered tree to satisfy hooks rule
+
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
+      {!isBuyerAuthorized && userRole && <Navigate to="/" />}
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -57,6 +57,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 import TemplatesComponent from '../components/TemplatesComponent';
+import { RoleContext } from "../context/RoleContext";
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -182,6 +183,8 @@ interface CloseState {
 const CloseBrokeragesPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const { userRole } = (React.useContext(RoleContext) as any) || {};
+  const isBrokerAuthorized = userRole === 'Real Estate Broker';
 
   const [state, setState] = useState<CloseState>({
     activeTab: 'dashboard',
@@ -264,6 +267,7 @@ const CloseBrokeragesPage = () => {
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
+      {!isBrokerAuthorized && <Navigate to="/" />}
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 
@@ -432,7 +436,7 @@ const CloseBrokeragesPage = () => {
               {/* Tab Content */}
               {state.dashboardTab === 'overview' && (
                 <>
-                  {/* Overview Cards */}
+            {/* Overview Cards */}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
                 <PeopleIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
@@ -876,8 +880,8 @@ const CloseBrokeragesPage = () => {
 
         {/* Close Dashboard Content wrapper and fragment */}
         </Box>
-      </>
-    )}
+          </>
+        )}
 
         {state.activeTab === 'agents' && (
           <>

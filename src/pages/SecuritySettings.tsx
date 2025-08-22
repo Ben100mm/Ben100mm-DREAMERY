@@ -13,7 +13,7 @@ import {
   Alert,
   Button
 } from '@mui/material';
-import { TabContext, TabPanel } from '@mui/lab';
+// Removed @mui/lab dependency; using Tabs + conditional rendering
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -120,7 +120,6 @@ const SecuritySettings: React.FC = () => {
           />
         </Box>
 
-        <TabContext value={activeTab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs
               value={activeTab}
@@ -136,7 +135,8 @@ const SecuritySettings: React.FC = () => {
             </Tabs>
           </Box>
 
-          <TabPanel value="overview">
+          {activeTab === 'overview' && (
+            <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               Security Overview
             </Typography>
@@ -183,9 +183,11 @@ const SecuritySettings: React.FC = () => {
                 Configure Security
               </Button>
             </Box>
-          </TabPanel>
+            </Box>
+          )}
 
-          <TabPanel value="2fa">
+          {activeTab === '2fa' && (
+            <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               Two-Factor Authentication
             </Typography>
@@ -193,9 +195,11 @@ const SecuritySettings: React.FC = () => {
               Add an extra layer of security to your account
             </Typography>
             <TwoFactorForm onSuccess={() => handleSecurityUpdate('twoFactor', true)} />
-          </TabPanel>
+            </Box>
+          )}
 
-          <TabPanel value="biometric">
+          {activeTab === 'biometric' && (
+            <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               Biometric Authentication
             </Typography>
@@ -203,9 +207,11 @@ const SecuritySettings: React.FC = () => {
               Use fingerprint or face recognition for quick access
             </Typography>
             <BiometricForm onSuccess={() => handleSecurityUpdate('biometric', true)} />
-          </TabPanel>
+            </Box>
+          )}
 
-          <TabPanel value="otp">
+          {activeTab === 'otp' && (
+            <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               One-Time Password Methods
             </Typography>
@@ -213,9 +219,11 @@ const SecuritySettings: React.FC = () => {
               Set up SMS, email, or authenticator app verification
             </Typography>
             <OTPForm onSuccess={() => handleSecurityUpdate('otp', true)} />
-          </TabPanel>
+            </Box>
+          )}
 
-          <TabPanel value="sso">
+          {activeTab === 'sso' && (
+            <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               Single Sign-On Configuration
             </Typography>
@@ -223,8 +231,8 @@ const SecuritySettings: React.FC = () => {
               Connect your account with external identity providers
             </Typography>
             <SSOForm onSuccess={() => handleSecurityUpdate('sso', true)} />
-          </TabPanel>
-        </TabContext>
+            </Box>
+          )}
       </SettingsCard>
     </SettingsContainer>
   );

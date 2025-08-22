@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { 
-  Grid, 
   Card, 
   CardContent, 
   Typography, 
@@ -27,6 +26,7 @@ import {
   Avatar,
   Rating
 } from '@mui/material';
+import CardMedia from '@mui/material/CardMedia';
 import { 
   Handshake as HandshakeIcon,
   Business as BusinessIcon,
@@ -387,8 +387,8 @@ const PartnerPage: React.FC = () => {
                 </Button>
               </CardContent>
             </PartnershipCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Partner Directory Tab */}
@@ -401,8 +401,8 @@ const PartnerPage: React.FC = () => {
             Browse our comprehensive directory of verified partners and service providers.
           </Typography>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -431,9 +431,9 @@ const PartnerPage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} md={6}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -478,15 +478,16 @@ const PartnerPage: React.FC = () => {
                   </List>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       )}
 
       {/* Collaboration Tools Tab */}
       {activeTab === 3 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -534,8 +535,9 @@ const PartnerPage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -581,15 +583,16 @@ const PartnerPage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
+          </Box>
         </Box>
 
         {/* Placeholder Partnership Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Partnership Opportunities
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
           {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`partner-placeholder-${index}`}>
+            <Box key={`partner-placeholder-${index}`}>
               <Card sx={{ 
                 height: '100%', 
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -615,7 +618,7 @@ const PartnerPage: React.FC = () => {
                   </Typography>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                    <LocationIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
                     <Typography variant="body2" color="text.secondary">
                       {['Real Estate Agent', 'Property Manager', 'Contractor', 'Inspector', 'Appraiser', 'Attorney', 'Accountant', 'Insurance Agent', 'Photographer', 'Marketing Specialist'][index]}
                     </Typography>
@@ -651,9 +654,10 @@ const PartnerPage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
+        </>
       )}
     </PageTemplate>
   );

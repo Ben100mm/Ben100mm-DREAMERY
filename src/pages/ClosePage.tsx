@@ -21,6 +21,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
+import { RoleContext } from '../context/RoleContext';
 
 // Types
 interface CloseOption {
@@ -35,6 +36,7 @@ const ClosePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('');
   const navigate = useNavigate();
   const theme = useTheme();
+  const { setUserRole, userRole, allowRoleSelector } = (React.useContext(RoleContext) as any) || {};
 
   const closeOptions: CloseOption[] = [
     {
@@ -82,10 +84,53 @@ const ClosePage: React.FC = () => {
     if (selectedOption) {
       const option = closeOptions.find(opt => opt.value === selectedOption);
       if (option) {
-        navigate(option.route);
+        // Map selection to a role that passes the RBAC guard
+        const optionToRole: Record<string, string> = {
+          buyer: 'Retail Buyer',
+          agent: 'Real Estate Agent',
+          brokerages: 'Real Estate Broker',
+          'professional-support': 'Title Agent',
+          businesses: 'Real Estate Agent'
+        };
+        const intendedRole = optionToRole[selectedOption];
+        console.log('Setting role to:', intendedRole, 'for option:', selectedOption);
+        if (setUserRole && intendedRole) {
+          setUserRole(intendedRole);
+          console.log('Role set in context, waiting a moment before navigating to:', option.route);
+          // Wait a moment for the role to be set in context before navigating
+          setTimeout(() => {
+            navigate(option.route, { state: { intendedRole } });
+          }, 100);
+        } else {
+          navigate(option.route, { state: { intendedRole } });
+        }
       }
     }
   };
+
+  // If selector is disabled, auto-redirect based on current role
+  React.useEffect(() => {
+    if (!allowRoleSelector && userRole) {
+      const roleToRoute: Record<string, string> = {
+        'Retail Buyer': '/close/buyer',
+        'Investor Buyer': '/close/buyer',
+        'iBuyer': '/close/buyer',
+        'Property Flipper': '/close/buyer',
+        'Real Estate Agent': '/close/agent',
+        'Buyer’s Agent': '/close/agent',
+        'Listing Agent': '/close/agent',
+        'Commercial Agent': '/close/agent',
+        'Luxury Agent': '/close/agent',
+        'New Construction Agent': '/close/agent',
+        'Wholesaler': '/close/agent',
+        'Disposition Agent': '/close/agent',
+        'Real Estate Broker': '/close/brokerages',
+        'Title Agent': '/close/professional-support'
+      };
+      const next = roleToRoute[userRole];
+      if (next) navigate(next);
+    }
+  }, [allowRoleSelector, userRole, navigate]);
 
   const selectedOptionData = closeOptions.find(opt => opt.value === selectedOption);
 

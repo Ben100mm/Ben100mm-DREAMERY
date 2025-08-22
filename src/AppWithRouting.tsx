@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/HeaderWithRouting';
@@ -47,8 +47,10 @@ import CloseBuyerPage from './pages/CloseBuyerPage';
 import CloseAgentPage from './pages/CloseAgentPage';
 import CloseBrokeragesPage from './pages/CloseBrokeragesPage';
 import CloseProfessionalSupportPage from './pages/CloseProfessionalSupportPage';
+import OtherProfessionalPage from './pages/OtherProfessionalPage';
 import CloseBusinessesPage from './pages/CloseBusinessesPage';
 import ProfilePage from './pages/ProfilePage';
+import { RoleProvider, RoleContext } from './context/RoleContext';
 
 import { theme } from "./theme";
 
@@ -68,58 +70,81 @@ const HomePage = () => (
   </AppContainer>
 );
 
+const AppContent = () => {
+  const { userRole } = React.useContext(RoleContext);
+
+  const getRouteForRole = (role: string) => {
+    if ([
+      'Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'
+    ].includes(role)) return '/close/buyer';
+    if ([
+      'Real Estate Agent', 'Real Estate Broker', 'Realtor', "Buyer’s Agent",
+      'Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent',
+      'Wholesaler', 'Disposition Agent'
+    ].includes(role)) return '/close/agent';
+    if (['Real Estate Broker'].includes(role)) return '/close/brokerages';
+    return '/close/other';
+  };
+
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
+      <Route path="/business-signup" element={<BusinessSignupPage />} />
+      <Route path="/buy" element={<BuyPage />} />
+      <Route path="/rent" element={<RentPage />} />
+      <Route path="/sell" element={<SellListAddressPage />} />
+      <Route path="/sell-moving-details" element={<SellListMovingDetailsPage />} />
+      <Route path="/sell-moving-details-2" element={<SellListMovingDetails2Page />} />
+      <Route path="/sell-home-details" element={<SellListHomeDetailsPage />} />
+      <Route path="/sell-home-details-2" element={<SellListHomeDetails2Page />} />
+      <Route path="/sell-home-details-3" element={<SellListHomeDetails3Page />} />
+      <Route path="/sell-home-quality" element={<SellListHomeQualityPage />} />
+      <Route path="/sell-home-quality-2" element={<SellListHomeQuality2Page />} />
+      <Route path="/sell-home-quality-3" element={<SellListHomeQuality3Page />} />
+      <Route path="/sell-home-quality-4" element={<SellListHomeQuality4Page />} />
+      <Route path="/sell-additional-info" element={<SellListAdditionalInfoPage />} />
+      <Route path="/sell-additional-info-2" element={<SellListAdditionalInfo2Page />} />
+      <Route path="/sell-additional-info-3" element={<SellListAdditionalInfo3Page />} />
+      <Route path="/sell-contact-info" element={<SellListContactInfoPage />} />
+      <Route path="/sell-phone-info" element={<SellListPhoneInfoPage />} />
+      <Route path="/sell-summary" element={<SellListSummaryPage />} />
+      <Route path="/sell-services" element={<SellListServicesPage />} />
+      <Route path="/mortgage" element={<MortgagePage />} />
+      <Route path="/pre-approval" element={<PreApprovalPage />} />
+      <Route path="/pre-approval-basic-info" element={<PreApprovalBasicInfoPage />} />
+      <Route path="/pre-approval-questions" element={<PreApprovalQuestionsPage />} />
+      <Route path="/pre-approval-home-preferences" element={<PreApprovalHomePreferencesPage />} />
+      <Route path="/pre-approval-financial" element={<PreApprovalFinancialPage />} />
+      <Route path="/pre-approval-property-financial" element={<PreApprovalPropertyFinancialPage />} />
+      <Route path="/pre-approval-additional-questions" element={<PreApprovalAdditionalQuestionsPage />} />
+      <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
+      <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
+      <Route path="/underwrite" element={<UnderwritePage />} />
+      <Route path="/close" element={<ClosePage />} />
+      <Route path="/close/buyer" element={<CloseBuyerPage />} />
+      <Route path="/close/agent" element={<CloseAgentPage />} />
+      <Route path="/close/brokerages" element={<CloseBrokeragesPage />} />
+      <Route path="/close/other" element={<OtherProfessionalPage />} />
+      <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
+      <Route path="/close/businesses" element={<CloseBusinessesPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/ux-demo" element={<UXDemoPage />} />
+      <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
+    </Routes>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
-            <Route path="/business-signup" element={<BusinessSignupPage />} />
-            <Route path="/buy" element={<BuyPage />} />
-            <Route path="/rent" element={<RentPage />} />
-            <Route path="/sell" element={<SellListAddressPage />} />
-            <Route path="/sell-moving-details" element={<SellListMovingDetailsPage />} />
-            <Route path="/sell-moving-details-2" element={<SellListMovingDetails2Page />} />
-            <Route path="/sell-home-details" element={<SellListHomeDetailsPage />} />
-            <Route path="/sell-home-details-2" element={<SellListHomeDetails2Page />} />
-            <Route path="/sell-home-details-3" element={<SellListHomeDetails3Page />} />
-            <Route path="/sell-home-quality" element={<SellListHomeQualityPage />} />
-            <Route path="/sell-home-quality-2" element={<SellListHomeQuality2Page />} />
-            <Route path="/sell-home-quality-3" element={<SellListHomeQuality3Page />} />
-            <Route path="/sell-home-quality-4" element={<SellListHomeQuality4Page />} />
-            <Route path="/sell-additional-info" element={<SellListAdditionalInfoPage />} />
-            <Route path="/sell-additional-info-2" element={<SellListAdditionalInfo2Page />} />
-            <Route path="/sell-additional-info-3" element={<SellListAdditionalInfo3Page />} />
-            <Route path="/sell-contact-info" element={<SellListContactInfoPage />} />
-            <Route path="/sell-phone-info" element={<SellListPhoneInfoPage />} />
-            <Route path="/sell-summary" element={<SellListSummaryPage />} />
-            <Route path="/sell-services" element={<SellListServicesPage />} />
-            <Route path="/mortgage" element={<MortgagePage />} />
-            <Route path="/pre-approval" element={<PreApprovalPage />} />
-            <Route path="/pre-approval-basic-info" element={<PreApprovalBasicInfoPage />} />
-            <Route path="/pre-approval-questions" element={<PreApprovalQuestionsPage />} />
-            <Route path="/pre-approval-home-preferences" element={<PreApprovalHomePreferencesPage />} />
-            <Route path="/pre-approval-financial" element={<PreApprovalFinancialPage />} />
-            <Route path="/pre-approval-property-financial" element={<PreApprovalPropertyFinancialPage />} />
-            <Route path="/pre-approval-additional-questions" element={<PreApprovalAdditionalQuestionsPage />} />
-            <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
-            <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
-            <Route path="/underwrite" element={<UnderwritePage />} />
-            <Route path="/close" element={<ClosePage />} />
-            <Route path="/close/buyer" element={<CloseBuyerPage />} />
-            <Route path="/close/agent" element={<CloseAgentPage />} />
-            <Route path="/close/brokerages" element={<CloseBrokeragesPage />} />
-            <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
-            <Route path="/close/businesses" element={<CloseBusinessesPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/ux-demo" element={<UXDemoPage />} />
-            <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
-
-          </Routes>
-        </Router>
+        <RoleProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </RoleProvider>
       </ThemeProvider>
     </AuthProvider>
   );

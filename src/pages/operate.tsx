@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { 
-  Grid, 
   Card, 
   CardContent, 
   Typography, 
@@ -27,6 +26,7 @@ import {
   Avatar,
   IconButton
 } from '@mui/material';
+import CardMedia from '@mui/material/CardMedia';
 import { 
   Build as BuildIcon,
   Schedule as ScheduleIcon,
@@ -163,8 +163,8 @@ const OperatePage: React.FC = () => {
 
       {/* Dashboard Tab */}
       {activeTab === 0 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -174,8 +174,8 @@ const OperatePage: React.FC = () => {
                   Real-time overview of your property operations and performance.
                 </Typography>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={3}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+                  <Box>
                     <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
                       <Typography variant="h4" sx={{ color: '#1a365d' }}>
                         {mockOperationalMetrics.totalProperties}
@@ -184,8 +184,8 @@ const OperatePage: React.FC = () => {
                         Total Properties
                       </Typography>
                     </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  </Box>
+                  <Box>
                     <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
                       <Typography variant="h4" sx={{ color: '#1a365d' }}>
                         {mockOperationalMetrics.totalRevenue}
@@ -194,8 +194,8 @@ const OperatePage: React.FC = () => {
                         Monthly Revenue
                       </Typography>
                     </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  </Box>
+                  <Box>
                     <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
                       <Typography variant="h4" sx={{ color: '#1a365d' }}>
                         {mockOperationalMetrics.netIncome}
@@ -204,8 +204,8 @@ const OperatePage: React.FC = () => {
                         Net Income
                       </Typography>
                     </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  </Box>
+                  <Box>
                     <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
                       <Typography variant="h4" sx={{ color: '#1a365d' }}>
                         {mockOperationalMetrics.averageOccupancy}
@@ -214,13 +214,13 @@ const OperatePage: React.FC = () => {
                         Avg Occupancy
                       </Typography>
                     </Box>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box>
             <DashboardCard>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -249,8 +249,8 @@ const OperatePage: React.FC = () => {
                 </Button>
               </CardContent>
             </DashboardCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Properties Tab */}
@@ -263,9 +263,9 @@ const OperatePage: React.FC = () => {
             Monitor and manage operations for each property in your portfolio.
           </Typography>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 3 }}>
             {mockProperties.map((property) => (
-              <Grid item xs={12} md={6} lg={4} key={property.id}>
+              <Box key={property.id}>
                 <OperationCard>
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -315,16 +315,16 @@ const OperatePage: React.FC = () => {
                     </Box>
                   </CardContent>
                 </OperationCard>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
       {/* Maintenance Tab */}
       {activeTab === 2 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -404,9 +404,9 @@ const OperatePage: React.FC = () => {
                 </TableContainer>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -434,14 +434,14 @@ const OperatePage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Financial Tab */}
       {activeTab === 3 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -495,9 +495,9 @@ const OperatePage: React.FC = () => {
                 </Grid>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -542,16 +542,16 @@ const OperatePage: React.FC = () => {
                 </List>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         </Grid>
 
         {/* Placeholder Operation Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Operations
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
           {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`operate-placeholder-${index}`}>
+            <Box key={`operate-placeholder-${index}`}>
               <Card sx={{ 
                 height: '100%', 
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -577,7 +577,7 @@ const OperatePage: React.FC = () => {
                   </Typography>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                    <LocationIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
                     <Typography variant="body2" color="text.secondary">
                       {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                     </Typography>
@@ -613,9 +613,9 @@ const OperatePage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       )}
     </PageTemplate>
   );

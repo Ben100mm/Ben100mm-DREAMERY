@@ -51,6 +51,7 @@ import OtherProfessionalPage from './pages/OtherProfessionalPage';
 import CloseBusinessesPage from './pages/CloseBusinessesPage';
 import ProfilePage from './pages/ProfilePage';
 import { RoleProvider, RoleContext } from './context/RoleContext';
+import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
 
 import { theme } from "./theme";
 
@@ -141,9 +142,11 @@ function App() {
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <RoleProvider>
-          <Router>
-            <AppContent />
-          </Router>
+          <ProfessionalSupportProvider>
+            <Router>
+              <AppContent />
+            </Router>
+          </ProfessionalSupportProvider>
         </RoleProvider>
       </ThemeProvider>
     </AuthProvider>

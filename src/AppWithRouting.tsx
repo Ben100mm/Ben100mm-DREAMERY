@@ -50,6 +50,7 @@ import CloseProfessionalSupportPage from './pages/CloseProfessionalSupportPage';
 import PartnerPage from './pages/partner';
 import PartnerProfileCompletionPage from './pages/PartnerProfileCompletionPage';
 import OtherProfessionalPage from './pages/OtherProfessionalPage';
+import AnalyzePage from './pages/AnalyzePage';
 import CloseBusinessesPage from './pages/CloseBusinessesPage';
 import ProfilePage from './pages/ProfilePage';
 import { RoleProvider, RoleContext } from './context/RoleContext';
@@ -132,11 +133,12 @@ const AppContent = () => {
       <Route path="/close/other" element={<OtherProfessionalPage />} />
       <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
       <Route path="/close/businesses" element={<CloseBusinessesPage />} />
+      <Route path="/analyze" element={<AnalyzePage />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/ux-demo" element={<UXDemoPage />} />
-      <Route path="/advanced-calculations" element={<AdvancedCalculationsPage />} />
+      <Route path="/advanced-calculations" element={<Navigate to="/analyze" replace />} />
     </Routes>
   );
 };

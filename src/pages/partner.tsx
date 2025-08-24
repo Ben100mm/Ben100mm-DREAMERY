@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
-import {
+import { 
   Box,
   Container,
-  Typography,
-  Button,
+  Typography, 
+  Button, 
   Paper,
   TextField,
   Select,
@@ -161,6 +161,19 @@ const PartnersPage: React.FC = () => {
     setActiveFilter(null);
   };
 
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    // Only close if we're actually leaving the popover area
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    if (relatedTarget && !e.currentTarget.contains(relatedTarget)) {
+      // Small delay to prevent accidental closing during scrolling
+      setTimeout(() => {
+        if (!e.currentTarget.contains(document.activeElement)) {
+          handleClose();
+        }
+      }, 150);
+    }
+  };
+
   return (
     <PageContainer>
       <PageAppBar title="Dreamery – Partners" />
@@ -169,13 +182,13 @@ const PartnersPage: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
             <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Partners & Services
-            </Typography>
-          </Box>
+                        </Typography>
+                      </Box>
 
           <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
             <TextField
               placeholder="San Francisco, CA"
-              size="small"
+                        size="small"
               sx={{ flexGrow: 1 }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -211,10 +224,10 @@ const PartnersPage: React.FC = () => {
               <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>500</Typography>
               <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
             </Box>
-          </Box>
+                    </Box>
 
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            <FilterButton onClick={(e) => handleOpen(e, "role")} className={activeFilter === "role" ? "active" : ""} endIcon={activeFilter === "role" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Role</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "role")} className={activeFilter === "role" ? "active" : ""} endIcon={activeFilter === "role" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Partners & Services</FilterButton>
             <FilterButton onClick={(e) => handleOpen(e, "experience")} className={activeFilter === "experience" ? "active" : ""} endIcon={activeFilter === "experience" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Experience</FilterButton>
             <FilterButton onClick={(e) => handleOpen(e, "availability")} className={activeFilter === "availability" ? "active" : ""} endIcon={activeFilter === "availability" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Availability</FilterButton>
             <FilterButton onClick={(e) => handleOpen(e, "certifications")} className={activeFilter === "certifications" ? "active" : ""} endIcon={activeFilter === "certifications" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Certifications</FilterButton>
@@ -222,7 +235,7 @@ const PartnersPage: React.FC = () => {
             <FilterButton onClick={(e) => handleOpen(e, "responseTime")} className={activeFilter === "responseTime" ? "active" : ""} endIcon={activeFilter === "responseTime" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Response Time</FilterButton>
             <FilterButton onClick={(e) => handleOpen(e, "rating")} className={activeFilter === "rating" ? "active" : ""} endIcon={activeFilter === "rating" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Ratings</FilterButton>
             <FilterButton onClick={(e) => handleOpen(e, "language")} className={activeFilter === "language" ? "active" : ""} endIcon={activeFilter === "language" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Language</FilterButton>
-          </Box>
+                    </Box>
         </Container>
       </HeaderSection>
 
@@ -272,7 +285,7 @@ const PartnersPage: React.FC = () => {
                     <MenuItem value="reviews">Most Reviewed</MenuItem>
                   </Select>
                 </FormControl>
-              </Box>
+                    </Box>
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 2 }}>
                 {filtered.map((p) => (
                   <PartnerCard key={p.id}>
@@ -282,23 +295,43 @@ const PartnersPage: React.FC = () => {
                           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{p.company}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             {Array.isArray(p.services) ? p.services.join(", ") : p.bio}
-                          </Typography>
-                        </Box>
+                      </Typography>
+                    </Box>
                         <Chip label={(typeof p.rating === "number" ? p.rating.toFixed(1) : "0.0") + "★"} color="primary" size="small" />
-                      </Box>
-                    </CardContent>
-                  </PartnerCard>
+                    </Box>
+                  </CardContent>
+                </PartnerCard>
                 ))}
                 {filtered.length === 0 && (
                   <Typography variant="body2" color="text.secondary">No partners match your filters.</Typography>
                 )}
-              </Box>
+                            </Box>
             </ResultsContainer>
-          </Box>
+                  </Box>
         </Box>
       </Container>
 
-      <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+      <Popover 
+        open={Boolean(anchorEl)} 
+        anchorEl={anchorEl} 
+        onClose={handleClose} 
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        disableRestoreFocus
+        keepMounted
+        disableAutoFocus
+        disableEnforceFocus
+        slotProps={{
+          paper: {
+            onMouseLeave: () => {
+              // Keep dropdown open when hovering over content
+            },
+            onWheel: (e) => {
+              // Prevent closing when scrolling
+              e.stopPropagation();
+            }
+          }
+        }}
+      >
         <FilterPopover>
           {activeFilter === "role" && (
             <FormControl fullWidth size="small">
@@ -424,7 +457,7 @@ const PartnersPage: React.FC = () => {
             <Box sx={{ p: 2 }}>
               <Typography variant="subtitle2" gutterBottom>
                 Project Size Range
-              </Typography>
+                </Typography>
               <Slider
                 value={projectSizeRange}
                 onChange={(_, newValue) => setProjectSizeRange(newValue as [number, number])}
@@ -441,9 +474,9 @@ const PartnersPage: React.FC = () => {
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   ${projectSizeRange[1].toLocaleString()}
-                </Typography>
-              </Box>
-            </Box>
+                      </Typography>
+                    </Box>
+                  </Box>
           )}
           {activeFilter === "responseTime" && (
             <FormControl fullWidth size="small">

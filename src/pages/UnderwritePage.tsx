@@ -8580,47 +8580,7 @@ const UnderwritePage: React.FC = () => {
                 </Box>
               </Box>
 
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds.selected,
-                  borderRadius: 1,
-                  border: "1px solid brandColors.accent.info",
-                  mb: 3,
-                }}
-              >
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: 600, color: "#1565c0", mb: 1 }}
-                >
-                  Unlock Advanced Modeling & Analysis
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
-                  Access specialized tools for exit strategies, tax
-                  implications, confidence intervals, seasonal adjustments,
-                  market analysis, and stress testing - separate from basic
-                  financial projections.
-                </Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    // Save current deal state to sessionStorage
-                    sessionStorage.setItem(
-                      "advancedDeal",
-                      JSON.stringify(state),
-                    );
-                    // Navigate to advanced analysis page
-                    navigate("/advanced-calculations");
-                  }}
-                  sx={{
-                    backgroundColor: brandColors.primary,
-                    "&:hover": { backgroundColor: "#2d3748" },
-                  }}
-                  startIcon={<TrendingUpIcon />}
-                >
-                  Open Advanced Modeling
-                </Button>
-              </Box>
+
             </AccordionDetails>
           </Accordion>
         </Card>
@@ -10232,6 +10192,25 @@ const UnderwritePage: React.FC = () => {
             flexWrap: "wrap",
           }}
         >
+          <Button
+            variant="contained"
+            onClick={() => {
+              // Save current deal state to sessionStorage
+              sessionStorage.setItem(
+                "advancedDeal",
+                JSON.stringify(state),
+              );
+              // Navigate to advanced analysis page
+              navigate("/advanced-calculations");
+            }}
+            sx={{
+              backgroundColor: brandColors.primary,
+              "&:hover": { backgroundColor: "#2d3748" },
+            }}
+            startIcon={<TrendingUpIcon />}
+          >
+            Analyse
+          </Button>
           <Button
             variant="outlined"
             onClick={exportToPDF}

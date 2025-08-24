@@ -65,7 +65,7 @@ const Navigation: React.FC = () => {
     { name: 'Invest', path: '/invest' },
     { name: 'Fund', path: '/fund' },
     { name: 'Operate', path: '/operate' },
-    { name: 'Partner', path: '/partner' },
+            { name: 'Partners', path: '/partner' },
     { name: 'Learn', path: '/learn' },
     { name: 'Advertise', path: '/advertise' }
   ];
@@ -80,6 +80,7 @@ const Navigation: React.FC = () => {
       case '/mortgage':
       case '/underwrite':
       case '/close':
+      case '/partner':
         console.log('Navigating to:', path); // Debug log
         navigate(path);
         break;

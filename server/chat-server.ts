@@ -227,6 +227,53 @@ app.get('/api/audit/logs', async (req, res) => {
   }
 });
 
+// --- Partner Profiles APIs ---
+// List partners with simple filters
+app.get('/api/partners', async (req, res) => {
+  try {
+    const q = req.query.q ? String(req.query.q) : undefined;
+    const partners = await prisma.partnerProfile.findMany({
+      include: { user: true },
+      orderBy: { rating: 'desc' }
+    } as any);
+    const filtered = q
+      ? (partners as any[]).filter((p) =>
+          [p.company, p.user?.firstName, p.user?.lastName]
+            .join(' ')
+            .toLowerCase()
+            .includes(q.toLowerCase())
+        )
+      : partners;
+    res.json({ data: filtered });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch partners' });
+  }
+});
+
+// Create/update a partner profile (minimal)
+app.post('/api/partners', async (req, res) => {
+  try {
+    const { userId, company, bio, services = [], languages = [] } = req.body || {};
+    if (!userId || !company) return res.status(400).json({ error: 'userId and company required' });
+    const upserted = await prisma.partnerProfile.upsert({
+      where: { userId },
+      update: { company, bio, services, languages },
+      create: {
+        userId,
+        company,
+        bio: bio || '',
+        services,
+        coverageArea: { type: 'FeatureCollection', features: [] } as any,
+        languages,
+        availability: {},
+        licenses: [],
+      },
+    } as any);
+    res.json({ data: upserted });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to save partner' });
+  }
+});
 // Create a task in a role's queue
 app.post('/api/tasks', async (req, res) => {
   try {

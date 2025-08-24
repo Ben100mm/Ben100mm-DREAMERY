@@ -51,7 +51,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-transaction',
+        frequency: 'once',
       },
       {
         id: 'settlement-compliance',
@@ -85,7 +85,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-transaction',
+        frequency: 'once',
       },
     ]);
 
@@ -129,7 +129,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-appraisal',
+        frequency: 'once',
       },
       {
         id: 'quality-control',
@@ -163,7 +163,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-appraisal',
+        frequency: 'once',
       },
     ]);
 
@@ -207,7 +207,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-project',
+        frequency: 'once',
       },
       {
         id: 'safety-compliance',
@@ -279,7 +279,7 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'monthly',
+        frequency: 'yearly',
       },
       {
         id: 'policy-compliance',

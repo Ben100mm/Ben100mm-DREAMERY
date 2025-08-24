@@ -1042,16 +1042,16 @@ const professionalRoles = [
 const dropdownConfig: Array<{ category: string; roles: string[] }> = [
   { category: 'Acquisition Specialists', roles: ['Acquisition Specialist', 'Disposition Agent'] },
   { category: 'Title', roles: ['Title Agent', 'Escrow Officer', 'Notary Public'] },
-  { category: 'Appraisers', roles: ['Appraiser', 'Residential Appraiser', 'Commercial Appraiser'] },
+  { category: 'Appraisers', roles: ['Residential Appraiser', 'Commercial Appraiser'] },
   { category: 'Inspectors', roles: ['Home Inspector', 'Commercial Inspector', 'Energy Inspector'] },
-  { category: 'Surveyors', roles: ['Surveyor', 'Land Surveyor'] },
+  { category: 'Surveyors', roles: ['Land Surveyor'] },
   { category: 'Insurance Agents', roles: ['Insurance Agent', 'Title Insurance Agent'] },
   { category: 'Mortgage Lenders / Brokers', roles: [
     'Mortgage Broker', 'Mortgage Lender', 'Loan Officer', 'Mortgage Underwriter', 'Hard Money Lender', 'Private Lender', 'Limited Partner (LP)', 'Banking Advisor'] },
   { category: 'Creative Finance Specialists', roles: [
     'Seller Finance Purchase Specialist', 'Subject To Existing Mortgage Purchase Specialist', 'Trust Acquisition Specialist', 'Hybrid Purchase Specialist', 'Lease Option Specialist'] },
   { category: 'Contractors / GC', roles: [
-    'General Contractor', 'Contractor', 'Electrical Contractor', 'Plumbing Contractor', 'HVAC Contractor', 'Roofing Contractor', 'Painting Contractor', 'Landscaping Contractor', 'Flooring Contractor', 'Kitchen Contractor', 'Bathroom Contractor'] },
+    'General Contractor', 'Electrical Contractor', 'Plumbing Contractor', 'HVAC Contractor', 'Roofing Contractor', 'Painting Contractor', 'Landscaping Contractor', 'Flooring Contractor', 'Kitchen Contractor', 'Bathroom Contractor'] },
   { category: 'Design & Architecture', roles: [
     'Interior Designer', 'Architect', 'Landscape Architect', 'Kitchen Designer', 'Bathroom Designer', 'Lighting Designer', 'Furniture Designer', 'Color Consultant'] },
   { category: 'Permit Expeditors', roles: ['Permit Expeditor'] },
@@ -1066,7 +1066,7 @@ const dropdownConfig: Array<{ category: string; roles: string[] }> = [
   { category: 'Legal Services', roles: [
     'Estate Planning Attorney', '1031 Exchange Intermediary', 'Entity Formation Service Provider', 'Escrow Service Provider', 'Legal Notary Service Provider'] },
   { category: 'Other', roles: [
-    'Real Estate Consultant', 'Real Estate Educator', 'Real Estate Trainer', 'Real Estate Coach', 'Financial Advisor', 'Tax Advisor', 'Relocation Specialist', 'Real Estate Investment Advisor'] },
+    'Real Estate Consultant', 'Real Estate Educator', 'Financial Advisor', 'Tax Advisor', 'Relocation Specialist', 'Real Estate Investment Advisor'] },
 ];
 
 // Build dropdown groups and a lookup map from id -> role (creates lightweight roles if missing)

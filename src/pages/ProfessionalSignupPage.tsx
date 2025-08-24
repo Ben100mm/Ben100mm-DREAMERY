@@ -80,6 +80,8 @@ const ProfessionalSignupPage: React.FC = () => {
     }
 
     setSuccess("Professional account created successfully!");
+    // Redirect to partner profile completion
+    window.location.href = "/partner-profile";
   };
 
   return (

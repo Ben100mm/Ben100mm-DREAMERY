@@ -39,6 +39,9 @@ model User {
   analyticsMetrics AnalyticsMetric[]
   documentInstances DocumentInstance[]
   complianceRecords ComplianceRecord[]
+  partnerProfile   PartnerProfile?
+  reviewsAuthored  Review[]        @relation("UserToReviewReviewer")
+  ratingsAuthored  Rating[]        @relation("UserToRatingReviewer")
 
   @@map("users")
 }
@@ -366,6 +369,67 @@ model AuditLog {
   user       User     @relation(fields: [userId], references: [id])
 
   @@map("audit_logs")
+}
+
+// Partner Directory
+model PartnerProfile {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  company          String
+  bio              String
+  services         Json
+  coverageArea     Json
+  languages        Json
+  availability     Json
+  licenses         Json
+  verificationStatus String  @default("pending")
+  verifiedAt       DateTime?
+  verifiedBy       String?
+  rating           Float    @default(0)
+  reviewCount      Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  user             User     @relation(fields: [userId], references: [id])
+  reviews          Review[]
+  ratings          Rating[]
+
+  @@map("partner_profiles")
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  partnerId   String
+  reviewerId  String
+  rating      Int
+  responsiveness Int
+  quality     Int
+  comment     String
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  partner     PartnerProfile @relation(fields: [partnerId], references: [id])
+  reviewer    User           @relation("UserToReviewReviewer", fields: [reviewerId], references: [id])
+
+  @@map("reviews")
+}
+
+model Rating {
+  id            String   @id @default(cuid())
+  partnerId     String
+  reviewerId    String
+  overallRating Int
+  categoryRatings Json
+  createdAt     DateTime @default(now())
+
+  // Relations
+  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
+  reviewer      User           @relation("UserToRatingReviewer", fields: [reviewerId], references: [id])
+
+  @@unique([partnerId, reviewerId])
+  @@map("ratings")
 }
 
 // Note: _prisma_migrations is managed by Prisma automatically

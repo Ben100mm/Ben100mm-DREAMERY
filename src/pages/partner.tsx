@@ -1,666 +1,492 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button, 
-  TextField,
+import React, { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
+import { brandColors } from "../theme";
+import { PageAppBar } from "../components/Header";
+import {
   Box,
-  Tabs,
-  Tab,
-  Chip,
-  LinearProgress,
-  Alert,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Container,
+  Typography,
+  Button,
   Paper,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
-  Rating
-} from '@mui/material';
-import CardMedia from '@mui/material/CardMedia';
-import { 
-  Handshake as HandshakeIcon,
-  Business as BusinessIcon,
-  TrendingUp as TrendingIcon,
-  Assessment as AssessmentIcon,
-  Timeline as TimelineIcon,
-  LocationOn as LocationIcon,
-  Person as PersonIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Star as StarIcon,
-  CheckCircle as CheckIcon,
-  Warning as WarningIcon,
-  Assignment as AssignmentIcon
-} from '@mui/icons-material';
-import PageTemplate from '../components/PageTemplate';
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
+  Popover,
+  Card,
+  CardContent,
+  IconButton,
+  InputAdornment,
+  Slider,
+} from "@mui/material";
+import { Search, Clear, KeyboardArrowDown, KeyboardArrowUp, Favorite } from "@mui/icons-material";
+
+const PageContainer = styled.div`
+  min-height: 100vh;
+  background: brandColors.backgrounds.secondary;
+`;
+
+const HeaderSection = styled.div`
+  background: brandColors.backgrounds.primary;
+  padding: 1rem 0;
+  border-bottom: 1px solid brandColors.borders.secondary;
+  position: sticky;
+  top: 64px;
+  z-index: 100;
+  margin-top: 64px;
+`;
+
+const FilterButton = styled(Button)`
+  text-transform: none;
+  color: brandColors.text.primary;
+  border: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
+  padding: 8px 16px;
+  min-width: 120px;
+  &:hover {
+    background: brandColors.backgrounds.secondary;
+    border-color: #c0c0c0;
+  }
+  &.active {
+    border-color: brandColors.primary;
+    color: brandColors.primary;
+  }
+`;
+
+const FilterPopover = styled(Paper)`
+  padding: 1.5rem;
+  min-width: 300px;
+  max-width: 400px;
+`;
+
+const MapContainer = styled.div`
+  height: 70vh;
+  background: linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: brandColors.backgrounds.primary;
+  font-size: 1.2rem;
+  position: relative;
+`;
+
+const MapOverlay = styled.div`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: brandColors.text.primary;
+  font-weight: 600;
+`;
+
+const ResultsContainer = styled.div`
+  padding: 2rem;
+  background: brandColors.backgrounds.primary;
+`;
 
 const PartnerCard = styled(Card)`
   height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
+  transition: all 0.2s ease;
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const PartnershipCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
-  color: white;
-  height: 100%;
-`;
+const PartnersPage: React.FC = () => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
-const mockPartnershipOpportunities = [
-  {
-    id: 1,
-    name: "City Development Group",
-    type: "Real Estate Developer",
-    location: "Downtown, City Center",
-    description: "Leading developer specializing in mixed-use properties",
-    rating: 4.8,
-    status: "Active",
-    projects: 15,
-    revenue: "$2.5M",
-    specialties: ["Mixed-Use", "Commercial", "Residential"],
-    contact: "John Smith",
-    email: "john.smith@citydev.com",
-    phone: "(555) 123-4567"
-  },
-  {
-    id: 2,
-    name: "Metro Investment Partners",
-    type: "Investment Firm",
-    location: "Financial District",
-    description: "Private equity firm focused on real estate investments",
-    rating: 4.6,
-    status: "Active",
-    projects: 8,
-    revenue: "$1.8M",
-    specialties: ["Investment", "Acquisition", "Management"],
-    contact: "Sarah Johnson",
-    email: "sarah.johnson@metroinvest.com",
-    phone: "(555) 234-5678"
-  },
-  {
-    id: 3,
-    name: "Premier Property Management",
-    type: "Property Management",
-    location: "Suburban Heights",
-    description: "Full-service property management company",
-    rating: 4.4,
-    status: "Active",
-    projects: 25,
-    revenue: "$3.2M",
-    specialties: ["Management", "Maintenance", "Tenant Services"],
-    contact: "Mike Davis",
-    email: "mike.davis@premiermanagement.com",
-    phone: "(555) 345-6789"
-  },
-  {
-    id: 4,
-    name: "Urban Construction Co.",
-    type: "Construction",
-    location: "Industrial District",
-    description: "Commercial and residential construction services",
-    rating: 4.7,
-    status: "Active",
-    projects: 12,
-    revenue: "$4.1M",
-    specialties: ["Construction", "Renovation", "Development"],
-    contact: "Lisa Wilson",
-    email: "lisa.wilson@urbanconstruction.com",
-    phone: "(555) 456-7890"
-  }
-];
+  // Search and filter state
+  const [search, setSearch] = useState("");
+  const [role, setRole] = useState<string>("any");
+  const [experienceLevel, setExperienceLevel] = useState<string>("any");
+  const [availability, setAvailability] = useState<string>("any");
+  const [certifications, setCertifications] = useState<string>("any");
+  const [projectSizeRange, setProjectSizeRange] = useState<[number, number]>([0, 500000]);
+  const [responseTime, setResponseTime] = useState<string>("any");
+  const [minRating, setMinRating] = useState<number>(0);
+  const [language, setLanguage] = useState<string>("any");
 
-const mockActivePartnerships = [
-  {
-    id: 1,
-    partner: "City Development Group",
-    project: "Downtown Mixed-Use Complex",
-    startDate: "2023-06-01",
-    endDate: "2024-12-31",
-    status: "In Progress",
-    revenue: "$850,000",
-    progress: 65
-  },
-  {
-    id: 2,
-    partner: "Metro Investment Partners",
-    project: "Suburban Office Park",
-    startDate: "2023-09-15",
-    endDate: "2024-06-30",
-    status: "Active",
-    revenue: "$620,000",
-    progress: 45
-  },
-  {
-    id: 3,
-    partner: "Premier Property Management",
-    project: "Residential Portfolio Management",
-    startDate: "2023-03-01",
-    endDate: "2025-02-28",
-    status: "Active",
-    revenue: "$1,200,000",
-    progress: 30
-  }
-];
+  // Data
+  const [partners, setPartners] = useState<any[]>([]);
 
-const mockPartnershipMetrics = {
-  totalPartners: 8,
-  activePartnerships: 6,
-  totalRevenue: "$2,670,000",
-  averageRating: 4.6,
-  successRate: "92%"
-};
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch(`http://localhost:5055/api/partners`);
+        const json = await res.json();
+        setPartners(Array.isArray(json.data) ? json.data : []);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to load partners", e);
+      }
+    };
+    load();
+  }, []);
 
-const PartnerPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [selectedPartner, setSelectedPartner] = useState<any>(null);
+  const filtered = useMemo(() => {
+    const lc = (s: string) => (s || "").toLowerCase();
+    return partners.filter((p) => {
+      const text = lc([
+        p.company,
+        p.bio,
+        (p.services || []).join(","),
+        (p.languages || []).join(","),
+        [p.user?.firstName, p.user?.lastName].filter(Boolean).join(" "),
+      ].join(" "));
+      const roleOk = role === "any" ? true : text.includes(lc(role));
+      const experienceOk = experienceLevel === "any" ? true : true; // TODO: Add experience level to partner data
+      const availabilityOk = availability === "any" ? true : true; // TODO: Add availability to partner data
+      const certificationsOk = certifications === "any" ? true : true; // TODO: Add certifications to partner data
+      const projectSizeOk = true; // TODO: Add project size to partner data - will filter by range when implemented
+      const responseTimeOk = responseTime === "any" ? true : true; // TODO: Add response time to partner data
+      const langOk = language === "any" ? true : text.includes(lc(language));
+      const ratingOk = (typeof p.rating === "number" ? p.rating : 0) >= minRating;
+      const searchOk = search ? text.includes(lc(search)) : true;
+      return roleOk && experienceOk && availabilityOk && certificationsOk && projectSizeOk && responseTimeOk && langOk && ratingOk && searchOk;
+    });
+      }, [partners, role, experienceLevel, availability, certifications, projectSizeRange, responseTime, language, minRating, search]);
+
+  const handleOpen = (evt: React.MouseEvent<HTMLElement>, key: string) => {
+    setAnchorEl(evt.currentTarget);
+    setActiveFilter(key);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setActiveFilter(null);
+  };
 
   return (
-    <PageTemplate 
-      title="Partnership Opportunities" 
-      subtitle="Connect with industry partners and grow your real estate business"
-      showAuthContent={true}
-    >
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-          <Tab label="Opportunities" />
-          <Tab label="Active Partnerships" />
-          <Tab label="Partner Directory" />
-          <Tab label="Collaboration Tools" />
-        </Tabs>
-      </Box>
+    <PageContainer>
+      <PageAppBar title="Dreamery – Partners" />
+      <HeaderSection>
+        <Container maxWidth="xl">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
+              San Francisco, CA Partners & Services
+            </Typography>
+          </Box>
 
-      {/* Opportunities Tab */}
-      {activeTab === 0 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Partnership Opportunities
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Discover potential partners and collaboration opportunities in the real estate industry.
-          </Typography>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+            <TextField
+              placeholder="San Francisco, CA"
+              size="small"
+              sx={{ flexGrow: 1 }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={() => setSearch("")}> 
+                      <Clear />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button variant="contained" sx={{ bgcolor: brandColors.primary }}>Save search</Button>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                border: "1px solid brandColors.borders.secondary",
+                borderRadius: "6px",
+                padding: "6px 12px",
+                backgroundColor: brandColors.backgrounds.secondary,
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#e9ecef", borderColor: "#c0c0c0" },
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>500</Typography>
+              <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
+            </Box>
+          </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
-            {mockPartnershipOpportunities.map((opportunity) => (
-              <PartnerCard key={opportunity.id}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box>
-                      <Typography variant="h6" gutterBottom>
-                        {opportunity.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {opportunity.type}
-                      </Typography>
-                    </Box>
-                    <Chip 
-                      label={opportunity.status} 
-                      color="success"
-                      size="small"
-                    />
-                  </Box>
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            <FilterButton onClick={(e) => handleOpen(e, "role")} className={activeFilter === "role" ? "active" : ""} endIcon={activeFilter === "role" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Role</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "experience")} className={activeFilter === "experience" ? "active" : ""} endIcon={activeFilter === "experience" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Experience</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "availability")} className={activeFilter === "availability" ? "active" : ""} endIcon={activeFilter === "availability" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Availability</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "certifications")} className={activeFilter === "certifications" ? "active" : ""} endIcon={activeFilter === "certifications" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Certifications</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "projectSize")} className={activeFilter === "projectSize" ? "active" : ""} endIcon={activeFilter === "projectSize" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Project Size</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "responseTime")} className={activeFilter === "responseTime" ? "active" : ""} endIcon={activeFilter === "responseTime" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Response Time</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "rating")} className={activeFilter === "rating" ? "active" : ""} endIcon={activeFilter === "rating" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Ratings</FilterButton>
+            <FilterButton onClick={(e) => handleOpen(e, "language")} className={activeFilter === "language" ? "active" : ""} endIcon={activeFilter === "language" ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>Language</FilterButton>
+          </Box>
+        </Container>
+      </HeaderSection>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <LocationIcon sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {opportunity.location}
-                    </Typography>
-                  </Box>
-
-                  <Typography variant="body2" paragraph>
-                    {opportunity.description}
-                  </Typography>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Rating value={opportunity.rating} readOnly size="small" />
-                    <Typography variant="body2" sx={{ ml: 1 }}>
-                      ({opportunity.rating})
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Projects:</strong> {opportunity.projects}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Revenue:</strong> {opportunity.revenue}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Contact:</strong> {opportunity.contact}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      <strong>Specialties:</strong>
-                    </Typography>
-                    {opportunity.specialties.map((specialty, index) => (
-                      <Chip 
-                        key={index}
-                        label={specialty} 
-                        size="small"
-                        variant="outlined"
-                        sx={{ mr: 0.5, mb: 0.5 }}
-                      />
-                    ))}
-                  </Box>
-
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button size="small" variant="outlined">
-                      View Profile
-                    </Button>
-                    <Button size="small" variant="contained">
-                      Contact
-                    </Button>
-                  </Box>
-                </CardContent>
-              </PartnerCard>
-            ))}
+      <Container maxWidth="xl">
+        <Box sx={{ display: "flex", height: "calc(100vh - 200px)" }}>
+          <Box sx={{ flex: 2, position: "relative", p: 2 }}>
+            <Box
+              sx={{
+                height: "100%",
+                background: "linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: brandColors.backgrounds.primary,
+                fontSize: "1.2rem",
+                position: "relative",
+                borderRadius: "8px",
+                overflow: "hidden",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "1rem",
+                  left: "1rem",
+                  background: "rgba(255, 255, 255, 0.9)",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  color: brandColors.text.primary,
+                  fontWeight: 600,
+                }}
+              >
+                {filtered.length} of {partners.length || 0} partners
+              </Box>
+              Interactive Map View
+            </Box>
+          </Box>
+          <Box sx={{ flex: 1, pl: 0 }}>
+            <ResultsContainer>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                <Typography variant="h6">{filtered.length} results</Typography>
+                <FormControl size="small">
+                  <InputLabel id="sort-label">Sort</InputLabel>
+                  <Select labelId="sort-label" label="Sort" value="relevance" onChange={() => void 0} sx={{ minWidth: 160 }}>
+                    <MenuItem value="relevance">Partners for You</MenuItem>
+                    <MenuItem value="rating">Highest Rated</MenuItem>
+                    <MenuItem value="reviews">Most Reviewed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 2 }}>
+                {filtered.map((p) => (
+                  <PartnerCard key={p.id}>
+                    <CardContent>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <Box>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{p.company}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {Array.isArray(p.services) ? p.services.join(", ") : p.bio}
+                          </Typography>
+                        </Box>
+                        <Chip label={(typeof p.rating === "number" ? p.rating.toFixed(1) : "0.0") + "★"} color="primary" size="small" />
+                      </Box>
+                    </CardContent>
+                  </PartnerCard>
+                ))}
+                {filtered.length === 0 && (
+                  <Typography variant="body2" color="text.secondary">No partners match your filters.</Typography>
+                )}
+              </Box>
+            </ResultsContainer>
           </Box>
         </Box>
-      )}
+      </Container>
 
-      {/* Active Partnerships Tab */}
-      {activeTab === 1 && (
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
-          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'span 2' } }}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Active Partnerships
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Track and manage your current partnership agreements and projects.
-                </Typography>
-
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Partner</TableCell>
-                        <TableCell>Project</TableCell>
-                        <TableCell>Duration</TableCell>
-                        <TableCell align="right">Revenue</TableCell>
-                        <TableCell align="center">Status</TableCell>
-                        <TableCell align="center">Progress</TableCell>
-                        <TableCell align="center">Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {mockActivePartnerships.map((partnership) => (
-                        <TableRow key={partnership.id}>
-                          <TableCell>
-                            <Typography variant="body2" fontWeight="bold">
-                              {partnership.partner}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              {partnership.project}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              {partnership.startDate} - {partnership.endDate}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography variant="body2" fontWeight="bold">
-                              {partnership.revenue}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Chip 
-                              label={partnership.status} 
-                              color={
-                                partnership.status === 'Active' ? 'success' : 
-                                partnership.status === 'In Progress' ? 'primary' : 
-                                'warning'
-                              }
-                              size="small"
-                            />
-                          </TableCell>
-                          <TableCell align="center">
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <LinearProgress 
-                                variant="determinate" 
-                                value={partnership.progress} 
-                                sx={{ width: 60, mr: 1 }}
-                              />
-                              <Typography variant="body2">
-                                {partnership.progress}%
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button size="small" variant="outlined">
-                              Manage
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </Box>
-
-          <PartnershipCard>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Partnership Summary
+      <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+        <FilterPopover>
+          {activeFilter === "role" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select labelId="role-label" label="Role" value={role} onChange={(e) => setRole(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="acquisition-specialist">Acquisition Specialist</MenuItem>
+                <MenuItem value="disposition-agent">Disposition Agent</MenuItem>
+                <MenuItem value="title-agent">Title Agent</MenuItem>
+                <MenuItem value="escrow-officer">Escrow Officer</MenuItem>
+                <MenuItem value="notary-public">Notary Public</MenuItem>
+                <MenuItem value="residential-appraiser">Residential Appraiser</MenuItem>
+                <MenuItem value="commercial-appraiser">Commercial Appraiser</MenuItem>
+                <MenuItem value="home-inspector">Home Inspector</MenuItem>
+                <MenuItem value="commercial-inspector">Commercial Inspector</MenuItem>
+                <MenuItem value="energy-inspector">Energy Inspector</MenuItem>
+                <MenuItem value="land-surveyor">Land Surveyor</MenuItem>
+                <MenuItem value="insurance-agent">Insurance Agent</MenuItem>
+                <MenuItem value="title-insurance-agent">Title Insurance Agent</MenuItem>
+                <MenuItem value="mortgage-broker">Mortgage Broker</MenuItem>
+                <MenuItem value="mortgage-lender">Mortgage Lender</MenuItem>
+                <MenuItem value="loan-officer">Loan Officer</MenuItem>
+                <MenuItem value="mortgage-underwriter">Mortgage Underwriter</MenuItem>
+                <MenuItem value="hard-money-lender">Hard Money Lender</MenuItem>
+                <MenuItem value="private-lender">Private Lender</MenuItem>
+                <MenuItem value="limited-partner">Limited Partner (LP)</MenuItem>
+                <MenuItem value="banking-advisor">Banking Advisor</MenuItem>
+                <MenuItem value="seller-finance-specialist">Seller Finance Purchase Specialist</MenuItem>
+                <MenuItem value="subject-to-specialist">Subject To Existing Mortgage Purchase Specialist</MenuItem>
+                <MenuItem value="trust-acquisition-specialist">Trust Acquisition Specialist</MenuItem>
+                <MenuItem value="hybrid-purchase-specialist">Hybrid Purchase Specialist</MenuItem>
+                <MenuItem value="lease-option-specialist">Lease Option Specialist</MenuItem>
+                <MenuItem value="general-contractor">General Contractor</MenuItem>
+                <MenuItem value="electrical-contractor">Electrical Contractor</MenuItem>
+                <MenuItem value="plumbing-contractor">Plumbing Contractor</MenuItem>
+                <MenuItem value="hvac-contractor">HVAC Contractor</MenuItem>
+                <MenuItem value="roofing-contractor">Roofing Contractor</MenuItem>
+                <MenuItem value="painting-contractor">Painting Contractor</MenuItem>
+                <MenuItem value="landscaping-contractor">Landscaping Contractor</MenuItem>
+                <MenuItem value="flooring-contractor">Flooring Contractor</MenuItem>
+                <MenuItem value="kitchen-contractor">Kitchen Contractor</MenuItem>
+                <MenuItem value="bathroom-contractor">Bathroom Contractor</MenuItem>
+                <MenuItem value="interior-designer">Interior Designer</MenuItem>
+                <MenuItem value="architect">Architect</MenuItem>
+                <MenuItem value="landscape-architect">Landscape Architect</MenuItem>
+                <MenuItem value="kitchen-designer">Kitchen Designer</MenuItem>
+                <MenuItem value="bathroom-designer">Bathroom Designer</MenuItem>
+                <MenuItem value="lighting-designer">Lighting Designer</MenuItem>
+                <MenuItem value="furniture-designer">Furniture Designer</MenuItem>
+                <MenuItem value="color-consultant">Color Consultant</MenuItem>
+                <MenuItem value="permit-expeditor">Permit Expeditor</MenuItem>
+                <MenuItem value="energy-consultant">Energy Consultant</MenuItem>
+                <MenuItem value="property-manager">Property Manager</MenuItem>
+                <MenuItem value="long-term-rental-manager">Long-term Rental Property Manager</MenuItem>
+                <MenuItem value="short-term-rental-manager">Short-term Rental Property Manager</MenuItem>
+                <MenuItem value="str-setup-manager">STR Setup & Manager</MenuItem>
+                <MenuItem value="housekeeper">Housekeeper</MenuItem>
+                <MenuItem value="landscape-cleaner">Landscape Cleaner</MenuItem>
+                <MenuItem value="turnover-specialist">Turnover Specialist</MenuItem>
+                <MenuItem value="handyman">Handyman</MenuItem>
+                <MenuItem value="landscaper">Landscaper</MenuItem>
+                <MenuItem value="arborist">Arborist</MenuItem>
+                <MenuItem value="tenant-screening-agent">Tenant Screening Agent</MenuItem>
+                <MenuItem value="leasing-agent">Leasing Agent</MenuItem>
+                <MenuItem value="bookkeeper">Bookkeeper</MenuItem>
+                <MenuItem value="cpa">Certified Public Accountant (CPA)</MenuItem>
+                <MenuItem value="accountant">Accountant</MenuItem>
+                <MenuItem value="photographer">Photographer</MenuItem>
+                <MenuItem value="videographer">Videographer</MenuItem>
+                <MenuItem value="ar-vr-developer">AR/VR Developer</MenuItem>
+                <MenuItem value="digital-twins-developer">Digital Twins Developer</MenuItem>
+                <MenuItem value="estate-planning-attorney">Estate Planning Attorney</MenuItem>
+                <MenuItem value="1031-exchange-intermediary">1031 Exchange Intermediary</MenuItem>
+                <MenuItem value="entity-formation-provider">Entity Formation Service Provider</MenuItem>
+                <MenuItem value="escrow-service-provider">Escrow Service Provider</MenuItem>
+                <MenuItem value="legal-notary-service-provider">Legal Notary Service Provider</MenuItem>
+                <MenuItem value="real-estate-consultant">Real Estate Consultant</MenuItem>
+                <MenuItem value="real-estate-educator">Real Estate Educator</MenuItem>
+                <MenuItem value="financial-advisor">Financial Advisor</MenuItem>
+                <MenuItem value="tax-advisor">Tax Advisor</MenuItem>
+                <MenuItem value="relocation-specialist">Relocation Specialist</MenuItem>
+                <MenuItem value="real-estate-investment-advisor">Real Estate Investment Advisor</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "experience" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="experience-label">Experience Level</InputLabel>
+              <Select labelId="experience-label" label="Experience Level" value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="new">New (0-2 years)</MenuItem>
+                <MenuItem value="established">Established (3-10 years)</MenuItem>
+                <MenuItem value="veteran">Veteran (10+ years)</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "availability" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="availability-label">Availability</InputLabel>
+              <Select labelId="availability-label" label="Availability" value={availability} onChange={(e) => setAvailability(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="available-now">Available Now</MenuItem>
+                <MenuItem value="available-soon">Available Soon</MenuItem>
+                <MenuItem value="limited">Limited Availability</MenuItem>
+                <MenuItem value="no-availability">No Availability</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "certifications" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="certifications-label">Certifications</InputLabel>
+              <Select labelId="certifications-label" label="Certifications" value={certifications} onChange={(e) => setCertifications(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="licensed">Licensed</MenuItem>
+                <MenuItem value="bonded">Bonded</MenuItem>
+                <MenuItem value="insured">Insured</MenuItem>
+                <MenuItem value="certified">Certified</MenuItem>
+                <MenuItem value="accredited">Accredited</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "projectSize" && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Project Size Range
               </Typography>
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  <strong>Total Partners:</strong> {mockPartnershipMetrics.totalPartners}
+              <Slider
+                value={projectSizeRange}
+                onChange={(_, newValue) => setProjectSizeRange(newValue as [number, number])}
+                valueLabelDisplay="auto"
+                min={0}
+                max={500000}
+                step={10000}
+                valueLabelFormat={(value) => `$${value.toLocaleString()}`}
+                sx={{ mt: 2 }}
+              />
+              <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+                <Typography variant="caption" color="text.secondary">
+                  ${projectSizeRange[0].toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  <strong>Active Partnerships:</strong> {mockPartnershipMetrics.activePartnerships}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Total Revenue:</strong> {mockPartnershipMetrics.totalRevenue}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Average Rating:</strong> {mockPartnershipMetrics.averageRating}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Success Rate:</strong> {mockPartnershipMetrics.successRate}
-                  </Typography>
-                </Box>
-                <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                  New Partnership
-                </Button>
-              </CardContent>
-            </PartnershipCard>
-          </Box>
-        </Box>
-      )}
-
-      {/* Partner Directory Tab */}
-      {activeTab === 2 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Partner Directory
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Browse our comprehensive directory of verified partners and service providers.
-          </Typography>
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
-            <Box>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Search Partners
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    label="Search by name, type, or specialty"
-                    margin="normal"
-                  />
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Filter by Category:
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                      <Chip label="Developers" size="small" />
-                      <Chip label="Investors" size="small" />
-                      <Chip label="Management" size="small" />
-                      <Chip label="Construction" size="small" />
-                      <Chip label="Legal" size="small" />
-                      <Chip label="Financial" size="small" />
-                    </Box>
-                  </Box>
-                  <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                    Search
-                  </Button>
-                </CardContent>
-              </Card>
+                <Typography variant="caption" color="text.secondary">
+                  ${projectSizeRange[1].toLocaleString()}
+                </Typography>
+              </Box>
             </Box>
-
-            <Box>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Partner Categories
-                  </Typography>
-                  <List>
-                    <ListItem>
-                      <ListItemIcon><BusinessIcon /></ListItemIcon>
-                      <ListItemText 
-                        primary="Real Estate Developers" 
-                        secondary="15 partners"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><TrendingIcon /></ListItemIcon>
-                      <ListItemText 
-                        primary="Investment Firms" 
-                        secondary="8 partners"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                      <ListItemText 
-                        primary="Property Management" 
-                        secondary="12 partners"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><HandshakeIcon /></ListItemIcon>
-                      <ListItemText 
-                        primary="Construction Services" 
-                        secondary="20 partners"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><AssessmentIcon /></ListItemIcon>
-                      <ListItemText 
-                        primary="Legal Services" 
-                        secondary="6 partners"
-                      />
-                    </ListItem>
-                  </List>
-                </CardContent>
-              </Card>
-            </Box>
+          )}
+          {activeFilter === "responseTime" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="responseTime-label">Response Time</InputLabel>
+              <Select labelId="responseTime-label" label="Response Time" value={responseTime} onChange={(e) => setResponseTime(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="same-day">Same Day</MenuItem>
+                <MenuItem value="24-hours">24 Hours</MenuItem>
+                <MenuItem value="48-hours">48 Hours</MenuItem>
+                <MenuItem value="1-week">1 Week</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "rating" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="rating-label">Min Rating</InputLabel>
+              <Select labelId="rating-label" label="Min Rating" value={String(minRating)} onChange={(e) => setMinRating(Number(e.target.value))}>
+                <MenuItem value={0}>Any</MenuItem>
+                <MenuItem value={3}>3.0+</MenuItem>
+                <MenuItem value={4}>4.0+</MenuItem>
+                <MenuItem value={4.5}>4.5+</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          {activeFilter === "language" && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="lang-label">Language</InputLabel>
+              <Select labelId="lang-label" label="Language" value={language} onChange={(e) => setLanguage(e.target.value)}>
+                <MenuItem value="any">Any</MenuItem>
+                <MenuItem value="english">English</MenuItem>
+                <MenuItem value="spanish">Spanish</MenuItem>
+                <MenuItem value="chinese">Chinese</MenuItem>
+                <MenuItem value="vietnamese">Vietnamese</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={handleClose} variant="contained">Apply</Button>
           </Box>
-        </Box>
-      )}
-
-      {/* Collaboration Tools Tab */}
-      {activeTab === 3 && (
-        <>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3 }}>
-          <Box>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Partnership Agreement Generator
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Create and customize partnership agreements with our template system.
-                </Typography>
-                
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Partner Name"
-                    margin="normal"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Project Type"
-                    margin="normal"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Start Date"
-                    type="date"
-                    margin="normal"
-                  />
-                  <TextField
-                    fullWidth
-                    label="End Date"
-                    type="date"
-                    margin="normal"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Project Description"
-                    multiline
-                    rows={3}
-                    margin="normal"
-                    sx={{ gridColumn: { xs: '1 / -1', sm: '1 / -1' } }}
-                  />
-                </Box>
-
-                <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                  Generate Agreement
-                </Button>
-              </CardContent>
-            </Card>
-          </Box>
-
-          <Box>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Communication Hub
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Tools for effective partner communication and collaboration.
-                </Typography>
-                
-                <List>
-                  <ListItem>
-                    <ListItemIcon><EmailIcon /></ListItemIcon>
-                    <ListItemText 
-                      primary="Partner Messaging" 
-                      secondary="Direct communication with partners"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                    <ListItemText 
-                      primary="Document Sharing" 
-                      secondary="Secure file sharing and collaboration"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon><TimelineIcon /></ListItemIcon>
-                    <ListItemText 
-                      primary="Project Timeline" 
-                      secondary="Track project milestones and deadlines"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon><AssessmentIcon /></ListItemIcon>
-                    <ListItemText 
-                      primary="Performance Reports" 
-                      secondary="Generate and share performance metrics"
-                    />
-                  </ListItem>
-                </List>
-
-                <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
-                  Access Hub
-                </Button>
-              </CardContent>
-            </Card>
-          </Box>
-        </Box>
-
-        {/* Placeholder Partnership Cards */}
-        <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
-          Featured Partnership Opportunities
-        </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
-          {Array.from({ length: 10 }, (_, index) => (
-            <Box key={`partner-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Partnership+${index + 1}`}
-                  alt={`Partnership ${index + 1}`}
-                  sx={{ objectFit: 'cover' }}
-                />
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                    Partnership #{index + 1}
-                  </Typography>
-                  
-                  <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                    ${(25000 + index * 5000)} investment
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {['Real Estate Agent', 'Property Manager', 'Contractor', 'Inspector', 'Appraiser', 'Attorney', 'Accountant', 'Insurance Agent', 'Photographer', 'Marketing Specialist'][index]}
-                    </Typography>
-                  </Box>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(18 + index)}% commission
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(5 + index)} years
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(85 + index)}% success
-                      </Typography>
-                    </Box>
-                  </Box>
-                  
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      backgroundColor: '#1a365d',
-                      '&:hover': { backgroundColor: '#0d2340' }
-                    }}
-                  >
-                    Partner Now
-                  </Button>
-                </CardContent>
-              </Card>
-            </Box>
-          ))}
-        </Box>
-        </>
-      )}
-    </PageTemplate>
+        </FilterPopover>
+      </Popover>
+    </PageContainer>
   );
 };
 
-export default PartnerPage; 
+export default PartnersPage;

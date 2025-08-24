@@ -1,604 +1,554 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { 
-  Grid, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button, 
-  TextField,
   Box,
-  Tabs,
-  Tab,
-  Chip,
-  LinearProgress,
-  Alert,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Container,
+  Typography,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  Avatar,
-  IconButton
+  Paper,
+  Tabs,
+  Tab
 } from '@mui/material';
 import { 
-  Home as HomeIcon,
-  Person as PersonIcon,
-  Build as BuildIcon,
-  AttachMoney as MoneyIcon,
-  Notifications as NotificationIcon,
-  CalendarToday as CalendarIcon,
-  LocationOn as LocationIcon,
-  Phone as PhoneIcon,
-  Email as EmailIcon,
-  Assignment as AssignmentIcon,
+  Dashboard as DashboardIcon,
+  AccountCircle as AccountIcon,
+  AddHome as ListingIcon,
+  Description as LeaseIcon,
+  Assignment as ApplicationIcon,
   Payment as PaymentIcon,
-  Receipt as ReceiptIcon,
-  TrendingUp as TrendingIcon
+  Settings as IntegrationIcon,
+  Security as InsuranceIcon,
+  Event as CalendarIcon,
+  Chat as ChatIcon,
+  MonetizationOn as EarningsIcon,
+  Insights as InsightsIcon
 } from '@mui/icons-material';
-import PageTemplate from '../components/PageTemplate';
-
-const PropertyCard = styled(Card)`
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const StatsCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
-  color: white;
-  height: 100%;
-`;
-
-const mockProperties = [
-  {
-    id: 1,
-    address: "123 Main St, City, State",
-    type: "Single Family",
-    status: "Occupied",
-    tenant: "John Smith",
-    rent: "$2,200",
-    occupancy: "100%",
-    maintenance: "Good",
-    lastInspection: "2024-01-10",
-    nextInspection: "2024-04-10"
-  },
-  {
-    id: 2,
-    address: "456 Oak Ave, City, State",
-    type: "Townhouse",
-    status: "Available",
-    tenant: null,
-    rent: "$1,800",
-    occupancy: "0%",
-    maintenance: "Needs Attention",
-    lastInspection: "2024-01-05",
-    nextInspection: "2024-04-05"
-  },
-  {
-    id: 3,
-    address: "789 Pine Rd, City, State",
-    type: "Apartment",
-    status: "Occupied",
-    tenant: "Sarah Johnson",
-    rent: "$1,500",
-    occupancy: "100%",
-    maintenance: "Excellent",
-    lastInspection: "2024-01-15",
-    nextInspection: "2024-04-15"
-  }
-];
-
-const mockMaintenanceRequests = [
-  {
-    id: 1,
-    property: "123 Main St",
-    tenant: "John Smith",
-    issue: "Leaky faucet in kitchen",
-    priority: "Medium",
-    status: "In Progress",
-    date: "2024-01-12",
-    assignedTo: "Mike's Plumbing"
-  },
-  {
-    id: 2,
-    property: "456 Oak Ave",
-    tenant: "Previous Tenant",
-    issue: "HVAC system not working",
-    priority: "High",
-    status: "Scheduled",
-    date: "2024-01-10",
-    assignedTo: "City HVAC"
-  },
-  {
-    id: 3,
-    property: "789 Pine Rd",
-    tenant: "Sarah Johnson",
-    issue: "Light fixture replacement",
-    priority: "Low",
-    status: "Completed",
-    date: "2024-01-08",
-    assignedTo: "Electric Pro"
-  }
-];
-
-const mockFinancialData = {
-  totalRevenue: "$6,500",
-  totalExpenses: "$1,200",
-  netIncome: "$5,300",
-  occupancyRate: "67%",
-  averageRent: "$1,833",
-  monthlyGrowth: "+2.3%"
-};
+import { PageAppBar } from '../components/Header';
+import { brandColors } from '../theme/theme';
 
 const ManagePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [accountSubTab, setAccountSubTab] = useState('personal');
+
+  const sidebarItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+    { id: 'calendar', label: 'Calendar', icon: <CalendarIcon /> },
+    { id: 'listings', label: 'Listings', icon: <ListingIcon /> },
+    { id: 'messages', label: 'Messages', icon: <ChatIcon /> },
+    { id: 'earnings', label: 'Earnings', icon: <EarningsIcon /> },
+    { id: 'insights', label: 'Insights', icon: <InsightsIcon /> },
+    { id: 'listing', label: 'Creating a Listing', icon: <ListingIcon /> },
+    { id: 'leases', label: 'Online Leases', icon: <LeaseIcon /> },
+    { id: 'applications', label: 'Rental Applications', icon: <ApplicationIcon /> },
+    { id: 'payments', label: 'Online Rent Payments', icon: <PaymentIcon /> },
+    { id: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
+    { id: 'insurance', label: 'Insurance', icon: <InsuranceIcon /> },
+    { id: 'account', label: 'Manage Your Account', icon: <AccountIcon /> }
+  ];
+
+  const accountSubTabs = [
+    { id: 'personal', label: 'Personal Information' },
+    { id: 'security', label: 'Login & Security' },
+    { id: 'privacy', label: 'Privacy' },
+    { id: 'notifications', label: 'Notifications' },
+    { id: 'payments', label: 'Payments' },
+    { id: 'taxes', label: 'Taxes' }
+  ];
+
+  const getBanner = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return {
+          title: 'Property Management Dashboard',
+          subtitle: 'Centralized overview of all property management activities and progress tracking'
+        };
+      case 'calendar':
+        return {
+          title: 'Calendar',
+          subtitle: 'View and manage maintenance, lease, and payment schedules'
+        };
+      case 'listing':
+        return {
+          title: 'Creating a Listing',
+          subtitle: 'Step-by-step tools to create and publish a listing'
+        };
+      case 'listings':
+        return {
+          title: 'Listings',
+          subtitle: 'Browse, edit, and manage your active and archived listings'
+        };
+      case 'messages':
+        return {
+          title: 'Messages',
+          subtitle: 'Conversations with tenants, applicants, and partners'
+        };
+      case 'earnings':
+        return {
+          title: 'Earnings',
+          subtitle: 'Track rent collections, deposits, payouts, and monthly totals'
+        };
+      case 'insights':
+        return {
+          title: 'Insights',
+          subtitle: 'Performance metrics, trends, and recommendations for your portfolio'
+        };
+      case 'account':
+        return {
+          title: 'Manage Your Account',
+          subtitle: 'Update your profile, manage preferences, and control your account settings'
+        };
+      case 'leases':
+        return {
+          title: 'Online Leases',
+          subtitle: 'Generate, send, and manage digital lease agreements with electronic signatures'
+        };
+      case 'applications':
+        return {
+          title: 'Rental Applications',
+          subtitle: 'Process rental applications, conduct background checks, and manage tenant screening'
+        };
+      case 'payments':
+        return {
+          title: 'Online Rent Payments',
+          subtitle: 'Accept online rent payments, track payment history, and manage late fees'
+        };
+      case 'integrations':
+        return {
+          title: 'Integrations',
+          subtitle: 'Connect with third-party services, accounting software, and property management tools'
+        };
+      case 'insurance':
+        return {
+          title: 'Insurance',
+          subtitle: 'Manage property insurance policies, claims, and coverage information'
+        };
+      default:
+        return { title: 'Property Management', subtitle: 'Manage your portfolio with Dreamery' };
+    }
+  };
+
+  const getBannerIcon = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'calendar':
+        return <CalendarIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'listing':
+        return <ListingIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'listings':
+        return <ListingIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'messages':
+        return <ChatIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'earnings':
+        return <EarningsIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'insights':
+        return <InsightsIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'account':
+        return <AccountIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'leases':
+        return <LeaseIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'applications':
+        return <ApplicationIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'payments':
+        return <PaymentIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'integrations':
+        return <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />;
+      case 'insurance':
+        return <InsuranceIcon sx={{ fontSize: 28, color: 'white' }} />;
+      default:
+        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+    }
+  };
+
+  const renderAccountSubContent = () => {
+    switch (accountSubTab) {
+      case 'personal':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Personal Information
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Update your name, contact information, and professional details.
+            </Typography>
+          </Box>
+        );
+      case 'security':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Login & Security
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage your password, two-factor authentication, and login preferences.
+            </Typography>
+          </Box>
+        );
+      case 'privacy':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Privacy
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Control your data sharing preferences and privacy settings.
+            </Typography>
+          </Box>
+        );
+      case 'notifications':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Notifications
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Configure email, SMS, and in-app notification preferences.
+            </Typography>
+          </Box>
+        );
+      case 'payments':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Payments
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage payment methods, billing information, and subscription details.
+            </Typography>
+          </Box>
+        );
+      case 'taxes':
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Taxes
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              View tax documents, update tax information, and manage tax preferences.
+            </Typography>
+          </Box>
+        );
+      default:
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Select a sub-tab
+            </Typography>
+          </Box>
+        );
+    }
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Dashboard
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Welcome to your property management dashboard.
+            </Typography>
+          </Box>
+        );
+      case 'calendar':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Calendar
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Schedule view for tasks, inspections, rent due dates, and lease events.
+            </Typography>
+          </Box>
+        );
+      case 'listing':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Creating a Listing
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Create and manage property listings.
+            </Typography>
+          </Box>
+        );
+      case 'listings':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Listings
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage active, pending, and archived listings. Add filters, edit details, or publish.
+            </Typography>
+          </Box>
+        );
+      case 'messages':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Messages
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              View conversations with tenants, applicants, and service partners.
+            </Typography>
+          </Box>
+        );
+      case 'earnings':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Earnings
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Summary of rent collections, payouts, and exportable statements.
+            </Typography>
+          </Box>
+        );
+      case 'insights':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Insights
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              KPIs, trends, and recommended actions across your portfolio.
+            </Typography>
+          </Box>
+        );
+      case 'account':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Account Settings
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Manage your personal information, security settings, and preferences.
+            </Typography>
+            
+            {/* Sub-tabs */}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+              <Tabs 
+                value={accountSubTab} 
+                onChange={(e, newValue) => setAccountSubTab(newValue)}
+                variant="scrollable"
+                scrollButtons="auto"
+                sx={{
+                  '& .MuiTab-root': {
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    minWidth: 'auto',
+                    px: 3,
+                    py: 1.5
+                  },
+                  '& .Mui-selected': {
+                    color: brandColors.primary,
+                    fontWeight: 600
+                  }
+                }}
+              >
+                {accountSubTabs.map((tab) => (
+                  <Tab 
+                    key={tab.id} 
+                    value={tab.id} 
+                    label={tab.label}
+                  />
+                ))}
+              </Tabs>
+            </Box>
+
+            {/* Sub-tab content */}
+            {renderAccountSubContent()}
+          </Box>
+        );
+      case 'leases':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Online Leases
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Generate and manage digital lease agreements.
+            </Typography>
+          </Box>
+        );
+      case 'applications':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Rental Applications
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Process rental applications and tenant screening.
+            </Typography>
+          </Box>
+        );
+      case 'payments':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Online Rent Payments
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Accept online rent payments and track history.
+            </Typography>
+          </Box>
+        );
+      case 'integrations':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Integrations
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Connect with third-party services.
+            </Typography>
+          </Box>
+        );
+      case 'insurance':
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Insurance
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Manage property insurance policies.
+            </Typography>
+          </Box>
+        );
+      default:
+        return (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Select a tab from the sidebar
+            </Typography>
+          </Box>
+        );
+    }
+  };
+
+  const banner = getBanner();
 
   return (
-    <PageTemplate 
-      title="Property Management" 
-      subtitle="Manage your properties, tenants, and maintenance efficiently"
-      showAuthContent={true}
-    >
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-          <Tab label="Properties" />
-          <Tab label="Tenants" />
-          <Tab label="Maintenance" />
-          <Tab label="Financial" />
-        </Tabs>
-      </Box>
+    <>
+      <PageAppBar title="Dreamery – Property Management" />
+      <Box sx={{ display: 'flex', height: 'calc(100vh - 64px)', mt: '64px' }}>
+        {/* Left Sidebar */}
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            width: 280, 
+            backgroundColor: '#f8f9fa',
+            borderRight: '1px solid #e0e0e0',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
+          {/* Station Header */}
+          <Box sx={{ px: 3, py: 2, mb: 1, flexShrink: 0 }}>
+            <Box
+              sx={{
+                backgroundColor: '#1a365d',
+                color: 'white',
+                borderRadius: 2,
+                py: 1.5,
+                px: 2,
+                textAlign: 'center',
+                fontWeight: 600,
+                fontSize: '1rem',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            >
+              Station
+            </Box>
+          </Box>
 
-      {/* Properties Tab */}
-      {activeTab === 0 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Property Portfolio
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Manage your properties and track their performance.
-          </Typography>
-
-          <Grid container spacing={3}>
-            {mockProperties.map((property) => (
-              <Grid item xs={12} md={6} lg={4} key={property.id}>
-                <PropertyCard>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                      <Box>
-                        <Typography variant="h6" gutterBottom>
-                          {property.address}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {property.type}
-                        </Typography>
-                      </Box>
-                      <Chip 
-                        label={property.status} 
-                        color={
-                          property.status === 'Occupied' ? 'success' : 
-                          property.status === 'Available' ? 'primary' : 
-                          'warning'
-                        }
-                        size="small"
-                      />
-                    </Box>
-
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Rent:</strong> {property.rent}/month
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Occupancy:</strong> {property.occupancy}
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Maintenance:</strong> {property.maintenance}
-                      </Typography>
-                      {property.tenant && (
-                        <Typography variant="body2">
-                          <strong>Tenant:</strong> {property.tenant}
-                        </Typography>
-                      )}
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button size="small" variant="outlined">
-                        View Details
-                      </Button>
-                      <Button size="small" variant="outlined">
-                        Manage
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </PropertyCard>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
-
-      {/* Tenants Tab */}
-      {activeTab === 1 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Tenant Management
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Manage tenant information, leases, and communications.
-          </Typography>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Tenant</TableCell>
-                      <TableCell>Property</TableCell>
-                      <TableCell>Lease End</TableCell>
-                      <TableCell align="right">Rent</TableCell>
-                      <TableCell align="center">Status</TableCell>
-                      <TableCell align="center">Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mockProperties.filter(p => p.tenant).map((property) => (
-                      <TableRow key={property.id}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
-                              {property.tenant?.charAt(0)}
-                            </Avatar>
-                            <Box>
-                              <Typography variant="body2" fontWeight="bold">
-                                {property.tenant}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                <EmailIcon sx={{ fontSize: 12, mr: 0.5 }} />
-                                john.smith@email.com
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {property.address}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            Dec 31, 2024
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Typography variant="body2" fontWeight="bold">
-                            {property.rent}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Chip 
-                            label="Active" 
-                            color="success"
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button size="small" variant="outlined">
-                            Contact
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Quick Actions
-                  </Typography>
-                  <List>
-                    <ListItem>
-                      <ListItemIcon><PersonIcon /></ListItemIcon>
-                      <ListItemText primary="Add New Tenant" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                      <ListItemText primary="Create Lease Agreement" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><NotificationIcon /></ListItemIcon>
-                      <ListItemText primary="Send Notifications" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><CalendarIcon /></ListItemIcon>
-                      <ListItemText primary="Schedule Inspections" />
-                    </ListItem>
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-
-      {/* Maintenance Tab */}
-      {activeTab === 2 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Maintenance Requests
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Track and manage maintenance requests and repairs.
-          </Typography>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Property</TableCell>
-                      <TableCell>Issue</TableCell>
-                      <TableCell>Priority</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Date</TableCell>
-                      <TableCell align="center">Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mockMaintenanceRequests.map((request) => (
-                      <TableRow key={request.id}>
-                        <TableCell>
-                          <Typography variant="body2" fontWeight="bold">
-                            {request.property}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {request.issue}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Chip 
-                            label={request.priority} 
-                            color={
-                              request.priority === 'High' ? 'error' : 
-                              request.priority === 'Medium' ? 'warning' : 
-                              'success'
-                            }
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Chip 
-                            label={request.status} 
-                            color={
-                              request.status === 'Completed' ? 'success' : 
-                              request.status === 'In Progress' ? 'primary' : 
-                              'warning'
-                            }
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {request.date}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button size="small" variant="outlined">
-                            Update
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Maintenance Summary
-                  </Typography>
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Open Requests:</strong> 2
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>In Progress:</strong> 1
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Completed:</strong> 1
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Average Response Time:</strong> 2.5 days
-                    </Typography>
-                  </Box>
-                  <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                    Create Request
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-
-      {/* Financial Tab */}
-      {activeTab === 3 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Financial Overview
-                </Typography>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        {mockFinancialData.totalRevenue}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total Revenue
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        {mockFinancialData.totalExpenses}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total Expenses
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        {mockFinancialData.netIncome}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Net Income
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        {mockFinancialData.occupancyRate}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Occupancy Rate
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <StatsCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Performance Metrics
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Average Rent: {mockFinancialData.averageRent}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Monthly Growth: {mockFinancialData.monthlyGrowth}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Cash Flow: Positive
-                  </Typography>
-                  <Typography variant="body2">
-                    ROI: 8.5%
-                  </Typography>
-                </Box>
-                <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-                  View Detailed Report
-                </Button>
-              </CardContent>
-            </StatsCard>
-          </Grid>
-        </Grid>
-
-        {/* Placeholder Management Cards */}
-        <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
-          Featured Management Properties
-        </Typography>
-        <Grid container spacing={3}>
-          {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`manage-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Managed+Property+${index + 1}`}
-                  alt={`Managed Property ${index + 1}`}
-                  sx={{ objectFit: 'cover' }}
-                />
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                    Managed Property #{index + 1}
-                  </Typography>
-                  
-                  <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                    ${(2800 + index * 300)}/month
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
-                    <Typography variant="body2" color="text.secondary">
-                      {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
-                    </Typography>
-                  </Box>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(95 + index)}% occupied
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        ${(1200 + index * 100)} expenses
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(8 + index)}% ROI
-                      </Typography>
-                    </Box>
-                  </Box>
-                  
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{
+          {/* Sidebar Navigation */}
+          <List sx={{ px: 2, pt: 0, flex: 1, overflow: 'auto' }}>
+            {sidebarItems.map((item) => (
+              <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
+                <ListItemButton
+                  onClick={() => setActiveTab(item.id)}
+                  selected={activeTab === item.id}
+                  sx={{
+                    borderRadius: 2,
+                    '&.Mui-selected': {
                       backgroundColor: '#1a365d',
-                      '&:hover': { backgroundColor: '#0d2340' }
+                      color: 'white',
+                      '&:hover': {
+                        backgroundColor: '#1a365d',
+                      },
+                      '& .MuiListItemIcon-root': {
+                        color: 'white',
+                      },
+                      '& .MuiListItemText-primary': {
+                        color: 'white',
+                        fontWeight: 600,
+                      },
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(26, 54, 93, 0.08)',
+                    },
+                  }}
+                >
+                  <ListItemIcon 
+                    sx={{ 
+                      minWidth: 40,
+                      color: activeTab === item.id ? 'white' : 'inherit'
                     }}
                   >
-                    Manage Property
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
-    </PageTemplate>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{
+                      fontSize: '0.9rem',
+                      fontWeight: activeTab === item.id ? 600 : 400,
+                      color: activeTab === item.id ? 'white' : 'inherit'
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+
+        {/* Main Content Area */}
+        <Box sx={{ flex: 1, p: 3, backgroundColor: '#fafafa', overflow: 'auto' }}>
+          <Container maxWidth="lg">
+            {/* Top Banner (matches CloseBuyerPage) */}
+            <Paper
+              elevation={0}
+              sx={{ 
+                mb: 4, 
+                p: 3, 
+                backgroundColor: brandColors.primary,
+                borderRadius: '16px 16px 0 0',
+                color: 'white'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                {getBannerIcon()}
+                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                  {banner.title}
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                {banner.subtitle}
+              </Typography>
+            </Paper>
+
+            {renderContent()}
+          </Container>
+        </Box>
+      </Box>
+    </>
   );
 };
 

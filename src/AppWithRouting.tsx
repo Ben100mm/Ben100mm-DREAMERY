@@ -51,6 +51,7 @@ import PartnerPage from './pages/partner';
 import PartnerProfileCompletionPage from './pages/PartnerProfileCompletionPage';
 import OtherProfessionalPage from './pages/OtherProfessionalPage';
 import AnalyzePage from './pages/AnalyzePage';
+import ManagePage from './pages/manage';
 import CloseBusinessesPage from './pages/CloseBusinessesPage';
 import ProfilePage from './pages/ProfilePage';
 import { RoleProvider, RoleContext } from './context/RoleContext';
@@ -134,6 +135,7 @@ const AppContent = () => {
       <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
       <Route path="/close/businesses" element={<CloseBusinessesPage />} />
       <Route path="/analyze" element={<AnalyzePage />} />
+      <Route path="/manage" element={<ManagePage />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />

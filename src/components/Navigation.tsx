@@ -81,6 +81,7 @@ const Navigation: React.FC = () => {
       case '/underwrite':
       case '/analyze':
       case '/close':
+      case '/manage':
       case '/partner':
         console.log('Navigating to:', path); // Debug log
         navigate(path);

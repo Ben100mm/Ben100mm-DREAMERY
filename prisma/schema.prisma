@@ -1,0 +1,371 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Base model with common fields
+model BaseModel {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("base_models")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  roleId    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  role      UserRole @relation(fields: [roleId], references: [id])
+  profile   UserProfile?
+  tasks     Task[]
+  notifications Notification[]
+  auditLogs AuditLog[]
+  analyticsMetrics AnalyticsMetric[]
+  documentInstances DocumentInstance[]
+  complianceRecords ComplianceRecord[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  phone         String?
+  company       String?
+  licenseNumber String?
+  specialties   Json
+  experience    Int      @default(0)
+  bio           String?
+  avatar        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+// Role and Permission Management
+model ProfessionalCategory {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  roles       UserRole[]
+
+  @@map("professional_categories")
+}
+
+model UserRole {
+  id         String   @id @default(cuid())
+  name       String
+  categoryId String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  category   ProfessionalCategory @relation(fields: [categoryId], references: [id])
+  users      User[]
+  permissions RolePermission[]
+  workflows  Workflow[]
+  documentTemplates DocumentTemplate[]
+  complianceRequirements ComplianceRequirement[]
+  analyticsDashboards AnalyticsDashboard[]
+  documentInstances DocumentInstance[]
+  analyticsMetrics AnalyticsMetric[]
+  tasks Task[]
+
+  @@map("user_roles")
+}
+
+model Permission {
+  id       String @id @default(cuid())
+  name     String
+  resource String
+  action   String // create, read, update, delete
+  conditions Json?
+
+  // Relations
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  // Relations
+  role         UserRole   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// Workflow Management
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  roleId      String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  role        UserRole      @relation(fields: [roleId], references: [id])
+  steps       WorkflowStep[]
+
+  @@map("workflows")
+}
+
+model WorkflowStep {
+  id               String   @id @default(cuid())
+  workflowId       String
+  name             String
+  description      String
+  order            Int
+  status           String   @default("pending") // pending, in_progress, completed, skipped, failed
+  data             Json
+  requiredFields   Json
+  validationRules  Json
+  estimatedDuration Int     @default(0) // in minutes
+  dependencies     Json // step IDs this depends on
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  workflow         Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@map("workflow_steps")
+}
+
+// Document Management
+model DocumentTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  roleId      String
+  category    String   // contract, form, agreement, disclosure, report, template
+  content     String
+  variables   Json
+  version     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  role        UserRole         @relation(fields: [roleId], references: [id])
+  instances   DocumentInstance[]
+
+  @@map("document_templates")
+}
+
+model DocumentInstance {
+  id         String    @id @default(cuid())
+  templateId String
+  userId     String
+  roleId     String
+  data       Json
+  status     String    @default("draft") // draft, pending, signed, expired, archived
+  signedAt   DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  template   DocumentTemplate @relation(fields: [templateId], references: [id])
+  user       User             @relation(fields: [userId], references: [id])
+  role       UserRole         @relation(fields: [roleId], references: [id])
+
+  @@map("document_instances")
+}
+
+// Compliance Management
+model ComplianceRequirement {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  roleId      String
+  category    String   // licensing, insurance, training, background_check, continuing_education, financial
+  requirements Json    // array of ComplianceCheck objects
+  frequency   String   // once, annually, quarterly, monthly, weekly, daily
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  role        UserRole         @relation(fields: [roleId], references: [id])
+  records     ComplianceRecord[]
+
+  @@map("compliance_requirements")
+}
+
+model ComplianceRecord {
+  id             String   @id @default(cuid())
+  requirementId  String
+  userId         String
+  status         String   @default("pending") // pending, verified, failed, expired
+  verifiedAt     DateTime?
+  verifiedBy     String?
+  evidence       Json?    // array of ComplianceEvidence objects
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id])
+  user          User                  @relation(fields: [userId], references: [id])
+
+  @@map("compliance_records")
+}
+
+// Analytics and Metrics
+model AnalyticsMetric {
+  id        String   @id @default(cuid())
+  roleId    String
+  userId    String
+  metric    String
+  value     Float
+  unit      String
+  category  String   // performance, productivity, quality, financial, compliance, user_engagement
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  // Relations
+  role      UserRole @relation(fields: [roleId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("analytics_metrics")
+}
+
+model AnalyticsDashboard {
+  id          String   @id @default(cuid())
+  roleId      String
+  name        String
+  description String
+  widgets     Json     // array of DashboardWidget objects
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  role        UserRole @relation(fields: [roleId], references: [id])
+
+  @@map("analytics_dashboards")
+}
+
+// Chat
+model ChatMessage {
+  id        String   @id @default(cuid())
+  room      String
+  userName  String
+  text      String
+  ts        DateTime @default(now())
+
+  @@index([room, ts])
+  @@map("chat_messages")
+}
+
+// Task and Reminder Management
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  roleId      String
+  userId      String
+  status      String     @default("pending") // pending, in_progress, completed, cancelled
+  priority    String     @default("medium") // low, medium, high, urgent
+  dueDate     DateTime?
+  completedAt DateTime?
+  tags        Json
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  role        UserRole   @relation(fields: [roleId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  reminders   Reminder[]
+
+  @@map("tasks")
+}
+
+model Reminder {
+  id          String    @id @default(cuid())
+  taskId      String
+  userId      String
+  type        String    // email, push, sms, in_app
+  scheduledAt DateTime
+  sentAt      DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@map("reminders")
+}
+
+// Notification System
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String    // info, success, warning, error, reminder
+  category  String
+  data      Json?
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+// Audit and Logging
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String
+  changes    Json?
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+// Note: _prisma_migrations is managed by Prisma automatically

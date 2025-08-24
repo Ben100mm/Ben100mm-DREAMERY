@@ -80,6 +80,8 @@ import { workflowEngine } from '../services/WorkflowEngine';
 import { documentTemplateService } from '../services/DocumentTemplateService';
 import { complianceService } from '../services/ComplianceService';
 import { RBACMiddleware, useRBAC } from '../components/RBACMiddleware';
+import { realtimeService } from '../services/RealtimeService';
+import ReactDOM from 'react-dom';
 
 // Brand colors
 const brandColors = {
@@ -1106,7 +1108,7 @@ const sidebarTabs = [
 
 const CloseProfessionalSupportPage: React.FC = () => {
   const theme = useTheme();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth() as any;
   const { state, dispatch, hasPermission, getRoleWorkflows, getRoleDocuments, getRoleCompliance } = useProfessionalSupport();
   const { hasPermission: rbacHasPermission } = useRBAC();
   
@@ -1211,6 +1213,353 @@ const CloseProfessionalSupportPage: React.FC = () => {
     setNotificationsMenuAnchor(null);
   };
 
+  // Collaboration chat wiring (minimal)
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState<Array<{ room: string; user: string; text: string; ts: number }>>([]);
+  const [chatJoined, setChatJoined] = useState(false);
+  const [isTyping, setIsTyping] = useState<string | null>(null);
+  const [onlineCount, setOnlineCount] = useState<number>(0);
+  const chatServerUrl = useMemo(() => (process.env.REACT_APP_CHAT_URL || 'http://localhost:5055'), []);
+
+  useEffect(() => {
+    if (!selectedRole) return;
+    // connect once
+    realtimeService.connect(chatServerUrl);
+    // join role room and wait for ack
+    realtimeService.join(selectedRole.id);
+    // subscribe
+    const off = realtimeService.onMessage((msg) => {
+      if (msg.room === selectedRole.id) {
+        setChatMessages((prev) => [...prev.slice(-99), msg]);
+      }
+    });
+    const offJoined = realtimeService.onJoined((room) => {
+      if (room === selectedRole.id) setChatJoined(true);
+    });
+    const offPresence = realtimeService.onPresence((room, ids) => {
+      if (room === selectedRole.id) setOnlineCount(ids.length);
+    });
+    const offTyping = realtimeService.onTyping((payload) => {
+      if (payload.room === selectedRole.id) {
+        setIsTyping(payload.user || 'someone');
+        setTimeout(() => setIsTyping(null), 1500);
+      }
+    });
+    return () => {
+      off();
+      offJoined();
+      offPresence();
+      offTyping();
+      setChatJoined(false);
+    };
+  }, [selectedRole, chatServerUrl]);
+
+  const handleSendChat = () => {
+    if (!selectedRole || !chatInput.trim()) return;
+    const displayName = 'anonymous';
+    const text = chatInput.trim();
+    // optimistic append so sender sees immediately
+    setChatMessages((prev) => [...prev.slice(-99), { room: selectedRole.id, user: displayName, text, ts: Date.now() }]);
+    realtimeService.send(selectedRole.id, displayName, text);
+    setChatInput('');
+  };
+
+  // Shared Queue component inline for speed
+  const SharedQueue: React.FC<{ roleId: string; roleName: string }> = ({ roleId, roleName }) => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [items, setItems] = useState<any[]>([]);
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5055/api/tasks?roleId=${encodeURIComponent(roleId)}`);
+        const json = await res.json();
+        setItems(json.data || []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => { fetchTasks(); }, [roleId]);
+    useEffect(() => {
+      const off = realtimeService.onTask((evt) => {
+        if (!evt?.task) return;
+        // update if event relates to this role
+        if (evt.task.roleId === roleId) fetchTasks();
+      });
+      return () => { off(); };
+    }, [roleId]);
+
+    const createTask = async () => {
+      if (!title.trim()) return;
+      await fetch('http://localhost:5055/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: title.trim(), description: desc, roleId, userId: 'system', priority: 'medium' })
+      });
+      setTitle('');
+      setDesc('');
+      fetchTasks();
+    };
+
+    const handoff = async (taskId: string, nextRoleId: string) => {
+      await fetch(`http://localhost:5055/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roleId: nextRoleId, status: 'pending' })
+      });
+      fetchTasks();
+    };
+
+    return (
+      <Box>
+        <Typography variant="body2" color="text.secondary" paragraph>
+          Tasks assigned to {roleName}. Create a task or handoff to another role.
+        </Typography>
+
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 2, mb: 2 }}>
+          <TextField label="Title" size="small" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <TextField label="Description" size="small" value={desc} onChange={(e) => setDesc(e.target.value)} />
+          <Button variant="contained" onClick={createTask}>Add Task</Button>
+        </Box>
+
+        <Card>
+          <CardContent>
+            {loading ? (
+              <Typography variant="body2">Loading…</Typography>
+            ) : items.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No tasks in queue.</Typography>
+            ) : (
+              <Box sx={{ display: 'grid', gap: 1 }}>
+                {items.map((t) => (
+                  <Card key={t.id} variant="outlined">
+                    <CardContent>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box>
+                          <Typography variant="subtitle1">{t.title}</Typography>
+                          <Typography variant="caption" color="text.secondary">{t.status} • {new Date(t.createdAt).toLocaleString()}</Typography>
+                          {t.description && (
+                            <Typography variant="body2" color="text.secondary">{t.description}</Typography>
+                          )}
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                          <FormControl size="small">
+                            <InputLabel id={`handoff-${t.id}`}>Handoff</InputLabel>
+                            <Select labelId={`handoff-${t.id}`} label="Handoff" onChange={(e) => handoff(t.id, String(e.target.value))} value="">
+                              <MenuItem value="">Select</MenuItem>
+                              <MenuItem value="disposition-agent">Disposition Agent</MenuItem>
+                              <MenuItem value="title-agent">Title Agent</MenuItem>
+                              <MenuItem value="escrow-officer">Escrow Officer</MenuItem>
+                              <MenuItem value="mortgage-broker">Mortgage Broker</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
+  const SharedDocuments: React.FC<{ roleId: string; roleName: string }> = ({ roleId, roleName }) => {
+    const [loading, setLoading] = useState(false);
+    const [items, setItems] = useState<any[]>([]);
+    const [shareRoles, setShareRoles] = useState<string[]>([]);
+
+    const fetchDocs = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5055/api/docs/shared?roleId=${encodeURIComponent(roleId)}`);
+        const json = await res.json();
+        setItems(json.data || []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      fetchDocs();
+      const off = realtimeService.onDoc(() => fetchDocs());
+      return () => { off(); };
+    }, [roleId]);
+
+    const updateShare = async (docId: string, add: string[], remove: string[]) => {
+      await fetch(`http://localhost:5055/api/docs/${docId}/share`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addRoles: add, removeRoles: remove })
+      });
+      fetchDocs();
+    };
+
+    return (
+      <Box>
+        <Typography variant="body2" color="text.secondary" paragraph>
+          Documents shared with {roleName}. Manage sharing targets and download.
+        </Typography>
+        <Card>
+          <CardContent>
+            {loading ? (
+              <Typography variant="body2">Loading…</Typography>
+            ) : items.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No shared documents.</Typography>
+            ) : (
+              <Box sx={{ display: 'grid', gap: 1 }}>
+                {items.map((d) => (
+                  <Card key={d.id} variant="outlined">
+                    <CardContent>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box>
+                          <Typography variant="subtitle1">{d.template?.name || d.templateId}</Typography>
+                          <Typography variant="caption" color="text.secondary">Status: {d.status} • {new Date(d.createdAt).toLocaleString()}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                          <Button size="small" href={`http://localhost:5055/api/docs/${d.id}/download`} target="_blank" rel="noopener noreferrer" variant="outlined">Download</Button>
+                          <FormControl size="small">
+                            <InputLabel id={`share-${d.id}`}>Share</InputLabel>
+                            <Select multiple labelId={`share-${d.id}`} label="Share" value={shareRoles} onChange={(e) => setShareRoles((e.target.value as string[]) || [])} renderValue={(sel) => (sel as string[]).join(', ')}>
+                              {professionalRoles.map((r) => (
+                                <MenuItem key={r.id} value={r.id}>{r.name}</MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          <Button size="small" variant="contained" onClick={() => updateShare(d.id, shareRoles, [])}>Apply</Button>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
+  const ComplianceHub: React.FC<{ roleId: string }> = ({ roleId }) => {
+    const [summary, setSummary] = useState<{ open: number; verifiedThisMonth: number; total: number } | null>(null);
+    const [records, setRecords] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [audit, setAudit] = useState<any[]>([]);
+
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [s, r, a] = await Promise.all([
+          fetch(`http://localhost:5055/api/compliance/summary?roleId=${encodeURIComponent(roleId)}`).then((res) => res.json()),
+          fetch(`http://localhost:5055/api/compliance/records?roleId=${encodeURIComponent(roleId)}`).then((res) => res.json()),
+          fetch(`http://localhost:5055/api/audit/logs?resource=compliance_record&limit=50`).then((res) => res.json()),
+        ]);
+        setSummary(s.data);
+        setRecords(r.data || []);
+        setAudit(a.data || []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      load();
+      const off = realtimeService.onCompliance(() => load());
+      return () => { off(); };
+    }, [roleId]);
+
+    const updateStatus = async (id: string, status: string) => {
+      await fetch(`http://localhost:5055/api/compliance/records/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      load();
+    };
+
+    return (
+      <Box sx={{ display: 'grid', gap: 2 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2 }}>
+          <Card><CardContent>
+            <Typography variant="subtitle2">Open Requirements</Typography>
+            <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>{summary?.open ?? 0}</Typography>
+          </CardContent></Card>
+          <Card><CardContent>
+            <Typography variant="subtitle2">Verified This Month</Typography>
+            <Typography variant="h4" sx={{ color: brandColors.success, fontWeight: 'bold' }}>{summary?.verifiedThisMonth ?? 0}</Typography>
+          </CardContent></Card>
+          <Card><CardContent>
+            <Typography variant="subtitle2">Total Records</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{summary?.total ?? 0}</Typography>
+          </CardContent></Card>
+        </Box>
+
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Typography variant="h6">Records</Typography>
+              <Button size="small" onClick={load}>Refresh</Button>
+            </Box>
+            {loading ? (
+              <Typography variant="body2">Loading…</Typography>
+            ) : records.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No records.</Typography>
+            ) : (
+              <Box sx={{ display: 'grid', gap: 1 }}>
+                {records.map((rec) => (
+                  <Card key={rec.id} variant="outlined">
+                    <CardContent>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box>
+                          <Typography variant="subtitle1">{rec.requirement?.name}</Typography>
+                          <Typography variant="caption" color="text.secondary">Status: {rec.status}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                          <FormControl size="small">
+                            <InputLabel id={`st-${rec.id}`}>Set Status</InputLabel>
+                            <Select labelId={`st-${rec.id}`} label="Set Status" value={rec.status} onChange={(e) => updateStatus(rec.id, e.target.value as string)}>
+                              <MenuItem value="pending">Pending</MenuItem>
+                              <MenuItem value="verified">Verified</MenuItem>
+                              <MenuItem value="failed">Failed</MenuItem>
+                              <MenuItem value="expired">Expired</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <Button size="small" variant="outlined" href={`#rec-${rec.id}`}>Details</Button>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>Recent Audit Logs</Typography>
+            {audit.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No audit entries.</Typography>
+            ) : (
+              <Box sx={{ display: 'grid', gap: 1 }}>
+                {audit.map((log) => (
+                  <Box key={log.id} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="caption">{new Date(log.timestamp).toLocaleString()}</Typography>
+                    <Typography variant="caption">{log.action} {log.resource} {log.resourceId}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
   // Render role-specific content
   const renderRoleContent = () => {
     if (!selectedRole) {
@@ -1224,6 +1573,96 @@ const CloseProfessionalSupportPage: React.FC = () => {
     }
 
     switch (activeTab) {
+      case 'collaboration':
+        return (
+          <Box sx={{ p: 3, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '320px 1fr' }, gap: 2 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Professionals Online
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Minimal scaffold: list professionals by role and availability.
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Chat
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Server: {chatServerUrl} · Room: {selectedRole.id} · {chatJoined ? 'Connected' : 'Connecting...'}
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateRows: '1fr auto', minHeight: 320, gap: 1 }}>
+                  <Paper variant="outlined" sx={{ p: 2, overflowY: 'auto' }}>
+                    {chatMessages.length === 0 ? (
+                      <Typography variant="caption" color="text.secondary">No messages yet.</Typography>
+                    ) : (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {chatMessages.map((m, idx) => (
+                          <Box key={idx} sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant="caption" color="text.secondary">{new Date(m.ts).toLocaleTimeString()} · {m.user}</Typography>
+                            <Typography variant="body2">{m.text}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+                  </Paper>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="Type a message..."
+                      value={chatInput}
+                      onChange={(e) => {
+                        setChatInput(e.target.value);
+                        if (selectedRole && e.target.value) {
+                          realtimeService.typing(selectedRole.id, 'anonymous');
+                        }
+                      }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSendChat(); }}
+                    />
+                    <Button variant="contained" onClick={handleSendChat}>Send</Button>
+                  </Box>
+                  {isTyping && (
+                    <Typography variant="caption" color="text.secondary">{isTyping} is typing…</Typography>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        );
+
+      case 'shared-queue':
+        return (
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              Shared Queue
+            </Typography>
+            <SharedQueue roleId={selectedRole.id} roleName={selectedRole.name} />
+          </Box>
+        );
+
+      case 'shared-documents':
+        return (
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              Shared Documents
+            </Typography>
+            <SharedDocuments roleId={selectedRole.id} roleName={selectedRole.name} />
+          </Box>
+        );
+
+      case 'compliance-hub':
+        return (
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              Compliance Hub
+            </Typography>
+            <ComplianceHub roleId={selectedRole.id} />
+          </Box>
+        );
       case 'overview':
   return (
           <Box sx={{ p: 3 }}>
@@ -39571,6 +40010,33 @@ const CloseProfessionalSupportPage: React.FC = () => {
               Navigation
               </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="overline" sx={{ color: 'text.secondary' }}>Cross-Role Tools</Typography>
+              {[
+                { id: 'collaboration', label: 'Collaboration', icon: <GroupIcon /> },
+                { id: 'shared-queue', label: 'Shared Queue', icon: <AssignmentIcon /> },
+                { id: 'shared-documents', label: 'Shared Documents', icon: <DescriptionIcon /> },
+                { id: 'compliance-hub', label: 'Compliance Hub', icon: <SecurityIcon /> },
+              ].map((tab) => (
+                <Button
+                  key={tab.id}
+                  variant={activeTab === tab.id ? 'contained' : 'text'}
+                  startIcon={tab.icon}
+                  onClick={() => setActiveTab(tab.id)}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    textAlign: 'left',
+                    color: activeTab === tab.id ? 'white' : 'text.primary',
+                    backgroundColor: activeTab === tab.id ? brandColors.primary : 'transparent',
+                    '&:hover': {
+                      backgroundColor: activeTab === tab.id ? brandColors.primary : 'rgba(0,0,0,0.04)',
+                    },
+                    mb: 0.5,
+                  }}
+                >
+                  {tab.label}
+                </Button>
+              ))}
+              <Divider sx={{ my: 1 }} />
               {selectedRole.id === 'acquisition-specialist' && [
                 { id: 'deal-pipeline', label: 'Deal Pipeline Management', icon: <AssignmentIcon /> },
                 { id: 'buyer-network', label: 'Buyer Network CRM', icon: <GroupIcon /> },

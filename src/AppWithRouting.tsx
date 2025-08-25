@@ -57,12 +57,13 @@ const FundPage = lazy(() => import('./pages/FundPage'));
 const OperatePage = lazy(() => import('./pages/OperatePage'));
 const LearnPage = lazy(() => import('./pages/LearnPage'));
 const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
-const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
-const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 import { RoleProvider, RoleContext } from './context/RoleContext';
 import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
-
+import { AnalysisProvider } from './context/AnalysisContext';
 import { theme } from "./theme";
+
+const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
 const AppContainer = styled.div`
   width: 100%;
@@ -140,7 +141,7 @@ const AppContent = () => {
       <Route path="/close/other" element={<OtherProfessionalPage />} />
       <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
       <Route path="/close/businesses" element={<CloseBusinessesPage />} />
-      <Route path="/analyze" element={<AnalyzePage />} />
+      <Route path="/analyze" element={<AnalysisProvider><AnalyzePage /></AnalysisProvider>} />
       <Route path="/manage" element={<ManagePage />} />
       <Route path="/invest" element={<InvestPage />} />
       <Route path="/fund" element={<FundPage />} />

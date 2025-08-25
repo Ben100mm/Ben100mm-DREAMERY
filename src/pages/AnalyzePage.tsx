@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -63,17 +63,22 @@ import {
   ExpandMore as ExpandMoreIcon,
   Delete as DeleteIcon,
   CheckCircle as CheckCircleIcon,
+  Undo as UndoIcon,
+  RestartAlt as RestartAltIcon,
+  HelpOutline,
 } from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
-import { AnalysisProvider } from '../context/AnalysisContext';
+import { AnalysisProvider, useAnalysis } from '../context/AnalysisContext';
 import { brandColors } from '../theme';
 import { useNavigate } from 'react-router-dom';
 import { calculateRiskScore, defaultMarketConditions } from '../utils/advancedCalculations';
 import AdvancedModelingTab from './AdvancedModelingTab';
+import { GuidedTour } from '../components/GuidedTour';
 
 const drawerWidth = 280;
 
 const AnalyzePage: React.FC = () => {
+  const { dealState } = useAnalysis();
   const [activeSection, setActiveSection] = useState<string>('station');
   const [drawerOpen, setDrawerOpen] = useState(true);
   const theme = useTheme();
@@ -100,6 +105,51 @@ const AnalyzePage: React.FC = () => {
     sensitivityRange: 90,
     sensitivitySteps: 14,
   });
+
+  // Advanced Modeling – local tab selection
+  const [advancedModelingTab, setAdvancedModelingTab] = useState<
+    'overview' | 'global' | 'seasonal' | 'exit' | 'tax' | 'refi' | 'risk' | 'sensitivity' | 'scenarios'
+  >('overview');
+
+  // Live Market Data State
+  const [marketDataLastUpdated, setMarketDataLastUpdated] = useState<string>('8/25/2025, 5:20:24 AM');
+  const [isUpdatingMarketData, setIsUpdatingMarketData] = useState<boolean>(false);
+
+  // Guided Tour State
+  const [isGuidedTourOpen, setIsGuidedTourOpen] = useState<boolean>(false);
+
+  // Guided Tour Handler
+  const handleGuidedTour = () => {
+    setIsGuidedTourOpen(true);
+  };
+
+  // Market Data Update Function
+  const updateMarketData = useCallback(() => {
+    setIsUpdatingMarketData(true);
+    // Simulate API call to fetch live market data
+    setTimeout(() => {
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString('en-US', {
+        month: 'numeric',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      const formattedTime = now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+      setMarketDataLastUpdated(`${formattedDate}, ${formattedTime}`);
+      setIsUpdatingMarketData(false);
+    }, 1000);
+  }, []);
+
+  // Auto-update market data every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(updateMarketData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [updateMarketData]);
   const [revenueInputs, setRevenueInputs] = useState({
     totalRooms: 33,
     averageDailyRate: 150,
@@ -2580,9 +2630,11 @@ const AnalyzePage: React.FC = () => {
         // Removed: Advanced Analysis merged into Advanced Modeling
         return null;
       case 'advanced-modeling':
+        // Local tabs for Advanced Modeling section
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Section Description */}
+            
+            {/* Banner */}
             <Box
               sx={{
                 p: 2,
@@ -2598,75 +2650,1907 @@ const AnalyzePage: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Overview Tiles (migrated from Advanced Analysis) */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' },
-                gap: 2,
-              }}
-            >
-              <Box
+            {/* Tabs (styled to match Documents page) */}
+            <Box sx={{ borderBottom: '1px solid', borderColor: brandColors.borders?.secondary || '#e5e7eb' }}>
+              <Tabs
+                value={advancedModelingTab}
+                onChange={(_, v) => setAdvancedModelingTab(v as typeof advancedModelingTab)}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
                 sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
+                  minHeight: 44,
+                  '& .MuiTab-root': {
+                    textTransform: 'none',
+                    minHeight: 44,
+                    fontWeight: 500,
+                    color: brandColors.text?.secondary || '#6b7280',
+                  },
+                  '& .Mui-selected': {
+                    color: brandColors.primary,
+                    fontWeight: 700,
+                  },
+                  '& .MuiTabs-indicator': {
+                    height: 3,
+                    borderRadius: 3,
+                    backgroundColor: brandColors.primary,
+                  },
                 }}
               >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Exit Strategies
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Refinance, Sale, 1031 Exchange
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Tax Analysis
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Depreciation, deductions, gains
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Seasonal Analysis
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Monthly occupancy patterns
-                </Typography>
-              </Box>
+                <Tab label="Overview" value="overview" />
+                <Tab label="Global Configuration" value="global" />
+                <Tab label="Seasonal & Market" value="seasonal" />
+                <Tab label="Exit Strategies" value="exit" />
+                <Tab label="Tax" value="tax" />
+                <Tab label="Refinance" value="refi" />
+                <Tab label="Risk Analysis" value="risk" />
+                <Tab label="Sensitivity & Inflation" value="sensitivity" />
+                <Tab label="Scenario Comparison" value="scenarios" />
+              </Tabs>
             </Box>
 
-            {/* Embedded Advanced Modeling Experience */}
-            <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
-              <AdvancedModelingTab />
+            {/* Tab Panels - placeholders for now */}
+            <Box sx={{ pt: 2 }}>
+              {advancedModelingTab === 'overview' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Advanced Calculations Overview
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                      Welcome to the Advanced Calculations Suite. This comprehensive tool provides sophisticated analysis for your real estate investments.
+                    </Typography>
+                  </Box>
+
+                  {/* Top Row Cards */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                    {/* Deal Information Card */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#e3f2fd',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Deal Information
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Property Type:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            Single Family
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Location:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            , 
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Purchase Price:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $160,000
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Operation Type:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            Buy & Hold
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Financing Type:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            Conventional
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Quick Actions Card */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#e3f2fd',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Quick Actions
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2, color: brandColors.text?.primary || '#111827' }}>
+                        <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                          Configure market conditions in Global Configuration
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                          Set up exit strategies for different timeframes
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                          Analyze risk factors and get scoring
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                          Save scenarios for comparison
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Bottom Row - Advanced Analysis Dashboard Card */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Advanced Analysis Dashboard
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280', mb: 3 }}>
+                      Configure market and seasonal inputs, then review calculated outputs.
+                    </Typography>
+                    
+                    {/* Calculation Completion Section */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Calculation Completion
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ flex: 1 }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={0}
+                            sx={{
+                              height: 8,
+                              borderRadius: 4,
+                              backgroundColor: '#e5e7eb',
+                              '& .MuiLinearProgress-bar': {
+                                backgroundColor: brandColors.primary,
+                              },
+                            }}
+                          />
+                        </Box>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280', minWidth: 'fit-content' }}>
+                          0 of 4 sections completed
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Quick Export Results Button */}
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: brandColors.primary,
+                        color: 'white',
+                        '&:hover': { backgroundColor: '#1976d2' },
+                      }}
+                    >
+                      Quick Export Results
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'global' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Global Configuration
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                      Configure market conditions, exit strategies, risk factors, and manage scenarios.
+                    </Typography>
+                  </Box>
+
+                  {/* Configuration Sections */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                    {/* Market Conditions */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#f9fafb',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Market Conditions
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Inflation Rate (%)"
+                            type="number"
+                            defaultValue="2.5"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Appreciation Rate (%)"
+                            type="number"
+                            defaultValue="4.0"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Rent Growth Rate (%)"
+                            type="number"
+                            defaultValue="3.0"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Exit Strategy Configuration */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#f9fafb',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Exit Strategy Configuration
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Market Appreciation (%)"
+                            type="number"
+                            defaultValue="4.0"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Selling Costs (%)"
+                            type="number"
+                            defaultValue="6"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Bottom Row - Risk Factors and Scenario Management */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                    {/* Risk Factor Configuration */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#f9fafb',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Risk Factor Configuration
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Market Volatility"
+                            type="number"
+                            defaultValue="5"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            label="Tenant Quality"
+                            type="number"
+                            defaultValue="7"
+                            size="small"
+                            sx={{ flex: 1 }}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Scenario Management */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: '#f9fafb',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                        Scenario Management
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: '#10b981',
+                          color: 'white',
+                          '&:hover': { backgroundColor: '#059669' },
+                        }}
+                      >
+                        Save Current Scenario
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'seasonal' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Seasonal & Market Analysis
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                      Configure seasonal adjustments and market conditions for accurate financial modeling.
+                    </Typography>
+                  </Box>
+
+                  {/* Content Cards */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                    {/* Seasonal Adjustments Card */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: 'white',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Seasonal Adjustments
+                        </Typography>
+                        <IconButton size="small" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <HelpOutline />
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Month Input */}
+                      <Box sx={{ mb: 3 }}>
+                        <TextField
+                          label="Month (1-12)"
+                          type="number"
+                          defaultValue="8"
+                          size="small"
+                          fullWidth
+                          inputProps={{ min: 1, max: 12 }}
+                        />
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                          Min: 1 | Max: 12
+                        </Typography>
+                      </Box>
+
+                      {/* Read-only Values */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Adjusted Vacancy:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            5.50%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Maintenance Multiplier:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            1.20
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Market Conditions Card */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: 'white',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Market Conditions
+                        </Typography>
+                        <IconButton size="small" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <HelpOutline />
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Market Dropdown */}
+                      <Box sx={{ mb: 3 }}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel>Market</InputLabel>
+                          <Select
+                            defaultValue="stable"
+                            label="Market"
+                          >
+                            <MenuItem value="stable">Stable</MenuItem>
+                            <MenuItem value="growing">Growing</MenuItem>
+                            <MenuItem value="declining">Declining</MenuItem>
+                            <MenuItem value="volatile">Volatile</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Box>
+
+                      {/* Read-only Values */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Adj Vacancy:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            5.00%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Adj Rent Growth:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            3.09%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Adj Appreciation:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            4.16%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Adj Cap Rate:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            6.00%
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'exit' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Exit Strategy Configuration
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                      Configure exit strategy parameters and view projected returns over different timeframes.
+                    </Typography>
+                  </Box>
+
+                  {/* Input Fields Card */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    {/* Input Fields */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+                      {/* Market Appreciation */}
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                          Market Appreciation (%)
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            type="number"
+                            defaultValue="4.0"
+                            size="small"
+                            sx={{ flex: 1 }}
+                            inputProps={{ step: 0.1, min: 0 }}
+                          />
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.75,
+                              backgroundColor: '#f3f4f6',
+                              border: '1px solid',
+                              borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              borderRadius: 1,
+                              minWidth: 32,
+                              textAlign: 'center',
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+
+                      {/* Selling Costs */}
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                          Selling Costs (%)
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            type="number"
+                            defaultValue="6"
+                            size="small"
+                            sx={{ flex: 1 }}
+                            inputProps={{ step: 0.1, min: 0 }}
+                          />
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.75,
+                              backgroundColor: '#f3f4f6',
+                              border: '1px solid',
+                              borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              borderRadius: 1,
+                              minWidth: 32,
+                              textAlign: 'center',
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Action Button */}
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: brandColors.primary,
+                        color: 'white',
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        px: 3,
+                        py: 1.5,
+                        '&:hover': { backgroundColor: '#1976d2' },
+                      }}
+                    >
+                      Recalculate Exit Strategies
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'tax' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                      Tax Implications
+                    </Typography>
+                    <IconButton size="small" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                      <HelpOutline />
+                    </IconButton>
+                  </Box>
+
+                  {/* Input Fields Card */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    {/* Input Fields - Two Columns */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+                      {/* Left Column */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {/* Annual Income */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Annual Income
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="120000"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                          <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                            Min: 0
+                          </Typography>
+                        </Box>
+
+                        {/* Mortgage Interest */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Mortgage Interest
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="12000"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                        </Box>
+
+                        {/* Depreciation */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Depreciation
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="8000"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                        </Box>
+                      </Box>
+
+                      {/* Right Column */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {/* Tax Bracket */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Tax Bracket (%)
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="24"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0, max: 50 }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                          />
+                          <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                            Min: 0 | Max: 50
+                          </Typography>
+                        </Box>
+
+                        {/* Property Tax */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Property Tax
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="6000"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                        </Box>
+
+                        {/* Repairs */}
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Repairs
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="3000"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Deduction Toggles */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 2 }}>
+                        Deduction Toggles
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                        <FormControlLabel
+                          control={<Switch defaultChecked />}
+                          label="Property Tax Deduction"
+                        />
+                        <FormControlLabel
+                          control={<Switch defaultChecked />}
+                          label="Depreciation Deduction"
+                        />
+                        <FormControlLabel
+                          control={<Switch defaultChecked />}
+                          label="Mortgage Interest Deduction"
+                        />
+                        <FormControlLabel
+                          control={<Switch defaultChecked />}
+                          label="Repair Expense Deduction"
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Calculated Results Section */}
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: '#f8fafc',
+                        borderRadius: 1,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 2 }}>
+                        Calculated Results
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Taxable Income:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $91,000
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Tax Savings:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $6,960
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Effective Tax Rate:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            18.2%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Net Income:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $105,120
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'refi' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Comprehensive Refinance Analysis
+                    </Typography>
+                  </Box>
+
+                  {/* Current Loan & Property Details Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Current Loan & Property Details
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                      {/* Left Column */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Current Loan Balance:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $200,000
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Current Interest Rate (%):
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            6.5%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Credit Score:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            750
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', fontStyle: 'italic' }}>
+                          Auto-updates new interest rate
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Refinance LTV (%):
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            70%
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', fontStyle: 'italic' }}>
+                          Maximum loan-to-value ratio
+                        </Typography>
+                      </Box>
+
+                      {/* Right Column */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Property Value:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $250,000
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Current Monthly Payment:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            $1,264
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            New Interest Rate (%):
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            5.5%
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            Closing Costs (%):
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            3%
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', fontStyle: 'italic' }}>
+                          Typical range: 2-5%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Refinance Scenarios Comparison Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Refinance Scenarios Comparison
+                    </Typography>
+                    
+                    {/* Scenario Tabs */}
+                    <Box sx={{ mb: 3 }}>
+                      <Tabs value="rate-term" sx={{ minHeight: 40 }}>
+                        <Tab 
+                          label="Rate & Term Refinance" 
+                          value="rate-term"
+                          sx={{
+                            backgroundColor: brandColors.primary,
+                            color: 'white',
+                            borderRadius: '8px 8px 0 0',
+                            '&.Mui-selected': { backgroundColor: brandColors.primary },
+                          }}
+                        />
+                        <Tab 
+                          label="Cash-Out Refinance" 
+                          value="cash-out"
+                          sx={{ color: brandColors.text?.secondary || '#6b7280' }}
+                        />
+                        <Tab 
+                          label="Cash-In Refinance" 
+                          value="cash-in"
+                          sx={{ color: brandColors.text?.secondary || '#6b7280' }}
+                        />
+                      </Tabs>
+                      <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 1 }}>
+                        Lower your interest rate and/or change your loan term
+                      </Typography>
+                    </Box>
+
+                    {/* Key Metrics */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 600 }}>
+                          $128.42
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Monthly Savings
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#fffbeb', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#f59e0b', fontWeight: 600 }}>
+                          46.7 months
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Break-even
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#fef2f2', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#ef4444', fontWeight: 600 }}>
+                          80.0%
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          New LTV
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Pros and Cons */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: '#10b981', mb: 1 }}>
+                          Pros:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                            ✓ Lower monthly payment
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                            ✓ Lower total interest paid
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                            ✓ No cash required
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: '#ef4444', mb: 1 }}>
+                          Cons:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                            ⚠ No equity access
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                            ⚠ Closing costs to consider
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Financial Metrics Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Financial Metrics
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 600 }}>
+                          $17,922.66
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Net Present Value
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 600 }}>
+                          $46,231.92
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Total Savings (30 years)
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#fef2f2', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#ef4444', fontWeight: 600 }}>
+                          $6,000
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Closing Costs
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Risk Analysis Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Risk Analysis
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 600 }}>
+                          2/10
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Risk Score
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#fef2f2', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#ef4444', fontWeight: 600 }}>
+                          80.0%
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Current LTV
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1 }}>
+                        <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 600 }}>
+                          Good
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Credit Rating
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Market Intelligence & Strategy Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Market Intelligence & Strategy
+                    </Typography>
+                    
+                    {/* Current Market Rates Table */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Current Market Rates by Credit Score:
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, maxWidth: 400 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1, backgroundColor: '#f9fafb' }}>
+                          <Typography variant="body2">800+ (Excellent):</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>5.25%</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1, backgroundColor: '#f9fafb' }}>
+                          <Typography variant="body2">740-799 (Good):</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>5.5%</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1, backgroundColor: '#f9fafb' }}>
+                          <Typography variant="body2">670-739 (Fair):</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>6%</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1, backgroundColor: '#f9fafb' }}>
+                          <Typography variant="body2">Below 670 (Poor):</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>7%</Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Strategy Recommendations */}
+                    <Box sx={{ mb: 3 }}>
+                      <Box sx={{ p: 2, backgroundColor: '#f0f9ff', borderRadius: 1, border: '1px solid #0ea5e9', mb: 2 }}>
+                        <Typography variant="body2" sx={{ color: '#0ea5e9', fontWeight: 600 }}>
+                          ✓ Excellent refinance candidate - proceed with confidence
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Refinance Strategy Recommendations:
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2, color: brandColors.text?.primary || '#111827' }}>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Best time to refinance: When rates are 0.5%+ lower than current
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Seasonal timing: Rates typically lowest in winter months
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Rate lock strategy: Lock rates when you're 30-45 days from closing
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Documentation & Compliance Checklist Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Documentation & Compliance Checklist
+                    </Typography>
+                    
+                    {/* Required Documents */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Required Documents:
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 1 }}>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Income verification (W-2s, pay stubs)
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Asset statements (bank accounts, investments)
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Property insurance information
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Current mortgage statement
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Property tax information
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                          ✓ Credit report authorization
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Timeline Planning */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Timeline Planning:
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2, color: brandColors.text?.primary || '#111827' }}>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Application to approval: 2-3 weeks
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Rate lock period: 30-60 days
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Closing preparation: 1-2 weeks
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Total timeline: 4-6 weeks
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Compliance Requirements */}
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                        Compliance Requirements:
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2, color: brandColors.text?.primary || '#111827' }}>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Owner-occupied: 6-month seasoning requirement
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Investment properties: 12-month seasoning requirement
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Maximum LTV: 80% for investment properties
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'risk' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Risk Analysis
+                    </Typography>
+                  </Box>
+
+                  {/* Risk Factor Configuration Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 1 }}>
+                      Risk Factor Configuration
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280', mb: 3 }}>
+                      Configure risk factors to assess investment risk and generate risk scores.
+                    </Typography>
+                    
+                    {/* Input Fields */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                          Market Volatility
+                        </Typography>
+                        <TextField
+                          type="number"
+                          defaultValue="5"
+                          size="small"
+                          fullWidth
+                          inputProps={{ min: 1, max: 10, step: 1 }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: brandColors.primary,
+                              },
+                            },
+                          }}
+                        />
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                          Scale: 1 (Low) to 10 (High)
+                        </Typography>
+                      </Box>
+                      
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                          Tenant Quality
+                        </Typography>
+                        <TextField
+                          type="number"
+                          defaultValue="7"
+                          size="small"
+                          fullWidth
+                          inputProps={{ min: 1, max: 10, step: 1 }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: brandColors.primary,
+                              },
+                            },
+                          }}
+                        />
+                        <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                          Scale: 1 (Poor) to 10 (Excellent)
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Recalculate Button */}
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: brandColors.primary,
+                        color: 'white',
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        px: 3,
+                        py: 1.5,
+                        '&:hover': { backgroundColor: '#1976d2' },
+                      }}
+                    >
+                      Recalculate Risk Analysis
+                    </Button>
+                  </Box>
+
+                  {/* Risk Analysis Results Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Risk Analysis Results
+                    </Typography>
+                    
+                    {/* Risk Score Display */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#f0f9ff', borderRadius: 1, border: '1px solid #0ea5e9' }}>
+                        <Typography variant="h4" sx={{ color: '#10b981', fontWeight: 700, mb: 1 }}>
+                          4.4/10
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Overall Risk Score
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ textAlign: 'center', p: 2, backgroundColor: '#fffbeb', borderRadius: 1, border: '1px solid #f59e0b' }}>
+                        <Typography variant="h4" sx={{ color: '#f59e0b', fontWeight: 700, mb: 1 }}>
+                          Medium
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          Risk Level
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Recommendation */}
+                    <Box sx={{ p: 2, backgroundColor: '#f0f9ff', borderRadius: 1, border: '1px solid #0ea5e9' }}>
+                      <Typography variant="body2" sx={{ color: '#0ea5e9', fontWeight: 600 }}>
+                        Recommendation: Implement stricter tenant screening and lease terms
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Confidence Intervals Section */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: '#fefce8',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: '#f59e0b',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#92400e', mb: 2 }}>
+                      Confidence Intervals (95%)
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography variant="body2" sx={{ color: '#92400e', fontWeight: 500 }}>
+                        Based on market volatility of 5/10
+                      </Typography>
+                      
+                      <Box component="ul" sx={{ m: 0, pl: 2, color: '#92400e' }}>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Higher volatility = wider confidence intervals
+                        </Typography>
+                        <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+                          Lower volatility = more precise projections
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'sensitivity' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Sensitivity & Inflation Analysis
+                    </Typography>
+                  </Box>
+
+                  {/* Two Column Layout */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 3 }}>
+                    
+                    {/* Left Section: Sensitivity Analysis */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: 'white',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Sensitivity Analysis
+                        </Typography>
+                        <IconButton size="small" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <HelpOutline />
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Input Fields */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Base Rent
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="2500"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Base Expenses
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="1500"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Property Value
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="350000"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Base Cash Flow
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="1000"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                      </Box>
+
+                      {/* Scenario Results */}
+                      <Box sx={{ p: 2, backgroundColor: '#f8fafc', borderRadius: 1, border: '1px solid', borderColor: brandColors.borders?.secondary || '#e5e7eb' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                          Scenario Results:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              Scenario 1:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: '#ef4444' }}>
+                              Cash Flow 600 (-40.0%)
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              Scenario 2:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: '#10b981' }}>
+                              Cash Flow 1000 (0.0%)
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              Scenario 3:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: '#10b981' }}>
+                              Cash Flow 1325 (+32.5%)
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Right Section: Inflation Adjustments */}
+                    <Box
+                      sx={{
+                        p: 3,
+                        backgroundColor: 'white',
+                        borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                          Inflation Adjustments
+                        </Typography>
+                        <IconButton size="small" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <HelpOutline />
+                        </IconButton>
+                      </Box>
+                      
+                      {/* Input Fields */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Monthly Rent
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="2500"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Monthly Expenses
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="1500"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Property Value
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="350000"
+                            size="small"
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Inflation Rate (%)
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="2.5"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 0, max: 20, step: 0.1 }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                          <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                            Min: 0 | Max: 20
+                          </Typography>
+                        </Box>
+                        
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 1 }}>
+                            Years
+                          </Typography>
+                          <TextField
+                            type="number"
+                            defaultValue="10"
+                            size="small"
+                            fullWidth
+                            inputProps={{ min: 1, max: 50, step: 1 }}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                '& fieldset': {
+                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: brandColors.primary,
+                                },
+                              },
+                            }}
+                          />
+                          <Typography variant="caption" sx={{ color: brandColors.text?.secondary || '#6b7280', mt: 0.5, display: 'block' }}>
+                            Min: 1 | Max: 50
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      {/* Calculated Adjusted Values */}
+                      <Box sx={{ p: 2, backgroundColor: '#f0f9ff', borderRadius: 1, border: '1px solid #0ea5e9' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: '#0ea5e9', mb: 1 }}>
+                          Calculated Adjusted Values:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              Adjusted Rent:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                              $3,200.21
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                              Adjusted Expenses:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                              $1,920.13
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
+                              Adjusted Property Value:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                              $448,029.59
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {advancedModelingTab === 'scenarios' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Main Heading */}
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
+                      Scenario Comparison
+                    </Typography>
+                  </Box>
+
+                  {/* Information Message Box */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: '#e3f2fd',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: '#90caf9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                    }}
+                  >
+                    {/* Information Icon */}
+                    <Box
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        backgroundColor: '#1976d2',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        flexShrink: 0,
+                      }}
+                    >
+                      i
+                    </Box>
+                    
+                    {/* Information Text */}
+                    <Typography variant="body1" sx={{ color: '#1565c0', fontWeight: 500 }}>
+                      No scenarios saved yet. Go to the Global Configuration tab to save your first scenario.
+                    </Typography>
+                  </Box>
+
+                  {/* Future Content Placeholder */}
+                  <Box
+                    sx={{
+                      p: 3,
+                      backgroundColor: 'white',
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
+                      Scenario Management Features
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280', mb: 2 }}>
+                      Once you've saved scenarios in Global Configuration, you'll be able to:
+                    </Typography>
+                    <Box component="ul" sx={{ m: 0, pl: 2, color: brandColors.text?.primary || '#111827' }}>
+                      <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                        Compare multiple investment scenarios side-by-side
+                      </Typography>
+                      <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                        Analyze the impact of different market conditions
+                      </Typography>
+                      <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                        View sensitivity analysis across various parameters
+                      </Typography>
+                      <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                        Export scenario comparison reports
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Box>
         );
@@ -2681,7 +4565,7 @@ const AnalyzePage: React.FC = () => {
 
   return (
     <AnalysisProvider>
-      <PageAppBar title="Dreamery – Analyze" />
+      <PageAppBar title="Dreamery – Analyse" />
       <Box sx={{ display: 'flex', height: '100vh', pt: '64px' }}>
         {/* Sidebar */}
         <Box
@@ -2712,6 +4596,42 @@ const AnalyzePage: React.FC = () => {
                   Station
                 </Box>
               </Box>
+
+              {/* Live Market Data Update Indicator */}
+              <Box sx={{ px: 3, py: 1, mb: 2 }}>
+                <Box
+                  onClick={updateMarketData}
+                  sx={{
+                    p: 2,
+                    backgroundColor: 'white',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: brandColors.primary,
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: '#f8fafc',
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    },
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: brandColors.primary, fontWeight: 600, mb: 0.5 }}>
+                    Live Market Data
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: brandColors.primary, display: 'block' }}>
+                    {isUpdatingMarketData ? 'Updating...' : marketDataLastUpdated}
+                  </Typography>
+                  {isUpdatingMarketData && (
+                    <Box sx={{ mt: 1 }}>
+                      <CircularProgress size={16} sx={{ color: brandColors.primary }} />
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+
+
               
               {/* Navigation Items */}
               {sections.map((section) => (
@@ -2812,7 +4732,7 @@ const AnalyzePage: React.FC = () => {
             overflow: 'auto',
           }}
         >
-          <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white' }}>
+          <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white', position: 'relative' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               {activeSection === 'dashboard' && <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />}
               {activeSection === 'pro-forma' && <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />}
@@ -2830,12 +4750,51 @@ const AnalyzePage: React.FC = () => {
               {activeSection === 'advanced-analysis' && 'Seasonal & Market, Exit Strategies, Tax, Refinance, Sensitivity, and Scenario Comparison content will be organized here.'}
               {activeSection === 'advanced-modeling' && 'Machine learning models, predictive analytics, and statistical modeling for real estate investment decisions.'}
             </Typography>
+            
+            {/* Guided Tour Button positioned in top right corner - only visible for Advanced Modeling */}
+            {activeSection === 'advanced-modeling' && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 12,
+                  right: 12,
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<HelpOutline />}
+                  onClick={handleGuidedTour}
+                  sx={{
+                    borderColor: 'white',
+                    color: 'white',
+                    py: 0.5,
+                    px: 1.5,
+                    fontSize: '0.75rem',
+                    minWidth: 'auto',
+                    '&:hover': { 
+                      borderColor: 'white', 
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white'
+                    },
+                  }}
+                >
+                  Guided Tour
+                </Button>
+              </Box>
+            )}
           </Paper>
 
           {/* Content Area */}
           {renderContent()}
         </Box>
       </Box>
+      
+      {/* Guided Tour Modal */}
+      <GuidedTour
+        isOpen={isGuidedTourOpen}
+        onClose={() => setIsGuidedTourOpen(false)}
+      />
     </AnalysisProvider>
   );
 };

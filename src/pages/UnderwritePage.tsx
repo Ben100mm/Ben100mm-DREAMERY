@@ -6186,8 +6186,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
         {/* Income Section */}
-        {false && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ fontWeight: 700 }}>Income</Typography>
@@ -6672,7 +6671,6 @@ const UnderwritePage: React.FC = () => {
               </AccordionDetails>
             </Accordion>
           </Card>
-        )}
 
         {/* Operating Expenses Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>

@@ -70,8 +70,8 @@ A modern, responsive real estate platform homepage built with React and Material
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Ben100mm/Ben100mm-dreamery-software-VibeCursor.git
-cd dreamery-homepage
+git clone https://github.com/Ben100mm/Ben100mm-dreamery-operating-software.git
+cd dreamery-operating-software
 ```
 
 2. Install dependencies:
@@ -89,7 +89,7 @@ The app will be available at `http://localhost:3000`
 ## Project Structure
 
 ```
-dreamery-homepage/
+dreamery-operating-software/
 ├── public/                 # Static assets
 │   ├── favicon.png
 │   ├── hero-background.jpg

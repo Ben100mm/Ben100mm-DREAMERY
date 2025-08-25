@@ -6998,14 +6998,32 @@ const UnderwritePage: React.FC = () => {
                     Pro Forma Analysis
                   </Typography>
                   <Chip
-                    label="Premium Feature"
-                    color="primary"
+                    label="Moved to Analyze Page"
+                    color="info"
                     variant="outlined"
                     size="small"
                   />
                 </Box>
               </AccordionSummary>
               <AccordionDetails>
+                <Box sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
+                    🚀 Pro Forma Analysis has been moved!
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 3 }}>
+                    All Pro Forma Analysis functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate('/analyze')}
+                    sx={{ mr: 2 }}
+                  >
+                    Go to Analyze Page
+                  </Button>
+                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+                    Features include: Presets, Custom settings, Sensitivity analysis, Benchmarks, Revenue analysis, and Break-even calculations.
+                  </Typography>
+                </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   {/* Section Description */}
                   <Box
@@ -8232,20 +8250,38 @@ const UnderwritePage: React.FC = () => {
         {/* Risk Assessment Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Risk Assessment
-                </Typography>
-                <Chip
-                  label="Premium Feature"
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
+                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Risk Assessment
+                  </Typography>
+                  <Chip
+                    label="Moved to Analyze Page"
+                    color="info"
+                    variant="outlined"
+                    size="small"
+                  />
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
+                    🚀 Risk Assessment has been moved!
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 3 }}>
+                    All Risk Assessment functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate('/analyze')}
+                    sx={{ mr: 2 }}
+                  >
+                    Go to Analyze Page
+                  </Button>
+                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+                    Features include: Risk scoring, Risk factors, Market conditions, Property age factors, and Comprehensive risk mitigation.
+                  </Typography>
+                </Box>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 {/* Section Description */}
                 <Box
@@ -8468,20 +8504,38 @@ const UnderwritePage: React.FC = () => {
         {/* Advanced Analysis Summary + CTA */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Advanced Analysis
-                </Typography>
-                <Chip
-                  label="Premium Feature"
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
+                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Advanced Analysis
+                  </Typography>
+                  <Chip
+                    label="Moved to Analyze Page"
+                    color="info"
+                    variant="outlined"
+                    size="small"
+                  />
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ p: 3, textAlign: 'center' }}>
+                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
+                    🚀 Advanced Analysis has been moved!
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 3 }}>
+                    All Advanced Analysis functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate('/analyze')}
+                    sx={{ mr: 2 }}
+                  >
+                    Go to Analyze Page
+                  </Button>
+                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+                    Features include: Exit strategies, Tax implications, Seasonal adjustments, Market analysis, and Advanced modeling.
+                  </Typography>
+                </Box>
               {/* Section Description */}
               <Box
                 sx={{

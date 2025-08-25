@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  Tabs,
-  Tab,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-  Alert,
-  Divider,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  CircularProgress,
-  Tooltip,
-  Snackbar,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Chip from "@mui/material/Chip";
+import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputAdornment from "@mui/material/InputAdornment";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import CircularProgress from "@mui/material/CircularProgress";
+import Tooltip from "@mui/material/Tooltip";
+import Snackbar from "@mui/material/Snackbar";
 import { brandColors } from "../theme";
 import MuiAlert from "@mui/material/Alert";
 import {

@@ -1,79 +1,75 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  ListSubheader,
-  FormControl,
-  InputLabel,
-  IconButton,
-  Tabs,
-  Tab,
-  Card,
-  CardContent,
-  Chip,
-  LinearProgress,
-  Alert,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Checkbox,
-  FormControlLabel,
-  Badge,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  AppBar,
-  Toolbar,
-  Avatar,
-  useTheme,
-  Menu,
-} from '@mui/material';
-import {
-  Support as SupportIcon,
-  People as PeopleIcon,
-  Settings as SettingsIcon,
-  Archive as ArchiveIcon,
-  IntegrationInstructions as IntegrationIcon,
-  ArrowBack as ArrowBackIcon,
-  ExpandMore as ExpandMoreIcon,
-  CheckCircle as CheckCircleIcon,
-  RadioButtonUnchecked as RadioButtonUncheckedIcon,
-  Assignment as AssignmentIcon,
-  Description as DescriptionIcon,
-  Security as SecurityIcon,
-  Analytics as AnalyticsIcon,
-  Assessment as AssessmentIcon,
-  Help as HelpIcon,
-  Business as BusinessIcon,
-  AccountTree as WorkflowIcon,
-  Folder as FolderIcon,
-  LibraryBooks as LibraryIcon,
-  Chat as ChatIcon,
-  Group as GroupIcon,
-  TrendingUp as TrendingUpIcon,
-  Report as ReportIcon,
-  SupportAgent as SupportAgentIcon,
-  Settings as SettingsIcon2,
-  Extension as ExtensionIcon,
-  Notifications as NotificationsIcon,
-  AccountCircle as AccountCircleIcon,
-  Search as SearchIcon,
-  LocationOn as LocationOnIcon,
-  Map as MapIcon,
-} from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import ListSubheader from '@mui/material/ListSubheader';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
+import LinearProgress from '@mui/material/LinearProgress';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Badge from '@mui/material/Badge';
+import Tooltip from '@mui/material/Tooltip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import { useTheme } from '@mui/material/styles';
+import SupportIcon from '@mui/icons-material/Support';
+import PeopleIcon from '@mui/icons-material/People';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import IntegrationIcon from '@mui/icons-material/IntegrationInstructions';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import DescriptionIcon from '@mui/icons-material/Description';
+import SecurityIcon from '@mui/icons-material/Security';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import HelpIcon from '@mui/icons-material/Help';
+import BusinessIcon from '@mui/icons-material/Business';
+import WorkflowIcon from '@mui/icons-material/AccountTree';
+import FolderIcon from '@mui/icons-material/Folder';
+import LibraryIcon from '@mui/icons-material/LibraryBooks';
+import ChatIcon from '@mui/icons-material/Chat';
+import GroupIcon from '@mui/icons-material/Group';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import ReportIcon from '@mui/icons-material/Report';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import SettingsIcon2 from '@mui/icons-material/Settings';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MapIcon from '@mui/icons-material/Map';
 import { useAuth } from '../contexts/AuthContext';
 import { useProfessionalSupport } from '../context/ProfessionalSupportContext';
 import { workflowEngine } from '../services/WorkflowEngine';
@@ -81,7 +77,19 @@ import { documentTemplateService } from '../services/DocumentTemplateService';
 import { complianceService } from '../services/ComplianceService';
 import { RBACMiddleware, useRBAC } from '../components/RBACMiddleware';
 import { realtimeService } from '../services/RealtimeService';
-import ReactDOM from 'react-dom';
+// ReactDOM import not used; removed
+import { buildApiUrl, getChatServerUrl } from '../utils/env';
+import { professionalRoles as professionalRolesData, dropdownConfig as dropdownConfigData } from '../data/professionalRoles';
+
+// Lazily load frequently rendered icons to trim initial bundle
+const LazySupportIcon = React.lazy(() => import('@mui/icons-material/Support'));
+const LazyPeopleIcon = React.lazy(() => import('@mui/icons-material/People'));
+const LazyWorkflowIcon = React.lazy(() => import('@mui/icons-material/AccountTree'));
+const LazyFolderIcon = React.lazy(() => import('@mui/icons-material/Folder'));
+const LazySecurityIcon = React.lazy(() => import('@mui/icons-material/Security'));
+const LazyAnalyticsIcon = React.lazy(() => import('@mui/icons-material/Analytics'));
+const LazyReportIcon = React.lazy(() => import('@mui/icons-material/Report'));
+const LazySettingsIcon = React.lazy(() => import('@mui/icons-material/Settings'));
 
 // Brand colors
 const brandColors = {
@@ -94,9 +102,10 @@ const brandColors = {
   info: '#3182ce'
 };
 
-// Professional roles with enhanced data - ALL 89 ROLES
-const professionalRoles = [
-  // Title & Escrow
+// Professional roles moved to data module
+const professionalRoles = professionalRolesData;
+/*
+/*  // Title & Escrow
   {
     id: 'title-agent',
     name: 'Title Agent',
@@ -1036,38 +1045,10 @@ const professionalRoles = [
     features: ['Investment Analysis', 'Portfolio Management', 'Risk Assessment', 'Market Research'],
     coreComponents: ['Document Management', 'Compliance', 'Transaction Management'],
   },
-];
+];*/
 
-// Dropdown configuration: categories and the exact roles to display (categories are visual only)
-const dropdownConfig: Array<{ category: string; roles: string[] }> = [
-  { category: 'Acquisition Specialists', roles: ['Acquisition Specialist', 'Disposition Agent'] },
-  { category: 'Title', roles: ['Title Agent', 'Escrow Officer', 'Notary Public'] },
-  { category: 'Appraisers', roles: ['Residential Appraiser', 'Commercial Appraiser'] },
-  { category: 'Inspectors', roles: ['Home Inspector', 'Commercial Inspector', 'Energy Inspector'] },
-  { category: 'Surveyors', roles: ['Land Surveyor'] },
-  { category: 'Insurance Agents', roles: ['Insurance Agent', 'Title Insurance Agent'] },
-  { category: 'Mortgage Lenders / Brokers', roles: [
-    'Mortgage Broker', 'Mortgage Lender', 'Loan Officer', 'Mortgage Underwriter', 'Hard Money Lender', 'Private Lender', 'Limited Partner (LP)', 'Banking Advisor'] },
-  { category: 'Creative Finance Specialists', roles: [
-    'Seller Finance Purchase Specialist', 'Subject To Existing Mortgage Purchase Specialist', 'Trust Acquisition Specialist', 'Hybrid Purchase Specialist', 'Lease Option Specialist'] },
-  { category: 'Contractors / GC', roles: [
-    'General Contractor', 'Electrical Contractor', 'Plumbing Contractor', 'HVAC Contractor', 'Roofing Contractor', 'Painting Contractor', 'Landscaping Contractor', 'Flooring Contractor', 'Kitchen Contractor', 'Bathroom Contractor'] },
-  { category: 'Design & Architecture', roles: [
-    'Interior Designer', 'Architect', 'Landscape Architect', 'Kitchen Designer', 'Bathroom Designer', 'Lighting Designer', 'Furniture Designer', 'Color Consultant'] },
-  { category: 'Permit Expeditors', roles: ['Permit Expeditor'] },
-  { category: 'Energy Consultants', roles: ['Energy Consultant'] },
-  { category: 'Property Managers', roles: [
-    'Property Manager', 'Long-term Rental Property Manager', 'Short-term Rental Property Manager', 'STR Setup & Manager'] },
-  { category: 'Cleaning & Maintenance', roles: [
-    'Housekeeper', 'Landscape Cleaner', 'Turnover Specialist', 'Handyman', 'Landscaper', 'Arborist'] },
-  { category: 'Tenant Services', roles: ['Tenant Screening Agent', 'Leasing Agent'] },
-  { category: 'Accounting', roles: ['Bookkeeper', 'Certified Public Accountant (CPA)', 'Accountant'] },
-  { category: 'Marketing & Advertisement', roles: ['Photographer', 'Videographer', 'AR/VR Developer', 'Digital Twins Developer'] },
-  { category: 'Legal Services', roles: [
-    'Estate Planning Attorney', '1031 Exchange Intermediary', 'Entity Formation Service Provider', 'Escrow Service Provider', 'Legal Notary Service Provider'] },
-  { category: 'Other', roles: [
-    'Real Estate Consultant', 'Real Estate Educator', 'Financial Advisor', 'Tax Advisor', 'Relocation Specialist', 'Real Estate Investment Advisor'] },
-];
+// Dropdown configuration moved to data module
+const dropdownConfig: Array<{ category: string; roles: string[] }> = dropdownConfigData;
 
 // Build dropdown groups and a lookup map from id -> role (creates lightweight roles if missing)
 const buildDropdownGroups = (roles: typeof professionalRoles, brand: typeof brandColors) => {
@@ -1093,17 +1074,17 @@ const buildDropdownGroups = (roles: typeof professionalRoles, brand: typeof bran
   });
   return { groups, idToRole };
 };
-// Sidebar tabs with permissions
+// Sidebar tabs with permissions (icons lazy-loaded)
 const sidebarTabs = [
-  { id: 'overview', label: 'Overview', icon: <SupportIcon />, permission: 'view_overview' },
-  { id: 'roles', label: 'Professional Roles', icon: <PeopleIcon />, permission: 'view_roles' },
-  { id: 'workflows', label: 'Workflows', icon: <WorkflowIcon />, permission: 'view_workflows' },
-  { id: 'documents', label: 'Document Hub', icon: <FolderIcon />, permission: 'view_documents' },
-  { id: 'compliance', label: 'Compliance', icon: <SecurityIcon />, permission: 'view_compliance' },
-  { id: 'analytics', label: 'Analytics', icon: <AnalyticsIcon />, permission: 'view_analytics' },
-  { id: 'reports', label: 'Reports', icon: <ReportIcon />, permission: 'view_reports' },
-  { id: 'settings', label: 'Settings', icon: <SettingsIcon />, permission: 'view_settings' },
-  { id: 'test', label: 'System Test', icon: <SettingsIcon />, permission: 'view_settings' },
+  { id: 'overview', label: 'Overview', icon: <React.Suspense fallback={null}><LazySupportIcon /></React.Suspense>, permission: 'view_overview' },
+  { id: 'roles', label: 'Professional Roles', icon: <React.Suspense fallback={null}><LazyPeopleIcon /></React.Suspense>, permission: 'view_roles' },
+  { id: 'workflows', label: 'Workflows', icon: <React.Suspense fallback={null}><LazyWorkflowIcon /></React.Suspense>, permission: 'view_workflows' },
+  { id: 'documents', label: 'Document Hub', icon: <React.Suspense fallback={null}><LazyFolderIcon /></React.Suspense>, permission: 'view_documents' },
+  { id: 'compliance', label: 'Compliance', icon: <React.Suspense fallback={null}><LazySecurityIcon /></React.Suspense>, permission: 'view_compliance' },
+  { id: 'analytics', label: 'Analytics', icon: <React.Suspense fallback={null}><LazyAnalyticsIcon /></React.Suspense>, permission: 'view_analytics' },
+  { id: 'reports', label: 'Reports', icon: <React.Suspense fallback={null}><LazyReportIcon /></React.Suspense>, permission: 'view_reports' },
+  { id: 'settings', label: 'Settings', icon: <React.Suspense fallback={null}><LazySettingsIcon /></React.Suspense>, permission: 'view_settings' },
+  { id: 'test', label: 'System Test', icon: <React.Suspense fallback={null}><LazySettingsIcon /></React.Suspense>, permission: 'view_settings' },
 ];
 
 const CloseProfessionalSupportPage: React.FC = () => {
@@ -1219,13 +1200,14 @@ const CloseProfessionalSupportPage: React.FC = () => {
   const [chatJoined, setChatJoined] = useState(false);
   const [isTyping, setIsTyping] = useState<string | null>(null);
   const [onlineCount, setOnlineCount] = useState<number>(0);
-  const chatServerUrl = useMemo(() => (process.env.REACT_APP_CHAT_URL || 'http://localhost:5055'), []);
+  const chatServerUrl = useMemo(() => getChatServerUrl(), []);
 
   useEffect(() => {
     if (!selectedRole) return;
-    // connect once
+    // Only connect realtime for tabs that need it
+    const needsRealtime = ['collaboration', 'shared-queue', 'shared-documents', 'compliance-hub'].includes(activeTab);
+    if (!needsRealtime) return;
     realtimeService.connect(chatServerUrl);
-    // join role room and wait for ack
     realtimeService.join(selectedRole.id);
     // subscribe
     const off = realtimeService.onMessage((msg) => {
@@ -1251,8 +1233,10 @@ const CloseProfessionalSupportPage: React.FC = () => {
       offPresence();
       offTyping();
       setChatJoined(false);
+      // Disconnect when leaving realtime-enabled tabs
+      realtimeService.disconnect();
     };
-  }, [selectedRole, chatServerUrl]);
+  }, [selectedRole, chatServerUrl, activeTab]);
 
   const handleSendChat = () => {
     if (!selectedRole || !chatInput.trim()) return;
@@ -1265,7 +1249,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
   };
 
   // Shared Queue component inline for speed
-  const SharedQueue: React.FC<{ roleId: string; roleName: string }> = ({ roleId, roleName }) => {
+  const SharedQueue: React.FC<{ roleId: string; roleName: string }> = React.memo(({ roleId, roleName }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [items, setItems] = useState<any[]>([]);
     const [title, setTitle] = useState('');
@@ -1274,7 +1258,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5055/api/tasks?roleId=${encodeURIComponent(roleId)}`);
+        const res = await fetch(buildApiUrl(`/api/tasks?roleId=${encodeURIComponent(roleId)}`));
         const json = await res.json();
         setItems(json.data || []);
       } finally {
@@ -1294,7 +1278,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
 
     const createTask = async () => {
       if (!title.trim()) return;
-      await fetch('http://localhost:5055/api/tasks', {
+      await fetch(buildApiUrl('/api/tasks'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: title.trim(), description: desc, roleId, userId: 'system', priority: 'medium' })
@@ -1305,7 +1289,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
     };
 
     const handoff = async (taskId: string, nextRoleId: string) => {
-      await fetch(`http://localhost:5055/api/tasks/${taskId}`, {
+      await fetch(buildApiUrl(`/api/tasks/${taskId}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roleId: nextRoleId, status: 'pending' })
@@ -1366,9 +1350,9 @@ const CloseProfessionalSupportPage: React.FC = () => {
         </Card>
       </Box>
     );
-  };
+  });
 
-  const SharedDocuments: React.FC<{ roleId: string; roleName: string }> = ({ roleId, roleName }) => {
+  const SharedDocuments: React.FC<{ roleId: string; roleName: string }> = React.memo(({ roleId, roleName }) => {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState<any[]>([]);
     const [shareRoles, setShareRoles] = useState<string[]>([]);
@@ -1376,7 +1360,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
     const fetchDocs = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5055/api/docs/shared?roleId=${encodeURIComponent(roleId)}`);
+        const res = await fetch(buildApiUrl(`/api/docs/shared?roleId=${encodeURIComponent(roleId)}`));
         const json = await res.json();
         setItems(json.data || []);
       } finally {
@@ -1391,7 +1375,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
     }, [roleId]);
 
     const updateShare = async (docId: string, add: string[], remove: string[]) => {
-      await fetch(`http://localhost:5055/api/docs/${docId}/share`, {
+      await fetch(buildApiUrl(`/api/docs/${docId}/share`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ addRoles: add, removeRoles: remove })
@@ -1421,7 +1405,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
                           <Typography variant="caption" color="text.secondary">Status: {d.status} • {new Date(d.createdAt).toLocaleString()}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                          <Button size="small" href={`http://localhost:5055/api/docs/${d.id}/download`} target="_blank" rel="noopener noreferrer" variant="outlined">Download</Button>
+                          <Button size="small" href={buildApiUrl(`/api/docs/${d.id}/download`)} target="_blank" rel="noopener noreferrer" variant="outlined">Download</Button>
                           <FormControl size="small">
                             <InputLabel id={`share-${d.id}`}>Share</InputLabel>
                             <Select multiple labelId={`share-${d.id}`} label="Share" value={shareRoles} onChange={(e) => setShareRoles((e.target.value as string[]) || [])} renderValue={(sel) => (sel as string[]).join(', ')}>
@@ -1442,9 +1426,9 @@ const CloseProfessionalSupportPage: React.FC = () => {
         </Card>
       </Box>
     );
-  };
+  });
 
-  const ComplianceHub: React.FC<{ roleId: string }> = ({ roleId }) => {
+  const ComplianceHub: React.FC<{ roleId: string }> = React.memo(({ roleId }) => {
     const [summary, setSummary] = useState<{ open: number; verifiedThisMonth: number; total: number } | null>(null);
     const [records, setRecords] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -1454,9 +1438,9 @@ const CloseProfessionalSupportPage: React.FC = () => {
       setLoading(true);
       try {
         const [s, r, a] = await Promise.all([
-          fetch(`http://localhost:5055/api/compliance/summary?roleId=${encodeURIComponent(roleId)}`).then((res) => res.json()),
-          fetch(`http://localhost:5055/api/compliance/records?roleId=${encodeURIComponent(roleId)}`).then((res) => res.json()),
-          fetch(`http://localhost:5055/api/audit/logs?resource=compliance_record&limit=50`).then((res) => res.json()),
+          fetch(buildApiUrl(`/api/compliance/summary?roleId=${encodeURIComponent(roleId)}`)).then((res) => res.json()),
+          fetch(buildApiUrl(`/api/compliance/records?roleId=${encodeURIComponent(roleId)}`)).then((res) => res.json()),
+          fetch(buildApiUrl(`/api/audit/logs?resource=compliance_record&limit=50`)).then((res) => res.json()),
         ]);
         setSummary(s.data);
         setRecords(r.data || []);
@@ -1473,7 +1457,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
     }, [roleId]);
 
     const updateStatus = async (id: string, status: string) => {
-      await fetch(`http://localhost:5055/api/compliance/records/${id}`, {
+      await fetch(buildApiUrl(`/api/compliance/records/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -1558,7 +1542,7 @@ const CloseProfessionalSupportPage: React.FC = () => {
         </Card>
       </Box>
     );
-  };
+  });
 
   // Render role-specific content
   const renderRoleContent = () => {

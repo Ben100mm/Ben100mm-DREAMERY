@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,59 +6,59 @@ import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/HeaderWithRouting';
 import Hero from './components/Hero';
 import Navigation from './components/Navigation';
-import AuthPage from './pages/AuthPage';
-import ProfessionalSignupPage from './pages/ProfessionalSignupPage';
-import BusinessSignupPage from './pages/BusinessSignupPage';
-import BuyPage from './pages/BuyPage';
-import RentPage from './pages/RentPage';
-import SellListAddressPage from './pages/SellListAddressPage';
-import SellListMovingDetailsPage from './pages/SellListMovingDetailsPage';
-import SellListMovingDetails2Page from './pages/SellListMovingDetails2Page';
-import SellListHomeDetailsPage from './pages/SellListHomeDetailsPage';
-import SellListHomeDetails2Page from './pages/SellListHomeDetails2Page';
-import SellListHomeDetails3Page from './pages/SellListHomeDetails3Page';
-import SellListHomeQualityPage from './pages/SellListHomeQualityPage';
-import SellListHomeQuality2Page from './pages/SellListHomeQuality2Page';
-import SellListHomeQuality3Page from './pages/SellListHomeQuality3Page';
-import SellListHomeQuality4Page from './pages/SellListHomeQuality4Page';
-import SellListAdditionalInfoPage from './pages/SellListAdditionalInfoPage';
-import SellListAdditionalInfo2Page from './pages/SellListAdditionalInfo2Page';
-import SellListAdditionalInfo3Page from './pages/SellListAdditionalInfo3Page';
-import SellListContactInfoPage from './pages/SellListContactInfoPage';
-import SellListPhoneInfoPage from './pages/SellListPhoneInfoPage';
-import SellListSummaryPage from './pages/SellListSummaryPage';
-import SellListServicesPage from './pages/SellListServicesPage';
-import SellListPage from './pages/SellListPage';
-import MortgagePage from './pages/MortgagePage';
-import PreApprovalPage from './pages/PreApprovalPage';
-import PreApprovalBasicInfoPage from './pages/PreApprovalBasicInfoPage';
-import PreApprovalQuestionsPage from './pages/PreApprovalQuestionsPage';
-import PreApprovalHomePreferencesPage from './pages/PreApprovalHomePreferencesPage';
-import PreApprovalFinancialPage from './pages/PreApprovalFinancialPage';
-import PreApprovalPropertyFinancialPage from './pages/PreApprovalPropertyFinancialPage';
-import PreApprovalAdditionalQuestionsPage from './pages/PreApprovalAdditionalQuestionsPage';
-import PreApprovalSummaryPage from './pages/PreApprovalSummaryPage';
-import PreApprovalResultsPage from './pages/PreApprovalResultsPage';
-import UnderwritePage from './pages/UnderwritePage';
-import UXDemoPage from './pages/UXDemoPage';
-import AdvancedCalculationsPage from './pages/AdvancedCalculationsPage';
-import ClosePage from './pages/ClosePage';
-import CloseBuyerPage from './pages/CloseBuyerPage';
-import CloseAgentPage from './pages/CloseAgentPage';
-import CloseBrokeragesPage from './pages/CloseBrokeragesPage';
-import CloseProfessionalSupportPage from './pages/CloseProfessionalSupportPage';
-import PartnerPage from './pages/partner';
-import PartnerProfileCompletionPage from './pages/PartnerProfileCompletionPage';
-import OtherProfessionalPage from './pages/OtherProfessionalPage';
-import AnalyzePage from './pages/AnalyzePage';
-import ManagePage from './pages/manage';
-import InvestPage from './pages/InvestPage';
-import FundPage from './pages/FundPage';
-import OperatePage from './pages/OperatePage';
-import LearnPage from './pages/LearnPage';
-import AdvertisePage from './pages/AdvertisePage';
-import CloseBusinessesPage from './pages/CloseBusinessesPage';
-import ProfilePage from './pages/ProfilePage';
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const ProfessionalSignupPage = lazy(() => import('./pages/ProfessionalSignupPage'));
+const BusinessSignupPage = lazy(() => import('./pages/BusinessSignupPage'));
+const BuyPage = lazy(() => import('./pages/BuyPage'));
+const RentPage = lazy(() => import('./pages/RentPage'));
+const SellListAddressPage = lazy(() => import('./pages/SellListAddressPage'));
+const SellListMovingDetailsPage = lazy(() => import('./pages/SellListMovingDetailsPage'));
+const SellListMovingDetails2Page = lazy(() => import('./pages/SellListMovingDetails2Page'));
+const SellListHomeDetailsPage = lazy(() => import('./pages/SellListHomeDetailsPage'));
+const SellListHomeDetails2Page = lazy(() => import('./pages/SellListHomeDetails2Page'));
+const SellListHomeDetails3Page = lazy(() => import('./pages/SellListHomeDetails3Page'));
+const SellListHomeQualityPage = lazy(() => import('./pages/SellListHomeQualityPage'));
+const SellListHomeQuality2Page = lazy(() => import('./pages/SellListHomeQuality2Page'));
+const SellListHomeQuality3Page = lazy(() => import('./pages/SellListHomeQuality3Page'));
+const SellListHomeQuality4Page = lazy(() => import('./pages/SellListHomeQuality4Page'));
+const SellListAdditionalInfoPage = lazy(() => import('./pages/SellListAdditionalInfoPage'));
+const SellListAdditionalInfo2Page = lazy(() => import('./pages/SellListAdditionalInfo2Page'));
+const SellListAdditionalInfo3Page = lazy(() => import('./pages/SellListAdditionalInfo3Page'));
+const SellListContactInfoPage = lazy(() => import('./pages/SellListContactInfoPage'));
+const SellListPhoneInfoPage = lazy(() => import('./pages/SellListPhoneInfoPage'));
+const SellListSummaryPage = lazy(() => import('./pages/SellListSummaryPage'));
+const SellListServicesPage = lazy(() => import('./pages/SellListServicesPage'));
+const SellListPage = lazy(() => import('./pages/SellListPage'));
+const MortgagePage = lazy(() => import('./pages/MortgagePage'));
+const PreApprovalPage = lazy(() => import('./pages/PreApprovalPage'));
+const PreApprovalBasicInfoPage = lazy(() => import('./pages/PreApprovalBasicInfoPage'));
+const PreApprovalQuestionsPage = lazy(() => import('./pages/PreApprovalQuestionsPage'));
+const PreApprovalHomePreferencesPage = lazy(() => import('./pages/PreApprovalHomePreferencesPage'));
+const PreApprovalFinancialPage = lazy(() => import('./pages/PreApprovalFinancialPage'));
+const PreApprovalPropertyFinancialPage = lazy(() => import('./pages/PreApprovalPropertyFinancialPage'));
+const PreApprovalAdditionalQuestionsPage = lazy(() => import('./pages/PreApprovalAdditionalQuestionsPage'));
+const PreApprovalSummaryPage = lazy(() => import('./pages/PreApprovalSummaryPage'));
+const PreApprovalResultsPage = lazy(() => import('./pages/PreApprovalResultsPage'));
+const UnderwritePage = lazy(() => import('./pages/UnderwritePage'));
+const UXDemoPage = lazy(() => import('./pages/UXDemoPage'));
+const AdvancedCalculationsPage = lazy(() => import('./pages/AdvancedCalculationsPage'));
+const ClosePage = lazy(() => import('./pages/ClosePage'));
+const CloseBuyerPage = lazy(() => import('./pages/CloseBuyerPage'));
+const CloseAgentPage = lazy(() => import('./pages/CloseAgentPage'));
+const CloseBrokeragesPage = lazy(() => import('./pages/CloseBrokeragesPage'));
+const CloseProfessionalSupportPage = lazy(() => import('./pages/CloseProfessionalSupportPage'));
+const PartnerPage = lazy(() => import('./pages/partner'));
+const PartnerProfileCompletionPage = lazy(() => import('./pages/PartnerProfileCompletionPage'));
+const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage'));
+const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
+const ManagePage = lazy(() => import('./pages/manage'));
+const InvestPage = lazy(() => import('./pages/InvestPage'));
+const FundPage = lazy(() => import('./pages/FundPage'));
+const OperatePage = lazy(() => import('./pages/OperatePage'));
+const LearnPage = lazy(() => import('./pages/LearnPage'));
+const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
+const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 import { RoleProvider, RoleContext } from './context/RoleContext';
 import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
 
@@ -97,6 +97,7 @@ const AppContent = () => {
   };
 
   return (
+    <Suspense fallback={<div>Loading…</div>}>
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/auth" element={<AuthPage />} />
@@ -152,6 +153,7 @@ const AppContent = () => {
       <Route path="/ux-demo" element={<UXDemoPage />} />
       <Route path="/advanced-calculations" element={<Navigate to="/analyze" replace />} />
     </Routes>
+    </Suspense>
   );
 };
 

@@ -1,42 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Container,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Switch,
-  FormControlLabel,
-  Button,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  LinearProgress,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  ToggleButton,
-  ToggleButtonGroup,
-  InputAdornment,
-  Tabs,
-  Tab,
-  IconButton,
-  Chip,
-  Slider,
-  Alert,
-  Snackbar,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import LinearProgress from "@mui/material/LinearProgress";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import InputAdornment from "@mui/material/InputAdornment";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import Slider from "@mui/material/Slider";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -623,6 +621,7 @@ function buildAmortization(
     balance = Math.max(0, interestOnly ? balance : balance - principal);
     schedule.push({ index: i, payment: pmt, interest, principal, balance });
   }
+
   return schedule;
 }
 
@@ -1735,6 +1734,16 @@ const UnderwritePage: React.FC = () => {
     return defaultState;
   });
 
+  // Memoize amortization schedule used across sections to avoid recomputation
+  const amortizationAll = useMemo(() => {
+    const amount = state.loan?.loanAmount || 0;
+    const rate = state.loan?.annualInterestRate || 0;
+    const years = state.loan?.amortizationYears || 0;
+    const io = state.loan?.interestOnly || false;
+    if (amount <= 0 || years <= 0) return [] as Array<{ index: number; payment: number; interest: number; principal: number; balance: number }>;
+    return buildAmortization(amount, rate, years, io);
+  }, [state.loan?.loanAmount, state.loan?.annualInterestRate, state.loan?.amortizationYears, state.loan?.interestOnly]);
+
   const [currentDate, setCurrentDate] = useState(() => {
     // Get the current date directly from the user's system
     const now = new Date();
@@ -1750,6 +1759,9 @@ const UnderwritePage: React.FC = () => {
     );
     return dateString;
   });
+
+  // Windowed rendering controls for large amortization table
+  const [amortRowsToShow, setAmortRowsToShow] = useState<number>(240);
 
   // Update the current date every minute to keep it live
   useEffect(() => {
@@ -4954,13 +4966,8 @@ const UnderwritePage: React.FC = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {buildAmortization(
-                                  state.loan.loanAmount,
-                                  state.loan.annualInterestRate,
-                                  state.loan.amortizationYears,
-                                  state.loan.interestOnly || false,
-                                )
-                                  .slice(0, 60)
+                                {amortizationAll
+                                  .slice(0, amortRowsToShow)
                                   .map((row) => (
                                     <TableRow key={row.index}>
                                       <TableCell>{row.index}</TableCell>
@@ -4999,6 +5006,10 @@ const UnderwritePage: React.FC = () => {
                                   ))}
                               </TableBody>
                             </Table>
+                          </Box>
+                          <Box sx={{ display: "flex", justifyContent: "center", mt: 1, gap: 1 }}>
+                            <Button size="small" variant="outlined" disabled={amortRowsToShow <= 60} onClick={() => setAmortRowsToShow((n) => Math.max(60, n - 120))}>Show Fewer</Button>
+                            <Button size="small" variant="outlined" disabled={amortRowsToShow >= amortizationAll.length} onClick={() => setAmortRowsToShow((n) => Math.min(amortizationAll.length, n + 120))}>Show More</Button>
                           </Box>
                           <Typography
                             variant="caption"

@@ -4,7 +4,7 @@ A modern, responsive real estate platform homepage built with React and Material
 
 ## Features
 
-### 🔐 Authentication System
+### Authentication System
 - **Basic Authentication Methods:**
   - Traditional email/password login
   - Social login (Google, Apple, Microsoft, Facebook, Twitter)
@@ -21,7 +21,7 @@ A modern, responsive real estate platform homepage built with React and Material
   - Method status management
   - Progressive security enhancement
 
-### 🏠 Core Features
+### Core Features
 - **Hero Section:**
   - Full-screen background with Victorian houses
   - Advanced search interface with autocomplete
@@ -38,7 +38,7 @@ A modern, responsive real estate platform homepage built with React and Material
   - Success feedback and user guidance
   - Accessibility features
 
-### 🎨 Design & UI
+### Design & UI
 - Clean, modern design with full-screen hero image
 - Transparent, elegant search interface
 - Material-UI components with custom styling
@@ -118,7 +118,7 @@ dreamery-operating-software/
 └── package.json
 ```
 
-## 🚀 Recent Updates
+## Recent Updates
 
 ### Authentication & Security Enhancements
 - **Reorganized Authentication Flow**: Separated basic auth from advanced security features
@@ -137,7 +137,7 @@ dreamery-operating-software/
 - **Error Handling**: Comprehensive error states and user feedback
 - **Loading States**: Smooth user experience with loading indicators
 
-## 🛠️ Development
+## Development
 
 ### Available Scripts
 - `npm start` - Run development server

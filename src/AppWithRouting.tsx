@@ -41,7 +41,7 @@ const PreApprovalSummaryPage = lazy(() => import('./pages/PreApprovalSummaryPage
 const PreApprovalResultsPage = lazy(() => import('./pages/PreApprovalResultsPage'));
 const UnderwritePage = lazy(() => import('./pages/UnderwritePage'));
 const UXDemoPage = lazy(() => import('./pages/UXDemoPage'));
-const AdvancedCalculationsPage = lazy(() => import('./pages/AdvancedCalculationsPage'));
+
 const ClosePage = lazy(() => import('./pages/ClosePage'));
 const CloseBuyerPage = lazy(() => import('./pages/CloseBuyerPage'));
 const CloseAgentPage = lazy(() => import('./pages/CloseAgentPage'));

@@ -694,7 +694,6 @@ function buildSubjectToAmortization(
 
   return schedule;
 }
-
 function computeIncome(state: DealState): number {
   const { propertyType, operationType } = state;
 
@@ -1412,7 +1411,6 @@ function Kpi(props: { label: string; value: string }) {
     </Box>
   );
 }
-
 const defaultState: DealState = {
   propertyType: "Single Family",
   operationType: "Buy & Hold",
@@ -2094,7 +2092,6 @@ const UnderwritePage: React.FC = () => {
       };
     });
   }
-
   // Dynamic Pro Forma calculations based on property type and operation type
   function getProFormaValues(
     propertyType: PropertyType,
@@ -2679,7 +2676,6 @@ const UnderwritePage: React.FC = () => {
       },
     }));
   }
-
   // Benchmark Comparison
   function getIndustryBenchmarks() {
     const benchmarks = {
@@ -3430,7 +3426,6 @@ const UnderwritePage: React.FC = () => {
       };
     });
   }
-
   function updateFixFlip<K extends keyof FixFlipInputs>(
     key: K,
     value: FixFlipInputs[K],
@@ -4614,111 +4609,109 @@ const UnderwritePage: React.FC = () => {
               </Accordion>
             </Card>
           )}
-
         {/* Subject-To Amortization Schedule Section */}
-        {state.offerType === "Subject To Existing Mortgage" &&
-          state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Subject-To Amortization Schedule
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 3 }}
-                  >
-                    {state.subjectTo?.loans?.map((loan, loanIndex) => (
-                      <Box
-                        key={loanIndex}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 2,
-                        }}
+        {false && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Subject-To Amortization Schedule
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+                >
+                  {state.subjectTo?.loans?.map((loan, loanIndex) => (
+                    <Box
+                      key={loanIndex}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
                       >
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
-                        >
-                          Loan {loanIndex + 1} Amortization Schedule
-                        </Typography>
-                        {loan.amount > 0 &&
-                          loan.annualInterestRate > 0 &&
-                          loan.originalTermYears > 0 && (
-                            <>
-                              <Box sx={{ width: "100%" }}>
-                                <LinearProgress
-                                  variant="determinate"
-                                  value={Math.min(
-                                    100,
-                                    ((loan.originalTermYears * 12) / 600) * 100,
-                                  )}
-                                  sx={{ height: 10, borderRadius: 5 }}
-                                />
-                              </Box>
-                              <Box sx={{ overflowX: "auto" }}>
-                                <Table>
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>Payment #</TableCell>
-                                      <TableCell>Date</TableCell>
-                                      <TableCell>Payment</TableCell>
-                                      <TableCell>Interest</TableCell>
-                                      <TableCell>Principal</TableCell>
-                                      <TableCell>Balance</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {buildSubjectToAmortization(
-                                      loan,
-                                      loan.paymentNumber || 1,
-                                    )
-                                      .slice(0, 60)
-                                      .map((row) => (
-                                        <TableRow key={row.index}>
-                                          <TableCell>{row.index}</TableCell>
-                                          <TableCell>
-                                            {row.paymentDate}
-                                          </TableCell>
-                                          <TableCell>
-                                            {formatCurrency(row.payment)}
-                                          </TableCell>
-                                          <TableCell>
-                                            {formatCurrency(row.interest)}
-                                          </TableCell>
-                                          <TableCell>
-                                            {formatCurrency(row.principal)}
-                                          </TableCell>
-                                          <TableCell>
-                                            {formatCurrency(row.balance)}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                  </TableBody>
-                                </Table>
-                              </Box>
-                              <Typography
-                                variant="caption"
-                                align="center"
-                                sx={{ color: brandColors.neutral.dark }}
-                              >
-                                Showing next 60 payments (5 years) of{" "}
-                                {loan.originalTermYears * 12 -
-                                  (loan.paymentNumber || 1) +
-                                  1}{" "}
-                                remaining payments
-                              </Typography>
-                            </>
-                          )}
-                      </Box>
-                    ))}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            </Card>
-          )}
+                        Loan {loanIndex + 1} Amortization Schedule
+                      </Typography>
+                      {loan.amount > 0 &&
+                        loan.annualInterestRate > 0 &&
+                        loan.originalTermYears > 0 && (
+                          <>
+                            <Box sx={{ width: "100%" }}>
+                              <LinearProgress
+                                variant="determinate"
+                                value={Math.min(
+                                  100,
+                                  ((loan.originalTermYears * 12) / 600) * 100,
+                                )}
+                                sx={{ height: 10, borderRadius: 5 }}
+                              />
+                            </Box>
+                            <Box sx={{ overflowX: "auto" }}>
+                              <Table>
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Payment #</TableCell>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell>Payment</TableCell>
+                                    <TableCell>Interest</TableCell>
+                                    <TableCell>Principal</TableCell>
+                                    <TableCell>Balance</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {buildSubjectToAmortization(
+                                    loan,
+                                    loan.paymentNumber || 1,
+                                  )
+                                    .slice(0, 60)
+                                    .map((row) => (
+                                      <TableRow key={row.index}>
+                                        <TableCell>{row.index}</TableCell>
+                                        <TableCell>
+                                          {row.paymentDate}
+                                        </TableCell>
+                                        <TableCell>
+                                          {formatCurrency(row.payment)}
+                                        </TableCell>
+                                        <TableCell>
+                                          {formatCurrency(row.interest)}
+                                        </TableCell>
+                                        <TableCell>
+                                          {formatCurrency(row.principal)}
+                                        </TableCell>
+                                        <TableCell>
+                                          {formatCurrency(row.balance)}
+                                        </TableCell>
+                                      </TableRow>
+                                    ))}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                            <Typography
+                              variant="caption"
+                              align="center"
+                              sx={{ color: brandColors.neutral.dark }}
+                            >
+                              Showing next 60 payments (5 years) of{" "}
+                              {loan.originalTermYears * 12 -
+                                (loan.paymentNumber || 1) +
+                                1}{" "}
+                              remaining payments
+                            </Typography>
+                          </>
+                        )}
+                    </Box>
+                  ))}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
 
         {/* Seller Finance Section - available even for arbitrage if selected */}
         {state.offerType === "Seller Finance" && (
@@ -4925,327 +4918,324 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Seller Finance Amortization Schedule Section */}
-        {state.offerType === "Seller Finance" &&
-          state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Seller Finance Amortization Schedule
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 3 }}
-                  >
-                    {state.loan.loanAmount > 0 &&
-                      state.loan.annualInterestRate > 0 &&
-                      state.loan.amortizationYears > 0 && (
-                        <>
-                          <Box sx={{ width: "100%" }}>
-                            <LinearProgress
-                              variant="determinate"
-                              value={Math.min(
+        {false && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Seller Finance Amortization Schedule
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+                >
+                  {state.loan.loanAmount > 0 &&
+                    state.loan.annualInterestRate > 0 &&
+                    state.loan.amortizationYears > 0 && (
+                      <>
+                        <Box sx={{ width: "100%" }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={Math.min(
+                              100,
+                              ((state.loan.amortizationYears * 12) / 600) *
                                 100,
-                                ((state.loan.amortizationYears * 12) / 600) *
-                                  100,
-                              )}
-                              sx={{ height: 10, borderRadius: 5 }}
-                            />
-                          </Box>
-                          <Box sx={{ overflowX: "auto" }}>
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Payment #</TableCell>
-                                  <TableCell>Date</TableCell>
-                                  <TableCell>Payment</TableCell>
-                                  <TableCell>Interest</TableCell>
-                                  <TableCell>Principal</TableCell>
-                                  <TableCell>Balance</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {amortizationAll
-                                  .slice(0, amortRowsToShow)
-                                  .map((row) => (
-                                    <TableRow key={row.index}>
-                                      <TableCell>{row.index}</TableCell>
-                                      <TableCell>
-                                        {(() => {
-                                          const startDate = new Date(
-                                            currentDate,
-                                          );
-                                          const paymentDate = new Date(
-                                            startDate,
-                                          );
-                                          paymentDate.setMonth(
-                                            startDate.getMonth() +
-                                              row.index -
-                                              1,
-                                          );
-                                          return paymentDate.toLocaleDateString(
-                                            "en-US",
-                                            { month: "short", year: "numeric" },
-                                          );
-                                        })()}
-                                      </TableCell>
-                                      <TableCell>
-                                        {formatCurrency(row.payment)}
-                                      </TableCell>
-                                      <TableCell>
-                                        {formatCurrency(row.interest)}
-                                      </TableCell>
-                                      <TableCell>
-                                        {formatCurrency(row.principal)}
-                                      </TableCell>
-                                      <TableCell>
-                                        {formatCurrency(row.balance)}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                          <Box sx={{ display: "flex", justifyContent: "center", mt: 1, gap: 1 }}>
-                            <Button size="small" variant="outlined" disabled={amortRowsToShow <= 60} onClick={() => setAmortRowsToShow((n) => Math.max(60, n - 120))}>Show Fewer</Button>
-                            <Button size="small" variant="outlined" disabled={amortRowsToShow >= amortizationAll.length} onClick={() => setAmortRowsToShow((n) => Math.min(amortizationAll.length, n + 120))}>Show More</Button>
-                          </Box>
-                          <Typography
-                            variant="caption"
-                            align="center"
-                            sx={{ color: brandColors.neutral.dark }}
-                          >
-                            Showing next 60 payments (5 years) of{" "}
-                            {state.loan.amortizationYears * 12} total payments
-                          </Typography>
-                        </>
-                      )}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            </Card>
-          )}
+                            )}
+                            sx={{ height: 10, borderRadius: 5 }}
+                          />
+                        </Box>
+                        <Box sx={{ overflowX: "auto" }}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Payment #</TableCell>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Payment</TableCell>
+                                <TableCell>Interest</TableCell>
+                                <TableCell>Principal</TableCell>
+                                <TableCell>Balance</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {amortizationAll
+                                .slice(0, amortRowsToShow)
+                                .map((row) => (
+                                  <TableRow key={row.index}>
+                                    <TableCell>{row.index}</TableCell>
+                                    <TableCell>
+                                      {(() => {
+                                        const startDate = new Date(
+                                          currentDate,
+                                        );
+                                        const paymentDate = new Date(
+                                          startDate,
+                                        );
+                                        paymentDate.setMonth(
+                                          startDate.getMonth() +
+                                            row.index -
+                                            1,
+                                        );
+                                        return paymentDate.toLocaleDateString(
+                                          "en-US",
+                                          { month: "short", year: "numeric" },
+                                        );
+                                      })()}
+                                    </TableCell>
+                                    <TableCell>
+                                      {formatCurrency(row.payment)}
+                                    </TableCell>
+                                    <TableCell>
+                                      {formatCurrency(row.interest)}
+                                    </TableCell>
+                                    <TableCell>
+                                      {formatCurrency(row.principal)}
+                                    </TableCell>
+                                    <TableCell>
+                                      {formatCurrency(row.balance)}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                            </TableBody>
+                          </Table>
+                        </Box>
+                        <Box sx={{ display: "flex", justifyContent: "center", mt: 1, gap: 1 }}>
+                          <Button size="small" variant="outlined" disabled={amortRowsToShow <= 60} onClick={() => setAmortRowsToShow((n) => Math.max(60, n - 120))}>Show Fewer</Button>
+                          <Button size="small" variant="outlined" disabled={amortRowsToShow >= amortizationAll.length} onClick={() => setAmortRowsToShow((n) => Math.min(amortizationAll.length, n + 120))}>Show More</Button>
+                        </Box>
+                        <Typography
+                          variant="caption"
+                          align="center"
+                          sx={{ color: brandColors.neutral.dark }}
+                        >
+                          Showing next 60 payments (5 years) of{" "}
+                          {state.loan.amortizationYears * 12} total payments
+                        </Typography>
+                      </>
+                    )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
 
         {/* Hybrid Financing Section - Moved to appear after Seller Finance */}
-        {state.offerType === "Hybrid" &&
-          state.operationType !== "Rental Arbitrage" && (
-            <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Hybrid Financing
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
+        {false && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Hybrid Financing
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+                >
                   <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                   >
+                    <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
+                      New Note (Loan 3)
+                    </Typography>
                     <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark }}>
-                        New Note (Loan 3)
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: "grid",
-                          gap: 2,
-                          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                        }}
-                      >
-                        <TextField
-                          fullWidth
-                          label="Down Payment"
-                          value={state.hybrid?.downPayment}
-                          onChange={(e) =>
-                            updateHybrid(
-                              "downPayment",
-                              parseCurrency(e.target.value),
-                            )
-                          }
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                $
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Loan Amount"
-                          value={state.hybrid?.loan3Amount}
-                          onChange={(e) =>
-                            updateHybrid(
-                              "loan3Amount",
-                              parseCurrency(e.target.value),
-                            )
-                          }
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                $
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Interest Rate"
-                          value={state.hybrid?.annualInterestRate}
-                          onChange={(e) =>
-                            updateHybrid(
-                              "annualInterestRate",
-                              parseCurrency(e.target.value),
-                            )
-                          }
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">%</InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Monthly Payment (Auto-calculated)"
-                          value={state.hybrid?.monthlyPayment}
-                          InputProps={{
-                            readOnly: true,
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                $
-                              </InputAdornment>
-                            ),
-                          }}
-                          helperText="Calculated from loan amount, interest rate, and term"
-                        />
-                        <TextField
-                          fullWidth
-                          label="Loan Term (Years)"
-                          type="number"
-                          value={state.hybrid?.loanTerm || 30}
-                          onChange={(e) =>
-                            updateHybrid(
-                              "loanTerm",
-                              parseInt(e.target.value) || 30,
-                            )
-                          }
-                        />
-                        <TextField
-                          fullWidth
-                          label="Start Date"
-                          type="date"
-                          value={currentDateInputValue()}
-                          onChange={(e) => {
-                            // Start date for hybrid loan 3 (analysis date is always current)
-                          }}
-                        />
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={state.hybrid?.interestOnly}
-                              onChange={(e) =>
-                                updateHybrid("interestOnly", e.target.checked)
-                              }
-                            />
-                          }
-                          label="Interest Only"
-                        />
-                        <TextField
-                          fullWidth
-                          label="Balloon Due (years)"
-                          type="number"
-                          value={state.hybrid?.balloonDue}
-                          onChange={(e) =>
-                            updateHybrid(
-                              "balloonDue",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          helperText="Leave as 0 for no balloon payment"
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                years
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Box>
-                    </Box>
-
-                    <TextField
-                      fullWidth
-                      label="Payment to Seller"
-                      value={state.hybrid?.paymentToSeller}
-                      onChange={(e) =>
-                        updateHybrid(
-                          "paymentToSeller",
-                          parseCurrency(e.target.value),
-                        )
-                      }
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
+                      sx={{
+                        display: "grid",
+                        gap: 2,
+                        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
                       }}
-                    />
-
-                    <Box
-                      sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
                     >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ mb: 2, color: brandColors.neutral.dark }}
-                      >
-                        Combined Financing Summary
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: "grid",
-                          gap: 2,
-                          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
+                      <TextField
+                        fullWidth
+                        label="Down Payment"
+                        value={state.hybrid?.downPayment}
+                        onChange={(e) =>
+                          updateHybrid(
+                            "downPayment",
+                            parseCurrency(e.target.value),
+                          )
+                        }
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              $
+                            </InputAdornment>
+                          ),
                         }}
-                      >
-                        <TextField
-                          fullWidth
-                          label="Total Loan Balance"
-                          value={formatCurrency(
-                            state.hybrid?.totalLoanBalance || 0,
-                          )}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Total Monthly Payment"
-                          value={formatCurrency(
-                            state.hybrid?.totalMonthlyPayment || 0,
-                          )}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Total Annual Payment"
-                          value={formatCurrency(
-                            state.hybrid?.totalAnnualPayment || 0,
-                          )}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                        />
-                      </Box>
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Amount"
+                        value={state.hybrid?.loan3Amount}
+                        onChange={(e) =>
+                          updateHybrid(
+                            "loan3Amount",
+                            parseCurrency(e.target.value),
+                          )
+                        }
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              $
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Interest Rate"
+                        value={state.hybrid?.annualInterestRate}
+                        onChange={(e) =>
+                          updateHybrid(
+                            "annualInterestRate",
+                            parseCurrency(e.target.value),
+                          )
+                        }
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">%</InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Monthly Payment (Auto-calculated)"
+                        value={state.hybrid?.monthlyPayment}
+                        InputProps={{
+                          readOnly: true,
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              $
+                            </InputAdornment>
+                          ),
+                        }}
+                        helperText="Calculated from loan amount, interest rate, and term"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Loan Term (Years)"
+                        type="number"
+                        value={state.hybrid?.loanTerm || 30}
+                        onChange={(e) =>
+                          updateHybrid(
+                            "loanTerm",
+                            parseInt(e.target.value) || 30,
+                          )
+                        }
+                      />
+                      <TextField
+                        fullWidth
+                        label="Start Date"
+                        type="date"
+                        value={currentDateInputValue()}
+                        onChange={(e) => {
+                          // Start date for hybrid loan 3 (analysis date is always current)
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={state.hybrid?.interestOnly}
+                            onChange={(e) =>
+                              updateHybrid("interestOnly", e.target.checked)
+                            }
+                          />
+                        }
+                        label="Interest Only"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Balloon Due (years)"
+                        type="number"
+                        value={state.hybrid?.balloonDue}
+                        onChange={(e) =>
+                          updateHybrid(
+                            "balloonDue",
+                            parseInt(e.target.value) || 0,
+                          )
+                        }
+                        helperText="Leave as 0 for no balloon payment"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              years
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
                     </Box>
                   </Box>
-                </AccordionDetails>
-              </Accordion>
-            </Card>
-          )}
-        {/* Hybrid Amortization Schedule Section - Combined Schedule for All Loans */}
+
+                  <TextField
+                    fullWidth
+                    label="Payment to Seller"
+                    value={state.hybrid?.paymentToSeller}
+                    onChange={(e) =>
+                      updateHybrid(
+                        "paymentToSeller",
+                        parseCurrency(e.target.value),
+                      )
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                    }}
+                  />
+
+                  <Box
+                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ mb: 2, color: brandColors.neutral.dark }}
+                    >
+                      Combined Financing Summary
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gap: 2,
+                        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        label="Total Loan Balance"
+                        value={formatCurrency(
+                          state.hybrid?.totalLoanBalance || 0,
+                        )}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Monthly Payment"
+                        value={formatCurrency(
+                          state.hybrid?.totalMonthlyPayment || 0,
+                        )}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Total Annual Payment"
+                        value={formatCurrency(
+                          state.hybrid?.totalAnnualPayment || 0,
+                        )}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
         {state.offerType === "Cash" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
@@ -5788,9 +5778,7 @@ const UnderwritePage: React.FC = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Box
-                    sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}
-                  >
+                  <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
                     <FormControlLabel
                       control={
                         <Switch
@@ -5871,7 +5859,6 @@ const UnderwritePage: React.FC = () => {
               </Accordion>
             </Card>
           )}
-
         {/* Appreciation Calculator Section */}
         {state.operationType !== "Rental Arbitrage" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
@@ -6199,7 +6186,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
         {/* Income Section */}
-        {state.operationType !== "Fix & Flip" && (
+        {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -6987,9 +6974,8 @@ const UnderwritePage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         </Card>
-
         {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
-        {state.operationType !== "Fix & Flip" && (
+        {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -6998,32 +6984,14 @@ const UnderwritePage: React.FC = () => {
                     Pro Forma Analysis
                   </Typography>
                   <Chip
-                    label="Moved to Analyze Page"
-                    color="info"
+                    label="Premium Feature"
+                    color="primary"
                     variant="outlined"
                     size="small"
                   />
                 </Box>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
-                    🚀 Pro Forma Analysis has been moved!
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 3 }}>
-                    All Pro Forma Analysis functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate('/analyze')}
-                    sx={{ mr: 2 }}
-                  >
-                    Go to Analyze Page
-                  </Button>
-                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
-                    Features include: Presets, Custom settings, Sensitivity analysis, Benchmarks, Revenue analysis, and Break-even calculations.
-                  </Typography>
-                </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   {/* Section Description */}
                   <Box
@@ -7721,7 +7689,6 @@ const UnderwritePage: React.FC = () => {
                       </Box>
                     </Box>
                   )}
-
                   {/* Revenue Analysis Tab - gated by ADR predicate */}
                   {shouldShowAdrTabs(state) &&
                     state.activeProFormaTab === "revenue" && (
@@ -8247,41 +8214,24 @@ const UnderwritePage: React.FC = () => {
             </Accordion>
           </Card>
         )}
-        {/* Risk Assessment Section */}
+        {/* Risk Assessment Section (disabled in favor of Analyze page) */}
+        {false && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Risk Assessment
-                  </Typography>
-                  <Chip
-                    label="Moved to Analyze Page"
-                    color="info"
-                    variant="outlined"
-                    size="small"
-                  />
-                </Box>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
-                    🚀 Risk Assessment has been moved!
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 3 }}>
-                    All Risk Assessment functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate('/analyze')}
-                    sx={{ mr: 2 }}
-                  >
-                    Go to Analyze Page
-                  </Button>
-                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
-                    Features include: Risk scoring, Risk factors, Market conditions, Property age factors, and Comprehensive risk mitigation.
-                  </Typography>
-                </Box>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Risk Assessment
+                </Typography>
+                <Chip
+                  label="Premium Feature"
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 {/* Section Description */}
                 <Box
@@ -8314,13 +8264,13 @@ const UnderwritePage: React.FC = () => {
                   {state.riskScoreResults ? (
                     <>
                       <Chip
-                        label={`${state.riskScoreResults.overallRiskScore}/10`}
+                        label={`${state.riskScoreResults!.overallRiskScore}/10`}
                         color={
-                          state.riskScoreResults.overallRiskScore <= 3
+                          state.riskScoreResults!.overallRiskScore <= 3
                             ? "success"
-                            : state.riskScoreResults.overallRiskScore <= 5
+                            : state.riskScoreResults!.overallRiskScore <= 5
                               ? "warning"
-                              : state.riskScoreResults.overallRiskScore <= 7
+                              : state.riskScoreResults!.overallRiskScore <= 7
                                 ? "error"
                                 : "error"
                         }
@@ -8331,7 +8281,7 @@ const UnderwritePage: React.FC = () => {
                         variant="body1"
                         sx={{ color: brandColors.neutral.dark, fontWeight: 500 }}
                       >
-                        {state.riskScoreResults.riskCategory}
+                        {state.riskScoreResults!.riskCategory}
                       </Typography>
                     </>
                   ) : (
@@ -8372,7 +8322,7 @@ const UnderwritePage: React.FC = () => {
                           variant="h4"
                           sx={{ fontWeight: 600, color: "#e65100" }}
                         >
-                          {state.riskScoreResults.riskBreakdown.marketRisk}/10
+                          {state.riskScoreResults!.riskBreakdown.marketRisk}/10
                         </Typography>
                       </Box>
                       <Box
@@ -8393,7 +8343,7 @@ const UnderwritePage: React.FC = () => {
                           variant="h4"
                           sx={{ fontWeight: 600, color: "#e65100" }}
                         >
-                          {state.riskScoreResults.riskBreakdown.propertyRisk}/10
+                          {state.riskScoreResults!.riskBreakdown.propertyRisk}/10
                         </Typography>
                       </Box>
                       <Box
@@ -8414,7 +8364,7 @@ const UnderwritePage: React.FC = () => {
                           variant="h4"
                           sx={{ fontWeight: 600, color: "#e65100" }}
                         >
-                          {state.riskScoreResults.riskBreakdown.tenantRisk}/10
+                          {state.riskScoreResults!.riskBreakdown.tenantRisk}/10
                         </Typography>
                       </Box>
                       <Box
@@ -8435,7 +8385,7 @@ const UnderwritePage: React.FC = () => {
                           variant="h4"
                           sx={{ fontWeight: 600, color: "#e65100" }}
                         >
-                          {state.riskScoreResults.riskBreakdown.financingRisk}
+                          {state.riskScoreResults!.riskBreakdown.financingRisk}
                           /10
                         </Typography>
                       </Box>
@@ -8455,7 +8405,7 @@ const UnderwritePage: React.FC = () => {
                       >
                         Key Recommendations:
                       </Typography>
-                      {state.riskScoreResults.recommendations
+                      {state.riskScoreResults!.recommendations
                         .slice(0, 3)
                         .map((rec, index) => (
                           <Typography
@@ -8499,637 +8449,8 @@ const UnderwritePage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         </Card>
-
+        )}
         {/* Advanced Analysis Section */}
-        {/* Advanced Analysis Summary + CTA */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-          <Accordion>
-                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Advanced Analysis
-                  </Typography>
-                  <Chip
-                    label="Moved to Analyze Page"
-                    color="info"
-                    variant="outlined"
-                    size="small"
-                  />
-                </Box>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
-                    🚀 Advanced Analysis has been moved!
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 3 }}>
-                    All Advanced Analysis functionality has been moved to the dedicated Analyze page for better organization and enhanced features.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate('/analyze')}
-                    sx={{ mr: 2 }}
-                  >
-                    Go to Analyze Page
-                  </Button>
-                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
-                    Features include: Exit strategies, Tax implications, Seasonal adjustments, Market analysis, and Advanced modeling.
-                  </Typography>
-                </Box>
-              {/* Section Description */}
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds.selected,
-                  borderRadius: 1,
-                  border: "1px solid brandColors.accent.info",
-                  fontSize: "0.875rem",
-                  mb: 3,
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ color: "#1565c0", fontWeight: 500 }}
-                >
-                  <strong>Advanced Modeling & Specialized Analysis:</strong>{" "}
-                  Access sophisticated tools for exit strategies, tax
-                  implications, seasonal adjustments, and market analysis beyond
-                  basic financial projections.
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
-                  gap: 2,
-                  mb: 3,
-                }}
-              >
-                {/* Exit Strategies Summary */}
-                <Box
-                  sx={{
-                    p: 2,
-                    backgroundColor: brandColors.backgrounds.secondary,
-                    borderRadius: 1,
-                    textAlign: "center",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
-                    Exit Strategies
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: brandColors.primary }}
-                  >
-                    Available
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
-                  >
-                    Refinance, Sale, 1031 Exchange
-                  </Typography>
-                </Box>
-
-                {/* Tax Implications Summary */}
-                <Box
-                  sx={{
-                    p: 2,
-                    backgroundColor: brandColors.backgrounds.secondary,
-                    borderRadius: 1,
-                    textAlign: "center",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
-                    Tax Analysis
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: brandColors.primary }}
-                  >
-                    Available
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
-                  >
-                    Depreciation, deductions, gains
-                  </Typography>
-                </Box>
-
-                {/* Seasonal Adjustments Summary */}
-                <Box
-                  sx={{
-                    p: 2,
-                    backgroundColor: brandColors.backgrounds.secondary,
-                    borderRadius: 1,
-                    textAlign: "center",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
-                    Seasonal Analysis
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: brandColors.primary }}
-                  >
-                    Available
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: brandColors.neutral.dark, fontSize: "0.8rem" }}
-                  >
-                    Monthly occupancy patterns
-                  </Typography>
-                </Box>
-              </Box>
-
-
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-
-        {/* Fix & Flip Section */}
-
-        {/* Fix & Flip Section */}
-        {state.operationType === "Fix & Flip" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ fontWeight: 700 }}>Fix & Flip</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gap: 2,
-                    gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    label="After Repair Value (ARV)"
-                    value={state.fixFlip?.arv}
-                    onChange={(e) =>
-                      updateFixFlip("arv", parseCurrency(e.target.value))
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Months Until Flip"
-                    type="number"
-                    value={state.fixFlip?.holdingPeriodMonths}
-                    onChange={(e) =>
-                      updateFixFlip(
-                        "holdingPeriodMonths",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                  />
-                  <TextField
-                    fullWidth
-                    label="Holding Costs (Monthly)"
-                    value={state.fixFlip?.holdingCosts}
-                    onChange={(e) =>
-                      updateFixFlip(
-                        "holdingCosts",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Selling Costs %"
-                    value={state.fixFlip?.sellingCostsPercent}
-                    onChange={(e) =>
-                      updateFixFlip(
-                        "sellingCostsPercent",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">%</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Target %"
-                    value={state.fixFlip?.targetPercent}
-                    onChange={(e) =>
-                      updateFixFlip(
-                        "targetPercent",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">%</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Rehab Cost"
-                    value={state.fixFlip?.rehabCost}
-                    onChange={(e) =>
-                      updateFixFlip("rehabCost", parseCurrency(e.target.value))
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-
-                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
-                    Auto-calculated Results
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gap: 2,
-                      gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      label="Maximum Allowable Offer"
-                      value={formatCurrency(
-                        state.fixFlip?.maximumAllowableOffer || 0,
-                      )}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Projected Profit"
-                      value={formatCurrency(
-                        state.fixFlip?.projectedProfit || 0,
-                      )}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="ROI During Hold"
-                      value={
-                        (state.fixFlip?.roiDuringHold || 0).toFixed(1) + "%"
-                      }
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Annualized ROI"
-                      value={
-                        (state.fixFlip?.annualizedRoi || 0).toFixed(1) + "%"
-                      }
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Box>
-
-                  {/* Exit Strategy Results */}
-                  <Box
-                    sx={{
-                      mt: 3,
-                      p: 2,
-                      bgcolor: "#fff3e0",
-                      borderRadius: 1,
-                      border: "1px solid #ffb74d",
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ mb: 2, color: "#e65100", fontWeight: 600 }}
-                    >
-                      Exit Strategy Analysis
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gap: 2,
-                        gridTemplateColumns: {
-                          xs: "1fr",
-                          md: "repeat(auto-fit, minmax(200px, 1fr))",
-                        },
-                      }}
-                    >
-                      {state.fixFlip?.exitStrategies?.map((strategy, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            p: 2,
-                            bgcolor: "#fff",
-                            borderRadius: 1,
-                            border: "1px solid brandColors.borders.secondary",
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ color: brandColors.primary, mb: 1, fontWeight: 600 }}
-                          >
-                            {strategy.timeframe} Year Exit
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            Projected Value:{" "}
-                            {formatCurrency(strategy.projectedValue)}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            Net Proceeds: {formatCurrency(strategy.netProceeds)}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            ROI: {strategy.roi.toFixed(1)}%
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}
-                          >
-                            Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-        )}
-
-        {/* BRRRR Section */}
-        {state.operationType === "BRRRR" && (
-          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ fontWeight: 700 }}>BRRRR</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gap: 2,
-                    gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    label="After Repair Value (ARV)"
-                    value={state.brrrr?.arv}
-                    onChange={(e) =>
-                      updateBRRRR("arv", parseCurrency(e.target.value))
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Refinance LTV %"
-                    value={state.brrrr?.refinanceLtv}
-                    onChange={(e) =>
-                      updateBRRRR("refinanceLtv", parseCurrency(e.target.value))
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">%</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Refinance Interest Rate"
-                    value={state.brrrr?.refinanceInterestRate}
-                    onChange={(e) =>
-                      updateBRRRR(
-                        "refinanceInterestRate",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">%</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Loan Term (years)"
-                    type="number"
-                    value={state.brrrr?.loanTerm}
-                    onChange={(e) =>
-                      updateBRRRR("loanTerm", parseInt(e.target.value) || 0)
-                    }
-                  />
-                  <TextField
-                    fullWidth
-                    label="New Monthly Payment"
-                    value={state.brrrr?.newMonthlyPayment}
-                    onChange={(e) =>
-                      updateBRRRR(
-                        "newMonthlyPayment",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Original Cash Invested"
-                    value={state.brrrr?.originalCashInvested}
-                    onChange={(e) =>
-                      updateBRRRR(
-                        "originalCashInvested",
-                        parseCurrency(e.target.value),
-                      )
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-
-                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
-                    Auto-calculated Results
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gap: 2,
-                      gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      label="Cash-Out Amount"
-                      value={formatCurrency(state.brrrr?.cashOutAmount || 0)}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Remaining Cash in Deal"
-                      value={formatCurrency(
-                        state.brrrr?.remainingCashInDeal || 0,
-                      )}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="New Cash on Cash Return"
-                      value={
-                        (state.brrrr?.newCashOnCashReturn || 0).toFixed(1) + "%"
-                      }
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Refinance Closing Costs"
-                      value={formatCurrency(
-                        state.brrrr?.refinanceClosingCosts || 0,
-                      )}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Effective Cash-Out (After Costs)"
-                      value={formatCurrency(state.brrrr?.effectiveCashOut || 0)}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="LTV Constraint Met"
-                      value={state.brrrr?.ltvConstraint ? "Yes" : "No"}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Box>
-
-                  {/* Exit Strategy Results */}
-                  <Box
-                    sx={{
-                      mt: 3,
-                      p: 2,
-                      bgcolor: "#fff3e0",
-                      borderRadius: 1,
-                      border: "1px solid #ffb74d",
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ mb: 2, color: "#e65100", fontWeight: 600 }}
-                    >
-                      Exit Strategy Analysis
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gap: 2,
-                        gridTemplateColumns: {
-                          xs: "1fr",
-                          md: "repeat(auto-fit, minmax(200px, 1fr))",
-                        },
-                      }}
-                    >
-                      {state.brrrr?.exitStrategies?.map((strategy, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            p: 2,
-                            bgcolor: "#fff",
-                            borderRadius: 1,
-                            border: "1px solid brandColors.borders.secondary",
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ color: brandColors.primary, mb: 1, fontWeight: 600 }}
-                          >
-                            {strategy.timeframe} Year Exit
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            Projected Value:{" "}
-                            {formatCurrency(strategy.projectedValue)}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            Net Proceeds:{" "}
-                            {formatCurrency(strategy.projectedValue)}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, mb: 0.5 }}
-                          >
-                            ROI: {strategy.roi.toFixed(1)}%
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}
-                          >
-                            Annualized ROI: {strategy.annualizedRoi.toFixed(1)}%
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-        )}
-        {/* At a Glance Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>

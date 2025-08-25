@@ -23,7 +23,6 @@ A modern, responsive real estate platform homepage built with React and Material
 
 ### Core Features
 - **Hero Section:**
-  - Full-screen background with Victorian houses
   - Advanced search interface with autocomplete
   - Geolocation support
   - Search history with localStorage persistence

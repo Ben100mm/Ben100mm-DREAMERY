@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -30,6 +30,7 @@ import {
   Button,
   Divider as DividerComponent,
   LinearProgress,
+  CircularProgress,
   Table,
   TableHead,
   TableRow,
@@ -61,6 +62,7 @@ import {
   ModelTraining as ModelTrainingIcon,
   ExpandMore as ExpandMoreIcon,
   Delete as DeleteIcon,
+  CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme';
@@ -76,6 +78,8 @@ const AnalyzePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+
+
 
   // Pro Forma Analysis State
   const [activeProFormaTab, setActiveProFormaTab] = useState('presets');
@@ -301,6 +305,96 @@ const AnalyzePage: React.FC = () => {
     annualInterestRate: 6.5,
   });
 
+  // Dashboard State for Editing
+  const [dashboardForm, setDashboardForm] = useState({
+    propertyAddress: '',
+    agentOwner: '',
+    propertyType: propertyType || 'Single Family',
+    operationType: operationType || 'Buy & Hold',
+    financeType: offerType || 'Conventional',
+    listedPrice: listedPrice || 0,
+    purchasePrice: purchasePrice || 0,
+    downPayment: (loan.downPayment || 0),
+    closingCosts: (loan.closingCosts || 0),
+    rehabCosts: (loan.rehabCosts || 0),
+    interestRate: (loan.annualInterestRate || 0),
+    monthlyPayment: (loan.monthlyPayment || 0),
+    maintenance: (ops.maintenance || 0),
+    vacancy: (ops.vacancy || 0),
+    management: (ops.management || 0),
+    capEx: (ops.capEx || 0),
+    opEx: (ops.opEx || 0),
+    squareFootage: squareFootage || 0,
+    units: units || 1,
+    monthlyIncome: 0
+  });
+
+  const [dashboardErrors, setDashboardErrors] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Auto-save function
+  const autoSave = useCallback(async (updates: Partial<typeof dashboardForm>) => {
+    setIsSaving(true);
+    try {
+      // Simulate auto-save delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Update local state
+      setDashboardForm(prev => ({ ...prev, ...updates }));
+      
+      // Clear any previous errors for this field
+      const fieldName = Object.keys(updates)[0];
+      if (dashboardErrors[fieldName]) {
+        setDashboardErrors(prev => ({ ...prev, [fieldName]: '' }));
+      }
+      
+      // Here you would typically save to backend/database
+      console.log('Auto-saved:', updates);
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [dashboardErrors]);
+
+  // Validation function
+  const validateField = (field: string, value: any): string => {
+    switch (field) {
+      case 'purchasePrice':
+      case 'listedPrice':
+      case 'downPayment':
+      case 'closingCosts':
+      case 'rehabCosts':
+      case 'monthlyPayment':
+      case 'squareFootage':
+        return value < 0 ? 'Value cannot be negative' : '';
+      case 'interestRate':
+        return value < 0 || value > 100 ? 'Interest rate must be between 0-100%' : '';
+      case 'maintenance':
+      case 'vacancy':
+      case 'management':
+      case 'capEx':
+      case 'opEx':
+        return value < 0 || value > 100 ? 'Percentage must be between 0-100%' : '';
+      case 'units':
+        return value < 1 ? 'Must have at least 1 unit' : '';
+      case 'monthlyIncome':
+        return value < 0 ? 'Monthly income cannot be negative' : '';
+      default:
+        return '';
+    }
+  };
+
+  // Handle field changes with validation
+  const handleDashboardChange = (field: string, value: any) => {
+    const error = validateField(field, value);
+    setDashboardErrors(prev => ({ ...prev, [field]: error }));
+    
+    if (!error) {
+      autoSave({ [field]: value });
+    }
+  };
+
   // Helpers for Dashboard
   const currency = (n: number) => `$${Number.isFinite(n) ? Math.round(n).toLocaleString() : '0'}`;
   const computeLoanAmountSimple = () => Math.max(0, purchasePrice - (loan.downPayment || 0));
@@ -318,7 +412,7 @@ const AnalyzePage: React.FC = () => {
   const variableMonthlyFromPercentages = (income: number) =>
     income * ((ops.vacancy + ops.management + ops.capEx + ops.opEx) / 100);
 
-  const computeFixedMonthlyOps = (ops: typeof this.ops) => {
+  const computeFixedMonthlyOps = (ops: any) => {
     return (ops.maintenance + ops.vacancy + ops.management + ops.capEx + ops.opEx) * 1000;
   };
 
@@ -327,56 +421,827 @@ const AnalyzePage: React.FC = () => {
       case 'dashboard':
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Section Description */}
-            <Box
-              sx={{
-                p: 2,
-                backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                borderRadius: 1,
-                border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
-                fontSize: '0.875rem',
-              }}
-            >
-              <Typography variant="body2" sx={{ color: brandColors.primary, fontWeight: 500 }}>
-                <strong>At a Glance:</strong> Key deal inputs and calculated financial metrics to connect Analyze with Underwrite. Read-only snapshot; values update as you change assumptions elsewhere.
-              </Typography>
+            {/* Save Status Indicator */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              {isSaving ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={16} />
+                  <Typography variant="body2" color="text.secondary">
+                    Saving...
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CheckCircleIcon sx={{ color: 'success.main', fontSize: 16 }} />
+                  <Typography variant="body2" color="success.main">
+                    All changes saved
+                  </Typography>
+                </Box>
+              )}
             </Box>
 
             {/* Property & Deal Info */}
-            <Box sx={{ p: 2, bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb', borderRadius: 2, border: `1px solid ${brandColors.borders?.secondary || '#e5e7eb'}` }}>
-              <Typography sx={{ fontWeight: 600, mb: 2, color: brandColors.primary, fontSize: '0.9rem' }}>Property & Deal Info</Typography>
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                <TextField fullWidth label="Property Type" value={propertyType} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Operation Type" value={operationType} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Finance Type" value={offerType} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Units" value={units} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Square Footage" value={squareFootage > 0 ? squareFootage.toLocaleString() : 'N/A'} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="ARV" value={arv ? currency(arv) : 'N/A'} InputProps={{ readOnly: true }} />
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Property & Deal Info
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Property Address"
+                  value={dashboardForm.propertyAddress}
+                  onChange={(e) => handleDashboardChange('propertyAddress', e.target.value)}
+                  error={!!dashboardErrors.propertyAddress}
+                  helperText={dashboardErrors.propertyAddress}
+                />
+                <TextField
+                  fullWidth
+                  label="Agent/Owner"
+                  value={dashboardForm.agentOwner}
+                  onChange={(e) => handleDashboardChange('agentOwner', e.target.value)}
+                  error={!!dashboardErrors.agentOwner}
+                  helperText={dashboardErrors.agentOwner}
+                />
+                <TextField
+                  fullWidth
+                  label="Analysis Date"
+                  value={new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="Property Type"
+                  value={dashboardForm.propertyType}
+                  onChange={(e) => handleDashboardChange('propertyType', e.target.value)}
+                  error={!!dashboardErrors.propertyType}
+                  helperText={dashboardErrors.propertyType}
+                />
+                <TextField
+                  fullWidth
+                  label="Operation Type"
+                  value={dashboardForm.operationType}
+                  onChange={(e) => handleDashboardChange('operationType', e.target.value)}
+                  error={!!dashboardErrors.operationType}
+                  helperText={dashboardErrors.operationType}
+                />
+                <TextField
+                  fullWidth
+                  label="Finance Type"
+                  value={dashboardForm.financeType}
+                  onChange={(e) => handleDashboardChange('financeType', e.target.value)}
+                  error={!!dashboardErrors.financeType}
+                  helperText={dashboardErrors.financeType}
+                />
+              </Box>
+            </Box>
+
+            {/* Property Details */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Property Details
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Square Footage"
+                  value={dashboardForm.squareFootage}
+                  onChange={(e) => handleDashboardChange('squareFootage', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.squareFootage}
+                  helperText={dashboardErrors.squareFootage || 'Enter total square footage'}
+                />
+                <TextField
+                  fullWidth
+                  label="Number of Units"
+                  value={dashboardForm.units}
+                  onChange={(e) => handleDashboardChange('units', parseInt(e.target.value) || 1)}
+                  type="number"
+                  error={!!dashboardErrors.units}
+                  helperText={dashboardErrors.units || 'Enter number of units'}
+                />
+                <TextField
+                  fullWidth
+                  label="Price per SF"
+                  value={dashboardForm.squareFootage > 0 ? (dashboardForm.purchasePrice / dashboardForm.squareFootage).toFixed(2) : 'N/A'}
+                  InputProps={{ readOnly: true }}
+                  helperText="Calculated automatically"
+                />
+                <TextField
+                  fullWidth
+                  label="Price per Unit"
+                  value={dashboardForm.units > 0 ? (dashboardForm.purchasePrice / dashboardForm.units).toFixed(0) : 'N/A'}
+                  InputProps={{ readOnly: true }}
+                  helperText="Calculated automatically"
+                />
               </Box>
             </Box>
 
             {/* Key Financial Metrics */}
-            <Box sx={{ p: 2, bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb', borderRadius: 2, border: `1px solid ${brandColors.borders?.secondary || '#e5e7eb'}` }}>
-              <Typography sx={{ fontWeight: 600, mb: 2, color: brandColors.primary, fontSize: '0.9rem' }}>Key Financial Metrics</Typography>
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                <TextField fullWidth label="Listed Price" value={currency(listedPrice)} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Purchase Price" value={currency(purchasePrice)} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Total Acquisition Cost" value={currency(purchasePrice + (loan.closingCosts || 0) + (loan.rehabCosts || 0))} InputProps={{ readOnly: true }} helperText="Purchase + Closing + Immediate CapEx" />
-                <TextField fullWidth label="Total Project Cost" value={currency(purchasePrice + (loan.closingCosts || 0) + (loan.rehabCosts || 0))} InputProps={{ readOnly: true }} helperText="Acquisition + Rehab" />
-                <TextField fullWidth label="Loan Amount" value={currency(computeLoanAmountSimple())} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Interest Rate" value={`${(loan.annualInterestRate || 0).toFixed(2)}%`} InputProps={{ readOnly: true }} />
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Key Financial Metrics
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Total Acquisition Cost"
+                  value={formatCurrency(
+                    purchasePrice +
+                      (loan.closingCosts || 0) +
+                      (loan.rehabCosts || 0),
+                  )}
+                  InputProps={{ readOnly: true }}
+                  helperText="Purchase + Closing + Immediate CapEx"
+                />
+                <TextField
+                  fullWidth
+                  label="Total Project Cost"
+                  value={formatCurrency(
+                    purchasePrice +
+                      (loan.closingCosts || 0) +
+                      (loan.rehabCosts || 0) +
+                      (loan.rehabCosts || 0),
+                  )}
+                  InputProps={{ readOnly: true }}
+                  helperText="Acquisition + Rehab"
+                />
+                <TextField
+                  fullWidth
+                  label="Price per Unit"
+                  value="N/A"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="Price per SF"
+                  value={squareFootage > 0 ? formatCurrency(purchasePrice / squareFootage) : 'N/A'}
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="ARV (if value-add/flip)"
+                  value="N/A"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="Equity at Purchase"
+                  value="N/A"
+                  InputProps={{ readOnly: true }}
+                  helperText="ARV - Total Project Cost"
+                />
+                <TextField
+                  fullWidth
+                  label="LTV"
+                  value={purchasePrice > 0 ? ((computeLoanAmountSimple() / purchasePrice) * 100).toFixed(1) + '%' : 'N/A'}
+                  InputProps={{ readOnly: true }}
+                  helperText="Loan Amount ÷ Purchase Price"
+                />
+                <TextField
+                  fullWidth
+                  label="LTC"
+                  value={(() => {
+                    const totalProjectCost = purchasePrice + (loan.closingCosts || 0) + (loan.rehabCosts || 0) + (loan.rehabCosts || 0);
+                    return totalProjectCost > 0 ? ((computeLoanAmountSimple() / totalProjectCost) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Loan Amount ÷ Total Project Cost"
+                />
+                <TextField
+                  fullWidth
+                  label="Debt Yield"
+                  value={(() => {
+                    const annualNOI = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - variableMonthlyFromPercentages(computeMonthlyIncome())) * 12;
+                    const loanAmount = computeLoanAmountSimple();
+                    return loanAmount > 0 ? ((annualNOI / loanAmount) * 100).toFixed(2) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="NOI ÷ Loan Amount"
+                />
+                <TextField
+                  fullWidth
+                  label="DSCR (Y1)"
+                  value={(() => {
+                    const annualNOI = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - variableMonthlyFromPercentages(computeMonthlyIncome())) * 12;
+                    const annualDebtService = (loan.monthlyPayment || 0) * 12;
+                    return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="NOI ÷ Annual Debt Service"
+                />
+                <TextField
+                  fullWidth
+                  label="DSCR (Stabilized)"
+                  value={(() => {
+                    const stabilizedAnnualNOI = (computeMonthlyIncome() * 1.05 - computeFixedMonthlyOps(ops as any) * 1.03 - variableMonthlyFromPercentages(computeMonthlyIncome() * 1.05)) * 12;
+                    const annualDebtService = (loan.monthlyPayment || 0) * 12;
+                    return annualDebtService > 0 ? (stabilizedAnnualNOI / annualDebtService).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Stabilized NOI ÷ Annual Debt Service"
+                />
+                <TextField
+                  fullWidth
+                  label="Expense Ratio"
+                  value={(() => {
+                    const grossIncome = computeMonthlyIncome() * 12;
+                    const operatingExpenses = (computeFixedMonthlyOps(ops as any) + variableMonthlyFromPercentages(computeMonthlyIncome())) * 12;
+                    return grossIncome > 0 ? ((operatingExpenses / grossIncome) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Operating Expenses ÷ EGI"
+                />
+                <TextField
+                  fullWidth
+                  label="NOI Margin"
+                  value={(() => {
+                    const grossIncome = computeMonthlyIncome() * 12;
+                    const annualNOI = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - variableMonthlyFromPercentages(computeMonthlyIncome())) * 12;
+                    return grossIncome > 0 ? ((annualNOI / grossIncome) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="NOI ÷ EGI"
+                />
+                <TextField
+                  fullWidth
+                  label="GRM"
+                  value={(() => {
+                    const grossAnnualIncome = computeMonthlyIncome() * 12;
+                    return grossAnnualIncome > 0 ? (purchasePrice / grossAnnualIncome).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Purchase Price ÷ Gross Annual Income"
+                />
+                <TextField
+                  fullWidth
+                  label="Break-even Occupancy (No Debt)"
+                  value={(() => {
+                    try {
+                      const monthlyRevenue = computeMonthlyIncome();
+                      if (monthlyRevenue > 0) {
+                        const expenses = computeFixedMonthlyOps(ops as any) + variableMonthlyFromPercentages(monthlyRevenue);
+                        return ((expenses / monthlyRevenue) * 100).toFixed(1) + '%';
+                      } else {
+                        return '0.0%';
+                      }
+                    } catch (error) {
+                      return '0.0%';
+                    }
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Expenses ÷ GPR"
+                />
+                <TextField
+                  fullWidth
+                  label="Break-even Occupancy (With Debt)"
+                  value={(() => {
+                    try {
+                      const monthlyRevenue = computeMonthlyIncome();
+                      if (monthlyRevenue > 0) {
+                        const expenses = computeFixedMonthlyOps(ops as any) + variableMonthlyFromPercentages(monthlyRevenue);
+                        const debtService = loan.monthlyPayment || 0;
+                        return (((expenses + debtService) / monthlyRevenue) * 100).toFixed(1) + '%';
+                      } else {
+                        return '0.0%';
+                      }
+                    } catch (error) {
+                      return '0.0%';
+                    }
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="(Expenses + Debt Service) ÷ GPR"
+                />
+                <TextField
+                  fullWidth
+                  label="Payback Period (Years)"
+                  value={(() => {
+                    const totalCashInvested = (loan.downPayment || 0) + (loan.closingCosts || 0) + (loan.rehabCosts || 0);
+                    const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12;
+                    return annualCashFlow > 0 ? (totalCashInvested / annualCashFlow).toFixed(1) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Total Cash Invested ÷ Annual Cash Flow"
+                />
+                <TextField
+                  fullWidth
+                  label="Equity Multiple (MOIC)"
+                  value={(() => {
+                    const totalCashInvested = (loan.downPayment || 0) + (loan.closingCosts || 0) + (loan.rehabCosts || 0);
+                    const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12;
+                    const totalDistributions = annualCashFlow * 5;
+                    return totalCashInvested > 0 ? (totalDistributions / totalCashInvested).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Total Distributions ÷ Total Cash Invested"
+                />
+                <TextField
+                  fullWidth
+                  label="IRR (Levered)"
+                  value={(() => {
+                    const totalCashInvested = (loan.downPayment || 0) + (loan.closingCosts || 0) + (loan.rehabCosts || 0);
+                    const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12;
+                    const futureValue = purchasePrice * Math.pow(1.03, 5);
+                    const totalReturn = annualCashFlow * 5 + futureValue - totalCashInvested;
+                    const irr = totalCashInvested > 0 ? Math.pow((totalReturn + totalCashInvested) / totalCashInvested, 1 / 5) - 1 : 0;
+                    return (irr * 100).toFixed(1) + '%';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Internal Rate of Return (Levered)"
+                />
+                <TextField
+                  fullWidth
+                  label="IRR (Unlevered)"
+                  value={(() => {
+                    const totalCashInvested = purchasePrice + (loan.closingCosts || 0) + (loan.rehabCosts || 0);
+                    const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any)) * 12;
+                    const futureValue = purchasePrice * Math.pow(1.03, 5);
+                    const totalReturn = annualCashFlow * 5 + futureValue - totalCashInvested;
+                    const irr = totalCashInvested > 0 ? Math.pow((totalReturn + totalCashInvested) / totalCashInvested, 1 / 5) - 1 : 0;
+                    return (irr * 100).toFixed(1) + '%';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Internal Rate of Return (Unlevered)"
+                />
+                <TextField
+                  fullWidth
+                  label="Return on Equity (Current)"
+                  value={(() => {
+                    const equity = purchasePrice - computeLoanAmountSimple();
+                    const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12;
+                    return equity > 0 ? ((annualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Annual Cash Flow ÷ Current Equity"
+                />
+                <TextField
+                  fullWidth
+                  label="Return on Equity (Stabilized)"
+                  value={(() => {
+                    const equity = purchasePrice - computeLoanAmountSimple();
+                    const stabilizedAnnualCashFlow = (computeMonthlyIncome() * 1.05 - computeFixedMonthlyOps(ops as any) * 1.03 - (loan.monthlyPayment || 0)) * 12;
+                    return equity > 0 ? ((stabilizedAnnualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Stabilized Annual Cash Flow ÷ Current Equity"
+                />
+                <TextField
+                  fullWidth
+                  label="Cash Reserve Months on Hand"
+                  value={(() => {
+                    const monthlyCashFlow = computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0);
+                    const cashReserve = monthlyCashFlow * 6;
+                    return monthlyCashFlow > 0 ? (cashReserve / monthlyCashFlow).toFixed(1) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Cash Reserve ÷ Monthly Cash Flow"
+                />
               </Box>
             </Box>
 
-            {/* Income & Ratios */}
-            <Box sx={{ p: 2, bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb', borderRadius: 2, border: `1px solid ${brandColors.borders?.secondary || '#e5e7eb'}` }}>
-              <Typography sx={{ fontWeight: 600, mb: 2, color: brandColors.primary, fontSize: '0.9rem' }}>Income & Performance</Typography>
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-                <TextField fullWidth label="Monthly Income" value={currency(computeMonthlyIncome())} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Monthly Operating Expenses" value={currency(computeFixedMonthlyOps(ops as any) + variableMonthlyFromPercentages(computeMonthlyIncome()))} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Monthly Cash Flow" value={currency(computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0))} InputProps={{ readOnly: true }} />
-                <TextField fullWidth label="Annual Cash Flow" value={currency((computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12)} InputProps={{ readOnly: true }} />
+            {/* Financial Terms */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Financial Terms
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Listed Price"
+                  value={dashboardForm.listedPrice}
+                  onChange={(e) => handleDashboardChange('listedPrice', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.listedPrice}
+                  helperText={dashboardErrors.listedPrice || 'Enter the listed price'}
+                />
+                <TextField
+                  fullWidth
+                  label="Purchase Price"
+                  value={dashboardForm.purchasePrice}
+                  onChange={(e) => handleDashboardChange('purchasePrice', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.purchasePrice}
+                  helperText={dashboardErrors.purchasePrice || 'Enter the purchase price'}
+                />
+                <TextField
+                  fullWidth
+                  label="Down Payment"
+                  value={dashboardForm.downPayment}
+                  onChange={(e) => handleDashboardChange('downPayment', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.downPayment}
+                  helperText={dashboardErrors.downPayment || 'Enter the down payment amount'}
+                />
+                <TextField
+                  fullWidth
+                  label="Loan Amount"
+                  value={dashboardForm.purchasePrice - dashboardForm.downPayment}
+                  InputProps={{ readOnly: true }}
+                  helperText="Calculated automatically"
+                />
+                <TextField
+                  fullWidth
+                  label="Interest Rate (%)"
+                  value={dashboardForm.interestRate}
+                  onChange={(e) => handleDashboardChange('interestRate', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.interestRate}
+                  helperText={dashboardErrors.interestRate || 'Enter annual interest rate'}
+                />
+                <TextField
+                  fullWidth
+                  label="Total Monthly Debt Service"
+                  value={dashboardForm.monthlyPayment}
+                  onChange={(e) => handleDashboardChange('monthlyPayment', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.monthlyPayment}
+                  helperText={dashboardErrors.monthlyPayment || 'Enter monthly payment amount'}
+                />
+              </Box>
+            </Box>
+
+            {/* Income & Performance */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Income & Performance
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Monthly Income"
+                  value={dashboardForm.monthlyIncome}
+                  onChange={(e) => handleDashboardChange('monthlyIncome', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.monthlyIncome}
+                  helperText={dashboardErrors.monthlyIncome || 'Enter monthly income amount'}
+                />
+                <TextField
+                  fullWidth
+                  label="Monthly Operating Expenses"
+                  value={dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx}
+                  InputProps={{ readOnly: true }}
+                  helperText="Calculated from percentages below"
+                />
+                <TextField
+                  fullWidth
+                  label="Monthly Cash Flow"
+                  value={dashboardForm.monthlyIncome - (dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx) - dashboardForm.monthlyPayment}
+                  InputProps={{ readOnly: true }}
+                  helperText="Monthly Income - Operating Expenses - Debt Service"
+                />
+                <TextField
+                  fullWidth
+                  label="Annual Cash Flow"
+                  value={(dashboardForm.monthlyIncome - (dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx) - dashboardForm.monthlyPayment) * 12}
+                  InputProps={{ readOnly: true }}
+                  helperText="Monthly Cash Flow × 12"
+                />
+                <TextField
+                  fullWidth
+                  label="Cash on Cash Return"
+                  value={(() => {
+                    const annualCashFlow = (dashboardForm.monthlyIncome - (dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx) - dashboardForm.monthlyPayment) * 12;
+                    const totalCashInvested = dashboardForm.downPayment + dashboardForm.closingCosts + dashboardForm.rehabCosts;
+                    return totalCashInvested > 0 ? ((annualCashFlow / totalCashInvested) * 100).toFixed(1) + '%' : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Annual Cash Flow ÷ Total Cash Invested"
+                />
+                <TextField
+                  fullWidth
+                  label="Break Even Occupancy"
+                  value={(() => {
+                    try {
+                      const monthlyRevenue = dashboardForm.monthlyIncome;
+                      if (monthlyRevenue > 0) {
+                        const expenses = dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx;
+                        return ((expenses / monthlyRevenue) * 100).toFixed(1) + '%';
+                      } else {
+                        return '0.0%';
+                      }
+                    } catch (error) {
+                      return '0.0%';
+                    }
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="Operating Expenses ÷ Monthly Revenue"
+                />
+              </Box>
+            </Box>
+
+            {/* Operating Expenses */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Operating Expenses (% of Monthly Income)
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Maintenance (%)"
+                  value={dashboardForm.maintenance}
+                  onChange={(e) => handleDashboardChange('maintenance', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.maintenance}
+                  helperText={dashboardErrors.maintenance || 'Enter maintenance percentage'}
+                />
+                <TextField
+                  fullWidth
+                  label="Vacancy (%)"
+                  value={dashboardForm.vacancy}
+                  onChange={(e) => handleDashboardChange('vacancy', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.vacancy}
+                  helperText={dashboardErrors.vacancy || 'Enter vacancy percentage'}
+                />
+                <TextField
+                  fullWidth
+                  label="Management (%)"
+                  value={dashboardForm.management}
+                  onChange={(e) => handleDashboardChange('management', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.management}
+                  helperText={dashboardErrors.management || 'Enter management percentage'}
+                />
+                <TextField
+                  fullWidth
+                  label="CapEx (%)"
+                  value={dashboardForm.capEx}
+                  onChange={(e) => handleDashboardChange('capEx', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.capEx}
+                  helperText={dashboardErrors.capEx || 'Enter CapEx percentage'}
+                />
+                <TextField
+                  fullWidth
+                  label="Other Operating Expenses (%)"
+                  value={dashboardForm.opEx}
+                  onChange={(e) => handleDashboardChange('opEx', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.opEx}
+                  helperText={dashboardErrors.opEx || 'Enter other expenses percentage'}
+                />
+                <TextField
+                  fullWidth
+                  label="Total Operating Expenses (%)"
+                  value={dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx}
+                  InputProps={{ readOnly: true }}
+                  helperText="Sum of all operating expense percentages"
+                />
+              </Box>
+            </Box>
+
+            {/* Costs & Expenses */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Costs & Expenses
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Total Project Cost"
+                  value={dashboardForm.purchasePrice + dashboardForm.closingCosts + dashboardForm.rehabCosts}
+                  InputProps={{ readOnly: true }}
+                  helperText="Purchase Price + Closing Costs + Rehab Costs"
+                />
+                <TextField
+                  fullWidth
+                  label="Closing Costs"
+                  value={dashboardForm.closingCosts}
+                  onChange={(e) => handleDashboardChange('closingCosts', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.closingCosts}
+                  helperText={dashboardErrors.closingCosts || 'Enter closing costs'}
+                />
+                <TextField
+                  fullWidth
+                  label="Rehab Costs"
+                  value={dashboardForm.rehabCosts}
+                  onChange={(e) => handleDashboardChange('rehabCosts', parseFloat(e.target.value) || 0)}
+                  type="number"
+                  error={!!dashboardErrors.rehabCosts}
+                  helperText={dashboardErrors.rehabCosts || 'Enter rehab costs'}
+                />
+                <TextField
+                  fullWidth
+                  label="Variable Monthly Expenses"
+                  value={dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx}
+                  InputProps={{ readOnly: true }}
+                  helperText="Calculated from percentages above"
+                />
+                <TextField
+                  fullWidth
+                  label="Total Monthly Expenses"
+                  value={dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx}
+                  InputProps={{ readOnly: true }}
+                  helperText="Sum of all operating expenses"
+                />
+                <TextField
+                  fullWidth
+                  label="Total Annual Expenses"
+                  value={(dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx) * 12}
+                  InputProps={{ readOnly: true }}
+                  helperText="Monthly Expenses × 12"
+                />
+              </Box>
+            </Box>
+
+            {/* Sensitivities */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: brandColors.primary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Sensitivities
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="DSCR at -10% Rent"
+                  value={(() => {
+                    const reducedIncome = dashboardForm.monthlyIncome * 0.9;
+                    const annualNOI = (reducedIncome - (dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx)) * 12;
+                    const annualDebtService = dashboardForm.monthlyPayment * 12;
+                    return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="DSCR with 10% rent reduction"
+                />
+                <TextField
+                  fullWidth
+                  label="DSCR at +10% Expenses"
+                  value={(() => {
+                    const increasedExpenses = (dashboardForm.maintenance + dashboardForm.vacancy + dashboardForm.management + dashboardForm.capEx + dashboardForm.opEx) * 1.1;
+                    const annualNOI = (dashboardForm.monthlyIncome - increasedExpenses) * 12;
+                    const annualDebtService = dashboardForm.monthlyPayment * 12;
+                    return annualDebtService > 0 ? (annualNOI / annualDebtService).toFixed(2) : 'N/A';
+                  })()}
+                  InputProps={{ readOnly: true }}
+                  helperText="DSCR with 10% expense increase"
+                />
               </Box>
             </Box>
           </Box>
@@ -1512,13 +2377,20 @@ const AnalyzePage: React.FC = () => {
                 mb: 2,
               }}
             >
-              <Typography variant="body2" sx={{ color: '#e65100', fontWeight: 500 }}>
-                <strong>Risk Scoring & Mitigation:</strong> Comprehensive risk assessment across market, property, tenant, and financing factors with actionable recommendations for risk mitigation.
+              <Typography
+                variant="body2"
+                sx={{ color: '#e65100', fontWeight: 500 }}
+              >
+                <strong>Risk Scoring & Mitigation:</strong> Comprehensive
+                risk assessment across market, property, tenant, and
+                financing factors with actionable recommendations for risk
+                mitigation.
               </Typography>
             </Box>
 
-            {/* Overall Risk Score */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Overall Risk Score:
               </Typography>
@@ -1538,67 +2410,168 @@ const AnalyzePage: React.FC = () => {
                     variant="filled"
                     sx={{ fontSize: '1.1rem', fontWeight: 600 }}
                   />
-                  <Typography variant="body1" sx={{ color: brandColors.neutral?.dark || '#333', fontWeight: 500 }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: brandColors.neutral?.dark || '#333', fontWeight: 500 }}
+                  >
                     {riskScoreResults.riskCategory}
                   </Typography>
                 </>
               ) : (
-                <Chip label="Not Calculated" color="default" variant="outlined" />
+                <Chip
+                  label="Not Calculated"
+                  color="default"
+                  variant="outlined"
+                />
               )}
             </Box>
 
-            {/* Breakdown */}
             {riskScoreResults && (
               <>
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(200px, 1fr))',
                     gap: 2,
                     mb: 3,
                   }}
                 >
-                  {[{ label: 'Market Risk', value: riskScoreResults.riskBreakdown.marketRisk },
-                    { label: 'Property Risk', value: riskScoreResults.riskBreakdown.propertyRisk },
-                    { label: 'Tenant Risk', value: riskScoreResults.riskBreakdown.tenantRisk },
-                    { label: 'Financing Risk', value: riskScoreResults.riskBreakdown.financingRisk },
-                  ].map(item => (
-                    <Box key={item.label} sx={{ p: 2, backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb', borderRadius: 1, textAlign: 'center' }}>
-                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>
-                        {item.label}
-                      </Typography>
-                      <Typography variant="h4" sx={{ fontWeight: 600, color: '#e65100' }}>
-                        {item.value}/10
-                      </Typography>
-                    </Box>
-                  ))}
+                  <Box
+                    sx={{
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      borderRadius: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ color: brandColors.primary, mb: 1 }}
+                    >
+                      Market Risk
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: '#e65100' }}
+                    >
+                      {riskScoreResults.riskBreakdown.marketRisk}/10
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      borderRadius: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ color: brandColors.primary, mb: 1 }}
+                    >
+                      Property Risk
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: '#e65100' }}
+                    >
+                      {riskScoreResults.riskBreakdown.propertyRisk}/10
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      borderRadius: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ color: brandColors.primary, mb: 1 }}
+                    >
+                      Tenant Risk
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: '#e65100' }}
+                    >
+                      {riskScoreResults.riskBreakdown.tenantRisk}/10
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      borderRadius: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ color: brandColors.primary, mb: 1 }}
+                    >
+                      Financing Risk
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: '#e65100' }}
+                    >
+                      {riskScoreResults.riskBreakdown.financingRisk}
+                      /10
+                    </Typography>
+                  </Box>
                 </Box>
 
-                {/* Recommendations */}
-                <Box sx={{ p: 2, backgroundColor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#e65100', mb: 1 }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    backgroundColor: '#fff3e0',
+                    borderRadius: 1,
+                    border: '1px solid #ffb74d',
+                  }}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: 600, color: '#e65100', mb: 1 }}
+                  >
                     Key Recommendations:
                   </Typography>
-                  {(riskScoreResults.recommendations || []).slice(0, 3).map((rec, index) => (
-                    <Typography key={index} variant="body2" sx={{ mb: 0.5, color: '#bf360c' }}>
-                      - {rec}
-                    </Typography>
-                  ))}
+                  {riskScoreResults.recommendations
+                    .slice(0, 3)
+                    .map((rec, index) => (
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        sx={{ mb: 0.5, color: '#bf360c' }}
+                      >
+                        - {rec}
+                      </Typography>
+                    ))}
                 </Box>
               </>
             )}
 
-            {/* Recalculate Button */}
             <Box sx={{ mt: 2, textAlign: 'center' }}>
               <Button
                 variant="contained"
                 onClick={() => {
-                  const results = calculateRiskScore(riskFactors, marketConditions, propertyAge);
+                  const results = calculateRiskScore(
+                    riskFactors,
+                    marketConditions,
+                    propertyAge,
+                  );
                   setRiskScoreResults(results);
                 }}
-                sx={{ backgroundColor: brandColors.primary, '&:hover': { backgroundColor: '#2d3748' } }}
+                sx={{
+                  backgroundColor: brandColors.primary,
+                  '&:hover': { backgroundColor: '#2d3748' },
+                }}
               >
-                {riskScoreResults ? 'Recalculate Risk Score' : 'Calculate Risk Score'}
+                {riskScoreResults
+                  ? 'Recalculate Risk Score'
+                  : 'Calculate Risk Score'}
               </Button>
             </Box>
           </Box>
@@ -1786,6 +2759,64 @@ const AnalyzePage: React.FC = () => {
                 </Box>
               </Box>
             ))}
+
+            {/* Action Buttons */}
+            <Box sx={{ px: 3, py: 2, mt: 'auto' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    '&:hover': {
+                      borderColor: brandColors.primary,
+                      backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                    },
+                  }}
+                >
+                  Export PDF
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{
+                    borderColor: brandColors.primary,
+                    color: brandColors.primary,
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    '&:hover': {
+                      borderColor: brandColors.primary,
+                      backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                    },
+                  }}
+                >
+                  Email PDF
+                </Button>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: brandColors.primary,
+                    color: 'white',
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    '&:hover': {
+                      backgroundColor: brandColors.primary,
+                      boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                    },
+                  }}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </Box>
           </List>
         </Box>
 

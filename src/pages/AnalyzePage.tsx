@@ -65,10 +65,11 @@ import {
   CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
+import { AnalysisProvider } from '../context/AnalysisContext';
 import { brandColors } from '../theme';
 import { useNavigate } from 'react-router-dom';
 import { calculateRiskScore, defaultMarketConditions } from '../utils/advancedCalculations';
-import AdvancedCalculationsPage from './AdvancedCalculationsPage';
+import AdvancedModelingTab from './AdvancedModelingTab';
 
 const drawerWidth = 280;
 
@@ -96,8 +97,8 @@ const AnalyzePage: React.FC = () => {
   }>>([]);
   const [selectedCustomPreset, setSelectedCustomPreset] = useState<string | null>(null);
   const [sensitivityAnalysis, setSensitivityAnalysis] = useState({
-    sensitivityRange: 20,
-    sensitivitySteps: 5,
+    sensitivityRange: 90,
+    sensitivitySteps: 14,
   });
   const [revenueInputs, setRevenueInputs] = useState({
     totalRooms: 33,
@@ -283,7 +284,6 @@ const AnalyzePage: React.FC = () => {
     { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
     { id: 'pro-forma', label: 'Pro Forma Analysis', icon: <AccountBalanceIcon /> },
     { id: 'risk-assessment', label: 'Risk Assessment', icon: <SecurityIcon /> },
-    { id: 'advanced-analysis', label: 'Advanced Analysis', icon: <TrendingUpIcon /> },
     { id: 'advanced-modeling', label: 'Advanced Modeling', icon: <ModelTrainingIcon /> },
   ];
 
@@ -1753,7 +1753,7 @@ const AnalyzePage: React.FC = () => {
                         }))
                       }
                       min={10}
-                      max={50}
+                      max={90}
                       step={5}
                       sx={{ width: 100 }}
                     />
@@ -1769,7 +1769,7 @@ const AnalyzePage: React.FC = () => {
                         }))
                       }
                       min={3}
-                      max={9}
+                      max={20}
                       step={1}
                       sx={{ width: 100 }}
                     />
@@ -2250,14 +2250,14 @@ const AnalyzePage: React.FC = () => {
                       mb: 3,
                     }}
                   >
-                    <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds?.selected || "#e3f2fd" }}>
+                    <Card sx={{ p: 2, backgroundColor: "#f5f5f5" }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: brandColors.actions?.primary || "#1976d2", mb: 1 }}
+                        sx={{ fontWeight: 600, color: "#424242", mb: 1 }}
                       >
                         Break-Even Occupancy
                       </Typography>
-                      <Typography variant="h6" sx={{ color: brandColors.actions?.primary || "#1976d2" }}>
+                      <Typography variant="h6" sx={{ color: "#424242" }}>
                         {calculateBreakEvenOccupancy().toFixed(1)}%
                       </Typography>
                       <Typography
@@ -2268,14 +2268,14 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                     </Card>
 
-                    <Card sx={{ p: 2, backgroundColor: "#f3e5f5" }}>
+                    <Card sx={{ p: 2, backgroundColor: "#e0e0e0" }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#7b1fa2", mb: 1 }}
+                        sx={{ fontWeight: 600, color: "#616161", mb: 1 }}
                       >
                         Break-Even ADR
                       </Typography>
-                      <Typography variant="h6" sx={{ color: "#7b1fa2" }}>
+                      <Typography variant="h6" sx={{ color: "#616161" }}>
                         ${calculateBreakEvenADR().toFixed(0)}
                       </Typography>
                       <Typography
@@ -2286,14 +2286,14 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                     </Card>
 
-                    <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds?.success || "#e8f5e8" }}>
+                    <Card sx={{ p: 2, backgroundColor: "#d5d5d5" }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#388e3c", mb: 1 }}
+                        sx={{ fontWeight: 600, color: "#757575", mb: 1 }}
                       >
                         Margin of Safety
                       </Typography>
-                      <Typography variant="h6" sx={{ color: "#388e3c" }}>
+                      <Typography variant="h6" sx={{ color: "#757575" }}>
                         {calculateMarginOfSafety().toFixed(1)}%
                       </Typography>
                       <Typography
@@ -2577,94 +2577,8 @@ const AnalyzePage: React.FC = () => {
           </Box>
         );
       case 'advanced-analysis':
-        return (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Section Description */}
-            <Box
-              sx={{
-                p: 2,
-                backgroundColor: brandColors.backgrounds?.selected || '#e8f2ff',
-                borderRadius: 1,
-                border: '1px solid',
-                borderColor: brandColors.accent?.info || '#90caf9',
-                fontSize: '0.875rem',
-              }}
-            >
-              <Typography variant="body2" sx={{ color: '#1565c0', fontWeight: 500 }}>
-                <strong>Advanced Modeling & Specialized Analysis:</strong> Access sophisticated tools for exit strategies, tax implications, seasonal adjustments, and market analysis beyond basic financial projections.
-              </Typography>
-            </Box>
-
-            {/* Summary Tiles */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' },
-                gap: 2,
-              }}
-            >
-              {/* Exit Strategies Summary */}
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Exit Strategies
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Refinance, Sale, 1031 Exchange
-                </Typography>
-              </Box>
-
-              {/* Tax Implications Summary */}
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Tax Analysis
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Depreciation, deductions, gains
-                </Typography>
-              </Box>
-
-              {/* Seasonal Adjustments Summary */}
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
-                  borderRadius: 1,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
-                  Seasonal Analysis
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
-                  Available
-                </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
-                  Monthly occupancy patterns
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        );
+        // Removed: Advanced Analysis merged into Advanced Modeling
+        return null;
       case 'advanced-modeling':
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -2684,9 +2598,75 @@ const AnalyzePage: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Embedded Advanced Calculations Experience */}
+            {/* Overview Tiles (migrated from Advanced Analysis) */}
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  p: 2,
+                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                  borderRadius: 1,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
+                  Exit Strategies
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                  Available
+                </Typography>
+                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
+                  Refinance, Sale, 1031 Exchange
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  p: 2,
+                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                  borderRadius: 1,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
+                  Tax Analysis
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                  Available
+                </Typography>
+                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
+                  Depreciation, deductions, gains
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  p: 2,
+                  backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                  borderRadius: 1,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: brandColors.neutral?.dark || '#333', mb: 1 }}>
+                  Seasonal Analysis
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                  Available
+                </Typography>
+                <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || '#333', fontSize: '0.8rem' }}>
+                  Monthly occupancy patterns
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Embedded Advanced Modeling Experience */}
             <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
-              <AdvancedCalculationsPage />
+              <AdvancedModelingTab />
             </Box>
           </Box>
         );
@@ -2700,7 +2680,7 @@ const AnalyzePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <AnalysisProvider>
       <PageAppBar title="Dreamery – Analyze" />
       <Box sx={{ display: 'flex', height: '100vh', pt: '64px' }}>
         {/* Sidebar */}
@@ -2856,7 +2836,7 @@ const AnalyzePage: React.FC = () => {
           {renderContent()}
         </Box>
       </Box>
-    </div>
+    </AnalysisProvider>
   );
 };
 

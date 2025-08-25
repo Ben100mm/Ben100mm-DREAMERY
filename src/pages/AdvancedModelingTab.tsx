@@ -79,6 +79,7 @@ import {
   defaultExitStrategies,
 } from "../utils/advancedCalculations";
 import { type DealState } from "../types/deal";
+import { useAnalysis } from "../context/AnalysisContext";
 import { formatCurrency } from "../components/UXComponents";
 import {
   LineChart,
@@ -149,7 +150,7 @@ function TabPanel(props: TabPanelProps) {
 // MAIN COMPONENT
 // ============================================================================
 
-const AdvancedCalculationsPage: React.FC = () => {
+const AdvancedModelingTab: React.FC = () => {
   // ============================================================================
   // STATE AND HOOKS
   // ============================================================================
@@ -164,7 +165,7 @@ const AdvancedCalculationsPage: React.FC = () => {
   });
   const [showTour, setShowTour] = useState(true);
   const [allResults, setAllResults] = useState<PartialCalculatorResults>({});
-  const [dealState, setDealState] = useState<DealState | null>(null);
+  const { dealState, setDealState } = useAnalysis();
   const [showConfiguration, setShowConfiguration] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [scenarios, setScenarios] = useState<
@@ -184,7 +185,7 @@ const AdvancedCalculationsPage: React.FC = () => {
     {
       target: "config-status-alert",
       content:
-        "Welcome to Advanced Analysis. Begin by completing the Global Configuration to unlock comprehensive financial modeling capabilities.",
+        "Welcome to Advanced Modeling. Begin by completing the Global Configuration to unlock comprehensive financial modeling capabilities.",
       placement: "bottom",
     },
     {
@@ -731,7 +732,7 @@ const AdvancedCalculationsPage: React.FC = () => {
       // Show a temporary success message
       setTimeout(() => {
         // You could add a toast notification here
-        console.log("Advanced analysis features are now available!");
+        console.log("Advanced modeling features are now available!");
 
         // Add a visual celebration effect
         const header = document.querySelector(
@@ -1012,14 +1013,9 @@ const AdvancedCalculationsPage: React.FC = () => {
               mb: 2,
             }}
           >
-            {/* Left side: Title and Status */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Typography
-                variant="h4"
-                sx={{ fontWeight: 700, color: brandColors.primary }}
-              >
-                Advanced Analysis
-              </Typography>
+            {/* Single Horizontal Flow - All Elements in One Row */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+              {/* Ready Status */}
               {dealState && (
                 <Box
                   sx={{
@@ -1071,10 +1067,87 @@ const AdvancedCalculationsPage: React.FC = () => {
                   )}
                 </Box>
               )}
-            </Box>
-            {/* Right side: Primary Actions */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              {/* Last Market Data Update Indicator */}
+
+              {/* History Indicator */}
+              {dealState && dealHistory.length > 1 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    px: 2,
+                    py: 0.75,
+                    backgroundColor: brandColors.backgrounds.hover,
+                    borderRadius: 1.5,
+                    border: `1px solid ${brandColors.primary}`,
+                    minHeight: 36,
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ color: brandColors.primary, fontWeight: 500 }}
+                  >
+                    History: {dealHistory.length - 1} step
+                    {dealHistory.length > 2 ? "s" : ""} available
+                  </Typography>
+                </Box>
+              )}
+
+              {/* Undo Button */}
+              <Button
+                variant="outlined"
+                onClick={handleUndo}
+                disabled={!canUndo}
+                startIcon={<UndoIcon aria-label="Undo" />}
+                aria-label={
+                  canUndo
+                    ? `Undo last change (${dealHistory.length - 1} steps available)`
+                    : "No changes to undo"
+                }
+                data-testid="undo-button"
+                sx={{
+                  borderColor: canUndo ? brandColors.primary : "#ccc",
+                  color: canUndo ? brandColors.primary : "#ccc",
+                  "&:hover": canUndo
+                    ? { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover }
+                    : {},
+                  minWidth: 80,
+                  px: 2,
+                  py: 0.75,
+                  minHeight: 36,
+                }}
+              >
+                Undo
+              </Button>
+
+              {/* Reset Button */}
+              <Button
+                variant="outlined"
+                onClick={handleReset}
+                disabled={!canReset}
+                startIcon={<RestartAltIcon aria-label="Reset" />}
+                aria-label={
+                  canReset
+                    ? "Reset to initial state"
+                    : "No initial state to reset to"
+                }
+                data-testid="reset-button"
+                sx={{
+                  borderColor: canReset ? brandColors.actions.error : "#ccc",
+                  color: canReset ? brandColors.actions.error : "#ccc",
+                  "&:hover": canReset
+                    ? { borderColor: brandColors.actions.error, bgcolor: brandColors.backgrounds.error }
+                    : {},
+                  minWidth: 80,
+                  px: 2,
+                  py: 0.75,
+                  minHeight: 36,
+                }}
+              >
+                Reset
+              </Button>
+
+              {/* Market Data Update Indicator */}
               {dealState?.lastMarketDataUpdate && (
                 <Button
                   variant="outlined"
@@ -1123,6 +1196,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 </Button>
               )}
 
+              {/* Guided Tour Button */}
               <Button
                 variant="outlined"
                 onClick={() => setShowGuidedTour(true)}
@@ -1140,6 +1214,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 Guided Tour
               </Button>
 
+              {/* Back to Underwrite Button */}
               <Button
                 variant="outlined"
                 disabled={false}
@@ -1181,95 +1256,7 @@ const AdvancedCalculationsPage: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Secondary Actions Row */}
-          {dealState && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                flexWrap: "wrap",
-              }}
-            >
-              {/* History Indicator */}
-              {dealHistory.length > 1 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    px: 2,
-                    py: 0.75,
-                    backgroundColor: brandColors.backgrounds.hover,
-                    borderRadius: 1.5,
-                    border: `1px solid ${brandColors.primary}`,
-                    minHeight: 36,
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ color: brandColors.primary, fontWeight: 500 }}
-                  >
-                    History: {dealHistory.length - 1} step
-                    {dealHistory.length > 2 ? "s" : ""} available
-                  </Typography>
-                </Box>
-              )}
 
-              {/* Undo/Reset Controls */}
-              <Button
-                variant="outlined"
-                onClick={handleUndo}
-                disabled={!canUndo}
-                startIcon={<UndoIcon aria-label="Undo" />}
-                aria-label={
-                  canUndo
-                    ? `Undo last change (${dealHistory.length - 1} steps available)`
-                    : "No changes to undo"
-                }
-                data-testid="undo-button"
-                sx={{
-                  borderColor: canUndo ? brandColors.primary : "#ccc",
-                  color: canUndo ? brandColors.primary : "#ccc",
-                  "&:hover": canUndo
-                    ? { borderColor: brandColors.secondary, bgcolor: brandColors.backgrounds.hover }
-                    : {},
-                  minWidth: 80,
-                  px: 2,
-                  py: 0.75,
-                  minHeight: 36,
-                }}
-              >
-                Undo
-              </Button>
-
-              <Button
-                variant="outlined"
-                onClick={handleReset}
-                disabled={!canReset}
-                startIcon={<RestartAltIcon aria-label="Reset" />}
-                aria-label={
-                  canReset
-                    ? "Reset to initial state"
-                    : "No initial state to reset to"
-                }
-                data-testid="reset-button"
-                sx={{
-                  borderColor: canReset ? brandColors.actions.error : "#ccc",
-                  color: canReset ? brandColors.actions.error : "#ccc",
-                  "&:hover": canReset
-                    ? { borderColor: brandColors.actions.error, bgcolor: brandColors.backgrounds.error }
-                    : {},
-                  minWidth: 80,
-                  px: 2,
-                  py: 0.75,
-                  minHeight: 36,
-                }}
-              >
-                Reset
-              </Button>
-            </Box>
-          )}
         </Box>
 
         {/* ============================================================================
@@ -1311,7 +1298,7 @@ const AdvancedCalculationsPage: React.FC = () => {
               >
                 <Typography variant="body2" sx={{ color: brandColors.primary, mb: 1 }}>
                   <strong>Configuration Required:</strong> Complete the Global
-                  Configuration tab to unlock advanced analysis features.
+                  Configuration tab to unlock advanced modeling features.
                   <Button
                     size="small"
                     variant="text"
@@ -1405,7 +1392,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 onClose={() => setShowConfigSuccess(false)}
               >
                 <Typography variant="body2" sx={{ color: brandColors.accent.success }}>
-                  <strong>Configuration Complete!</strong> All advanced analysis
+                  <strong>Configuration Complete!</strong> All advanced modeling
                   features are now unlocked and ready to use.
                 </Typography>
               </Alert>
@@ -1687,7 +1674,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       sx={{ color: brandColors.primary, mb: 1 }}
                     >
                       <strong>Getting Started:</strong> Complete the Global
-                      Configuration tab to unlock advanced analysis features.
+                      Configuration tab to unlock advanced modeling features.
                     </Typography>
                     <Typography
                       variant="caption"
@@ -1950,7 +1937,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                       }}
                     >
                       <Typography variant="body2" sx={{ color: brandColors.accent.success }}>
-                        All configurations complete! Advanced analysis features
+                        All configurations complete! Advanced modeling features
                         are now unlocked.
                       </Typography>
                       <Typography
@@ -1962,7 +1949,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                           mt: 0.5,
                         }}
                       >
-                        You can now access all tabs and advanced analysis
+                        You can now access all tabs and advanced modeling
                         features.
                       </Typography>
                       <Typography
@@ -2291,7 +2278,7 @@ const AdvancedCalculationsPage: React.FC = () => {
             <Alert severity="warning" sx={{ mb: 2 }}>
               <Typography variant="body2">
                 <strong>No Deal Data:</strong> Please go back to the Underwrite
-                page and click "Open Advanced Analysis" to load your deal data.
+                page and click "Open Advanced Modeling" to load your deal data.
                 Advanced features are disabled until a deal is loaded.
               </Typography>
             </Alert>
@@ -2409,7 +2396,7 @@ const AdvancedCalculationsPage: React.FC = () => {
                 variant="h6"
                 sx={{ mb: 2, color: brandColors.primary, fontWeight: 600 }}
               >
-                Welcome to Advanced Analysis
+                Welcome to Advanced Modeling
               </Typography>
               <Typography
                 variant="body2"
@@ -2509,4 +2496,4 @@ const AdvancedCalculationsPage: React.FC = () => {
   );
 };
 
-export default AdvancedCalculationsPage;
+export default AdvancedModelingTab;

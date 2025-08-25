@@ -39,9 +39,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
 
   const steps: TourStep[] = [
     {
-      title: "Welcome to Advanced Analysis Suite!",
+      title: "Welcome to Advanced Modeling Suite!",
       description:
-        "This guided tour will walk you through the powerful features available for analyzing your real estate investments. Let's get started with a comprehensive overview of what you can accomplish.",
+        "This guided tour will walk you through the powerful features available for advanced modeling and analysis of your real estate investments. Let's get started with a comprehensive overview of what you can accomplish.",
       target: "body",
       placement: "center",
       icon: "",
@@ -113,7 +113,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
     {
       title: "You're All Set!",
       description:
-        "You now have a complete understanding of the Advanced Analysis Suite. Start with the Overview tab to see your current calculations, then explore each section to dive deeper into specific analysis areas. Remember, you can always access this tour again by clicking the help button in the top navigation.",
+        "You now have a complete understanding of the Advanced Modeling Suite. Start with the Overview tab to see your current calculations, then explore each section to dive deeper into specific analysis areas. Remember, you can always access this tour again by clicking the help button in the top navigation.",
       target: "body",
       placement: "center",
       icon: "",
@@ -168,6 +168,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      sx={{
+        zIndex: 9999,
+      }}
       PaperProps={{
         sx: {
           borderRadius: 3,

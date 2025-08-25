@@ -166,77 +166,77 @@ const ManagePage: React.FC = () => {
   const renderAccountSubContent = () => {
     switch (accountSubTab) {
       case 'personal':
-        return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
+  return (
+        <Box>
+          <Typography variant="h6" gutterBottom>
               Personal Information
-            </Typography>
+          </Typography>
             <Typography variant="body1" color="text.secondary">
               Update your name, contact information, and professional details.
-            </Typography>
+          </Typography>
           </Box>
         );
       case 'security':
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
+                      <Box>
+                        <Typography variant="h6" gutterBottom>
               Login & Security
-            </Typography>
+                        </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage your password, two-factor authentication, and login preferences.
-            </Typography>
-          </Box>
+                        </Typography>
+                      </Box>
         );
       case 'privacy':
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
               Privacy
-            </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               Control your data sharing preferences and privacy settings.
-            </Typography>
-          </Box>
+                        </Typography>
+                    </Box>
         );
       case 'notifications':
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
+        <Box>
+          <Typography variant="h6" gutterBottom>
               Notifications
-            </Typography>
+          </Typography>
             <Typography variant="body1" color="text.secondary">
               Configure email, SMS, and in-app notification preferences.
-            </Typography>
+          </Typography>
           </Box>
         );
       case 'payments':
         return (
-          <Box>
+                            <Box>
             <Typography variant="h6" gutterBottom>
               Payments
-            </Typography>
+                              </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage payment methods, billing information, and subscription details.
-            </Typography>
-          </Box>
+                              </Typography>
+                            </Box>
         );
       case 'taxes':
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
               Taxes
-            </Typography>
+                          </Typography>
             <Typography variant="body1" color="text.secondary">
               View tax documents, update tax information, and manage tax preferences.
-            </Typography>
-          </Box>
+                  </Typography>
+        </Box>
         );
       default:
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
+        <Box>
+          <Typography variant="h6" gutterBottom>
               Select a sub-tab
-            </Typography>
+          </Typography>
           </Box>
         );
     }
@@ -249,10 +249,10 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Dashboard
-            </Typography>
+                          </Typography>
             <Typography variant="body1" color="text.secondary">
               Welcome to your property management dashboard.
-            </Typography>
+                  </Typography>
           </Box>
         );
       case 'calendar':
@@ -260,10 +260,10 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Calendar
-            </Typography>
+                    </Typography>
             <Typography variant="body1" color="text.secondary">
               Schedule view for tasks, inspections, rent due dates, and lease events.
-            </Typography>
+                    </Typography>
           </Box>
         );
       case 'listing':
@@ -271,65 +271,65 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Creating a Listing
-            </Typography>
+                    </Typography>
             <Typography variant="body1" color="text.secondary">
               Create and manage property listings.
-            </Typography>
-          </Box>
+                    </Typography>
+                  </Box>
         );
       case 'listings':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Listings
-            </Typography>
+                </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage active, pending, and archived listings. Add filters, edit details, or publish.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       case 'messages':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Messages
-            </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               View conversations with tenants, applicants, and service partners.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       case 'earnings':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Earnings
-            </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               Summary of rent collections, payouts, and exportable statements.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       case 'insights':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Insights
-            </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               KPIs, trends, and recommended actions across your portfolio.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       case 'account':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Account Settings
-            </Typography>
+                </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
               Manage your personal information, security settings, and preferences.
-            </Typography>
+                  </Typography>
             
             {/* Sub-tabs */}
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
@@ -371,21 +371,21 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Online Leases
-            </Typography>
+                  </Typography>
             <Typography variant="body1" color="text.secondary">
               Generate and manage digital lease agreements.
-            </Typography>
-          </Box>
+                  </Typography>
+                </Box>
         );
       case 'applications':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Rental Applications
-            </Typography>
+        </Typography>
             <Typography variant="body1" color="text.secondary">
               Process rental applications and tenant screening.
-            </Typography>
+                  </Typography>
           </Box>
         );
       case 'payments':
@@ -393,11 +393,11 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Online Rent Payments
-            </Typography>
+                  </Typography>
             <Typography variant="body1" color="text.secondary">
               Accept online rent payments and track history.
-            </Typography>
-          </Box>
+                    </Typography>
+                  </Box>
         );
       case 'integrations':
         return (
@@ -407,8 +407,8 @@ const ManagePage: React.FC = () => {
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Connect with third-party services.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       case 'insurance':
         return (
@@ -418,15 +418,15 @@ const ManagePage: React.FC = () => {
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage property insurance policies.
-            </Typography>
-          </Box>
+                      </Typography>
+                    </Box>
         );
       default:
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Select a tab from the sidebar
-            </Typography>
+                      </Typography>
           </Box>
         );
     }
@@ -466,9 +466,9 @@ const ManagePage: React.FC = () => {
               }}
             >
               Station
-            </Box>
-          </Box>
-
+                    </Box>
+                  </Box>
+                  
           {/* Sidebar Navigation */}
           <List sx={{ px: 2, pt: 0, flex: 1, overflow: 'auto' }}>
             {sidebarItems.map((item) => (
@@ -476,7 +476,7 @@ const ManagePage: React.FC = () => {
                 <ListItemButton
                   onClick={() => setActiveTab(item.id)}
                   selected={activeTab === item.id}
-                  sx={{
+                    sx={{
                     borderRadius: 2,
                     '&.Mui-selected': {
                       backgroundColor: '#1a365d',

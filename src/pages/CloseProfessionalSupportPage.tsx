@@ -79,7 +79,7 @@ import { RBACMiddleware, useRBAC } from '../components/RBACMiddleware';
 import { realtimeService } from '../services/RealtimeService';
 // ReactDOM import not used; removed
 import { buildApiUrl, getChatServerUrl } from '../utils/env';
-import { professionalRoles as professionalRolesData, dropdownConfig as dropdownConfigData } from '../data/professionalRoles';
+import { professionalRoles as professionalRolesData, dropdownConfig as dropdownConfigData } from '../data/professionalRoles.tsx';
 
 // Lazily load frequently rendered icons to trim initial bundle
 const LazySupportIcon = React.lazy(() => import('@mui/icons-material/Support'));

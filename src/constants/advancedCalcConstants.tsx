@@ -1,25 +1,21 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  Typography,
-  TextField,
-  Button,
-  Alert,
-  InputAdornment,
-  CircularProgress,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import InputAdornment from "@mui/material/InputAdornment";
+import CircularProgress from "@mui/material/CircularProgress";
 import { brandColors } from "../theme";
-import {
-  Calculate as CalculateIcon,
-  Settings as SettingsIcon,
-  TrendingUp as TrendingUpIcon,
-  AccountBalance as AccountBalanceIcon,
-  Security as SecurityIcon,
-  ShowChart as ShowChartIcon,
-  Timeline as TimelineIcon,
-  SwapHoriz as SwapHorizIcon,
-} from "@mui/icons-material";
+import CalculateIcon from "@mui/icons-material/Calculate";
+import SettingsIcon from "@mui/icons-material/Settings";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SecurityIcon from "@mui/icons-material/Security";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import { OverviewTab } from "../components/OverviewTab";
 import { GlobalConfigTab } from "../components/GlobalConfigTab";
 import { ExitStrategiesTab } from "../components/ExitStrategiesTab";

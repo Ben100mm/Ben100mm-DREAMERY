@@ -59,7 +59,7 @@ const Navigation: React.FC = () => {
     { name: 'Sell / List', path: '/sell' },
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
-    { name: 'Analyse', path: '/analyze' },
+    { name: 'Analyze', path: '/analyze' },
     { name: 'Close', path: '/close' },
     { name: 'Manage', path: '/manage' },
     { name: 'Invest', path: '/invest' },

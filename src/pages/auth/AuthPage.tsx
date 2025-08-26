@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Paper, Box, Tab, Tabs, Typography } from '@mui/material';
-import { TabContext, TabPanel } from '@mui/lab';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -90,7 +89,7 @@ const AuthCard = styled(Paper)`
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [tab, setTab] = useState('signin');
+  const [tab, setTab] = useState<'signin' | 'signup' | 'magic'>('signin');
 
   // Redirect to dashboard if already authenticated
   React.useEffect(() => {
@@ -99,7 +98,10 @@ const AuthPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (
+    event: React.SyntheticEvent,
+    newValue: 'signin' | 'signup' | 'magic'
+  ) => {
     setTab(newValue);
   };
 
@@ -143,7 +145,6 @@ const AuthPage: React.FC = () => {
           </Typography>
         </LogoContainer>
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <TabContext value={tab}>
             <Box>
               <Tabs
                 value={tab}
@@ -162,16 +163,21 @@ const AuthPage: React.FC = () => {
                 <Tab label="Magic Link" value="magic" />
               </Tabs>
             </Box>
-            <TabPanel value="signin">
-              <SignInForm onSuccess={handleAuthSuccess} />
-            </TabPanel>
-            <TabPanel value="signup">
-              <SignUpForm onSuccess={handleAuthSuccess} />
-            </TabPanel>
-            <TabPanel value="magic">
-              <MagicLinkForm onSuccess={handleAuthSuccess} />
-            </TabPanel>
-          </TabContext>
+            {tab === 'signin' && (
+              <Box sx={{ pt: 2 }}>
+                <SignInForm onSuccess={handleAuthSuccess} />
+              </Box>
+            )}
+            {tab === 'signup' && (
+              <Box sx={{ pt: 2 }}>
+                <SignUpForm onSuccess={handleAuthSuccess} />
+              </Box>
+            )}
+            {tab === 'magic' && (
+              <Box sx={{ pt: 2 }}>
+                <MagicLinkForm onSuccess={handleAuthSuccess} />
+              </Box>
+            )}
         </Box>
       </AuthCard>
     </AuthContainer>

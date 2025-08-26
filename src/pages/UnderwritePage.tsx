@@ -9593,7 +9593,7 @@ const UnderwritePage: React.FC = () => {
             }}
             startIcon={<TrendingUpIcon />}
           >
-            Analyse
+            Analyze
           </Button>
           <Button
             variant="outlined"

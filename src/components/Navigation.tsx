@@ -23,7 +23,7 @@ const NavList = styled.ul`
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;
-  gap: 1.25rem;
+  gap: 1.00rem;
   margin: 0;
   padding: 0;
   font-size: 0.85rem;
@@ -34,12 +34,12 @@ const NavItem = styled.li`
     color: white;
     text-decoration: none;
     font-weight: 800;
-    padding: 0.5rem 0.75rem;
+    padding: 0.35rem 0.5rem;
     border-radius: 4px;
     transition: all 0.2s ease;
-    font-size: 1rem;
+    font-size: 0.95rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     cursor: pointer;
     &:hover {
       background: rgba(255, 255, 255, 0.2);
@@ -54,8 +54,8 @@ const Navigation: React.FC = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Buy', path: '/buy' },
-    { name: 'Rent', path: '/rent' },
+    { name: 'Lumina', path: '/lumina' },
+    { name: 'Marketplace', path: '/marketplace' },
     { name: 'Sell / List', path: '/sell' },
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
@@ -65,7 +65,7 @@ const Navigation: React.FC = () => {
     { name: 'Invest', path: '/invest' },
     { name: 'Fund', path: '/fund' },
     { name: 'Operate', path: '/operate' },
-            { name: 'Partners', path: '/partner' },
+    { name: 'Partners', path: '/partner' },
     { name: 'Learn', path: '/learn' },
     { name: 'Advertise', path: '/advertise' }
   ];
@@ -74,8 +74,8 @@ const Navigation: React.FC = () => {
     console.log('Navigation clicked:', path); // Debug log
     // Navigate to any declared route; non-declared paths will log for now
     switch (path) {
-      case '/buy':
-      case '/rent':
+      case '/lumina':
+      case '/marketplace':
       case '/sell':
       case '/mortgage':
       case '/underwrite':

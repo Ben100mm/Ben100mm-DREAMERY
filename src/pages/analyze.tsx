@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { 
-  Grid, 
   Card, 
   CardContent, 
   Typography, 
@@ -115,27 +114,28 @@ const AnalyzePage: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Analyze a Property
           </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={8}>
-              <TextField
-                fullWidth
-                label="Enter property address"
-                value={propertyAddress}
-                onChange={(e) => setPropertyAddress(e.target.value)}
-                placeholder="123 Main St, City, State"
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Button
-                fullWidth
-                variant="contained"
-                startIcon={<AnalyticsIcon />}
-                sx={{ height: '56px' }}
-              >
-                Analyze Property
-              </Button>
-            </Grid>
-          </Grid>
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, 
+            gap: 2, 
+            alignItems: 'center' 
+          }}>
+            <TextField
+              fullWidth
+              label="Enter property address"
+              value={propertyAddress}
+              onChange={(e) => setPropertyAddress(e.target.value)}
+              placeholder="123 Main St, City, State"
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              startIcon={<AnalyticsIcon />}
+              sx={{ height: '56px' }}
+            >
+              Analyze Property
+            </Button>
+          </Box>
         </CardContent>
       </Card>
 
@@ -151,184 +151,182 @@ const AnalyzePage: React.FC = () => {
 
       {/* Market Overview Tab */}
       {activeTab === 0 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <MetricCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Market Overview
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+          gap: 3 
+        }}>
+          <MetricCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Market Overview
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Average Sale Price: <strong>{mockMarketData.averagePrice}</strong>
                 </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Average Sale Price: <strong>{mockMarketData.averagePrice}</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Price per Sq Ft: <strong>{mockMarketData.pricePerSqFt}</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Days on Market: <strong>{mockMarketData.daysOnMarket} days</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Inventory Level: <strong>{mockMarketData.inventoryLevel}</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Market Trend: <strong style={{ color: '#4caf50' }}>{mockMarketData.marketTrend}</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Cap Rate: <strong>{mockMarketData.capRate}</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    Average ROI: <strong>{mockMarketData.roi}</strong>
-                  </Typography>
-                </Box>
-              </CardContent>
-            </MetricCard>
-          </Grid>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Price per Sq Ft: <strong>{mockMarketData.pricePerSqFt}</strong>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Days on Market: <strong>{mockMarketData.daysOnMarket} days</strong>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Inventory Level: <strong>{mockMarketData.inventoryLevel}</strong>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Market Trend: <strong style={{ color: '#4caf50' }}>{mockMarketData.marketTrend}</strong>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Cap Rate: <strong>{mockMarketData.capRate}</strong>
+                </Typography>
+                <Typography variant="body2">
+                  Average ROI: <strong>{mockMarketData.roi}</strong>
+                </Typography>
+              </Box>
+            </CardContent>
+          </MetricCard>
 
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Market Insights
-                </Typography>
-                <Typography variant="body2" paragraph>
-                  The current market shows strong fundamentals with increasing property values 
-                  and decreasing days on market. This indicates a seller's market with 
-                  strong buyer demand.
-                </Typography>
-                <Alert severity="success" sx={{ mb: 2 }}>
-                  Market conditions are favorable for both buyers and sellers
-                </Alert>
-                <Button variant="outlined" startIcon={<TimelineIcon />}>
-                  View Historical Data
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Market Insights
+              </Typography>
+              <Typography variant="body2" paragraph>
+                The current market shows strong fundamentals with increasing property values 
+                and decreasing days on market. This indicates a seller's market with 
+                strong buyer demand.
+              </Typography>
+              <Alert severity="success" sx={{ mb: 2 }}>
+                Market conditions are favorable for both buyers and sellers
+              </Alert>
+              <Button variant="outlined" startIcon={<TimelineIcon />}>
+                View Historical Data
+              </Button>
+            </CardContent>
+          </Card>
 
-          <Grid item xs={12}>
+          <Box sx={{ gridColumn: { xs: '1', md: '1 / -1' } }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Market Trends
                 </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={3}>
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        +3.2%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Price Growth
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        -12%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Days on Market
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        +8%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Sales Volume
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        +5.8%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Cap Rate
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, 
+                  gap: 2 
+                }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                      +3.2%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Price Growth
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                      -12%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Days on Market
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                      +8%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Sales Volume
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                      +15%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Buyer Demand
+                    </Typography>
+                  </Box>
+                </Box>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Property Analysis Tab */}
       {activeTab === 1 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <AnalysisCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Property Valuation
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+          gap: 3 
+        }}>
+          <AnalysisCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Property Valuation
+              </Typography>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="body2" gutterBottom>
+                  Estimated Value Range
                 </Typography>
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Estimated Value Range
-                  </Typography>
-                  <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 'bold' }}>
-                    $450,000 - $520,000
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Based on comparable sales and market conditions
-                  </Typography>
-                </Box>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" gutterBottom>
-                    Confidence Level
-                  </Typography>
-                  <LinearProgress 
-                    variant="determinate" 
-                    value={85} 
-                    sx={{ height: 8, borderRadius: 4 }}
-                  />
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    85% confidence based on 12 comparable properties
-                  </Typography>
-                </Box>
-
-                <Button variant="contained" fullWidth startIcon={<AssessmentIcon />}>
-                  Get Detailed Report
-                </Button>
-              </CardContent>
-            </AnalysisCard>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <AnalysisCard>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Investment Analysis
+                <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 'bold' }}>
+                  $450,000 - $520,000
                 </Typography>
-                <Grid container spacing={2}>
-                  {mockInvestmentMetrics.map((metric, index) => (
-                    <Grid item xs={6} key={index}>
-                      <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                        <Typography variant="h6" sx={{ color: '#1a365d' }}>
-                          {metric.value}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {metric.metric}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: '#4caf50' }}>
-                          {metric.trend}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-              </CardContent>
-            </AnalysisCard>
-          </Grid>
-        </Grid>
+                <Typography variant="body2" color="text.secondary">
+                  Based on comparable sales and market conditions
+                </Typography>
+              </Box>
+              
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="body2" gutterBottom>
+                  Confidence Level
+                </Typography>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={85} 
+                  sx={{ height: 8, borderRadius: 4 }}
+                />
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  85% confidence based on 12 comparable properties
+                </Typography>
+              </Box>
+
+              <Button variant="contained" fullWidth startIcon={<AssessmentIcon />}>
+                Get Detailed Report
+              </Button>
+            </CardContent>
+          </AnalysisCard>
+
+          <AnalysisCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Investment Analysis
+              </Typography>
+              <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+                gap: 2 
+              }}>
+                {mockInvestmentMetrics.map((metric, index) => (
+                  <Box key={index} sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                    <Typography variant="h6" sx={{ color: '#1a365d' }}>
+                      {metric.value}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {metric.metric}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#4caf50' }}>
+                      {metric.trend}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </AnalysisCard>
+        </Box>
       )}
 
       {/* Comparable Sales Tab */}
@@ -384,156 +382,141 @@ const AnalyzePage: React.FC = () => {
 
       {/* Investment Metrics Tab */}
       {activeTab === 3 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Investment Performance
-                </Typography>
-                <Typography variant="body2" paragraph>
-                  Track key investment metrics and performance indicators for your properties.
-                </Typography>
-                
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        $2,400
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Monthly Cash Flow
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        12.4%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total ROI
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        5.8%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Cap Rate
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h4" sx={{ color: '#1a365d' }}>
-                        3.2%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Annual Appreciation
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Investment Tips
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Alert severity="info" sx={{ mb: 2 }}>
-                    Consider properties with cap rates above 5% for better cash flow
-                  </Alert>
-                  <Alert severity="success" sx={{ mb: 2 }}>
-                    Properties in growing neighborhoods show higher appreciation potential
-                  </Alert>
-                  <Alert severity="warning" sx={{ mb: 2 }}>
-                    Factor in maintenance costs when calculating ROI
-                  </Alert>
+        <>
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+          gap: 3 
+        }}>
+          <AnalysisCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Investment Performance
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Track key investment metrics and performance indicators for your properties.
+              </Typography>
+              
+              <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
+                gap: 3 
+              }}>
+                <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    $2,400
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Monthly Cash Flow
+                  </Typography>
                 </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+                <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    12.4%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total ROI
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    5.8%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Cap Rate
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    3.2%
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Annual Appreciation
+                  </Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </AnalysisCard>
 
-        {/* Placeholder Analysis Cards */}
+          <AnalysisCard>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Investment Tips
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  Consider properties with cap rates above 5% for better cash flow
+                </Alert>
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Properties in growing neighborhoods show higher appreciation potential
+                </Alert>
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  Factor in maintenance costs when calculating ROI
+                </Alert>
+              </Box>
+            </CardContent>
+          </AnalysisCard>
+        </Box>
+
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Property Analysis
         </Typography>
-        <Grid container spacing={3}>
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, 
+          gap: 3 
+        }}>
           {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`analyze-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Analysis+Property+${index + 1}`}
-                  alt={`Analysis Property ${index + 1}`}
-                  sx={{ objectFit: 'cover' }}
-                />
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                    Analysis Property #{index + 1}
+            <AnalysisCard key={`analyze-placeholder-${index}`}>
+              <CardContent>
+                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                  Analysis Property #{index + 1}
+                </Typography>
+                
+                <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
+                  ${(450000 + index * 60000).toLocaleString()}
+                </Typography>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <MapIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                   </Typography>
-                  
-                  <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                    ${(450000 + index * 60000).toLocaleString()}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                     <Typography variant="body2" color="text.secondary">
-                      {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
+                      {(85 + index * 2)}% ROI
                     </Typography>
                   </Box>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(85 + index * 2)}% ROI
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(12 + index)}% growth
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(3 + index)} months
-                      </Typography>
-                    </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {(12 + index)}% growth
+                    </Typography>
                   </Box>
-                  
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      backgroundColor: '#1a365d',
-                      '&:hover': { backgroundColor: '#0d2340' }
-                    }}
-                  >
-                    View Analysis
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {(3 + index)} months
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: '#1a365d',
+                    '&:hover': { backgroundColor: '#0d2340' }
+                  }}
+                >
+                  View Analysis
+                </Button>
+              </CardContent>
+            </AnalysisCard>
           ))}
-        </Grid>
+        </Box>
+        </>
       )}
     </PageTemplate>
   );

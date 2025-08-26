@@ -79,7 +79,7 @@ const drawerWidth = 280;
 
 const AnalyzePage: React.FC = () => {
   const { dealState } = useAnalysis();
-  const [activeSection, setActiveSection] = useState<string>('station');
+  const [activeSection, setActiveSection] = useState<string>('dashboard');
   const [drawerOpen, setDrawerOpen] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

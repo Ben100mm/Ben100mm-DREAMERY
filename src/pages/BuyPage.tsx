@@ -34,6 +34,7 @@ import {
 import styled from "styled-components";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
+import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -1031,16 +1032,17 @@ const BuyPage: React.FC = () => {
 
     return (
     <PageContainer>
-      <PageAppBar title="Dreamery - Buy Properties" />
+      <PageAppBar title="Dreamery Marketplace" />
       <HeaderSection>
         <Container maxWidth="xl">
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2, justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Real Estate & Homes For Sale
             </Typography>
+            <MarketplaceModeToggle />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2, justifyContent: 'space-between' }}>
             <TextField
               placeholder="San Francisco, CA"
               size="small"

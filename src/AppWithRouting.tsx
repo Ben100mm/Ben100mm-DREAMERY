@@ -3,12 +3,18 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthProvider } from './contexts/AuthContext';
+import { RoleProvider, RoleContext } from './context/RoleContext';
+import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
+import { AnalysisProvider } from './context/AnalysisContext';
+import { theme } from "./theme";
 import Header from './components/HeaderWithRouting';
 import Hero from './components/Hero';
 import Navigation from './components/Navigation';
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const ProfessionalSignupPage = lazy(() => import('./pages/ProfessionalSignupPage'));
 const BusinessSignupPage = lazy(() => import('./pages/BusinessSignupPage'));
+const LuminaPage = lazy(() => import('./pages/LuminaPage'));
+const MarketplacePage = lazy(() => import('./pages/MarketplacePage'));
 const BuyPage = lazy(() => import('./pages/BuyPage'));
 const RentPage = lazy(() => import('./pages/RentPage'));
 const SellListAddressPage = lazy(() => import('./pages/SellListAddressPage'));
@@ -57,10 +63,6 @@ const FundPage = lazy(() => import('./pages/FundPage'));
 const OperatePage = lazy(() => import('./pages/OperatePage'));
 const LearnPage = lazy(() => import('./pages/LearnPage'));
 const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
-import { RoleProvider, RoleContext } from './context/RoleContext';
-import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
-import { AnalysisProvider } from './context/AnalysisContext';
-import { theme } from "./theme";
 
 const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -104,8 +106,14 @@ const AppContent = () => {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
       <Route path="/business-signup" element={<BusinessSignupPage />} />
-      <Route path="/buy" element={<BuyPage />} />
-      <Route path="/rent" element={<RentPage />} />
+      <Route path="/lumina" element={<LuminaPage />} />
+      <Route path="/marketplace" element={<MarketplacePage />}>
+        <Route index element={<Navigate to="buy" replace />} />
+        <Route path="buy" element={<BuyPage />} />
+        <Route path="rent" element={<RentPage />} />
+      </Route>
+      <Route path="/buy" element={<Navigate to="/marketplace/buy" replace />} />
+      <Route path="/rent" element={<Navigate to="/marketplace/rent" replace />} />
       <Route path="/sell" element={<SellListAddressPage />} />
       <Route path="/sell-moving-details" element={<SellListMovingDetailsPage />} />
       <Route path="/sell-moving-details-2" element={<SellListMovingDetails2Page />} />

@@ -313,7 +313,9 @@ export class ComplianceService {
           },
         ],
         required: true,
-        frequency: 'per-policy',
+        // Frequency options are limited to: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly'
+        // Policy-related items should be checked yearly by default
+        frequency: 'yearly',
       },
     ]);
   }

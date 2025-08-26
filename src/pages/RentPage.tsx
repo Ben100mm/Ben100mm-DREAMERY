@@ -34,6 +34,7 @@ import {
 import styled from "styled-components";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
+import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -934,76 +935,41 @@ const RentPage: React.FC = () => {
 
       return (
     <PageContainer>
-      <PageAppBar title="Dreamery - Rent Properties" />
-      {/* Top Search Section */}
-      <Box
-        sx={{
-          background: brandColors.backgrounds.primary,
-          py: 2,
-          marginTop: "64px",
-        }}
-      >
+      <PageAppBar title="Dreamery Marketplace" />
+
+      <HeaderSection>
         <Container maxWidth="xl">
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-            <Button
-              startIcon={<ArrowBack />}
-              onClick={() => window.history.back()}
-              sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
-            >
-              Back
-            </Button>
+          {/* Title and Search - match Buy page spacing */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2, justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
               San Francisco, CA Real Estate & Homes For Rent
             </Typography>
+            <MarketplaceModeToggle />
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box sx={{ flex: 1, position: "relative" }}>
-              <TextField
-                fullWidth
-                placeholder="San Francisco, CA"
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ color: brandColors.neutral.dark }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton size="small">
-                        <Clear sx={{ color: brandColors.neutral.dark }} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-              />
-            </Box>
-
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: brandColors.backgrounds.primary,
-                textTransform: "uppercase",
-                fontWeight: 600,
-                px: 3,
-                py: 1,
-                borderRadius: "8px",
-                "&:hover": {
-                  backgroundColor: brandColors.secondary,
-                },
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+            <TextField
+              placeholder="San Francisco, CA"
+              size="small"
+              sx={{ flexGrow: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small">
+                      <Clear />
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
-            >
-              Save Search
+            />
+            <Button variant="contained" sx={{ bgcolor: brandColors.primary }}>
+              Save search
             </Button>
-
             <Box
               sx={{
                 display: "flex",
@@ -1020,20 +986,13 @@ const RentPage: React.FC = () => {
                 },
               }}
             >
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: 600, color: brandColors.text.primary }}
-              >
+              <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>
                 500
               </Typography>
               <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
             </Box>
           </Box>
-        </Container>
-      </Box>
 
-      <HeaderSection>
-        <Container maxWidth="xl">
           <Box
             sx={{
               display: "flex",

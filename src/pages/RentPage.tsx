@@ -1012,7 +1012,7 @@ const RentPage: React.FC = () => {
                 )
               }
             >
-              For Rent
+              Property Status
             </FilterButton>
 
             <FilterButton

@@ -231,7 +231,7 @@ const CloseAgentPage: React.FC = () => {
 
   // Role-based access guard (no early returns to satisfy hooks rule)
   const { userRole } = (useContext(RoleContext) as any) || {};
-  const buyingRoles = ['Real Estate Agent', 'Buyer’s Agent', 'Wholesaler', 'Realtor'];
+      const buyingRoles = ['Real Estate Agent', 'Buyer\'s Agent', 'Wholesaler', 'Realtor'];
   const listingRoles = ['Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent', 'Disposition Agent'];
   const isAgentAuthorized = !!userRole && (buyingRoles.includes(userRole) || listingRoles.includes(userRole));
   

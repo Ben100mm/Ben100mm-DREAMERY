@@ -187,9 +187,9 @@ const LearnPage: React.FC = () => {
             Choose from our comprehensive library of real estate courses and training programs.
           </Typography>
 
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr 1fr' }, gap: 3 }}>
             {mockCourses.map((course) => (
-              <Grid item xs={12} md={6} lg={3} key={course.id}>
+              <Box key={course.id}>
                 <CourseCard>
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -258,16 +258,16 @@ const LearnPage: React.FC = () => {
                     </Button>
                   </CardContent>
                 </CourseCard>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
       {/* My Learning Tab */}
       {activeTab === 1 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -335,9 +335,9 @@ const LearnPage: React.FC = () => {
                 </TableContainer>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box>
             <ProgressCard>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -365,8 +365,8 @@ const LearnPage: React.FC = () => {
                 </Button>
               </CardContent>
             </ProgressCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Resources Tab */}
@@ -379,8 +379,8 @@ const LearnPage: React.FC = () => {
             Access articles, videos, and tools to enhance your real estate knowledge.
           </Typography>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -404,9 +404,9 @@ const LearnPage: React.FC = () => {
                   </List>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} md={4}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -451,8 +451,8 @@ const LearnPage: React.FC = () => {
                   </List>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       )}
 

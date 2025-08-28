@@ -270,7 +270,7 @@ const CloseBuyerPage: React.FC = () => {
     { value: 'insurance', label: 'Insurance & Utilities', icon: <HomeIcon /> },
     { value: 'walkthrough', label: 'Walkthrough', icon: <CheckCircleIcon /> },
     { value: 'post-closing', label: 'Post-Closing', icon: <SupportIcon /> },
-    { value: 'assistant', label: 'Closing Assistant', icon: <ClosingAssistantIcon size={20} variant="icon" /> },
+    { value: 'assistant', label: 'Closing Assistant', icon: <ClosingAssistantIcon size={20} /> },
     { value: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
   ];
 

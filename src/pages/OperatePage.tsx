@@ -37,8 +37,8 @@ const OperatePage: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return {
-          title: 'Operations Dashboard',
-          subtitle: 'Centralized overview of your property operations, performance metrics, and ongoing activities'
+                  title: 'Projects Dashboard',
+        subtitle: 'Centralized overview of your property projects, performance metrics, and ongoing activities'
         };
       case 'projects':
         return {
@@ -58,7 +58,7 @@ const OperatePage: React.FC = () => {
       case 'contractors':
         return {
           title: 'Contractor & Vendor Scheduling',
-          subtitle: 'Schedule and manage contractors, vendors, and service providers for property operations'
+          subtitle: 'Schedule and manage contractors, vendors, and service providers for property projects'
         };
       case 'optimization':
         return {
@@ -66,7 +66,7 @@ const OperatePage: React.FC = () => {
           subtitle: 'AI-powered recommendations for improving property performance and portfolio returns'
         };
       default:
-        return { title: 'Property Operations', subtitle: 'Ongoing operations and tools for investment properties' };
+        return { title: 'Property Projects', subtitle: 'Ongoing projects and tools for investment properties' };
     }
   };
 
@@ -95,10 +95,10 @@ const OperatePage: React.FC = () => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Operations Dashboard
+              Projects Dashboard
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Monitor your property operations, track performance metrics, and view ongoing activities across your portfolio.
+              Monitor your property projects, track performance metrics, and view ongoing activities across your portfolio.
             </Typography>
           </Box>
         );
@@ -142,7 +142,7 @@ const OperatePage: React.FC = () => {
               Contractor & Vendor Scheduling
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Schedule and manage contractors, vendors, and service providers for property operations and maintenance.
+              Schedule and manage contractors, vendors, and service providers for property projects and maintenance.
             </Typography>
           </Box>
         );
@@ -161,7 +161,7 @@ const OperatePage: React.FC = () => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Select an operations option from the sidebar
+              Select a projects option from the sidebar
             </Typography>
           </Box>
         );
@@ -172,7 +172,7 @@ const OperatePage: React.FC = () => {
 
   return (
     <>
-      <PageAppBar title="Dreamery – Property Operations" />
+              <PageAppBar title="Dreamery – Property Projects" />
       <Box sx={{ display: 'flex', height: 'calc(100vh - 64px)', mt: '64px' }}>
         {/* Left Sidebar */}
         <Paper 

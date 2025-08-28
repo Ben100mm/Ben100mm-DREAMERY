@@ -52,101 +52,18 @@ import {
 import { toast } from 'react-hot-toast';
 import { brandColors } from "../../../theme";
 
-// Custom Atom Icon Component
-const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
+// Custom Lumina Logo Component
+const LuminaIcon: React.FC<{ sx?: any; size?: number }> = ({ sx = {}, size = 24 }) => (
   <Box
+    component="img"
+    src="/Lumina%20Logo.png"
+    alt="Lumina logo"
     sx={{
-      width: 24,
-      height: 24,
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      width: size,
+      height: size,
       ...sx
     }}
-  >
-    {/* Nucleus */}
-    <Box
-      sx={{
-        width: 8,
-        height: 8,
-        backgroundColor: brandColors.actions.primary,
-        borderRadius: '50%',
-        position: 'absolute',
-        zIndex: 2,
-      }}
-    />
-    
-    {/* Electron orbits */}
-    <Box
-      sx={{
-        width: 20,
-        height: 20,
-        border: `1.5px solid ${brandColors.actions.primary}`,
-        borderRadius: '50%',
-        position: 'absolute',
-        transform: 'rotate(0deg)',
-      }}
-    />
-    <Box
-      sx={{
-        width: 16,
-        height: 16,
-        border: `1.5px solid ${brandColors.actions.primary}`,
-        borderRadius: '50%',
-        position: 'absolute',
-        transform: 'rotate(45deg)',
-      }}
-    />
-    <Box
-      sx={{
-        width: 18,
-        height: 18,
-        border: `1.5px solid ${brandColors.actions.primary}`,
-        borderRadius: '50%',
-        position: 'absolute',
-        transform: 'rotate(-30deg)',
-      }}
-    />
-    
-    {/* Electrons */}
-    <Box
-      sx={{
-        width: 4,
-        height: 4,
-        backgroundColor: brandColors.actions.primary,
-        borderRadius: '50%',
-        position: 'absolute',
-        top: 1,
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
-    />
-    <Box
-      sx={{
-        width: 4,
-        height: 4,
-        backgroundColor: brandColors.actions.primary,
-        borderRadius: '50%',
-        position: 'absolute',
-        bottom: 1,
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
-    />
-    <Box
-      sx={{
-        width: 4,
-        height: 4,
-        backgroundColor: brandColors.actions.primary,
-        borderRadius: '50%',
-        position: 'absolute',
-        top: '50%',
-        right: 1,
-        transform: 'translateY(-50%)',
-      }}
-    />
-  </Box>
+  />
 );
 
 // Types
@@ -701,7 +618,7 @@ const ClosingAssistant: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <AtomIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+                            <LuminaIcon size={40} sx={{ mb: 1 }} />
             <Typography variant="h6" component="div">
               {assistantData.chatHistory.length}
             </Typography>
@@ -736,7 +653,7 @@ const ClosingAssistant: React.FC = () => {
                   <Box key={message.id} sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                       <Avatar sx={{ backgroundColor: message.type === 'assistant' ? brandColors.actions.primary : brandColors.accent.success }}>
-                        {message.type === 'assistant' ? <AtomIcon /> : <HomeIcon />}
+                        {message.type === 'assistant' ? <LuminaIcon size={24} /> : <HomeIcon />}
                       </Avatar>
                       <Box sx={{ flexGrow: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
@@ -773,7 +690,7 @@ const ClosingAssistant: React.FC = () => {
                 {isTyping && (
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                     <Avatar sx={{ backgroundColor: brandColors.actions.primary }}>
-                      <AtomIcon />
+                      <LuminaIcon size={24} />
                     </Avatar>
                     <Paper sx={{ p: 2, backgroundColor: brandColors.backgrounds.primary }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

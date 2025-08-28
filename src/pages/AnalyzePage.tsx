@@ -1,65 +1,72 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Paper from '@mui/material/Paper';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
-import LinearProgress from '@mui/material/LinearProgress';
-import CircularProgress from '@mui/material/CircularProgress';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import InputAdornment from '@mui/material/InputAdornment';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
-import Slider from '@mui/material/Slider';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import SecurityIcon from '@mui/icons-material/Security';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import PersonIcon from '@mui/icons-material/Person';
-import SupportIcon from '@mui/icons-material/Support';
-import CloseIcon from '@mui/icons-material/Close';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import BusinessIcon from '@mui/icons-material/Business';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import UndoIcon from '@mui/icons-material/Undo';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Paper,
+  useTheme,
+  useMediaQuery,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Badge,
+  Avatar,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Divider,
+  Card,
+  CardContent,
+  TextField,
+  Select,
+  MenuItem as MenuItemComponent,
+  InputLabel,
+  FormControl,
+  Switch,
+  FormControlLabel,
+  Button,
+  Divider as DividerComponent,
+  LinearProgress,
+  CircularProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  ToggleButton,
+  ToggleButtonGroup,
+  InputAdornment,
+  Tabs,
+  Tab,
+  IconButton as IconButtonComponent,
+  Chip,
+  Slider,
+  Alert,
+  Snackbar,
+} from '@mui/material';
+import {
+  AccountBalance as AccountBalanceIcon,
+  Security as SecurityIcon,
+  TrendingUp as TrendingUpIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  ArrowBack as ArrowBackIcon,
+  Person as PersonIcon,
+  Support as SupportIcon,
+  Close as CloseIcon,
+  Dashboard as DashboardIcon,
+  Business as BusinessIcon,
+  ModelTraining as ModelTrainingIcon,
+  ExpandMore as ExpandMoreIcon,
+  Delete as DeleteIcon,
+  CheckCircle as CheckCircleIcon,
+  Undo as UndoIcon,
+  RestartAlt as RestartAltIcon,
+  HelpOutline,
+} from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
 import { AnalysisProvider, useAnalysis } from '../context/AnalysisContext';
 import { brandColors } from '../theme';
@@ -72,7 +79,7 @@ const drawerWidth = 280;
 
 const AnalyzePage: React.FC = () => {
   const { dealState } = useAnalysis();
-  const [activeSection, setActiveSection] = useState<string>('dashboard');
+  const [activeSection, setActiveSection] = useState<string>('station');
   const [drawerOpen, setDrawerOpen] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -1686,7 +1693,7 @@ const AnalyzePage: React.FC = () => {
                             >
                               {preset.name}
                             </Typography>
-                            <IconButton
+                            <IconButtonComponent
                               size="small"
                               onClick={() =>
                                 deleteCustomPreset(preset.id)
@@ -1694,7 +1701,7 @@ const AnalyzePage: React.FC = () => {
                               sx={{ color: "#d32f2f" }}
                             >
                               <DeleteIcon fontSize="small" />
-                            </IconButton>
+                            </IconButtonComponent>
                           </Box>
                           {preset.description && (
                             <Typography
@@ -4558,7 +4565,7 @@ const AnalyzePage: React.FC = () => {
 
   return (
     <AnalysisProvider>
-              <PageAppBar title="Dreamery – Analyze" />
+      <PageAppBar title="Dreamery – Analyse" />
       <Box sx={{ display: 'flex', height: '100vh', pt: '64px' }}>
         {/* Sidebar */}
         <Box

@@ -28,7 +28,7 @@ A comprehensive, professional-grade real estate platform built with React, TypeS
 
 ### **Business Operations Pages:**
 10. **Manage** (`/manage`) - Property management with tenant and maintenance tools
-11. **Operate** (`/operate`) - Property operations and maintenance scheduling
+11. **Projects** (`/operate`) - Property projects and maintenance scheduling
 
 ### **Business Development Pages:**
 12. **Partner** (`/partner`) - Partnership opportunities and collaboration tools

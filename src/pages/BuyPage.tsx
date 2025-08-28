@@ -384,11 +384,7 @@ const BuyPage: React.FC = () => {
                 control={<Radio />}
                 label="For Sale"
               />
-              <FormControlLabel
-                value="for-rent"
-                control={<Radio />}
-                label="For Rent"
-              />
+
               <FormControlLabel value="sold" control={<Radio />} label="Sold" />
               <FormControlLabel
                 value="coming-soon"

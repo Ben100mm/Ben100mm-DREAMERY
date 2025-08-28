@@ -397,29 +397,29 @@ const ManagePage: React.FC = () => {
             <Typography variant="body1" color="text.secondary">
               Update your name, contact information, and professional details.
           </Typography>
-          </Box>
+      </Box>
         );
       case 'security':
         return (
-                      <Box>
-                        <Typography variant="h6" gutterBottom>
+        <Box>
+          <Typography variant="h6" gutterBottom>
               Login & Security
-                        </Typography>
+          </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage your password, two-factor authentication, and login preferences.
-                        </Typography>
+          </Typography>
                       </Box>
         );
       case 'privacy':
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
+                      <Box>
+                        <Typography variant="h6" gutterBottom>
               Privacy
-                      </Typography>
+                        </Typography>
             <Typography variant="body1" color="text.secondary">
               Control your data sharing preferences and privacy settings.
                         </Typography>
-                    </Box>
+                      </Box>
         );
       case 'notifications':
         return (
@@ -430,7 +430,7 @@ const ManagePage: React.FC = () => {
             <Typography variant="body1" color="text.secondary">
               Configure email, SMS, and in-app notification preferences.
           </Typography>
-          </Box>
+                    </Box>
         );
       case 'payments':
         return (
@@ -492,10 +492,10 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Dashboard
-                          </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               Welcome to your property management dashboard.
-                  </Typography>
+                      </Typography>
           </Box>
         );
       case 'calendar':
@@ -503,10 +503,10 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Calendar
-                    </Typography>
+                      </Typography>
             <Typography variant="body1" color="text.secondary">
               Schedule view for tasks, inspections, rent due dates, and lease events.
-                    </Typography>
+                        </Typography>
           </Box>
         );
       case 'listing':
@@ -710,8 +710,8 @@ const ManagePage: React.FC = () => {
                       />
                     </RadioGroup>
                   </Box>
-                </Box>
-                
+                    </Box>
+
                 {/* Right Column - Moving Details Illustration */}
                 <Box sx={{ 
                   flex: 1, 
@@ -768,7 +768,7 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Back
-                    </Button>
+                      </Button>
                     
                     {/* Next Button - Bottom Right */}
                     <Button
@@ -790,11 +790,11 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Next
-                    </Button>
-                  </Box>
+                      </Button>
+                    </Box>
                 </Box>
-              </Box>
-            )}
+        </Box>
+      )}
 
             {/* Step 3: Timeline Questionnaire */}
             {listingStep === 3 && (
@@ -815,7 +815,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     How soon would you like to sell?
-                  </Typography>
+          </Typography>
                   
                   <Box sx={{ mb: 4 }}>
                     <RadioGroup
@@ -959,8 +959,8 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Review your home details
-                  </Typography>
-                  
+          </Typography>
+
                   <Typography
                     variant="h6"
                     sx={{
@@ -971,7 +971,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Update any missing or incorrect info.
-                  </Typography>
+                              </Typography>
 
                   <Box sx={{ mb: 4 }}>
                     {/* Home Type Dropdown */}
@@ -1010,10 +1010,10 @@ const ManagePage: React.FC = () => {
                         size="medium"
                         sx={{ mb: 1 }}
                       />
-                      <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" color="text.secondary">
                         Tip: Don't include basements, non-permitted additions, or non-heated square footage.
-                      </Typography>
-                    </Box>
+                              </Typography>
+                            </Box>
 
                     {/* Lot Size */}
                     <TextField
@@ -1053,7 +1053,7 @@ const ManagePage: React.FC = () => {
                       }}>
                         <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                           {field.label}
-                        </Typography>
+                          </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Button
                             variant="outlined"
@@ -1177,8 +1177,8 @@ const ManagePage: React.FC = () => {
                     </Button>
                   </Box>
                 </Box>
-              </Box>
-            )}
+        </Box>
+      )}
 
             {/* Step 5: Property Features & Amenities */}
             {listingStep === 5 && (
@@ -1199,7 +1199,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Property Features & Amenities
-                  </Typography>
+          </Typography>
                   
                   <Typography
                     variant="h6"
@@ -1210,14 +1210,14 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Tell us about your home's special features and parking options
-                  </Typography>
-                  
+          </Typography>
+
                   <Box sx={{ mb: 4 }}>
                     {/* Pool Section */}
                     <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                         Pool & Water Features
-                      </Typography>
+                          </Typography>
                       <Select
                         fullWidth
                         value={selectedPoolType || ''}
@@ -1242,7 +1242,7 @@ const ManagePage: React.FC = () => {
                     <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                         Parking & Garage
-                      </Typography>
+                          </Typography>
                       
                       {/* Parking Type */}
                       <Box sx={{ mb: 3 }}>
@@ -1290,7 +1290,7 @@ const ManagePage: React.FC = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Button
                                 variant="outlined"
-                                size="small"
+                            size="small"
                                 onClick={() => field.setter(Math.max(0, field.value - 1))}
                                 sx={{ 
                                   minWidth: '32px', 
@@ -1514,7 +1514,7 @@ const ManagePage: React.FC = () => {
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
                           Basement condition
-                        </Typography>
+                    </Typography>
                         <Select
                           fullWidth
                           value={basementCondition || ''}
@@ -1538,7 +1538,7 @@ const ManagePage: React.FC = () => {
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
                           Do you know the square footage of the basement?
-                        </Typography>
+                    </Typography>
                         
                         <RadioGroup
                           value={knowsBasementSqft || ''}
@@ -1564,10 +1564,10 @@ const ManagePage: React.FC = () => {
                           <Box>
                             <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
                               What's the square footage of the basement?
-                            </Typography>
+                    </Typography>
                             <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
                               It's okay to estimate.
-                            </Typography>
+                    </Typography>
                             
                             <TextField
                               fullWidth
@@ -1587,7 +1587,7 @@ const ManagePage: React.FC = () => {
                               variant="outlined"
                               size="medium"
                             />
-                          </Box>
+                  </Box>
                         )}
                       </Box>
                     )}
@@ -1650,7 +1650,7 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Back
-                    </Button>
+                  </Button>
                     
                     {/* Next Button - Bottom Right */}
                     <Button
@@ -1681,8 +1681,8 @@ const ManagePage: React.FC = () => {
                     </Button>
                   </Box>
                 </Box>
-              </Box>
-            )}
+        </Box>
+      )}
 
             {/* Step 7: Property Quality Assessment */}
             {listingStep === 7 && (
@@ -1741,11 +1741,11 @@ const ManagePage: React.FC = () => {
                               <Box>
                                 <Typography variant="body1" fontWeight="bold">
                                   {option.label}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
                                   {option.subtitle}
-                                </Typography>
-                              </Box>
+                      </Typography>
+                    </Box>
                             }
                             sx={{ 
                               alignItems: 'flex-start', 
@@ -1792,11 +1792,11 @@ const ManagePage: React.FC = () => {
                               <Box>
                                 <Typography variant="body1" fontWeight="bold">
                                   {option.label}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
                                   {option.subtitle}
-                                </Typography>
-                              </Box>
+                      </Typography>
+                    </Box>
                             }
                             sx={{ 
                               alignItems: 'flex-start', 
@@ -1843,11 +1843,11 @@ const ManagePage: React.FC = () => {
                               <Box>
                                 <Typography variant="body1" fontWeight="bold">
                                   {option.label}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
                                   {option.subtitle}
-                                </Typography>
-                              </Box>
+                      </Typography>
+                    </Box>
                             }
                             sx={{ 
                               alignItems: 'flex-start', 
@@ -1894,11 +1894,11 @@ const ManagePage: React.FC = () => {
                               <Box>
                                 <Typography variant="body1" fontWeight="bold">
                                   {option.label}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
                                   {option.subtitle}
-                                </Typography>
-                              </Box>
+                      </Typography>
+                    </Box>
                             }
                             sx={{ 
                               alignItems: 'flex-start', 
@@ -1982,7 +1982,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     What type of countertops are in the kitchen?
-                  </Typography>
+                </Typography>
                   
                   <FormControl component="fieldset" fullWidth>
                     <RadioGroup
@@ -2180,7 +2180,7 @@ const ManagePage: React.FC = () => {
                           }}
                         >
                           Do any of these apply to your home?
-                        </Typography>
+                  </Typography>
                         
                         <Box sx={{ mb: 3 }}>
                           <FormControlLabel
@@ -2216,7 +2216,7 @@ const ManagePage: React.FC = () => {
                           }}
                         >
                           Is there a guard at the entrance?
-                        </Typography>
+                  </Typography>
                         
                         <FormControl component="fieldset" fullWidth>
                           <RadioGroup
@@ -2239,7 +2239,7 @@ const ManagePage: React.FC = () => {
                         </FormControl>
                       </>
                     )}
-                  </Box>
+                </Box>
                 </Box>
                 
                 {/* Right Column - Additional Info-2 Illustration */}
@@ -2298,7 +2298,7 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Back
-                    </Button>
+                </Button>
                     
                     {/* Next Button - Bottom Right */}
                     <Button
@@ -2349,7 +2349,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     To the best of your knowledge, do any of these apply to your home?
-                  </Typography>
+        </Typography>
                   
                   <Typography
                     variant="body1"
@@ -2854,7 +2854,7 @@ const ManagePage: React.FC = () => {
                       alt="Additional information illustration" 
                       style={{
                         width: '100%',
-                        height: '100%',
+                height: '100%', 
                         objectFit: 'contain'
                       }}
                     />
@@ -2878,7 +2878,7 @@ const ManagePage: React.FC = () => {
                         px: 4,
                         py: 1.5,
                         fontSize: '1rem',
-                        '&:hover': { 
+                '&:hover': { 
                           borderColor: brandColors.secondary,
                           backgroundColor: 'rgba(26, 54, 93, 0.04)'
                         }
@@ -3469,7 +3469,7 @@ const ManagePage: React.FC = () => {
                 {/* Header Illustration */}
                 <Box sx={{ textAlign: 'center', mb: 4 }}>
                   <Box
-                    component="img"
+                  component="img"
                     src="/final sell:list.png"
                     alt="Watercolor neighborhood illustration"
                     sx={{
@@ -3493,8 +3493,8 @@ const ManagePage: React.FC = () => {
                   }}
                 >
                   {propertyAddress || 'Your Property'} Your selling options
-                </Typography>
-                
+                  </Typography>
+                  
                 <Typography
                   variant="h6"
                   sx={{
@@ -3505,8 +3505,8 @@ const ManagePage: React.FC = () => {
                   }}
                 >
                   Here are your tailored selling options (based on the info you provided).
-                </Typography>
-
+                  </Typography>
+                  
                 {/* Dreamery Listing Card */}
                 <Box sx={{ 
                   backgroundColor: 'white', 
@@ -3553,8 +3553,8 @@ const ManagePage: React.FC = () => {
                   
                   <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                     Have any questions? Speak to a Dreamery specialist.
-                  </Typography>
-                </Box>
+                      </Typography>
+                    </Box>
 
                 {/* How it works Section */}
                 <Box sx={{ mb: 4 }}>
@@ -3589,9 +3589,9 @@ const ManagePage: React.FC = () => {
                         Sell for <strong>2% more</strong> when using a premium Showcase listing.
                       </Typography>
                     </Box>
+                    </Box>
                   </Box>
-                </Box>
-
+                  
                 {/* Get Showcase for free Card */}
                 <Box sx={{ 
                   backgroundColor: 'white', 
@@ -3677,9 +3677,9 @@ const ManagePage: React.FC = () => {
                   </Box>
                   
                   <Box sx={{ textAlign: 'center', mt: 3 }}>
-                    <Button
-                      variant="contained"
-                      sx={{
+                  <Button
+                    variant="contained"
+                    sx={{
                         backgroundColor: brandColors.primary,
                         px: 4,
                         py: 1.5,
@@ -3687,7 +3687,7 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Find out more
-                    </Button>
+                  </Button>
                   </Box>
                 </Box>
 

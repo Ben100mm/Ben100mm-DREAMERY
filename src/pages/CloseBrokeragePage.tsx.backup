@@ -307,8 +307,8 @@ const CloseBrokeragePage: React.FC = () => {
               </Paper>
 
               {/* Key Metrics */}
-              <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={3}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 3, mb: 4 }}>
+                <Box>
                   <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
                     <MonetizationOnIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
@@ -321,8 +321,8 @@ const CloseBrokeragePage: React.FC = () => {
                       +15% vs last month
                     </Typography>
                   </Paper>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
                     <GroupIcon sx={{ fontSize: 40, color: brandColors.success, mb: 1 }} />
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.success }}>
@@ -335,8 +335,8 @@ const CloseBrokeragePage: React.FC = () => {
                       All performing well
                     </Typography>
                   </Paper>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
                     <AssignmentIcon sx={{ fontSize: 40, color: brandColors.warning, mb: 1 }} />
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.warning }}>
@@ -349,8 +349,8 @@ const CloseBrokeragePage: React.FC = () => {
                       +8 this week
                     </Typography>
                   </Paper>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
                     <HomeIcon sx={{ fontSize: 40, color: brandColors.info, mb: 1 }} />
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.info }}>
@@ -363,8 +363,8 @@ const CloseBrokeragePage: React.FC = () => {
                       5 new this month
                     </Typography>
                   </Paper>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
 
               {/* Agent Performance Overview */}
               <Paper elevation={2} sx={{ p: 3, mb: 4 }}>

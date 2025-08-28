@@ -30,21 +30,23 @@ import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
 import { brandColors } from "../theme";
 import MuiAlert from "@mui/material/Alert";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import CalculateIcon from "@mui/icons-material/Calculate";
-import SecurityIcon from "@mui/icons-material/Security";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
-import SettingsIcon from "@mui/icons-material/Settings";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import PersonIcon from "@mui/icons-material/Person";
-import HelpIcon from "@mui/icons-material/HelpOutline";
-import UndoIcon from "@mui/icons-material/Undo";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import {
+  ExpandMore as ExpandMoreIcon,
+  Timeline as TimelineIcon,
+  TrendingUp as TrendingUpIcon,
+  Calculate as CalculateIcon,
+  Security as SecurityIcon,
+  AccountBalance as AccountBalanceIcon,
+  SwapHoriz as SwapHorizIcon,
+  ShowChart as ShowChartIcon,
+  Settings as SettingsIcon,
+  CloudUpload as CloudUploadIcon,
+  CloudDownload as CloudDownloadIcon,
+  Person as PersonIcon,
+  HelpOutline as HelpIcon,
+  Undo as UndoIcon,
+  RestartAlt as RestartAltIcon,
+} from "@mui/icons-material";
 import {
   AdvancedAnalysisDashboard,
   SeasonalAdjustmentsCalculator,
@@ -79,18 +81,12 @@ import {
 import { type DealState } from "../types/deal";
 import { useAnalysis } from "../context/AnalysisContext";
 import { formatCurrency } from "../components/UXComponents";
-const LineChart = React.lazy(() =>
-  import("@mui/x-charts").then((m) => ({ default: m.LineChart }))
-);
-const BarChart = React.lazy(() =>
-  import("@mui/x-charts").then((m) => ({ default: m.BarChart }))
-);
-const PieChart = React.lazy(() =>
-  import("@mui/x-charts").then((m) => ({ default: m.PieChart }))
-);
-import type {
+import {
+  LineChart,
   LineSeriesType,
+  BarChart,
   BarSeriesType,
+  PieChart,
   PieSeriesType,
 } from "@mui/x-charts";
 import { useAuth } from "../contexts/AuthContext";

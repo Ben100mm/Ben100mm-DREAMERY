@@ -451,48 +451,40 @@ const OperatePage: React.FC = () => {
                   Track operational costs, revenue, and profitability.
                 </Typography>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h5" sx={{ color: '#4caf50' }}>
-                        $138,000
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total Monthly Revenue
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(244, 67, 54, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h5" sx={{ color: '#f44336' }}>
-                        $35,500
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total Monthly Expenses
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h5" sx={{ color: '#1a365d' }}>
-                        $102,500
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Net Monthly Income
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ p: 2, bgcolor: 'rgba(255, 152, 0, 0.1)', borderRadius: 2 }}>
-                      <Typography variant="h5" sx={{ color: '#ff9800' }}>
-                        74.3%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Profit Margin
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
+                  <Box sx={{ p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ color: '#4caf50' }}>
+                      $138,000
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Monthly Revenue
+                    </Typography>
+                  </Box>
+                  <Box sx={{ p: 2, bgcolor: 'rgba(244, 67, 54, 0.1)', borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ color: '#f44336' }}>
+                      $35,500
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Monthly Expenses
+                    </Typography>
+                  </Box>
+                  <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ color: '#1a365d' }}>
+                      $102,500
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Net Monthly Income
+                    </Typography>
+                  </Box>
+                  <Box sx={{ p: 2, bgcolor: 'rgba(255, 152, 0, 0.1)', borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ color: '#ff9800' }}>
+                      74.3%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Profit Margin
+                    </Typography>
+                  </Box>
+                </Box>
               </CardContent>
             </Card>
           </Box>
@@ -543,7 +535,7 @@ const OperatePage: React.FC = () => {
               </CardContent>
             </Card>
           </Box>
-        </Grid>
+        </Box>
 
         {/* Placeholder Operation Cards */}
         <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>

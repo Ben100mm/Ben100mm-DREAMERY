@@ -118,9 +118,9 @@ const Dashboard: React.FC = () => {
           </Button>
         </HeaderSection>
 
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
           {/* User Info Card */}
-          <Grid item xs={12} md={6}>
+          <Box>
             <StatusCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -153,10 +153,10 @@ const Dashboard: React.FC = () => {
                 </Box>
               </CardContent>
             </StatusCard>
-          </Grid>
+          </Box>
 
           {/* Email Verification Card */}
-          <Grid item xs={12} md={6}>
+          <Box>
             <StatusCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -196,10 +196,10 @@ const Dashboard: React.FC = () => {
                 )}
               </CardContent>
             </StatusCard>
-          </Grid>
+          </Box>
 
           {/* Security Settings Card */}
-          <Grid item xs={12}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: '1 / -1' } }}>
             <StatusCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -234,8 +234,8 @@ const Dashboard: React.FC = () => {
                 </Button>
               </CardContent>
             </StatusCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Divider sx={{ my: 3 }} />
 

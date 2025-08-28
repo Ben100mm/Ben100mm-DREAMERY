@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { 
-  Grid, 
   Card, 
   CardContent, 
   Typography, 
@@ -154,8 +153,8 @@ const ClosePage: React.FC = () => {
           <Typography variant="body1" paragraph>
             Ensure all parties, documents, and funds are ready for closing.
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -169,8 +168,8 @@ const ClosePage: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Box>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -184,8 +183,8 @@ const ClosePage: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       )
     },
@@ -200,8 +199,8 @@ const ClosePage: React.FC = () => {
           <Alert severity="info" sx={{ mb: 2 }}>
             Digital signing available for remote closings
           </Alert>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -227,8 +226,8 @@ const ClosePage: React.FC = () => {
                   </List>
                 </CardContent>
               </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Box>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -242,8 +241,8 @@ const ClosePage: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       )
     },
@@ -403,8 +402,8 @@ const ClosePage: React.FC = () => {
 
       {/* Documents Tab */}
       {activeTab === 2 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+          <Box>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -440,9 +439,9 @@ const ClosePage: React.FC = () => {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={4}>
+          <Box>
             <TimelineCard>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -475,8 +474,8 @@ const ClosePage: React.FC = () => {
                 </Typography>
               </CardContent>
             </TimelineCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
 
       {/* Costs & Payments Tab */}
@@ -489,8 +488,8 @@ const ClosePage: React.FC = () => {
             Track closing costs and payment status.
           </Typography>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+            <Box>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
@@ -498,34 +497,36 @@ const ClosePage: React.FC = () => {
                       <TableCell>Item</TableCell>
                       <TableCell align="right">Amount</TableCell>
                       <TableCell align="center">Status</TableCell>
-                      <TableCell align="center">Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {mockClosingCosts.map((cost, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{cost.item}</TableCell>
-                        <TableCell align="right">${cost.amount.toLocaleString()}</TableCell>
-                        <TableCell align="center">
-                          <Chip 
-                            label={cost.paid ? "Paid" : "Pending"} 
-                            color={cost.paid ? "success" : "warning"}
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button size="small" variant="outlined">
-                            {cost.paid ? "View Receipt" : "Pay Now"}
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell>Title Search</TableCell>
+                      <TableCell align="right">$450</TableCell>
+                      <TableCell align="center">
+                        <Chip label="Paid" color="success" size="small" />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Recording Fees</TableCell>
+                      <TableCell align="right">$125</TableCell>
+                      <TableCell align="center">
+                        <Chip label="Pending" color="warning" size="small" />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Transfer Tax</TableCell>
+                      <TableCell align="right">$1,200</TableCell>
+                      <TableCell align="center">
+                        <Chip label="Pending" color="warning" size="small" />
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} md={4}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -550,82 +551,87 @@ const ClosePage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
+      )}
 
-        {/* Placeholder Closing Cards */}
-        <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
-          Featured Closing Transactions
-        </Typography>
-        <Grid container spacing={3}>
-          {Array.from({ length: 10 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={`close-placeholder-${index}`}>
-              <Card sx={{ 
-                height: '100%', 
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                '&:hover': { 
-                  transform: 'translateY(-4px)', 
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
-                }
-              }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Closing+${index + 1}`}
-                  alt={`Closing ${index + 1}`}
-                  sx={{ objectFit: 'cover' }}
-                />
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
-                    Closing #{index + 1}
+      {/* Placeholder Closing Cards */}
+      <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
+        Featured Closing Transactions
+      </Typography>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr', lg: '1fr 1fr 1fr 1fr' }, gap: 3 }}>
+        {Array.from({ length: 10 }, (_, index) => (
+          <Box key={`close-placeholder-${index}`}>
+            <Card sx={{ 
+              height: '100%', 
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              '&:hover': { 
+                transform: 'translateY(-4px)', 
+                boxShadow: '0 8px 25px rgba(0,0,0,0.15)' 
+              }
+            }}>
+              <Box
+                component="img"
+                src={`https://via.placeholder.com/300x200/1a365d/ffffff?text=Closing+${index + 1}`}
+                alt={`Closing ${index + 1}`}
+                sx={{ 
+                  width: '100%', 
+                  height: 200, 
+                  objectFit: 'cover', 
+                  borderRadius: 1, 
+                  mb: 1 
+                }}
+              />
+              <CardContent>
+                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                  Closing #{index + 1}
+                </Typography>
+                
+                <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
+                  ${(425000 + index * 55000).toLocaleString()}
+                </Typography>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <LocationIcon sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
                   </Typography>
-                  
-                  <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                    ${(425000 + index * 55000).toLocaleString()}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <LocationOn sx={{ color: '#718096', fontSize: 20, mr: 1 }} />
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                     <Typography variant="body2" color="text.secondary">
-                      {['Los Angeles, CA', 'New York, NY', 'Chicago, IL', 'Miami, FL', 'Seattle, WA', 'Austin, TX', 'Denver, CO', 'Phoenix, AZ', 'Portland, OR', 'Nashville, TN'][index]}
+                      {(15 + index)} days
                     </Typography>
                   </Box>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(15 + index)} days
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        ${(8000 + index * 500)} fees
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {(85 + index)}% complete
-                      </Typography>
-                    </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      ${(8000 + index * 500)} fees
+                    </Typography>
                   </Box>
-                  
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      backgroundColor: '#1a365d',
-                      '&:hover': { backgroundColor: '#0d2340' }
-                    }}
-                  >
-                    View Closing
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {(85 + index)}% complete
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: '#1a365d',
+                    '&:hover': { backgroundColor: '#0d2340' }
+                  }}
+                >
+                  View Closing
+                </Button>
+              </CardContent>
+            </Card>
+          </Box>
+        ))}
+      </Box>
     </PageTemplate>
   );
 };

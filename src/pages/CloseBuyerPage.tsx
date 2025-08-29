@@ -73,7 +73,7 @@ import {
 // Import the actual components
 import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
 import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
-import DueDiligenceTools from '../components/close/due-diligence/DueDiligenceTools';
+import { LazyDueDiligenceTools } from '../components/lazy';
 import FinancingCoordination from '../components/close/financing/FinancingCoordination';
 import LegalCompliance from '../components/close/legal-compliance/LegalCompliance';
 import SettlementClosingCosts from '../components/close/settlement/SettlementClosingCosts';
@@ -209,7 +209,7 @@ const CloseBuyerPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { userRole } = useContext(RoleContext as any) || {};
+  const userRole = (useContext(RoleContext as any) as any)?.userRole || 'Retail Buyer';
   const allowedRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
   const isBuyerAuthorized = allowedRoles.includes(userRole);
   
@@ -281,7 +281,7 @@ const CloseBuyerPage: React.FC = () => {
       case 'escrow-title':
         return <EscrowTitleHub />;
       case 'due-diligence':
-        return <DueDiligenceTools />;
+        return <LazyDueDiligenceTools />;
       case 'financing':
         return <FinancingCoordination />;
       case 'legal':
@@ -716,7 +716,7 @@ const CloseBuyerPage: React.FC = () => {
                   </Typography>
                 </Paper>
                 <Box sx={{ pl: 0, ml: 3 }}>
-                  <DueDiligenceTools />
+                  <LazyDueDiligenceTools />
                 </Box>
               </>
             )}

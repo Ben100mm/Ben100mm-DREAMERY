@@ -23,7 +23,7 @@ export class DocumentTemplateService {
           { name: 'propertyAddress', type: 'string', required: true, validation: '^[\\w\\s,.-]+$' },
           { name: 'buyerName', type: 'string', required: true },
           { name: 'sellerName', type: 'string', required: true },
-          { name: 'purchasePrice', type: 'number', required: true, validation: '^[0-9]+(\.[0-9]{2})?$' },
+          { name: 'purchasePrice', type: 'number', required: true, validation: '^[0-9]+(\\.[0-9]{2})?$' },
           { name: 'closingDate', type: 'date', required: true },
           { name: 'titleCompany', type: 'string', required: true },
           { name: 'exceptions', type: 'string', required: false },

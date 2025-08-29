@@ -22,19 +22,20 @@ import {
   Paper,
   Link,
 } from "@mui/material";
-import {
-  Search,
-  Favorite,
-  FavoriteBorder,
-  ArrowBack,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  Clear,
-} from "@mui/icons-material";
 import styled from "styled-components";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
+import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
+
+// Lazy load icons to reduce initial bundle size
+const LazySearchIcon = React.lazy(() => import("@mui/icons-material/Search"));
+const LazyFavoriteIcon = React.lazy(() => import("@mui/icons-material/Favorite"));
+const LazyFavoriteBorderIcon = React.lazy(() => import("@mui/icons-material/FavoriteBorder"));
+const LazyArrowBackIcon = React.lazy(() => import("@mui/icons-material/ArrowBack"));
+const LazyKeyboardArrowDownIcon = React.lazy(() => import("@mui/icons-material/KeyboardArrowDown"));
+const LazyKeyboardArrowUpIcon = React.lazy(() => import("@mui/icons-material/KeyboardArrowUp"));
+const LazyClearIcon = React.lazy(() => import("@mui/icons-material/Clear"));
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -955,13 +956,17 @@ const RentPage: React.FC = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search />
+                    <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                      <LazySearchIcon />
+                    </React.Suspense>
                   </InputAdornment>
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton size="small">
-                      <Clear />
+                      <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                        <LazyClearIcon />
+                      </React.Suspense>
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -989,7 +994,9 @@ const RentPage: React.FC = () => {
               <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>
                 500
               </Typography>
-              <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyFavoriteIcon sx={{ color: "#e31c25", fontSize: 20 }} />
+              </React.Suspense>
             </Box>
           </Box>
 
@@ -1006,9 +1013,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "for-rent" ? "active" : ""}
               endIcon={
                 activeFilter === "for-rent" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1020,9 +1031,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "price" ? "active" : ""}
               endIcon={
                 activeFilter === "price" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1034,9 +1049,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "beds-baths" ? "active" : ""}
               endIcon={
                 activeFilter === "beds-baths" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1048,9 +1067,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "home-type" ? "active" : ""}
               endIcon={
                 activeFilter === "home-type" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1062,9 +1085,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "listing-type" ? "active" : ""}
               endIcon={
                 activeFilter === "listing-type" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1076,9 +1103,13 @@ const RentPage: React.FC = () => {
               className={activeFilter === "more" ? "active" : ""}
               endIcon={
                 activeFilter === "more" ? (
-                  <KeyboardArrowUp />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowUpIcon />
+                  </React.Suspense>
                 ) : (
-                  <KeyboardArrowDown />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyKeyboardArrowDownIcon />
+                  </React.Suspense>
                 )
               }
             >
@@ -1207,9 +1238,13 @@ const RentPage: React.FC = () => {
                           }}
                         >
                           {favorites.has(property.id) ? (
-                            <Favorite />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                              <LazyFavoriteIcon />
+                            </React.Suspense>
                           ) : (
-                            <FavoriteBorder />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                              <LazyFavoriteBorderIcon />
+                            </React.Suspense>
                           )}
                         </IconButton>
                       </Box>

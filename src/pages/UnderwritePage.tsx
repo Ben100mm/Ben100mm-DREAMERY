@@ -35,9 +35,6 @@ import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import {
   pmt,
   totalMonthlyDebtService,
@@ -73,6 +70,11 @@ import {
   type PropertyAgeFactors,
   type LocationFactors,
 } from "../utils/advancedCalculations";
+
+// Lazy load icons to reduce initial bundle size
+const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
+const LazyDeleteIcon = React.lazy(() => import("@mui/icons-material/Delete"));
+const LazyTrendingUpIcon = React.lazy(() => import("@mui/icons-material/TrendingUp"));
 
 // Updated type definitions
 type PropertyType =
@@ -3959,7 +3961,11 @@ const UnderwritePage: React.FC = () => {
         {/* Basic Info Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
               <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -4165,7 +4171,11 @@ const UnderwritePage: React.FC = () => {
           state.operationType !== "Rental Arbitrage" && (
             <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                   <Typography sx={{ fontWeight: 700 }}>
                     Subject-To Existing Mortgage
                   </Typography>
@@ -4613,7 +4623,11 @@ const UnderwritePage: React.FC = () => {
         {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>
                   Subject-To Amortization Schedule
                 </Typography>
@@ -4717,7 +4731,11 @@ const UnderwritePage: React.FC = () => {
         {state.offerType === "Seller Finance" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -4921,7 +4939,11 @@ const UnderwritePage: React.FC = () => {
         {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>
                   Seller Finance Amortization Schedule
                 </Typography>
@@ -5023,7 +5045,11 @@ const UnderwritePage: React.FC = () => {
         {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>
                   Hybrid Financing
                 </Typography>
@@ -5239,7 +5265,11 @@ const UnderwritePage: React.FC = () => {
         {state.offerType === "Cash" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -5557,7 +5587,11 @@ const UnderwritePage: React.FC = () => {
           state.offerType !== "Cash" && (
             <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                   <Typography sx={{ fontWeight: 700 }}>
                     {state.operationType === "Rental Arbitrage"
                       ? "Startup Costs"
@@ -5772,7 +5806,11 @@ const UnderwritePage: React.FC = () => {
               state.offerType !== "Cash")) && (
             <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                   <Typography sx={{ fontWeight: 700 }}>
                     Amortization Schedule
                   </Typography>
@@ -5863,7 +5901,11 @@ const UnderwritePage: React.FC = () => {
         {state.operationType !== "Rental Arbitrage" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>
                   Appreciation Calculator
                 </Typography>
@@ -6188,7 +6230,11 @@ const UnderwritePage: React.FC = () => {
         {/* Income Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Typography sx={{ fontWeight: 700 }}>Income</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -6675,7 +6721,11 @@ const UnderwritePage: React.FC = () => {
         {/* Operating Expenses Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
               <Typography sx={{ fontWeight: 700 }}>
                 Operating Expenses
               </Typography>
@@ -6976,7 +7026,11 @@ const UnderwritePage: React.FC = () => {
         {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Typography sx={{ fontWeight: 700 }}>
                     Pro Forma Analysis
@@ -7402,7 +7456,9 @@ const UnderwritePage: React.FC = () => {
                                     }
                                     sx={{ color: "#d32f2f" }}
                                   >
-                                    <DeleteIcon fontSize="small" />
+                                    <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyDeleteIcon fontSize="small" />
+                </React.Suspense>
                                   </IconButton>
                                 </Box>
                                 {preset.description && (
@@ -8216,7 +8272,11 @@ const UnderwritePage: React.FC = () => {
         {false && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography sx={{ fontWeight: 700 }}>
                   Risk Assessment
@@ -8451,7 +8511,11 @@ const UnderwritePage: React.FC = () => {
         {/* Advanced Analysis Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
               <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -9591,7 +9655,11 @@ const UnderwritePage: React.FC = () => {
               backgroundColor: brandColors.primary,
               "&:hover": { backgroundColor: "#2d3748" },
             }}
-            startIcon={<TrendingUpIcon />}
+            startIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyTrendingUpIcon />
+                </React.Suspense>
+              }
           >
             Analyze
           </Button>

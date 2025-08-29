@@ -35,18 +35,19 @@ import {
   HelpTooltip,
   RequiredFieldIndicator,
 } from "../components";
-import {
-  Calculate as CalculateIcon,
-  Description as DescriptionIcon,
-  Flag as FlagIcon,
-  AttachMoney as MoneyIcon,
-  Home as HomeIcon,
-  Close as CloseIcon,
-} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
+import { LENDER_TYPES, PROPERTY_TYPES, LOAN_PURPOSES, CREDIT_SCORE_RANGES, DOWN_PAYMENT_OPTIONS } from "../data";
+
+// Lazy load icons to reduce initial bundle size
+const LazyCalculateIcon = React.lazy(() => import("@mui/icons-material/Calculate"));
+const LazyDescriptionIcon = React.lazy(() => import("@mui/icons-material/Description"));
+const LazyFlagIcon = React.lazy(() => import("@mui/icons-material/Flag"));
+const LazyMoneyIcon = React.lazy(() => import("@mui/icons-material/AttachMoney"));
+const LazyHomeIcon = React.lazy(() => import("@mui/icons-material/Home"));
+const LazyCloseIcon = React.lazy(() => import("@mui/icons-material/Close"));
 
 const PageContainer = styled.div`
   height: 100vh;
@@ -559,7 +560,11 @@ const MortgagePage: React.FC = () => {
                     }, 2000);
                   }}
                   disabled={isCalculating}
-                  startIcon={<CalculateIcon />}
+                  startIcon={
+                    <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                      <LazyCalculateIcon />
+                    </React.Suspense>
+                  }
                   sx={{
                     backgroundColor: brandColors.primary,
                     textTransform: "none",
@@ -1105,35 +1110,55 @@ const MortgagePage: React.FC = () => {
       title: "Calculate your DreamAbility™",
       description:
         "Get a real-time estimate of what you can afford with Zillow Home Loans.",
-      icon: <CalculateIcon />,
+      icon: (
+        <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyCalculateIcon />
+        </React.Suspense>
+      ),
     },
     {
       step: "2",
       title: "Get pre-approved",
       description:
         "Make strong offers on homes with a Verified Pre-approval letter from us.",
-      icon: <DescriptionIcon />,
+      icon: (
+        <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyDescriptionIcon />
+        </React.Suspense>
+      ),
     },
     {
       step: "3",
       title: "Make an offer",
       description:
         "Confirm that a home fits your budget with us and determine a fair offer price.",
-      icon: <FlagIcon />,
+      icon: (
+        <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyFlagIcon />
+        </React.Suspense>
+      ),
     },
     {
       step: "4",
       title: "Apply for a mortgage",
       description:
         "After your offer is accepted, you'll complete your full loan application.",
-      icon: <MoneyIcon />,
+      icon: (
+        <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyMoneyIcon />
+        </React.Suspense>
+      ),
     },
     {
       step: "5",
       title: "Close on your home",
       description:
         "Congrats, homeowner! Sign the closing paperwork and we'll finalize the sale.",
-      icon: <HomeIcon />,
+      icon: (
+        <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyHomeIcon />
+        </React.Suspense>
+      ),
     },
   ];
 
@@ -1769,7 +1794,9 @@ const MortgagePage: React.FC = () => {
             </Box>
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <HomeIcon sx={{ mr: 1, color: brandColors.primary }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24, mr: 1, color: brandColors.primary }} />}>
+                  <LazyHomeIcon sx={{ mr: 1, color: brandColors.primary }} />
+                </React.Suspense>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   EQUAL HOUSING LENDER
                 </Typography>
@@ -1856,7 +1883,9 @@ const MortgagePage: React.FC = () => {
                 Sample loan terms
               </Typography>
               <IconButton onClick={handleCloseModal} sx={{ color: brandColors.neutral.dark }}>
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -2037,7 +2066,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseDreamAbilityModal}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -2415,7 +2446,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseDreamAbilityResults}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -2866,7 +2899,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseWhatThisMeans}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -2950,7 +2985,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseTargetPaymentBreakdown}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -3158,7 +3195,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseDownPaymentDetails}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -3273,7 +3312,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseAprDetails}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 
@@ -3356,7 +3397,9 @@ const MortgagePage: React.FC = () => {
                 onClick={handleCloseInterestRateDetails}
                 sx={{ color: brandColors.neutral.dark }}
               >
-                <CloseIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
               </IconButton>
             </Box>
 

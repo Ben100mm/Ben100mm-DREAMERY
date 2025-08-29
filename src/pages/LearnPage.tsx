@@ -15,8 +15,7 @@ import {
   School as CoursesIcon,
   Assignment as CaseStudiesIcon,
   QuestionAnswer as QAIcon,
-  LiveTv as LiveSessionsIcon,
-  SmartToy as AITutorIcon
+  LiveTv as LiveSessionsIcon
 } from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme/theme';
@@ -30,7 +29,7 @@ const LearnPage: React.FC = () => {
     { id: 'casestudies', label: 'Case Studies', icon: <CaseStudiesIcon /> },
     { id: 'qa', label: 'Q&A', icon: <QAIcon /> },
     { id: 'livesessions', label: 'Live Sessions', icon: <LiveSessionsIcon /> },
-    { id: 'aitutor', label: 'Dreamery AI Tutor', icon: <AITutorIcon /> }
+    { id: 'aitutor', label: 'Lumina', icon: <Box component="img" src="/Lumina%20Logo.png" alt="Lumina logo" sx={{ width: 24, height: 24 }} /> }
   ];
 
   const getBanner = () => {
@@ -62,7 +61,7 @@ const LearnPage: React.FC = () => {
         };
       case 'aitutor':
         return {
-          title: 'Dreamery AI Tutor',
+          title: 'Lumina',
           subtitle: 'Personalized AI-powered learning assistance and real-time guidance'
         };
       default:
@@ -83,7 +82,7 @@ const LearnPage: React.FC = () => {
       case 'livesessions':
         return <LiveSessionsIcon sx={{ fontSize: 28, color: 'white' }} />;
       case 'aitutor':
-        return <AITutorIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <Box component="img" src="/Lumina%20Logo.png" alt="Lumina logo" sx={{ width: 28, height: 28 }} />;
       default:
         return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
     }
@@ -150,7 +149,7 @@ const LearnPage: React.FC = () => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Dreamery AI Tutor
+              Lumina
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Get personalized AI-powered learning assistance, real-time guidance, and adaptive learning recommendations.

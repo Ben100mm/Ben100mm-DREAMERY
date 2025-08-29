@@ -31,8 +31,21 @@ import {
   SensitivityAnalysisCalculator,
   StressTestingCalculator,
   InflationAdjustmentsCalculator,
-  ComprehensiveRefinanceCalculator,
 } from "../components";
+import { LazyComprehensiveRefinanceCalculator } from "../components/lazy";
+
+export {
+  SeasonalAdjustmentsCalculator,
+  MarketConditionsCalculator,
+  ExitStrategiesCalculator,
+  RiskAnalysisCalculator,
+  TaxImplicationsCalculator,
+  RefinanceScenariosCalculator,
+  SensitivityAnalysisCalculator,
+  StressTestingCalculator,
+  InflationAdjustmentsCalculator,
+  LazyComprehensiveRefinanceCalculator,
+};
 
 // Color constants
 export const DEFAULT_COLOR = brandColors.primary;
@@ -156,13 +169,7 @@ export const createTabConfig = (
     label: "Refinance",
     icon: <AccountBalanceIcon aria-label="Account Balance" />,
     className: "refinance-tab",
-    component: (
-      <ComprehensiveRefinanceCalculator
-        onResultsChange={(results: any) =>
-          handleResultsChange("refinance", results)
-        }
-      />
-    ),
+    component: <LazyComprehensiveRefinanceCalculator />,
   },
   {
     label: "Risk Analysis",

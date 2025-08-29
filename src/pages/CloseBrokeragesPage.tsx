@@ -28,36 +28,37 @@ import {
   Tab,
   LinearProgress,
 } from '@mui/material';
-import {
-  ArrowBack as ArrowBackIcon,
-  Notifications as NotificationsIcon,
-  Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Business as BusinessIcon,
-  People as PeopleIcon,
-  Assessment as AssessmentIcon,
-  Support as SupportIcon,
-  Settings as SettingsIcon,
-  IntegrationInstructions as IntegrationIcon,
-  TrendingUp as TrendingUpIcon,
-  CheckCircle as CheckCircleIcon,
-  Person as PersonIcon,
-  Close as CloseIcon,
-  Edit as EditIcon,
-  Add as AddIcon,
-  Search as SearchIcon,
-  Description as Description,
-  Assignment as AssignmentIcon,
-  Archive as ArchiveIcon,
-  Security as SecurityIcon,
-  School as SchoolIcon,
-  MoreVert as MoreVertIcon,
-  Send as SendIcon,
-  ArrowForward as ArrowForwardIcon,
-} from '@mui/icons-material';
 import { brandColors } from "../theme";
 import TemplatesComponent from '../components/TemplatesComponent';
 import { RoleContext } from "../context/RoleContext";
+import { AGENT_ROLES } from "../data";
+
+// Lazy load icons to reduce initial bundle size
+const LazyArrowBackIcon = React.lazy(() => import('@mui/icons-material/ArrowBack'));
+const LazyNotificationsIcon = React.lazy(() => import('@mui/icons-material/Notifications'));
+const LazyMenuIcon = React.lazy(() => import('@mui/icons-material/Menu'));
+const LazyDashboardIcon = React.lazy(() => import('@mui/icons-material/Dashboard'));
+const LazyBusinessIcon = React.lazy(() => import('@mui/icons-material/Business'));
+const LazyPeopleIcon = React.lazy(() => import('@mui/icons-material/People'));
+const LazyAssessmentIcon = React.lazy(() => import('@mui/icons-material/Assessment'));
+const LazySupportIcon = React.lazy(() => import('@mui/icons-material/Support'));
+const LazySettingsIcon = React.lazy(() => import('@mui/icons-material/Settings'));
+const LazyIntegrationIcon = React.lazy(() => import('@mui/icons-material/IntegrationInstructions'));
+const LazyTrendingUpIcon = React.lazy(() => import('@mui/icons-material/TrendingUp'));
+const LazyCheckCircleIcon = React.lazy(() => import('@mui/icons-material/CheckCircle'));
+const LazyPersonIcon = React.lazy(() => import('@mui/icons-material/Person'));
+const LazyCloseIcon = React.lazy(() => import('@mui/icons-material/Close'));
+const LazyEditIcon = React.lazy(() => import('@mui/icons-material/Edit'));
+const LazyAddIcon = React.lazy(() => import('@mui/icons-material/Add'));
+const LazySearchIcon = React.lazy(() => import('@mui/icons-material/Search'));
+const LazyDescriptionIcon = React.lazy(() => import('@mui/icons-material/Description'));
+const LazyAssignmentIcon = React.lazy(() => import('@mui/icons-material/Assignment'));
+const LazyArchiveIcon = React.lazy(() => import('@mui/icons-material/Archive'));
+const LazySecurityIcon = React.lazy(() => import('@mui/icons-material/Security'));
+const LazySchoolIcon = React.lazy(() => import('@mui/icons-material/School'));
+const LazyMoreVertIcon = React.lazy(() => import('@mui/icons-material/MoreVert'));
+const LazySendIcon = React.lazy(() => import('@mui/icons-material/Send'));
+const LazyArrowForwardIcon = React.lazy(() => import('@mui/icons-material/ArrowForward'));
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -211,23 +212,23 @@ const CloseBrokeragesPage = () => {
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 
   const tabs = [
-    { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { value: 'agents', label: 'Agent Management', icon: <PeopleIcon /> },
-    { value: 'transactions', label: 'Transactions', icon: <BusinessIcon /> },
-    { value: 'listings', label: 'Listings', icon: <BusinessIcon /> },
-    { value: 'offers', label: 'Offers', icon: <AssessmentIcon /> },
-    { value: 'documents', label: 'Documents', icon: <AssessmentIcon /> },
-    { value: 'payments-finance', label: 'Payments & Finance', icon: <AssessmentIcon /> },
-    { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <AssignmentIcon /> },
-    { value: 'checklists', label: 'Checklists', icon: <CheckCircleIcon /> },
-    { value: 'templates', label: 'Templates and Envelopes', icon: <AssessmentIcon /> },
-    { value: 'access-archives', label: 'Access Archives', icon: <ArchiveIcon /> },
-    { value: 'compliance', label: 'Compliance', icon: <SecurityIcon /> },
-    { value: 'training-resources', label: 'Training & Resources', icon: <SchoolIcon /> },
-    { value: 'reports-analytics', label: 'Reports & Analytics', icon: <AssessmentIcon /> },
-    { value: 'support', label: 'Support', icon: <SupportIcon /> },
-    { value: 'settings', label: 'Settings', icon: <SettingsIcon /> },
-    { value: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
+    { value: 'dashboard', label: 'Dashboard', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyDashboardIcon /></React.Suspense> },
+    { value: 'agents', label: 'Agent Management', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyPeopleIcon /></React.Suspense> },
+    { value: 'transactions', label: 'Transactions', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyBusinessIcon /></React.Suspense> },
+    { value: 'listings', label: 'Listings', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyBusinessIcon /></React.Suspense> },
+    { value: 'offers', label: 'Offers', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssessmentIcon /></React.Suspense> },
+    { value: 'documents', label: 'Documents', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssessmentIcon /></React.Suspense> },
+    { value: 'payments-finance', label: 'Payments & Finance', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssessmentIcon /></React.Suspense> },
+    { value: 'tasks-reminders', label: 'Tasks & Reminders', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssignmentIcon /></React.Suspense> },
+    { value: 'checklists', label: 'Checklists', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyCheckCircleIcon /></React.Suspense> },
+    { value: 'templates', label: 'Templates and Envelopes', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssessmentIcon /></React.Suspense> },
+    { value: 'access-archives', label: 'Access Archives', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyArchiveIcon /></React.Suspense> },
+    { value: 'compliance', label: 'Compliance', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazySecurityIcon /></React.Suspense> },
+    { value: 'training-resources', label: 'Training & Resources', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazySchoolIcon /></React.Suspense> },
+    { value: 'reports-analytics', label: 'Reports & Analytics', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAssessmentIcon /></React.Suspense> },
+    { value: 'support', label: 'Support', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazySupportIcon /></React.Suspense> },
+    { value: 'settings', label: 'Settings', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazySettingsIcon /></React.Suspense> },
+    { value: 'integrations', label: 'Integrations', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyIntegrationIcon /></React.Suspense> },
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -289,7 +290,9 @@ const CloseBrokeragesPage = () => {
                 onClick={handleNotificationsClick}
               >
                 <Badge badgeContent={state.notifications} color="error">
-                  <NotificationsIcon />
+                  <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                    <LazyNotificationsIcon />
+                  </React.Suspense>
                 </Badge>
               </IconButton>
             </Tooltip>
@@ -310,7 +313,9 @@ const CloseBrokeragesPage = () => {
                 color="inherit"
                 onClick={handleBackToClose}
               >
-                <ArrowBackIcon />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyArrowBackIcon />
+                </React.Suspense>
               </IconButton>
             </Tooltip>
           </Box>
@@ -412,7 +417,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Brokerage Dashboard
                 </Typography>
@@ -439,7 +446,9 @@ const CloseBrokeragesPage = () => {
             {/* Overview Cards */}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <PeopleIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   {mockBrokerageData.totalAgents}
                 </Typography>
@@ -448,7 +457,9 @@ const CloseBrokeragesPage = () => {
                 </Typography>
               </Paper>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <BusinessIcon sx={{ fontSize: 40, color: brandColors.actions.warning, mb: 1 }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.warning }}>
                   {mockBrokerageData.activeTransactions}
                 </Typography>
@@ -457,7 +468,9 @@ const CloseBrokeragesPage = () => {
                 </Typography>
               </Paper>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyTrendingUpIcon />
+                </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   ${(mockBrokerageData.monthlyVolume / 1000000).toFixed(1)}M
                 </Typography>
@@ -466,7 +479,9 @@ const CloseBrokeragesPage = () => {
                 </Typography>
               </Paper>
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
-                <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   {mockBrokerageData.completedThisMonth}
                 </Typography>
@@ -719,7 +734,9 @@ const CloseBrokeragesPage = () => {
               </Box>
             </Box>
             <IconButton size="small" sx={{ color: brandColors.primary }}>
-              <ArrowForwardIcon />
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyArrowForwardIcon />
+                </React.Suspense>
             </IconButton>
           </Box>
         </Paper>
@@ -896,7 +913,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <PeopleIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Agent Management
                 </Typography>
@@ -978,7 +997,9 @@ const CloseBrokeragesPage = () => {
                           <Button
                             variant="outlined"
                             size="small"
-                            startIcon={<PersonIcon />}
+                            startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPersonIcon />
+                </React.Suspense>}
                             sx={{ flex: 1 }}
                           >
                             View Details
@@ -986,7 +1007,9 @@ const CloseBrokeragesPage = () => {
                           <Button
                             variant="outlined"
                             size="small"
-                            startIcon={<EditIcon />}
+                            startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyEditIcon />
+                </React.Suspense>}
                             sx={{ flex: 1 }}
                           >
                             Edit
@@ -1041,7 +1064,9 @@ const CloseBrokeragesPage = () => {
                 <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
                   <Button
                     variant="contained"
-                    startIcon={<AddIcon />}
+                    startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                     sx={{ backgroundColor: brandColors.primary }}
                   >
                     Add Agent
@@ -1066,7 +1091,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Listings
                 </Typography>
@@ -1183,7 +1210,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search listings..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -1320,7 +1349,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search expired listings..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -1474,7 +1505,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Offers
                 </Typography>
@@ -1592,7 +1625,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search offers..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -1893,7 +1928,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Documents
                 </Typography>
@@ -2007,7 +2044,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search documents..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -2220,16 +2259,24 @@ const CloseBrokeragesPage = () => {
                           Workflow Actions
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                          <Button variant="outlined" startIcon={<SearchIcon />} fullWidth>
+                          <Button variant="outlined" startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>} fullWidth>
                             Search Documents
                           </Button>
-                          <Button variant="outlined" startIcon={<AssessmentIcon />} fullWidth>
+                          <Button variant="outlined" startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>} fullWidth>
                             Generate Reports
                           </Button>
-                          <Button variant="outlined" startIcon={<BusinessIcon />} fullWidth>
+                          <Button variant="outlined" startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>} fullWidth>
                             Bulk Actions
                           </Button>
-                          <Button variant="outlined" startIcon={<PeopleIcon />} fullWidth>
+                          <Button variant="outlined" startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>} fullWidth>
                             Assign Reviewers
                           </Button>
                         </Box>
@@ -2288,7 +2335,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Description sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ fontSize: 28, color: 'white' }} />}>
+                  <LazyDescriptionIcon sx={{ fontSize: 28, color: 'white' }} />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Working Documents
                 </Typography>
@@ -2321,7 +2370,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Templates and Envelopes
                 </Typography>
@@ -2351,7 +2402,9 @@ const CloseBrokeragesPage = () => {
                 <Box sx={{ mb: 3 }}>
                   <Button 
                     variant="contained" 
-                    startIcon={<AddIcon />}
+                    startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                     sx={{ backgroundColor: brandColors.primary }}
                   >
                     Create New Template
@@ -2373,7 +2426,9 @@ const CloseBrokeragesPage = () => {
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Chip label={template.category} color="primary" size="small" />
                         <IconButton size="small">
-                          <MoreVertIcon />
+                          <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                         </IconButton>
                       </Box>
                       <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -2404,7 +2459,9 @@ const CloseBrokeragesPage = () => {
                 <Box sx={{ mb: 3 }}>
                   <Button 
                     variant="contained" 
-                    startIcon={<SendIcon />}
+                    startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySendIcon />
+                </React.Suspense>}
                     sx={{ backgroundColor: brandColors.primary }}
                   >
                     Create New Envelope
@@ -2504,7 +2561,9 @@ const CloseBrokeragesPage = () => {
                             Edit
                           </Button>
                           <IconButton size="small">
-                            <MoreVertIcon />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                           </IconButton>
                         </Box>
                       </Box>
@@ -2530,7 +2589,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ArchiveIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyArchiveIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Access Archives
                 </Typography>
@@ -2563,7 +2624,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Transactions
                 </Typography>
@@ -2680,7 +2743,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search transactions..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -2811,7 +2876,9 @@ const CloseBrokeragesPage = () => {
                         size="small"
                         placeholder="Search completed transactions..."
                         InputProps={{
-                          startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                          startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                         }}
                         sx={{ minWidth: 300 }}
                       />
@@ -2955,7 +3022,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Analytics
                 </Typography>
@@ -2986,7 +3055,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SettingsIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySettingsIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Settings
                 </Typography>
@@ -3015,7 +3086,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyIntegrationIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Integrations
                 </Typography>
@@ -3045,7 +3118,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Payments & Finance
                 </Typography>
@@ -3148,7 +3223,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Reports & Analytics
                 </Typography>
@@ -3419,7 +3496,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssignmentIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssignmentIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Tasks & Reminders
                 </Typography>
@@ -3434,26 +3513,34 @@ const CloseBrokeragesPage = () => {
               <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
                 <Button
                   variant="contained"
-                  startIcon={<AddIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                   sx={{ backgroundColor: brandColors.primary }}
                 >
                   Create New Task
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<AssignmentIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssignmentIcon />
+                </React.Suspense>}
                 >
                   Import Tasks
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<CheckCircleIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>}
                 >
                   Bulk Complete
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<MoreVertIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>}
                 >
                   More Actions
                 </Button>
@@ -3502,7 +3589,9 @@ const CloseBrokeragesPage = () => {
                     size="small"
                     placeholder="Search tasks..."
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                     }}
                     sx={{ minWidth: 250 }}
                   />
@@ -3763,7 +3852,9 @@ const CloseBrokeragesPage = () => {
                           </Typography>
                         </Box>
                         <IconButton size="small">
-                          <MoreVertIcon />
+                          <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                         </IconButton>
                       </Box>
                     </Card>
@@ -3788,7 +3879,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <CheckCircleIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Checklists
                 </Typography>
@@ -3803,26 +3896,34 @@ const CloseBrokeragesPage = () => {
               <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
                 <Button
                   variant="contained"
-                  startIcon={<AddIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                   sx={{ backgroundColor: brandColors.primary }}
                 >
                   Create New Checklist
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<AssignmentIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssignmentIcon />
+                </React.Suspense>}
                 >
                   Import Templates
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<CheckCircleIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>}
                 >
                   Bulk Actions
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<MoreVertIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>}
                 >
                   More Actions
                 </Button>
@@ -3872,10 +3973,18 @@ const CloseBrokeragesPage = () => {
                 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
                   {[
-                    { name: 'Transaction Closing', count: 8, color: 'primary', icon: <BusinessIcon />, description: 'Complete closing process checklists' },
-                    { name: 'Property Management', count: 5, color: 'success', icon: <AssessmentIcon />, description: 'Property maintenance and management' },
-                    { name: 'Client Onboarding', count: 3, color: 'info', icon: <PeopleIcon />, description: 'New client setup and documentation' },
-                    { name: 'Compliance & Legal', count: 2, color: 'warning', icon: <SecurityIcon />, description: 'Regulatory compliance requirements' }
+                    { name: 'Transaction Closing', count: 8, color: 'primary', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>, description: 'Complete closing process checklists' },
+                    { name: 'Property Management', count: 5, color: 'success', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>, description: 'Property maintenance and management' },
+                    { name: 'Client Onboarding', count: 3, color: 'info', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>, description: 'New client setup and documentation' },
+                    { name: 'Compliance & Legal', count: 2, color: 'warning', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>, description: 'Regulatory compliance requirements' }
                   ].map((category) => (
                     <Box key={category.name}>
                       <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
@@ -3912,7 +4021,9 @@ const CloseBrokeragesPage = () => {
                     size="small"
                     placeholder="Search checklists..."
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                     }}
                     sx={{ minWidth: 250 }}
                   />
@@ -4105,7 +4216,9 @@ const CloseBrokeragesPage = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                           <Chip label={template.category} color="primary" size="small" />
                           <IconButton size="small">
-                            <MoreVertIcon />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                           </IconButton>
                         </Box>
                         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -4156,7 +4269,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SecurityIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Compliance
                 </Typography>
@@ -4171,26 +4286,34 @@ const CloseBrokeragesPage = () => {
               <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
                 <Button
                   variant="contained"
-                  startIcon={<SecurityIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>}
                   sx={{ backgroundColor: brandColors.primary }}
                 >
                   New Compliance Review
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<AssessmentIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>}
                 >
                   Generate Audit Report
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<CheckCircleIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>}
                 >
                   Risk Assessment
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<MoreVertIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>}
                 >
                   More Actions
                 </Button>
@@ -4240,10 +4363,18 @@ const CloseBrokeragesPage = () => {
                 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
                   {[
-                    { name: 'Real Estate Law', status: 'Compliant', score: 98, color: 'success', icon: <BusinessIcon />, lastReview: '2024-01-10' },
-                    { name: 'Financial Regulations', status: 'Under Review', score: 85, color: 'warning', icon: <AssessmentIcon />, lastReview: '2024-01-15' },
-                    { name: 'Data Privacy', status: 'Compliant', score: 92, color: 'success', icon: <SecurityIcon />, lastReview: '2024-01-08' },
-                    { name: 'Anti-Money Laundering', status: 'Compliant', score: 96, color: 'success', icon: <SecurityIcon />, lastReview: '2024-01-12' }
+                    { name: 'Real Estate Law', status: 'Compliant', score: 98, color: 'success', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>, lastReview: '2024-01-10' },
+                    { name: 'Financial Regulations', status: 'Under Review', score: 85, color: 'warning', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>, lastReview: '2024-01-15' },
+                    { name: 'Data Privacy', status: 'Compliant', score: 92, color: 'success', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>, lastReview: '2024-01-08' },
+                    { name: 'Anti-Money Laundering', status: 'Compliant', score: 96, color: 'success', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>, lastReview: '2024-01-12' }
                   ].map((category) => (
                     <Box key={category.name}>
                       <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
@@ -4283,7 +4414,9 @@ const CloseBrokeragesPage = () => {
                     size="small"
                     placeholder="Search issues..."
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                     }}
                     sx={{ minWidth: 250 }}
                   />
@@ -4553,7 +4686,9 @@ const CloseBrokeragesPage = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                           <Chip label={report.type} color="primary" size="small" />
                           <IconButton size="small">
-                            <MoreVertIcon />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                           </IconButton>
                         </Box>
                         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -4601,7 +4736,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SchoolIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Training & Resources
                 </Typography>
@@ -4631,26 +4768,34 @@ const CloseBrokeragesPage = () => {
                   <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
                     <Button
                       variant="contained"
-                      startIcon={<SchoolIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Enroll in Course
                     </Button>
                     <Button
                       variant="outlined"
-                      startIcon={<AssessmentIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>}
                     >
                       Take Assessment
                     </Button>
                     <Button
                       variant="outlined"
-                      startIcon={<AssignmentIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssignmentIcon />
+                </React.Suspense>}
                     >
                       Download Resources
                     </Button>
                     <Button
                       variant="outlined"
-                      startIcon={<MoreVertIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>}
                     >
                       More Actions
                     </Button>
@@ -4838,7 +4983,9 @@ const CloseBrokeragesPage = () => {
                     size="small"
                     placeholder="Search resources..."
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                     }}
                     sx={{ minWidth: 250 }}
                   />
@@ -4851,7 +4998,7 @@ const CloseBrokeragesPage = () => {
                       category: 'Legal',
                       count: 45,
                       color: 'primary',
-                      icon: <Description />,
+                      icon: <React.Suspense fallback={<Box />}><LazyDescriptionIcon /></React.Suspense>,
                       description: 'Standard contract templates and forms'
                     },
                     { 
@@ -4859,7 +5006,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Marketing',
                       count: 32,
                       color: 'success',
-                      icon: <AssessmentIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>,
                       description: 'Brochures, flyers, and presentation templates'
                     },
                     { 
@@ -4867,7 +5016,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Training',
                       count: 78,
                       color: 'info',
-                      icon: <SchoolIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>,
                       description: 'Video tutorials and training content'
                     },
                     { 
@@ -4875,7 +5026,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Compliance',
                       count: 23,
                       color: 'warning',
-                      icon: <SecurityIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySecurityIcon />
+                </React.Suspense>,
                       description: 'Regulatory compliance documentation'
                     },
                     { 
@@ -4883,7 +5036,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Tools',
                       count: 15,
                       color: 'error',
-                      icon: <BusinessIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>,
                       description: 'Financial analysis and calculation tools'
                     },
                     { 
@@ -4891,7 +5046,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Guidelines',
                       count: 67,
                       color: 'secondary',
-                      icon: <CheckCircleIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCheckCircleIcon />
+                </React.Suspense>,
                       description: 'Industry best practices and guidelines'
                     },
                     { 
@@ -4899,7 +5056,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Learning',
                       count: 34,
                       color: 'primary',
-                      icon: <AssessmentIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>,
                       description: 'Real-world case studies and examples'
                     },
                     { 
@@ -4907,7 +5066,9 @@ const CloseBrokeragesPage = () => {
                       category: 'Training',
                       count: 89,
                       color: 'info',
-                      icon: <SchoolIcon />,
+                      icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>,
                       description: 'Recorded webinars and presentations'
                     }
                   ].map((resource) => (
@@ -5094,7 +5255,9 @@ const CloseBrokeragesPage = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                           <Chip label={achievement.type} color="success" size="small" />
                           <IconButton size="small">
-                            <MoreVertIcon />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                           </IconButton>
                         </Box>
                         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -5142,7 +5305,9 @@ const CloseBrokeragesPage = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      startIcon={<AddIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Add New Course
@@ -5196,7 +5361,9 @@ const CloseBrokeragesPage = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      startIcon={<AddIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Upload Resource
@@ -5250,7 +5417,9 @@ const CloseBrokeragesPage = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      startIcon={<AddIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAddIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Create New Path
@@ -5304,7 +5473,9 @@ const CloseBrokeragesPage = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      startIcon={<AssessmentIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyAssessmentIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Issue Certificate
@@ -5358,7 +5529,9 @@ const CloseBrokeragesPage = () => {
                     </Typography>
                     <Button
                       variant="contained"
-                      startIcon={<SettingsIcon />}
+                      startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySettingsIcon />
+                </React.Suspense>}
                       sx={{ backgroundColor: brandColors.primary }}
                     >
                       Program Settings
@@ -5420,7 +5593,9 @@ const CloseBrokeragesPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySupportIcon />
+                </React.Suspense>
                 <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
                   Support
                 </Typography>
@@ -5435,26 +5610,34 @@ const CloseBrokeragesPage = () => {
               <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
                 <Button
                   variant="contained"
-                  startIcon={<SupportIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySupportIcon />
+                </React.Suspense>}
                   sx={{ backgroundColor: brandColors.primary }}
                 >
                   Create Support Ticket
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<SchoolIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>}
                 >
                   View Documentation
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<PeopleIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>}
                 >
                   Contact Support
                 </Button>
                 <Button
                   variant="outlined"
-                  startIcon={<MoreVertIcon />}
+                  startIcon={<React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>}
                 >
                   More Actions
                 </Button>
@@ -5504,10 +5687,18 @@ const CloseBrokeragesPage = () => {
                 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
                   {[
-                    { name: 'Technical Issues', count: 8, color: 'error', icon: <SettingsIcon />, description: 'Software and system problems' },
-                    { name: 'Account Management', count: 5, color: 'primary', icon: <PeopleIcon />, description: 'User accounts and permissions' },
-                    { name: 'Training & Onboarding', count: 12, color: 'success', icon: <SchoolIcon />, description: 'Learning and setup assistance' },
-                    { name: 'Billing & Payments', count: 3, color: 'warning', icon: <BusinessIcon />, description: 'Financial and payment issues' }
+                    { name: 'Technical Issues', count: 8, color: 'error', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySettingsIcon />
+                </React.Suspense>, description: 'Software and system problems' },
+                    { name: 'Account Management', count: 5, color: 'primary', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPeopleIcon />
+                </React.Suspense>, description: 'User accounts and permissions' },
+                    { name: 'Training & Onboarding', count: 12, color: 'success', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySchoolIcon />
+                </React.Suspense>, description: 'Learning and setup assistance' },
+                    { name: 'Billing & Payments', count: 3, color: 'warning', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyBusinessIcon />
+                </React.Suspense>, description: 'Financial and payment issues' }
                   ].map((category) => (
                     <Box key={category.name}>
                       <Card sx={{ height: '100%', cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
@@ -5544,7 +5735,9 @@ const CloseBrokeragesPage = () => {
                     size="small"
                     placeholder="Search tickets..."
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      startAdornment: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySearchIcon />
+                </React.Suspense>
                     }}
                     sx={{ minWidth: 250 }}
                   />
@@ -5729,7 +5922,9 @@ const CloseBrokeragesPage = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                           <Chip label={resource.category} color="primary" size="small" />
                           <IconButton size="small">
-                            <MoreVertIcon />
+                            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyMoreVertIcon />
+                </React.Suspense>
                           </IconButton>
                         </Box>
                         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -5892,20 +6087,26 @@ const CloseBrokeragesPage = () => {
       >
         <MenuItem onClick={() => navigate('/profile')}>
           <ListItemIcon>
-            <PersonIcon fontSize="small" />
+            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyPersonIcon />
+                </React.Suspense>
           </ListItemIcon>
           Profile
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <SupportIcon fontSize="small" />
+            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazySupportIcon />
+                </React.Suspense>
           </ListItemIcon>
           Support
         </MenuItem>
         <Divider />
         <MenuItem onClick={() => navigate('/')}>
           <ListItemIcon>
-            <CloseIcon fontSize="small" />
+            <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyCloseIcon />
+                </React.Suspense>
           </ListItemIcon>
           Sign Out
         </MenuItem>

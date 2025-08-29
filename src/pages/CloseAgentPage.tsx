@@ -15,7 +15,6 @@ import {
   Toolbar,
   Drawer,
   List,
-  Grid,
   useTheme,
   useMediaQuery,
   Menu,
@@ -34,6 +33,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
+
 import {
   ArrowBack as ArrowBackIcon,
   ArrowForward as ArrowForwardIcon,
@@ -230,8 +230,8 @@ const CloseAgentPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // Role-based access guard (no early returns to satisfy hooks rule)
-  const { userRole } = (useContext(RoleContext) as any) || {};
-      const buyingRoles = ['Real Estate Agent', 'Buyer\'s Agent', 'Wholesaler', 'Realtor'];
+  const { userRole } = (useContext(RoleContext) as any) || { userRole: 'Real Estate Agent' };
+  const buyingRoles = ['Real Estate Agent', 'Buyer\'s Agent', 'Wholesaler', 'Realtor'];
   const listingRoles = ['Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent', 'Disposition Agent'];
   const isAgentAuthorized = !!userRole && (buyingRoles.includes(userRole) || listingRoles.includes(userRole));
   
@@ -10247,8 +10247,8 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
                         1. PARTIES TO CONTRACT - PROPERTY
                       </Typography>
-                      <Grid container spacing={2}>
-                        <Grid component="div" xs={12} md={6}>
+                      <Box sx={{ display: 'grid', gap: 2 }}>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Broker" 
@@ -10256,8 +10256,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="Enter broker name"
                           />
-                        </Grid>
-                        <Grid component="div" xs={12} md={6}>
+                        </Box>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Purchaser" 
@@ -10265,8 +10265,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="Enter purchaser name"
                           />
-                        </Grid>
-                        <Grid component="div" xs={12} md={6}>
+                        </Box>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Seller" 
@@ -10274,8 +10274,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="Enter seller name"
                           />
-                        </Grid>
-                        <Grid component="div" xs={12} md={6}>
+                        </Box>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Property Description" 
@@ -10283,16 +10283,16 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="Enter property details"
                           />
-                        </Grid>
-                      </Grid>
+                        </Box>
+                      </Box>
                     </Box>
 
                     <Box sx={{ mb: 4 }}>
                       <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
                         2. EARNEST MONEY DEPOSIT
                       </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
+                      <Box sx={{ display: 'grid', gap: 2 }}>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Amount" 
@@ -10300,8 +10300,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="$0.00"
                           />
-                        </Grid>
-                        <Grid item xs={12} md={4}>
+                        </Box>
+                        <Box>
                           <FormControl fullWidth size="small">
                             <InputLabel>Payment Type</InputLabel>
                             <Select label="Payment Type">
@@ -10309,8 +10309,8 @@ const CloseAgentPage: React.FC = () => {
                               <MenuItem value="check">Check</MenuItem>
                             </Select>
                           </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
+                        </Box>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Broker Details" 
@@ -10318,8 +10318,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="Enter broker details"
                           />
-                        </Grid>
-                      </Grid>
+                        </Box>
+                      </Box>
                     </Box>
 
                     <Box sx={{ mb: 4 }}>
@@ -10340,8 +10340,8 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
                         4. FINANCING
                       </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
+                      <Box sx={{ display: 'grid', gap: 2 }}>
+                        <Box>
                           <FormControl fullWidth size="small">
                             <InputLabel>Loan Type</InputLabel>
                             <Select label="Loan Type">
@@ -10351,8 +10351,8 @@ const CloseAgentPage: React.FC = () => {
                               <MenuItem value="conventional">Conventional</MenuItem>
                             </Select>
                           </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box>
                           <TextField 
                             fullWidth 
                             label="Delivery Date" 
@@ -10360,8 +10360,8 @@ const CloseAgentPage: React.FC = () => {
                             size="small"
                             placeholder="MM/DD/YYYY"
                           />
-                        </Grid>
-                      </Grid>
+                        </Box>
+                      </Box>
                     </Box>
 
                     {/* Signature Fields Placeholder */}
@@ -10391,26 +10391,26 @@ const CloseAgentPage: React.FC = () => {
                   <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                     Envelope Management
                   </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
+                  <Box sx={{ display: 'grid', gap: 2 }}>
+                    <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
                         <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 700 }}>12</Typography>
                         <Typography variant="body2" color="text.secondary">Active Envelopes</Typography>
                       </Box>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
+                    </Box>
+                    <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
                         <Typography variant="h4" sx={{ color: '#ff9800', fontWeight: 700 }}>5</Typography>
                         <Typography variant="body2" color="text.secondary">Pending Signatures</Typography>
                       </Box>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
+                    </Box>
+                    <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
                         <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>28</Typography>
                         <Typography variant="body2" color="text.secondary">Completed This Month</Typography>
                       </Box>
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Box>
                 </Paper>
 
                 {/* Recent Activity */}
@@ -10488,8 +10488,8 @@ const CloseAgentPage: React.FC = () => {
                         Enter the address of the property or choose an existing property from your Dreamery account.
                       </Typography>
                       
-                      <Grid container spacing={2}>
-                        <Grid component="div" xs={12} md={6}>
+                      <Box sx={{ display: 'grid', gap: 2 }}>
+                        <Box>
                           <TextField
                             fullWidth
                             label="Property Address"
@@ -10497,8 +10497,8 @@ const CloseAgentPage: React.FC = () => {
                             placeholder="Enter street address"
                             size="small"
                           />
-                        </Grid>
-                        <Grid component="div" xs={12} md={3}>
+                        </Box>
+                        <Box>
                           <TextField
                             fullWidth
                             label="City"
@@ -10506,8 +10506,8 @@ const CloseAgentPage: React.FC = () => {
                             placeholder="City"
                             size="small"
                           />
-                        </Grid>
-                        <Grid component="div" xs={12} md={3}>
+                        </Box>
+                        <Box>
                           <TextField
                             fullWidth
                             label="State"
@@ -10515,8 +10515,8 @@ const CloseAgentPage: React.FC = () => {
                             placeholder="State"
                             size="small"
                           />
-                        </Grid>
-                      </Grid>
+                        </Box>
+                      </Box>
                       
                       <Box sx={{ mt: 2 }}>
                         <Button
@@ -10564,8 +10564,8 @@ const CloseAgentPage: React.FC = () => {
                         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                           Recipients
                         </Typography>
-                        <Grid container spacing={2}>
-                          <Grid component="div" xs={12} md={4}>
+                        <Box sx={{ display: 'grid', gap: 2 }}>
+                          <Box>
                             <TextField
                               fullWidth
                               label="First Name"
@@ -10573,8 +10573,8 @@ const CloseAgentPage: React.FC = () => {
                               placeholder="Enter first name"
                               size="small"
                             />
-                          </Grid>
-                          <Grid component="div" xs={12} md={4}>
+                          </Box>
+                          <Box>
                             <TextField
                               fullWidth
                               label="Last Name"
@@ -10582,8 +10582,8 @@ const CloseAgentPage: React.FC = () => {
                               placeholder="Enter last name"
                               size="small"
                             />
-                          </Grid>
-                          <Grid component="div" xs={12} md={4}>
+                          </Box>
+                          <Box>
                             <TextField
                               fullWidth
                               label="Email"
@@ -10591,8 +10591,8 @@ const CloseAgentPage: React.FC = () => {
                               placeholder="Enter email address"
                               size="small"
                             />
-                          </Grid>
-                        </Grid>
+                          </Box>
+                        </Box>
                         <Button
                           variant="outlined"
                           startIcon={<AddIcon />}
@@ -11042,7 +11042,7 @@ const CloseAgentPage: React.FC = () => {
                     </Box>
 
                     {/* Template Grid */}
-                    <Grid container spacing={3}>
+                    <Box sx={{ display: 'grid', gap: 3 }}>
                       {[
                         { name: 'Starter Agent Template', forms: 108 },
                         { name: 'MPE Form Template', forms: 1 },
@@ -11054,7 +11054,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Burbank Client Template', forms: 1 },
                         { name: 'Essential Forms v1', forms: 3 }
                       ].map((template, index) => (
-                        <Grid component="div" xs={12} sm={6} md={4} key={index}>
+                        <Box key={index}>
                           <Paper
                             elevation={1}
                             sx={{
@@ -11109,9 +11109,9 @@ const CloseAgentPage: React.FC = () => {
                               </Box>
                             </Box>
                           </Paper>
-                        </Grid>
+                        </Box>
                       ))}
-                    </Grid>
+                    </Box>
                   </Box>
                 </>
               )}

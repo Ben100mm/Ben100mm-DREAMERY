@@ -73,7 +73,7 @@ import {
 // Import the actual components
 import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
 import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
-import { LazyDueDiligenceTools } from '../components/lazy';
+import LazyDueDiligenceTools from '../components/lazy/DueDiligenceToolsLazy';
 import FinancingCoordination from '../components/close/financing/FinancingCoordination';
 import LegalCompliance from '../components/close/legal-compliance/LegalCompliance';
 import SettlementClosingCosts from '../components/close/settlement/SettlementClosingCosts';

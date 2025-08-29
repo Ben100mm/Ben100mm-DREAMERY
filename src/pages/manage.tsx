@@ -22,25 +22,25 @@ import {
   Card,
   FormControl
 } from '@mui/material';
-import { 
-  Dashboard as DashboardIcon,
-  AccountCircle as AccountIcon,
-  AddHome as ListingIcon,
-  Description as LeaseIcon,
-  Assignment as ApplicationIcon,
-  Payment as PaymentIcon,
-  Settings as IntegrationIcon,
-  Security as InsuranceIcon,
-  Event as CalendarIcon,
-  Chat as ChatIcon,
-  MonetizationOn as EarningsIcon,
-  Insights as InsightsIcon,
-  Home as HomeIcon,
-  Edit as EditIcon
-} from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme/theme';
 import housesImage from '../houses-watercolor.png';
+// Lazy load icons to reduce initial bundle size
+const LazyDashboardIcon = React.lazy(() => import('@mui/icons-material/Dashboard'));
+const LazyAccountIcon = React.lazy(() => import('@mui/icons-material/AccountCircle'));
+const LazyListingIcon = React.lazy(() => import('@mui/icons-material/AddHome'));
+const LazyLeaseIcon = React.lazy(() => import('@mui/icons-material/Description'));
+const LazyApplicationIcon = React.lazy(() => import('@mui/icons-material/Assignment'));
+const LazyPaymentIcon = React.lazy(() => import('@mui/icons-material/Payment'));
+const LazyIntegrationIcon = React.lazy(() => import('@mui/icons-material/Settings'));
+const LazyInsuranceIcon = React.lazy(() => import('@mui/icons-material/Security'));
+const LazyCalendarIcon = React.lazy(() => import('@mui/icons-material/Event'));
+const LazyChatIcon = React.lazy(() => import('@mui/icons-material/Chat'));
+const LazyEarningsIcon = React.lazy(() => import('@mui/icons-material/MonetizationOn'));
+const LazyInsightsIcon = React.lazy(() => import('@mui/icons-material/Insights'));
+const LazyHomeIcon = React.lazy(() => import('@mui/icons-material/Home'));
+const LazyEditIcon = React.lazy(() => import('@mui/icons-material/Edit'));
+
 
 const ManagePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -257,19 +257,19 @@ const ManagePage: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
   const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'calendar', label: 'Calendar', icon: <CalendarIcon /> },
-    { id: 'listings', label: 'Listings', icon: <ListingIcon /> },
-    { id: 'messages', label: 'Messages', icon: <ChatIcon /> },
-    { id: 'earnings', label: 'Earnings', icon: <EarningsIcon /> },
-    { id: 'insights', label: 'Insights', icon: <InsightsIcon /> },
-    { id: 'listing', label: 'Creating a Listing', icon: <ListingIcon /> },
-    { id: 'leases', label: 'Online Leases', icon: <LeaseIcon /> },
-    { id: 'applications', label: 'Rental Applications', icon: <ApplicationIcon /> },
-    { id: 'payments', label: 'Online Rent Payments', icon: <PaymentIcon /> },
-    { id: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
-    { id: 'insurance', label: 'Insurance', icon: <InsuranceIcon /> },
-    { id: 'account', label: 'Manage Your Account', icon: <AccountIcon /> }
+    { id: 'dashboard', label: 'Dashboard', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyDashboardIcon /></React.Suspense> },
+    { id: 'calendar', label: 'Calendar', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyCalendarIcon /></React.Suspense> },
+    { id: 'listings', label: 'Listings', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyListingIcon /></React.Suspense> },
+    { id: 'messages', label: 'Messages', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyChatIcon /></React.Suspense> },
+    { id: 'earnings', label: 'Earnings', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyEarningsIcon /></React.Suspense> },
+    { id: 'insights', label: 'Insights', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyInsightsIcon /></React.Suspense> },
+    { id: 'listing', label: 'Creating a Listing', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyListingIcon /></React.Suspense> },
+    { id: 'leases', label: 'Online Leases', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyLeaseIcon /></React.Suspense> },
+    { id: 'applications', label: 'Rental Applications', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyApplicationIcon /></React.Suspense> },
+    { id: 'payments', label: 'Online Rent Payments', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyPaymentIcon /></React.Suspense> },
+    { id: 'integrations', label: 'Integrations', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyIntegrationIcon /></React.Suspense> },
+    { id: 'insurance', label: 'Insurance', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyInsuranceIcon /></React.Suspense> },
+    { id: 'account', label: 'Manage Your Account', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyAccountIcon /></React.Suspense> }
   ];
 
   const accountSubTabs = [
@@ -356,33 +356,33 @@ const ManagePage: React.FC = () => {
   const getBannerIcon = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyDashboardIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'calendar':
-        return <CalendarIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyCalendarIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'listing':
-        return <ListingIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyListingIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'listings':
-        return <ListingIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyListingIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'messages':
-        return <ChatIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyChatIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'earnings':
-        return <EarningsIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyEarningsIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'insights':
-        return <InsightsIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, color: 'white' }} />}><LazyInsightsIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'account':
-        return <AccountIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyAccountIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'leases':
-        return <LeaseIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyLeaseIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'applications':
-        return <ApplicationIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyApplicationIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'payments':
-        return <PaymentIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyPaymentIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'integrations':
-        return <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyIntegrationIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       case 'insurance':
-        return <InsuranceIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyInsuranceIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
       default:
-        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <React.Suspense fallback={<Box sx={{ width: 28, height: 28 }} />}><LazyDashboardIcon sx={{ fontSize: 28, color: 'white' }} /></React.Suspense>;
     }
   };
 
@@ -511,683 +511,710 @@ const ManagePage: React.FC = () => {
         );
       case 'listing':
         return (
-          <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
             {/* Listing Creation Form with Multi-Step Layout */}
             {listingStep === 1 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
-                {/* Left Column - Form */}
-                <Box sx={{ flex: 1, maxWidth: '500px' }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 700,
-                      color: brandColors.primary,
-                      mb: 2
-                    }}
-                  >
-                    Tell us a bit about your home
-            </Typography>
-                  
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: 'text.secondary',
-                      mb: 4,
-                      fontWeight: 400,
-                      lineHeight: 1.5
-                    }}
-                  >
-              Discover your home's potential selling price with our Showcase listing in just 3 minutes. 
-              Start by entering your property's address below.
-            </Typography>
-
-            <Box sx={{ mb: 4 }}>
-              <TextField
-                fullWidth
-                placeholder="Enter your address"
-                value={propertyAddress}
-                onChange={(e) => setPropertyAddress(e.target.value)}
-                variant="outlined"
-                size="medium"
-                sx={{ mb: 3 }}
-              />
-              
-              <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', mb: 4 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={sellChecked}
-                      onChange={(e) => setSellChecked(e.target.checked)}
-                      sx={{ color: brandColors.primary }}
-                    />
-                  }
-                  label="Sell"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={listChecked}
-                      onChange={(e) => setListChecked(e.target.checked)}
-                      sx={{ color: brandColors.primary }}
-                    />
-                  }
-                  label="List"
-                />
-                    </Box>
-                  </Box>
-              </Box>
-
-                {/* Right Column - Watercolor Houses Image and Button */}
+              <>
                 <Box sx={{ 
-                  flex: 1, 
                   display: 'flex', 
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start', 
-                  alignItems: 'center',
-                  minHeight: '400px'
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
                 }}>
-                  <Box
-                    sx={{
-                      width: '400px',
-                      height: '400px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      mb: 3
-                    }}
-                  >
-                    <img 
-                      src={housesImage} 
-                      alt="Watercolor houses illustration" 
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </Box>
-                  
-                  {/* Next Button positioned below the image */}
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                <Button
-                  variant="contained"
-                      size="medium"
-                  onClick={() => {
-                        if (propertyAddress.trim() && (sellChecked || listChecked)) {
-                          goNext();
-                        } else {
-                          alert('Please enter an address and select at least one option (Sell or List)');
-                        }
-                  }}
-                  sx={{
-                    backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
+                  {/* Left Column - Form */}
+                  <Box sx={{ flex: 1, maxWidth: '500px' }}>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        fontWeight: 700,
+                        color: brandColors.primary,
+                        mb: 2
                       }}
                     >
-                      Next
-                    </Button>
+                      Tell us a bit about your home
+                    </Typography>
+                    
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: 'text.secondary',
+                        mb: 4,
+                        fontWeight: 400,
+                        lineHeight: 1.5
+                      }}
+                    >
+                      Discover your home's potential selling price with our Showcase listing in just 3 minutes. 
+                      Start by entering your property's address below.
+                    </Typography>
+
+                    <Box sx={{ mb: 4 }}>
+                      <TextField
+                        fullWidth
+                        placeholder="Enter your address"
+                        value={propertyAddress}
+                        onChange={(e) => setPropertyAddress(e.target.value)}
+                        variant="outlined"
+                        size="medium"
+                        sx={{ mb: 3 }}
+                      />
+                      
+                      <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', mb: 4 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={sellChecked}
+                              onChange={(e) => setSellChecked(e.target.checked)}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Sell"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={listChecked}
+                              onChange={(e) => setListChecked(e.target.checked)}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="List"
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Right Column - Watercolor Houses Image */}
+                  <Box sx={{ 
+                    flex: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center',
+                    minHeight: '400px'
+                  }}>
+                    <Box
+                      sx={{
+                        width: '400px',
+                        height: '400px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        mb: 3
+                      }}
+                    >
+                      <img 
+                        src={housesImage} 
+                        alt="Watercolor houses illustration" 
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+                
+                                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  width: '100%',
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (propertyAddress.trim() && (sellChecked || listChecked)) {
+                        goNext();
+                      } else {
+                        alert('Please enter an address and select at least one option (Sell or List)');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
             {/* Step 2: Questionnaire */}
             {listingStep === 2 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
-                {/* Left Column - Questionnaire */}
-                <Box sx={{ flex: 1, maxWidth: '500px' }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 700,
-                      color: brandColors.primary,
-                      mb: 2
-                    }}
-                  >
-                    Before we continue, do any of these describe your situation?
-                  </Typography>
-                  
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: 'text.secondary',
-                      mb: 4,
-                      fontWeight: 400,
-                      lineHeight: 1.5
-                    }}
-                  >
-                    If you've signed an agreement with an agent, we may need to share your selling options with them.
-                  </Typography>
-
-                  <Box sx={{ mb: 4 }}>
-                    <RadioGroup
-                      value={selectedSituation || ''}
-                      onChange={(e) => setSelectedSituation(e.target.value)}
-                    >
-                      <FormControlLabel
-                        value="agent"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="I'm the owner's real estate agent"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="owner-agent"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="I'm both the owner and a licensed agent"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="builder"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="I'm working with a home builder"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="owner"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="I'm the owner and haven't signed an agreement with an agent"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="other"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="Other"
-                        sx={{ mb: 2 }}
-                      />
-                    </RadioGroup>
-                  </Box>
-                    </Box>
-
-                {/* Right Column - Moving Details Illustration */}
+              <>
                 <Box sx={{ 
-                  flex: 1, 
                   display: 'flex', 
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start', 
-                  alignItems: 'center',
-                  minHeight: '400px'
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
                 }}>
-                  <Box
-                    sx={{
-                      width: '400px',
-                      height: '400px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      mb: 3
-                    }}
-                  >
-                    <img 
-                      src="/moving-details-illustration.png" 
-                      alt="Moving details illustration" 
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </Box>
-                  
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
+                  {/* Left Column - Questionnaire */}
+                  <Box sx={{ flex: 1, maxWidth: '500px' }}>
+                    <Typography
+                      variant="h4"
                       sx={{
-                        borderColor: brandColors.primary,
+                        fontWeight: 700,
                         color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
+                        mb: 2
                       }}
                     >
-                      Back
-                      </Button>
+                      Before we continue, do any of these describe your situation?
+                    </Typography>
                     
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (selectedSituation) {
-                          goNext();
-                        } else {
-                          alert('Please select an option to continue');
-                        }
-                      }}
+                    <Typography
+                      variant="h6"
                       sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
+                        color: 'text.secondary',
+                        mb: 4,
+                        fontWeight: 400,
+                        lineHeight: 1.5
                       }}
                     >
-                      Next
-                      </Button>
-                    </Box>
-                </Box>
-        </Box>
-      )}
+                      If you've signed an agreement with an agent, we may need to share your selling options with them.
+                    </Typography>
 
-            {/* Step 3: Timeline Questionnaire */}
-            {listingStep === 3 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
-                {/* Left Column - Timeline Questionnaire */}
-                <Box sx={{ flex: 1, maxWidth: '500px' }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 700,
-                      color: brandColors.primary,
-                      mb: 2
-                    }}
-                  >
-                    How soon would you like to sell?
-          </Typography>
-                  
-                  <Box sx={{ mb: 4 }}>
-                    <RadioGroup
-                      value={selectedTimeline || ''}
-                      onChange={(e) => setSelectedTimeline(e.target.value)}
+                    <Box sx={{ mb: 4 }}>
+                      <RadioGroup
+                        value={selectedSituation || ''}
+                        onChange={(e) => setSelectedSituation(e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="agent"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="I'm the owner's real estate agent"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="owner-agent"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="I'm both the owner and a licensed agent"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="builder"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="I'm working with a home builder"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="owner"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="I'm the owner and haven't signed an agreement with an agent"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="other"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="Other"
+                          sx={{ mb: 2 }}
+                        />
+                      </RadioGroup>
+                    </Box>
+                  </Box>
+
+                  {/* Right Column - Moving Details Illustration */}
+                  <Box sx={{ 
+                    flex: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center',
+                    minHeight: '400px'
+                  }}>
+                    <Box
+                      sx={{
+                        width: '400px',
+                        height: '400px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        mb: 3
+                      }}
                     >
-                      <FormControlLabel
-                        value="asap"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="As soon as possible"
-                        sx={{ mb: 2 }}
+                      <img 
+                        src="/moving-details-illustration.png" 
+                        alt="Moving details illustration" 
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain'
+                        }}
                       />
-                      <FormControlLabel
-                        value="1-month"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="Within 1 month"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="2-3-months"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="2-3 months"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="4-plus-months"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="4+ months"
-                        sx={{ mb: 2 }}
-                      />
-                      <FormControlLabel
-                        value="browsing"
-                        control={<Radio sx={{ color: brandColors.primary }} />}
-                        label="Just browsing"
-                        sx={{ mb: 2 }}
-                      />
-                    </RadioGroup>
+                    </Box>
                   </Box>
                 </Box>
                 
-                {/* Right Column - Moving Details Illustration 2 */}
+                {/* Navigation Buttons - Bottom of content space */}
                 <Box sx={{ 
-                  flex: 1, 
                   display: 'flex', 
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start', 
-                  alignItems: 'center',
-                  minHeight: '400px'
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
                 }}>
-                  <Box
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
                     sx={{
-                      width: '400px',
-                      height: '400px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      mb: 3
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
                     }}
                   >
-                    <img 
-                      src="/moving-details-illustration-2.png" 
-                      alt="Moving details illustration 2" 
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (selectedSituation) {
+                        goNext();
+                      } else {
+                        alert('Please select an option to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
+            )}
+
+            {/* Step 3: Timeline Questionnaire */}
+            {listingStep === 3 && (
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
+                  {/* Left Column - Timeline Questionnaire */}
+                  <Box sx={{ flex: 1, maxWidth: '500px' }}>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        fontWeight: 700,
+                        color: brandColors.primary,
+                        mb: 2
                       }}
-                    />
+                    >
+                      How soon would you like to sell?
+                    </Typography>
+                    
+                    <Box sx={{ mb: 4 }}>
+                      <RadioGroup
+                        value={selectedTimeline || ''}
+                        onChange={(e) => setSelectedTimeline(e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="asap"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="As soon as possible"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="1-month"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="Within 1 month"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="2-3-months"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="2-3 months"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="4-plus-months"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="4+ months"
+                          sx={{ mb: 2 }}
+                        />
+                        <FormControlLabel
+                          value="browsing"
+                          control={<Radio sx={{ color: brandColors.primary }} />}
+                          label="Just browsing"
+                          sx={{ mb: 2 }}
+                        />
+                      </RadioGroup>
+                    </Box>
                   </Box>
                   
-                  {/* Navigation Buttons */}
+                  {/* Right Column - Moving Details Illustration 2 */}
                   <Box sx={{ 
+                    flex: 1, 
                     display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center',
+                    minHeight: '400px'
                   }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
+                    <Box
                       sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
+                        width: '400px',
+                        height: '400px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        mb: 3
                       }}
                     >
-                      Back
-                    </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (selectedTimeline) {
-                          goNext();
-                        } else {
-                          alert('Please select a timeline to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
+                      <img 
+                        src="/moving-details-illustration-2.png" 
+                        alt="Moving details illustration 2" 
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (selectedTimeline) {
+                        goNext();
+                      } else {
+                        alert('Please select a timeline to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
             {/* Step 4: Home Details Form */}
             {listingStep === 4 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
-                {/* Left Column - Home Details Form */}
-                <Box sx={{ flex: 1, maxWidth: '500px' }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 700,
-                      color: brandColors.primary,
-                      mb: 2
-                    }}
-                  >
-                    Review your home details
-          </Typography>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
+                  {/* Left Column - Home Details Form */}
+                  <Box sx={{ flex: 1, maxWidth: '500px' }}>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        fontWeight: 700,
+                        color: brandColors.primary,
+                        mb: 2
+                      }}
+                    >
+                      Review your home details
+                    </Typography>
 
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: 'text.secondary',
-                      mb: 4,
-                      fontWeight: 400,
-                      lineHeight: 1.5
-                    }}
-                  >
-                    Update any missing or incorrect info.
-                              </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: 'text.secondary',
+                        mb: 4,
+                        fontWeight: 400,
+                        lineHeight: 1.5
+                      }}
+                    >
+                      Update any missing or incorrect info.
+                    </Typography>
 
-                  <Box sx={{ mb: 4 }}>
-                    {/* Home Type Dropdown */}
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-                        Home type
-                      </Typography>
-                      <Select
-                        fullWidth
-                        value={homeType || ''}
-                        onChange={(e) => setHomeType(e.target.value)}
-                        displayEmpty
-                        variant="outlined"
-                        size="medium"
-                      >
-                        <MenuItem value="" disabled>
-                          Select home type
-                        </MenuItem>
-                        <MenuItem value="single-family">Single-family</MenuItem>
-                        <MenuItem value="condo">Condo</MenuItem>
-                        <MenuItem value="townhouse">Townhouse</MenuItem>
-                        <MenuItem value="multi-family">Multi-family</MenuItem>
-                        <MenuItem value="manufactured">Manufactured</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
-                      </Select>
-                    </Box>
+                    <Box sx={{ mb: 4 }}>
+                      {/* Home Type Dropdown */}
+                      <Box sx={{ mb: 3 }}>
+                        <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+                          Home type
+                        </Typography>
+                        <Select
+                          fullWidth
+                          value={homeType || ''}
+                          onChange={(e) => setHomeType(e.target.value)}
+                          displayEmpty
+                          variant="outlined"
+                          size="medium"
+                        >
+                          <MenuItem value="" disabled>
+                            Select home type
+                          </MenuItem>
+                          <MenuItem value="single-family">Single-family</MenuItem>
+                          <MenuItem value="condo">Condo</MenuItem>
+                          <MenuItem value="townhouse">Townhouse</MenuItem>
+                          <MenuItem value="multi-family">Multi-family</MenuItem>
+                          <MenuItem value="manufactured">Manufactured</MenuItem>
+                          <MenuItem value="other">Other</MenuItem>
+                        </Select>
+                      </Box>
 
-                    {/* Square Footage */}
-                    <Box sx={{ mb: 3 }}>
+                      {/* Square Footage */}
+                      <Box sx={{ mb: 3 }}>
+                        <TextField
+                          fullWidth
+                          placeholder="Square footage (above ground)"
+                          value={squareFootage}
+                          onChange={(e) => setSquareFootage(e.target.value)}
+                          variant="outlined"
+                          size="medium"
+                          sx={{ mb: 1 }}
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          Tip: Don't include basements, non-permitted additions, or non-heated square footage.
+                        </Typography>
+                      </Box>
+
+                      {/* Lot Size */}
                       <TextField
                         fullWidth
-                        placeholder="Square footage (above ground)"
-                        value={squareFootage}
-                        onChange={(e) => setSquareFootage(e.target.value)}
+                        placeholder="Lot size (acres)"
+                        value={lotSize}
+                        onChange={(e) => setLotSize(e.target.value)}
                         variant="outlined"
                         size="medium"
-                        sx={{ mb: 1 }}
+                        sx={{ mb: 3 }}
                       />
-                              <Typography variant="caption" color="text.secondary">
-                        Tip: Don't include basements, non-permitted additions, or non-heated square footage.
-                              </Typography>
-                            </Box>
 
-                    {/* Lot Size */}
-                    <TextField
-                      fullWidth
-                      placeholder="Lot size (acres)"
-                      value={lotSize}
-                      onChange={(e) => setLotSize(e.target.value)}
-                      variant="outlined"
-                      size="medium"
-                      sx={{ mb: 3 }}
-                    />
+                      {/* Year Built */}
+                      <TextField
+                        fullWidth
+                        placeholder="Year built"
+                        value={yearBuilt}
+                        onChange={(e) => setYearBuilt(e.target.value)}
+                        variant="outlined"
+                        size="medium"
+                        sx={{ mb: 3 }}
+                      />
 
-                    {/* Year Built */}
-                    <TextField
-                      fullWidth
-                      placeholder="Year built"
-                      value={yearBuilt}
-                      onChange={(e) => setYearBuilt(e.target.value)}
-                      variant="outlined"
-                      size="medium"
-                      sx={{ mb: 3 }}
-                    />
-
-                    {/* Number Inputs with +/- Buttons */}
-                    {[
-                      { label: 'Bedrooms', value: bedrooms, setter: setBedrooms },
-                      { label: 'Full bathrooms', value: fullBathrooms, setter: setFullBathrooms },
-                      { label: '3/4 bathrooms', value: threeQuarterBathrooms, setter: setThreeQuarterBathrooms },
-                      { label: '1/2 bathrooms', value: halfBathrooms, setter: setHalfBathrooms },
-                      { label: 'Floors (above ground)', value: floorsAboveGround, setter: setFloorsAboveGround }
-                    ].map((field) => (
-                      <Box key={field.label} sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between', 
-                        mb: 2 
-                      }}>
-                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                          {field.label}
+                      {/* Number Inputs with +/- Buttons */}
+                      {[
+                        { label: 'Bedrooms', value: bedrooms, setter: setBedrooms },
+                        { label: 'Full bathrooms', value: fullBathrooms, setter: setFullBathrooms },
+                        { label: '3/4 bathrooms', value: threeQuarterBathrooms, setter: setThreeQuarterBathrooms },
+                        { label: '1/2 bathrooms', value: halfBathrooms, setter: setHalfBathrooms },
+                        { label: 'Floors (above ground)', value: floorsAboveGround, setter: setFloorsAboveGround }
+                      ].map((field) => (
+                        <Box key={field.label} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'space-between', 
+                          mb: 2 
+                        }}>
+                          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                            {field.label}
                           </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => field.setter(Math.max(0, field.value - 1))}
-                            sx={{ 
-                              minWidth: '32px', 
-                              height: '32px', 
-                              borderRadius: '50%',
-                              border: '1px solid #ccc',
-                              p: 0
-                            }}
-                          >
-                            -
-                          </Button>
-                          <Typography variant="body1" sx={{ 
-                            minWidth: '20px', 
-                            textAlign: 'center',
-                            fontWeight: 500
-                          }}>
-                            {field.value}
-                          </Typography>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => field.setter(field.value + 1)}
-                            sx={{ 
-                              minWidth: '32px', 
-                              height: '32px', 
-                              borderRadius: '50%',
-                              border: '1px solid #ccc',
-                              p: 0
-                            }}
-                          >
-                            +
-                          </Button>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => field.setter(Math.max(0, field.value - 1))}
+                              sx={{ 
+                                minWidth: '32px', 
+                                height: '32px', 
+                                borderRadius: '50%',
+                                border: '1px solid #ccc',
+                                p: 0
+                              }}
+                            >
+                              -
+                            </Button>
+                            <Typography variant="body1" sx={{ 
+                              minWidth: '20px', 
+                              textAlign: 'center',
+                              fontWeight: 500
+                            }}>
+                              {field.value}
+                            </Typography>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => field.setter(field.value + 1)}
+                              sx={{ 
+                                minWidth: '32px', 
+                                height: '32px', 
+                                borderRadius: '50%',
+                                border: '1px solid #ccc',
+                                p: 0
+                              }}
+                            >
+                              +
+                            </Button>
+                          </Box>
                         </Box>
-                      </Box>
-                    ))}
+                      ))}
+                    </Box>
+                  </Box>
+                  
+                  {/* Right Column - Home Details Illustration */}
+                  <Box sx={{ 
+                    flex: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center',
+                    minHeight: '400px'
+                  }}>
+                    <Box
+                      sx={{
+                        width: '400px',
+                        height: '400px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        mb: 3
+                      }}
+                    >
+                      <img 
+                        src="/home-details-1.png" 
+                        alt="Home details illustration" 
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </Box>
                   </Box>
                 </Box>
                 
-                {/* Right Column - Home Details Illustration */}
+                {/* Navigation Buttons - Bottom of content space */}
                 <Box sx={{ 
-                  flex: 1, 
                   display: 'flex', 
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start', 
-                  alignItems: 'center',
-                  minHeight: '400px'
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
                 }}>
-                  <Box
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
                     sx={{
-                      width: '400px',
-                      height: '400px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      mb: 3
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
                     }}
                   >
-                    <img 
-                      src="/home-details-1.png" 
-                      alt="Home details illustration" 
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </Box>
+                    Back
+                  </Button>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (homeType && squareFootage && yearBuilt) {
-                          goNext();
-                        } else {
-                          alert('Please fill in Home type, Square footage, and Year built to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
-                  </Box>
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (homeType && squareFootage && yearBuilt) {
+                        goNext();
+                      } else {
+                        alert('Please fill in Home type, Square footage, and Year built to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
                 </Box>
-        </Box>
-      )}
+              </>
+            )}
 
             {/* Step 5: Property Features & Amenities */}
             {listingStep === 5 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
                 {/* Left Column - Property Features Form */}
                 <Box sx={{ flex: 1, maxWidth: '500px' }}>
                   <Typography
@@ -1414,67 +1441,73 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (selectedPoolType && parkingType && heatingCooling) {
-                          goNext();
-                        } else {
-                          alert('Please complete all required fields to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
                   </Box>
                 </Box>
-              </Box>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (selectedPoolType && parkingType && heatingCooling) {
+                        goNext();
+                      } else {
+                        alert('Please complete all required fields to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
             {/* Step 6: Basement Details Form */}
             {listingStep === 6 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
                 {/* Left Column - Basement Details Form */}
                 <Box sx={{ flex: 1, maxWidth: '500px' }}>
                   <Typography
@@ -1625,68 +1658,78 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                  </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (hasBasement) {
-                          if (hasBasement === 'yes' && (!basementCondition || !knowsBasementSqft)) {
-                            alert('Please complete the basement details to continue');
-                          } else if (hasBasement === 'yes' && knowsBasementSqft === 'yes' && (!basementFinishedSqft || !basementUnfinishedSqft)) {
-                            alert('Please enter the basement square footage to continue');
-                          } else {
-                            goNext();
-                          }
-                        } else {
-                          alert('Please select whether your home has a basement to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
                   </Box>
                 </Box>
-        </Box>
-      )}
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (hasBasement) {
+                        if (hasBasement === 'yes' && (!basementCondition || !knowsBasementSqft)) {
+                          alert('Please complete the basement details to continue');
+                        } else if (hasBasement === 'yes' && knowsBasementSqft === 'yes' && (!basementFinishedSqft || !basementUnfinishedSqft)) {
+                          alert('Please enter the basement square footage to continue');
+                        } else {
+                          goNext();
+                        }
+                      } else {
+                        alert('Please select whether your home has a basement to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
+            )}
 
             {/* Step 7: Property Quality Assessment */}
             {listingStep === 7 && (
-              <Box sx={{ maxWidth: '1000px', mx: 'auto' }}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                minHeight: '100%',
+                maxWidth: '1000px', 
+                mx: 'auto' 
+              }}>
                 <Typography
                   variant="h4"
                   sx={{
@@ -1914,17 +1957,24 @@ const ManagePage: React.FC = () => {
                     </RadioGroup>
                   </FormControl>
                 </Box>
-
-                {/* Navigation Buttons */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  mt: 'auto',
+                  pt: 4,
+                  gap: 2
+                }}>
                   <Button
                     variant="outlined"
-                                          onClick={goBack}
+                    onClick={goBack}
                     sx={{ 
                       px: 4, 
                       py: 1.5,
                       borderColor: brandColors.primary,
                       color: brandColors.primary,
+                      fontSize: '1rem',
                       '&:hover': { 
                         borderColor: brandColors.secondary,
                         backgroundColor: 'rgba(26, 54, 93, 0.04)'
@@ -1936,12 +1986,12 @@ const ManagePage: React.FC = () => {
                   <Button
                     variant="contained"
                     onClick={() => {
-                                              if (selectedExteriorDescription && selectedLivingRoomDescription && 
-                            selectedMainBathroomDescription && selectedKitchenDescription) {
-                          goNext();
-                        } else {
-                          alert('Please complete all quality assessments to continue.');
-                        }
+                      if (selectedExteriorDescription && selectedLivingRoomDescription && 
+                          selectedMainBathroomDescription && selectedKitchenDescription) {
+                        goNext();
+                      } else {
+                        alert('Please complete all quality assessments to continue.');
+                      }
                     }}
                     sx={{
                       backgroundColor: brandColors.primary,
@@ -1958,19 +2008,15 @@ const ManagePage: React.FC = () => {
             )}
 
             {/* Step 8: Kitchen Countertops Form */}
-
-
-
-
-
-            {/* Step 9: Additional Information Form */}
             {listingStep === 8 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
                 {/* Left Column - Kitchen Countertops Form */}
                 <Box sx={{ flex: 1, maxWidth: '500px' }}>
                   <Typography
@@ -2068,69 +2114,75 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (selectedCountertopType) {
-                          goNext();
-                        } else {
-                          alert('Please select a countertop type to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
                   </Box>
                 </Box>
-              </Box>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (selectedCountertopType) {
+                        goNext();
+                      } else {
+                        alert('Please select a countertop type to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
 
 
             {/* Step 9: HOA and Community Features Form */}
             {listingStep === 9 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
                 {/* Left Column - HOA and Community Features Form */}
                 <Box sx={{ flex: 1, maxWidth: '500px' }}>
                   <Typography
@@ -2273,57 +2325,61 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                        if (isHOA) {
-                          goNext();
-                        } else {
-                          alert('Please select whether your home is part of an HOA to continue');
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
                   </Box>
                 </Box>
-              </Box>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      if (isHOA) {
+                        goNext();
+                      } else {
+                        alert('Please select whether your home is part of an HOA to continue');
+                      }
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
 
@@ -2332,12 +2388,14 @@ const ManagePage: React.FC = () => {
 
             {/* Step 10: Additional Information Form */}
             {listingStep === 10 && (
-              <Box sx={{ 
-                display: 'flex', 
-                gap: 4, 
-                alignItems: 'flex-start',
-                maxWidth: '100%'
-              }}>
+              <>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 4, 
+                  alignItems: 'flex-start',
+                  maxWidth: '100%',
+                  flex: 1
+                }}>
                 {/* Left Column - Additional Information Form */}
                 <Box sx={{ flex: 1, maxWidth: '500px' }}>
                   <Typography
@@ -2363,468 +2421,245 @@ const ManagePage: React.FC = () => {
                   </Typography>
                   
                   <FormControl component="fieldset" fullWidth>
-                    <Box sx={{ mb: 3 }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.leasedSolarPanels}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              leasedSolarPanels: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Leased or financed solar panels</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.foundationIssues}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              foundationIssues: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Foundation issues</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.fireDamage}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              fireDamage: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Fire damage</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.septicSystem}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              septicSystem: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Septic system</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.asbestosSiding}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              asbestosSiding: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Asbestos siding</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.horseProperty}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              horseProperty: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Horse property</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.mobileManufacturedHome}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              mobileManufacturedHome: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Mobile or manufactured home</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.uniqueOwnershipStructure}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              uniqueOwnershipStructure: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Unique ownership structure</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.bmrOwnershipProgram}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              bmrOwnershipProgram: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Part of a Below Market Rate (BMR) Ownership Program</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.rentControlledWithTenant}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              rentControlledWithTenant: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Rent-controlled and has a tenant</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.undergroundFuelOilTanks}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              undergroundFuelOilTanks: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Existing active or inactive underground fuel oil tanks</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.cesspoolOnProperty}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              cesspoolOnProperty: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Cesspool on property</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.noneOfThese}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              noneOfThese: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">None of these apply to my home</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
-                      
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={additionalInfo.other}
-                            onChange={(e) => setAdditionalInfo(prev => ({
-                              ...prev,
-                              other: e.target.checked
-                            }))}
-                            sx={{ color: brandColors.primary }}
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1">Other</Typography>
-                            <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
-                              borderRadius: '50%', 
-                              bgcolor: 'text.secondary',
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px',
-                              cursor: 'help'
-                            }}>
-                              i
-                            </Box>
-                          </Box>
-                        }
-                        sx={{ mb: 2 }}
-                      />
+                    {/* Property Systems & Infrastructure */}
+                    <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                      <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                        Property Systems & Infrastructure
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.septicSystem}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                septicSystem: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Septic system"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.cesspoolOnProperty}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                cesspoolOnProperty: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Cesspool on property"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.undergroundFuelOilTanks}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                undergroundFuelOilTanks: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Underground fuel oil tanks"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.leasedSolarPanels}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                leasedSolarPanels: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Leased or financed solar panels"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Property Condition & Issues */}
+                    <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                      <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                        Property Condition & Issues
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.foundationIssues}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                foundationIssues: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Foundation issues"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.fireDamage}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                fireDamage: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Fire damage"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.asbestosSiding}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                asbestosSiding: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Asbestos siding"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Property Type & Features */}
+                    <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                      <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                        Property Type & Features
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.horseProperty}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                horseProperty: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Horse property"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.mobileManufacturedHome}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                mobileManufacturedHome: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Mobile or manufactured home"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Ownership & Legal */}
+                    <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                      <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                        Ownership & Legal
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.uniqueOwnershipStructure}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                uniqueOwnershipStructure: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Unique ownership structure"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.bmrOwnershipProgram}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                bmrOwnershipProgram: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Part of a Below Market Rate (BMR) Ownership Program"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.rentControlledWithTenant}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                rentControlledWithTenant: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Rent-controlled and has a tenant"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* General Options */}
+                    <Box sx={{ mb: 3, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                      <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
+                        General Options
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.noneOfThese}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                noneOfThese: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="None of these apply to my home"
+                          sx={{ mb: 1 }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={additionalInfo.other}
+                              onChange={(e) => setAdditionalInfo(prev => ({
+                                ...prev,
+                                other: e.target.checked
+                              }))}
+                              sx={{ color: brandColors.primary }}
+                            />
+                          }
+                          label="Other"
+                          sx={{ mb: 1 }}
+                        />
+                      </Box>
                     </Box>
                   </FormControl>
                 </Box>
@@ -2860,53 +2695,57 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                   
-                  {/* Navigation Buttons */}
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%',
-                    gap: 2
-                  }}>
-                    {/* Back Button - Bottom Left */}
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={goBack}
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                '&:hover': { 
-                          borderColor: brandColors.secondary,
-                          backgroundColor: 'rgba(26, 54, 93, 0.04)'
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
-                    
-                    {/* Next Button - Bottom Right */}
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => {
-                                                  goNext();
-                      }}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1rem',
-                        '&:hover': { backgroundColor: brandColors.secondary }
-                      }}
-                    >
-                      Next
-                    </Button>
                   </Box>
                 </Box>
-              </Box>
+                
+                {/* Navigation Buttons - Bottom of content space */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  width: '100%',
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
+                }}>
+                  {/* Back Button - Bottom Left */}
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    onClick={goBack}
+                    sx={{
+                      borderColor: brandColors.primary,
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { 
+                        borderColor: brandColors.secondary,
+                        backgroundColor: 'rgba(26, 54, 93, 0.04)'
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                  
+                  {/* Next Button - Bottom Right */}
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => {
+                      goNext();
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1rem',
+                      '&:hover': { backgroundColor: brandColors.secondary }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </>
             )}
 
 
@@ -2914,6 +2753,9 @@ const ManagePage: React.FC = () => {
             {/* Step 11: Name Collection Form */}
             {listingStep === 11 && (
               <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                minHeight: '100%',
                 maxWidth: '500px', 
                 mx: 'auto',
                 p: 3
@@ -2975,18 +2817,20 @@ const ManagePage: React.FC = () => {
                     />
                   </Box>
                 </Box>
-
-                {/* Navigation Buttons */}
+                
+                {/* Navigation Buttons - Bottom of content space */}
                 <Box sx={{ 
                   display: 'flex', 
                   justifyContent: 'space-between', 
-                  gap: 2
+                  gap: 2,
+                  mt: 'auto',
+                  pt: 4
                 }}>
                   {/* Back Button - Bottom Left */}
                   <Button
                     variant="outlined"
                     size="medium"
-                                          onClick={goBack}
+                    onClick={goBack}
                     sx={{
                       borderColor: brandColors.primary,
                       color: brandColors.primary,
@@ -3008,7 +2852,7 @@ const ManagePage: React.FC = () => {
                     size="medium"
                     onClick={() => {
                       if (firstName.trim() && lastName.trim()) {
-                                                  goNext();
+                        goNext();
                       } else {
                         alert('Please enter both your first name and last name to continue');
                       }
@@ -3211,19 +3055,25 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>Property Address:</strong> {propertyAddress || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Sell Property:</strong> {sellChecked ? 'true' : 'false'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>List Property:</strong> {listChecked ? 'true' : 'false'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3242,13 +3092,17 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>Agent Relationship:</strong> {selectedSituation || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Timing:</strong> {selectedTimeline || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3267,61 +3121,81 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>Home Type:</strong> {homeType || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Square Footage:</strong> {squareFootage || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Year Built:</strong> {yearBuilt || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Bedrooms:</strong> {bedrooms || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Full Bathrooms:</strong> {fullBathrooms || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Floors:</strong> {floorsAboveGround || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Pool Type:</strong> {selectedPoolType || 'No'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Garage Spaces:</strong> {garageSpaces || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Carport Spaces:</strong> {carportSpaces || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Has Basement:</strong> {hasBasement || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3340,25 +3214,33 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>Exterior Quality:</strong> {selectedExteriorDescription || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Living Room Quality:</strong> {selectedLivingRoomDescription || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Bathroom Quality:</strong> {selectedMainBathroomDescription || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Kitchen Quality:</strong> {selectedKitchenDescription || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3377,13 +3259,17 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>Kitchen Countertops:</strong> {selectedCountertopType || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>HOA:</strong> {isHOA || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
@@ -3403,7 +3289,9 @@ const ManagePage: React.FC = () => {
                         additionalInfo.other && 'Other'
                       ].filter(Boolean).join(', ') || 'none'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3422,19 +3310,25 @@ const ManagePage: React.FC = () => {
                     <Typography variant="body1">
                       <strong>First Name:</strong> {firstName || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Last Name:</strong> {lastName || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Typography variant="body1">
                       <strong>Phone Number:</strong> {phoneNumber || 'Not provided'}
                     </Typography>
-                    <EditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
+                      <LazyEditIcon sx={{ cursor: 'pointer', color: brandColors.primary, fontSize: 20 }} />
+                    </React.Suspense>
                   </Box>
                 </Box>
 
@@ -3528,7 +3422,9 @@ const ManagePage: React.FC = () => {
                       justifyContent: 'center',
                       mr: 2
                     }}>
-                      <HomeIcon sx={{ fontSize: 24, color: 'white' }} />
+                      <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                        <LazyHomeIcon sx={{ fontSize: 24, color: 'white' }} />
+                      </React.Suspense>
                     </Box>
                     <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.primary }}>
                       DREAMERY
@@ -3908,44 +3804,44 @@ const ManagePage: React.FC = () => {
           <Box>
             <Typography variant="h5" gutterBottom>
               Listings
-                </Typography>
+            </Typography>
             <Typography variant="body1" color="text.secondary">
               Manage active, pending, and archived listings. Add filters, edit details, or publish.
-                      </Typography>
-                    </Box>
+            </Typography>
+          </Box>
         );
       case 'messages':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Messages
-                      </Typography>
+            </Typography>
             <Typography variant="body1" color="text.secondary">
               View conversations with tenants, applicants, and service partners.
-                      </Typography>
-                    </Box>
+            </Typography>
+          </Box>
         );
       case 'earnings':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Earnings
-                      </Typography>
+            </Typography>
             <Typography variant="body1" color="text.secondary">
               Summary of rent collections, payouts, and exportable statements.
-                      </Typography>
-                    </Box>
+            </Typography>
+          </Box>
         );
       case 'insights':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
               Insights
-                      </Typography>
+            </Typography>
             <Typography variant="body1" color="text.secondary">
               KPIs, trends, and recommended actions across your portfolio.
-                      </Typography>
-                    </Box>
+            </Typography>
+          </Box>
         );
       case 'account':
         return (

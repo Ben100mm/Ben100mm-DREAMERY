@@ -32,7 +32,7 @@ import {
   StressTestingCalculator,
   InflationAdjustmentsCalculator,
 } from "../components";
-import { LazyComprehensiveRefinanceCalculator } from "../components/lazy";
+import LazyComprehensiveRefinanceCalculator from "../components/lazy/ComprehensiveRefinanceCalculatorLazy";
 
 export {
   SeasonalAdjustmentsCalculator,

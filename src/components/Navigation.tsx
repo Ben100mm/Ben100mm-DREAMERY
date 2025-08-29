@@ -23,7 +23,7 @@ const NavList = styled.ul`
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;
-  gap: 1.00rem;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   font-size: 0.85rem;
@@ -56,7 +56,6 @@ const Navigation: React.FC = () => {
   const navItems = [
     { name: 'Lumina', path: '/lumina' },
     { name: 'Marketplace', path: '/marketplace' },
-    { name: 'Sell / List', path: '/sell' },
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Analyze', path: '/analyze' },
@@ -76,7 +75,6 @@ const Navigation: React.FC = () => {
     switch (path) {
       case '/lumina':
       case '/marketplace':
-      case '/sell':
       case '/mortgage':
       case '/underwrite':
       case '/analyze':

@@ -17,24 +17,7 @@ const LuminaPage = lazy(() => import('./pages/LuminaPage'));
 const MarketplacePage = lazy(() => import('./pages/MarketplacePage'));
 const BuyPage = lazy(() => import('./pages/BuyPage'));
 const RentPage = lazy(() => import('./pages/RentPage'));
-const SellListAddressPage = lazy(() => import('./pages/SellListAddressPage'));
-const SellListMovingDetailsPage = lazy(() => import('./pages/SellListMovingDetailsPage'));
-const SellListMovingDetails2Page = lazy(() => import('./pages/SellListMovingDetails2Page'));
-const SellListHomeDetailsPage = lazy(() => import('./pages/SellListHomeDetailsPage'));
-const SellListHomeDetails2Page = lazy(() => import('./pages/SellListHomeDetails2Page'));
-const SellListHomeDetails3Page = lazy(() => import('./pages/SellListHomeDetails3Page'));
-const SellListHomeQualityPage = lazy(() => import('./pages/SellListHomeQualityPage'));
-const SellListHomeQuality2Page = lazy(() => import('./pages/SellListHomeQuality2Page'));
-const SellListHomeQuality3Page = lazy(() => import('./pages/SellListHomeQuality3Page'));
-const SellListHomeQuality4Page = lazy(() => import('./pages/SellListHomeQuality4Page'));
-const SellListAdditionalInfoPage = lazy(() => import('./pages/SellListAdditionalInfoPage'));
-const SellListAdditionalInfo2Page = lazy(() => import('./pages/SellListAdditionalInfo2Page'));
-const SellListAdditionalInfo3Page = lazy(() => import('./pages/SellListAdditionalInfo3Page'));
-const SellListContactInfoPage = lazy(() => import('./pages/SellListContactInfoPage'));
-const SellListPhoneInfoPage = lazy(() => import('./pages/SellListPhoneInfoPage'));
-const SellListSummaryPage = lazy(() => import('./pages/SellListSummaryPage'));
-const SellListServicesPage = lazy(() => import('./pages/SellListServicesPage'));
-const SellListPage = lazy(() => import('./pages/SellListPage'));
+
 const MortgagePage = lazy(() => import('./pages/MortgagePage'));
 const PreApprovalPage = lazy(() => import('./pages/PreApprovalPage'));
 const PreApprovalBasicInfoPage = lazy(() => import('./pages/PreApprovalBasicInfoPage'));
@@ -114,23 +97,7 @@ const AppContent = () => {
       </Route>
       <Route path="/buy" element={<Navigate to="/marketplace/buy" replace />} />
       <Route path="/rent" element={<Navigate to="/marketplace/rent" replace />} />
-      <Route path="/sell" element={<SellListAddressPage />} />
-      <Route path="/sell-moving-details" element={<SellListMovingDetailsPage />} />
-      <Route path="/sell-moving-details-2" element={<SellListMovingDetails2Page />} />
-      <Route path="/sell-home-details" element={<SellListHomeDetailsPage />} />
-      <Route path="/sell-home-details-2" element={<SellListHomeDetails2Page />} />
-      <Route path="/sell-home-details-3" element={<SellListHomeDetails3Page />} />
-      <Route path="/sell-home-quality" element={<SellListHomeQualityPage />} />
-      <Route path="/sell-home-quality-2" element={<SellListHomeQuality2Page />} />
-      <Route path="/sell-home-quality-3" element={<SellListHomeQuality3Page />} />
-      <Route path="/sell-home-quality-4" element={<SellListHomeQuality4Page />} />
-      <Route path="/sell-additional-info" element={<SellListAdditionalInfoPage />} />
-      <Route path="/sell-additional-info-2" element={<SellListAdditionalInfo2Page />} />
-      <Route path="/sell-additional-info-3" element={<SellListAdditionalInfo3Page />} />
-      <Route path="/sell-contact-info" element={<SellListContactInfoPage />} />
-      <Route path="/sell-phone-info" element={<SellListPhoneInfoPage />} />
-      <Route path="/sell-summary" element={<SellListSummaryPage />} />
-      <Route path="/sell-services" element={<SellListServicesPage />} />
+
       <Route path="/mortgage" element={<MortgagePage />} />
       <Route path="/pre-approval" element={<PreApprovalPage />} />
       <Route path="/pre-approval-basic-info" element={<PreApprovalBasicInfoPage />} />

@@ -722,7 +722,7 @@ const ManagePage: React.FC = () => {
                         />
                       </RadioGroup>
                     </Box>
-                  </Box>
+                    </Box>
 
                   {/* Right Column - Moving Details Illustration */}
                   <Box sx={{ 
@@ -784,7 +784,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Back
-                  </Button>
+                      </Button>
                   
                   {/* Next Button - Bottom Right */}
                   <Button
@@ -806,8 +806,8 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Next
-                  </Button>
-                </Box>
+                      </Button>
+                    </Box>
               </>
             )}
 
@@ -870,7 +870,7 @@ const ManagePage: React.FC = () => {
                           sx={{ mb: 2 }}
                         />
                       </RadioGroup>
-                    </Box>
+        </Box>
                   </Box>
                   
                   {/* Right Column - Moving Details Illustration 2 */}
@@ -981,7 +981,7 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Review your home details
-                    </Typography>
+          </Typography>
 
                     <Typography
                       variant="h6"
@@ -993,14 +993,14 @@ const ManagePage: React.FC = () => {
                       }}
                     >
                       Update any missing or incorrect info.
-                    </Typography>
+          </Typography>
 
                     <Box sx={{ mb: 4 }}>
                       {/* Home Type Dropdown */}
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
                           Home type
-                        </Typography>
+                              </Typography>
                         <Select
                           fullWidth
                           value={homeType || ''}
@@ -1032,10 +1032,10 @@ const ManagePage: React.FC = () => {
                           size="medium"
                           sx={{ mb: 1 }}
                         />
-                        <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" color="text.secondary">
                           Tip: Don't include basements, non-permitted additions, or non-heated square footage.
-                        </Typography>
-                      </Box>
+                              </Typography>
+                            </Box>
 
                       {/* Lot Size */}
                       <TextField
@@ -1097,10 +1097,10 @@ const ManagePage: React.FC = () => {
                               fontWeight: 500
                             }}>
                               {field.value}
-                            </Typography>
+                          </Typography>
                             <Button
                               variant="outlined"
-                              size="small"
+                            size="small"
                               onClick={() => field.setter(field.value + 1)}
                               sx={{ 
                                 minWidth: '32px', 
@@ -1111,7 +1111,7 @@ const ManagePage: React.FC = () => {
                               }}
                             >
                               +
-                            </Button>
+                          </Button>
                           </Box>
                         </Box>
                       ))}
@@ -1147,7 +1147,7 @@ const ManagePage: React.FC = () => {
                           objectFit: 'contain'
                         }}
                       />
-                    </Box>
+        </Box>
                   </Box>
                 </Box>
                 
@@ -1717,7 +1717,7 @@ const ManagePage: React.FC = () => {
                   >
                     Next
                   </Button>
-                </Box>
+        </Box>
               </>
             )}
 
@@ -2355,7 +2355,7 @@ const ManagePage: React.FC = () => {
                     }}
                   >
                     Back
-                  </Button>
+                </Button>
                   
                   {/* Next Button - Bottom Right */}
                   <Button
@@ -2718,7 +2718,7 @@ const ManagePage: React.FC = () => {
                       px: 4,
                       py: 1.5,
                       fontSize: '1rem',
-                      '&:hover': { 
+                '&:hover': { 
                         borderColor: brandColors.secondary,
                         backgroundColor: 'rgba(26, 54, 93, 0.04)'
                       }

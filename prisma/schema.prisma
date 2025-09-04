@@ -27,6 +27,7 @@ model User {
   lastName  String
   roleId    String
   isActive  Boolean  @default(true)
+  deletedAt DateTime? // Soft delete timestamp
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -56,6 +57,7 @@ model UserProfile {
   experience    Int      @default(0)
   bio           String?
   avatar        String?
+  deletedAt     DateTime? // Soft delete timestamp
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -197,12 +199,13 @@ model DocumentInstance {
   status     String    @default("draft") // draft, pending, signed, expired, archived
   signedAt   DateTime?
   expiresAt  DateTime?
+  deletedAt  DateTime? // Soft delete timestamp
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
   // Relations
   template   DocumentTemplate @relation(fields: [templateId], references: [id])
-  user       User             @relation(fields: [userId], references: [id])
+  user       User             @relation(fields: [userId], references: [id], onDelete: SetNull)
   role       UserRole         @relation(fields: [roleId], references: [id])
 
   @@map("document_instances")
@@ -237,12 +240,13 @@ model ComplianceRecord {
   verifiedBy     String?
   evidence       Json?    // array of ComplianceEvidence objects
   notes          String?
+  deletedAt      DateTime? // Soft delete timestamp
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   // Relations
   requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id])
-  user          User                  @relation(fields: [userId], references: [id])
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@map("compliance_records")
 }
@@ -261,7 +265,7 @@ model AnalyticsMetric {
 
   // Relations
   role      UserRole @relation(fields: [roleId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("analytics_metrics")
 }
@@ -306,12 +310,13 @@ model Task {
   dueDate     DateTime?
   completedAt DateTime?
   tags        Json
+  deletedAt   DateTime?  // Soft delete timestamp
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
   // Relations
   role        UserRole   @relation(fields: [roleId], references: [id])
-  user        User       @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminders   Reminder[]
 
   @@map("tasks")
@@ -345,10 +350,11 @@ model Notification {
   data      Json?
   isRead    Boolean   @default(false)
   readAt    DateTime?
+  deletedAt DateTime? // Soft delete timestamp
   createdAt DateTime  @default(now())
 
   // Relations
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
 }
@@ -366,7 +372,7 @@ model AuditLog {
   timestamp  DateTime @default(now())
 
   // Relations
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
 }
@@ -387,11 +393,12 @@ model PartnerProfile {
   verifiedBy       String?
   rating           Float    @default(0)
   reviewCount      Int      @default(0)
+  deletedAt        DateTime? // Soft delete timestamp
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
   // Relations
-  user             User     @relation(fields: [userId], references: [id])
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   reviews          Review[]
   ratings          Rating[]
 
@@ -411,7 +418,7 @@ model Review {
 
   // Relations
   partner     PartnerProfile @relation(fields: [partnerId], references: [id])
-  reviewer    User           @relation("UserToReviewReviewer", fields: [reviewerId], references: [id])
+  reviewer    User           @relation("UserToReviewReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
 
   @@map("reviews")
 }
@@ -426,7 +433,7 @@ model Rating {
 
   // Relations
   partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  reviewer      User           @relation("UserToRatingReviewer", fields: [reviewerId], references: [id])
+  reviewer      User           @relation("UserToRatingReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
 
   @@unique([partnerId, reviewerId])
   @@map("ratings")

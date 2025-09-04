@@ -49,7 +49,10 @@
     "db:studio": "prisma studio",
     "db:seed": "ts-node --transpile-only --compiler-options '{\"module\":\"commonjs\"}' server/scripts/seedDatabase.ts",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
-    "chat:dev": "ts-node --transpile-only --compiler-options '{\"module\":\"commonjs\"}' server/chat-server.ts"
+    "chat:dev": "ts-node --transpile-only --compiler-options '{\"module\":\"commonjs\"}' server/chat-server.ts",
+    "data:cleanup": "node scripts/data-cleanup-cron.js",
+    "data:cleanup:dry": "node scripts/data-cleanup-cron.js --dry-run",
+    "data:cleanup:verbose": "node scripts/data-cleanup-cron.js --verbose"
   },
   "eslintConfig": {
     "extends": [

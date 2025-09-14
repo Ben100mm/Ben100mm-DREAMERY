@@ -193,7 +193,7 @@ model DocumentTemplate {
 model DocumentInstance {
   id         String    @id @default(cuid())
   templateId String
-  userId     String
+  userId     String?
   roleId     String
   data       Json
   status     String    @default("draft") // draft, pending, signed, expired, archived
@@ -205,7 +205,7 @@ model DocumentInstance {
 
   // Relations
   template   DocumentTemplate @relation(fields: [templateId], references: [id])
-  user       User             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user       User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
   role       UserRole         @relation(fields: [roleId], references: [id])
 
   @@map("document_instances")
@@ -255,7 +255,7 @@ model ComplianceRecord {
 model AnalyticsMetric {
   id        String   @id @default(cuid())
   roleId    String
-  userId    String
+  userId    String?
   metric    String
   value     Float
   unit      String
@@ -265,7 +265,7 @@ model AnalyticsMetric {
 
   // Relations
   role      UserRole @relation(fields: [roleId], references: [id])
-  user      User     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("analytics_metrics")
 }
@@ -362,7 +362,7 @@ model Notification {
 // Audit and Logging
 model AuditLog {
   id         String   @id @default(cuid())
-  userId     String
+  userId     String?
   action     String
   resource   String
   resourceId String
@@ -372,7 +372,7 @@ model AuditLog {
   timestamp  DateTime @default(now())
 
   // Relations
-  user       User     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
 }
@@ -408,7 +408,7 @@ model PartnerProfile {
 model Review {
   id          String   @id @default(cuid())
   partnerId   String
-  reviewerId  String
+  reviewerId  String?
   rating      Int
   responsiveness Int
   quality     Int
@@ -418,7 +418,7 @@ model Review {
 
   // Relations
   partner     PartnerProfile @relation(fields: [partnerId], references: [id])
-  reviewer    User           @relation("UserToReviewReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewer    User?          @relation("UserToReviewReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
 
   @@map("reviews")
 }
@@ -426,14 +426,14 @@ model Review {
 model Rating {
   id            String   @id @default(cuid())
   partnerId     String
-  reviewerId    String
+  reviewerId    String?
   overallRating Int
   categoryRatings Json
   createdAt     DateTime @default(now())
 
   // Relations
   partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  reviewer      User           @relation("UserToRatingReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewer      User?          @relation("UserToRatingReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
 
   @@unique([partnerId, reviewerId])
   @@map("ratings")

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box,
   Container,
@@ -20,11 +20,15 @@ import {
   Select,
   MenuItem,
   Card,
-  FormControl
+  FormControl,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme/theme';
 import housesImage from '../houses-watercolor.png';
+import { ConversationList, ChatInterface, DetailsPanel } from '../components/messaging';
+import { Conversation, Message, UserDetails } from '../types/messaging';
 // Lazy load icons to reduce initial bundle size
 const LazyDashboardIcon = React.lazy(() => import('@mui/icons-material/Dashboard'));
 const LazyAccountIcon = React.lazy(() => import('@mui/icons-material/AccountCircle'));
@@ -43,8 +47,17 @@ const LazyEditIcon = React.lazy(() => import('@mui/icons-material/Edit'));
 
 
 const ManagePage: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const [activeTab, setActiveTab] = useState('dashboard');
   const [accountSubTab, setAccountSubTab] = useState('personal');
+  
+  // Messaging state
+  const [selectedConversationId, setSelectedConversationId] = useState<string>('1');
+  const [showConversationList, setShowConversationList] = useState(true);
+  const [showDetailsPanel, setShowDetailsPanel] = useState(!isMobile);
+  const [translationEnabled, setTranslationEnabled] = useState(false);
   
   // Listing form state
   const [propertyAddress, setPropertyAddress] = useState('');
@@ -255,6 +268,356 @@ const ManagePage: React.FC = () => {
 
   // Phone number collection form state
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  // Mock messaging data - 10 Dreamery-relevant conversations
+  const mockConversations: Conversation[] = [
+    {
+      id: '1',
+      contactName: 'Sarah Johnson',
+      role: 'Property Buyer',
+      organization: 'Dream Homes Realty',
+      propertyDescription: '3BR/2BA Modern Condo in Downtown',
+      lastMessage: 'Thank you for the quick response! I\'m very interested in scheduling a viewing.',
+      timestamp: new Date('2024-01-15T14:30:00'),
+      unreadCount: 2,
+      status: 'Active',
+      initials: 'SJ',
+      topicOfDiscussion: 'Property Viewing Request',
+      dateOfContact: new Date('2024-01-15T10:00:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2024-01-10T09:00:00'),
+    },
+    {
+      id: '2',
+      contactName: 'Michael Chen',
+      role: 'Real Estate Agent',
+      organization: 'Premier Properties',
+      propertyDescription: 'Luxury Villa with Pool - Malibu',
+      lastMessage: 'The inspection report looks great. When can we proceed with the offer?',
+      timestamp: new Date('2024-01-15T11:45:00'),
+      unreadCount: 0,
+      status: 'Pending',
+      initials: 'MC',
+      topicOfDiscussion: 'Purchase Offer Negotiation',
+      dateOfContact: new Date('2024-01-14T16:20:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2024-01-05T08:30:00'),
+    },
+    {
+      id: '3',
+      contactName: 'Emily Rodriguez',
+      role: 'Property Seller',
+      organization: 'Family Home LLC',
+      propertyDescription: 'Historic Victorian House - 4BR/3BA',
+      lastMessage: 'The closing documents have been signed. Thank you for your excellent service!',
+      timestamp: new Date('2024-01-14T16:00:00'),
+      unreadCount: 0,
+      status: 'Closed',
+      initials: 'ER',
+      topicOfDiscussion: 'Property Sale Completion',
+      dateOfContact: new Date('2024-01-01T09:00:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-12-20T14:15:00'),
+    },
+    {
+      id: '4',
+      contactName: 'David Thompson',
+      role: 'Property Manager',
+      organization: 'Urban Living Properties',
+      propertyDescription: '12-Unit Apartment Building - Westside',
+      lastMessage: 'I need to discuss the maintenance schedule for next month. Can we set up a call?',
+      timestamp: new Date('2024-01-15T09:15:00'),
+      unreadCount: 1,
+      status: 'Active',
+      initials: 'DT',
+      topicOfDiscussion: 'Property Management Services',
+      dateOfContact: new Date('2024-01-12T14:30:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-11-15T10:00:00'),
+    },
+    {
+      id: '5',
+      contactName: 'Lisa Park',
+      role: 'Tenant',
+      organization: 'Individual',
+      propertyDescription: '2BR/1BA Apartment - Midtown',
+      lastMessage: 'The leak in the kitchen faucet has been fixed. Thank you for sending the plumber so quickly!',
+      timestamp: new Date('2024-01-15T08:45:00'),
+      unreadCount: 0,
+      status: 'Active',
+      initials: 'LP',
+      topicOfDiscussion: 'Maintenance Request',
+      dateOfContact: new Date('2024-01-14T11:20:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-08-20T09:00:00'),
+    },
+    {
+      id: '6',
+      contactName: 'Robert Martinez',
+      role: 'Mortgage Broker',
+      organization: 'Dreamery Home Loans',
+      propertyDescription: 'Single Family Home - Suburban',
+      lastMessage: 'The pre-approval letter is ready. Your client should receive it within the hour.',
+      timestamp: new Date('2024-01-14T17:30:00'),
+      unreadCount: 0,
+      status: 'Pending',
+      initials: 'RM',
+      topicOfDiscussion: 'Mortgage Pre-approval',
+      dateOfContact: new Date('2024-01-13T10:15:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-09-10T08:30:00'),
+    },
+    {
+      id: '7',
+      contactName: 'Jennifer Walsh',
+      role: 'Home Inspector',
+      organization: 'Quality Inspections Inc.',
+      propertyDescription: 'Townhouse - New Construction',
+      lastMessage: 'The inspection is complete. I found a few minor issues that need attention before closing.',
+      timestamp: new Date('2024-01-14T15:20:00'),
+      unreadCount: 1,
+      status: 'Active',
+      initials: 'JW',
+      topicOfDiscussion: 'Property Inspection Report',
+      dateOfContact: new Date('2024-01-12T08:00:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-07-05T14:00:00'),
+    },
+    {
+      id: '8',
+      contactName: 'Amanda Foster',
+      role: 'Rental Applicant',
+      organization: 'Individual',
+      propertyDescription: '1BR/1BA Studio - Arts District',
+      lastMessage: 'I\'m very interested in the studio apartment. When can I submit my rental application?',
+      timestamp: new Date('2024-01-15T13:10:00'),
+      unreadCount: 3,
+      status: 'Active',
+      initials: 'AF',
+      topicOfDiscussion: 'Rental Application Inquiry',
+      dateOfContact: new Date('2024-01-15T13:10:00'),
+      verificationStatus: 'Pending',
+      joinDate: new Date('2024-01-15T13:10:00'),
+    },
+    {
+      id: '9',
+      contactName: 'Thomas Kim',
+      role: 'Insurance Agent',
+      organization: 'Dreamery Insurance Partners',
+      propertyDescription: 'Multi-Family Property - 6 Units',
+      lastMessage: 'The insurance quote for your multi-family property is ready. Coverage includes flood protection.',
+      timestamp: new Date('2024-01-13T16:45:00'),
+      unreadCount: 0,
+      status: 'Pending',
+      initials: 'TK',
+      topicOfDiscussion: 'Property Insurance Quote',
+      dateOfContact: new Date('2024-01-10T11:30:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-06-20T09:15:00'),
+    },
+    {
+      id: '10',
+      contactName: 'Maria Gonzalez',
+      role: 'Property Investor',
+      organization: 'Gonzalez Investment Group',
+      propertyDescription: 'Commercial Property - Retail Space',
+      lastMessage: 'I\'d like to discuss the investment potential of the retail property. Are you available for a call this week?',
+      timestamp: new Date('2024-01-12T14:20:00'),
+      unreadCount: 2,
+      status: 'Active',
+      initials: 'MG',
+      topicOfDiscussion: 'Investment Property Discussion',
+      dateOfContact: new Date('2024-01-12T14:20:00'),
+      verificationStatus: 'Verified',
+      joinDate: new Date('2023-05-15T10:30:00'),
+    },
+  ];
+
+  const mockMessages: Message[] = [
+    // Conversation 1 - Sarah Johnson (Property Buyer)
+    {
+      id: '1',
+      conversationId: '1',
+      senderId: 'user1',
+      senderName: 'Sarah Johnson',
+      content: 'Hi! I saw your listing for the downtown condo and I\'m very interested. Is it still available?',
+      timestamp: new Date('2024-01-15T10:00:00'),
+      isFromUser: false,
+    },
+    {
+      id: '2',
+      conversationId: '1',
+      senderId: 'agent1',
+      senderName: 'You',
+      content: 'Hello Sarah! Yes, the condo is still available. Would you like to schedule a viewing?',
+      timestamp: new Date('2024-01-15T10:15:00'),
+      isFromUser: true,
+    },
+    {
+      id: '3',
+      conversationId: '1',
+      senderId: 'user1',
+      senderName: 'Sarah Johnson',
+      content: 'That would be great! I\'m available this weekend. What times work for you?',
+      timestamp: new Date('2024-01-15T10:30:00'),
+      isFromUser: false,
+    },
+    {
+      id: '4',
+      conversationId: '1',
+      senderId: 'user1',
+      senderName: 'Sarah Johnson',
+      content: 'Thank you for the quick response! I\'m very interested in scheduling a viewing.',
+      timestamp: new Date('2024-01-15T14:30:00'),
+      isFromUser: false,
+    },
+    
+    // Conversation 5 - Lisa Park (Tenant)
+    {
+      id: '5',
+      conversationId: '5',
+      senderId: 'tenant1',
+      senderName: 'Lisa Park',
+      content: 'Hi, I have a maintenance issue in my apartment. The kitchen faucet has been leaking for two days now.',
+      timestamp: new Date('2024-01-14T11:20:00'),
+      isFromUser: false,
+    },
+    {
+      id: '6',
+      conversationId: '5',
+      senderId: 'agent1',
+      senderName: 'You',
+      content: 'I\'m sorry to hear about the leak, Lisa. I\'ll send a plumber over today. What\'s the best time for you?',
+      timestamp: new Date('2024-01-14T11:35:00'),
+      isFromUser: true,
+    },
+    {
+      id: '7',
+      conversationId: '5',
+      senderId: 'tenant1',
+      senderName: 'Lisa Park',
+      content: 'The leak in the kitchen faucet has been fixed. Thank you for sending the plumber so quickly!',
+      timestamp: new Date('2024-01-15T08:45:00'),
+      isFromUser: false,
+    },
+    
+    // Conversation 8 - Amanda Foster (Rental Applicant)
+    {
+      id: '8',
+      conversationId: '8',
+      senderId: 'applicant1',
+      senderName: 'Amanda Foster',
+      content: 'Hi! I saw the studio apartment listing in the Arts District. Is it still available for rent?',
+      timestamp: new Date('2024-01-15T13:10:00'),
+      isFromUser: false,
+    },
+    {
+      id: '9',
+      conversationId: '8',
+      senderId: 'agent1',
+      senderName: 'You',
+      content: 'Hello Amanda! Yes, the studio is still available. Are you interested in scheduling a viewing?',
+      timestamp: new Date('2024-01-15T13:25:00'),
+      isFromUser: true,
+    },
+    {
+      id: '10',
+      conversationId: '8',
+      senderId: 'applicant1',
+      senderName: 'Amanda Foster',
+      content: 'I\'m very interested in the studio apartment. When can I submit my rental application?',
+      timestamp: new Date('2024-01-15T13:45:00'),
+      isFromUser: false,
+    },
+    
+    // Conversation 10 - Maria Gonzalez (Property Investor)
+    {
+      id: '11',
+      conversationId: '10',
+      senderId: 'investor1',
+      senderName: 'Maria Gonzalez',
+      content: 'Good morning! I\'m interested in the retail property you have listed. What are the current rental rates?',
+      timestamp: new Date('2024-01-12T14:20:00'),
+      isFromUser: false,
+    },
+    {
+      id: '12',
+      conversationId: '10',
+      senderId: 'agent1',
+      senderName: 'You',
+      content: 'Hello Maria! The current rental rate is $45/sq ft annually. Would you like to see the financials?',
+      timestamp: new Date('2024-01-12T14:45:00'),
+      isFromUser: true,
+    },
+    {
+      id: '13',
+      conversationId: '10',
+      senderId: 'investor1',
+      senderName: 'Maria Gonzalez',
+      content: 'I\'d like to discuss the investment potential of the retail property. Are you available for a call this week?',
+      timestamp: new Date('2024-01-12T15:10:00'),
+      isFromUser: false,
+    },
+  ];
+
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
+
+  // Responsive behavior
+  useEffect(() => {
+    if (isMobile) {
+      setShowDetailsPanel(false);
+    } else {
+      setShowConversationList(true);
+      setShowDetailsPanel(true);
+    }
+  }, [isMobile]);
+
+  // Messaging functions
+  const handleConversationSelect = (conversationId: string) => {
+    setSelectedConversationId(conversationId);
+    if (isMobile) {
+      setShowConversationList(false);
+      setShowDetailsPanel(false);
+    }
+  };
+
+  const handleSendMessage = (message: string) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      conversationId: selectedConversationId,
+      senderId: 'current-user',
+      senderName: 'You',
+      content: message,
+      timestamp: new Date(),
+      isFromUser: true,
+    };
+    
+    setMessages(prev => [...prev, newMessage]);
+    console.log('Sending message:', { message, conversationId: selectedConversationId });
+  };
+
+  const handleTranslationToggle = (enabled: boolean) => {
+    setTranslationEnabled(enabled);
+  };
+
+  const handleBackToList = () => {
+    if (isMobile) {
+      setShowConversationList(true);
+      setShowDetailsPanel(false);
+    }
+  };
+
+  const handleShowDetails = () => {
+    if (isMobile) {
+      setShowConversationList(false);
+      setShowDetailsPanel(true);
+    } else {
+      setShowDetailsPanel(!showDetailsPanel);
+    }
+  };
+
+  const selectedConversation = mockConversations.find(conv => conv.id === selectedConversationId);
+  const conversationMessages = messages.filter(msg => msg.conversationId === selectedConversationId);
 
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyDashboardIcon /></React.Suspense> },
@@ -3812,13 +4175,89 @@ const ManagePage: React.FC = () => {
         );
       case 'messages':
         return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Messages
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              View conversations with tenants, applicants, and service partners.
-            </Typography>
+          <Box sx={{ 
+            height: 'calc(100vh - 240px)', // Account for header, banner, and padding
+            display: 'flex', 
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}>
+            <Box sx={{ 
+              display: 'flex', 
+              height: '100%', 
+              border: `1px solid ${brandColors.borders.secondary}`, 
+              borderRadius: 1, 
+              overflow: 'hidden',
+              minHeight: 0 // Allow flex children to shrink
+            }}>
+              {/* Conversation List */}
+              <Box sx={{ 
+                width: isMobile ? '100%' : 320, 
+                minWidth: isMobile ? 'auto' : 320, 
+                maxWidth: isMobile ? '100%' : 320,
+                borderRight: isMobile ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
+                display: showConversationList ? 'flex' : 'none',
+                flexShrink: 0,
+                flexDirection: 'column',
+                height: '100%',
+                overflow: 'hidden'
+              }}>
+                <ConversationList
+                  conversations={mockConversations}
+                  selectedConversationId={selectedConversationId}
+                  onConversationSelect={handleConversationSelect}
+                  onBackToList={isMobile ? handleBackToList : undefined}
+                />
+              </Box>
+              
+              {/* Chat Interface */}
+              <Box sx={{ 
+                flex: 1, 
+                minWidth: 0, // Allow flex item to shrink below content size
+                borderRight: isMobile || !showDetailsPanel ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
+                display: selectedConversation ? 'flex' : 'none',
+                flexDirection: 'column',
+                height: '100%',
+                overflow: 'hidden'
+              }}>
+                <ChatInterface
+                  conversation={selectedConversation}
+                  messages={conversationMessages}
+                  onSendMessage={handleSendMessage}
+                  onTranslationToggle={handleTranslationToggle}
+                  translationEnabled={translationEnabled}
+                  onBackToList={isMobile ? handleBackToList : undefined}
+                  onShowDetails={handleShowDetails}
+                  isMobile={isMobile}
+                />
+              </Box>
+              
+              {/* Details Panel */}
+              <Box sx={{ 
+                width: isMobile ? '100%' : 320, 
+                minWidth: isMobile ? 'auto' : 320,
+                maxWidth: isMobile ? '100%' : 320,
+                display: showDetailsPanel ? 'flex' : 'none',
+                flexShrink: 0,
+                flexDirection: 'column',
+                height: '100%',
+                overflow: 'hidden'
+              }}>
+                <DetailsPanel
+                  userDetails={selectedConversation ? {
+                    id: selectedConversation.id,
+                    name: selectedConversation.contactName,
+                    organization: selectedConversation.organization,
+                    role: selectedConversation.role,
+                    initials: selectedConversation.initials,
+                    joinDate: selectedConversation.joinDate,
+                    verificationStatus: selectedConversation.verificationStatus,
+                    contactDate: selectedConversation.dateOfContact,
+                    topicOfDiscussion: selectedConversation.topicOfDiscussion,
+                  } : undefined}
+                  onBackToList={isMobile ? handleBackToList : undefined}
+                />
+              </Box>
+            </Box>
           </Box>
         );
       case 'earnings':
@@ -4066,7 +4505,9 @@ const ManagePage: React.FC = () => {
               </Typography>
             </Paper>
 
-            {renderContent()}
+            <Box sx={{ padding: 2 }}>
+              {renderContent()}
+            </Box>
           </Container>
         </Box>
       </Box>

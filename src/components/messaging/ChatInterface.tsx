@@ -120,6 +120,7 @@ const MessagesArea = styled.div`
   flex-direction: column;
   gap: 1rem;
   min-height: 0;
+  width: 100%;
   
   &::-webkit-scrollbar {
     width: 4px;
@@ -144,8 +145,10 @@ const MessagesArea = styled.div`
 const MessageBubble = styled.div<{ isFromUser: boolean }>`
   display: flex;
   flex-direction: column;
-  align-items: ${props => props.isFromUser ? 'flex-end' : 'flex-start'};
+  align-self: ${props => props.isFromUser ? 'flex-end' : 'flex-start'};
   max-width: 70%;
+  margin-left: ${props => props.isFromUser ? 'auto' : '0'};
+  margin-right: ${props => props.isFromUser ? '0' : 'auto'};
 `;
 
 const MessageContent = styled(Paper)<{ isFromUser: boolean }>`

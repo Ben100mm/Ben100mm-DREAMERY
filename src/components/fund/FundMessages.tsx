@@ -294,12 +294,12 @@ const FundMessages: React.FC = () => {
           p: 3, 
           backgroundColor: brandColors.primary,
           borderRadius: '16px 16px 0 0',
-          color: 'white'
+          color: brandColors.text.inverse
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />
-          <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+          <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
             Fundraising Communications
           </Typography>
         </Box>
@@ -381,14 +381,8 @@ const FundMessages: React.FC = () => {
                 {filteredConversations.map((conversation, index) => (
                   <React.Fragment key={conversation.id}>
                     <ListItem
-                      button
                       onClick={() => setSelectedConversation(conversation.id)}
-                      selected={selectedConversation === conversation.id}
-                      sx={{
-                        '&.Mui-selected': {
-                          backgroundColor: brandColors.backgrounds.selected,
-                        },
-                        '&:hover': {
+                      sx={{ '&:hover': {
                           backgroundColor: brandColors.backgrounds.hover,
                         },
                       }}

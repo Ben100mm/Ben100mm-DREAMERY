@@ -6,6 +6,8 @@ import { ReactComponent as AppleLogo } from '../../assets/social-logos/apple.svg
 import { ReactComponent as FacebookLogo } from '../../assets/social-logos/facebook.svg';
 import { ReactComponent as MicrosoftLogo } from '../../assets/social-logos/microsoft.svg';
 import { ReactComponent as TwitterLogo } from '../../assets/social-logos/twitter.svg';
+import { brandColors } from "../../theme";
+
 
 const SocialButton = styled(Button)`
   width: 100%;
@@ -15,7 +17,7 @@ const SocialButton = styled(Button)`
   text-transform: none;
   font-weight: 500;
   border-radius: 8px;
-  color: #1a365d;
+  color: brandColors.primary;
   border-color: rgba(0, 0, 0, 0.12);
   
   .logo {

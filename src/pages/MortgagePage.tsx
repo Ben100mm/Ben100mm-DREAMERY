@@ -87,7 +87,7 @@ const HeaderSection = styled.div`
 const BuyAbilityCard = styled(Card)`
   background: brandColors.backgrounds.primary;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px brandColors.shadows.light;
   margin: 0;
   max-width: 400px;
   position: relative;
@@ -261,7 +261,7 @@ const MortgagePage: React.FC = () => {
       const load = async () => {
         try {
           const r = await fetch(
-            `${url}${url.includes("?") ? "&" : "?"}ts=${Date.now()}`,
+            `${url}url.includes("?") ? "&" : "?"ts=${Date.now()}`,
             { cache: "no-store" },
           );
           if (!r.ok) return;
@@ -537,9 +537,9 @@ const MortgagePage: React.FC = () => {
                     alignContent: "start",
                   }}
                 >
-                  <Typography>Loan: ${loanAmount.toLocaleString()}</Typography>
+                  <Typography>Loan: loanAmount.toLocaleString()</Typography>
                   <Typography>
-                    Debt svc: ${Math.round(debtService).toLocaleString()}/mo
+                    Debt svc: Math.round(debtService).toLocaleString()/mo
                   </Typography>
                   <Typography>DSCR: {dscr.toFixed(2)}</Typography>
                   <Typography>LTV: {(ltv * 100).toFixed(1)}%</Typography>
@@ -745,7 +745,7 @@ const MortgagePage: React.FC = () => {
               Upload lenders CSV
             </Button>
             {uploadedRows && (
-              <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
+              <Typography variant="caption" sx={{ color: brandColors.neutral[800] }}>
                 Loaded {uploadedRows.length} rows from CSV (overrides live feed
                 until refresh)
               </Typography>
@@ -902,7 +902,7 @@ const MortgagePage: React.FC = () => {
           )}
           {step === 2 && (
             <Box>
-              <Typography sx={{ mb: 1, color: brandColors.neutral.dark }}>Next Steps</Typography>
+              <Typography sx={{ mb: 1, color: brandColors.neutral[800] }}>Next Steps</Typography>
               <ul style={{ margin: 0, paddingLeft: 16 }}>
                 <li>Upload income docs</li>
                 <li>Verify identity</li>
@@ -1251,7 +1251,7 @@ const MortgagePage: React.FC = () => {
             >
               Get a mortgage from Dreamery Home Loans
             </Typography>
-            <Typography variant="h6" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+            <Typography variant="h6" sx={{ mb: 3, color: brandColors.neutral[800] }}>
               Competitive rates, clear fees, and guidance at every step. Get
               your DreamAbility™ to see what you can afford in real time.
             </Typography>
@@ -1289,9 +1289,9 @@ const MortgagePage: React.FC = () => {
                       variant="h5"
                       sx={{ fontWeight: 700, color: brandColors.primary }}
                     >
-                      ${LOAN_AMOUNT.toLocaleString()}
+                      LOAN_AMOUNT.toLocaleString()
                     </Typography>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       Target price
                     </Typography>
                   </Box>
@@ -1300,9 +1300,9 @@ const MortgagePage: React.FC = () => {
                       variant="h5"
                       sx={{ fontWeight: 700, color: brandColors.primary }}
                     >
-                      ${LOAN_AMOUNT.toLocaleString()}
+                      LOAN_AMOUNT.toLocaleString()
                     </Typography>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       DreamAbility™
                     </Typography>
                   </Box>
@@ -1329,7 +1329,7 @@ const MortgagePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: brandColors.neutral.dark, fontSize: "0.75rem" }}
+                      sx={{ color: brandColors.neutral[800], fontSize: "0.75rem" }}
                     >
                       Mo. payment
                     </Typography>
@@ -1343,7 +1343,7 @@ const MortgagePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: brandColors.neutral.dark, fontSize: "0.75rem" }}
+                      sx={{ color: brandColors.neutral[800], fontSize: "0.75rem" }}
                     >
                       Rate
                     </Typography>
@@ -1357,7 +1357,7 @@ const MortgagePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: brandColors.neutral.dark, fontSize: "0.75rem" }}
+                      sx={{ color: brandColors.neutral[800], fontSize: "0.75rem" }}
                     >
                       APR
                     </Typography>
@@ -1393,7 +1393,7 @@ const MortgagePage: React.FC = () => {
         </Typography>
         <Typography
           variant="body1"
-          sx={{ textAlign: "center", color: brandColors.neutral.dark, mb: 4 }}
+          sx={{ textAlign: "center", color: brandColors.neutral[800], mb: 4 }}
         >
           Explore programs and compare rates. Get pre-approved with confidence.
         </Typography>
@@ -1456,7 +1456,7 @@ const MortgagePage: React.FC = () => {
                     >
                       {option.rate.toFixed(3)}%
                     </Typography>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       Rate
                     </Typography>
                   </Box>
@@ -1474,11 +1474,11 @@ const MortgagePage: React.FC = () => {
                     >
                       {option.apr.toFixed(3)}%
                     </Typography>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       APR
                     </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 2 }}>
                     Points (cost) {option.points.toFixed(3)} ($
                     {option.pointsCost.toLocaleString()})
                   </Typography>
@@ -1487,7 +1487,7 @@ const MortgagePage: React.FC = () => {
                       <Typography
                         key={idx}
                         variant="body2"
-                        sx={{ color: brandColors.neutral.dark }}
+                        sx={{ color: brandColors.neutral[800] }}
                       >
                         - {feature}
                       </Typography>
@@ -1571,7 +1571,7 @@ const MortgagePage: React.FC = () => {
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
               Get a personalized rate in minutes
             </Typography>
-            <Typography variant="body1" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+            <Typography variant="body1" sx={{ color: brandColors.neutral[800], mb: 3 }}>
               Mortgage rates aren't one size fits all. We'll estimate based on
               your unique details.
             </Typography>
@@ -1636,7 +1636,7 @@ const MortgagePage: React.FC = () => {
                   gap: 2,
                   width: "max-content",
                   scrollBehavior: "smooth",
-                  transform: `translateX(-${currentSlide * SLIDE_WIDTH_PX}px)`,
+                  transform: `translateX(-currentSlide * SLIDE_WIDTH_PXpx)`,
                   transition: "transform 0.3s ease-in-out",
                 }}
               >
@@ -1652,7 +1652,7 @@ const MortgagePage: React.FC = () => {
                           justifyContent: "center",
                         }}
                       >
-                        <Typography variant="h6" sx={{ color: brandColors.neutral.dark }}>
+                        <Typography variant="h6" sx={{ color: brandColors.neutral[800] }}>
                           [Article Image]
                         </Typography>
                       </Box>
@@ -1761,7 +1761,7 @@ const MortgagePage: React.FC = () => {
             }}
           >
             <Box>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 <Link
                   href="#"
                   sx={{ color: brandColors.primary, textDecoration: "none" }}
@@ -1769,7 +1769,7 @@ const MortgagePage: React.FC = () => {
                   Terms of use
                 </Link>
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                 <Link
                   href="#"
                   sx={{ color: brandColors.primary, textDecoration: "none" }}
@@ -1779,16 +1779,16 @@ const MortgagePage: React.FC = () => {
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 Dreamery Home Loans
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 1500 Dreamery Boulevard, Suite 500
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 Austin, TX 78701
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                 855-372-6337
               </Typography>
             </Box>
@@ -1801,13 +1801,13 @@ const MortgagePage: React.FC = () => {
                   EQUAL HOUSING LENDER
                 </Typography>
               </Box>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 © Dreamery Home Loans, LLC
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 An Equal Housing Lender
               </Typography>
-              <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                 NMLS ID#: 10287
               </Typography>
               <Link
@@ -1827,7 +1827,7 @@ const MortgagePage: React.FC = () => {
 
           <Typography
             variant="body2"
-            sx={{ color: brandColors.neutral.dark, textAlign: "center" }}
+            sx={{ color: brandColors.neutral[800], textAlign: "center" }}
           >
             Dreamery Group is committed to ensuring digital accessibility for
             individuals with disabilities. We are continuously working to
@@ -1846,7 +1846,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1882,7 +1882,7 @@ const MortgagePage: React.FC = () => {
               >
                 Sample loan terms
               </Typography>
-              <IconButton onClick={handleCloseModal} sx={{ color: brandColors.neutral.dark }}>
+              <IconButton onClick={handleCloseModal} sx={{ color: brandColors.neutral[800] }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
                 </React.Suspense>
@@ -1890,7 +1890,7 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Content */}
-            <Typography variant="body1" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+            <Typography variant="body1" sx={{ mb: 3, color: brandColors.neutral[800] }}>
               Loan interest rates and APR (Annual Percentage Rate) are dependent
               on the specific characteristics of the transaction and the
               individual's credit history. These figures are for estimation
@@ -1898,7 +1898,7 @@ const MortgagePage: React.FC = () => {
               This is not a commitment to lend.
             </Typography>
 
-            <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+            <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral[800] }}>
               Rates current as of:{" "}
               {new Date().toLocaleDateString("en-US", {
                 month: "numeric",
@@ -1918,7 +1918,7 @@ const MortgagePage: React.FC = () => {
 
               {selectedLoan.title === "30-Year FHA" ? (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     FHA Loan Example includes a one-time upfront mortgage
                     insurance premium equal to 1.75% of base loan amount will be
                     charged and paid at closing. A monthly mortgage insurance
@@ -1929,7 +1929,7 @@ const MortgagePage: React.FC = () => {
                     loan only; greater LTVs require payment of MIP for the life
                     of the loan.
                   </Typography>
-                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Interest rate of 6.000% (6.678% APR) calculated for a
                     mortgage loan of $275,000, with a monthly payment of
                     $1,792.00. Rate assumes a down payment of 20% and includes
@@ -1941,7 +1941,7 @@ const MortgagePage: React.FC = () => {
                 </>
               ) : selectedLoan.title === "30-Year VA" ? (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Interest rate of 6.125% (6.419% APR) calculated for a
                     mortgage loan of $275,000, with a monthly payment of
                     $1,692.00. Rate assumes a down payment of 20% and includes
@@ -1952,14 +1952,14 @@ const MortgagePage: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+                  <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Interest rate of {selectedLoan.rate.toFixed(3)}% (
                     {selectedLoan.apr.toFixed(3)}% APR) calculated for a
-                    mortgage loan of ${LOAN_AMOUNT.toLocaleString()}, with a
+                    mortgage loan of LOAN_AMOUNT.toLocaleString(), with a
                     monthly payment of $
                     {Math.round(selectedLoan.monthlyPayment).toLocaleString()}.
                   </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Rate assumes a down payment of 20% and includes{" "}
                     {selectedLoan.points.toFixed(3)} points, paid at closing.
                     Payment amount is for principal and interest only and does
@@ -1978,7 +1978,7 @@ const MortgagePage: React.FC = () => {
               >
                 For all rates shown, unless otherwise noted, we assumed:
               </Typography>
-              <Box component="ul" sx={{ pl: 2, color: brandColors.neutral.dark }}>
+              <Box component="ul" sx={{ pl: 2, color: brandColors.neutral[800] }}>
                 <Typography component="li" variant="body2" sx={{ mb: 1 }}>
                   Debt-to-income ratio less than 43%
                 </Typography>
@@ -2026,7 +2026,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2064,7 +2064,7 @@ const MortgagePage: React.FC = () => {
               </Typography>
               <IconButton
                 onClick={handleCloseDreamAbilityModal}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -2079,7 +2079,7 @@ const MortgagePage: React.FC = () => {
             >
               Find homes in your budget
             </Typography>
-            <Typography variant="body1" sx={{ mb: 4, color: brandColors.neutral.dark }}>
+            <Typography variant="body1" sx={{ mb: 4, color: brandColors.neutral[800] }}>
               See a real-time view of what you can afford in today's market.
             </Typography>
 
@@ -2183,7 +2183,7 @@ const MortgagePage: React.FC = () => {
                         left: 12,
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       $
@@ -2212,7 +2212,7 @@ const MortgagePage: React.FC = () => {
                         right: 12,
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       /year
@@ -2220,7 +2220,7 @@ const MortgagePage: React.FC = () => {
                   </Box>
                   <Typography
                     variant="caption"
-                    sx={{ color: brandColors.neutral.dark, mt: 0.5, display: "block" }}
+                    sx={{ color: brandColors.neutral[800], mt: 0.5, display: "block" }}
                   >
                     Pre-tax income
                   </Typography>
@@ -2241,7 +2241,7 @@ const MortgagePage: React.FC = () => {
                         left: 12,
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       $
@@ -2266,7 +2266,7 @@ const MortgagePage: React.FC = () => {
                   </Box>
                   <Typography
                     variant="caption"
-                    sx={{ color: brandColors.neutral.dark, mt: 0.5, display: "block" }}
+                    sx={{ color: brandColors.neutral[800], mt: 0.5, display: "block" }}
                   >
                     At least $1,500
                   </Typography>
@@ -2321,7 +2321,7 @@ const MortgagePage: React.FC = () => {
                         left: 12,
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       $
@@ -2350,7 +2350,7 @@ const MortgagePage: React.FC = () => {
                         right: 12,
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       /month
@@ -2358,7 +2358,7 @@ const MortgagePage: React.FC = () => {
                   </Box>
                   <Typography
                     variant="caption"
-                    sx={{ color: brandColors.neutral.dark, mt: 0.5, display: "block" }}
+                    sx={{ color: brandColors.neutral[800], mt: 0.5, display: "block" }}
                   >
                     Loans, credit cards, alimony
                   </Typography>
@@ -2400,7 +2400,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2444,7 +2444,7 @@ const MortgagePage: React.FC = () => {
               </Typography>
               <IconButton
                 onClick={handleCloseDreamAbilityResults}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -2609,7 +2609,7 @@ const MortgagePage: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Max home price
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2625,7 +2625,7 @@ const MortgagePage: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Max payment
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2644,7 +2644,7 @@ const MortgagePage: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Loan option
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2661,7 +2661,7 @@ const MortgagePage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       Your est. interest rate
                     </Typography>
                     <Box
@@ -2703,7 +2703,7 @@ const MortgagePage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       APR
                     </Typography>
                     <Box
@@ -2744,7 +2744,7 @@ const MortgagePage: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Points
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -2771,7 +2771,7 @@ const MortgagePage: React.FC = () => {
               </Button>
               <Typography
                 variant="caption"
-                sx={{ color: brandColors.neutral.dark, textAlign: "center", display: "block" }}
+                sx={{ color: brandColors.neutral[800], textAlign: "center", display: "block" }}
               >
                 powered by Dreamery Home Loans
               </Typography>
@@ -2781,7 +2781,7 @@ const MortgagePage: React.FC = () => {
             <Typography
               variant="caption"
               sx={{
-                color: brandColors.neutral.dark,
+                color: brandColors.neutral[800],
                 textAlign: "center",
                 display: "block",
                 mb: 3,
@@ -2812,7 +2812,7 @@ const MortgagePage: React.FC = () => {
               </Button>
               <Typography
                 variant="caption"
-                sx={{ color: brandColors.neutral.dark, display: "block" }}
+                sx={{ color: brandColors.neutral[800], display: "block" }}
               >
                 We'll store your data according to the{" "}
                 <Link
@@ -2839,7 +2839,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2855,7 +2855,7 @@ const MortgagePage: React.FC = () => {
               p: 3,
               maxWidth: 400,
               width: "100%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 20px brandColors.shadows.medium",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -2897,7 +2897,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <IconButton
                 onClick={handleCloseWhatThisMeans}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -2923,7 +2923,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2941,7 +2941,7 @@ const MortgagePage: React.FC = () => {
               width: "100%",
               maxHeight: "80vh",
               overflow: "auto",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 20px brandColors.shadows.medium",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -2983,7 +2983,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <IconButton
                 onClick={handleCloseTargetPaymentBreakdown}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -2992,12 +2992,12 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
               The amount you tell us you feel comfortable spending per month.
             </Typography>
 
             {/* Loan Terms */}
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
               30 Year Fixed, 6.130%
             </Typography>
 
@@ -3038,7 +3038,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <Typography
                 variant="caption"
-                sx={{ color: brandColors.neutral.dark, display: "block", mb: 2 }}
+                sx={{ color: brandColors.neutral[800], display: "block", mb: 2 }}
               >
                 30 Year Fixed, 6.130%
               </Typography>
@@ -3095,7 +3095,7 @@ const MortgagePage: React.FC = () => {
             {/* Disclaimer */}
             <Typography
               variant="caption"
-              sx={{ color: brandColors.neutral.dark, display: "block", lineHeight: 1.4 }}
+              sx={{ color: brandColors.neutral[800], display: "block", lineHeight: 1.4 }}
             >
               *To estimate your property taxes, we multiply the home value you
               provide by the county's effective{" "}
@@ -3135,7 +3135,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -3151,7 +3151,7 @@ const MortgagePage: React.FC = () => {
               p: 3,
               maxWidth: 400,
               width: "100%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 20px brandColors.shadows.medium",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -3193,7 +3193,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <IconButton
                 onClick={handleCloseDownPaymentDetails}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -3202,7 +3202,7 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
               A down payment is a percentage of the home price you pay upfront
               before you close.
             </Typography>
@@ -3220,10 +3220,10 @@ const MortgagePage: React.FC = () => {
               }}
             >
               <Box>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   Down payment
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   10.1% of $739,853
                 </Typography>
               </Box>
@@ -3236,7 +3236,7 @@ const MortgagePage: React.FC = () => {
             </Box>
 
             {/* Lender Requirement */}
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
               Most lenders require at least 3% down.
             </Typography>
           </Box>
@@ -3252,7 +3252,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -3268,7 +3268,7 @@ const MortgagePage: React.FC = () => {
               p: 3,
               maxWidth: 450,
               width: "100%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 20px brandColors.shadows.medium",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -3310,7 +3310,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <IconButton
                 onClick={handleCloseAprDetails}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />
@@ -3337,7 +3337,7 @@ const MortgagePage: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -3353,7 +3353,7 @@ const MortgagePage: React.FC = () => {
               p: 3,
               maxWidth: 450,
               width: "100%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 20px brandColors.shadows.medium",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -3395,7 +3395,7 @@ const MortgagePage: React.FC = () => {
               </Box>
               <IconButton
                 onClick={handleCloseInterestRateDetails}
-                sx={{ color: brandColors.neutral.dark }}
+                sx={{ color: brandColors.neutral[800] }}
               >
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCloseIcon />

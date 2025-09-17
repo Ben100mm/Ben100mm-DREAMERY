@@ -243,7 +243,7 @@ const InvestCrowdfunding: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(${deal.image})`,
+                  backgroundImage: `url(deal.image)`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -271,7 +271,7 @@ const InvestCrowdfunding: React.FC = () => {
                     size="small"
                     onClick={() => handleShare(deal.id)}
                     sx={{ 
-                      color: 'white',
+                      color: brandColors.text.inverse,
                       backgroundColor: 'rgba(0,0,0,0.5)',
                     }}
                   >
@@ -282,7 +282,7 @@ const InvestCrowdfunding: React.FC = () => {
                   sx={{ position: 'absolute', bottom: 8, right: 8 }}
                   onClick={(e) => handleMenuClick(e, deal.id)}
                 >
-                  <MoreVertIcon sx={{ color: 'white' }} />
+                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
                 </IconButton>
               </Box>
 
@@ -321,10 +321,10 @@ const InvestCrowdfunding: React.FC = () => {
                   />
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
-                      ${deal.raisedAmount.toLocaleString()} raised
+                      deal.raisedAmount.toLocaleString() raised
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ${deal.targetAmount.toLocaleString()} target
+                      deal.targetAmount.toLocaleString() target
                     </Typography>
                   </Box>
                 </Box>
@@ -351,7 +351,7 @@ const InvestCrowdfunding: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
-                        Min: ${deal.minInvestment.toLocaleString()}
+                        Min: deal.minInvestment.toLocaleString()
                       </Typography>
                     </Box>
                   </Grid>

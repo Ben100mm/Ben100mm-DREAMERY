@@ -38,6 +38,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Business as BusinessIcon,
   AttachMoney as MoneyIcon,
+  TrendingUp as TrendingUpIcon,
   Security as SecurityIcon,
   CalendarToday as CalendarIcon,
   LocationOn as LocationIcon,

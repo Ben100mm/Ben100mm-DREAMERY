@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Box, Container, Typography, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { brandColors } from "../theme";
+
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -16,7 +18,7 @@ const PageHeader = styled.div`
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px brandColors.shadows.light;
 `;
 
 const ContentCard = styled.div`
@@ -25,7 +27,7 @@ const ContentCard = styled.div`
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px brandColors.shadows.light;
 `;
 
 interface PageTemplateProps {
@@ -79,7 +81,7 @@ const PageTemplate: React.FC<PageTemplateProps> = ({
 
         {/* Page Header */}
         <PageHeader>
-          <Typography variant="h3" component="h1" gutterBottom sx={{ color: '#1a365d', fontWeight: 700 }}>
+          <Typography variant="h3" component="h1" gutterBottom sx={{ color: brandColors.primary, fontWeight: 700 }}>
             {title}
           </Typography>
           {subtitle && (

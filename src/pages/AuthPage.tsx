@@ -101,7 +101,7 @@ const AuthPage: React.FC = () => {
   const handleSocialLogin = (provider: string) => {
     setError("");
     setSuccess("");
-    setSuccess(`Signing in with ${provider}...`);
+    setSuccess(`Signing in with provider...`);
   };
 
   return (
@@ -173,14 +173,14 @@ const AuthPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1e3a8a",
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#1e3a8a",
@@ -201,14 +201,14 @@ const AuthPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1e3a8a",
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#1e3a8a",
@@ -220,7 +220,7 @@ const AuthPage: React.FC = () => {
                       <IconButton
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
-                        sx={{ color: brandColors.neutral.dark }}
+                        sx={{ color: brandColors.neutral[800] }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -251,7 +251,7 @@ const AuthPage: React.FC = () => {
 
             {/* Toggle Sign In/Sign Up */}
             <Box sx={{ textAlign: "center", mb: 3 }}>
-              <Typography sx={{ color: brandColors.neutral.dark, fontSize: "14px" }}>
+              <Typography sx={{ color: brandColors.neutral[800], fontSize: "14px" }}>
                 {isSignUp ? "Have a Dreamery account?" : "New to Dreamery?"}{" "}
                 <Link
                   component="button"
@@ -269,7 +269,7 @@ const AuthPage: React.FC = () => {
                 </Link>
               </Typography>
               {isSignUp && (
-                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "14px", mt: 1 }}>
+                <Typography sx={{ color: brandColors.neutral[800], fontSize: "14px", mt: 1 }}>
                   I am a{" "}
                   <Link
                     component="button"
@@ -309,7 +309,7 @@ const AuthPage: React.FC = () => {
             {/* Divider */}
             <Box sx={{ my: 3, display: "flex", alignItems: "center" }}>
               <Divider sx={{ flex: 1, borderColor: brandColors.borders.secondary }} />
-              <Typography sx={{ px: 2, color: brandColors.neutral.dark, fontSize: "14px" }}>
+              <Typography sx={{ px: 2, color: brandColors.neutral[800], fontSize: "14px" }}>
                 Or Continue with
               </Typography>
               <Divider sx={{ flex: 1, borderColor: brandColors.borders.secondary }} />
@@ -328,7 +328,7 @@ const AuthPage: React.FC = () => {
                   background: brandColors.backgrounds.primary,
                   "&:hover": {
                     background: brandColors.backgrounds.secondary,
-                    borderColor: "#c0c0c0",
+                    borderColor: brandColors.neutral[300],
                   },
                 }}
               >
@@ -342,10 +342,10 @@ const AuthPage: React.FC = () => {
                   height: 48,
                   border: "1px solid brandColors.borders.secondary",
                   background: brandColors.backgrounds.primary,
-                  color: "#000000",
+                  color: brandColors.neutral[950],
                   "&:hover": {
                     background: brandColors.backgrounds.secondary,
-                    borderColor: "#c0c0c0",
+                    borderColor: brandColors.neutral[300],
                   },
                 }}
               >
@@ -361,7 +361,7 @@ const AuthPage: React.FC = () => {
                   background: brandColors.backgrounds.primary,
                   "&:hover": {
                     background: brandColors.backgrounds.secondary,
-                    borderColor: "#c0c0c0",
+                    borderColor: brandColors.neutral[300],
                   },
                 }}
               >
@@ -378,7 +378,7 @@ const AuthPage: React.FC = () => {
                   color: "#1877f2",
                   "&:hover": {
                     background: brandColors.backgrounds.secondary,
-                    borderColor: "#c0c0c0",
+                    borderColor: brandColors.neutral[300],
                   },
                 }}
               >
@@ -392,10 +392,10 @@ const AuthPage: React.FC = () => {
                   height: 48,
                   border: "1px solid brandColors.borders.secondary",
                   background: brandColors.backgrounds.primary,
-                  color: "#000000",
+                  color: brandColors.neutral[950],
                   "&:hover": {
                     background: brandColors.backgrounds.secondary,
-                    borderColor: "#c0c0c0",
+                    borderColor: brandColors.neutral[300],
                   },
                 }}
               >
@@ -405,7 +405,7 @@ const AuthPage: React.FC = () => {
 
             {/* Terms of Use */}
             <Box sx={{ textAlign: "center", mb: 2 }}>
-              <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
+              <Typography sx={{ color: brandColors.neutral[800], fontSize: "12px" }}>
                 By submitting, I accept Dreamery's{" "}
                 <Link
                   sx={{
@@ -427,7 +427,7 @@ const AuthPage: React.FC = () => {
                 startIcon={<ArrowBack />}
                 onClick={() => window.history.back()}
                 sx={{
-                  color: brandColors.neutral.dark,
+                  color: brandColors.neutral[800],
                   textTransform: "none",
                   fontSize: "14px",
                   "&:hover": {

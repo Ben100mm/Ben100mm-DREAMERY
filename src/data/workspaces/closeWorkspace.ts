@@ -13,13 +13,15 @@ import {
 import ClosingAssistantIcon from '../../components/close/ai-closing-assistant/ClosingAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
+import { brandColors } from "../../../theme";
+
 
 export const closeWorkspace: WorkspaceConfig = {
   id: 'close',
   name: 'Close',
   description: 'Closing and transaction management',
   icon: <SecurityIcon />,
-  color: '#1a365d',
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
     { 

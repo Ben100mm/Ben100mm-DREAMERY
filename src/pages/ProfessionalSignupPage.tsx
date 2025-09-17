@@ -156,14 +156,14 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1e3a8a",
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -187,14 +187,14 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1e3a8a",
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -207,7 +207,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       <IconButton
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
-                        sx={{ color: brandColors.neutral.dark }}
+                        sx={{ color: brandColors.neutral[800] }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -219,21 +219,21 @@ const ProfessionalSignupPage: React.FC = () => {
               {/* Password Requirements */}
               <Box sx={{ mb: 3, pl: 2 }}>
                 <Typography
-                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral[800], fontSize: "12px", mb: 0.5 }}
                 >
                   - At least 8 characters
                 </Typography>
                 <Typography
-                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral[800], fontSize: "12px", mb: 0.5 }}
                 >
                   - Mix of letters and numbers
                 </Typography>
                 <Typography
-                  sx={{ color: brandColors.neutral.dark, fontSize: "12px", mb: 0.5 }}
+                  sx={{ color: brandColors.neutral[800], fontSize: "12px", mb: 0.5 }}
                 >
                   - At least 1 special character
                 </Typography>
-                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
+                <Typography sx={{ color: brandColors.neutral[800], fontSize: "12px" }}>
                   - At least 1 lowercase letter and 1 uppercase letter
                 </Typography>
               </Box>
@@ -247,7 +247,7 @@ const ProfessionalSignupPage: React.FC = () => {
               </Typography>
 
               <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel sx={{ color: brandColors.neutral.dark, fontWeight: 600 }}>
+                <InputLabel sx={{ color: brandColors.neutral[800], fontWeight: 600 }}>
                   Professional type
                 </InputLabel>
                 <Select
@@ -259,7 +259,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: "#1e3a8a",
@@ -269,7 +269,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -298,7 +298,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -313,7 +313,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -327,7 +327,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -345,7 +345,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -361,7 +361,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -374,7 +374,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -389,7 +389,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -415,7 +415,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -455,7 +455,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -484,7 +484,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -496,7 +496,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -510,7 +510,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -531,7 +531,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -552,7 +552,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -567,7 +567,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -583,7 +583,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -600,7 +600,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -629,7 +629,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -644,7 +644,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <ListSubheader
                     sx={{
                       fontWeight: "bold",
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       backgroundColor: brandColors.neutral.light,
                       fontSize: "14px",
                     }}
@@ -684,14 +684,14 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
-                          borderColor: "#c0c0c0",
+                          borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
                           borderColor: "#1e3a8a",
                         },
                       },
                       "& .MuiInputLabel-root": {
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                         fontWeight: 600,
                       },
                       "& .MuiInputLabel-root.Mui-focused": {
@@ -714,14 +714,14 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
-                          borderColor: "#c0c0c0",
+                          borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
                           borderColor: "#1e3a8a",
                         },
                       },
                       "& .MuiInputLabel-root": {
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                         fontWeight: 600,
                       },
                       "& .MuiInputLabel-root.Mui-focused": {
@@ -746,14 +746,14 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.borders.secondary,
                     },
                     "&:hover fieldset": {
-                      borderColor: "#c0c0c0",
+                      borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1e3a8a",
                     },
                   },
                   "& .MuiInputLabel-root": {
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
@@ -765,7 +765,7 @@ const ProfessionalSignupPage: React.FC = () => {
               <Box sx={{ mb: 3 }}>
                 <Typography
                   sx={{
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                     fontWeight: 600,
                     mb: 1,
                     fontSize: "14px",
@@ -787,7 +787,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
-                          borderColor: "#c0c0c0",
+                          borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
                           borderColor: "#1e3a8a",
@@ -808,7 +808,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
-                          borderColor: "#c0c0c0",
+                          borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
                           borderColor: "#1e3a8a",
@@ -829,7 +829,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.borders.secondary,
                         },
                         "&:hover fieldset": {
-                          borderColor: "#c0c0c0",
+                          borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
                           borderColor: "#1e3a8a",
@@ -840,7 +840,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                     <Typography
                       sx={{
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                         fontWeight: 600,
                         fontSize: "14px",
                       }}
@@ -860,7 +860,7 @@ const ProfessionalSignupPage: React.FC = () => {
                             borderColor: brandColors.borders.secondary,
                           },
                           "&:hover fieldset": {
-                            borderColor: "#c0c0c0",
+                            borderColor: brandColors.neutral[300],
                           },
                           "&.Mui-focused fieldset": {
                             borderColor: "#1e3a8a",
@@ -919,7 +919,7 @@ const ProfessionalSignupPage: React.FC = () => {
 
               {/* Terms of Use */}
               <Box sx={{ textAlign: "center", mb: 3 }}>
-                <Typography sx={{ color: brandColors.neutral.dark, fontSize: "12px" }}>
+                <Typography sx={{ color: brandColors.neutral[800], fontSize: "12px" }}>
                   By submitting, I accept Dreamery's{" "}
                   <Link
                     sx={{
@@ -941,7 +941,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   startIcon={<ArrowBack />}
                   onClick={() => window.history.back()}
                   sx={{
-                    color: brandColors.neutral.dark,
+                    color: brandColors.neutral[800],
                     textTransform: "none",
                     fontSize: "14px",
                     "&:hover": {

@@ -99,7 +99,7 @@ const MetricCard = styled(Card)`
 `;
 
 const StatusChip = styled(Chip)<{ status: 'completed' | 'in-progress' | 'pending' | 'blocked' | 'on-track' | 'at-risk' | 'delayed' | 'overdue' | 'upcoming' }>`
-  background-color: ${({ status }) => {
+  background-color: ({ status ) => {
     switch (status) {
       case 'completed':
       case 'on-track':
@@ -304,7 +304,7 @@ const ClosingDashboard: React.FC = () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Show success message (would use react-hot-toast in production)
-        alert(`Document "${selectedFile.name}" uploaded successfully!`);
+        alert(`Document selectedFile.name uploaded successfully!`);
         
         setUploadDialogOpen(false);
         setSelectedFile(null);

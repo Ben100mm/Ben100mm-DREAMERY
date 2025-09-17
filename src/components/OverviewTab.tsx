@@ -22,7 +22,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -46,7 +46,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
         >
           <Chip
-            label={`${label}: Balloon in ${loan.balloonDue} years`}
+            label={`${label}: Balloon in loan.balloonDue years`}
             size="small"
             color="warning"
             variant="outlined"
@@ -156,7 +156,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       >
         Advanced Calculations Overview
       </Typography>
-      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
         Welcome to the Advanced Calculations Suite. This comprehensive tool
         provides sophisticated analysis for your real estate investments.
       </Typography>
@@ -240,7 +240,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               <CardContent>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: brandColors.neutral.dark, mb: 2 }}
+                  sx={{ fontWeight: 600, color: brandColors.neutral[800], mb: 2 }}
                 >
                   Financing Details & Balloon Payment Information
                 </Typography>
@@ -248,7 +248,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                 <Divider sx={{ my: 2 }} />
                 <Typography
                   variant="caption"
-                  sx={{ color: brandColors.neutral.dark, fontStyle: "italic" }}
+                  sx={{ color: brandColors.neutral[800], fontStyle: "italic" }}
                 >
                   Balloon payment terms are now integrated for advanced
                   financial modeling and risk analysis.

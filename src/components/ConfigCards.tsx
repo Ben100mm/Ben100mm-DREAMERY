@@ -374,7 +374,7 @@ export const ConfigCards: React.FC<ConfigCardsProps> = ({
                 // Show success snackbar
                 setSnackbar({
                   open: true,
-                  message: `Scenario "${scenarioName}" saved successfully`,
+                  message: `Scenario scenarioName saved successfully`,
                   severity: "success",
                 });
               }

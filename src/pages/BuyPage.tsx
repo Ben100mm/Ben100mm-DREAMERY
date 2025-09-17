@@ -23,7 +23,7 @@ import {
   Link,
 } from "@mui/material";
 import styled from "styled-components";
-import { brandColors } from "../theme";
+import { brandColors, colorUtils } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
@@ -61,7 +61,7 @@ const FilterButton = styled(Button)`
   min-width: 120px;
   &:hover {
     background: brandColors.backgrounds.secondary;
-    border-color: #c0c0c0;
+    border-color: #e0e0e0;
   }
   &.active {
     border-color: brandColors.primary;
@@ -77,7 +77,7 @@ const FilterPopover = styled(Paper)`
 
 const MapContainer = styled.div`
   height: 70vh;
-  background: linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%);
+  background: linear-gradient(135deg, #eeeeee 0%, #eeeeee 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,17 +107,17 @@ const PropertyCard = styled(Card)`
   transition: all 0.2s ease;
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: colorUtils.shadow('0, 0, 0', 0.15, 12, 4);
   }
 `;
 
 const PropertyImage = styled.div`
   height: 200px;
   background:
-    linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-    linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-    linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    linear-gradient(45deg, #eeeeee 25%, transparent 25%),
+    linear-gradient(-45deg, #eeeeee 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #eeeeee 75%),
+    linear-gradient(-45deg, transparent 75%, #eeeeee 75%);
   background-size: 20px 20px;
   background-position:
     0 0,
@@ -127,7 +127,7 @@ const PropertyImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: brandColors.neutral.dark;
+  color: brandColors.neutral[800];
   font-size: 0.9rem;
 `;
 
@@ -494,7 +494,7 @@ const BuyPage: React.FC = () => {
             </Box>
             {priceType === "monthly-payment" && (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                   Includes estimated principal and interest, mortgage insurance,
                   property taxes, home insurance and HOA fees.
                 </Typography>
@@ -518,7 +518,7 @@ const BuyPage: React.FC = () => {
                     mt: 2,
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Save this monthly payment info to your Dreamery account.
                     (See our{" "}
                     <Link
@@ -1077,8 +1077,8 @@ const BuyPage: React.FC = () => {
                 backgroundColor: brandColors.backgrounds.secondary,
                 cursor: "pointer",
                 "&:hover": {
-                  backgroundColor: "#e9ecef",
-                  borderColor: "#c0c0c0",
+                  backgroundColor: brandColors.neutral[100],
+                  borderColor: brandColors.neutral[300],
                 },
               }}
             >
@@ -1089,7 +1089,7 @@ const BuyPage: React.FC = () => {
                 500
               </Typography>
               <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                <LazyFavoriteIcon sx={{ color: "#e31c25", fontSize: 20 }} />
+                <LazyFavoriteIcon sx={{ color: brandColors.accent.error, fontSize: 20 }} />
               </React.Suspense>
             </Box>
           </Box>
@@ -1222,7 +1222,7 @@ const BuyPage: React.FC = () => {
           <Box
             sx={{
               height: "100%",
-              background: "linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)",
+              background: "linear-gradient(135deg, #eeeeee 0%, #eeeeee 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -1286,11 +1286,11 @@ const BuyPage: React.FC = () => {
                         width: "120px",
                         height: "90px",
                         flexShrink: 0,
-                        background: "#f0f0f0",
+                        background: brandColors.neutral[100],
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       {property.image}
@@ -1315,8 +1315,8 @@ const BuyPage: React.FC = () => {
                           onClick={() => toggleFavorite(property.id)}
                           sx={{
                             color: favorites.has(property.id)
-                              ? "#e31c25"
-                              : "#ccc",
+                              ? brandColors.accent.error
+                              : brandColors.neutral[400],
                           }}
                         >
                           {favorites.has(property.id) ? (
@@ -1369,7 +1369,7 @@ const BuyPage: React.FC = () => {
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         {property.beds} bds | {property.baths} ba |{" "}
                         {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>

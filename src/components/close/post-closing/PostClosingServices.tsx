@@ -577,7 +577,7 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              ${exemption.annualSavings.toLocaleString()}/year
+                              exemption.annualSavings.toLocaleString()/year
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Filed: {exemption.filingDate}
@@ -670,7 +670,7 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              ${payment.monthlyPayment.toLocaleString()}/month
+                              payment.monthlyPayment.toLocaleString()/month
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Due: {payment.dueDate} of each month
@@ -701,7 +701,7 @@ const PostClosingServices: React.FC = () => {
                             {payment.reminders.filter(r => r.enabled).map((reminder) => (
                               <Chip 
                                 key={reminder.id} 
-                                label={`${reminder.type.toUpperCase()} - ${reminder.daysBefore} days before`} 
+                                label={`${reminder.type.toUpperCase()} - reminder.daysBefore days before`} 
                                 size="small" 
                                 sx={{ mr: 0.5, mb: 0.5 }}
                               />
@@ -760,10 +760,10 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              ${warranty.annualPremium}/year
+                              warranty.annualPremium/year
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Deductible: ${warranty.deductible}
+                              Deductible: warranty.deductible
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Term: {warranty.term} months
@@ -886,7 +886,7 @@ const PostClosingServices: React.FC = () => {
                             {service.fees.map((fee, index) => (
                               <Box key={index} sx={{ mb: 1 }}>
                                 <Typography variant="body2" color="text.secondary">
-                                  {fee.type}: ${fee.amount} ({fee.frequency})
+                                  {fee.type}: fee.amount ({fee.frequency})
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary">
                                   {fee.description}

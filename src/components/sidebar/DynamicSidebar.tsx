@@ -67,7 +67,7 @@ const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
           fullWidth
           sx={{
             backgroundColor: brandColors.primary,
-            color: 'white',
+            color: brandColors.text.inverse,
             py: 2,
             fontWeight: 600,
             fontSize: isCollapsed ? '0.75rem' : '1.1rem',

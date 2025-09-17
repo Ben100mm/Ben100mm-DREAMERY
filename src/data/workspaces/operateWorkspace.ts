@@ -8,13 +8,15 @@ import {
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
+import { brandColors } from "../../../theme";
+
 
 export const operateWorkspace: WorkspaceConfig = {
   id: 'operate',
   name: 'Operate',
   description: 'Property operations and project management',
   icon: <DashboardIcon />,
-  color: '#1a365d',
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
     { 

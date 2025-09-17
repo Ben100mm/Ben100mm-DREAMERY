@@ -521,7 +521,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 />
                 <Chip
                   icon={<TimelineIcon />}
-                  label={`Break-even: ${selectedScenario.breakEvenMonths.toFixed(1)} months`}
+                  label={`Break-even: selectedScenario.breakEvenMonths.toFixed(1) months`}
                   color={
                     selectedScenario.breakEvenMonths < 24
                       ? "success"
@@ -530,7 +530,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 />
                 <Chip
                   icon={<AccountBalanceIcon />}
-                  label={`New LTV: ${selectedScenario.ltv.toFixed(1)}%`}
+                  label={`New LTV: selectedScenario.ltv.toFixed(1)%`}
                   color={
                     selectedScenario.ltv < 70
                       ? "success"
@@ -860,14 +860,14 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                   </Alert>
                 )}
 
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Best time to refinance: When rates are 0.5%+ lower than
                   current
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Seasonal timing: Rates typically lowest in winter months
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Rate lock strategy: Lock rates when you're 30-45 days from
                   closing
                 </Typography>
@@ -923,16 +923,16 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 Timeline Planning:
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Application to approval: 2-3 weeks
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Rate lock period: 30-60 days
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Closing preparation: 1-2 weeks
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Total timeline: 4-6 weeks
                 </Typography>
               </Box>
@@ -941,13 +941,13 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                   Compliance Requirements:
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Owner-occupied: 6-month seasoning requirement
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Investment properties: 12-month seasoning requirement
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   • Maximum LTV: 80% for investment properties
                 </Typography>
               </Box>

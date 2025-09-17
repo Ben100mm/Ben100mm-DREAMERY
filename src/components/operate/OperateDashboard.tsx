@@ -130,9 +130,9 @@ const OperateDashboard: React.FC = () => {
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case 'project_completed': return <CheckCircleIcon sx={{ color: '#4caf50' }} />;
-      case 'expense_approved': return <MoneyIcon sx={{ color: '#2196f3' }} />;
-      case 'deadline_approaching': return <WarningIcon sx={{ color: '#ff9800' }} />;
+      case 'project_completed': return <CheckCircleIcon sx={{ color: brandColors.accent.success }} />;
+      case 'expense_approved': return <MoneyIcon sx={{ color: brandColors.accent.info }} />;
+      case 'deadline_approaching': return <WarningIcon sx={{ color: brandColors.accent.warning }} />;
       case 'contractor_added': return <PersonIcon sx={{ color: '#9c27b0' }} />;
       default: return <ProjectIcon />;
     }
@@ -173,12 +173,12 @@ const OperateDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#4caf50', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.success, mr: 2 }}>
                   <MoneyIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${(stats.totalBudget / 1000000).toFixed(1)}M
+                    (stats.totalBudget / 1000000).toFixed(1)M
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Budget
@@ -187,7 +187,7 @@ const OperateDashboard: React.FC = () => {
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="caption" color="text.secondary">
-                  ${stats.spentBudget.toLocaleString()} spent
+                  stats.spentBudget.toLocaleString() spent
                 </Typography>
               </Box>
             </CardContent>
@@ -198,7 +198,7 @@ const OperateDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#ff9800', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.warning, mr: 2 }}>
                   <BuildIcon />
                 </Avatar>
                 <Box>
@@ -221,12 +221,12 @@ const OperateDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#2196f3', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.info, mr: 2 }}>
                   <TrendingUpIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${stats.monthlySavings.toLocaleString()}
+                    stats.monthlySavings.toLocaleString()
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Monthly Savings
@@ -274,10 +274,10 @@ const OperateDashboard: React.FC = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            ${project.budget.toLocaleString()}
+                            project.budget.toLocaleString()
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            ${project.spent.toLocaleString()} spent
+                            project.spent.toLocaleString() spent
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -340,7 +340,7 @@ const OperateDashboard: React.FC = () => {
                             </Typography>
                             {activity.amount > 0 && (
                               <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                                ${activity.amount.toLocaleString()}
+                                activity.amount.toLocaleString()
                               </Typography>
                             )}
                           </Box>

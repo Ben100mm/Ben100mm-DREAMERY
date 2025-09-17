@@ -189,7 +189,7 @@ export async function measurePerformance<T>(
   const duration = performance.now() - start;
   
   // Log performance metrics
-  console.log(`Performance [${name}]: ${duration.toFixed(2)}ms`);
+  console.log(`Performance [name]: duration.toFixed(2)ms`);
   
   return { result, duration };
 }

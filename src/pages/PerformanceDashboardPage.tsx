@@ -1,18 +1,20 @@
 import React from 'react';
 import { PerformanceMetricsDashboard } from '../utils/performance';
 import { Box, Typography, Paper } from '@mui/material';
+import { brandColors } from "../theme";
+
 
 const PerformanceDashboardPage: React.FC = () => {
   return (
     <Box sx={{ 
       minHeight: '100vh', 
-      bgcolor: '#f5f5f5',
+      bgcolor: brandColors.neutral[100],
       p: 0 
     }}>
       {/* Header */}
       <Paper elevation={1} sx={{ 
         bgcolor: '#1a237e', 
-        color: 'white', 
+        color: brandColors.text.inverse, 
         p: 3, 
         mb: 3,
         borderRadius: 0

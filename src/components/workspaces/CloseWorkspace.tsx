@@ -43,55 +43,55 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
         return {
           title: 'Closing Dashboard',
           subtitle: 'Centralized overview of all closing activities and progress tracking',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'escrow-title':
         return {
           title: 'Escrow & Title Hub',
           subtitle: 'Manage escrow accounts, title searches, and title insurance',
-          icon: <SecurityIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <SecurityIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'due-diligence':
         return {
           title: 'Due Diligence Tools',
           subtitle: 'Comprehensive property and legal research tools',
-          icon: <SearchIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <SearchIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'financing':
         return {
           title: 'Financing Coordination',
           subtitle: 'Coordinate with lenders and manage funding processes',
-          icon: <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'legal':
         return {
           title: 'Legal & Compliance',
           subtitle: 'Legal document preparation and regulatory compliance',
-          icon: <GavelIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <GavelIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'settlement':
         return {
           title: 'Settlement & Closing Costs',
           subtitle: 'Calculate and track all closing costs and settlement amounts',
-          icon: <CalculateIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CalculateIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'insurance':
         return {
           title: 'Insurance & Utilities',
           subtitle: 'Manage property insurance and utility transfers',
-          icon: <HomeIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <HomeIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'walkthrough':
         return {
           title: 'Final Walkthrough & Handover',
           subtitle: 'Final property inspection and key handover process',
-          icon: <CheckCircleIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CheckCircleIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'post-closing':
         return {
           title: 'Post-Closing Services',
           subtitle: 'Ongoing support and services after closing',
-          icon: <SupportIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <SupportIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'assistant':
         return {
@@ -103,19 +103,19 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
         return {
           title: 'Closing Communications',
           subtitle: 'Stay connected with everyone involved in your closing process',
-          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'integrations':
         return {
           title: 'Partner Integrations',
           subtitle: 'Connect with third-party services and platforms',
-          icon: <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
           title: 'Closing Dashboard',
           subtitle: 'Centralized overview of all closing activities and progress tracking',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
     }
   };
@@ -163,12 +163,12 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
           p: 3, 
           backgroundColor: brandColors.primary,
           borderRadius: '16px 16px 0 0',
-          color: 'white'
+          color: brandColors.text.inverse
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           {banner.icon}
-          <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
             {banner.title}
           </Typography>
         </Box>

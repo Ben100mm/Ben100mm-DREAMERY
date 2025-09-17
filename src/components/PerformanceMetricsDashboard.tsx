@@ -166,7 +166,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `performance-metrics-${Date.now()}.json`;
+    a.download = `performance-metrics-Date.now().json`;
     a.click();
     URL.revokeObjectURL(url);
   };

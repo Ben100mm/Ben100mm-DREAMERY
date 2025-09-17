@@ -61,7 +61,7 @@ const FilterButton = styled(Button)`
   min-width: 120px;
   &:hover {
     background: brandColors.backgrounds.secondary;
-    border-color: #c0c0c0;
+    border-color: brandColors.neutral[300];
   }
   &.active {
     border-color: brandColors.primary;
@@ -77,7 +77,7 @@ const FilterPopover = styled(Paper)`
 
 const MapContainer = styled.div`
   height: 70vh;
-  background: linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%);
+  background: linear-gradient(135deg, brandColors.neutral[200] 0%, brandColors.neutral[200] 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,7 +108,7 @@ const PropertyCard = styled(Card)`
   margin-bottom: 1rem;
   transition: all 0.2s ease;
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px brandColors.shadows.light;
     transform: translateY(-2px);
   }
 `;
@@ -986,8 +986,8 @@ const RentPage: React.FC = () => {
                 backgroundColor: brandColors.backgrounds.secondary,
                 cursor: "pointer",
                 "&:hover": {
-                  backgroundColor: "#e9ecef",
-                  borderColor: "#c0c0c0",
+                  backgroundColor: brandColors.neutral[100],
+                  borderColor: brandColors.neutral[300],
                 },
               }}
             >
@@ -995,7 +995,7 @@ const RentPage: React.FC = () => {
                 500
               </Typography>
               <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                <LazyFavoriteIcon sx={{ color: "#e31c25", fontSize: 20 }} />
+                <LazyFavoriteIcon sx={{ color: brandColors.accent.error, fontSize: 20 }} />
               </React.Suspense>
             </Box>
           </Box>
@@ -1140,7 +1140,7 @@ const RentPage: React.FC = () => {
           <Box
             sx={{
               height: "100%",
-              background: "linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)",
+              background: "linear-gradient(135deg, brandColors.neutral[200] 0%, brandColors.neutral[200] 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -1204,11 +1204,11 @@ const RentPage: React.FC = () => {
                         width: "120px",
                         height: "90px",
                         flexShrink: 0,
-                        background: "#f0f0f0",
+                        background: brandColors.neutral[100],
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                       }}
                     >
                       {property.image}
@@ -1233,8 +1233,8 @@ const RentPage: React.FC = () => {
                           onClick={() => toggleFavorite(property.id)}
                           sx={{
                             color: favorites.has(property.id)
-                              ? "#e31c25"
-                              : "#ccc",
+                              ? brandColors.accent.error
+                              : brandColors.neutral[400],
                           }}
                         >
                           {favorites.has(property.id) ? (
@@ -1287,7 +1287,7 @@ const RentPage: React.FC = () => {
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         {property.beds} bds | {property.baths} ba |{" "}
                         {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>

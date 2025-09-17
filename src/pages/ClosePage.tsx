@@ -169,7 +169,7 @@ const ClosePage: React.FC = () => {
           p: 4, 
           borderRadius: 3,
           background: brandColors.backgrounds.gradient,
-                color: 'white'
+                color: brandColors.text.inverse
         }}
       >
         <Typography 

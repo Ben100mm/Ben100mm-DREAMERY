@@ -185,7 +185,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: `linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.secondary} 100%)`,
+          background: `linear-gradient(135deg, brandColors.primary 0%, brandColors.secondary 100%)`,
           color: brandColors.backgrounds.primary,
         }}
       >
@@ -267,7 +267,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                       variant="subtitle2"
                       sx={{
                         fontWeight: 600,
-                        color: activeStep === index ? brandColors.primary : brandColors.neutral.dark,
+                        color: activeStep === index ? brandColors.primary : brandColors.neutral[800],
                         mb: 0.5,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -306,7 +306,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
 
               <Typography
                 variant="body1"
-                sx={{ mb: 3, color: brandColors.neutral.dark, lineHeight: 1.6 }}
+                sx={{ mb: 3, color: brandColors.neutral[800], lineHeight: 1.6 }}
               >
                 {steps[activeStep].description}
               </Typography>
@@ -317,18 +317,18 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                   sx={{
                     p: 2,
                     backgroundColor: "#fff3e0",
-                    border: "2px dashed #f57c00",
+                    border: "2px dashed brandColors.accent.warningDark",
                     borderRadius: 2,
                     mb: 3,
                   }}
                 >
                   <Typography
                     variant="subtitle2"
-                    sx={{ color: "#f57c00", fontWeight: 600, mb: 1 }}
+                    sx={{ color: brandColors.accent.warningDark, fontWeight: 600, mb: 1 }}
                   >
                     Tip:
                   </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                     Look for the highlighted element on the page:{" "}
                     <strong>{steps[activeStep].target.replace(".", "")}</strong>
                   </Typography>
@@ -337,7 +337,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
 
               {/* Progress Indicator */}
               <Box sx={{ mt: "auto", pt: 2 }}>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
                   Step {activeStep + 1} of {steps.length}
                 </Typography>
                 <Box
@@ -373,7 +373,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
           backgroundColor: brandColors.backgrounds.secondary,
         }}
       >
-        <Button onClick={handleSkip} sx={{ color: brandColors.neutral.dark }}>
+        <Button onClick={handleSkip} sx={{ color: brandColors.neutral[800] }}>
           Skip Tour
         </Button>
 

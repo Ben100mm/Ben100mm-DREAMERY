@@ -483,7 +483,7 @@ const SettlementClosingCosts: React.FC = () => {
   const getSectionColor = (section: string) => {
     const colors: { [key: string]: string } = {
       'A': '#f8f9fa',      // Very light grey
-      'B': '#e9ecef',      // Light grey
+      'B': brandColors.neutral[100],      // Light grey
       'C': '#dee2e6',      // Medium light grey
       'D': '#ced4da',      // Medium grey
       'E': '#adb5bd',      // Medium dark grey
@@ -491,13 +491,13 @@ const SettlementClosingCosts: React.FC = () => {
       'G': '#495057',      // Darker grey
       'H': '#343a40',      // Very dark grey
       'I': '#f8f9fa',      // Very light grey (repeating pattern)
-      'J': '#e9ecef',      // Light grey (repeating pattern)
+      'J': brandColors.neutral[100],      // Light grey (repeating pattern)
       'K': '#dee2e6',      // Medium light grey (repeating pattern)
       'L': '#ced4da',      // Medium grey (repeating pattern)
       'M': '#adb5bd',      // Medium dark grey (repeating pattern)
       'N': '#6c757d',      // Dark grey (repeating pattern)
     };
-    return colors[section] || '#ffffff'; // Default to white
+    return colors[section] || brandColors.neutral[0]; // Default to white
   };
 
   return (
@@ -509,7 +509,7 @@ const SettlementClosingCosts: React.FC = () => {
           <CardContent sx={{ textAlign: 'center' }}>
             <ReceiptIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
             <Typography variant="h6" component="div">
-              ${totalCosts.toLocaleString()}
+              totalCosts.toLocaleString()
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Total Closing Costs
@@ -521,7 +521,7 @@ const SettlementClosingCosts: React.FC = () => {
           <CardContent sx={{ textAlign: 'center' }}>
             <MoneyIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
             <Typography variant="h6" component="div">
-              ${buyerTotal.toLocaleString()}
+              buyerTotal.toLocaleString()
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Buyer Costs
@@ -533,7 +533,7 @@ const SettlementClosingCosts: React.FC = () => {
           <CardContent sx={{ textAlign: 'center' }}>
             <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
             <Typography variant="h6" component="div">
-              ${sellerTotal.toLocaleString()}
+              sellerTotal.toLocaleString()
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Seller Costs
@@ -545,7 +545,7 @@ const SettlementClosingCosts: React.FC = () => {
           <CardContent sx={{ textAlign: 'center' }}>
             <AccountBalanceIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
             <Typography variant="h6" component="div">
-              ${settlementData.commission.totalCommission.toLocaleString()}
+              settlementData.commission.totalCommission.toLocaleString()
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Total Commission
@@ -599,14 +599,14 @@ const SettlementClosingCosts: React.FC = () => {
                       </TableCell>
                       <TableCell>{cost.description}</TableCell>
                       <TableCell align="right">
-                        ${cost.buyerCost.toLocaleString()}
+                        cost.buyerCost.toLocaleString()
                       </TableCell>
                       <TableCell align="right">
-                        ${cost.sellerCost.toLocaleString()}
+                        cost.sellerCost.toLocaleString()
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          ${cost.totalCost.toLocaleString()}
+                          cost.totalCost.toLocaleString()
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -647,16 +647,16 @@ const SettlementClosingCosts: React.FC = () => {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
                   <Box>
                     <Typography variant="body2" color="text.secondary">Total Buyer Costs</Typography>
-                    <Typography variant="h6" color="primary">${buyerTotal.toLocaleString()}</Typography>
+                    <Typography variant="h6" color="primary">buyerTotal.toLocaleString()</Typography>
                   </Box>
                   <Box>
                     <Typography variant="body2" color="text.secondary">Total Seller Costs</Typography>
-                    <Typography variant="h6" color="secondary">${sellerTotal.toLocaleString()}</Typography>
+                    <Typography variant="h6" color="secondary">sellerTotal.toLocaleString()</Typography>
                   </Box>
                   <Box>
                     <Typography variant="body2" color="text.secondary">Net Cash to Seller</Typography>
                     <Typography variant="h6" color="success.main">
-                      ${(settlementData.statement.purchasePrice - sellerTotal - buyerTotal).toLocaleString()}
+                      (settlementData.statement.purchasePrice - sellerTotal - buyerTotal).toLocaleString()
                     </Typography>
                   </Box>
                 </Box>
@@ -757,27 +757,27 @@ const SettlementClosingCosts: React.FC = () => {
                     
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">Total Commission</Typography>
-                      <Typography variant="h6">${settlementData.commission.totalCommission.toLocaleString()}</Typography>
+                      <Typography variant="h6">settlementData.commission.totalCommission.toLocaleString()</Typography>
                     </Box>
                     
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">Listing Agent</Typography>
-                      <Typography variant="h6" color="primary">${settlementData.commission.listingAgent.toLocaleString()}</Typography>
+                      <Typography variant="h6" color="primary">settlementData.commission.listingAgent.toLocaleString()</Typography>
                     </Box>
                     
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">Selling Agent</Typography>
-                      <Typography variant="h6" color="secondary">${settlementData.commission.sellingAgent.toLocaleString()}</Typography>
+                      <Typography variant="h6" color="secondary">settlementData.commission.sellingAgent.toLocaleString()</Typography>
                     </Box>
                     
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">Broker Split</Typography>
-                      <Typography variant="h6" color="warning.main">${settlementData.commission.brokerSplit.toLocaleString()}</Typography>
+                      <Typography variant="h6" color="warning.main">settlementData.commission.brokerSplit.toLocaleString()</Typography>
                     </Box>
                     
                     <Box>
                       <Typography variant="body2" color="text.secondary">Agent Split</Typography>
-                      <Typography variant="h6" color="success.main">${settlementData.commission.agentSplit.toLocaleString()}</Typography>
+                      <Typography variant="h6" color="success.main">settlementData.commission.agentSplit.toLocaleString()</Typography>
                     </Box>
                   </CardContent>
                 </Card>
@@ -857,8 +857,8 @@ const SettlementClosingCosts: React.FC = () => {
                   </Box>
                   
                   <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
-                    <Typography variant="body2" color="text.secondary">Seller Credit: ${settlementData.prorations.propertyTaxes.sellerCredit.toFixed(2)}</Typography>
-                    <Typography variant="body2" color="text.secondary">Buyer Debit: ${settlementData.prorations.propertyTaxes.buyerDebit.toFixed(2)}</Typography>
+                    <Typography variant="body2" color="text.secondary">Seller Credit: settlementData.prorations.propertyTaxes.sellerCredit.toFixed(2)</Typography>
+                    <Typography variant="body2" color="text.secondary">Buyer Debit: settlementData.prorations.propertyTaxes.buyerDebit.toFixed(2)</Typography>
                   </Box>
                 </AccordionDetails>
               </Accordion>
@@ -914,8 +914,8 @@ const SettlementClosingCosts: React.FC = () => {
                   </Box>
                   
                   <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
-                    <Typography variant="body2" color="text.secondary">Seller Credit: ${settlementData.prorations.hoa.sellerCredit.toFixed(2)}</Typography>
-                    <Typography variant="body2" color="text.secondary">Buyer Debit: ${settlementData.prorations.hoa.buyerDebit.toFixed(2)}</Typography>
+                    <Typography variant="body2" color="text.secondary">Seller Credit: settlementData.prorations.hoa.sellerCredit.toFixed(2)</Typography>
+                    <Typography variant="body2" color="text.secondary">Buyer Debit: settlementData.prorations.hoa.buyerDebit.toFixed(2)</Typography>
                   </Box>
                 </AccordionDetails>
               </Accordion>
@@ -996,16 +996,16 @@ const SettlementClosingCosts: React.FC = () => {
                       Financial Summary
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Purchase Price: ${settlementData.statement.purchasePrice.toLocaleString()}
+                      Purchase Price: settlementData.statement.purchasePrice.toLocaleString()
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Loan Amount: ${settlementData.statement.loanAmount.toLocaleString()}
+                      Loan Amount: settlementData.statement.loanAmount.toLocaleString()
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Total Costs: ${totalCosts.toLocaleString()}
+                      Total Costs: totalCosts.toLocaleString()
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Net to Seller: ${(settlementData.statement.purchasePrice - sellerTotal - buyerTotal).toLocaleString()}
+                      Net to Seller: (settlementData.statement.purchasePrice - sellerTotal - buyerTotal).toLocaleString()
                     </Typography>
                   </CardContent>
                 </Card>

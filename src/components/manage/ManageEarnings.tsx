@@ -121,16 +121,16 @@ const ManageEarnings: React.FC = () => {
   };
 
   const getChangeIcon = (current: number, previous: number) => {
-    return current > previous ? <TrendingUpIcon sx={{ color: '#4caf50' }} /> : <TrendingDownIcon sx={{ color: '#f44336' }} />;
+    return current > previous ? <TrendingUpIcon sx={{ color: brandColors.accent.success }} /> : <TrendingDownIcon sx={{ color: brandColors.accent.error }} />;
   };
 
   const getChangeColor = (current: number, previous: number) => {
-    return current > previous ? '#4caf50' : '#f44336';
+    return current > previous ? brandColors.accent.success : brandColors.accent.error;
   };
 
   const calculateChange = (current: number, previous: number) => {
     const change = ((current - previous) / previous) * 100;
-    return change > 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
+    return change > 0 ? `+change.toFixed(1)%` : `${change.toFixed(1)}%`;
   };
 
   return (
@@ -180,12 +180,12 @@ const ManageEarnings: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#4caf50', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.success, mr: 2 }}>
                   <MoneyIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    ${earningsData.totalRevenue.toLocaleString()}
+                    earningsData.totalRevenue.toLocaleString()
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Revenue
@@ -209,12 +209,12 @@ const ManageEarnings: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#ff9800', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.warning, mr: 2 }}>
                   <ReceiptIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    ${earningsData.totalExpenses.toLocaleString()}
+                    earningsData.totalExpenses.toLocaleString()
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Expenses
@@ -243,7 +243,7 @@ const ManageEarnings: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    ${earningsData.netIncome.toLocaleString()}
+                    earningsData.netIncome.toLocaleString()
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Net Income
@@ -267,7 +267,7 @@ const ManageEarnings: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#2196f3', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.info, mr: 2 }}>
                   <TrendingUpIcon />
                 </Avatar>
                 <Box>
@@ -280,7 +280,7 @@ const ManageEarnings: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Average rent: ${earningsData.averageRent.toLocaleString()}
+                Average rent: earningsData.averageRent.toLocaleString()
               </Typography>
             </CardContent>
           </Card>
@@ -324,7 +324,7 @@ const ManageEarnings: React.FC = () => {
                         <TableCell>{row.tenant}</TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            ${row.rent.toLocaleString()}
+                            row.rent.toLocaleString()
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -364,10 +364,10 @@ const ManageEarnings: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                     <Typography variant="body2">{expense.category}</Typography>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      ${expense.amount.toLocaleString()}
+                      expense.amount.toLocaleString()
                     </Typography>
                   </Box>
-                  <Box sx={{ width: '100%', height: 8, backgroundColor: '#e0e0e0', borderRadius: 4 }}>
+                  <Box sx={{ width: '100%', height: 8, backgroundColor: brandColors.neutral[300], borderRadius: 4 }}>
                     <Box
                       sx={{
                         width: `${expense.percentage}%`,

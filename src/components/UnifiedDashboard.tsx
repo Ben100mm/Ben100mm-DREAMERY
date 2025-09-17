@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   AppBar,
@@ -43,6 +43,7 @@ import { WorkspaceConfig } from '../data/workspaces/types';
 
 const UnifiedDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const userRole = (useContext(RoleContext as any) as any)?.userRole || 'Retail Buyer';
@@ -60,7 +61,16 @@ const UnifiedDashboard: React.FC = () => {
     operateWorkspace,
   ];
 
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace);
+  // Get workspace from URL parameters
+  const getWorkspaceFromURL = () => {
+    const urlParams = new URLSearchParams(location.search);
+    const workspaceParam = urlParams.get('workspace');
+    return workspaceParam && availableWorkspaces.some(w => w.id === workspaceParam) 
+      ? workspaceParam 
+      : preferences.defaultWorkspace;
+  };
+
+  const [selectedWorkspace, setSelectedWorkspace] = useState<string>(getWorkspaceFromURL());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
@@ -77,6 +87,14 @@ const UnifiedDashboard: React.FC = () => {
   useEffect(() => {
     setDefaultWorkspace(selectedWorkspace);
   }, [selectedWorkspace, setDefaultWorkspace]);
+
+  // Handle URL parameter changes
+  useEffect(() => {
+    const workspaceFromURL = getWorkspaceFromURL();
+    if (workspaceFromURL !== selectedWorkspace) {
+      setSelectedWorkspace(workspaceFromURL);
+    }
+  }, [location.search, preferences.defaultWorkspace]);
 
   const currentWorkspace = availableWorkspaces.find(w => w.id === selectedWorkspace);
 
@@ -146,7 +164,7 @@ const UnifiedDashboard: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery {currentWorkspace?.name || 'Dashboard'}
           </Typography>
 

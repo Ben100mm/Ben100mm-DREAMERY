@@ -31,7 +31,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -47,7 +47,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
       >
         Risk Factor Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
         Configure risk factors to assess investment risk and generate risk
         scores
       </Typography>
@@ -166,10 +166,10 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
               Overall Risk Score: {dealState.riskScoreResults.overallRiskScore}
               /10
             </Typography>
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
               Risk Level: {dealState.riskScoreResults.riskCategory}
             </Typography>
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
               {dealState.riskScoreResults.recommendations?.join(", ")}
             </Typography>
           </Box>
@@ -184,18 +184,18 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
           >
             <Typography
               variant="subtitle2"
-              sx={{ fontWeight: 600, mb: 1, color: brandColors.neutral.dark }}
+              sx={{ fontWeight: 600, mb: 1, color: brandColors.neutral[800] }}
             >
               Confidence Intervals (95%):
             </Typography>
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 1 }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 1 }}>
               Based on market volatility of{" "}
               {dealState?.riskFactors?.marketVolatility || 5}/10
             </Typography>
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
               - Higher volatility = wider confidence intervals
             </Typography>
-            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
               - Lower volatility = more precise projections
             </Typography>
           </Box>

@@ -6,6 +6,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
+import { brandColors } from "../theme";
+
 
 
 const AuthContainer = styled(Container)`
@@ -35,7 +37,7 @@ const AuthCard = styled(Paper)`
   min-height: auto;
   padding: 1.25rem;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px brandColors.shadows.light;
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -55,7 +57,7 @@ const AuthCard = styled(Paper)`
     color: #666;
     
     &.Mui-selected {
-      color: #1a365d;
+      color: brandColors.primary;
     }
   }
 
@@ -76,11 +78,11 @@ const AuthCard = styled(Paper)`
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.15);
+      background: brandColors.shadows.medium;
       border-radius: 3px;
       
       &:hover {
-        background: rgba(0, 0, 0, 0.25);
+        background: brandColors.shadows.dark;
       }
     }
   }
@@ -133,7 +135,7 @@ const AuthPage: React.FC = () => {
           <Typography
             variant="h5"
             sx={{
-              color: '#1a365d',
+              color: brandColors.primary,
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 900,
               letterSpacing: '-0.5px',

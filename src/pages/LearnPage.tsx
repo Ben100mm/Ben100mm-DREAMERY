@@ -72,19 +72,19 @@ const LearnPage: React.FC = () => {
   const getBannerIcon = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'courses':
-        return <CoursesIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <CoursesIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'casestudies':
-        return <CaseStudiesIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <CaseStudiesIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'qa':
-        return <QAIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <QAIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'livesessions':
-        return <LiveSessionsIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <LiveSessionsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'aitutor':
         return <Box component="img" src="/Lumina%20Logo.png" alt="Lumina logo" sx={{ width: 28, height: 28 }} />;
       default:
-        return <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />;
+        return <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
     }
   };
 
@@ -179,7 +179,7 @@ const LearnPage: React.FC = () => {
           sx={{ 
             width: 280, 
             backgroundColor: '#f8f9fa',
-            borderRight: '1px solid #e0e0e0',
+            borderRight: '1px solid brandColors.neutral[300]',
             height: '100%',
             display: 'flex',
             flexDirection: 'column'
@@ -189,8 +189,8 @@ const LearnPage: React.FC = () => {
           <Box sx={{ px: 3, py: 2, mb: 1, flexShrink: 0 }}>
             <Box
               sx={{
-                backgroundColor: '#1a365d',
-                color: 'white',
+                backgroundColor: brandColors.primary,
+                color: brandColors.text.inverse,
                 borderRadius: 2,
                 py: 1.5,
                 px: 2,
@@ -210,25 +210,17 @@ const LearnPage: React.FC = () => {
               <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
                 <ListItemButton
                   onClick={() => setActiveTab(item.id)}
-                  selected={activeTab === item.id}
-                  sx={{
-                    borderRadius: 2,
-                    '&.Mui-selected': {
-                      backgroundColor: '#1a365d',
-                      color: 'white',
-                      '&:hover': {
-                        backgroundColor: '#1a365d',
-                      },
-                      '& .MuiListItemIcon-root': {
-                        color: 'white',
-                      },
-                      '& .MuiListItemText-primary': {
-                        color: 'white',
-                        fontWeight: 600,
-                      },
+                  sx={{ 
+                    borderRadius: 2, 
+                    '& .MuiListItemIcon-root': {
+                      color: brandColors.text.inverse,
+                    },
+                    '& .MuiListItemText-primary': {
+                      color: brandColors.text.inverse,
+                      fontWeight: 600,
                     },
                     '&:hover': {
-                      backgroundColor: 'rgba(26, 54, 93, 0.08)',
+                      backgroundColor: brandColors.interactive.hover,
                     },
                   }}
                 >
@@ -255,7 +247,7 @@ const LearnPage: React.FC = () => {
         </Paper>
 
         {/* Main Content Area */}
-        <Box sx={{ flex: 1, p: 3, backgroundColor: '#fafafa', overflow: 'auto' }}>
+        <Box sx={{ flex: 1, p: 3, backgroundColor: brandColors.neutral[50], overflow: 'auto' }}>
           <Container maxWidth="lg">
             {/* Top Banner (matches other pages) */}
             <Paper
@@ -265,12 +257,12 @@ const LearnPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 {getBannerIcon()}
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   {banner.title}
                 </Typography>
               </Box>

@@ -829,10 +829,10 @@ const FinalWalkthroughHandover: React.FC = () => {
                       <TableCell>{repair.assignedTo}</TableCell>
                       <TableCell>
                         <Typography variant="body2">
-                          Est: ${repair.estimatedCost}
+                          Est: repair.estimatedCost
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Actual: ${repair.actualCost}
+                          Actual: repair.actualCost
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -1047,7 +1047,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                         <Typography variant="body1">
                           {walkthroughData.possessionAgreement.rentBackPeriod} days
                           {walkthroughData.possessionAgreement.rentBackAmount && (
-                            <span> - ${walkthroughData.possessionAgreement.rentBackAmount}/day</span>
+                            <span> - walkthroughData.possessionAgreement.rentBackAmount/day</span>
                           )}
                         </Typography>
                       </Box>
@@ -1108,7 +1108,7 @@ const FinalWalkthroughHandover: React.FC = () => {
                 Assigned to: {selectedRepair.assignedTo}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Cost: ${selectedRepair.actualCost} (Estimated: ${selectedRepair.estimatedCost})
+                Cost: selectedRepair.actualCost (Estimated: selectedRepair.estimatedCost)
               </Typography>
               {selectedRepair.completionDate && (
                 <Typography variant="body2" gutterBottom>

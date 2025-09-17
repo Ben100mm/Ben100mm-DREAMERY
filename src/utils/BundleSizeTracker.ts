@@ -183,7 +183,7 @@ export class BundleSizeTracker {
    * Generate unique build ID
    */
   private generateBuildId(): string {
-    return `build-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `build-Date.now()-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
@@ -291,7 +291,7 @@ export class BundleSizeTracker {
     
     const alert: RegressionAlert = {
       type: severity,
-      message: `Bundle size increased by ${sizeIncreasePercentage.toFixed(1)}% (${this.formatBytes(sizeIncrease)})`,
+      message: `Bundle size increased by sizeIncreasePercentage.toFixed(1)% (this.formatBytes(sizeIncrease))`,
       currentSize: currentBuild.totalSize,
       previousSize: previousBuild.totalSize,
       increase: sizeIncrease,
@@ -331,7 +331,7 @@ export class BundleSizeTracker {
       if (currentValue > budget.threshold) {
         const alert: RegressionAlert = {
           type: budget.severity,
-          message: `${budget.name} (${this.formatBytes(currentValue)}) exceeds budget (${this.formatBytes(budget.threshold)})`,
+          message: `${budget.name} (this.formatBytes(currentValue)) exceeds budget (this.formatBytes(budget.threshold))`,
           currentSize: currentValue,
           previousSize: budget.threshold,
           increase: currentValue - budget.threshold,

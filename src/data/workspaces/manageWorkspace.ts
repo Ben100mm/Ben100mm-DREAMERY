@@ -15,13 +15,15 @@ import {
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
+import { brandColors } from "../../../theme";
+
 
 export const manageWorkspace: WorkspaceConfig = {
   id: 'manage',
   name: 'Manage',
   description: 'Property management and rental operations',
   icon: <DashboardIcon />,
-  color: '#1a365d',
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
     { 

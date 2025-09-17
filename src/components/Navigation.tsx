@@ -5,16 +5,16 @@ import { brandColors } from "../theme";
 
 const NavContainer = styled.nav`
   width: 100%;
-  background: rgba(255, 255, 255, 0.25);
+  background: brandColors.surfaces.glass;
   padding: 0.75rem 0;
   position: absolute;
   bottom: 5%;
   left: 0;
   z-index: 9999;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px brandColors.shadows.light;
   &:hover {
-    background: rgba(255, 255, 255, 0.35);
+    background: brandColors.surfaces.glassHover;
   }
 `;
 
@@ -23,7 +23,7 @@ const NavList = styled.ul`
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;
-  gap: 1.25rem;
+  gap: 2rem;
   margin: 0;
   padding: 0;
   font-size: 0.85rem;
@@ -34,18 +34,44 @@ const NavItem = styled.li`
     color: white;
     text-decoration: none;
     font-weight: 800;
-    padding: 0.35rem 0.5rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.95rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
     letter-spacing: 0.3px;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
     &:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: brandColors.interactive.hover;
       color: white;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
       font-weight: 900;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+    
+    &:active {
+      transform: translateY(0);
+      transition: transform 0.1s ease;
     }
   }
 `;
@@ -59,11 +85,7 @@ const Navigation: React.FC = () => {
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Analyze', path: '/analyze' },
-    { name: 'Close', path: '/close' },
-    { name: 'Manage', path: '/manage' },
-    { name: 'Invest', path: '/invest' },
-    { name: 'Fund', path: '/fund' },
-    { name: 'Projects', path: '/operate' },
+    { name: 'Workspaces', path: '/close' },
     { name: 'Partners', path: '/partner' },
     { name: 'Learn', path: '/learn' },
     { name: 'Advertise', path: '/advertise' }
@@ -79,10 +101,6 @@ const Navigation: React.FC = () => {
       case '/underwrite':
       case '/analyze':
       case '/close':
-      case '/manage':
-      case '/invest':
-      case '/fund':
-      case '/operate':
       case '/learn':
       case '/advertise':
       case '/partner':

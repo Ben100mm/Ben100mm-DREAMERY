@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
 import { WorkspaceConfig } from '../../data/workspaces/types';
+import { brandColors } from '../../theme';
 
 interface WorkspaceSelectorProps {
   workspaces: WorkspaceConfig[];
@@ -35,23 +36,23 @@ const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
           displayEmpty
           IconComponent={KeyboardArrowDownIcon}
           sx={{
-            backgroundColor: 'white',
+            backgroundColor: brandColors.surfaces.primary,
             borderRadius: 2,
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: 'transparent',
             },
             '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(0, 0, 0, 0.23)',
+              borderColor: brandColors.borders.secondary,
             },
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#1a365d',
+              borderColor: brandColors.primary,
             },
           }}
           renderValue={(value) => {
             if (!selectedWorkspaceConfig) return 'Select Workspace';
             return (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ color: '#1a365d' }}>
+                <Box sx={{ color: brandColors.primary }}>
                   {selectedWorkspaceConfig.icon}
                 </Box>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -61,8 +62,8 @@ const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
                   label={selectedWorkspaceConfig.name} 
                   size="small" 
                   sx={{ 
-                    backgroundColor: '#1a365d',
-                    color: 'white',
+                    backgroundColor: brandColors.primary,
+                    color: brandColors.text.inverse,
                     fontSize: '0.75rem',
                     height: 20,
                   }} 
@@ -74,7 +75,7 @@ const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
           {workspaces.map((workspace) => (
             <MenuItem key={workspace.id} value={workspace.id}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-                <Box sx={{ color: '#1a365d' }}>
+                <Box sx={{ color: brandColors.primary }}>
                   {workspace.icon}
                 </Box>
                 <Box sx={{ flex: 1 }}>

@@ -28,7 +28,7 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
         >
           Advanced Analysis Features
         </Typography>
-        <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+        <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral[800] }}>
           Comprehensive tools for sophisticated real estate investment analysis
         </Typography>
 
@@ -57,16 +57,16 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Multiple exit strategies (2, 5, 10 years)
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Refinance timing options and scenarios
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Tax benefits and deductions included
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Inflation adjustments over time
                 </Typography>
               </AccordionDetails>
@@ -103,7 +103,7 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
                       border: `1px solid ${brandColors.accent.warning}`,
                     }}
                   >
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.neutral.dark }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.neutral[800] }}>
                       Overall Risk Score:
                     </Typography>
                     <Chip
@@ -125,21 +125,21 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
                         fontSize: "1rem",
                       }}
                     />
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       {dealState.riskScoreResults.riskCategory}
                     </Typography>
                   </Box>
                 )}
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Sensitivity analysis for key variables
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Stress testing with worst-case scenarios
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Confidence intervals for projections
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Risk scoring (1-10 scale) with recommendations
                 </Typography>
               </AccordionDetails>
@@ -164,16 +164,16 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Seasonal adjustment factors
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Local market condition analysis
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Live market data integration
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Comparative market analysis
                 </Typography>
               </AccordionDetails>
@@ -196,16 +196,16 @@ export const FeaturesOverview: React.FC<FeaturesOverviewProps> = ({ dealState })
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Scenario comparison and saving
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Export functionality (CSV, JSON, Reports)
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Cloud backup and sync
                 </Typography>
-                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" paragraph sx={{ color: brandColors.neutral[800] }}>
                   - Auto-save and version control
                 </Typography>
               </AccordionDetails>

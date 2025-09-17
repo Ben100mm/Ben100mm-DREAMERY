@@ -67,7 +67,7 @@ const PreApprovalPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back to Mortgage
           </Button>
@@ -103,7 +103,7 @@ const PreApprovalPage: React.FC = () => {
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: brandColors.neutral.dark, mb: 2, textAlign: "center" }}
+                sx={{ color: brandColors.neutral[800], mb: 2, textAlign: "center" }}
               >
                 Pre-qualification is the first step toward a pre-approval with
                 us.
@@ -129,7 +129,7 @@ const PreApprovalPage: React.FC = () => {
                 >
                   Ready to get started?
                 </Typography>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 4 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 4 }}>
                   Our pre-approval process takes just a few minutes and will
                   help you understand your borrowing power and loan options.
                 </Typography>
@@ -164,7 +164,7 @@ const PreApprovalPage: React.FC = () => {
 
               {/* Additional Information */}
               <Box sx={{ mt: 2, textAlign: "center" }}>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 0.5 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 0.5 }}>
                   Your information is safe and secure with us.
                 </Typography>
                 <Link

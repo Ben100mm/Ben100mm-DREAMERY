@@ -22,6 +22,8 @@ import KeyIcon from '@mui/icons-material/Key';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import UsbIcon from '@mui/icons-material/Usb';
+import { brandColors } from "../../theme";
+
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -36,11 +38,11 @@ const MethodCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
   
   &.selected {
-    border-color: #1a365d;
+    border-color: brandColors.primary;
     background-color: rgba(26, 54, 93, 0.05);
   }
 `;
@@ -49,7 +51,7 @@ const QRCodeContainer = styled(Box)`
   display: flex;
   justify-content: center;
   padding: 1rem;
-  background: #f5f5f5;
+  background: brandColors.neutral[100];
   border-radius: 8px;
   margin: 1rem 0;
 `;
@@ -163,11 +165,11 @@ const TwoFactorForm: React.FC<TwoFactorFormProps> = ({ onSuccess }) => {
   const getMethodColor = (method: TwoFactorMethod) => {
     switch (method) {
       case 'authenticator':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'hardware':
-        return '#ff9800';
+        return brandColors.accent.warning;
       default:
-        return '#757575';
+        return brandColors.neutral[600];
     }
   };
 
@@ -193,7 +195,7 @@ const TwoFactorForm: React.FC<TwoFactorFormProps> = ({ onSuccess }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'white',
+                        color: brandColors.text.inverse,
                         fontSize: '1.5rem'
                       }}
                     >

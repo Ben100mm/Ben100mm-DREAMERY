@@ -24,7 +24,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
         >
           Summary of All Calculations
         </Typography>
-        <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+        <Typography variant="body2" sx={{ mb: 3, color: brandColors.neutral[800] }}>
           Overview of results from all completed calculations
         </Typography>
 
@@ -82,8 +82,8 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
               // Create a formatted text report
               let reportContent = "ADVANCED ANALYSIS RESULTS REPORT\n";
               reportContent += "=====================================\n\n";
-              reportContent += `Generated on: ${new Date().toLocaleString()}\n`;
-              reportContent += `Total Calculations: ${Object.keys(allResults).length}\n\n`;
+              reportContent += `Generated on: new Date().toLocaleString()\n`;
+              reportContent += `Total Calculations: Object.keys(allResults).length\n\n`;
 
               Object.entries(allResults).forEach(([type, results]) => {
                 reportContent += `${type.toUpperCase()} ANALYSIS\n`;
@@ -138,10 +138,10 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
                     label={type.charAt(0).toUpperCase() + type.slice(1)}
                     size="small"
                   />
-                  <HelpTooltip title={`Results from ${type} calculations`} />
+                  <HelpTooltip title={`Results from type calculations`} />
                 </Box>
 
-                <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                   {type === "seasonal" &&
                     "Seasonal adjustments for vacancy rates and maintenance costs"}
                   {type === "market" &&
@@ -170,7 +170,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
                     border: "1px solid brandColors.borders.secondary",
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
+                  <Typography variant="caption" sx={{ color: brandColors.neutral[800] }}>
                     Results available
                   </Typography>
                 </Box>

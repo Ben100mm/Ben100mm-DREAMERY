@@ -78,7 +78,7 @@ const PreApprovalSummaryPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back
           </Button>
@@ -119,7 +119,7 @@ const PreApprovalSummaryPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral[800], mb: 4, textAlign: "center" }}
               >
                 You'll get connected with a dedicated loan officer to verify
                 you're on track, explore your loan options and upgrade to a
@@ -144,29 +144,29 @@ const PreApprovalSummaryPage: React.FC = () => {
                 </Typography>
                 <Box sx={{ display: "grid", gap: 1.5 }}>
                   {answers.firstName && answers.lastName && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Name:</strong> {answers.firstName}{" "}
                       {answers.lastName}
                     </Typography>
                   )}
                   {answers.emailAddress && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Email:</strong> {answers.emailAddress}
                     </Typography>
                   )}
                   {answers.phoneNumber && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Phone:</strong> {answers.phoneNumber}
                     </Typography>
                   )}
                   {answers.streetAddress && answers.city && answers.state && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Current Address:</strong> {answers.streetAddress},{" "}
                       {answers.city}, {answers.state} {answers.zipCode}
                     </Typography>
                   )}
                   {answers.income && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Annual Income:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -177,37 +177,37 @@ const PreApprovalSummaryPage: React.FC = () => {
                     </Typography>
                   )}
                   {answers.credit && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Credit Score:</strong> {answers.credit}
                     </Typography>
                   )}
                   {answers.journey && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Home-buying Journey:</strong> {answers.journey}
                     </Typography>
                   )}
                   {answers.timeline && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Timeline:</strong> {answers.timeline}
                     </Typography>
                   )}
                   {answers.location && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Target Location:</strong> {answers.location}
                     </Typography>
                   )}
                   {answers.homeType && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Home Type:</strong> {answers.homeType}
                     </Typography>
                   )}
                   {answers.homeUse && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Home Use:</strong> {answers.homeUse}
                     </Typography>
                   )}
                   {answers.homePrice && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Target Home Price:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -218,7 +218,7 @@ const PreApprovalSummaryPage: React.FC = () => {
                     </Typography>
                   )}
                   {answers.monthlyPayment && (
-                    <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       <strong>Target Monthly Payment:</strong> $
                       {(() => {
                         const num = parseInt(
@@ -247,7 +247,7 @@ const PreApprovalSummaryPage: React.FC = () => {
                 >
                   Next Steps:
                 </Typography>
-                <Box component="ul" sx={{ pl: 2, color: brandColors.neutral.dark, m: 0 }}>
+                <Box component="ul" sx={{ pl: 2, color: brandColors.neutral[800], m: 0 }}>
                   <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
                     Upload income documents
                   </Typography>

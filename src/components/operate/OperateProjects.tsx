@@ -279,7 +279,7 @@ const OperateProjects: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(${project.image})`,
+                  backgroundImage: `url(project.image)`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -301,7 +301,7 @@ const OperateProjects: React.FC = () => {
                   sx={{ position: 'absolute', bottom: 8, right: 8 }}
                   onClick={(e) => handleMenuClick(e, project.id)}
                 >
-                  <MoreVertIcon sx={{ color: 'white' }} />
+                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
                 </IconButton>
               </Box>
 
@@ -332,10 +332,10 @@ const OperateProjects: React.FC = () => {
                   />
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
-                      ${project.spent.toLocaleString()} spent
+                      project.spent.toLocaleString() spent
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ${project.budget.toLocaleString()} budget
+                      project.budget.toLocaleString() budget
                     </Typography>
                   </Box>
                 </Box>
@@ -362,7 +362,7 @@ const OperateProjects: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
-                        ${project.budget.toLocaleString()}
+                        project.budget.toLocaleString()
                       </Typography>
                     </Box>
                   </Grid>

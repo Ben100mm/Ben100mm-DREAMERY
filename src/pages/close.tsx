@@ -42,6 +42,8 @@ import {
   Receipt as ReceiptIcon
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
+import { brandColors } from "../theme";
+
 
 const ClosingCard = styled(Card)`
   height: 100%;
@@ -49,12 +51,12 @@ const ClosingCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
 `;
 
 const TimelineCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
+  background: linear-gradient(135deg, brandColors.primary 0%, #2d5a8b 100%);
   color: white;
   height: 100%;
 `;
@@ -557,7 +559,7 @@ const ClosePage: React.FC = () => {
       )}
 
       {/* Placeholder Closing Cards */}
-      <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
+      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700, mb: 3, mt: 4 }}>
         Featured Closing Transactions
       </Typography>
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr', lg: '1fr 1fr 1fr 1fr' }, gap: 3 }}>
@@ -584,12 +586,12 @@ const ClosePage: React.FC = () => {
                 }}
               />
               <CardContent>
-                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                <Typography variant="h6" component="h3" sx={{ color: brandColors.primary, fontWeight: 600, mb: 1 }}>
                   Closing #{index + 1}
                 </Typography>
                 
                 <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                  ${(425000 + index * 55000).toLocaleString()}
+                  (425000 + index * 55000).toLocaleString()
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -607,7 +609,7 @@ const ClosePage: React.FC = () => {
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                     <Typography variant="body2" color="text.secondary">
-                      ${(8000 + index * 500)} fees
+                      (8000 + index * 500) fees
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -621,8 +623,8 @@ const ClosePage: React.FC = () => {
                   variant="contained"
                   fullWidth
                   sx={{
-                    backgroundColor: '#1a365d',
-                    '&:hover': { backgroundColor: '#0d2340' }
+                    backgroundColor: brandColors.primary,
+                    '&:hover': { backgroundColor: brandColors.primaryDark }
                   }}
                 >
                   View Closing

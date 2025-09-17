@@ -1351,7 +1351,7 @@ const AnalyzePage: React.FC = () => {
                       borderRadius: "4px 4px 0 0",
                     },
                     "&:hover": {
-                      backgroundColor: brandColors.backgrounds?.secondary || "#f5f5f5",
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                       color: brandColors.primary,
                     },
                   },
@@ -1393,7 +1393,7 @@ const AnalyzePage: React.FC = () => {
                   sx={{
                     mt: 1,
                     p: 2,
-                    backgroundColor: brandColors.backgrounds?.secondary || "#f5f5f5",
+                    backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                     borderRadius: 1,
                     border: "1px solid",
                     borderColor: brandColors.borders?.secondary || "#ddd",
@@ -1525,7 +1525,7 @@ const AnalyzePage: React.FC = () => {
                         );
                         // Show success message
                         alert(
-                          `Preset "${name.trim()}" saved successfully!`,
+                          `Preset name.trim() saved successfully!`,
                         );
                       }
                     }}
@@ -1636,7 +1636,7 @@ const AnalyzePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: brandColors.neutral?.light || "#f5f5f5",
+                    backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
                     borderRadius: 1,
                     mb: 3,
                   }}
@@ -1849,7 +1849,7 @@ const AnalyzePage: React.FC = () => {
                           sx={{
                             backgroundColor:
                               row.multiplier === "100%"
-                                ? brandColors.neutral?.light || "#f5f5f5"
+                                ? brandColors.neutral?.light || brandColors.neutral[100]
                                 : "inherit",
                             fontWeight:
                               row.multiplier === "100%"
@@ -1931,7 +1931,7 @@ const AnalyzePage: React.FC = () => {
                                 color:
                                   data.variance > 0
                                     ? "#d32f2f"
-                                    : brandColors.accent?.success || "#4caf50",
+                                    : brandColors.accent?.success || brandColors.accent.success,
                                 fontWeight: "bold",
                               }}
                             >
@@ -1964,7 +1964,7 @@ const AnalyzePage: React.FC = () => {
                     sx={{
                       mt: 2,
                       p: 2,
-                      backgroundColor: brandColors.neutral?.light || "#f5f5f5",
+                      backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
                       borderRadius: 1,
                     }}
                   >
@@ -2224,13 +2224,13 @@ const AnalyzePage: React.FC = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      ${annualRevenue.toLocaleString()}
+                                      annualRevenue.toLocaleString()
                                     </Typography>
                                     <Typography
                                       variant="caption"
                                       sx={{ color: brandColors.neutral?.dark || "#333" }}
                                     >
-                                      ${monthlyRevenue.toLocaleString()}
+                                      monthlyRevenue.toLocaleString()
                                       /mo
                                     </Typography>
                                   </Box>
@@ -2247,7 +2247,7 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.neutral?.light || "#f5f5f5",
+                      backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
                       borderRadius: 1,
                     }}
                   >
@@ -2300,14 +2300,14 @@ const AnalyzePage: React.FC = () => {
                       mb: 3,
                     }}
                   >
-                    <Card sx={{ p: 2, backgroundColor: "#f5f5f5" }}>
+                    <Card sx={{ p: 2, backgroundColor: brandColors.neutral[100] }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#424242", mb: 1 }}
+                        sx={{ fontWeight: 600, color: brandColors.neutral[800], mb: 1 }}
                       >
                         Break-Even Occupancy
                       </Typography>
-                      <Typography variant="h6" sx={{ color: "#424242" }}>
+                      <Typography variant="h6" sx={{ color: brandColors.neutral[800] }}>
                         {calculateBreakEvenOccupancy().toFixed(1)}%
                       </Typography>
                       <Typography
@@ -2318,15 +2318,15 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                     </Card>
 
-                    <Card sx={{ p: 2, backgroundColor: "#e0e0e0" }}>
+                    <Card sx={{ p: 2, backgroundColor: brandColors.neutral[300] }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#616161", mb: 1 }}
+                        sx={{ fontWeight: 600, color: brandColors.neutral[700], mb: 1 }}
                       >
                         Break-Even ADR
                       </Typography>
-                      <Typography variant="h6" sx={{ color: "#616161" }}>
-                        ${calculateBreakEvenADR().toFixed(0)}
+                      <Typography variant="h6" sx={{ color: brandColors.neutral[700] }}>
+                        calculateBreakEvenADR().toFixed(0)
                       </Typography>
                       <Typography
                         variant="caption"
@@ -2339,11 +2339,11 @@ const AnalyzePage: React.FC = () => {
                     <Card sx={{ p: 2, backgroundColor: "#d5d5d5" }}>
                       <Typography
                         variant="subtitle2"
-                        sx={{ fontWeight: 600, color: "#757575", mb: 1 }}
+                        sx={{ fontWeight: 600, color: brandColors.neutral[600], mb: 1 }}
                       >
                         Margin of Safety
                       </Typography>
-                      <Typography variant="h6" sx={{ color: "#757575" }}>
+                      <Typography variant="h6" sx={{ color: brandColors.neutral[600] }}>
                         {calculateMarginOfSafety().toFixed(1)}%
                       </Typography>
                       <Typography
@@ -2392,16 +2392,16 @@ const AnalyzePage: React.FC = () => {
                               }}
                             >
                               <TableCell>{occupancy}%</TableCell>
-                              <TableCell>${dailyRevenue.toFixed(0)}</TableCell>
-                              <TableCell>${monthlyRevenue.toFixed(0)}</TableCell>
-                              <TableCell>${annualRevenue.toFixed(0)}</TableCell>
+                              <TableCell>dailyRevenue.toFixed(0)</TableCell>
+                              <TableCell>monthlyRevenue.toFixed(0)</TableCell>
+                              <TableCell>annualRevenue.toFixed(0)</TableCell>
                               <TableCell
                                 sx={{
-                                  color: profitLoss >= 0 ? "#388e3c" : "#d32f2f",
+                                  color: profitLoss >= 0 ? brandColors.accent.successDark : "#d32f2f",
                                   fontWeight: "bold",
                                 }}
                               >
-                                {profitLoss >= 0 ? "+" : ""}${profitLoss.toFixed(0)}
+                                {profitLoss >= 0 ? "+" : ""}profitLoss.toFixed(0)
                               </TableCell>
                             </TableRow>
                           );
@@ -2422,7 +2422,7 @@ const AnalyzePage: React.FC = () => {
                 p: 2,
                 backgroundColor: '#fff3e0',
                 borderRadius: 1,
-                border: '1px solid #ffb74d',
+                border: '1px solid brandColors.accent.warningLight',
                 fontSize: '0.875rem',
                 mb: 2,
               }}
@@ -2579,7 +2579,7 @@ const AnalyzePage: React.FC = () => {
                     p: 2,
                     backgroundColor: '#fff3e0',
                     borderRadius: 1,
-                    border: '1px solid #ffb74d',
+                    border: '1px solid brandColors.accent.warningLight',
                   }}
                 >
                   <Typography
@@ -2840,8 +2840,8 @@ const AnalyzePage: React.FC = () => {
                       variant="contained"
                       sx={{
                         backgroundColor: brandColors.primary,
-                        color: 'white',
-                        '&:hover': { backgroundColor: '#1976d2' },
+                        color: brandColors.text.inverse,
+                        '&:hover': { backgroundColor: brandColors.accent.infoDark },
                       }}
                     >
                       Quick Export Results
@@ -3012,7 +3012,7 @@ const AnalyzePage: React.FC = () => {
                         variant="contained"
                         sx={{
                           backgroundColor: '#10b981',
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           '&:hover': { backgroundColor: '#059669' },
                         }}
                       >
@@ -3260,13 +3260,13 @@ const AnalyzePage: React.FC = () => {
                       variant="contained"
                       sx={{
                         backgroundColor: brandColors.primary,
-                        color: 'white',
+                        color: brandColors.text.inverse,
                         borderRadius: 2,
                         textTransform: 'none',
                         fontWeight: 500,
                         px: 3,
                         py: 1.5,
-                        '&:hover': { backgroundColor: '#1976d2' },
+                        '&:hover': { backgroundColor: brandColors.accent.infoDark },
                       }}
                     >
                       Recalculate Exit Strategies
@@ -3615,12 +3615,9 @@ const AnalyzePage: React.FC = () => {
                         <Tab 
                           label="Rate & Term Refinance" 
                           value="rate-term"
-                          sx={{
-                            backgroundColor: brandColors.primary,
-                            color: 'white',
-                            borderRadius: '8px 8px 0 0',
-                            '&.Mui-selected': { backgroundColor: brandColors.primary },
-                          }}
+                          sx={{ backgroundColor: brandColors.primary,
+                            color: brandColors.text.inverse,
+                            borderRadius: '8px 8px 0 0', }}
                         />
                         <Tab 
                           label="Cash-Out Refinance" 
@@ -4014,13 +4011,13 @@ const AnalyzePage: React.FC = () => {
                       variant="contained"
                       sx={{
                         backgroundColor: brandColors.primary,
-                        color: 'white',
+                        color: brandColors.text.inverse,
                         borderRadius: 2,
                         textTransform: 'none',
                         fontWeight: 500,
                         px: 3,
                         py: 1.5,
-                        '&:hover': { backgroundColor: '#1976d2' },
+                        '&:hover': { backgroundColor: brandColors.accent.infoDark },
                       }}
                     >
                       Recalculate Risk Analysis
@@ -4498,8 +4495,8 @@ const AnalyzePage: React.FC = () => {
                         width: 24,
                         height: 24,
                         borderRadius: '50%',
-                        backgroundColor: '#1976d2',
-                        color: 'white',
+                        backgroundColor: brandColors.accent.infoDark,
+                        color: brandColors.text.inverse,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -4583,7 +4580,7 @@ const AnalyzePage: React.FC = () => {
                 <Box
                   sx={{
                     backgroundColor: brandColors.primary,
-                    color: 'white',
+                    color: brandColors.text.inverse,
                     borderRadius: 2,
                     py: 1.5,
                     px: 2,
@@ -4702,7 +4699,7 @@ const AnalyzePage: React.FC = () => {
                   fullWidth
                   sx={{
                     backgroundColor: brandColors.primary,
-                    color: 'white',
+                    color: brandColors.text.inverse,
                     borderRadius: 2,
                     textTransform: 'none',
                     fontWeight: 500,
@@ -4732,14 +4729,14 @@ const AnalyzePage: React.FC = () => {
             overflow: 'auto',
           }}
         >
-          <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: 'white', position: 'relative' }}>
+          <Paper elevation={0} sx={{ mb: 4, p: 3, backgroundColor: brandColors.primary, borderRadius: '16px 16px 0 0', color: brandColors.text.inverse, position: 'relative' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              {activeSection === 'dashboard' && <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />}
-              {activeSection === 'pro-forma' && <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />}
-              {activeSection === 'risk-assessment' && <SecurityIcon sx={{ fontSize: 28, color: 'white' }} />}
-              {activeSection === 'advanced-analysis' && <TrendingUpIcon sx={{ fontSize: 28, color: 'white' }} />}
-              {activeSection === 'advanced-modeling' && <ModelTrainingIcon sx={{ fontSize: 28, color: 'white' }} />}
-              <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+              {activeSection === 'dashboard' && <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />}
+              {activeSection === 'pro-forma' && <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />}
+              {activeSection === 'risk-assessment' && <SecurityIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />}
+              {activeSection === 'advanced-analysis' && <TrendingUpIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />}
+              {activeSection === 'advanced-modeling' && <ModelTrainingIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />}
+              <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                 {sections.find(s => s.id === activeSection)?.label}
               </Typography>
             </Box>
@@ -4767,7 +4764,7 @@ const AnalyzePage: React.FC = () => {
                   onClick={handleGuidedTour}
                   sx={{
                     borderColor: 'white',
-                    color: 'white',
+                    color: brandColors.text.inverse,
                     py: 0.5,
                     px: 1.5,
                     fontSize: '0.75rem',
@@ -4775,7 +4772,7 @@ const AnalyzePage: React.FC = () => {
                     '&:hover': { 
                       borderColor: 'white', 
                       backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white'
+                      color: brandColors.text.inverse
                     },
                   }}
                 >

@@ -97,12 +97,12 @@ const ManageDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#4caf50', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.success, mr: 2 }}>
                   <MoneyIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${stats.monthlyRevenue.toLocaleString()}
+                    stats.monthlyRevenue.toLocaleString()
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Monthly Revenue
@@ -110,7 +110,7 @@ const ManageDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TrendingUpIcon sx={{ color: '#4caf50', mr: 0.5, fontSize: 16 }} />
+                <TrendingUpIcon sx={{ color: brandColors.accent.success, mr: 0.5, fontSize: 16 }} />
                 <Typography variant="caption" color="success.main">
                   +12% from last month
                 </Typography>
@@ -123,7 +123,7 @@ const ManageDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#ff9800', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.warning, mr: 2 }}>
                   <TaskIcon />
                 </Avatar>
                 <Box>
@@ -146,7 +146,7 @@ const ManageDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#2196f3', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.info, mr: 2 }}>
                   <CalendarIcon />
                 </Avatar>
                 <Box>
@@ -180,9 +180,9 @@ const ManageDashboard: React.FC = () => {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar sx={{ 
-                          bgcolor: activity.type === 'rent_payment' ? '#4caf50' : 
-                                  activity.type === 'maintenance' ? '#ff9800' :
-                                  activity.type === 'renewal' ? '#2196f3' : '#9c27b0'
+                          bgcolor: activity.type === 'rent_payment' ? brandColors.accent.success : 
+                                  activity.type === 'maintenance' ? brandColors.accent.warning :
+                                  activity.type === 'renewal' ? brandColors.accent.info : '#9c27b0'
                         }}>
                           {activity.type === 'rent_payment' && <MoneyIcon />}
                           {activity.type === 'maintenance' && <WarningIcon />}

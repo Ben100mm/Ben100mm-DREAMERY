@@ -32,6 +32,7 @@ import { brandColors } from "../theme";
 import TemplatesComponent from '../components/TemplatesComponent';
 import { RoleContext } from "../context/RoleContext";
 import { AGENT_ROLES } from "../data";
+import BrokerageMessages from "../components/brokerage/BrokerageMessages";
 
 // Lazy load icons to reduce initial bundle size
 const LazyArrowBackIcon = React.lazy(() => import('@mui/icons-material/ArrowBack'));
@@ -59,6 +60,7 @@ const LazySchoolIcon = React.lazy(() => import('@mui/icons-material/School'));
 const LazyMoreVertIcon = React.lazy(() => import('@mui/icons-material/MoreVert'));
 const LazySendIcon = React.lazy(() => import('@mui/icons-material/Send'));
 const LazyArrowForwardIcon = React.lazy(() => import('@mui/icons-material/ArrowForward'));
+const LazyChatIcon = React.lazy(() => import('@mui/icons-material/Chat'));
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -213,6 +215,7 @@ const CloseBrokeragesPage = () => {
 
   const tabs = [
     { value: 'dashboard', label: 'Dashboard', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyDashboardIcon /></React.Suspense> },
+    { value: 'messages', label: 'Messages', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyChatIcon /></React.Suspense> },
     { value: 'agents', label: 'Agent Management', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyPeopleIcon /></React.Suspense> },
     { value: 'transactions', label: 'Transactions', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyBusinessIcon /></React.Suspense> },
     { value: 'listings', label: 'Listings', icon: <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}><LazyBusinessIcon /></React.Suspense> },
@@ -279,7 +282,7 @@ const CloseBrokeragesPage = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery Closing Hub - Brokerages
           </Typography>
 
@@ -341,7 +344,7 @@ const CloseBrokeragesPage = () => {
               fullWidth
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 py: 2,
                 fontWeight: 600,
                 fontSize: '1.1rem',
@@ -413,14 +416,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyBusinessIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Brokerage Dashboard
                 </Typography>
               </Box>
@@ -472,7 +475,7 @@ const CloseBrokeragesPage = () => {
                   <LazyTrendingUpIcon />
                 </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
-                  ${(mockBrokerageData.monthlyVolume / 1000000).toFixed(1)}M
+                  (mockBrokerageData.monthlyVolume / 1000000).toFixed(1)M
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Monthly Volume
@@ -508,7 +511,7 @@ const CloseBrokeragesPage = () => {
                     Top Agent - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </Typography>
                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                    ${(mockBrokerageData.topAgentVolume / 1000000).toFixed(1)}M
+                    (mockBrokerageData.topAgentVolume / 1000000).toFixed(1)M
                   </Typography>
                 </Box>
               </Box>
@@ -558,7 +561,7 @@ const CloseBrokeragesPage = () => {
                                   width: 60, 
                                   height: 60, 
                                   borderRadius: '50%', 
-                                  border: '4px solid #e0e0e0',
+                                  border: '4px solid brandColors.neutral[300]',
                                   position: 'relative',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -576,7 +579,7 @@ const CloseBrokeragesPage = () => {
                                   height: '100%',
                                   borderRadius: '50%',
                                   border: '4px solid transparent',
-                                  borderTop: '4px solid #4caf50',
+                                  borderTop: '4px solid brandColors.accent.success',
                                   transform: 'rotate(90deg)',
                                   clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)'
                                 }} />
@@ -590,7 +593,7 @@ const CloseBrokeragesPage = () => {
                   width: 60, 
                   height: 60, 
                   borderRadius: '50%', 
-                  border: '4px solid #e0e0e0',
+                  border: '4px solid brandColors.neutral[300]',
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
@@ -608,7 +611,7 @@ const CloseBrokeragesPage = () => {
                   height: '100%',
                   borderRadius: '50%',
                   border: '4px solid transparent',
-                  borderTop: '4px solid #4caf50',
+                  borderTop: '4px solid brandColors.accent.success',
                   transform: 'rotate(36deg)',
                   clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)'
                 }} />
@@ -647,7 +650,7 @@ const CloseBrokeragesPage = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <Typography variant="caption" sx={{ color: 'white', transform: 'rotate(-90deg)' }}>
+              <Typography variant="caption" sx={{ color: brandColors.text.inverse, transform: 'rotate(-90deg)' }}>
                 Buyer
               </Typography>
             </Box>
@@ -660,7 +663,7 @@ const CloseBrokeragesPage = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <Typography variant="caption" sx={{ color: 'white', transform: 'rotate(-90deg)' }}>
+              <Typography variant="caption" sx={{ color: brandColors.text.inverse, transform: 'rotate(-90deg)' }}>
                 Seller
               </Typography>
             </Box>
@@ -702,7 +705,7 @@ const CloseBrokeragesPage = () => {
               width: 80, 
               height: 80, 
               borderRadius: '50%',
-              background: 'conic-gradient(#8b0000 0deg 180deg, #1976d2 180deg 270deg, #9c27b0 270deg 300deg, #03a9f4 300deg 360deg)',
+              background: 'conic-gradient(#8b0000 0deg 180deg, brandColors.accent.infoDark 180deg 270deg, #9c27b0 270deg 300deg, #03a9f4 300deg 360deg)',
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
@@ -721,7 +724,7 @@ const CloseBrokeragesPage = () => {
                 <Typography variant="caption">Lead</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Box sx={{ width: 12, height: 12, backgroundColor: '#1976d2', borderRadius: 2 }} />
+                <Box sx={{ width: 12, height: 12, backgroundColor: brandColors.accent.infoDark, borderRadius: 2 }} />
                 <Typography variant="caption">Active</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -754,7 +757,7 @@ const CloseBrokeragesPage = () => {
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: brandColors.neutral[100],
             borderRadius: 2
           }}>
             <Typography variant="body2" color="text.secondary">
@@ -776,7 +779,7 @@ const CloseBrokeragesPage = () => {
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: brandColors.neutral[100],
             borderRadius: 2
           }}>
             <Typography variant="body2" color="text.secondary">
@@ -831,7 +834,7 @@ const CloseBrokeragesPage = () => {
                 Revenue:
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
-                ${agent.revenue.toLocaleString()}
+                agent.revenue.toLocaleString()
               </Typography>
             </Box>
           </Paper>
@@ -862,15 +865,15 @@ const CloseBrokeragesPage = () => {
           <Box key={index} sx={{ 
             display: 'flex', alignItems: 'center', 
             py: 2,
-            borderBottom: index < 7 ? '1px solid #f0f0f0' : 'none'
+            borderBottom: index < 7 ? '1px solid brandColors.neutral[100]' : 'none'
           }}>
             <Box sx={{ 
               width: 8, 
               height: 8, 
               borderRadius: '50%', 
-              backgroundColor: activity.status === 'completed' ? '#4caf50' : 
-                               activity.status === 'pending' ? '#ff9800' : 
-                               activity.status === 'scheduled' ? '#2196f3' : '#9c27b0',
+              backgroundColor: activity.status === 'completed' ? brandColors.accent.success : 
+                               activity.status === 'pending' ? brandColors.accent.warning : 
+                               activity.status === 'scheduled' ? brandColors.accent.info : '#9c27b0',
               mr: 2 
             }} />
             <Box sx={{ flexGrow: 1 }}>
@@ -909,14 +912,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyPeopleIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Agent Management
                 </Typography>
               </Box>
@@ -963,7 +966,7 @@ const CloseBrokeragesPage = () => {
                               {agent.performance}%
                             </Typography>
                           </Box>
-                          <Box sx={{ bgcolor: '#e0e0e0', borderRadius: 1, height: 8, mb: 2 }}>
+                          <Box sx={{ bgcolor: brandColors.neutral[300], borderRadius: 1, height: 8, mb: 2 }}>
                             <Box
                               sx={{
                                 width: `${agent.performance}%`,
@@ -989,7 +992,7 @@ const CloseBrokeragesPage = () => {
                             Monthly Revenue:
                           </Typography>
                           <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
-                            ${agent.revenue.toLocaleString()}
+                            agent.revenue.toLocaleString()
                           </Typography>
                         </Box>
 
@@ -1087,14 +1090,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyBusinessIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Listings
                 </Typography>
               </Box>
@@ -1165,7 +1168,7 @@ const CloseBrokeragesPage = () => {
                       ].map((listing) => (
                         <Box key={listing.id} sx={{ 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
+                          borderBottom: '1px solid brandColors.neutral[300]',
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1179,7 +1182,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                ${listing.price.toLocaleString()}
+                                listing.price.toLocaleString()
                               </Typography>
                               <Chip 
                                 label={listing.status} 
@@ -1255,7 +1258,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  ${listing.price.toLocaleString()}
+                                  listing.price.toLocaleString()
                                 </Typography>
                                 <Box>
                                   <Button size="small" variant="outlined" sx={{ mr: 1 }}>
@@ -1310,7 +1313,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  ${listing.price.toLocaleString()}
+                                  listing.price.toLocaleString()
                                 </Typography>
                                 <Chip 
                                   label={listing.priority} 
@@ -1386,10 +1389,10 @@ const CloseBrokeragesPage = () => {
                               <Box sx={{ textAlign: 'right' }}>
                                 <Box sx={{ mb: 1 }}>
                                   <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                    ${listing.originalPrice.toLocaleString()}
+                                    listing.originalPrice.toLocaleString()
                                   </Typography>
                                   <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                    ${listing.finalPrice.toLocaleString()}
+                                    listing.finalPrice.toLocaleString()
                                   </Typography>
                                 </Box>
                                 <Button size="small" variant="outlined">
@@ -1501,14 +1504,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Offers
                 </Typography>
               </Box>
@@ -1579,7 +1582,7 @@ const CloseBrokeragesPage = () => {
                       ].map((offer) => (
                         <Box key={offer.id} sx={{ 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
+                          borderBottom: '1px solid brandColors.neutral[300]',
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1593,7 +1596,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                ${offer.price.toLocaleString()}
+                                offer.price.toLocaleString()
                               </Typography>
                               <Chip 
                                 label={offer.status} 
@@ -1665,7 +1668,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  ${offer.price.toLocaleString()}
+                                  offer.price.toLocaleString()
                                 </Typography>
                                 <Chip 
                                   label={offer.status} 
@@ -1733,7 +1736,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  ${offer.price.toLocaleString()}
+                                  offer.price.toLocaleString()
                                 </Typography>
                                 <Chip 
                                   label={offer.priority} 
@@ -1799,10 +1802,10 @@ const CloseBrokeragesPage = () => {
                               <Box sx={{ textAlign: 'right' }}>
                                 <Box sx={{ mb: 1 }}>
                                   <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                    ${offer.originalPrice.toLocaleString()}
+                                    offer.originalPrice.toLocaleString()
                                   </Typography>
                                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                    ${offer.currentPrice.toLocaleString()}
+                                    offer.currentPrice.toLocaleString()
                                   </Typography>
                                 </Box>
                                 <Button size="small" variant="contained">
@@ -1871,10 +1874,10 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ mb: 2 }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                  ${offer.price.toLocaleString()}
+                                  offer.price.toLocaleString()
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Down Payment: ${offer.downPayment.toLocaleString()}
+                                  Down Payment: offer.downPayment.toLocaleString()
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 2 }}>
@@ -1924,14 +1927,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Documents
                 </Typography>
               </Box>
@@ -2002,7 +2005,7 @@ const CloseBrokeragesPage = () => {
                       ].map((document) => (
                         <Box key={document.id} sx={{ 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
+                          borderBottom: '1px solid brandColors.neutral[300]',
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2222,7 +2225,7 @@ const CloseBrokeragesPage = () => {
                       </Box>
                     </Box>
                     
-                    <Box sx={{ border: '2px dashed #ccc', borderRadius: 2, p: 4, textAlign: 'center', mb: 3 }}>
+                    <Box sx={{ border: '2px dashed brandColors.neutral[400]', borderRadius: 2, p: 4, textAlign: 'center', mb: 3 }}>
                       <Typography variant="h6" sx={{ mb: 2 }}>
                         Drag and drop documents here, or click to browse
                       </Typography>
@@ -2331,14 +2334,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <React.Suspense fallback={<Box sx={{ fontSize: 28, color: 'white' }} />}>
-                  <LazyDescriptionIcon sx={{ fontSize: 28, color: 'white' }} />
+                <React.Suspense fallback={<Box sx={{ fontSize: 28, color: brandColors.text.inverse }} />}>
+                  <LazyDescriptionIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Working Documents
                 </Typography>
               </Box>
@@ -2366,14 +2369,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Templates and Envelopes
                 </Typography>
               </Box>
@@ -2585,14 +2588,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyArchiveIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Access Archives
                 </Typography>
               </Box>
@@ -2620,14 +2623,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyBusinessIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Transactions
                 </Typography>
               </Box>
@@ -2698,7 +2701,7 @@ const CloseBrokeragesPage = () => {
                       ].map((transaction) => (
                         <Box key={transaction.id} sx={{ 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
+                          borderBottom: '1px solid brandColors.neutral[300]',
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2712,7 +2715,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                ${transaction.value.toLocaleString()}
+                                transaction.value.toLocaleString()
                               </Typography>
                               <Chip 
                                 label={transaction.status} 
@@ -2771,7 +2774,7 @@ const CloseBrokeragesPage = () => {
                                     Agent: {transaction.agent}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
-                                    Value: ${transaction.value.toLocaleString()}
+                                    Value: transaction.value.toLocaleString()
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
                                     Days Left: {transaction.daysLeft}
@@ -2906,13 +2909,13 @@ const CloseBrokeragesPage = () => {
                                     Closed: {transaction.closedDate}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
-                                    Value: ${transaction.value.toLocaleString()}
+                                    Value: transaction.value.toLocaleString()
                                   </Typography>
                                 </Box>
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h6" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                                  ${transaction.commission.toLocaleString()}
+                                  transaction.commission.toLocaleString()
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                   Commission
@@ -3018,14 +3021,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Analytics
                 </Typography>
               </Box>
@@ -3051,14 +3054,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazySettingsIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Settings
                 </Typography>
               </Box>
@@ -3082,14 +3085,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyIntegrationIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Integrations
                 </Typography>
               </Box>
@@ -3114,14 +3117,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Payments & Finance
                 </Typography>
               </Box>
@@ -3219,14 +3222,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssessmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Reports & Analytics
                 </Typography>
               </Box>
@@ -3492,14 +3495,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyAssignmentIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Tasks & Reminders
                 </Typography>
               </Box>
@@ -3875,14 +3878,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCheckCircleIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Checklists
                 </Typography>
               </Box>
@@ -4265,14 +4268,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazySecurityIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Compliance
                 </Typography>
               </Box>
@@ -4732,14 +4735,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazySchoolIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Training & Resources
                 </Typography>
               </Box>
@@ -5579,6 +5582,10 @@ const CloseBrokeragesPage = () => {
           </>
         )}
 
+        {state.activeTab === 'messages' && (
+          <BrokerageMessages />
+        )}
+
         {state.activeTab === 'support' && (
           <>
             {/* Header */}
@@ -5589,14 +5596,14 @@ const CloseBrokeragesPage = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazySupportIcon />
                 </React.Suspense>
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Support
                 </Typography>
               </Box>

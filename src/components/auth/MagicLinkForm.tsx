@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import styled from 'styled-components';
 import EmailIcon from '@mui/icons-material/Email';
+import { brandColors } from "../../theme";
+
 
 const InfoBox = styled(Box)`
   background-color: rgba(26, 54, 93, 0.05);
@@ -86,7 +88,7 @@ const MagicLinkForm: React.FC<MagicLinkFormProps> = ({ onSuccess }) => {
   if (emailSent) {
     return (
       <Box sx={{ textAlign: 'center', py: 2 }}>
-        <EmailIcon sx={{ fontSize: 40, color: '#1a365d', mb: 1.5 }} />
+        <EmailIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1.5 }} />
         <Typography variant="h6" gutterBottom>
           Check your email
         </Typography>
@@ -110,7 +112,7 @@ const MagicLinkForm: React.FC<MagicLinkFormProps> = ({ onSuccess }) => {
   return (
     <Box>
       <InfoBox>
-        <EmailIcon sx={{ color: '#1a365d' }} />
+        <EmailIcon sx={{ color: brandColors.primary }} />
         <Typography variant="body2" color="text.secondary">
           We'll email you a magic link for password-free sign in. This link will expire in 24 hours.
         </Typography>
@@ -165,9 +167,9 @@ const MagicLinkForm: React.FC<MagicLinkFormProps> = ({ onSuccess }) => {
             fontSize: '1rem',
             fontWeight: 600,
             borderRadius: '8px',
-            backgroundColor: '#1a365d',
+            backgroundColor: brandColors.primary,
             '&:hover': {
-              backgroundColor: '#0d2340',
+              backgroundColor: brandColors.primaryDark,
             },
           }}
         >

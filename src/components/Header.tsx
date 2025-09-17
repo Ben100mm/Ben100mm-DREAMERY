@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
-import { brandColors } from "../theme";
+import { brandColors, colorUtils } from "../theme";
 import { Person, Notifications, Close } from "@mui/icons-material";
 import { useTheme } from "@mui/material";
 import { Badge, IconButton, Tooltip } from "@mui/material";
@@ -18,6 +18,7 @@ import {
   Notifications as NotificationsIcon,
   ArrowBack as ArrowBackIcon,
   Help as SupportIcon,
+  Chat as ChatIcon,
 } from "@mui/icons-material";
 
 const Header: React.FC = () => {
@@ -80,14 +81,14 @@ const Header: React.FC = () => {
             alignItems: "center",
             gap: 1,
             cursor: "pointer",
-            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            backgroundColor: brandColors.surfaces.glass,
             padding: "8px 20px",
             borderRadius: "6px",
             transition: "all 0.2s ease",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            boxShadow: colorUtils.shadow('0, 0, 0', 0.1, 4, 2),
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.6)",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+              backgroundColor: brandColors.surfaces.glassHover,
+              boxShadow: colorUtils.shadow('0, 0, 0', 0.15, 8, 4),
             },
           }}
           onClick={handleUserMenuClick}
@@ -189,10 +190,18 @@ const Header: React.FC = () => {
 };
 
 // New AppBar component for pages
-export const PageAppBar: React.FC<{ title: string; showBackButton?: boolean; onBackClick?: () => void }> = ({ 
+export const PageAppBar: React.FC<{ 
+  title: string; 
+  showBackButton?: boolean; 
+  onBackClick?: () => void;
+  showMessages?: boolean;
+  onToggleMessages?: () => void;
+}> = ({ 
   title, 
   showBackButton = true, 
-  onBackClick 
+  onBackClick,
+  showMessages = false,
+  onToggleMessages
 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -230,11 +239,25 @@ export const PageAppBar: React.FC<{ title: string; showBackButton?: boolean; onB
       }}
     >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
           {title}
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {onToggleMessages && (
+            <Tooltip title={showMessages ? "Hide Messages" : "Show Messages"}>
+              <IconButton
+                color="inherit"
+                onClick={onToggleMessages}
+                sx={{ 
+                  backgroundColor: showMessages ? 'rgba(255, 255, 255, 0.2)' : 'transparent' 
+                }}
+              >
+                <ChatIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
           <Tooltip title="Notifications">
             <IconButton
               color="inherit"

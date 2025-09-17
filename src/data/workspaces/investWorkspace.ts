@@ -6,13 +6,15 @@ import {
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
+import { brandColors } from "../../../theme";
+
 
 export const investWorkspace: WorkspaceConfig = {
   id: 'invest',
   name: 'Invest',
   description: 'Investment opportunities and portfolio management',
   icon: <CrowdfundingIcon />,
-  color: '#1a365d',
+  color: brandColors.primary,
   defaultTab: 'crowdfunding',
   sidebarItems: [
     { 

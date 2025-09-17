@@ -27,37 +27,37 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
         return {
           title: 'Crowdfunded Deals',
           subtitle: 'Access to vetted real estate investment opportunities through crowdfunding platforms',
-          icon: <CrowdfundingIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CrowdfundingIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'jointventure':
         return {
           title: 'Joint Venture',
           subtitle: 'Partner with experienced developers and investors on larger projects',
-          icon: <JointVentureIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <JointVentureIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'fractional':
         return {
           title: 'Fractional Ownership',
           subtitle: 'Own a portion of premium properties with lower capital requirements',
-          icon: <FractionalIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <FractionalIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'privatemarket':
         return {
           title: 'Private Market Investment Listings',
           subtitle: 'Exclusive access to off-market investment opportunities and private placements',
-          icon: <PrivateMarketIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <PrivateMarketIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'messages':
         return {
           title: 'Investment Communications',
           subtitle: 'Manage communications with investment opportunities and portfolio partners',
-          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
           title: 'Investment Opportunities',
           subtitle: 'Connect to real estate investment opportunities',
-          icon: <CrowdfundingIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CrowdfundingIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
     }
   };
@@ -115,12 +115,12 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
           p: 3, 
           backgroundColor: brandColors.primary,
           borderRadius: '16px 16px 0 0',
-          color: 'white'
+          color: brandColors.text.inverse
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           {banner.icon}
-          <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
             {banner.title}
           </Typography>
         </Box>

@@ -40,10 +40,6 @@ const PartnerPage = lazy(() => import('./pages/partner'));
 const PartnerProfileCompletionPage = lazy(() => import('./pages/PartnerProfileCompletionPage'));
 const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage'));
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
-const ManagePage = lazy(() => import('./pages/manage'));
-const InvestPage = lazy(() => import('./pages/InvestPage'));
-const FundPage = lazy(() => import('./pages/FundPage'));
-const OperatePage = lazy(() => import('./pages/OperatePage'));
 const LearnPage = lazy(() => import('./pages/LearnPage'));
 const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
 
@@ -118,10 +114,10 @@ const AppContent = () => {
       <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
       <Route path="/close/businesses" element={<CloseBusinessesPage />} />
       <Route path="/analyze" element={<AnalysisProvider><AnalyzePage /></AnalysisProvider>} />
-      <Route path="/manage" element={<ManagePage />} />
-      <Route path="/invest" element={<InvestPage />} />
-      <Route path="/fund" element={<FundPage />} />
-      <Route path="/operate" element={<OperatePage />} />
+      <Route path="/manage" element={<Navigate to="/close/buyer?workspace=manage" replace />} />
+      <Route path="/invest" element={<Navigate to="/close/buyer?workspace=invest" replace />} />
+      <Route path="/fund" element={<Navigate to="/close/buyer?workspace=fund" replace />} />
+      <Route path="/operate" element={<Navigate to="/close/buyer?workspace=operate" replace />} />
       <Route path="/learn" element={<LearnPage />} />
       <Route path="/advertise" element={<AdvertisePage />} />
       <Route path="/partner" element={<PartnerPage />} />

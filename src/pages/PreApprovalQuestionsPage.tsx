@@ -54,8 +54,8 @@ const QuestionCard = styled(Card)`
 `;
 
 const OptionCard = styled(Box)<{ $selected?: boolean }>`
-  border: 2px solid ${(props) => (props.$selected ? brandColors.primary : brandColors.borders.secondary)};
-  background-color: ${(props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.primary)};
+  border: 2px solid (props) => (props.$selected ? brandColors.primary : brandColors.borders.secondary);
+  background-color: (props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.primary);
   border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
@@ -64,7 +64,7 @@ const OptionCard = styled(Box)<{ $selected?: boolean }>`
 
   &:hover {
     border-color: brandColors.primary;
-    background-color: ${(props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.secondary)};
+    background-color: (props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.secondary);
   }
 `;
 
@@ -165,7 +165,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back
           </Button>
@@ -201,7 +201,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
 
               {/* Description */}
               {currentQuestion.description && (
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
                   {currentQuestion.description}
                 </Typography>
               )}
@@ -217,7 +217,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <SearchIcon sx={{ color: brandColors.neutral.dark }} />
+                        <SearchIcon sx={{ color: brandColors.neutral[800] }} />
                       </InputAdornment>
                     ),
                   }}
@@ -233,10 +233,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
                   {currentQuestion.options?.map((option, index) => (
                     <OptionCard
                       key={index}
-                      $selected={
-                        answers[currentQuestion.id as keyof typeof answers] ===
-                        option
-                      }
+                      $
                       onClick={() =>
                         handleOptionSelect(currentQuestion.id, option)
                       }

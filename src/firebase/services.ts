@@ -72,11 +72,11 @@ export const saveDealToCloud = async (dealData: any, dealId?: string) => {
     }
 
     const userId = user.uid;
-    const dealsRef = ref(database, `users/${userId}/deals`);
+    const dealsRef = ref(database, `users/userId/deals`);
 
     if (dealId) {
       // Update existing deal
-      await update(ref(database, `users/${userId}/deals/${dealId}`), {
+      await update(ref(database, `users/userId/deals/${dealId}`), {
         ...dealData,
         updatedAt: new Date().toISOString(),
         updatedBy: user.email,
@@ -107,7 +107,7 @@ export const loadDealsFromCloud = async () => {
     }
 
     const userId = user.uid;
-    const dealsRef = ref(database, `users/${userId}/deals`);
+    const dealsRef = ref(database, `users/userId/deals`);
     const snapshot = await get(dealsRef);
 
     if (snapshot.exists()) {
@@ -132,7 +132,7 @@ export const deleteDealFromCloud = async (dealId: string) => {
     }
 
     const userId = user.uid;
-    const dealRef = ref(database, `users/${userId}/deals/${dealId}`);
+    const dealRef = ref(database, `users/userId/deals/${dealId}`);
     await remove(dealRef);
 
     return { success: true };
@@ -149,7 +149,7 @@ export const searchDealsByPropertyType = async (propertyType: string) => {
     }
 
     const userId = user.uid;
-    const dealsRef = ref(database, `users/${userId}/deals`);
+    const dealsRef = ref(database, `users/userId/deals`);
     const dealsQuery = query(
       dealsRef,
       orderByChild("propertyType"),

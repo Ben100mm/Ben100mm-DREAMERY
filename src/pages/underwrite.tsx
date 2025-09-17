@@ -43,6 +43,8 @@ import {
   LocationOn
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
+import { brandColors } from "../theme";
+
 
 const RiskCard = styled(Card)`
   height: 100%;
@@ -50,12 +52,12 @@ const RiskCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
 `;
 
 const ApprovalCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
+  background: linear-gradient(135deg, brandColors.primary 0%, #2d5a8b 100%);
   color: white;
   height: 100%;
 `;
@@ -443,7 +445,7 @@ const UnderwritePage: React.FC = () => {
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
               <Card>
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: '#4caf50' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success }}>
                     12
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -453,7 +455,7 @@ const UnderwritePage: React.FC = () => {
               </Card>
               <Card>
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: '#4caf50' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success }}>
                     3
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -463,7 +465,7 @@ const UnderwritePage: React.FC = () => {
               </Card>
               <Card>
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: '#f44336' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.error }}>
                     1
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -475,7 +477,7 @@ const UnderwritePage: React.FC = () => {
           </Box>
 
           {/* Placeholder Underwriting Cards */}
-          <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
+          <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700, mb: 3, mt: 4 }}>
             Featured Underwriting Applications
           </Typography>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
@@ -496,12 +498,12 @@ const UnderwritePage: React.FC = () => {
                     sx={{ objectFit: 'cover' }}
                   />
                   <CardContent>
-                    <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                    <Typography variant="h6" component="h3" sx={{ color: brandColors.primary, fontWeight: 600, mb: 1 }}>
                       Application #{index + 1}
                     </Typography>
                     
                     <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                      ${(350000 + index * 45000).toLocaleString()}
+                      (350000 + index * 45000).toLocaleString()
                     </Typography>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -533,8 +535,8 @@ const UnderwritePage: React.FC = () => {
                       variant="contained"
                       fullWidth
                       sx={{
-                        backgroundColor: '#1a365d',
-                        '&:hover': { backgroundColor: '#0d2340' }
+                        backgroundColor: brandColors.primary,
+                        '&:hover': { backgroundColor: brandColors.primaryDark }
                       }}
                     >
                       Review Application

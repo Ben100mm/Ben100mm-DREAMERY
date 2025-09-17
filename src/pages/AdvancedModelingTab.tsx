@@ -1175,7 +1175,7 @@ const AdvancedModelingTab: React.FC = () => {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: brandColors.neutral.dark,
+                      color: brandColors.neutral[800],
                       mb: 1,
                       fontSize: { xs: "0.875rem", sm: "1rem" },
                     }}
@@ -1310,7 +1310,7 @@ const AdvancedModelingTab: React.FC = () => {
                    DESCRIPTION TEXT
                    ============================================================================ */}
 
-                <Typography variant="body1" sx={{ mb: 4, color: brandColors.neutral.dark }}>
+                <Typography variant="body1" sx={{ mb: 4, color: brandColors.neutral[800] }}>
                   Comprehensive financial analysis tools with seasonal
                   adjustments, market factors, exit strategies, tax
                   implications, refinance scenarios, sensitivity analysis,
@@ -1330,7 +1330,7 @@ const AdvancedModelingTab: React.FC = () => {
                   >
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: 600, color: brandColors.neutral.dark, mb: 2 }}
+                      sx={{ fontWeight: 600, color: brandColors.neutral[800], mb: 2 }}
                     >
                       Financing Details & Balloon Payment Integration
                     </Typography>
@@ -1349,20 +1349,20 @@ const AdvancedModelingTab: React.FC = () => {
                           <Box>
                             <Typography
                               variant="subtitle2"
-                              sx={{ fontWeight: 600, color: brandColors.neutral.dark }}
+                              sx={{ fontWeight: 600, color: brandColors.neutral[800] }}
                             >
                               {financing.type}
                             </Typography>
                             <Typography
                               variant="body2"
-                              sx={{ color: brandColors.neutral.dark }}
+                              sx={{ color: brandColors.neutral[800] }}
                             >
                               <strong>Monthly Payment:</strong> $
                               {financing.monthlyPayment.toLocaleString()}
                             </Typography>
                             <Typography
                               variant="body2"
-                              sx={{ color: brandColors.neutral.dark }}
+                              sx={{ color: brandColors.neutral[800] }}
                             >
                               <strong>Total Loan Amount:</strong> $
                               {financing.totalLoanAmount.toLocaleString()}
@@ -1396,7 +1396,7 @@ const AdvancedModelingTab: React.FC = () => {
                             {financing.interestOnly && (
                               <Typography
                                 variant="body2"
-                                sx={{ color: brandColors.neutral.dark }}
+                                sx={{ color: brandColors.neutral[800] }}
                               >
                                 <strong>Interest Only:</strong> Yes
                               </Typography>
@@ -1408,7 +1408,7 @@ const AdvancedModelingTab: React.FC = () => {
                     <Typography
                       variant="caption"
                       sx={{
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                         fontStyle: "italic",
                         display: "block",
                         mt: 1,
@@ -1502,7 +1502,7 @@ const AdvancedModelingTab: React.FC = () => {
                         mb: 1,
                       }}
                     >
-                      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
+                      <Typography variant="caption" sx={{ color: brandColors.neutral[800] }}>
                         {(() => {
                           const { status } =
                             checkConfigurationStatus(dealState);
@@ -1511,7 +1511,7 @@ const AdvancedModelingTab: React.FC = () => {
                           return `${completed}/4 configurations complete`;
                         })()}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: brandColors.neutral.dark }}>
+                      <Typography variant="caption" sx={{ color: brandColors.neutral[800] }}>
                         {(() => {
                           const { status } =
                             checkConfigurationStatus(dealState);
@@ -1568,7 +1568,7 @@ const AdvancedModelingTab: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                               Market Conditions
                             </Typography>
                             <Chip
@@ -1597,7 +1597,7 @@ const AdvancedModelingTab: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                               Risk Factors
                             </Typography>
                             <Chip
@@ -1620,7 +1620,7 @@ const AdvancedModelingTab: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                               Exit Strategies
                             </Typography>
                             <Chip
@@ -1645,7 +1645,7 @@ const AdvancedModelingTab: React.FC = () => {
                               alignItems: "center",
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                               Tax Implications
                             </Typography>
                             <Chip
@@ -1780,7 +1780,7 @@ const AdvancedModelingTab: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: brandColors.neutral.dark,
+                          color: brandColors.neutral[800],
                           fontWeight: 500,
                           fontSize: { xs: "0.875rem", sm: "1rem" },
                         }}
@@ -1793,7 +1793,7 @@ const AdvancedModelingTab: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: brandColors.neutral.dark,
+                          color: brandColors.neutral[800],
                           fontWeight: 600,
                           fontSize: { xs: "0.875rem", sm: "1rem" },
                         }}
@@ -1811,7 +1811,7 @@ const AdvancedModelingTab: React.FC = () => {
                         variant="text"
                         onClick={() => setTabValue(1)}
                         sx={{
-                          color: brandColors.neutral.dark,
+                          color: brandColors.neutral[800],
                           textDecoration: "underline",
                           fontSize: { xs: "0.75rem", sm: "0.875rem" },
                           minWidth: "auto",
@@ -1851,7 +1851,7 @@ const AdvancedModelingTab: React.FC = () => {
                     }
                     sx={{
                       "& .MuiTab-root": {
-                        color: brandColors.neutral.dark,
+                        color: brandColors.neutral[800],
                         fontWeight: 600,
                         textTransform: "none",
                         minHeight: { xs: 48, md: 64 },
@@ -1896,11 +1896,11 @@ const AdvancedModelingTab: React.FC = () => {
                         }
                         id={`advanced-calc-tab-${index}`}
                         aria-controls={`advanced-calc-tabpanel-${index}`}
-                        data-testid={`tab-${index}-${tab.label.toLowerCase().replace(/\s+/g, "-")}`}
+                        data-testid={`tab-index-${tab.label.toLowerCase().replace(/\s+/g, "-")}`}
                         sx={{}}
                         onClick={() =>
                           console.log(
-                            `Tab ${index} (${tab.label}) clicked directly`,
+                            `Tab index (tab.label) clicked directly`,
                           )
                         }
                       />
@@ -1950,7 +1950,7 @@ const AdvancedModelingTab: React.FC = () => {
                 >
                   How to Integrate with Existing Calculations
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 3, color: brandColors.neutral.dark }}>
+                <Typography variant="body1" sx={{ mb: 3, color: brandColors.neutral[800] }}>
                   Our sophisticated analysis tools seamlessly integrate with
                   your existing mortgage and underwriting workflows to provide
                   more sophisticated analysis without breaking current
@@ -1980,15 +1980,15 @@ const AdvancedModelingTab: React.FC = () => {
                       >
                         For Mortgage Calculations
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         - Use seasonal adjustments to modify vacancy rates in
                         your DSCR calculations
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         - Apply market conditions to adjust rent growth and
                         appreciation rates
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         - Include tax implications to show net income after
                         deductions
                       </Typography>
@@ -2011,16 +2011,16 @@ const AdvancedModelingTab: React.FC = () => {
                       >
                         For Underwriting Analysis
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         - Use risk scoring to evaluate deal quality
                       </Typography>
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral.dark }}>
+                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
                         - Apply stress testing to assess worst-case scenarios
                       </Typography>
                       <Typography
                         variant="body2"
                         paragraph
-                        sx={{ color: brandColors.neutral.dark }}
+                        sx={{ color: brandColors.neutral[800] }}
                       >
                         - Include exit strategies to show different ROI
                         timelines
@@ -2123,7 +2123,7 @@ const AdvancedModelingTab: React.FC = () => {
             right: 0,
             bottom: 0,
             zIndex: 9999,
-            bgcolor: "rgba(0, 0, 0, 0.5)",
+            bgcolor: brandColors.surfaces.overlay,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -2158,7 +2158,7 @@ const AdvancedModelingTab: React.FC = () => {
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ mb: 3, color: brandColors.neutral.dark, lineHeight: 1.6 }}
+                sx={{ mb: 3, color: brandColors.neutral[800], lineHeight: 1.6 }}
               >
                 {tourSteps[currentTourStep].content}
               </Typography>
@@ -2171,7 +2171,7 @@ const AdvancedModelingTab: React.FC = () => {
                     setShowTourTooltip(false);
                     setCurrentTourStep(0);
                   }}
-                  sx={{ borderColor: brandColors.neutral.dark, color: brandColors.neutral.dark }}
+                  sx={{ borderColor: brandColors.neutral[800], color: brandColors.neutral[800] }}
                 >
                   Dismiss
                 </Button>
@@ -2207,7 +2207,7 @@ const AdvancedModelingTab: React.FC = () => {
                       width: 8,
                       height: 8,
                       borderRadius: "50%",
-                      bgcolor: index === currentTourStep ? brandColors.primary : "#ccc",
+                      bgcolor: index === currentTourStep ? brandColors.primary : brandColors.neutral[400],
                     }}
                   />
                 ))}

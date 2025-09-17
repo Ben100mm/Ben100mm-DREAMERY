@@ -142,7 +142,7 @@ const PreApprovalFinancialPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back
           </Button>
@@ -183,7 +183,7 @@ const PreApprovalFinancialPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral[800], mb: 4, textAlign: "center" }}
               >
                 Help us understand your financial goals and budget.
               </Typography>
@@ -208,7 +208,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                       </Typography>
                       {question.hasInfo && (
                         <Tooltip title={question.infoText} arrow>
-                          <IconButton size="small" sx={{ color: brandColors.neutral.dark }}>
+                          <IconButton size="small" sx={{ color: brandColors.neutral[800] }}>
                             <InfoIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -216,7 +216,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                     </Box>
 
                     {question.description && (
-                      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 2 }}>
                         {question.description}
                       </Typography>
                     )}
@@ -239,7 +239,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                         "& .MuiOutlinedInput-root": {
                           backgroundColor: brandColors.neutral.light,
                           "&:hover": {
-                            backgroundColor: "#f0f0f0",
+                            backgroundColor: brandColors.neutral[100],
                           },
                         },
                       }}
@@ -249,7 +249,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                         ),
                         endAdornment: question.suffix ? (
                           <InputAdornment position="end">
-                            <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                            <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                               {question.suffix}
                             </Typography>
                           </InputAdornment>

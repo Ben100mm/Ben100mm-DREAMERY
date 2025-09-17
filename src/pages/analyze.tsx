@@ -30,6 +30,8 @@ import {
   Download as DownloadIcon
 } from '@mui/icons-material';
 import PageTemplate from '../components/PageTemplate';
+import { brandColors } from "../theme";
+
 
 const AnalysisCard = styled(Card)`
   height: 100%;
@@ -37,12 +39,12 @@ const AnalysisCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
 `;
 
 const MetricCard = styled(Card)`
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a8b 100%);
+  background: linear-gradient(135deg, brandColors.primary 0%, #2d5a8b 100%);
   color: white;
   height: 100%;
 `;
@@ -175,7 +177,7 @@ const AnalyzePage: React.FC = () => {
                   Inventory Level: <strong>{mockMarketData.inventoryLevel}</strong>
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 1 }}>
-                  Market Trend: <strong style={{ color: '#4caf50' }}>{mockMarketData.marketTrend}</strong>
+                  Market Trend: <strong style={{ color: brandColors.accent.success }}>{mockMarketData.marketTrend}</strong>
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 1 }}>
                   Cap Rate: <strong>{mockMarketData.capRate}</strong>
@@ -218,7 +220,7 @@ const AnalyzePage: React.FC = () => {
                   gap: 2 
                 }}>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    <Typography variant="h4" sx={{ color: brandColors.primary }}>
                       +3.2%
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -226,7 +228,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                   </Box>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    <Typography variant="h4" sx={{ color: brandColors.primary }}>
                       -12%
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -234,7 +236,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                   </Box>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    <Typography variant="h4" sx={{ color: brandColors.primary }}>
                       +8%
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -242,7 +244,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                   </Box>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                    <Typography variant="h4" sx={{ color: brandColors.primary }}>
                       +15%
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -272,7 +274,7 @@ const AnalyzePage: React.FC = () => {
                 <Typography variant="body2" gutterBottom>
                   Estimated Value Range
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 'bold' }}>
+                <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                   $450,000 - $520,000
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -312,13 +314,13 @@ const AnalyzePage: React.FC = () => {
               }}>
                 {mockInvestmentMetrics.map((metric, index) => (
                   <Box key={index} sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                    <Typography variant="h6" sx={{ color: '#1a365d' }}>
+                    <Typography variant="h6" sx={{ color: brandColors.primary }}>
                       {metric.value}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {metric.metric}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#4caf50' }}>
+                    <Typography variant="caption" sx={{ color: brandColors.accent.success }}>
                       {metric.trend}
                     </Typography>
                   </Box>
@@ -403,7 +405,7 @@ const AnalyzePage: React.FC = () => {
                 gap: 3 
               }}>
                 <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary }}>
                     $2,400
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -411,7 +413,7 @@ const AnalyzePage: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary }}>
                     12.4%
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -419,7 +421,7 @@ const AnalyzePage: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary }}>
                     5.8%
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -427,7 +429,7 @@ const AnalyzePage: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 2, bgcolor: 'rgba(26, 54, 93, 0.1)', borderRadius: 2 }}>
-                  <Typography variant="h4" sx={{ color: '#1a365d' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary }}>
                     3.2%
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -458,7 +460,7 @@ const AnalyzePage: React.FC = () => {
           </AnalysisCard>
         </Box>
 
-        <Typography variant="h4" sx={{ color: '#1a365d', fontWeight: 700, mb: 3, mt: 4 }}>
+        <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700, mb: 3, mt: 4 }}>
           Featured Property Analysis
         </Typography>
         <Box sx={{ 
@@ -469,12 +471,12 @@ const AnalyzePage: React.FC = () => {
           {Array.from({ length: 10 }, (_, index) => (
             <AnalysisCard key={`analyze-placeholder-${index}`}>
               <CardContent>
-                <Typography variant="h6" component="h3" sx={{ color: '#1a365d', fontWeight: 600, mb: 1 }}>
+                <Typography variant="h6" component="h3" sx={{ color: brandColors.primary, fontWeight: 600, mb: 1 }}>
                   Analysis Property #{index + 1}
                 </Typography>
                 
                 <Typography variant="h5" sx={{ color: '#2d3748', fontWeight: 700, mb: 1 }}>
-                  ${(450000 + index * 60000).toLocaleString()}
+                  (450000 + index * 60000).toLocaleString()
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -506,8 +508,8 @@ const AnalyzePage: React.FC = () => {
                   variant="contained"
                   fullWidth
                   sx={{
-                    backgroundColor: '#1a365d',
-                    '&:hover': { backgroundColor: '#0d2340' }
+                    backgroundColor: brandColors.primary,
+                    '&:hover': { backgroundColor: brandColors.primaryDark }
                   }}
                 >
                   View Analysis

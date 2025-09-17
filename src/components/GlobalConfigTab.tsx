@@ -49,7 +49,7 @@ export const GlobalConfigTab: React.FC<GlobalConfigTabProps> = ({
       >
         Global Configuration
       </Typography>
-      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
         Configure market conditions, exit strategies, risk factors, and manage
         scenarios
       </Typography>

@@ -2,6 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RoleContext } from '../context/RoleContext';
 import UnifiedDashboard from '../components/UnifiedDashboard';
+import { brandColors } from "../theme";
+
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -236,7 +238,7 @@ const CloseBuyerPage: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery Closing Hub
           </Typography>
 
@@ -294,7 +296,7 @@ const CloseBuyerPage: React.FC = () => {
               fullWidth
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 py: 2,
                 fontWeight: 600,
                 fontSize: '1.1rem',
@@ -370,12 +372,12 @@ const CloseBuyerPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Closing Dashboard
                 </Typography>
               </Box>
@@ -455,7 +457,7 @@ const CloseBuyerPage: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto',
-                    color: 'white',
+                    color: brandColors.text.inverse,
                     fontSize: '0.875rem',
                     fontWeight: 'bold',
                   }}
@@ -590,12 +592,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SecurityIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <SecurityIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Escrow & Title Hub
                     </Typography>
                   </Box>
@@ -618,12 +620,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SearchIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <SearchIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Due Diligence Tools
                     </Typography>
                   </Box>
@@ -646,12 +648,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Financing Coordination
                     </Typography>
                   </Box>
@@ -674,12 +676,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <GavelIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <GavelIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Legal & Compliance
                     </Typography>
                   </Box>
@@ -702,12 +704,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <CalculateIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <CalculateIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Settlement & Closing Costs
                     </Typography>
                   </Box>
@@ -730,12 +732,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <HomeIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <HomeIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Insurance & Utilities
                     </Typography>
                   </Box>
@@ -758,12 +760,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <CheckCircleIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <CheckCircleIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Final Walkthrough & Handover
                     </Typography>
                   </Box>
@@ -786,12 +788,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <SupportIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Post-Closing Services
                     </Typography>
                   </Box>
@@ -814,12 +816,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <ClosingAssistantIcon size={28} color="white" />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Lumina
                     </Typography>
                   </Box>
@@ -842,12 +844,12 @@ const CloseBuyerPage: React.FC = () => {
                     p: 3, 
                     backgroundColor: brandColors.primary,
                     borderRadius: '16px 16px 0 0',
-                    color: 'white'
+                    color: brandColors.text.inverse
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />
-                    <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                    <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Partner Integrations
                     </Typography>
                   </Box>

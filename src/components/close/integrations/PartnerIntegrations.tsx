@@ -775,7 +775,7 @@ const PartnerIntegrations: React.FC = () => {
                             Policy: {policy.policyNumber} | Status: {policy.status}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Premium: ${policy.premium}/year | Deductible: ${policy.deductible}
+                            Premium: policy.premium/year | Deductible: policy.deductible
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Effective: {policy.effectiveDate} | Expires: {policy.expiryDate}
@@ -846,7 +846,7 @@ const PartnerIntegrations: React.FC = () => {
                             />
                           </Box>
                           <Typography variant="body2" color="text.secondary">
-                            Starting at ${service.pricing.baseRate}
+                            Starting at service.pricing.baseRate
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             {service.specialties.slice(0, 2).join(', ')}
@@ -913,7 +913,7 @@ const PartnerIntegrations: React.FC = () => {
                         {pkg.description}
                       </Typography>
                       <Typography variant="h5" color="primary" gutterBottom>
-                        ${pkg.price}
+                        pkg.price
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                         Duration: {pkg.duration}

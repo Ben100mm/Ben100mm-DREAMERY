@@ -620,7 +620,7 @@ const NotificationsSettingsPage: React.FC = () => {
           <IconButton
             onClick={handleBack}
             sx={{ 
-              color: brandColors.neutral.dark,
+              color: brandColors.neutral[800],
               '&:hover': { color: brandColors.primary }
             }}
           >
@@ -632,7 +632,7 @@ const NotificationsSettingsPage: React.FC = () => {
               variant="outlined"
               onClick={handleNext}
               sx={{ 
-                color: brandColors.neutral.dark,
+                color: brandColors.neutral[800],
                 borderColor: brandColors.neutral.medium,
                 '&:hover': {
                   borderColor: brandColors.primary,

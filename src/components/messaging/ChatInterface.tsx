@@ -38,14 +38,14 @@ const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: ${brandColors.backgrounds.primary};
+  background: brandColors.backgrounds.primary;
   overflow: hidden;
 `;
 
 const ChatHeader = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
-  background: ${brandColors.backgrounds.primary};
+  border-bottom: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,8 +64,8 @@ const ChatHeaderRight = styled.div`
 `;
 
 const ContactAvatar = styled(Avatar)`
-  background: ${brandColors.primary};
-  color: ${brandColors.backgrounds.primary};
+  background: brandColors.primary;
+  color: brandColors.backgrounds.primary;
   font-weight: 600;
   width: 40px;
   height: 40px;
@@ -78,13 +78,13 @@ const ContactInfo = styled.div`
 
 const ContactName = styled(Typography)`
   font-weight: 600;
-  color: ${brandColors.text.primary};
+  color: brandColors.text.primary;
   font-size: 1rem;
   margin: 0;
 `;
 
 const ContactDetails = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.8rem;
   margin: 0;
 `;
@@ -92,7 +92,7 @@ const ContactDetails = styled(Typography)`
 const StatusChip = styled(Chip)<{ status: string }>`
   font-size: 0.7rem;
   height: 20px;
-  background: ${props => {
+  background: props => {
     switch (props.status) {
       case 'Active':
         return brandColors.accent.success;
@@ -102,9 +102,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
         return brandColors.text.disabled;
       default:
         return brandColors.text.disabled;
-    }
+    
   }};
-  color: ${brandColors.backgrounds.primary};
+  color: brandColors.backgrounds.primary;
   
   .MuiChip-label {
     padding: 0 8px;
@@ -131,13 +131,13 @@ const MessagesArea = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background: ${brandColors.borders.secondary};
+    background: brandColors.borders.secondary;
     border-radius: 2px;
     opacity: 0.6;
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background: ${brandColors.text.disabled};
+    background: brandColors.text.disabled;
     opacity: 0.8;
   }
 `;
@@ -145,37 +145,37 @@ const MessagesArea = styled.div`
 const MessageBubble = styled.div<{ isFromUser: boolean }>`
   display: flex;
   flex-direction: column;
-  align-self: ${props => props.isFromUser ? 'flex-end' : 'flex-start'};
+  align-self: props => props.isFromUser ? 'flex-end' : 'flex-start';
   max-width: 70%;
-  margin-left: ${props => props.isFromUser ? 'auto' : '0'};
-  margin-right: ${props => props.isFromUser ? '0' : 'auto'};
+  margin-left: props => props.isFromUser ? 'auto' : '0';
+  margin-right: props => props.isFromUser ? '0' : 'auto';
 `;
 
 const MessageContent = styled(Paper)<{ isFromUser: boolean }>`
   padding: 0.75rem 1rem;
-  background: ${props => props.isFromUser 
+  background: props => props.isFromUser 
     ? brandColors.primary  /* Dreamery primary blue for user messages */
-    : brandColors.backgrounds.secondary}; /* Dreamery secondary background for respondent messages */
-  color: ${props => props.isFromUser 
+    : brandColors.backgrounds.secondary; /* Dreamery secondary background for respondent messages */
+  color: props => props.isFromUser 
     ? brandColors.backgrounds.primary  /* White text for user messages */
-    : brandColors.text.primary}; /* Dreamery text primary for respondent messages */
-  border-radius: ${props => props.isFromUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px'};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    : brandColors.text.primary; /* Dreamery text primary for respondent messages */
+  border-radius: props => props.isFromUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px';
+  box-shadow: 0 1px 3px brandColors.shadows.light;
   word-wrap: break-word;
   line-height: 1.4;
 `;
 
 const MessageTimestamp = styled(Typography)`
   font-size: 0.7rem;
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   margin-top: 0.25rem;
   text-align: center;
 `;
 
 const MessageInputArea = styled.div`
   padding: 1rem;
-  border-top: 1px solid ${brandColors.borders.secondary};
-  background: ${brandColors.backgrounds.primary};
+  border-top: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
 `;
 
 const MessageInputContainer = styled.div`
@@ -189,7 +189,7 @@ const MessageInput = styled(TextField)`
   
   & .MuiOutlinedInput-root {
     borderRadius: 24px;
-    backgroundColor: ${brandColors.backgrounds.secondary};
+    backgroundColor: brandColors.backgrounds.secondary;
     padding: 0.5rem 1rem;
     
     & .MuiOutlinedInput-input {
@@ -199,24 +199,24 @@ const MessageInput = styled(TextField)`
 `;
 
 const SendButton = styled(IconButton)<{ disabled: boolean }>`
-  background: ${props => props.disabled 
+  background: props => props.disabled 
     ? brandColors.text.disabled 
-    : brandColors.primary};
-  color: ${brandColors.backgrounds.primary};
+    : brandColors.primary;
+  color: brandColors.backgrounds.primary;
   width: 40px;
   height: 40px;
   
   &:hover {
-    background: ${props => props.disabled 
+    background: props => props.disabled 
       ? brandColors.text.disabled 
-      : brandColors.secondary};
+      : brandColors.secondary;
   }
 `;
 
 const ClosedConversationNotice = styled.div`
   padding: 1rem;
-  background: ${brandColors.backgrounds.warning};
-  border: 1px solid ${brandColors.accent.warning};
+  background: brandColors.backgrounds.warning;
+  border: 1px solid brandColors.accent.warning;
   border-radius: 8px;
   margin: 1rem;
   text-align: center;
@@ -228,7 +228,7 @@ const NoConversationSelected = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   padding: 2rem;
 `;
 

@@ -5,10 +5,10 @@ type FaviconVariant = "light" | "dark";
 const candidates = (
   variant: FaviconVariant,
 ): Array<{ selector: string; href: string }> => [
-  { selector: "link[rel='icon'][type='image/svg+xml']", href: `/favicon-${variant}.svg` },
-  { selector: "link[rel='icon'][sizes='32x32']", href: `/favicon-32x32-${variant}.png` },
-  { selector: "link[rel='icon'][sizes='16x16']", href: `/favicon-16x16-${variant}.png` },
-  { selector: "link[rel='apple-touch-icon']", href: `/apple-touch-icon-${variant}.png` },
+  { selector: "link[rel='icon'][type='image/svg+xml']", href: `/favicon-variant.svg` },
+  { selector: "link[rel='icon'][sizes='32x32']", href: `/favicon-32x32-variant.png` },
+  { selector: "link[rel='icon'][sizes='16x16']", href: `/favicon-16x16-variant.png` },
+  { selector: "link[rel='apple-touch-icon']", href: `/apple-touch-icon-variant.png` },
 ];
 
 /**

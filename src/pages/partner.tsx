@@ -47,7 +47,7 @@ const FilterButton = styled(Button)`
   min-width: 120px;
   &:hover {
     background: brandColors.backgrounds.secondary;
-    border-color: #c0c0c0;
+    border-color: brandColors.neutral[300];
   }
   &.active {
     border-color: brandColors.primary;
@@ -63,7 +63,7 @@ const FilterPopover = styled(Paper)`
 
 const MapContainer = styled.div`
   height: 70vh;
-  background: linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%);
+  background: linear-gradient(135deg, brandColors.neutral[200] 0%, brandColors.neutral[200] 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@ const PartnerCard = styled(Card)`
   transition: all 0.2s ease;
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
 `;
 
@@ -218,11 +218,11 @@ const PartnersPage: React.FC = () => {
                 padding: "6px 12px",
                 backgroundColor: brandColors.backgrounds.secondary,
                 cursor: "pointer",
-                "&:hover": { backgroundColor: "#e9ecef", borderColor: "#c0c0c0" },
+                "&:hover": { backgroundColor: brandColors.neutral[100], borderColor: brandColors.neutral[300] },
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>500</Typography>
-              <Favorite sx={{ color: "#e31c25", fontSize: 20 }} />
+              <Favorite sx={{ color: brandColors.accent.error, fontSize: 20 }} />
             </Box>
                     </Box>
 
@@ -245,7 +245,7 @@ const PartnersPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                background: "linear-gradient(135deg, #d3d3d3 0%, #d3d3d3 100%)",
+                background: "linear-gradient(135deg, brandColors.neutral[200] 0%, brandColors.neutral[200] 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -470,10 +470,10 @@ const PartnersPage: React.FC = () => {
               />
               <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
                 <Typography variant="caption" color="text.secondary">
-                  ${projectSizeRange[0].toLocaleString()}
+                  projectSizeRange[0].toLocaleString()
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  ${projectSizeRange[1].toLocaleString()}
+                  projectSizeRange[1].toLocaleString()
                       </Typography>
                     </Box>
                   </Box>

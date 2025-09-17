@@ -651,10 +651,10 @@ const InsuranceUtilities: React.FC = () => {
 
                         <Box sx={{ mb: 2 }}>
                           <Typography variant="h5" color="primary" gutterBottom>
-                            ${quote.annualPremium.toLocaleString()}/year
+                            quote.annualPremium.toLocaleString()/year
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Deductible: ${quote.deductible.toLocaleString()}
+                            Deductible: quote.deductible.toLocaleString()
                           </Typography>
                         </Box>
 
@@ -663,13 +663,13 @@ const InsuranceUtilities: React.FC = () => {
                             Coverage:
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Dwelling: ${quote.coverage.dwelling.toLocaleString()}
+                            Dwelling: quote.coverage.dwelling.toLocaleString()
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Personal Property: ${quote.coverage.personalProperty.toLocaleString()}
+                            Personal Property: quote.coverage.personalProperty.toLocaleString()
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            Liability: ${quote.coverage.liability.toLocaleString()}
+                            Liability: quote.coverage.liability.toLocaleString()
                           </Typography>
                         </Box>
 
@@ -775,11 +775,11 @@ const InsuranceUtilities: React.FC = () => {
 
                         <Box sx={{ mb: 2 }}>
                           <Typography variant="body2" color="text.secondary">
-                            Transfer Fee: ${provider.transferFee}
+                            Transfer Fee: provider.transferFee
                           </Typography>
                           {provider.depositRequired && (
                             <Typography variant="body2" color="text.secondary">
-                              Deposit Required: ${provider.depositAmount}
+                              Deposit Required: provider.depositAmount
                             </Typography>
                           )}
                         </Box>
@@ -886,7 +886,7 @@ const InsuranceUtilities: React.FC = () => {
                         <Box sx={{ mb: 2 }}>
                           <Typography variant="body2" color="text.secondary">
                             <MoneyIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                            ${provider.hourlyRate}/hr (min {provider.minimumHours} hrs)
+                            provider.hourlyRate/hr (min {provider.minimumHours} hrs)
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             <ScheduleIcon sx={{ fontSize: 16, mr: 0.5 }} />
@@ -1046,10 +1046,10 @@ const InsuranceUtilities: React.FC = () => {
                 {insuranceUtilitiesData.selectedInsurance.provider}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                Annual Premium: ${insuranceUtilitiesData.selectedInsurance.annualPremium.toLocaleString()}
+                Annual Premium: insuranceUtilitiesData.selectedInsurance.annualPremium.toLocaleString()
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Deductible: ${insuranceUtilitiesData.selectedInsurance.deductible.toLocaleString()}
+                Deductible: insuranceUtilitiesData.selectedInsurance.deductible.toLocaleString()
               </Typography>
               <Alert severity="info" sx={{ mt: 2 }}>
                 By binding this policy, you agree to the terms and conditions of the insurance provider.
@@ -1189,7 +1189,7 @@ const InsuranceUtilities: React.FC = () => {
               <Box sx={{ mb: 2 }}>
                 <Typography variant="h6" gutterBottom>Pricing & Availability</Typography>
                 <Typography variant="body2">
-                  Hourly Rate: ${selectedProvider.hourlyRate}/hr
+                  Hourly Rate: selectedProvider.hourlyRate/hr
                 </Typography>
                 <Typography variant="body2">
                   Minimum Hours: {selectedProvider.minimumHours} hrs

@@ -544,18 +544,12 @@ const DueDiligenceTools: React.FC = () => {
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
             aria-label="Due Diligence Tools"
-            sx={{
-              '& .MuiTab-root': {
+            sx={{ '& .MuiTab-root': {
                 minHeight: '64px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textTransform: 'none',
-                color: brandColors.neutral.dark,
-                '&.Mui-selected': {
-                  color: brandColors.actions.primary,
-                  backgroundColor: brandColors.backgrounds.primary,
-                },
-              },
+                color: brandColors.neutral[800], },
             }}
           >
             <Tab
@@ -653,7 +647,7 @@ const DueDiligenceTools: React.FC = () => {
                         ))}
                       </Box>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Rate:</strong> ${inspector.hourlyRate}/hr
+                        <strong>Rate:</strong> inspector.hourlyRate/hr
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                         <strong>Contact:</strong> {inspector.contactInfo.phone}

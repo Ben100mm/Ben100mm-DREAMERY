@@ -134,7 +134,7 @@ const ManageMessages: React.FC = () => {
         <Grid item xs={12} md={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 0 }}>
-              <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, borderBottom: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                   Conversations
                 </Typography>
@@ -142,13 +142,17 @@ const ManageMessages: React.FC = () => {
               <List sx={{ p: 0 }}>
                 {conversations.map((conversation, index) => (
                   <React.Fragment key={conversation.id}>
-                    <ListItem
-                      button
-                      selected={selectedConversation === conversation.id}
+                    <ListItem sx={{
+        backgroundColor: selectedConversation === conversation.id ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
+        cursor: 'pointer',
+        
+        '&:hover': {
+          backgroundColor: 'rgba(25, 118, 210, 0.04)',
+        },
+      }}
                       onClick={() => setSelectedConversation(conversation.id)}
                       sx={{
-                        '&.Mui-selected': {
-                          backgroundColor: `${brandColors.primary}15`,
+                        15`,
                         },
                       }}
                     >
@@ -205,7 +209,7 @@ const ManageMessages: React.FC = () => {
             {selectedConv ? (
               <>
                 {/* Chat Header */}
-                <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}>
+                <Box sx={{ p: 2, borderBottom: '1px solid brandColors.neutral[300]' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Avatar sx={{ bgcolor: brandColors.primary }}>
@@ -242,7 +246,7 @@ const ManageMessages: React.FC = () => {
                           maxWidth: '70%',
                           p: 2,
                           borderRadius: 2,
-                          backgroundColor: message.sender === 'manager' ? brandColors.primary : '#f5f5f5',
+                          backgroundColor: message.sender === 'manager' ? brandColors.primary : brandColors.neutral[100],
                           color: message.sender === 'manager' ? 'white' : 'text.primary',
                         }}
                       >
@@ -263,7 +267,7 @@ const ManageMessages: React.FC = () => {
                 </Box>
 
                 {/* Message Input */}
-                <Box sx={{ p: 2, borderTop: '1px solid #e0e0e0' }}>
+                <Box sx={{ p: 2, borderTop: '1px solid brandColors.neutral[300]' }}>
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <TextField
                       fullWidth

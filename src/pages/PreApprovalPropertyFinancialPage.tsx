@@ -100,7 +100,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back
           </Button>
@@ -141,7 +141,7 @@ const PreApprovalPropertyFinancialPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral[800], mb: 4, textAlign: "center" }}
               >
                 Help us understand your property preferences and financial
                 situation to provide accurate estimates.

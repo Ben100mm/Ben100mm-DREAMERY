@@ -31,55 +31,55 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
         return {
           title: 'Fundraising Dashboard',
           subtitle: 'Centralized overview of your capital raising activities and project performance',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'projects':
         return {
           title: 'Projects',
           subtitle: 'Manage and track all your real estate fundraising projects',
-          icon: <ProjectsIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ProjectsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'createproject':
         return {
           title: 'Create New Project',
           subtitle: 'Start a new real estate investment opportunity and fundraising campaign',
-          icon: <CreateProjectIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CreateProjectIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'investor':
         return {
           title: 'Investor Onboarding',
           subtitle: 'Streamlined process for bringing new investors into your projects',
-          icon: <InvestorIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <InvestorIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'compliance':
         return {
           title: 'Capital Raise Compliance Tools',
           subtitle: 'Ensure regulatory compliance and proper documentation for fundraising activities',
-          icon: <ComplianceIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ComplianceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'calculator':
         return {
           title: 'Waterfall & ROI Calculators',
           subtitle: 'Advanced financial modeling tools for project returns and investor distributions',
-          icon: <CalculatorIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CalculatorIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'portal':
         return {
           title: 'Secure Investor Portal',
           subtitle: 'Protected access for investors to view project updates and manage investments',
-          icon: <PortalIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <PortalIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'messages':
         return {
           title: 'Fundraising Communications',
           subtitle: 'Manage communications with investors, advisors, and fundraising partners',
-          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
           title: 'Fundraising Platform',
           subtitle: 'Raise capital for real estate projects',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
     }
   };
@@ -161,12 +161,12 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
           p: 3, 
           backgroundColor: brandColors.primary,
           borderRadius: '16px 16px 0 0',
-          color: 'white'
+          color: brandColors.text.inverse
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           {banner.icon}
-          <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
             {banner.title}
           </Typography>
         </Box>

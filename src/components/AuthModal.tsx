@@ -147,7 +147,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         <TabPanel value={tabValue} index={0}>
-          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral[800] }}>
             Sign in to access your saved deals and calculations
           </Typography>
 
@@ -173,7 +173,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral[800] }}>
             Create an account to save and sync your deals across devices
           </Typography>
 

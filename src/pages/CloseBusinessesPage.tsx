@@ -39,8 +39,10 @@ import {
   AccountBalance as AccountBalanceIcon,
   Person as PersonIcon,
   Close as CloseIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
+import BusinessMessages from "../components/business/BusinessMessages";
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -176,6 +178,7 @@ const CloseBusinessesPage: React.FC = () => {
 
   const tabs = [
     { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+    { value: 'messages', label: 'Messages', icon: <ChatIcon /> },
     { value: 'businesses', label: 'Business Management', icon: <BusinessIcon /> },
     { value: 'employees', label: 'Employee Access', icon: <PeopleIcon /> },
     { value: 'analytics', label: 'Analytics', icon: <AssessmentIcon /> },
@@ -231,7 +234,7 @@ const CloseBusinessesPage: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery Closing Hub - Businesses
           </Typography>
 
@@ -289,7 +292,7 @@ const CloseBusinessesPage: React.FC = () => {
               fullWidth
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 py: 2,
                 fontWeight: 600,
                 fontSize: '1.1rem',
@@ -361,12 +364,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <BusinessIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Business Dashboard
                 </Typography>
               </Box>
@@ -407,7 +410,7 @@ const CloseBusinessesPage: React.FC = () => {
               <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
                 <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
-                  ${(mockBusinessData.totalRevenue / 1000000).toFixed(1)}M
+                  (mockBusinessData.totalRevenue / 1000000).toFixed(1)M
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Total Revenue
@@ -432,7 +435,7 @@ const CloseBusinessesPage: React.FC = () => {
                     Top Business - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </Typography>
                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                    ${(mockBusinessData.topBusinessRevenue / 1000000).toFixed(1)}M
+                    (mockBusinessData.topBusinessRevenue / 1000000).toFixed(1)M
                   </Typography>
                 </Box>
               </Box>
@@ -449,12 +452,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <BusinessIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Business Management
                 </Typography>
               </Box>
@@ -478,12 +481,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <PeopleIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <PeopleIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Employee Access
                 </Typography>
               </Box>
@@ -507,12 +510,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssessmentIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <AssessmentIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Analytics
                 </Typography>
               </Box>
@@ -527,6 +530,10 @@ const CloseBusinessesPage: React.FC = () => {
           </>
         )}
 
+        {state.activeTab === 'messages' && (
+          <BusinessMessages />
+        )}
+
         {state.activeTab === 'support' && (
           <>
             <Paper 
@@ -536,12 +543,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <SupportIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Support
                 </Typography>
               </Box>
@@ -565,12 +572,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SettingsIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <SettingsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Settings
                 </Typography>
               </Box>
@@ -594,12 +601,12 @@ const CloseBusinessesPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Integrations
                 </Typography>
               </Box>

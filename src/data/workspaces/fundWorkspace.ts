@@ -9,13 +9,15 @@ import {
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
+import { brandColors } from "../../../theme";
+
 
 export const fundWorkspace: WorkspaceConfig = {
   id: 'fund',
   name: 'Fund',
   description: 'Capital raising and fundraising platform',
   icon: <DashboardIcon />,
-  color: '#1a365d',
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
     { 

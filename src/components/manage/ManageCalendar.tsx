@@ -180,11 +180,11 @@ const ManageCalendar: React.FC = () => {
                     sx={{
                       p: 1,
                       minHeight: 60,
-                      border: '1px solid #e0e0e0',
+                      border: '1px solid brandColors.neutral[300]',
                       borderRadius: 1,
                       cursor: 'pointer',
                       '&:hover': {
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: brandColors.neutral[100],
                       },
                     }}
                   >

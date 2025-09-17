@@ -1,1 +1,1 @@
-export { default as theme, brandColors } from './theme';
+export { default as theme, brandColors, colorUtils } from './theme';

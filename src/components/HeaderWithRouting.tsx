@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { brandColors } from "../theme";
+import { brandColors, colorUtils } from "../theme";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -54,14 +54,14 @@ const Header: React.FC = () => {
             position: "absolute",
             right: 32,
             top: -8,
-            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            backgroundColor: brandColors.surfaces.glass,
             padding: "8px 20px",
             borderRadius: "6px",
             transition: "all 0.2s ease",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            boxShadow: colorUtils.shadow('0, 0, 0', 0.1, 4, 2),
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.6)",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+              backgroundColor: brandColors.surfaces.glassHover,
+              boxShadow: colorUtils.shadow('0, 0, 0', 0.15, 8, 4),
             },
           }}
         >
@@ -96,7 +96,7 @@ const Header: React.FC = () => {
           <Typography
             variant="h4"
             sx={{
-              color: "#FFFFFF",
+              color: brandColors.text.inverse,
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 900,
               letterSpacing: "-1px",

@@ -197,7 +197,7 @@ const ManageListings: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(${listing.images[0]})`,
+                  backgroundImage: `url(listing.images[0])`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -214,7 +214,7 @@ const ManageListings: React.FC = () => {
                   sx={{ position: 'absolute', top: 8, left: 8 }}
                   onClick={(e) => handleMenuClick(e, listing.id)}
                 >
-                  <MoreVertIcon sx={{ color: 'white' }} />
+                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
                 </IconButton>
               </Box>
 
@@ -234,7 +234,7 @@ const ManageListings: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                    ${listing.price.toLocaleString()}/month
+                    listing.price.toLocaleString()/month
                   </Typography>
                 </Box>
 

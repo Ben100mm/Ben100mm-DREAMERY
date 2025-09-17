@@ -5,6 +5,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SecurityIcon from '@mui/icons-material/Security';
 import WorkflowIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
+import { brandColors } from "../../../theme";
+
 
 export const professionalRoles = [
   {
@@ -12,7 +14,7 @@ export const professionalRoles = [
     name: 'Title Agent',
     description: 'Title insurance and escrow services',
     icon: <BusinessIcon />,
-    color: '#1976d2',
+    color: brandColors.accent.infoDark,
     category: 'Title & Escrow',
     permissions: ['view_documents', 'view_compliance', 'view_workflows'],
     features: ['Title Search', 'Lien Check', 'Settlement', 'Recording'],
@@ -23,7 +25,7 @@ export const professionalRoles = [
     name: 'Escrow Officer',
     description: 'Escrow and closing coordination',
     icon: <BusinessIcon />,
-    color: '#1976d2',
+    color: brandColors.accent.infoDark,
     category: 'Title & Escrow',
     permissions: ['view_documents', 'view_compliance', 'view_workflows'],
     features: ['Escrow Management', 'Closing Coordination', 'Fund Disbursement'],
@@ -34,7 +36,7 @@ export const professionalRoles = [
     name: 'Notary Public',
     description: 'Document notarization services',
     icon: <DescriptionIcon />,
-    color: '#1976d2',
+    color: brandColors.accent.infoDark,
     category: 'Title & Escrow',
     permissions: ['view_documents', 'view_compliance'],
     features: ['Document Notarization', 'Identity Verification', 'Witness Services'],

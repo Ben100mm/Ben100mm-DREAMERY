@@ -32,7 +32,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
   if (!dealState) {
     return (
       <Box>
-        <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
           No deal data found. Please go back to the Underwrite page and click
           "Open Advanced Analysis" to load your deal data.
         </Typography>
@@ -82,9 +82,9 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
       headers.join(","),
       ...scenarios.map((scenario) =>
         [
-          `"${scenario.name}"`,
-          `"${scenario.timestamp || "N/A"}"`,
-          `"${Object.keys(scenario.results || {}).join(", ")}"`,
+          `scenario.name`,
+          `scenario.timestamp || "N/A"`,
+          `"Object.keys(scenario.results || {).join(", ")}"`,
         ].join(","),
       ),
     ].join("\n");
@@ -93,7 +93,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `scenarios-comparison-${new Date().toISOString().split("T")[0]}.csv`;
+    link.download = `scenarios-comparison-new Date().toISOString().split("T")[0].csv`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -106,7 +106,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `scenarios-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `scenarios-new Date().toISOString().split("T")[0].json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -119,7 +119,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
       >
         Scenario Comparison
       </Typography>
-      <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 3 }}>
+      <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
         Compare saved scenarios and their key metrics
       </Typography>
 
@@ -146,7 +146,7 @@ export const ScenarioComparisonTab: React.FC<ScenarioComparisonTabProps> = ({
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+                <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                   {scenario.timestamp
                     ? new Date(scenario.timestamp).toLocaleString()
                     : "No timestamp"}

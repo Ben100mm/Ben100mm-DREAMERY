@@ -360,7 +360,7 @@ const LegalCompliance: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setComplianceData(prev => ({ ...prev, checklist: data }));
-        toast.success(`Loaded ${state} compliance checklist`);
+        toast.success(`Loaded state compliance checklist`);
       }
     } catch (error) {
       console.error('Failed to fetch checklist:', error);
@@ -805,7 +805,7 @@ const LegalCompliance: React.FC = () => {
                         </Typography>
                         
                         <Typography variant="body2" gutterBottom>
-                          <strong>Rate:</strong> ${attorney.hourlyRate}/hr
+                          <strong>Rate:</strong> attorney.hourlyRate/hr
                         </Typography>
                         
                         <Box sx={{ mt: 2 }}>

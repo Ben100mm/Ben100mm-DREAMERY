@@ -201,7 +201,7 @@ const ProfilePage: React.FC = () => {
               </Avatar>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="h4" sx={{ 
-                  color: 'white',
+                  color: brandColors.text.inverse,
                   fontWeight: 700,
                   mb: 1
                 }}>
@@ -223,7 +223,7 @@ const ProfilePage: React.FC = () => {
                 variant="outlined"
                 startIcon={<Edit />}
                 sx={{ 
-                  color: 'white',
+                  color: brandColors.text.inverse,
                   borderColor: 'rgba(255, 255, 255, 0.5)',
                   '&:hover': {
                     borderColor: 'white',
@@ -848,7 +848,7 @@ const ProfilePage: React.FC = () => {
             variant="outlined"
             onClick={handleBack}
             sx={{ 
-              color: brandColors.neutral.dark,
+              color: brandColors.neutral[800],
               borderColor: brandColors.neutral.medium,
               '&:hover': {
                 borderColor: brandColors.primary,

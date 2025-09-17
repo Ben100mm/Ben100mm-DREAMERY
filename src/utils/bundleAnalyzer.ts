@@ -68,15 +68,15 @@ export function checkPerformanceBudget(metrics: BundleMetrics, budget: Partial<B
   const violations: string[] = [];
   
   if (budget.totalSize && metrics.totalSize > budget.totalSize) {
-    violations.push(`Total bundle size ${metrics.totalSize} exceeds budget ${budget.totalSize}`);
+    violations.push(`Total bundle size metrics.totalSize exceeds budget ${budget.totalSize}`);
   }
   
   if (budget.jsSize && metrics.jsSize > budget.jsSize) {
-    violations.push(`JavaScript size ${metrics.jsSize} exceeds budget ${budget.jsSize}`);
+    violations.push(`JavaScript size metrics.jsSize exceeds budget ${budget.jsSize}`);
   }
   
   if (budget.gzipSize && metrics.gzipSize > budget.gzipSize) {
-    violations.push(`Gzipped size ${metrics.gzipSize} exceeds budget ${budget.gzipSize}`);
+    violations.push(`Gzipped size metrics.gzipSize exceeds budget ${budget.gzipSize}`);
   }
   
   return {
@@ -147,9 +147,9 @@ export class BundleSizeTracker {
     const percentage = (change / previous.metrics.totalSize) * 100;
     
     if (change > 0) {
-      return `+${(change / 1024).toFixed(1)}KB (+${percentage.toFixed(1)}%)`;
+      return `+(change / 1024).toFixed(1)KB (+percentage.toFixed(1)%)`;
     } else {
-      return `${(change / 1024).toFixed(1)}KB (${percentage.toFixed(1)}%)`;
+      return `${(change / 1024).toFixed(1)}KB (percentage.toFixed(1)%)`;
     }
   }
   

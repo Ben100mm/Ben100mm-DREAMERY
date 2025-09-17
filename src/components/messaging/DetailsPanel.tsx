@@ -39,14 +39,14 @@ const DetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: ${brandColors.backgrounds.primary};
+  background: brandColors.backgrounds.primary;
   overflow: hidden;
 `;
 
 const DetailsHeader = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
-  background: ${brandColors.backgrounds.primary};
+  border-bottom: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -68,13 +68,13 @@ const DetailsContent = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background: ${brandColors.borders.secondary};
+    background: brandColors.borders.secondary;
     border-radius: 2px;
     opacity: 0.6;
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background: ${brandColors.text.disabled};
+    background: brandColors.text.disabled;
     opacity: 0.8;
   }
 `;
@@ -84,8 +84,8 @@ const UserProfileSection = styled.div`
 `;
 
 const UserAvatar = styled(Avatar)`
-  background: ${brandColors.primary};
-  color: ${brandColors.backgrounds.primary};
+  background: brandColors.primary;
+  color: brandColors.backgrounds.primary;
   font-weight: 600;
   width: 80px;
   height: 80px;
@@ -94,19 +94,19 @@ const UserAvatar = styled(Avatar)`
 
 const UserName = styled(Typography)`
   font-weight: 600;
-  color: ${brandColors.text.primary};
+  color: brandColors.text.primary;
   text-align: center;
   margin-bottom: 0.5rem;
 `;
 
 const UserRole = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   text-align: center;
   margin-bottom: 0.25rem;
 `;
 
 const UserOrganization = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   text-align: center;
   margin-bottom: 1rem;
   font-style: italic;
@@ -122,7 +122,7 @@ const VerificationStatus = styled.div`
 
 const StatusChip = styled(Chip)<{ status: string }>`
   font-size: 0.8rem;
-  background: ${props => {
+  background: props => {
     switch (props.status) {
       case 'Verified':
         return brandColors.accent.success;
@@ -132,9 +132,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
         return brandColors.text.disabled;
       default:
         return brandColors.text.disabled;
-    }
+    
   }};
-  color: ${brandColors.backgrounds.primary};
+  color: brandColors.backgrounds.primary;
 `;
 
 const ActionButtons = styled.div`
@@ -150,38 +150,38 @@ const ActionButton = styled(Button)`
   padding: 0.75rem;
   
   &.primary {
-    background: ${brandColors.primary};
-    color: ${brandColors.backgrounds.primary};
+    background: brandColors.primary;
+    color: brandColors.backgrounds.primary;
     
     &:hover {
-      background: ${brandColors.secondary};
+      background: brandColors.secondary;
     }
   }
   
   &.secondary {
-    border: 1px solid ${brandColors.borders.secondary};
-    color: ${brandColors.text.primary};
+    border: 1px solid brandColors.borders.secondary;
+    color: brandColors.text.primary;
     
     &:hover {
-      background: ${brandColors.backgrounds.hover};
-      border-color: ${brandColors.primary};
+      background: brandColors.backgrounds.hover;
+      border-color: brandColors.primary;
     }
   }
 `;
 
 const InfoSection = styled(Card)`
   margin-bottom: 1.5rem;
-  background: ${brandColors.backgrounds.primary};
-  border: 1px solid ${brandColors.borders.secondary};
+  background: brandColors.backgrounds.primary;
+  border: 1px solid brandColors.borders.secondary;
   box-shadow: none;
 `;
 
 const InfoSectionTitle = styled(Typography)`
   font-weight: 600;
-  color: ${brandColors.text.primary};
+  color: brandColors.text.primary;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const InfoItem = styled.div`
@@ -189,7 +189,7 @@ const InfoItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid ${brandColors.backgrounds.secondary};
+  border-bottom: 1px solid brandColors.backgrounds.secondary;
   
   &:last-child {
     border-bottom: none;
@@ -197,13 +197,13 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.9rem;
   font-weight: 500;
 `;
 
 const InfoValue = styled(Typography)`
-  color: ${brandColors.text.primary};
+  color: brandColors.text.primary;
   font-size: 0.9rem;
 `;
 
@@ -213,7 +213,7 @@ const PrivateNotesSection = styled.div`
 
 const PrivateNotesTextarea = styled(TextField)`
   & .MuiOutlinedInput-root {
-    backgroundColor: ${brandColors.backgrounds.secondary};
+    backgroundColor: brandColors.backgrounds.secondary;
   }
 `;
 
@@ -224,10 +224,10 @@ const SupportSection = styled.div`
 const SupportOption = styled(ListItem)`
   border-radius: 8px;
   margin-bottom: 0.5rem;
-  border: 1px solid ${brandColors.borders.secondary};
+  border: 1px solid brandColors.borders.secondary;
   
   &:hover {
-    background: ${brandColors.backgrounds.hover};
+    background: brandColors.backgrounds.hover;
   }
 `;
 
@@ -237,7 +237,7 @@ const NoDetailsSelected = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   padding: 2rem;
   text-align: center;
 `;

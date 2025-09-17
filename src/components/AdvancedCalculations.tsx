@@ -72,7 +72,7 @@ export const AdvancedAnalysisDashboard: React.FC<{
         <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
           Advanced Analysis Dashboard
         </Typography>
-        <Typography variant="body2" sx={{ color: brandColors.neutral.dark, mb: 2 }}>
+        <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 2 }}>
           Configure market and seasonal inputs, then review calculated outputs.
         </Typography>
         <CompletionProgress
@@ -132,10 +132,10 @@ export const SeasonalAdjustmentsCalculator: React.FC<
           max={12}
         />
         <Box sx={{ mt: 1 }}>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Adjusted Vacancy: {(result.adjustedVacancyRate * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Maintenance Multiplier: {result.maintenanceMultiplier.toFixed(2)}
           </Typography>
         </Box>
@@ -178,16 +178,16 @@ export const MarketConditionsCalculator: React.FC<MarketConditionsProps> = ({
           ]}
         />
         <Box sx={{ mt: 1 }}>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Adj Vacancy: {(result.adjustedVacancyRate * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Adj Rent Growth: {(result.adjustedRentGrowth * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Adj Appreciation: {(result.adjustedAppreciation * 100).toFixed(2)}%
           </Typography>
-          <Typography variant="body2" sx={{ color: brandColors.neutral.dark }}>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
             Adj Cap Rate: {(result.adjustedCapRate * 100).toFixed(2)}%
           </Typography>
         </Box>
@@ -242,7 +242,7 @@ export const ExitStrategiesCalculator: React.FC<ExitStrategiesProps> = ({
             <Typography
               key={r.timeframe}
               variant="body2"
-              sx={{ color: brandColors.neutral.dark }}
+              sx={{ color: brandColors.neutral[800] }}
             >
               Year {r.timeframe}: ROI {r.roi.toFixed(1)}%, Annualized{" "}
               {r.annualizedRoi.toFixed(1)}%

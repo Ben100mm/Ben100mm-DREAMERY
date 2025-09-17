@@ -107,9 +107,11 @@ import {
   Send as SendIcon,
   ArrowUpward as ArrowUpwardIcon,
   CloudUpload as UploadIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 import { RoleContext } from "../context/RoleContext";
+import AgentMessages from "../components/agent/AgentMessages";
 
 // Custom Atom Icon Component
 const AtomIcon: React.FC<{ sx?: any }> = ({ sx }) => (
@@ -467,6 +469,7 @@ const CloseAgentPage: React.FC = () => {
   const tabs = [
     // Core Dashboard & Overview
     { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+    { value: 'messages', label: 'Messages', icon: <ChatIcon /> },
     
     // Client & Transaction Management
     { value: 'clients', label: 'Client Management', icon: <PeopleIcon /> },
@@ -580,7 +583,7 @@ const CloseAgentPage: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery Closing Hub - Agent
           </Typography>
 
@@ -638,7 +641,7 @@ const CloseAgentPage: React.FC = () => {
               fullWidth
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 py: 2,
                 fontWeight: 600,
                 fontSize: '1.1rem',
@@ -750,12 +753,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssignmentIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <AssignmentIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Agent Dashboard
                 </Typography>
               </Box>
@@ -987,12 +990,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <PeopleIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <PeopleIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Client Management
                 </Typography>
               </Box>
@@ -1016,12 +1019,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssignmentIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <AssignmentIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Transactions
                 </Typography>
               </Box>
@@ -1125,7 +1128,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1141,7 +1144,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1161,7 +1164,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1177,7 +1180,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1213,10 +1216,10 @@ const CloseAgentPage: React.FC = () => {
                       p: 2, 
                       mb: 3, 
                       backgroundColor: '#e3f2fd', 
-                      border: '1px solid #2196f3',
+                      border: '1px solid brandColors.accent.info',
                       borderRadius: '8px'
                     }}>
-                      <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500 }}>
+                      <Typography variant="body2" sx={{ color: brandColors.accent.infoDark, fontWeight: 500 }}>
                         💡 Tip: Use MLS Search to auto-fill property details for accuracy
                       </Typography>
                     </Box>
@@ -1233,7 +1236,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1249,7 +1252,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1263,7 +1266,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1286,7 +1289,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1325,7 +1328,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1348,7 +1351,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{
                               width: '100%',
                               padding: '12px',
-                              border: '1px solid #ccc',
+                              border: '1px solid brandColors.neutral[400]',
                               borderRadius: '4px',
                               fontSize: '14px'
                             }}
@@ -1373,7 +1376,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1387,7 +1390,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ccc',
+                            border: '1px solid brandColors.neutral[400]',
                             borderRadius: '4px',
                             fontSize: '14px'
                           }}
@@ -1430,7 +1433,7 @@ const CloseAgentPage: React.FC = () => {
                     p: 2, 
                     mt: 2, 
                     backgroundColor: '#f8f9fa', 
-                    border: '1px solid #e9ecef',
+                    border: '1px solid brandColors.neutral[100]',
                     borderRadius: '8px'
                   }}>
                     <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
@@ -1508,7 +1511,7 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ 
                     display: 'grid', 
                     gridTemplateColumns: '1fr auto',
-                    borderBottom: '2px solid #e0e0e0',
+                    borderBottom: '2px solid brandColors.neutral[300]',
                     p: 2,
                     backgroundColor: '#f8f9fa'
                   }}>
@@ -1572,7 +1575,7 @@ const CloseAgentPage: React.FC = () => {
                         display: 'grid',
                         gridTemplateColumns: '1fr auto',
                         p: 2,
-                        borderBottom: '1px solid #e0e0e0',
+                        borderBottom: '1px solid brandColors.neutral[300]',
                         '&:hover': { backgroundColor: '#f8f9fa' },
                         '&:last-child': { borderBottom: 'none' }
                       }}
@@ -1640,7 +1643,7 @@ const CloseAgentPage: React.FC = () => {
                     style={{
                       width: '100%',
                       padding: '12px',
-                      border: '1px solid #ccc',
+                      border: '1px solid brandColors.neutral[400]',
                       borderRadius: '4px',
                       fontSize: '14px'
                     }}
@@ -1699,12 +1702,12 @@ const CloseAgentPage: React.FC = () => {
                         elevation={1}
                         sx={{
                           p: 2,
-                          border: selectedProperty?.mlsNumber === property.mlsNumber ? `2px solid ${brandColors.primary}` : '1px solid #e0e0e0',
+                          border: selectedProperty?.mlsNumber === property.mlsNumber ? `2px solid ${brandColors.primary}` : '1px solid brandColors.neutral[300]',
                           borderRadius: '8px',
                           cursor: 'pointer',
                           backgroundColor: selectedProperty?.mlsNumber === property.mlsNumber ? '#f0f8ff' : 'white',
                           '&:hover': {
-                            backgroundColor: selectedProperty?.mlsNumber === property.mlsNumber ? '#f0f8ff' : '#f5f5f5',
+                            backgroundColor: selectedProperty?.mlsNumber === property.mlsNumber ? '#f0f8ff' : brandColors.neutral[100],
                             borderColor: brandColors.primary
                           }
                         }}
@@ -1731,7 +1734,7 @@ const CloseAgentPage: React.FC = () => {
                           <Box sx={{ 
                             width: 80, 
                             height: 60, 
-                            backgroundColor: '#f0f0f0',
+                            backgroundColor: brandColors.neutral[100],
                             borderRadius: '4px',
                             display: 'flex',
                             alignItems: 'center',
@@ -1754,21 +1757,21 @@ const CloseAgentPage: React.FC = () => {
                     p: 2, 
                     mt: 2, 
                     backgroundColor: '#e8f5e8', 
-                    border: '1px solid #4caf50',
+                    border: '1px solid brandColors.accent.success',
                     borderRadius: '8px',
                     textAlign: 'center'
                   }}>
                     <Typography variant="body1" sx={{ color: '#2e7d32', fontWeight: 500 }}>
                       ✅ Property data imported successfully!
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#388e3c', mt: 1 }}>
+                    <Typography variant="body2" sx={{ color: brandColors.accent.successDark, mt: 1 }}>
                       Property details have been added to your form.
                     </Typography>
                   </Box>
                 )}
 
                 {/* Modal Actions */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3, pt: 2, borderTop: '1px solid brandColors.neutral[300]' }}>
                   <Button
                     variant="outlined"
                     onClick={() => setMlsModalOpen(false)}
@@ -1801,12 +1804,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <BusinessIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <BusinessIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Reports & Analytics
                 </Typography>
               </Box>
@@ -1821,6 +1824,10 @@ const CloseAgentPage: React.FC = () => {
           </>
         )}
 
+        {state.activeTab === 'messages' && (
+          <AgentMessages />
+        )}
+
         {state.activeTab === 'support' && (
           <>
             <Paper 
@@ -1830,12 +1837,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SupportIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <SupportIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Support
                 </Typography>
               </Box>
@@ -1859,12 +1866,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <SettingsIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <SettingsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Settings
                 </Typography>
               </Box>
@@ -1888,12 +1895,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Integrations
                 </Typography>
               </Box>
@@ -1918,12 +1925,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ManageAccountsIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <ManageAccountsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Manage Transactions
                 </Typography>
               </Box>
@@ -1953,7 +1960,7 @@ const CloseAgentPage: React.FC = () => {
                       placeholder="Search transactions..." 
                       style={{ 
                         padding: '8px 12px', 
-                        border: '1px solid #ccc', 
+                        border: '1px solid brandColors.neutral[400]', 
                         borderRadius: '4px', 
                         fontSize: '14px' 
                       }} 
@@ -1961,10 +1968,10 @@ const CloseAgentPage: React.FC = () => {
                   </Box>
                   <Button variant="outlined">Search</Button>
                   <Button variant="outlined">Show All</Button>
-                  <IconButton sx={{ border: '1px solid #ccc', backgroundColor: brandColors.backgrounds.selected }}>
+                  <IconButton sx={{ border: '1px solid brandColors.neutral[400]', backgroundColor: brandColors.backgrounds.selected }}>
                     <ListAltIcon />
                   </IconButton>
-                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                  <IconButton sx={{ border: '1px solid brandColors.neutral[400]' }}>
                     <FilterListIcon />
                   </IconButton>
                   <FormControl sx={{ minWidth: 120 }}>
@@ -2071,12 +2078,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ListAltIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <ListAltIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Manage Listings
                 </Typography>
               </Box>
@@ -2104,7 +2111,7 @@ const CloseAgentPage: React.FC = () => {
                       style={{ 
                         flex: 1, 
                         padding: '8px 12px', 
-                        border: '1px solid #ccc', 
+                        border: '1px solid brandColors.neutral[400]', 
                         borderRadius: '4px', 
                         fontSize: '14px' 
                       }} 
@@ -2114,10 +2121,10 @@ const CloseAgentPage: React.FC = () => {
                     </Button>
                   </Box>
                   <Button variant="outlined">Show All</Button>
-                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                  <IconButton sx={{ border: '1px solid brandColors.neutral[400]' }}>
                     <ListAltIcon />
                   </IconButton>
-                  <IconButton sx={{ border: '1px solid #ccc' }}>
+                  <IconButton sx={{ border: '1px solid brandColors.neutral[400]' }}>
                     <FilterListIcon />
                   </IconButton>
                   <FormControl sx={{ minWidth: 120 }}>
@@ -2300,12 +2307,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <CreateIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <CreateIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Write A Listing
                 </Typography>
               </Box>
@@ -2360,7 +2367,7 @@ const CloseAgentPage: React.FC = () => {
                                 ml: 1
                               }}
                             >
-                              <CheckCircleIcon sx={{ fontSize: 12, color: 'white' }} />
+                              <CheckCircleIcon sx={{ fontSize: 12, color: brandColors.text.inverse }} />
                             </Box>
                           )}
                         </Box>
@@ -2408,7 +2415,7 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         I'm creating a listing for:
                       </Typography>
-                      <Box sx={{ display: 'flex', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+                      <Box sx={{ display: 'flex', border: '1px solid brandColors.neutral[400]', borderRadius: '8px', overflow: 'hidden' }}>
                         <Box
                           onClick={() => handlePropertyPurposeChange('sale')}
                           sx={{
@@ -2417,10 +2424,10 @@ const CloseAgentPage: React.FC = () => {
                             cursor: 'pointer',
                             backgroundColor: propertyPurpose === 'sale' ? brandColors.primary : 'white',
                             color: propertyPurpose === 'sale' ? 'white' : 'text.primary',
-                            borderRight: '1px solid #ccc',
+                            borderRight: '1px solid brandColors.neutral[400]',
                             transition: 'all 0.2s ease',
                             '&:hover': {
-                              backgroundColor: propertyPurpose === 'sale' ? brandColors.primary : '#f5f5f5'
+                              backgroundColor: propertyPurpose === 'sale' ? brandColors.primary : brandColors.neutral[100]
                             }
                           }}
                         >
@@ -2438,7 +2445,7 @@ const CloseAgentPage: React.FC = () => {
                             color: propertyPurpose === 'rent' ? 'white' : 'text.primary',
                             transition: 'all 0.2s ease',
                             '&:hover': {
-                              backgroundColor: propertyPurpose === 'rent' ? brandColors.primary : '#f5f5f5'
+                              backgroundColor: propertyPurpose === 'rent' ? brandColors.primary : brandColors.neutral[100]
                             }
                           }}
                         >
@@ -2464,7 +2471,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -2507,7 +2514,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2521,7 +2528,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2533,7 +2540,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -2554,7 +2561,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2568,7 +2575,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2593,7 +2600,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2607,7 +2614,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2621,7 +2628,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2635,7 +2642,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2650,7 +2657,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -2662,7 +2669,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -2691,7 +2698,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2703,7 +2710,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }}
@@ -2722,7 +2729,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2734,7 +2741,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }}
@@ -2753,7 +2760,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }}
@@ -2792,7 +2799,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2818,7 +2825,7 @@ const CloseAgentPage: React.FC = () => {
                                   style={{ 
                                     width: '100%', 
                                     padding: '12px', 
-                                    border: '1px solid #ccc', 
+                                    border: '1px solid brandColors.neutral[400]', 
                                     borderRadius: '4px', 
                                     fontSize: '14px' 
                                   }} 
@@ -2833,7 +2840,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2847,7 +2854,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2872,7 +2879,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2897,7 +2904,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2911,7 +2918,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -2942,7 +2949,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2956,7 +2963,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2970,7 +2977,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2984,7 +2991,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -2998,7 +3005,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -3012,7 +3019,7 @@ const CloseAgentPage: React.FC = () => {
                             style={{ 
                               width: '100%', 
                               padding: '12px', 
-                              border: '1px solid #ccc', 
+                              border: '1px solid brandColors.neutral[400]', 
                               borderRadius: '4px', 
                               fontSize: '14px' 
                             }} 
@@ -3035,7 +3042,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -3049,7 +3056,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -3063,7 +3070,7 @@ const CloseAgentPage: React.FC = () => {
                                 style={{ 
                                   width: '100%', 
                                   padding: '12px', 
-                                  border: '1px solid #ccc', 
+                                  border: '1px solid brandColors.neutral[400]', 
                                   borderRadius: '4px', 
                                   fontSize: '14px' 
                                 }} 
@@ -3087,7 +3094,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -3105,7 +3112,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -3125,7 +3132,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3139,7 +3146,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3161,7 +3168,7 @@ const CloseAgentPage: React.FC = () => {
                         style={{ 
                           width: '100%', 
                           padding: '12px', 
-                          border: '1px solid #ccc', 
+                          border: '1px solid brandColors.neutral[400]', 
                           borderRadius: '4px', 
                           fontSize: '14px',
                           resize: 'vertical'
@@ -3218,11 +3225,11 @@ const CloseAgentPage: React.FC = () => {
                       Upload Photos
                     </Typography>
                     <Box sx={{ 
-                      border: '2px dashed #ccc', 
+                      border: '2px dashed brandColors.neutral[400]', 
                       borderRadius: '8px', 
                       p: 4, 
                       textAlign: 'center',
-                      backgroundColor: '#fafafa',
+                      backgroundColor: brandColors.neutral[50],
                       cursor: 'pointer',
                       '&:hover': { borderColor: brandColors.primary, backgroundColor: '#f0f8ff' }
                     }}>
@@ -3275,7 +3282,7 @@ const CloseAgentPage: React.FC = () => {
                             'Attic (if applicable)'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3308,7 +3315,7 @@ const CloseAgentPage: React.FC = () => {
                             'Landscaping'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3341,7 +3348,7 @@ const CloseAgentPage: React.FC = () => {
                             'Landscaping'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3372,7 +3379,7 @@ const CloseAgentPage: React.FC = () => {
                             'Zoning Information'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3405,7 +3412,7 @@ const CloseAgentPage: React.FC = () => {
                             'Landscaping'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3438,7 +3445,7 @@ const CloseAgentPage: React.FC = () => {
                             'HVAC Systems'
                           ].map((category) => (
                             <Box key={category} sx={{ 
-                              border: '1px solid #e0e0e0', 
+                              border: '1px solid brandColors.neutral[300]', 
                               borderRadius: '4px', 
                               p: 2, 
                               textAlign: 'center',
@@ -3517,7 +3524,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -3540,7 +3547,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3554,7 +3561,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3568,7 +3575,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3582,7 +3589,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3596,7 +3603,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -3618,7 +3625,7 @@ const CloseAgentPage: React.FC = () => {
                     
                     {/* Sample Contacts Table */}
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3650,8 +3657,8 @@ const CloseAgentPage: React.FC = () => {
                           gridTemplateColumns: '1fr 1fr 1fr 1fr 100px', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' }
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] }
                         }}>
                           <Typography variant="body2">{contact.name}</Typography>
                           <Chip label={contact.type} size="small" color="primary" />
@@ -3733,7 +3740,7 @@ const CloseAgentPage: React.FC = () => {
                       Property Preparation
                     </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3750,8 +3757,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -3784,7 +3791,7 @@ const CloseAgentPage: React.FC = () => {
                       Legal & Documentation
                     </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3801,8 +3808,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -3835,7 +3842,7 @@ const CloseAgentPage: React.FC = () => {
                       Marketing & Presentation
                     </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3852,8 +3859,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -3886,7 +3893,7 @@ const CloseAgentPage: React.FC = () => {
                       Financial & Pricing
                     </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3903,8 +3910,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -3937,7 +3944,7 @@ const CloseAgentPage: React.FC = () => {
                       Closing & Transaction
                     </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -3954,8 +3961,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -3988,7 +3995,7 @@ const CloseAgentPage: React.FC = () => {
                         Listing Agreement & Addendum
                       </Typography>
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -4007,8 +4014,8 @@ const CloseAgentPage: React.FC = () => {
                           alignItems: 'center', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <input 
@@ -4049,7 +4056,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -4061,7 +4068,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4080,7 +4087,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4161,11 +4168,11 @@ const CloseAgentPage: React.FC = () => {
                       Upload Documents
                     </Typography>
                     <Box sx={{ 
-                      border: '2px dashed #ccc', 
+                      border: '2px dashed brandColors.neutral[400]', 
                       borderRadius: '8px', 
                       p: 4, 
                       textAlign: 'center',
-                      backgroundColor: '#fafafa',
+                      backgroundColor: brandColors.neutral[50],
                       cursor: 'pointer',
                       '&:hover': { borderColor: brandColors.primary, backgroundColor: '#f0f8ff' }
                     }}>
@@ -4198,13 +4205,13 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Other Documents', count: propertyPurpose === 'sale' ? 5 : 5, color: 'primary' }
                       ].map((category) => (
                         <Box key={category.name} sx={{ 
-                          border: '1px solid #e0e0e0', 
+                          border: '1px solid brandColors.neutral[300]', 
                           borderRadius: '4px', 
                           p: 2, 
                           textAlign: 'center',
                           backgroundColor: '#f9f9f9',
                           cursor: 'pointer',
-                          '&:hover': { backgroundColor: '#f0f0f0' }
+                          '&:hover': { backgroundColor: brandColors.neutral[100] }
                         }}>
                           <Typography variant="subtitle2" gutterBottom>{category.name}</Typography>
                           <Typography variant="h6" color={`${category.color}.main`}>{category.count}</Typography>
@@ -4286,7 +4293,7 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                         {propertyPurpose === 'sale' ? 'Contracts' : 'Rental Agreements'}
                       </Typography>
-                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                         {(propertyPurpose === 'sale' ? [
                           { name: 'Purchase Agreement', status: 'Required', date: '', size: '', type: 'PDF', category: 'Contracts' },
                           { name: 'Listing Agreement', status: 'Required', date: '2024-01-15', size: '2.1 MB', type: 'PDF', category: 'Contracts' },
@@ -4298,7 +4305,7 @@ const CloseAgentPage: React.FC = () => {
                           { name: 'Pet Agreement', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Rental Agreements' },
                           { name: 'Sublease Agreement', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Rental Agreements' }
                         ]).map((doc, index) => (
-                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                             <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                             <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                             <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
@@ -4319,7 +4326,7 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                         {propertyPurpose === 'sale' ? 'Disclosures' : 'Tenant Forms'}
                       </Typography>
-                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                         {(propertyPurpose === 'sale' ? [
                           { name: 'Seller Property Disclosure', status: 'Required', date: '2024-01-14', size: '1.2 MB', type: 'PDF', category: 'Disclosures' },
                           { name: 'Lead Paint Disclosure', status: 'Required', date: '', size: '', type: 'PDF', category: 'Disclosures' },
@@ -4331,7 +4338,7 @@ const CloseAgentPage: React.FC = () => {
                           { name: 'Employment Verification', status: 'Required', date: '', size: '', type: 'PDF', category: 'Tenant Forms' },
                           { name: 'References Form', status: 'Required', date: '', size: '', type: 'PDF', category: 'Tenant Forms' }
                         ]).map((doc, index) => (
-                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                             <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                             <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                             <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
@@ -4352,7 +4359,7 @@ const CloseAgentPage: React.FC = () => {
                       <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                         Financial Documents
                       </Typography>
-                      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                      <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                         {(propertyPurpose === 'sale' ? [
                           { name: 'Pre-approval Letter', status: 'Required', date: '2024-01-13', size: '0.5 MB', type: 'PDF', category: 'Financial' },
                           { name: 'Proof of Funds', status: 'Required', date: '', size: '', type: 'PDF', category: 'Financial' },
@@ -4364,7 +4371,7 @@ const CloseAgentPage: React.FC = () => {
                           { name: 'Pay Stubs', status: 'Required', date: '', size: '', type: 'PDF', category: 'Financial' },
                           { name: 'Tax Returns', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Financial' }
                         ]).map((doc, index) => (
-                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                             <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                             <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                             <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Pending' ? 'warning' : 'default'} variant="outlined" />
@@ -4386,7 +4393,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Property Documents
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {(propertyPurpose === 'sale' ? [
                         { name: 'Property Photos', status: 'Required', date: '2024-01-12', size: '15.2 MB', type: 'JPG', category: 'Property' },
                         { name: 'Inspection Report', status: 'Required', date: '2024-01-11', size: '2.8 MB', type: 'PDF', category: 'Property' },
@@ -4400,7 +4407,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Property Maintenance Records', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Property' },
                         { name: 'Utility Setup Instructions', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Property' }
                       ]).map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
@@ -4421,7 +4428,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Legal Documents
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {(propertyPurpose === 'sale' ? [
                         { name: 'Title Report', status: 'Required', date: '2024-01-09', size: '3.2 MB', type: 'PDF', category: 'Legal' },
                         { name: 'Insurance Certificate', status: 'Required', date: '2024-01-08', size: '0.8 MB', type: 'PDF', category: 'Legal' },
@@ -4435,7 +4442,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Building Code Compliance', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Legal' },
                         { name: 'Tenant Rights Notice', status: 'Required', date: '2024-01-06', size: '0.4 MB', type: 'PDF', category: 'Legal' }
                       ]).map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
@@ -4456,7 +4463,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Marketing Materials
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {(propertyPurpose === 'sale' ? [
                         { name: 'Property Brochure', status: 'Required', date: '2024-01-12', size: '8.5 MB', type: 'PDF', category: 'Marketing' },
                         { name: 'Virtual Tour Video', status: 'Optional', date: '2024-01-11', size: '45.2 MB', type: 'MP4', category: 'Marketing' },
@@ -4470,7 +4477,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Amenities List', status: 'Required', date: '2024-01-09', size: '0.2 MB', type: 'DOCX', category: 'Marketing' },
                         { name: 'Neighborhood Guide', status: 'Optional', date: '2024-01-08', size: '1.1 MB', type: 'PDF', category: 'Marketing' }
                       ]).map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
@@ -4491,7 +4498,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Lease Documents
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {[
                         { name: 'Standard Lease Agreement', status: 'Required', date: '2024-01-12', size: '2.1 MB', type: 'PDF', category: 'Lease Documents' },
                         { name: 'Lease Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Lease Documents' },
@@ -4499,7 +4506,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Move-in Checklist', status: 'Required', date: '2024-01-10', size: '0.5 MB', type: 'PDF', category: 'Lease Documents' },
                         { name: 'Rent Payment Schedule', status: 'Required', date: '2024-01-09', size: '0.3 MB', type: 'DOCX', category: 'Lease Documents' }
                       ].map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'warning'} variant="outlined" />
@@ -4520,7 +4527,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Addendums
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {(propertyPurpose === 'sale' ? [
                         { name: 'Financing Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
                         { name: 'Inspection Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
@@ -4534,7 +4541,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Utilities Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' },
                         { name: 'Maintenance Addendum', status: 'Conditional', date: '', size: '', type: 'PDF', category: 'Addendums' }
                       ]).map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Conditional' ? 'warning' : 'default'} variant="outlined" />
@@ -4555,7 +4562,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Tenant Forms
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {[
                         { name: 'Rental Application Form', status: 'Required', date: '2024-01-12', size: '1.2 MB', type: 'PDF', category: 'Tenant Forms' },
                         { name: 'Credit Check Authorization', status: 'Required', date: '2024-01-11', size: '0.8 MB', type: 'PDF', category: 'Tenant Forms' },
@@ -4563,7 +4570,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'References Form', status: 'Required', date: '2024-01-09', size: '0.4 MB', type: 'PDF', category: 'Tenant Forms' },
                         { name: 'Income Verification', status: 'Required', date: '2024-01-08', size: '0.7 MB', type: 'PDF', category: 'Tenant Forms' }
                       ].map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Required' ? 'error' : 'default'} variant="outlined" />
@@ -4584,7 +4591,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="subtitle1" gutterBottom sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                       Other Documents
                     </Typography>
-                    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <Box sx={{ border: '1px solid brandColors.neutral[300]', borderRadius: '4px', overflow: 'hidden' }}>
                       {(propertyPurpose === 'sale' ? [
                         { name: 'Third Party Reports', status: 'Optional', date: '', size: '', type: 'PDF', category: 'Other' },
                         { name: 'Custom Forms', status: 'Optional', date: '', size: '', type: 'DOCX', category: 'Other' },
@@ -4598,7 +4605,7 @@ const CloseAgentPage: React.FC = () => {
                         { name: 'Agent Notes', status: 'Optional', date: '2024-01-05', size: '0.2 MB', type: 'DOCX', category: 'Other' },
                         { name: 'Landlord Communications', status: 'Optional', date: '2024-01-04', size: '0.1 MB', type: 'PDF', category: 'Other' }
                       ]).map((doc, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid #e0e0e0', '&:hover': { backgroundColor: '#f5f5f5' }, '&:last-child': { borderBottom: 'none' } }}>
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderBottom: '1px solid brandColors.neutral[300]', '&:hover': { backgroundColor: brandColors.neutral[100] }, '&:last-child': { borderBottom: 'none' } }}>
                           <input type="checkbox" style={{ transform: 'scale(1.2)' }} />
                           <Typography variant="body2" sx={{ flex: 1, fontWeight: 500 }}>{doc.name}</Typography>
                           <Chip label={doc.status} size="small" color={doc.status === 'Optional' ? 'default' : 'primary'} variant="outlined" />
@@ -4663,7 +4670,7 @@ const CloseAgentPage: React.FC = () => {
                         <select 
                           style={{ 
                             padding: '8px 12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4680,7 +4687,7 @@ const CloseAgentPage: React.FC = () => {
                         <select 
                           style={{ 
                             padding: '8px 12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4708,7 +4715,7 @@ const CloseAgentPage: React.FC = () => {
                     
                     {/* Sample Activities */}
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -4740,8 +4747,8 @@ const CloseAgentPage: React.FC = () => {
                       ].map((activity, index) => (
                         <Box key={index} sx={{ 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] },
                           '&:last-child': { borderBottom: 'none' }
                         }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -4821,7 +4828,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -4833,7 +4840,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4852,7 +4859,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }} 
@@ -4864,7 +4871,7 @@ const CloseAgentPage: React.FC = () => {
                           style={{ 
                             width: '100%', 
                             padding: '12px', 
-                            border: '1px solid #ccc', 
+                            border: '1px solid brandColors.neutral[400]', 
                             borderRadius: '4px', 
                             fontSize: '14px' 
                           }}
@@ -4884,7 +4891,7 @@ const CloseAgentPage: React.FC = () => {
                         style={{ 
                           width: '100%', 
                           padding: '12px', 
-                          border: '1px solid #ccc', 
+                          border: '1px solid brandColors.neutral[400]', 
                           borderRadius: '4px', 
                           fontSize: '14px',
                           resize: 'vertical'
@@ -4919,7 +4926,7 @@ const CloseAgentPage: React.FC = () => {
 
                     {/* Tasks */}
                     <Box sx={{ 
-                      border: '1px solid #e0e0e0', 
+                      border: '1px solid brandColors.neutral[300]', 
                       borderRadius: '4px', 
                       overflow: 'hidden' 
                     }}>
@@ -4977,8 +4984,8 @@ const CloseAgentPage: React.FC = () => {
                           gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 100px', 
                           gap: 2, 
                           p: 2, 
-                          borderBottom: '1px solid #e0e0e0',
-                          '&:hover': { backgroundColor: '#f5f5f5' }
+                          borderBottom: '1px solid brandColors.neutral[300]',
+                          '&:hover': { backgroundColor: brandColors.neutral[100] }
                         }}>
                           <Typography variant="body2" sx={{ fontWeight: 500 }}>{task.title}</Typography>
                           <Chip 
@@ -5092,12 +5099,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ReceiptIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <ReceiptIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Write An Offer
                 </Typography>
               </Box>
@@ -5417,7 +5424,7 @@ const CloseAgentPage: React.FC = () => {
                       Required Documents & Attachments
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
-                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                      <Box sx={{ p: 3, border: '2px dashed brandColors.neutral[400]', borderRadius: 2, textAlign: 'center' }}>
                         <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
                           Pre-Approval Letter
                         </Typography>
@@ -5425,7 +5432,7 @@ const CloseAgentPage: React.FC = () => {
                           Upload Document
                         </Button>
                       </Box>
-                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                      <Box sx={{ p: 3, border: '2px dashed brandColors.neutral[400]', borderRadius: 2, textAlign: 'center' }}>
                         <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
                           Proof of Funds
                         </Typography>
@@ -5433,7 +5440,7 @@ const CloseAgentPage: React.FC = () => {
                           Upload Document
                         </Button>
                       </Box>
-                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                      <Box sx={{ p: 3, border: '2px dashed brandColors.neutral[400]', borderRadius: 2, textAlign: 'center' }}>
                         <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
                           Buyer's Agent Agreement
                         </Typography>
@@ -5441,7 +5448,7 @@ const CloseAgentPage: React.FC = () => {
                           Upload Document
                         </Button>
                       </Box>
-                      <Box sx={{ p: 3, border: '2px dashed #ccc', borderRadius: 2, textAlign: 'center' }}>
+                      <Box sx={{ p: 3, border: '2px dashed brandColors.neutral[400]', borderRadius: 2, textAlign: 'center' }}>
                         <Typography variant="body2" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                           + Add More Documents
                         </Typography>
@@ -5462,7 +5469,7 @@ const CloseAgentPage: React.FC = () => {
                       Review & Submit Offer
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3, mb: 3 }}>
-                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
                           Offer Summary
                         </Typography>
@@ -5473,7 +5480,7 @@ const CloseAgentPage: React.FC = () => {
                           Offer Price
                         </Typography>
                       </Box>
-                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
                           Closing Date
                         </Typography>
@@ -5484,7 +5491,7 @@ const CloseAgentPage: React.FC = () => {
                           Target Close
                         </Typography>
                       </Box>
-                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
                           Financing
                         </Typography>
@@ -5584,7 +5591,7 @@ const CloseAgentPage: React.FC = () => {
                       <Box sx={{ 
                         display: 'grid', 
                         gridTemplateColumns: '2fr 1fr 1fr auto',
-                        borderBottom: '2px solid #e0e0e0',
+                        borderBottom: '2px solid brandColors.neutral[300]',
                         p: 2,
                         backgroundColor: '#f8f9fa'
                       }}>
@@ -5633,14 +5640,14 @@ const CloseAgentPage: React.FC = () => {
                           amount: '$1,400,000',
                           date: '03/22/2023 04:32:00 P.M.',
                           status: 'Declined',
-                          statusColor: '#e0e0e0'
+                          statusColor: brandColors.neutral[300]
                         },
                         {
                           address: '8872 9 Line, Rural Halton Hills, Halton, Ontario L0P 1K0',
                           amount: '$1,299,999',
                           date: '03/22/2023 04:32:00 P.M.',
                           status: 'Declined',
-                          statusColor: '#e0e0e0'
+                          statusColor: brandColors.neutral[300]
                         }
                       ].map((offer, index) => (
                         <Box
@@ -5649,7 +5656,7 @@ const CloseAgentPage: React.FC = () => {
                             display: 'grid',
                             gridTemplateColumns: '2fr 1fr 1fr auto',
                             p: 2,
-                            borderBottom: '1px solid #e0e0e0',
+                            borderBottom: '1px solid brandColors.neutral[300]',
                             '&:hover': { backgroundColor: '#f8f9fa' },
                             '&:last-child': { borderBottom: 'none' }
                           }}
@@ -5730,12 +5737,12 @@ const CloseAgentPage: React.FC = () => {
         p: 3, 
         backgroundColor: brandColors.primary,
         borderRadius: '16px 16px 0 0',
-        color: 'white'
+        color: brandColors.text.inverse
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <CompareArrowsIcon sx={{ fontSize: 28, color: 'white' }} />
-        <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+        <CompareArrowsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+        <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
           Review Offers
         </Typography>
       </Box>
@@ -5791,7 +5798,7 @@ const CloseAgentPage: React.FC = () => {
               Offer Summary
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3 }}>
-              <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center', border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2, textAlign: 'center', border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.secondary' }}>
                   Total Offers
                 </Typography>
@@ -5806,7 +5813,7 @@ const CloseAgentPage: React.FC = () => {
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#856404' }}>
                   Pending Review
                 </Typography>
-                <Typography variant="h3" sx={{ color: '#f57c00', fontWeight: 700 }}>
+                <Typography variant="h3" sx={{ color: brandColors.accent.warningDark, fontWeight: 700 }}>
                   3
                 </Typography>
                 <Typography variant="caption" sx={{ color: '#856404' }}>
@@ -5814,13 +5821,13 @@ const CloseAgentPage: React.FC = () => {
                 </Typography>
               </Box>
               <Box sx={{ p: 3, backgroundColor: '#e3f2fd', borderRadius: 2, textAlign: 'center', border: '1px solid #90caf9' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#1976d2' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.accent.infoDark }}>
                   Under Negotiation
                 </Typography>
-                <Typography variant="h3" sx={{ color: '#1976d2', fontWeight: 700 }}>
+                <Typography variant="h3" sx={{ color: brandColors.accent.infoDark, fontWeight: 700 }}>
                   2
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#1976d2' }}>
+                <Typography variant="caption" sx={{ color: brandColors.accent.infoDark }}>
                   In discussion
                 </Typography>
               </Box>
@@ -5890,9 +5897,9 @@ const CloseAgentPage: React.FC = () => {
                 ].map((offer) => (
                   <Box key={offer.id} sx={{ 
                     p: 2, 
-                    border: '1px solid #e0e0e0', 
+                    border: '1px solid brandColors.neutral[300]', 
                     borderRadius: 1,
-                    '&:hover': { backgroundColor: '#f5f5f5' }
+                    '&:hover': { backgroundColor: brandColors.neutral[100] }
                   }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -5905,7 +5912,7 @@ const CloseAgentPage: React.FC = () => {
                           backgroundColor: offer.status === 'Pending' ? '#fff3cd' : 
                                          offer.status === 'Under Review' ? '#e3f2fd' : '#e8f5e8',
                           color: offer.status === 'Pending' ? '#856404' : 
-                                 offer.status === 'Under Review' ? '#1976d2' : '#2e7d32'
+                                 offer.status === 'Under Review' ? brandColors.accent.infoDark : '#2e7d32'
                         }}
                       />
                     </Box>
@@ -5921,7 +5928,7 @@ const CloseAgentPage: React.FC = () => {
                         size="small" 
                         sx={{ 
                           backgroundColor: offer.priority === 'High' ? '#ffebee' : '#fff3cd',
-                          color: offer.priority === 'High' ? '#c62828' : '#856404'
+                          color: offer.priority === 'High' ? brandColors.accent.errorDark : '#856404'
                         }}
                       />
                     </Box>
@@ -5938,7 +5945,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* MLS Integration */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   MLS Integration
                 </Typography>
@@ -5947,31 +5954,31 @@ const CloseAgentPage: React.FC = () => {
                     label="Property Data" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Market Updates" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Comparable Sales" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -5980,7 +5987,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* CRM Integration */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   CRM Integration
                 </Typography>
@@ -5989,31 +5996,31 @@ const CloseAgentPage: React.FC = () => {
                     label="Client Updates" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Transaction Sync" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Follow-up Tasks" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -6022,7 +6029,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Email Automation */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Email Automation
                 </Typography>
@@ -6031,31 +6038,31 @@ const CloseAgentPage: React.FC = () => {
                     label="Offer Notifications" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Status Updates" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Client Reports" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -6072,7 +6079,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* NAR Code of Ethics */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   NAR Code of Ethics
                 </Typography>
@@ -6081,31 +6088,31 @@ const CloseAgentPage: React.FC = () => {
                     label="Fair Representation" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="No Discrimination" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Transparent Process" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -6114,7 +6121,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Fair Housing Compliance */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Fair Housing Compliance
                 </Typography>
@@ -6123,31 +6130,31 @@ const CloseAgentPage: React.FC = () => {
                     label="Protected Classes" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Equal Treatment" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="No Bias" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -6156,7 +6163,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Documentation Audit */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Documentation Audit
                 </Typography>
@@ -6165,31 +6172,31 @@ const CloseAgentPage: React.FC = () => {
                     label="All Offers Documented" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Timestamps Recorded" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                   <Chip 
                     label="Agent Notes Complete" 
                     size="small" 
                     sx={{ 
-                      backgroundColor: '#4caf50', 
-                      color: 'white',
+                      backgroundColor: brandColors.accent.success, 
+                      color: brandColors.text.inverse,
                       '& .MuiChip-label': { display: 'flex', alignItems: 'center', gap: 0.5 }
                     }}
-                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: 'white' }} />}
+                    icon={<CheckCircleIcon sx={{ fontSize: 16, color: brandColors.text.inverse }} />}
                   />
                 </Box>
                 <Typography variant="body2" color="text.secondary">
@@ -6210,7 +6217,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* Comparable Sales */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Comparable Sales
                 </Typography>
@@ -6227,7 +6234,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="body2">890 Elm Dr</Typography>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>$418,000</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, pt: 1, borderTop: '1px solid #e0e0e0' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, pt: 1, borderTop: '1px solid brandColors.neutral[300]' }}>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>Average:</Typography>
                     <Typography variant="body2" sx={{ fontWeight: 700, color: brandColors.primary }}>$431,667</Typography>
                   </Box>
@@ -6235,7 +6242,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Market Trends */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Market Trends
                 </Typography>
@@ -6243,29 +6250,29 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="body2">Days on Market</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="body2" sx={{ color: '#4caf50', fontWeight: 600 }}>↓ 12%</Typography>
+                      <Typography variant="body2" sx={{ color: brandColors.accent.success, fontWeight: 600 }}>↓ 12%</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="body2">Price per Sq Ft</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="body2" sx={{ color: '#4caf50', fontWeight: 600 }}>↑ 8%</Typography>
+                      <Typography variant="body2" sx={{ color: brandColors.accent.success, fontWeight: 600 }}>↑ 8%</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="body2">Inventory Level</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="body2" sx={{ color: '#f44336', fontWeight: 600 }}>↓ 15%</Typography>
+                      <Typography variant="body2" sx={{ color: brandColors.accent.error, fontWeight: 600 }}>↓ 15%</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, pt: 1, borderTop: '1px solid #e0e0e0' }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, pt: 1, borderTop: '1px solid brandColors.neutral[300]' }}>
                     Last 30 days
                   </Typography>
                 </Box>
               </Box>
 
               {/* Buyer Demand */}
-              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 3, backgroundColor: 'white', borderRadius: 2, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Buyer Demand
                 </Typography>
@@ -6282,7 +6289,7 @@ const CloseAgentPage: React.FC = () => {
                     <Typography variant="body2">Avg Days to Offer</Typography>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>11</Typography>
                   </Box>
-                  <Typography variant="caption" sx={{ mt: 1, pt: 1, borderTop: '1px solid #e0e0e0', color: '#4caf50', fontWeight: 600 }}>
+                  <Typography variant="caption" sx={{ mt: 1, pt: 1, borderTop: '1px solid brandColors.neutral[300]', color: brandColors.accent.success, fontWeight: 600 }}>
                     Strong buyer interest
                   </Typography>
                 </Box>
@@ -6297,7 +6304,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* Offer Summary Cards */}
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Total Offers Received
                 </Typography>
@@ -6309,11 +6316,11 @@ const CloseAgentPage: React.FC = () => {
                 </Typography>
               </Box>
               
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Pending Review
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#ff9800', fontWeight: 700 }}>
+                <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 700 }}>
                   3
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -6321,11 +6328,11 @@ const CloseAgentPage: React.FC = () => {
                 </Typography>
               </Box>
               
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Under Negotiation
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>
+                <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 700 }}>
                   2
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -6397,9 +6404,9 @@ const CloseAgentPage: React.FC = () => {
                   gridTemplateColumns: '40px 150px 200px 150px 120px 120px 120px 100px 80px',
                   gap: 1,
                   p: 2,
-                  borderBottom: '1px solid #e0e0e0',
+                  borderBottom: '1px solid brandColors.neutral[300]',
                   alignItems: 'center',
-                  '&:hover': { backgroundColor: '#f5f5f5' }
+                  '&:hover': { backgroundColor: brandColors.neutral[100] }
                 }}>
                   <Box>
                     <input type="checkbox" />
@@ -6416,7 +6423,7 @@ const CloseAgentPage: React.FC = () => {
                         backgroundColor: offer.status === 'Pending' ? '#fff3cd' : 
                                        offer.status === 'Under Review' ? '#e3f2fd' : '#e8f5e8',
                         color: offer.status === 'Pending' ? '#856404' : 
-                               offer.status === 'Under Review' ? '#1976d2' : '#2e7d32',
+                               offer.status === 'Under Review' ? brandColors.accent.infoDark : '#2e7d32',
                         fontWeight: 600
                       }}
                     />
@@ -6427,7 +6434,7 @@ const CloseAgentPage: React.FC = () => {
                       size="small" 
                       sx={{ 
                         backgroundColor: offer.priority === 'High' ? '#ffebee' : '#fff3cd',
-                        color: offer.priority === 'High' ? '#c62828' : '#856404',
+                        color: offer.priority === 'High' ? brandColors.accent.errorDark : '#856404',
                         fontWeight: 600
                       }}
                     />
@@ -6486,7 +6493,7 @@ const CloseAgentPage: React.FC = () => {
                     sx={{ fontWeight: 600 }}
                   />
                 </Box>
-                <Box sx={{ display: 'flex', border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+                <Box sx={{ display: 'flex', border: '1px solid brandColors.neutral[300]', borderRadius: '4px' }}>
                   <Button 
                     variant="contained" 
                     size="small" 
@@ -6523,8 +6530,8 @@ const CloseAgentPage: React.FC = () => {
                       width: 24,
                       height: 24,
                       borderRadius: '50%',
-                      backgroundColor: index <= 2 ? brandColors.primary : '#e0e0e0',
-                      color: 'white',
+                      backgroundColor: index <= 2 ? brandColors.primary : brandColors.neutral[300],
+                      color: brandColors.text.inverse,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -6544,7 +6551,7 @@ const CloseAgentPage: React.FC = () => {
                       <Box sx={{
                         width: 20,
                         height: 2,
-                        backgroundColor: index < 2 ? brandColors.primary : '#e0e0e0',
+                        backgroundColor: index < 2 ? brandColors.primary : brandColors.neutral[300],
                         ml: 0.5
                       }} />
                     )}
@@ -6561,7 +6568,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* Review Status */}
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Review Status
                 </Typography>
@@ -6574,11 +6581,11 @@ const CloseAgentPage: React.FC = () => {
               </Box>
               
               {/* Review Priority */}
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Review Priority
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#ff9800', fontWeight: 700 }}>
+                <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 700 }}>
                   High
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -6587,11 +6594,11 @@ const CloseAgentPage: React.FC = () => {
               </Box>
               
               {/* Review Deadline */}
-              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+              <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, border: '1px solid brandColors.neutral[300]' }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   Review Deadline
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#f44336', fontWeight: 700 }}>
+                <Typography variant="h4" sx={{ color: brandColors.accent.error, fontWeight: 700 }}>
                   24h
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -6608,7 +6615,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
               {/* Create Counter-Offer */}
-              <Box sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2 }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Create Counter-Offer
                 </Typography>
@@ -6652,7 +6659,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Communication Hub */}
-              <Box sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2 }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Communication Hub
                 </Typography>
@@ -6696,7 +6703,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Document Sharing */}
-              <Box sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2 }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Document Sharing
                 </Typography>
@@ -6748,7 +6755,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 3 }}>
               {/* Offer Details */}
-              <Box sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2 }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Offer #OFF001 - John Smith
                 </Typography>
@@ -6773,7 +6780,7 @@ const CloseAgentPage: React.FC = () => {
               </Box>
 
               {/* Review Actions */}
-              <Box sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Box sx={{ p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2 }}>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: brandColors.primary }}>
                   Review Actions
                 </Typography>
@@ -6782,7 +6789,7 @@ const CloseAgentPage: React.FC = () => {
                     variant="contained" 
                     fullWidth 
                     sx={{ 
-                      backgroundColor: '#4caf50',
+                      backgroundColor: brandColors.accent.success,
                       '&:hover': { backgroundColor: '#45a049' }
                     }}
                   >
@@ -6791,14 +6798,14 @@ const CloseAgentPage: React.FC = () => {
                   <Button 
                     variant="outlined" 
                     fullWidth 
-                    sx={{ borderColor: '#ff9800', color: '#ff9800' }}
+                    sx={{ borderColor: brandColors.accent.warning, color: brandColors.accent.warning }}
                   >
                     Counter Offer
                   </Button>
                   <Button 
                     variant="outlined" 
                     fullWidth 
-                    sx={{ borderColor: '#f44336', color: '#f44336' }}
+                    sx={{ borderColor: brandColors.accent.error, color: brandColors.accent.error }}
                   >
                     Reject Offer
                   </Button>
@@ -6879,11 +6886,11 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                     <Box>
                       <Typography variant="body2" color="text.secondary">Highest Offer:</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#2196f3' }}>$410,000</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: brandColors.accent.info }}>$410,000</Typography>
                     </Box>
                     <Box>
                       <Typography variant="body2" color="text.secondary">Lowest Offer:</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: '#f44336' }}>$385,000</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: brandColors.accent.error }}>$385,000</Typography>
                     </Box>
                     <Box>
                       <Typography variant="body2" color="text.secondary">Avg Offer:</Typography>
@@ -6907,40 +6914,40 @@ const CloseAgentPage: React.FC = () => {
                         width: 16,
                         height: 16,
                         borderRadius: '50%',
-                        backgroundColor: '#4caf50'
+                        backgroundColor: brandColors.accent.success
                       }} />
                       <Typography variant="body2">Offer #3</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#4caf50', ml: 'auto' }}>92</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success, ml: 'auto' }}>92</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{
                         width: 16,
                         height: 16,
                         borderRadius: '50%',
-                        backgroundColor: '#2196f3'
+                        backgroundColor: brandColors.accent.info
                       }} />
                       <Typography variant="body2">Offer #1</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#2196f3', ml: 'auto' }}>87</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.info, ml: 'auto' }}>87</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{
                         width: 16,
                         height: 16,
                         borderRadius: '50%',
-                        backgroundColor: '#ff9800'
+                        backgroundColor: brandColors.accent.warning
                       }} />
                       <Typography variant="body2">Offer #2</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#ff9800', ml: 'auto' }}>83</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.warning, ml: 'auto' }}>83</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{
                         width: 16,
                         height: 16,
                         borderRadius: '50%',
-                        backgroundColor: '#f44336'
+                        backgroundColor: brandColors.accent.error
                       }} />
                       <Typography variant="body2">Offer #4</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#f44336', ml: 'auto' }}>78</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.error, ml: 'auto' }}>78</Typography>
                     </Box>
                   </Box>
                 </Paper>
@@ -6953,19 +6960,19 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="body2">Buyers</Typography>
-                      <Chip label="25%" size="small" sx={{ backgroundColor: brandColors.primary, color: 'white' }} />
+                      <Chip label="25%" size="small" sx={{ backgroundColor: brandColors.primary, color: brandColors.text.inverse }} />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="body2">Closing Date</Typography>
-                      <Chip label="20%" size="small" sx={{ backgroundColor: brandColors.primary, color: 'white' }} />
+                      <Chip label="20%" size="small" sx={{ backgroundColor: brandColors.primary, color: brandColors.text.inverse }} />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="body2">Loan Type</Typography>
-                      <Chip label="15%" size="small" sx={{ backgroundColor: brandColors.primary, color: 'white' }} />
+                      <Chip label="15%" size="small" sx={{ backgroundColor: brandColors.primary, color: brandColors.text.inverse }} />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="body2">Down Payment</Typography>
-                      <Chip label="20%" size="small" sx={{ backgroundColor: brandColors.primary, color: 'white' }} />
+                      <Chip label="20%" size="small" sx={{ backgroundColor: brandColors.primary, color: brandColors.text.inverse }} />
                     </Box>
                   </Box>
                 </Paper>
@@ -7008,7 +7015,7 @@ const CloseAgentPage: React.FC = () => {
                             sx={{
                               p: 2,
                               backgroundColor: currentOfferIndex === index ? 'white' : '#f8f9fa',
-                              border: currentOfferIndex === index ? `2px solid ${brandColors.primary}` : '1px solid #e0e0e0',
+                              border: currentOfferIndex === index ? `2px solid ${brandColors.primary}` : '1px solid brandColors.neutral[300]',
                               cursor: 'pointer',
                               transition: 'all 0.2s ease',
                               '&:hover': {
@@ -7021,16 +7028,16 @@ const CloseAgentPage: React.FC = () => {
                             {/* Offer Header */}
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                               <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 700 }}>
-                                ${offer.price.toLocaleString()}
+                                offer.price.toLocaleString()
                               </Typography>
                               <Chip
                                 label={`Score: ${offer.score}`}
                                 size="small"
                                 sx={{
-                                  backgroundColor: offer.score >= 90 ? '#4caf50' : 
-                                                 offer.score >= 80 ? '#2196f3' : 
-                                                 offer.score >= 70 ? '#ff9800' : '#f44336',
-                                  color: 'white',
+                                  backgroundColor: offer.score >= 90 ? brandColors.accent.success : 
+                                                 offer.score >= 80 ? brandColors.accent.info : 
+                                                 offer.score >= 70 ? brandColors.accent.warning : brandColors.accent.error,
+                                  color: brandColors.text.inverse,
                                   fontWeight: 600
                                 }}
                               />
@@ -7044,7 +7051,7 @@ const CloseAgentPage: React.FC = () => {
                                 sx={{
                                   backgroundColor: offer.status === 'ACTIVE' ? '#e3f2fd' : 
                                                  offer.status === 'PENDING' ? '#fff3cd' : '#fce4ec',
-                                  color: offer.status === 'ACTIVE' ? '#1976d2' : 
+                                  color: offer.status === 'ACTIVE' ? brandColors.accent.infoDark : 
                                          offer.status === 'PENDING' ? '#856404' : '#c2185b',
                                   fontWeight: 600,
                                   mb: 1
@@ -7063,7 +7070,7 @@ const CloseAgentPage: React.FC = () => {
                               </Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="caption" color="text.secondary">Down:</Typography>
-                                <Typography variant="caption" sx={{ fontWeight: 600 }}>${offer.downPayment.toLocaleString()}</Typography>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>offer.downPayment.toLocaleString()</Typography>
                               </Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="caption" color="text.secondary">Loan:</Typography>
@@ -7091,19 +7098,19 @@ const CloseAgentPage: React.FC = () => {
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Offer Price</Typography>
                             <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
-                              ${offers[currentOfferIndex].price.toLocaleString()}
+                              offers[currentOfferIndex].price.toLocaleString()
                             </Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Net Amount</Typography>
                             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                              ${offers[currentOfferIndex].netAmount.toLocaleString()}
+                              offers[currentOfferIndex].netAmount.toLocaleString()
                             </Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Commission</Typography>
-                            <Typography variant="h6" sx={{ fontWeight: 600, color: '#4caf50' }}>
-                              ${offers[currentOfferIndex].commission.toLocaleString()}
+                            <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
+                              offers[currentOfferIndex].commission.toLocaleString()
                             </Typography>
                           </Box>
                           <Box>
@@ -7125,7 +7132,7 @@ const CloseAgentPage: React.FC = () => {
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Down Payment</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 600 }}>${offers[currentOfferIndex].downPayment.toLocaleString()}</Typography>
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>offers[currentOfferIndex].downPayment.toLocaleString()</Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Finance Type</Typography>
@@ -7133,7 +7140,7 @@ const CloseAgentPage: React.FC = () => {
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Initial Deposit</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 600 }}>${offers[currentOfferIndex].initialDeposit.toLocaleString()}</Typography>
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>offers[currentOfferIndex].initialDeposit.toLocaleString()</Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Days on Market</Typography>
@@ -7170,7 +7177,7 @@ const CloseAgentPage: React.FC = () => {
                             variant="contained"
                             startIcon={<CheckCircleIcon />}
                             sx={{
-                              backgroundColor: '#4caf50',
+                              backgroundColor: brandColors.accent.success,
                               '&:hover': { backgroundColor: '#45a049' }
                             }}
                           >
@@ -7180,10 +7187,10 @@ const CloseAgentPage: React.FC = () => {
                             variant="outlined"
                             startIcon={<EditIcon />}
                             sx={{
-                              borderColor: '#ff9800',
-                              color: '#ff9800',
+                              borderColor: brandColors.accent.warning,
+                              color: brandColors.accent.warning,
                               '&:hover': {
-                                borderColor: '#f57c00',
+                                borderColor: brandColors.accent.warningDark,
                                 backgroundColor: 'rgba(255,152,0,0.04)'
                               }
                             }}
@@ -7275,7 +7282,7 @@ const CloseAgentPage: React.FC = () => {
           <Box sx={{
             p: 3,
             backgroundColor: brandColors.primary,
-            color: 'white',
+            color: brandColors.text.inverse,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -7285,7 +7292,7 @@ const CloseAgentPage: React.FC = () => {
             </Typography>
             <IconButton
               onClick={() => setSendOffersModalOpen(false)}
-              sx={{ color: 'white' }}
+              sx={{ color: brandColors.text.inverse }}
             >
               <CloseIcon />
             </IconButton>
@@ -7316,13 +7323,13 @@ const CloseAgentPage: React.FC = () => {
                   <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
                     To
                   </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, minHeight: 40, p: 1, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, minHeight: 40, p: 1, border: '1px solid brandColors.neutral[300]', borderRadius: 1 }}>
                     {recipients.map((email, index) => (
                       <Chip
                         key={index}
                         label={email}
                         onDelete={() => setRecipients(prev => prev.filter((_, i) => i !== index))}
-                        sx={{ backgroundColor: '#e3f2fd', color: '#1976d2' }}
+                        sx={{ backgroundColor: '#e3f2fd', color: brandColors.accent.infoDark }}
                       />
                     ))}
                   </Box>
@@ -7425,12 +7432,12 @@ const CloseAgentPage: React.FC = () => {
         p: 3, 
         backgroundColor: brandColors.primary,
         borderRadius: '16px 16px 0 0',
-        color: 'white'
+        color: brandColors.text.inverse
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <DescriptionIcon sx={{ fontSize: 28, color: 'white' }} />
-        <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+        <DescriptionIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+        <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
           Documents to Review
         </Typography>
       </Box>
@@ -7472,7 +7479,7 @@ const CloseAgentPage: React.FC = () => {
 
           {/* Global Navigation & Filters */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box sx={{ display: 'flex', border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+            <Box sx={{ display: 'flex', border: '1px solid brandColors.neutral[300]', borderRadius: '4px' }}>
               <Button 
                 variant="contained" 
                 size="small" 
@@ -7517,15 +7524,15 @@ const CloseAgentPage: React.FC = () => {
         mb: 4 
       }}>
         <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#fff3e0' }}>
-          <Typography variant="h4" sx={{ color: '#f57c00', fontWeight: 700 }}>18</Typography>
+          <Typography variant="h4" sx={{ color: brandColors.accent.warningDark, fontWeight: 700 }}>18</Typography>
           <Typography variant="subtitle1" color="text.secondary">Pending Review</Typography>
         </Paper>
         <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e8' }}>
-          <Typography variant="h4" sx={{ color: '#388e3c', fontWeight: 700 }}>12</Typography>
+          <Typography variant="h4" sx={{ color: brandColors.accent.successDark, fontWeight: 700 }}>12</Typography>
           <Typography variant="subtitle1" color="text.secondary">Approved Today</Typography>
         </Paper>
         <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
-          <Typography variant="h4" sx={{ color: '#1976d2', fontWeight: 700 }}>6</Typography>
+          <Typography variant="h4" sx={{ color: brandColors.accent.infoDark, fontWeight: 700 }}>6</Typography>
           <Typography variant="subtitle1" color="text.secondary">Rejected Today</Typography>
         </Paper>
         <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#fce4ec' }}>
@@ -7574,7 +7581,7 @@ const CloseAgentPage: React.FC = () => {
                   alignItems: 'center', 
                   justifyContent: 'space-between',
                   p: 2,
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: brandColors.neutral[100],
                   borderRadius: '4px',
                   mb: 2
                 }}>
@@ -7600,7 +7607,7 @@ const CloseAgentPage: React.FC = () => {
                     gap: 2,
                     p: 1.5,
                     backgroundColor: '#fff',
-                    border: '1px solid #e0e0e0',
+                    border: '1px solid brandColors.neutral[300]',
                     borderRadius: '4px',
                     cursor: 'pointer',
                     '&:hover': { backgroundColor: '#f0f8ff' }
@@ -7622,7 +7629,7 @@ const CloseAgentPage: React.FC = () => {
                     gap: 2,
                     p: 1.5,
                     backgroundColor: '#e3f2fd',
-                    border: '1px solid #2196f3',
+                    border: '1px solid brandColors.accent.info',
                     borderRadius: '4px',
                     cursor: 'pointer'
                   }}>
@@ -7652,7 +7659,7 @@ const CloseAgentPage: React.FC = () => {
                     alignItems: 'center', 
                     justifyContent: 'space-between',
                     p: 2,
-                    backgroundColor: '#f5f5f5',
+                    backgroundColor: brandColors.neutral[100],
                     borderRadius: '4px'
                   }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -7690,7 +7697,7 @@ const CloseAgentPage: React.FC = () => {
                       alignItems: 'center', 
                       justifyContent: 'space-between',
                       p: 2,
-                      backgroundColor: '#f5f5f5',
+                      backgroundColor: brandColors.neutral[100],
                       borderRadius: '4px'
                     }}>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -7716,7 +7723,7 @@ const CloseAgentPage: React.FC = () => {
                   style={{ 
                     width: '100%', 
                     padding: '8px', 
-                    border: '1px solid #ccc', 
+                    border: '1px solid brandColors.neutral[400]', 
                     borderRadius: '4px', 
                     fontSize: '14px' 
                   }} 
@@ -7741,7 +7748,7 @@ const CloseAgentPage: React.FC = () => {
               justifyContent: 'space-between', 
               mb: 3,
               p: 2,
-              backgroundColor: '#f5f5f5',
+              backgroundColor: brandColors.neutral[100],
               borderRadius: '8px',
               gap: { xs: 2, sm: 0 }
             }}>
@@ -7751,7 +7758,7 @@ const CloseAgentPage: React.FC = () => {
                   <select 
                     style={{ 
                       padding: '4px 8px', 
-                      border: '1px solid #ccc', 
+                      border: '1px solid brandColors.neutral[400]', 
                       borderRadius: '4px', 
                       fontSize: '14px' 
                     }}
@@ -7790,7 +7797,7 @@ const CloseAgentPage: React.FC = () => {
             {/* Enhanced Document Content */}
             <Box sx={{ 
               backgroundColor: 'white',
-              border: '1px solid #e0e0e0',
+              border: '1px solid brandColors.neutral[300]',
               borderRadius: '8px',
               p: { xs: 2, md: 4 },
               height: '600px',
@@ -7800,7 +7807,7 @@ const CloseAgentPage: React.FC = () => {
               <Box sx={{ textAlign: 'center', mb: 4 }}>
                 <Typography variant="h4" sx={{ 
                   fontWeight: 700, 
-                  color: '#1a365d',
+                  color: brandColors.primary,
                   mb: 2
                 }}>
                   WIRE FRAUD AND ELECTRONIC FUNDS TRANSFER ADVISORY
@@ -7818,27 +7825,27 @@ const CloseAgentPage: React.FC = () => {
               <Box sx={{ mb: 4 }}>
                 <Box sx={{ 
                   height: '20px', 
-                  backgroundColor: '#e0e0e0', 
+                  backgroundColor: brandColors.neutral[300], 
                   borderRadius: '4px', 
                   mb: 2 
                 }} />
                 <Box sx={{ 
                   height: '20px', 
-                  backgroundColor: '#e0e0e0', 
+                  backgroundColor: brandColors.neutral[300], 
                   borderRadius: '4px', 
                   mb: 2,
                   width: '80%' 
                 }} />
                 <Box sx={{ 
                   height: '20px', 
-                  backgroundColor: '#e0e0e0', 
+                  backgroundColor: brandColors.neutral[300], 
                   borderRadius: '4px', 
                   mb: 2,
                   width: '60%' 
                 }} />
                 <Box sx={{ 
                   height: '20px', 
-                  backgroundColor: '#e0e0e0', 
+                  backgroundColor: brandColors.neutral[300], 
                   borderRadius: '4px', 
                   mb: 2,
                   width: '90%' 
@@ -7847,11 +7854,11 @@ const CloseAgentPage: React.FC = () => {
 
               {/* Signature Area */}
               <Box sx={{ 
-                border: '2px dashed #ccc', 
+                border: '2px dashed brandColors.neutral[400]', 
                 borderRadius: '8px', 
                 p: 4, 
                 textAlign: 'center',
-                backgroundColor: '#fafafa',
+                backgroundColor: brandColors.neutral[50],
                 mt: 6
               }}>
                 <Typography variant="body1" color="text.secondary">
@@ -7871,7 +7878,7 @@ const CloseAgentPage: React.FC = () => {
                   size="large"
                   startIcon={<CheckCircleIcon />}
                   sx={{ 
-                    backgroundColor: '#4caf50',
+                    backgroundColor: brandColors.accent.success,
                     '&:hover': { backgroundColor: '#45a049' },
                     px: 4,
                     py: 1.5
@@ -7884,7 +7891,7 @@ const CloseAgentPage: React.FC = () => {
                   size="large"
                   startIcon={<CancelIcon />}
                   sx={{ 
-                    backgroundColor: '#f44336',
+                    backgroundColor: brandColors.accent.error,
                     '&:hover': { backgroundColor: '#da190b' },
                     px: 4,
                     py: 1.5
@@ -8028,12 +8035,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AccountBalanceIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Payments & Finance
                 </Typography>
               </Box>
@@ -8101,8 +8108,8 @@ const CloseAgentPage: React.FC = () => {
                       
                       {/* Pending Payments */}
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           $8,420
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8115,8 +8122,8 @@ const CloseAgentPage: React.FC = () => {
                       
                       {/* Monthly Revenue */}
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <TrendingUpIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           $16,430
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8129,8 +8136,8 @@ const CloseAgentPage: React.FC = () => {
                       
                       {/* Processing Speed */}
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <SpeedIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <SpeedIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           2.4 days
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8179,7 +8186,7 @@ const CloseAgentPage: React.FC = () => {
                           Payment Analytics
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                          <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 700 }}>
+                          <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 700 }}>
                             87%
                           </Typography>
                           <Chip label="+5%" color="success" size="small" />
@@ -8203,7 +8210,7 @@ const CloseAgentPage: React.FC = () => {
                           Cash Flow Overview
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                          <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>
+                          <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 700 }}>
                             $16,430
                           </Typography>
                           <Chip label="+8%" color="success" size="small" />
@@ -8363,7 +8370,7 @@ const CloseAgentPage: React.FC = () => {
                           Direct Deposit
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#4caf50' }} />
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: brandColors.accent.success }} />
                           <Typography variant="caption">Connected</Typography>
                         </Box>
                         <Typography variant="caption" color="text.secondary">
@@ -8377,7 +8384,7 @@ const CloseAgentPage: React.FC = () => {
                           Financial Transfer
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#4caf50' }} />
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: brandColors.accent.success }} />
                           <Typography variant="caption">Connected</Typography>
                         </Box>
                         <Typography variant="caption" color="text.secondary">
@@ -8391,7 +8398,7 @@ const CloseAgentPage: React.FC = () => {
                           Credit Card Processing
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#ff9800' }} />
+                          <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: brandColors.accent.warning }} />
                           <Typography variant="caption">Pending</Typography>
                         </Box>
                         <Typography variant="caption" color="text.secondary">
@@ -8459,13 +8466,13 @@ const CloseAgentPage: React.FC = () => {
                               height: 40,
                               borderRadius: '50%',
                               backgroundColor: 
-                                transaction.status === 'Completed' ? '#4caf50' :
-                                transaction.status === 'Pending' ? '#ff9800' :
-                                transaction.status === 'Processing' ? '#2196f3' : '#9e9e9e',
+                                transaction.status === 'Completed' ? brandColors.accent.success :
+                                transaction.status === 'Pending' ? brandColors.accent.warning :
+                                transaction.status === 'Processing' ? brandColors.accent.info : brandColors.neutral[500],
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: 'white',
+                              color: brandColors.text.inverse,
                               fontSize: '12px',
                               fontWeight: 600
                             }}>
@@ -8510,7 +8517,7 @@ const CloseAgentPage: React.FC = () => {
                         startIcon={<AddIcon />}
                         sx={{ 
                           backgroundColor: brandColors.primary, 
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           '&:hover': { backgroundColor: brandColors.secondary }
                         }}
                       >
@@ -8681,9 +8688,9 @@ const CloseAgentPage: React.FC = () => {
                           gridTemplateColumns: '40px 120px 100px 200px 150px 100px 120px 120px 120px 120px 80px',
                           gap: 1,
                           p: 2,
-                          borderBottom: '1px solid #e0e0e0',
+                          borderBottom: '1px solid brandColors.neutral[300]',
                           alignItems: 'center',
-                          '&:hover': { backgroundColor: '#f5f5f5' }
+                          '&:hover': { backgroundColor: brandColors.neutral[100] }
                         }}>
                           <Box>
                             <input type="checkbox" />
@@ -8698,7 +8705,7 @@ const CloseAgentPage: React.FC = () => {
                               size="small" 
                               sx={{ 
                                 backgroundColor: invoice.status === 'Overdue' ? '#ffebee' : '#e8f5e8',
-                                color: invoice.status === 'Overdue' ? '#c62828' : '#2e7d32',
+                                color: invoice.status === 'Overdue' ? brandColors.accent.errorDark : '#2e7d32',
                                 fontWeight: 600
                               }}
                             />
@@ -8712,7 +8719,7 @@ const CloseAgentPage: React.FC = () => {
                                 backgroundColor: invoice.paymentStatus === 'Paid' ? '#e8f5e8' : 
                                                invoice.paymentStatus === 'Pending' ? '#fff3cd' : '#ffebee',
                                 color: invoice.paymentStatus === 'Paid' ? '#2e7d32' : 
-                                       invoice.paymentStatus === 'Pending' ? '#856404' : '#c62828',
+                                       invoice.paymentStatus === 'Pending' ? '#856404' : brandColors.accent.errorDark,
                                 fontWeight: 600
                               }}
                             />
@@ -8721,7 +8728,7 @@ const CloseAgentPage: React.FC = () => {
                           <Box sx={{ 
                             fontSize: '0.875rem', 
                             fontWeight: 600,
-                            color: invoice.balance === '$0.00' ? '#2e7d32' : '#c62828'
+                            color: invoice.balance === '$0.00' ? '#2e7d32' : brandColors.accent.errorDark
                           }}>
                             {invoice.balance}
                           </Box>
@@ -8746,8 +8753,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AttachMoneyIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <AttachMoneyIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           $45,200
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8755,8 +8762,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <TrendingUpIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           12
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8764,8 +8771,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           $3,450
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8797,7 +8804,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             8
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8805,7 +8812,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             $12,800
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8813,7 +8820,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#f44336' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.error }}>
                             2
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8843,7 +8850,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                             $32,400
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8851,7 +8858,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             15
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8859,7 +8866,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             2.1 days
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8889,7 +8896,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             3
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8897,7 +8904,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             $2,150
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8905,7 +8912,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                             1
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8927,8 +8934,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <ReceiptIcon sx={{ fontSize: 40, color: '#f44336', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#f44336' }}>
+                        <ReceiptIcon sx={{ fontSize: 40, color: brandColors.accent.error, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.error }}>
                           $8,750
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8936,8 +8943,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <WarningIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <WarningIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           5
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8945,8 +8952,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <CheckCircleIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           $2,300
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -8978,7 +8985,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             5
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8986,7 +8993,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#f44336' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.error }}>
                             $3,200
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -8994,7 +9001,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             2
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9024,7 +9031,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#f44336', mb: 1 }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.error, mb: 1 }}>
                             $8,750
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9032,7 +9039,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             18
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9040,7 +9047,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             $486
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9070,7 +9077,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                             $2,300
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9078,7 +9085,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             12
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9086,7 +9093,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             $192
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9116,7 +9123,7 @@ const CloseAgentPage: React.FC = () => {
                       </Box>
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                             $850
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9124,7 +9131,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                             4
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9132,7 +9139,7 @@ const CloseAgentPage: React.FC = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                             $212
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
@@ -9154,8 +9161,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           $125,000
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9163,8 +9170,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <TrendingUpIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           3.2%
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9172,8 +9179,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <ScheduleIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <ScheduleIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           15
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9194,8 +9201,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <SecurityIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <SecurityIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           $89,500
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9203,8 +9210,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           8
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9212,8 +9219,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <WarningIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <WarningIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           $12,300
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9234,8 +9241,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           $156,800
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9243,8 +9250,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <TrendingUpIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           $23,450
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9252,8 +9259,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <AccountBalanceWalletIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           $8,900
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9489,8 +9496,8 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3 }}>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <BusinessIcon sx={{ fontSize: 40, color: '#2196f3', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#2196f3' }}>
+                        <BusinessIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
                           Dreamery Real Estate
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9498,8 +9505,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <AccountBalanceIcon sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#4caf50' }}>
+                        <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                           $2.4M
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9507,8 +9514,8 @@ const CloseAgentPage: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 1, textAlign: 'center' }}>
-                        <PeopleIcon sx={{ fontSize: 40, color: '#ff9800', mb: 1 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ff9800' }}>
+                        <PeopleIcon sx={{ fontSize: 40, color: brandColors.accent.warning, mb: 1 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.accent.warning }}>
                           24
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -9534,12 +9541,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <AssignmentTurnedInIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <AssignmentTurnedInIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Templates
                 </Typography>
               </Box>
@@ -9764,11 +9771,11 @@ const CloseAgentPage: React.FC = () => {
                   gap: 2 
                 }}>
                   {[
-                    { name: 'Starter Agent', count: 1, color: '#4caf50' },
-                    { name: 'State-Specific', count: 2, color: '#2196f3' },
-                    { name: 'MPE Forms', count: 1, color: '#ff9800' },
+                    { name: 'Starter Agent', count: 1, color: brandColors.accent.success },
+                    { name: 'State-Specific', count: 2, color: brandColors.accent.info },
+                    { name: 'MPE Forms', count: 1, color: brandColors.accent.warning },
                     { name: 'Special Cases', count: 1, color: '#9c27b0' },
-                    { name: 'Condo', count: 1, color: '#f44336' },
+                    { name: 'Condo', count: 1, color: brandColors.accent.error },
                     { name: 'Brokerage', count: 1, color: '#795548' },
                     { name: 'Client-Specific', count: 1, color: '#607d8b' },
                     { name: 'Essential', count: 1, color: '#00bcd4' },
@@ -9785,7 +9792,7 @@ const CloseAgentPage: React.FC = () => {
                         p: 2,
                         backgroundColor: 'white',
                         borderRadius: '8px',
-                        border: '1px solid #e0e0e0'
+                        border: '1px solid brandColors.neutral[300]'
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -9822,12 +9829,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ChecklistIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <ChecklistIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Checklists
                 </Typography>
               </Box>
@@ -10045,12 +10052,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <TaskIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <TaskIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Tasks & Reminders
                 </Typography>
               </Box>
@@ -10074,12 +10081,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <EditIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <EditIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Digital Signature
                 </Typography>
               </Box>
@@ -10151,7 +10158,7 @@ const CloseAgentPage: React.FC = () => {
                     </Typography>
                   </Box>
                   
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e8f5e8', borderRadius: 1, border: '2px solid #4caf50' }}>
+                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e8f5e8', borderRadius: 1, border: '2px solid brandColors.accent.success' }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#2e7d32' }}>
                       Highly Secure
                     </Typography>
@@ -10164,7 +10171,7 @@ const CloseAgentPage: React.FC = () => {
                       variant="contained" 
                       sx={{ 
                         backgroundColor: brandColors.primary, 
-                        color: 'white',
+                        color: brandColors.text.inverse,
                         width: '100%',
                         '&:hover': { backgroundColor: brandColors.secondary }
                       }}
@@ -10176,7 +10183,7 @@ const CloseAgentPage: React.FC = () => {
                 {/* Main Content - Document Viewer */}
                 <Paper elevation={2} sx={{ flex: 1, p: 3 }}>
                   {/* Top Bar */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pb: 2, borderBottom: '1px solid #e0e0e0' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pb: 2, borderBottom: '1px solid brandColors.neutral[300]' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
                         DREAMERY D-SIGN
@@ -10208,7 +10215,7 @@ const CloseAgentPage: React.FC = () => {
                         variant="contained" 
                         sx={{ 
                           backgroundColor: brandColors.primary, 
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           '&:hover': { backgroundColor: brandColors.secondary }
                         }}
                       >
@@ -10219,10 +10226,10 @@ const CloseAgentPage: React.FC = () => {
 
                   {/* Document Content */}
                   <Box sx={{ 
-                    border: '2px solid #e0e0e0', 
+                    border: '2px solid brandColors.neutral[300]', 
                     borderRadius: 2, 
                     p: 4, 
-                    backgroundColor: '#fafafa',
+                    backgroundColor: brandColors.neutral[50],
                     minHeight: 600,
                     position: 'relative'
                   }}>
@@ -10369,11 +10376,11 @@ const CloseAgentPage: React.FC = () => {
                       mt: 4, 
                       p: 3, 
                       backgroundColor: '#e3f2fd', 
-                      border: '2px dashed #2196f3',
+                      border: '2px dashed brandColors.accent.info',
                       borderRadius: 2,
                       textAlign: 'center'
                     }}>
-                      <Typography variant="h6" sx={{ color: '#1976d2', mb: 1 }}>
+                      <Typography variant="h6" sx={{ color: brandColors.accent.infoDark, mb: 1 }}>
                         Digital Signature Fields
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -10394,19 +10401,19 @@ const CloseAgentPage: React.FC = () => {
                   <Box sx={{ display: 'grid', gap: 2 }}>
                     <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 700 }}>12</Typography>
+                        <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 700 }}>12</Typography>
                         <Typography variant="body2" color="text.secondary">Active Envelopes</Typography>
                       </Box>
                     </Box>
                     <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Typography variant="h4" sx={{ color: '#ff9800', fontWeight: 700 }}>5</Typography>
+                        <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 700 }}>5</Typography>
                         <Typography variant="body2" color="text.secondary">Pending Signatures</Typography>
                       </Box>
                     </Box>
                     <Box>
                       <Box sx={{ textAlign: 'center', p: 2 }}>
-                        <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 700 }}>28</Typography>
+                        <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 700 }}>28</Typography>
                         <Typography variant="body2" color="text.secondary">Completed This Month</Typography>
                       </Box>
                     </Box>
@@ -10430,7 +10437,7 @@ const CloseAgentPage: React.FC = () => {
                         justifyContent: 'space-between', 
                         alignItems: 'center', 
                         py: 1,
-                        borderBottom: index < 3 ? '1px solid #f0f0f0' : 'none'
+                        borderBottom: index < 3 ? '1px solid brandColors.neutral[100]' : 'none'
                       }}>
                         <Box>
                           <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -10447,7 +10454,7 @@ const CloseAgentPage: React.FC = () => {
                             backgroundColor: activity.status === 'completed' ? '#e8f5e8' : 
                                            activity.status === 'pending' ? '#fff3cd' : '#e3f2fd',
                             color: activity.status === 'completed' ? '#2e7d32' : 
-                                   activity.status === 'pending' ? '#856404' : '#1976d2'
+                                   activity.status === 'pending' ? '#856404' : brandColors.accent.infoDark
                           }}
                         />
                       </Box>
@@ -10475,7 +10482,7 @@ const CloseAgentPage: React.FC = () => {
                           display: 'flex', 
                           alignItems: 'center', 
                           justifyContent: 'center',
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           fontWeight: 600
                         }}>
                           1
@@ -10546,7 +10553,7 @@ const CloseAgentPage: React.FC = () => {
                           display: 'flex', 
                           alignItems: 'center', 
                           justifyContent: 'center',
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           fontWeight: 600
                         }}>
                           2
@@ -10666,7 +10673,7 @@ const CloseAgentPage: React.FC = () => {
                           display: 'flex', 
                           alignItems: 'center', 
                           justifyContent: 'center',
-                          color: 'white',
+                          color: brandColors.text.inverse,
                           fontWeight: 600
                         }}>
                           3
@@ -10786,7 +10793,7 @@ const CloseAgentPage: React.FC = () => {
                     {/* Main Content - Document Editor */}
                     <Paper elevation={2} sx={{ flex: 1, p: 3 }}>
                       {/* Top Toolbar */}
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pb: 2, borderBottom: '1px solid #e0e0e0' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pb: 2, borderBottom: '1px solid brandColors.neutral[300]' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
                             D-SIGN
@@ -10898,10 +10905,10 @@ const CloseAgentPage: React.FC = () => {
 
                       {/* Document Content */}
                       <Box sx={{ 
-                        border: '2px solid #e0e0e0', 
+                        border: '2px solid brandColors.neutral[300]', 
                         borderRadius: 2, 
                         p: 4, 
-                        backgroundColor: '#fafafa',
+                        backgroundColor: brandColors.neutral[50],
                         minHeight: 600,
                         position: 'relative'
                       }}>
@@ -10927,12 +10934,12 @@ const CloseAgentPage: React.FC = () => {
                           <Box sx={{ 
                             p: 3, 
                             backgroundColor: '#e3f2fd', 
-                            border: '2px dashed #2196f3',
+                            border: '2px dashed brandColors.accent.info',
                             borderRadius: 2,
                             textAlign: 'center',
                             minWidth: 200
                           }}>
-                            <Typography variant="h6" sx={{ color: '#1976d2', mb: 1 }}>
+                            <Typography variant="h6" sx={{ color: brandColors.accent.infoDark, mb: 1 }}>
                               Signature
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
@@ -10946,12 +10953,12 @@ const CloseAgentPage: React.FC = () => {
                           <Box sx={{ 
                             p: 3, 
                             backgroundColor: '#e3f2fd', 
-                            border: '2px dashed #2196f3',
+                            border: '2px dashed brandColors.accent.info',
                             borderRadius: 2,
                             textAlign: 'center',
                             minWidth: 200
                           }}>
-                            <Typography variant="h6" sx={{ color: '#1976d2', mb: 1 }}>
+                            <Typography variant="h6" sx={{ color: brandColors.accent.infoDark, mb: 1 }}>
                               Date
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
@@ -11088,7 +11095,7 @@ const CloseAgentPage: React.FC = () => {
                             </Box>
 
                             {/* Quick Actions */}
-                            <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #f0f0f0' }}>
+                            <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid brandColors.neutral[100]' }}>
                               <Box sx={{ display: 'flex', gap: 1 }}>
                                 <Button
                                   size="small"
@@ -11154,12 +11161,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <CancelIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <CancelIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Canceled Contracts
                 </Typography>
               </Box>
@@ -11183,12 +11190,12 @@ const CloseAgentPage: React.FC = () => {
                 p: 3, 
                 backgroundColor: brandColors.primary,
                 borderRadius: '16px 16px 0 0',
-                color: 'white'
+                color: brandColors.text.inverse
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ArchiveIcon sx={{ fontSize: 28, color: 'white' }} />
-                <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+                <ArchiveIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Access Archives
                 </Typography>
               </Box>

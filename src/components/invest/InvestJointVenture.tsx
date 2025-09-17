@@ -266,7 +266,7 @@ const InvestJointVenture: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(${jv.image})`,
+                  backgroundImage: `url(jv.image)`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -294,7 +294,7 @@ const InvestJointVenture: React.FC = () => {
                     size="small"
                     onClick={() => handleShare(jv.id)}
                     sx={{ 
-                      color: 'white',
+                      color: brandColors.text.inverse,
                       backgroundColor: 'rgba(0,0,0,0.5)',
                     }}
                   >
@@ -305,7 +305,7 @@ const InvestJointVenture: React.FC = () => {
                   sx={{ position: 'absolute', bottom: 8, right: 8 }}
                   onClick={(e) => handleMenuClick(e, jv.id)}
                 >
-                  <MoreVertIcon sx={{ color: 'white' }} />
+                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
                 </IconButton>
               </Box>
 
@@ -354,10 +354,10 @@ const InvestJointVenture: React.FC = () => {
                   />
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
-                      ${(jv.totalInvestment - jv.availableInvestment).toLocaleString()} invested
+                      (jv.totalInvestment - jv.availableInvestment).toLocaleString() invested
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ${jv.totalInvestment.toLocaleString()} total
+                      jv.totalInvestment.toLocaleString() total
                     </Typography>
                   </Box>
                 </Box>
@@ -368,7 +368,7 @@ const InvestJointVenture: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
-                        Min: ${jv.minInvestment.toLocaleString()}
+                        Min: jv.minInvestment.toLocaleString()
                       </Typography>
                     </Box>
                   </Grid>

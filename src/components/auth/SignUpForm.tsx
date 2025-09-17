@@ -13,6 +13,8 @@ import {
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
 import { useAuth } from '../../contexts/AuthContext';
+import { brandColors } from "../../theme";
+
 
 
 
@@ -86,10 +88,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           borderRadius: '3px',
         },
         '&::-webkit-scrollbar-thumb': {
-          background: 'rgba(0, 0, 0, 0.15)',
+          background: brandColors.shadows.medium,
           borderRadius: '3px',
           '&:hover': {
-            background: 'rgba(0, 0, 0, 0.25)',
+            background: brandColors.shadows.dark,
           },
         },
       }}>
@@ -191,9 +193,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             fontSize: '1rem',
             fontWeight: 600,
             borderRadius: '8px',
-            backgroundColor: '#1a365d',
+            backgroundColor: brandColors.primary,
             '&:hover': {
-              backgroundColor: '#0d2340',
+              backgroundColor: brandColors.primaryDark,
             },
           }}
         >

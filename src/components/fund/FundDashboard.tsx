@@ -119,7 +119,7 @@ const FundDashboard: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${(stats.totalRaised / 1000000).toFixed(1)}M
+                    (stats.totalRaised / 1000000).toFixed(1)M
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Raised
@@ -127,7 +127,7 @@ const FundDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TrendingUpIcon sx={{ color: '#4caf50', mr: 0.5, fontSize: 16 }} />
+                <TrendingUpIcon sx={{ color: brandColors.accent.success, mr: 0.5, fontSize: 16 }} />
                 <Typography variant="caption" color="success.main">
                   +23% this quarter
                 </Typography>
@@ -140,7 +140,7 @@ const FundDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#4caf50', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.success, mr: 2 }}>
                   <ProjectIcon />
                 </Avatar>
                 <Box>
@@ -163,7 +163,7 @@ const FundDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#ff9800', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.warning, mr: 2 }}>
                   <GroupIcon />
                 </Avatar>
                 <Box>
@@ -176,7 +176,7 @@ const FundDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Avg: ${stats.averageInvestment.toLocaleString()}
+                Avg: stats.averageInvestment.toLocaleString()
               </Typography>
             </CardContent>
           </Card>
@@ -186,7 +186,7 @@ const FundDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#2196f3', mr: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.accent.info, mr: 2 }}>
                   <TrendingUpIcon />
                 </Avatar>
                 <Box>
@@ -199,7 +199,7 @@ const FundDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Commission: ${stats.totalCommissions.toLocaleString()}
+                Commission: stats.totalCommissions.toLocaleString()
               </Typography>
             </CardContent>
           </Card>
@@ -237,12 +237,12 @@ const FundDashboard: React.FC = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            ${project.targetAmount.toLocaleString()}
+                            project.targetAmount.toLocaleString()
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            ${project.raisedAmount.toLocaleString()}
+                            project.raisedAmount.toLocaleString()
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -304,7 +304,7 @@ const FundDashboard: React.FC = () => {
                               {investment.investor}
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                              ${investment.amount.toLocaleString()}
+                              investment.amount.toLocaleString()
                             </Typography>
                           </Box>
                         }

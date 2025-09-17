@@ -236,7 +236,7 @@ const FundProjects: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(${project.image})`,
+                  backgroundImage: `url(project.image)`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -253,7 +253,7 @@ const FundProjects: React.FC = () => {
                   sx={{ position: 'absolute', top: 8, left: 8 }}
                   onClick={(e) => handleMenuClick(e, project.id)}
                 >
-                  <MoreVertIcon sx={{ color: 'white' }} />
+                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
                 </IconButton>
               </Box>
 
@@ -284,10 +284,10 @@ const FundProjects: React.FC = () => {
                   />
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
-                      ${project.raisedAmount.toLocaleString()} raised
+                      project.raisedAmount.toLocaleString() raised
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ${project.targetAmount.toLocaleString()} target
+                      project.targetAmount.toLocaleString() target
                     </Typography>
                   </Box>
                 </Box>
@@ -314,7 +314,7 @@ const FundProjects: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
-                        Min: ${project.minInvestment.toLocaleString()}
+                        Min: project.minInvestment.toLocaleString()
                       </Typography>
                     </Box>
                   </Grid>

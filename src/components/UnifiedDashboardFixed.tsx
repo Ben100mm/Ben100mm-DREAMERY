@@ -48,22 +48,22 @@ const closeWorkspaceConfig: WorkspaceConfig = {
   id: 'close',
   name: 'Close',
   description: 'Closing and transaction management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: '#1a365d', borderRadius: 1 }} />,
-  color: '#1a365d',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'escrow-title', label: 'Escrow & Title', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'due-diligence', label: 'Due Diligence', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'financing', label: 'Financing', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'legal', label: 'Legal & Compliance', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'settlement', label: 'Settlement', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'insurance', label: 'Insurance & Utilities', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'walkthrough', label: 'Walkthrough', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'post-closing', label: 'Post-Closing', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'assistant', label: 'Closing Assistant', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'integrations', label: 'Integrations', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'escrow-title', label: 'Escrow & Title', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'due-diligence', label: 'Due Diligence', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'financing', label: 'Financing', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'legal', label: 'Legal & Compliance', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'settlement', label: 'Settlement', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'insurance', label: 'Insurance & Utilities', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'walkthrough', label: 'Walkthrough', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'post-closing', label: 'Post-Closing', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'assistant', label: 'Closing Assistant', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'integrations', label: 'Integrations', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -71,23 +71,23 @@ const manageWorkspaceConfig: WorkspaceConfig = {
   id: 'manage',
   name: 'Manage',
   description: 'Property management and rental operations',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: '#1a365d', borderRadius: 1 }} />,
-  color: '#1a365d',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'calendar', label: 'Calendar', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'listings', label: 'Listings', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'earnings', label: 'Earnings', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'insights', label: 'Insights', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'listing', label: 'Creating a Listing', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'leases', label: 'Online Leases', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'applications', label: 'Rental Applications', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'payments', label: 'Online Rent Payments', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'integrations', label: 'Integrations', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'insurance', label: 'Insurance', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'account', label: 'Manage Your Account', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'calendar', label: 'Calendar', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'listings', label: 'Listings', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'earnings', label: 'Earnings', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'insights', label: 'Insights', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'listing', label: 'Creating a Listing', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'leases', label: 'Online Leases', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'applications', label: 'Rental Applications', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'payments', label: 'Online Rent Payments', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'integrations', label: 'Integrations', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'insurance', label: 'Insurance', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'account', label: 'Manage Your Account', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -95,18 +95,18 @@ const fundWorkspaceConfig: WorkspaceConfig = {
   id: 'fund',
   name: 'Fund',
   description: 'Capital raising and fundraising platform',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: '#1a365d', borderRadius: 1 }} />,
-  color: '#1a365d',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'projects', label: 'Projects', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'createproject', label: 'Create New Project', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'investor', label: 'Investor Onboarding', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'compliance', label: 'Capital Raise Compliance Tools', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'calculator', label: 'Waterfall & ROI Calculators', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'portal', label: 'Secure Investor Portal', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'projects', label: 'Projects', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'createproject', label: 'Create New Project', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'investor', label: 'Investor Onboarding', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'compliance', label: 'Capital Raise Compliance Tools', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'calculator', label: 'Waterfall & ROI Calculators', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'portal', label: 'Secure Investor Portal', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -114,15 +114,15 @@ const investWorkspaceConfig: WorkspaceConfig = {
   id: 'invest',
   name: 'Invest',
   description: 'Investment opportunities and portfolio management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: '#1a365d', borderRadius: 1 }} />,
-  color: '#1a365d',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
   defaultTab: 'crowdfunding',
   sidebarItems: [
-    { id: 'crowdfunding', label: 'Crowdfunded Deals', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'jointventure', label: 'Joint Venture', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'fractional', label: 'Fractional Ownership', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'privatemarket', label: 'Private Market Investment Listings', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'crowdfunding', label: 'Crowdfunded Deals', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'jointventure', label: 'Joint Venture', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'fractional', label: 'Fractional Ownership', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'privatemarket', label: 'Private Market Investment Listings', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -130,17 +130,17 @@ const operateWorkspaceConfig: WorkspaceConfig = {
   id: 'operate',
   name: 'Operate',
   description: 'Property operations and project management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: '#1a365d', borderRadius: 1 }} />,
-  color: '#1a365d',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
   defaultTab: 'dashboard',
   sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'projects', label: 'Projects', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'createproject', label: 'Create a New Project', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'expenses', label: 'Expense Tracking', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'contractors', label: 'Contractor & Vendor Scheduling', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'optimization', label: 'Portfolio Optimization Suggestions', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
-    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'projects', label: 'Projects', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'createproject', label: 'Create a New Project', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'expenses', label: 'Expense Tracking', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'contractors', label: 'Contractor & Vendor Scheduling', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
+    { id: 'optimization', label: 'Portfolio Optimization Suggestions', icon: <Box sx={{ width: 20, height: 20, bgcolor: brandColors.primary, borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -248,7 +248,7 @@ const UnifiedDashboardFixed: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery {currentWorkspace?.name || 'Dashboard'}
           </Typography>
 
@@ -319,7 +319,7 @@ const UnifiedDashboardFixed: React.FC = () => {
                       borderColor: 'rgba(0, 0, 0, 0.23)',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#1a365d',
+                      borderColor: brandColors.primary,
                     },
                   }}
                   renderValue={(value) => {
@@ -327,7 +327,7 @@ const UnifiedDashboardFixed: React.FC = () => {
                     if (!workspace) return 'Select Workspace';
                     return (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ color: '#1a365d' }}>
+                        <Box sx={{ color: brandColors.primary }}>
                           {workspace.icon}
                         </Box>
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -337,8 +337,8 @@ const UnifiedDashboardFixed: React.FC = () => {
                           label={workspace.name} 
                           size="small" 
                           sx={{ 
-                            backgroundColor: '#1a365d',
-                            color: 'white',
+                            backgroundColor: brandColors.primary,
+                            color: brandColors.text.inverse,
                             fontSize: '0.75rem',
                             height: 20,
                           }} 
@@ -350,7 +350,7 @@ const UnifiedDashboardFixed: React.FC = () => {
                   {availableWorkspaces.map((workspace) => (
                     <MenuItem key={workspace.id} value={workspace.id}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-                        <Box sx={{ color: '#1a365d' }}>
+                        <Box sx={{ color: brandColors.primary }}>
                           {workspace.icon}
                         </Box>
                         <Box sx={{ flex: 1 }}>
@@ -374,7 +374,7 @@ const UnifiedDashboardFixed: React.FC = () => {
             <Box
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 borderRadius: 2,
                 py: 1.5,
                 px: 2,
@@ -410,10 +410,10 @@ const UnifiedDashboardFixed: React.FC = () => {
                         p: 2,
                         borderRadius: 2,
                         cursor: 'pointer',
-                        backgroundColor: activeTab === item.id ? '#1a365d' : 'transparent',
+                        backgroundColor: activeTab === item.id ? brandColors.primary : 'transparent',
                         color: activeTab === item.id ? 'white' : 'inherit',
                         '&:hover': {
-                          backgroundColor: activeTab === item.id ? '#1a365d' : 'rgba(26, 54, 93, 0.08)',
+                          backgroundColor: activeTab === item.id ? brandColors.primary : brandColors.interactive.hover,
                         },
                         display: 'flex',
                         alignItems: 'center',
@@ -421,7 +421,7 @@ const UnifiedDashboardFixed: React.FC = () => {
                         position: 'relative',
                       }}
                     >
-                      <Box sx={{ color: activeTab === item.id ? 'white' : '#1a365d' }}>
+                      <Box sx={{ color: activeTab === item.id ? 'white' : brandColors.primary }}>
                         {item.icon}
                       </Box>
                       <Typography 
@@ -471,10 +471,10 @@ const UnifiedDashboardFixed: React.FC = () => {
                   p: 2,
                   borderRadius: 2,
                   cursor: 'pointer',
-                  backgroundColor: activeTab === item.id ? '#1a365d' : 'transparent',
+                  backgroundColor: activeTab === item.id ? brandColors.primary : 'transparent',
                   color: activeTab === item.id ? 'white' : 'inherit',
                   '&:hover': {
-                    backgroundColor: activeTab === item.id ? '#1a365d' : 'rgba(26, 54, 93, 0.08)',
+                    backgroundColor: activeTab === item.id ? brandColors.primary : brandColors.interactive.hover,
                   },
                   display: 'flex',
                   alignItems: 'center',
@@ -482,7 +482,7 @@ const UnifiedDashboardFixed: React.FC = () => {
                   position: 'relative',
                 }}
               >
-                <Box sx={{ color: activeTab === item.id ? 'white' : '#1a365d' }}>
+                <Box sx={{ color: activeTab === item.id ? 'white' : brandColors.primary }}>
                   {item.icon}
                 </Box>
                 {!sidebarCollapsed && (

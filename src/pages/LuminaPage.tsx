@@ -29,7 +29,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   width: 100%;
   background: #0b0c0f;
-  color: #ffffff;
+  color: brandColors.neutral[0];
   display: flex;
   padding-top: 64px; /* account for fixed PageAppBar */
 `;
@@ -170,7 +170,7 @@ const LuminaPage: React.FC = () => {
                   sx={{
                     color: "#0b0c0f",
                     bgcolor: "#fff",
-                    "&:hover": { bgcolor: "#f5f5f5" },
+                    "&:hover": { bgcolor: brandColors.neutral[100] },
                   }}
                 >
                   <MicIcon />

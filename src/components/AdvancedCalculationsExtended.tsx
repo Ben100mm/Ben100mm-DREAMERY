@@ -174,16 +174,16 @@ export const TaxImplicationsCalculator: React.FC<{
           }}
         >
           <Typography variant="body2">
-            Taxable Income: ${results.taxableIncome.toLocaleString()}
+            Taxable Income: results.taxableIncome.toLocaleString()
           </Typography>
           <Typography variant="body2">
-            Tax Savings: ${results.taxSavings.toLocaleString()}
+            Tax Savings: results.taxSavings.toLocaleString()
           </Typography>
           <Typography variant="body2">
             Effective Tax Rate: {(results.effectiveTaxRate * 100).toFixed(1)}%
           </Typography>
           <Typography variant="body2">
-            Net Income: ${results.netIncome.toLocaleString()}
+            Net Income: results.netIncome.toLocaleString()
           </Typography>
         </Box>
       </CardContent>
@@ -461,7 +461,7 @@ export const StressTestingCalculator: React.FC<{
             label={`Risk: ${results.riskLevel}`}
           />
           <Typography variant="body2">
-            Stress Cash Flow: ${results.stressTestCashFlow.toLocaleString()}
+            Stress Cash Flow: results.stressTestCashFlow.toLocaleString()
           </Typography>
           <Typography variant="body2">
             Stress ROI: {results.stressTestRoi.toFixed(1)}%
@@ -554,10 +554,10 @@ export const InflationAdjustmentsCalculator: React.FC<{
           }}
         >
           <Typography variant="body2">
-            Adjusted Rent: ${results.adjustedRent.toLocaleString()}
+            Adjusted Rent: results.adjustedRent.toLocaleString()
           </Typography>
           <Typography variant="body2">
-            Adjusted Expenses: ${results.adjustedExpenses.toLocaleString()}
+            Adjusted Expenses: results.adjustedExpenses.toLocaleString()
           </Typography>
           <Typography variant="body2">
             Adjusted Property Value: $

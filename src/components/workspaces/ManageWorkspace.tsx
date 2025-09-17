@@ -332,85 +332,85 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
         return {
           title: 'Property Management Dashboard',
           subtitle: 'Centralized overview of your rental properties and management activities',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'calendar':
         return {
           title: 'Calendar',
           subtitle: 'Schedule and manage property maintenance, inspections, and tenant activities',
-          icon: <CalendarIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CalendarIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'listings':
         return {
           title: 'Listings',
           subtitle: 'Manage your rental property listings and marketing',
-          icon: <ListingIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ListingIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'messages':
         return {
           title: 'Messages',
           subtitle: 'Communicate with tenants, contractors, and service providers',
-          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'earnings':
         return {
           title: 'Earnings',
           subtitle: 'Track rental income, expenses, and financial performance',
-          icon: <EarningsIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <EarningsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'insights':
         return {
           title: 'Insights',
           subtitle: 'Analytics and reports on property performance and market trends',
-          icon: <InsightsIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <InsightsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'listing':
         return {
           title: 'Creating a Listing',
           subtitle: 'Step-by-step process to create and publish rental listings',
-          icon: <CreateListingIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <CreateListingIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'leases':
         return {
           title: 'Online Leases',
           subtitle: 'Digital lease management and tenant onboarding',
-          icon: <LeaseIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <LeaseIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'applications':
         return {
           title: 'Rental Applications',
           subtitle: 'Process and manage tenant applications and screening',
-          icon: <ApplicationIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <ApplicationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'payments':
         return {
           title: 'Online Rent Payments',
           subtitle: 'Secure payment processing and rent collection management',
-          icon: <PaymentIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <PaymentIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'integrations':
         return {
           title: 'Integrations',
           subtitle: 'Connect with third-party property management tools and services',
-          icon: <IntegrationIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'insurance':
         return {
           title: 'Insurance',
           subtitle: 'Property insurance management and claims processing',
-          icon: <InsuranceIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <InsuranceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'account':
         return {
           title: 'Manage Your Account',
           subtitle: 'Account settings, preferences, and profile management',
-          icon: <AccountIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <AccountIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
           title: 'Property Management Dashboard',
           subtitle: 'Centralized overview of your rental properties and management activities',
-          icon: <DashboardIcon sx={{ fontSize: 28, color: 'white' }} />,
+          icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
     }
   };
@@ -1130,7 +1130,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                 minWidth: '32px', 
                                 height: '32px', 
                                 borderRadius: '50%',
-                                border: '1px solid #ccc',
+                                border: `1px solid ${brandColors.borders.secondary}`,
                                 p: 0
                               }}
                             >
@@ -1151,7 +1151,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                 minWidth: '32px', 
                                 height: '32px', 
                                 borderRadius: '50%',
-                                border: '1px solid #ccc',
+                                border: `1px solid ${brandColors.borders.secondary}`,
                                 p: 0
                               }}
                             >
@@ -1287,7 +1287,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                       <Box sx={{ mb: 4 }}>
                         {/* Pool Section */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                        <Box sx={{ mb: 4, p: 3, border: `1px solid ${brandColors.borders.secondary}`, borderRadius: 2 }}>
                           <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                             Pool & Water Features
                           </Typography>
@@ -1312,7 +1312,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Parking Section */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                        <Box sx={{ mb: 4, p: 3, border: `1px solid ${brandColors.borders.secondary}`, borderRadius: 2 }}>
                           <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                             Parking & Garage
                           </Typography>
@@ -1369,7 +1369,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                       minWidth: '32px', 
                                       height: '32px', 
                                       borderRadius: '50%',
-                                      border: '1px solid #ccc',
+                                      border: `1px solid ${brandColors.borders.secondary}`,
                                       p: 0
                                     }}
                                   >
@@ -1390,7 +1390,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                       minWidth: '32px', 
                                       height: '32px', 
                                       borderRadius: '50%',
-                                      border: '1px solid #ccc',
+                                      border: `1px solid ${brandColors.borders.secondary}`,
                                       p: 0
                                     }}
                                   >
@@ -1403,7 +1403,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Heating & Cooling Section */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                        <Box sx={{ mb: 4, p: 3, border: `1px solid ${brandColors.borders.secondary}`, borderRadius: 2 }}>
                           <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                             Heating & Cooling Systems
                           </Typography>
@@ -1429,7 +1429,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Additional Features Section */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                        <Box sx={{ mb: 4, p: 3, border: `1px solid ${brandColors.borders.secondary}`, borderRadius: 2 }}>
                           <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary }}>
                             Additional Property Features
                           </Typography>
@@ -1840,7 +1840,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                   alignItems: 'flex-start', 
                                   m: 0,
                                   p: 2,
-                                  border: '1px solid #e0e0e0',
+                                  border: '1px solid brandColors.neutral[300]',
                                   borderRadius: 1,
                                   '&:hover': { borderColor: brandColors.primary }
                                 }}
@@ -1891,7 +1891,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                   alignItems: 'flex-start', 
                                   m: 0,
                                   p: 2,
-                                  border: '1px solid #e0e0e0',
+                                  border: '1px solid brandColors.neutral[300]',
                                   borderRadius: 1,
                                   '&:hover': { borderColor: brandColors.primary }
                                 }}
@@ -1942,7 +1942,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                   alignItems: 'flex-start', 
                                   m: 0,
                                   p: 2,
-                                  border: '1px solid #e0e0e0',
+                                  border: '1px solid brandColors.neutral[300]',
                                   borderRadius: 1,
                                   '&:hover': { borderColor: brandColors.primary }
                                 }}
@@ -1993,7 +1993,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                                   alignItems: 'flex-start', 
                                   m: 0,
                                   p: 2,
-                                  border: '1px solid #e0e0e0',
+                                  border: '1px solid brandColors.neutral[300]',
                                   borderRadius: 1,
                                   '&:hover': { borderColor: brandColors.primary }
                                 }}
@@ -2462,7 +2462,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       
                       <FormControl component="fieldset" fullWidth>
                         {/* Property Systems & Infrastructure */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                        <Box sx={{ mb: 4, p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2, bgcolor: brandColors.neutral[50] }}>
                           <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
                             Property Systems & Infrastructure
                           </Typography>
@@ -2527,7 +2527,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Property Condition & Issues */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                        <Box sx={{ mb: 4, p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2, bgcolor: brandColors.neutral[50] }}>
                           <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
                             Property Condition & Issues
                           </Typography>
@@ -2578,7 +2578,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Property Type & Features */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                        <Box sx={{ mb: 4, p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2, bgcolor: brandColors.neutral[50] }}>
                           <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
                             Property Type & Features
                           </Typography>
@@ -2615,7 +2615,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* Ownership & Legal */}
-                        <Box sx={{ mb: 4, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                        <Box sx={{ mb: 4, p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2, bgcolor: brandColors.neutral[50] }}>
                           <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
                             Ownership & Legal
                           </Typography>
@@ -2666,7 +2666,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
 
                         {/* General Options */}
-                        <Box sx={{ mb: 3, p: 3, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fafafa' }}>
+                        <Box sx={{ mb: 3, p: 3, border: '1px solid brandColors.neutral[300]', borderRadius: 2, bgcolor: brandColors.neutral[50] }}>
                           <Typography variant="h6" sx={{ mb: 3, color: brandColors.primary, fontWeight: 600 }}>
                             General Options
                           </Typography>
@@ -3077,7 +3077,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Property Information
@@ -3108,7 +3108,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Moving Details
@@ -3133,7 +3133,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Home Details
@@ -3261,7 +3261,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         p: 3, 
                         borderRadius: 2, 
                         mb: 3,
-                        border: '1px solid #e9ecef'
+                        border: '1px solid brandColors.neutral[100]'
                       }}>
                         <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                           Basement Details
@@ -3297,7 +3297,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Home Quality
@@ -3334,7 +3334,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Additional Information
@@ -3379,7 +3379,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         HOA and Community Features
@@ -3416,7 +3416,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 3, 
                       borderRadius: 2, 
                       mb: 4,
-                      border: '1px solid #e9ecef'
+                      border: '1px solid brandColors.neutral[100]'
                     }}>
                       <Typography variant="h6" sx={{ mb: 2, color: brandColors.primary, fontWeight: 700 }}>
                         Contact Information
@@ -3513,7 +3513,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 4, 
                       borderRadius: 3, 
                       mb: 4,
-                      border: '2px solid #e9ecef',
+                      border: '2px solid brandColors.neutral[100]',
                       boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                       textAlign: 'center'
                     }}>
@@ -3528,7 +3528,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                           justifyContent: 'center',
                           mr: 2
                         }}>
-                          <Typography sx={{ fontSize: 24, color: 'white' }}>🏠</Typography>
+                          <Typography sx={{ fontSize: 24, color: brandColors.text.inverse }}>🏠</Typography>
                         </Box>
                         <Typography variant="h5" sx={{ fontWeight: 700, color: brandColors.primary }}>
                           DREAMERY
@@ -3537,7 +3537,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       
                       <Typography variant="h2" sx={{ 
                         fontWeight: 700, 
-                        color: '#4caf50', 
+                        color: brandColors.accent.success, 
                         mb: 1 
                       }}>
                         $782,148
@@ -3598,7 +3598,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                       p: 4, 
                       borderRadius: 3, 
                       mb: 4,
-                      border: '2px solid #e9ecef',
+                      border: '2px solid brandColors.neutral[100]',
                       boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                     }}>
                       <Typography variant="h5" sx={{ 
@@ -3639,11 +3639,11 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                           backgroundColor: '#f8f9fa', 
                           p: 3, 
                           borderRadius: 2,
-                          border: '1px solid #e9ecef'
+                          border: '1px solid brandColors.neutral[100]'
                         }}>
                           <Box sx={{ 
                             backgroundColor: '#dc3545', 
-                            color: 'white', 
+                            color: brandColors.text.inverse, 
                             px: 2, 
                             py: 0.5, 
                             borderRadius: 1, 
@@ -3657,7 +3657,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                           <Box sx={{ 
                             width: '100%', 
                             height: 120, 
-                            backgroundColor: '#e9ecef', 
+                            backgroundColor: brandColors.neutral[100], 
                             borderRadius: 1, 
                             mb: 2,
                             display: 'flex',
@@ -3705,7 +3705,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         backgroundColor: 'white', 
                         p: 3, 
                         borderRadius: 2,
-                        border: '1px solid #e9ecef'
+                        border: '1px solid brandColors.neutral[100]'
                       }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                           <Typography variant="body1">
@@ -3733,13 +3733,13 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
                         
                         <Box sx={{ 
-                          borderTop: '2px solid #e9ecef', 
+                          borderTop: '2px solid brandColors.neutral[100]', 
                           pt: 2, 
                           textAlign: 'center' 
                         }}>
                           <Typography variant="h6" sx={{ 
                             fontWeight: 700, 
-                            color: '#4caf50', 
+                            color: brandColors.accent.success, 
                             mb: 2 
                           }}>
                             Estimated cash proceeds: $727,398 - $750,863
@@ -3824,7 +3824,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: 'white',
+                              color: brandColors.text.inverse,
                               fontSize: '0.875rem',
                               fontWeight: 600,
                               mr: 2
@@ -4674,12 +4674,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
           p: 3, 
           backgroundColor: brandColors.primary,
           borderRadius: '16px 16px 0 0',
-          color: 'white'
+          color: brandColors.text.inverse
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           {banner.icon}
-          <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
             {banner.title}
           </Typography>
         </Box>

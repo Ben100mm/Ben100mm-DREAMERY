@@ -38,24 +38,24 @@ const ConversationListContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: ${brandColors.backgrounds.primary};
+  background: brandColors.backgrounds.primary;
   overflow: hidden;
 `;
 
 const HeaderSection = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
-  background: ${brandColors.backgrounds.primary};
+  border-bottom: 1px solid brandColors.borders.secondary;
+  background: brandColors.backgrounds.primary;
 `;
 
 const SearchSection = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const FilterSection = styled.div`
   padding: 0 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
+  border-bottom: 1px solid brandColors.borders.secondary;
 `;
 
 const ConversationListContent = styled.div`
@@ -73,30 +73,30 @@ const ConversationListContent = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background: ${brandColors.borders.secondary};
+    background: brandColors.borders.secondary;
     border-radius: 2px;
     opacity: 0.6;
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background: ${brandColors.text.disabled};
+    background: brandColors.text.disabled;
     opacity: 0.8;
   }
 `;
 
 const ConversationItem = styled(ListItemButton)<{ selected: boolean }>`
   padding: 1rem;
-  border-bottom: 1px solid ${brandColors.borders.secondary};
-  background: ${props => props.selected ? brandColors.backgrounds.selected : 'transparent'};
+  border-bottom: 1px solid brandColors.borders.secondary;
+  background: props => props.selected ? brandColors.backgrounds.selected : 'transparent';
   
   &:hover {
-    background: ${props => props.selected ? brandColors.backgrounds.selected : brandColors.backgrounds.hover};
+    background: props => props.selected ? brandColors.backgrounds.selected : brandColors.backgrounds.hover;
   }
 `;
 
 const ConversationAvatar = styled(Avatar)`
-  background: ${brandColors.primary};
-  color: ${brandColors.backgrounds.primary};
+  background: brandColors.primary;
+  color: brandColors.backgrounds.primary;
   font-weight: 600;
   width: 48px;
   height: 48px;
@@ -118,30 +118,30 @@ const ConversationHeader = styled.div`
 
 const ConversationName = styled(Typography)`
   font-weight: 600;
-  color: ${brandColors.text.primary};
+  color: brandColors.text.primary;
   font-size: 0.95rem;
 `;
 
 const ConversationTime = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.8rem;
 `;
 
 const ConversationRole = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.8rem;
   margin-bottom: 0.25rem;
 `;
 
 const ConversationProperty = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
   font-style: italic;
 `;
 
 const ConversationMessage = styled(Typography)`
-  color: ${brandColors.text.secondary};
+  color: brandColors.text.secondary;
   font-size: 0.85rem;
   line-height: 1.3;
   overflow: hidden;
@@ -154,7 +154,7 @@ const ConversationMessage = styled(Typography)`
 const StatusChip = styled(Chip)<{ status: string }>`
   font-size: 0.7rem;
   height: 20px;
-  background: ${props => {
+  background: props => {
     switch (props.status) {
       case 'Active':
         return brandColors.accent.success;
@@ -164,9 +164,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
         return brandColors.text.disabled;
       default:
         return brandColors.text.disabled;
-    }
+    
   }};
-  color: ${brandColors.backgrounds.primary};
+  color: brandColors.backgrounds.primary;
   
   .MuiChip-label {
     padding: 0 8px;
@@ -291,9 +291,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             value="all"
             sx={{ 
               color: brandColors.text.secondary,
-              '&.Mui-selected': {
-                color: brandColors.primary,
-              }
+              
             }}
           />
           <Tab 
@@ -301,9 +299,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             value="unread"
             sx={{ 
               color: brandColors.text.secondary,
-              '&.Mui-selected': {
-                color: brandColors.primary,
-              }
+              
             }}
           />
         </Tabs>
@@ -314,7 +310,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
           {filteredConversations.map((conversation) => (
             <ListItem key={conversation.id} disablePadding>
               <ConversationItem
-                selected={conversation.id === selectedConversationId}
                 onClick={() => onConversationSelect(conversation.id)}
               >
                 <ListItemAvatar>

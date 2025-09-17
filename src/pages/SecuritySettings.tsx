@@ -23,6 +23,8 @@ import OTPForm from '../components/auth/OTPForm';
 import BiometricForm from '../components/auth/BiometricForm';
 import TwoFactorForm from '../components/auth/TwoFactorForm';
 import SSOForm from '../components/auth/SSOForm';
+import { brandColors } from "../theme";
+
 
 const SettingsContainer = styled(Container)`
   min-height: 100vh;
@@ -36,7 +38,7 @@ const SettingsCard = styled(Paper)`
   margin: 0 auto;
   padding: 2rem;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px brandColors.shadows.light;
 `;
 
 const HeaderSection = styled(Box)`
@@ -45,7 +47,7 @@ const HeaderSection = styled(Box)`
   gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid brandColors.neutral[300];
 `;
 
 const SecurityMethodCard = styled(Card)`
@@ -54,8 +56,8 @@ const SecurityMethodCard = styled(Card)`
   transition: all 0.2s ease;
   
   &:hover {
-    border-color: #1a365d;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: brandColors.primary;
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
 `;
 
@@ -94,9 +96,9 @@ const SecuritySettings: React.FC = () => {
     <SettingsContainer>
       <SettingsCard>
         <HeaderSection>
-          <SecurityIcon sx={{ fontSize: 40, color: '#1a365d' }} />
+          <SecurityIcon sx={{ fontSize: 40, color: brandColors.primary }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight="bold" color="#1a365d">
+            <Typography variant="h4" component="h1" fontWeight="bold" color=brandColors.primary>
               Security Settings
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -108,7 +110,7 @@ const SecuritySettings: React.FC = () => {
         <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
           <Chip
             icon={<ShieldIcon />}
-            label={`Security Score: ${getSecurityScore()}%`}
+            label={`Security Score: getSecurityScore()%`}
             color={getSecurityScore() >= 80 ? 'success' : getSecurityScore() >= 60 ? 'warning' : 'error'}
             variant="outlined"
           />

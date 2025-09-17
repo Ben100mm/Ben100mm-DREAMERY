@@ -10,6 +10,7 @@ import {
   StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { WorkspaceItem } from '../../data/workspaces/types';
+import { brandColors } from '../../theme';
 
 interface SidebarItemProps {
   item: WorkspaceItem;
@@ -37,10 +38,10 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         p: 2,
         borderRadius: 2,
         cursor: 'pointer',
-        backgroundColor: isActive ? '#1a365d' : 'transparent',
-        color: isActive ? 'white' : 'inherit',
+        backgroundColor: isActive ? brandColors.primary : 'transparent',
+        color: isActive ? brandColors.text.inverse : 'inherit',
         '&:hover': {
-          backgroundColor: isActive ? '#1a365d' : 'rgba(26, 54, 93, 0.08)',
+          backgroundColor: isActive ? brandColors.primary : brandColors.interactive.hover,
         },
         display: 'flex',
         alignItems: 'center',
@@ -48,7 +49,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         position: 'relative',
       }}
     >
-      <Box sx={{ color: isActive ? 'white' : '#1a365d' }}>
+       <Box sx={{ color: isActive ? 'white' : brandColors.primary }}>
         {item.icon}
       </Box>
       <Typography 

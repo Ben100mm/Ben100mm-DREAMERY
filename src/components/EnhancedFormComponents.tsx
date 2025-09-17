@@ -601,11 +601,11 @@ export const useFormValidation = (initialValues: Record<string, any>) => {
     }
 
     if (rules.minLength && value.length < rules.minLength) {
-      return `${field} must be at least ${rules.minLength} characters`;
+      return `${field} must be at least rules.minLength characters`;
     }
 
     if (rules.maxLength && value.length > rules.maxLength) {
-      return `${field} must be no more than ${rules.maxLength} characters`;
+      return `${field} must be no more than rules.maxLength characters`;
     }
 
     if (rules.pattern && !rules.pattern.test(value)) {

@@ -193,12 +193,12 @@ const FinancingCoordination: React.FC = () => {
   // Check rate lock status and show reminders
   useEffect(() => {
     if (loanData.rateLock.daysRemaining <= 7) {
-      toast.error(`Rate lock expires in ${loanData.rateLock.daysRemaining} days!`, {
+      toast.error(`Rate lock expires in loanData.rateLock.daysRemaining days!`, {
         duration: 5000,
         icon: '⚠️',
       });
     } else if (loanData.rateLock.daysRemaining <= 14) {
-      toast(`Rate lock expires in ${loanData.rateLock.daysRemaining} days`, {
+      toast(`Rate lock expires in loanData.rateLock.daysRemaining days`, {
         duration: 4000,
         icon: '🔒',
       });
@@ -324,7 +324,7 @@ const FinancingCoordination: React.FC = () => {
         
         doc.setFontSize(12);
         doc.text(`Loan Status: ${loanData.status.status}`, 20, 40);
-        doc.text(`Progress: ${loanData.status.progress}%`, 20, 50);
+        doc.text(`Progress: loanData.status.progress%`, 20, 50);
         doc.text(`Next Milestone: ${loanData.status.nextMilestone}`, 20, 60);
         doc.text(`Estimated Completion: ${loanData.status.estimatedCompletion}`, 20, 70);
         
@@ -599,7 +599,7 @@ const FinancingCoordination: React.FC = () => {
                       </TableCell>
                       <TableCell>{cost.description}</TableCell>
                       <TableCell align="right">
-                        ${cost.amount.toLocaleString()}
+                        cost.amount.toLocaleString()
                       </TableCell>
                       <TableCell>
                         <Chip 

@@ -14,6 +14,8 @@ import {
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
 import { useAuth } from '../../contexts/AuthContext';
+import { brandColors } from "../../theme";
+
 
 
 
@@ -124,9 +126,9 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
             fontSize: '1rem',
             fontWeight: 600,
             borderRadius: '8px',
-            backgroundColor: '#1a365d',
+            backgroundColor: brandColors.primary,
             '&:hover': {
-              backgroundColor: '#0d2340',
+              backgroundColor: brandColors.primaryDark,
             },
           }}
         >

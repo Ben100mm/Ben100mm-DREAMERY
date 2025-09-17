@@ -55,11 +55,11 @@ const UnifiedDashboardSimple: React.FC = () => {
   
   // Simple workspace configuration
   const workspaces = [
-    { id: 'close', name: 'Close', icon: <SecurityIcon />, color: '#1a365d' },
-    { id: 'manage', name: 'Manage', icon: <DashboardIcon />, color: '#1a365d' },
-    { id: 'fund', name: 'Fund', icon: <ProjectsIcon />, color: '#1a365d' },
-    { id: 'invest', name: 'Invest', icon: <CrowdfundingIcon />, color: '#1a365d' },
-    { id: 'operate', name: 'Operate', icon: <OptimizationIcon />, color: '#1a365d' },
+    { id: 'close', name: 'Close', icon: <SecurityIcon />, color: brandColors.primary },
+    { id: 'manage', name: 'Manage', icon: <DashboardIcon />, color: brandColors.primary },
+    { id: 'fund', name: 'Fund', icon: <ProjectsIcon />, color: brandColors.primary },
+    { id: 'invest', name: 'Invest', icon: <CrowdfundingIcon />, color: brandColors.primary },
+    { id: 'operate', name: 'Operate', icon: <OptimizationIcon />, color: brandColors.primary },
   ];
 
   const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace || 'close');
@@ -140,7 +140,7 @@ const UnifiedDashboardSimple: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'white' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
             Dreamery {currentWorkspace?.name || 'Dashboard'}
           </Typography>
 
@@ -209,7 +209,7 @@ const UnifiedDashboardSimple: React.FC = () => {
                     borderColor: 'rgba(0, 0, 0, 0.23)',
                   },
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1a365d',
+                    borderColor: brandColors.primary,
                   },
                 }}
                 renderValue={(value) => {
@@ -217,7 +217,7 @@ const UnifiedDashboardSimple: React.FC = () => {
                   if (!workspace) return 'Select Workspace';
                   return (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ color: '#1a365d' }}>
+                      <Box sx={{ color: brandColors.primary }}>
                         {workspace.icon}
                       </Box>
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -227,8 +227,8 @@ const UnifiedDashboardSimple: React.FC = () => {
                         label={workspace.name} 
                         size="small" 
                         sx={{ 
-                          backgroundColor: '#1a365d',
-                          color: 'white',
+                          backgroundColor: brandColors.primary,
+                          color: brandColors.text.inverse,
                           fontSize: '0.75rem',
                           height: 20,
                         }} 
@@ -240,7 +240,7 @@ const UnifiedDashboardSimple: React.FC = () => {
                 {workspaces.map((workspace) => (
                   <MenuItem key={workspace.id} value={workspace.id}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-                      <Box sx={{ color: '#1a365d' }}>
+                      <Box sx={{ color: brandColors.primary }}>
                         {workspace.icon}
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -260,7 +260,7 @@ const UnifiedDashboardSimple: React.FC = () => {
             <Box
               sx={{
                 backgroundColor: brandColors.primary,
-                color: 'white',
+                color: brandColors.text.inverse,
                 borderRadius: 2,
                 py: 1.5,
                 px: 2,

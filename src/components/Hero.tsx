@@ -61,10 +61,10 @@ const SearchContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px brandColors.shadows.light;
   &:hover {
     background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px brandColors.shadows.medium;
   }
 `;
 
@@ -123,8 +123,8 @@ const MapButton = styled(IconButton)`
 `;
 
 const SearchButton = styled.button`
-  background: #1a365d;
-  color: white;
+  background: brandColors.primary;
+  color: brandColors.text.inverse;
   border: none;
   border-radius: 6px;
   padding: 8px 16px;
@@ -133,7 +133,7 @@ const SearchButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   &:hover {
-    background: #0d2340;
+    background: brandColors.primaryDark;
   }
 `;
 

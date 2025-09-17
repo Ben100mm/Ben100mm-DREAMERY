@@ -189,7 +189,7 @@ export const NavigationProgress: React.FC<{
               Progress Overview
             </Typography>
             <Chip
-              label={`${completedSteps}/${totalSteps} completed`}
+              label={`${completedSteps}/totalSteps completed`}
               color={completedSteps === totalSteps ? "success" : "primary"}
               variant="outlined"
             />
@@ -355,7 +355,6 @@ export const NavigationProgress: React.FC<{
             <ListItem key={step.id} disablePadding>
               <ListItemButton
                 onClick={() => handleJumpTo(step.id)}
-                selected={index === currentStep}
               >
                 <ListItemIcon>
                   {step.completed ? (

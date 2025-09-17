@@ -16,6 +16,8 @@ import FaceIcon from '@mui/icons-material/Face';
 import SecurityIcon from '@mui/icons-material/Security';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { brandColors } from "../../theme";
+
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -30,11 +32,11 @@ const BiometricCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
   
   &.selected {
-    border-color: #1a365d;
+    border-color: brandColors.primary;
     background-color: rgba(26, 54, 93, 0.05);
   }
 `;
@@ -152,11 +154,11 @@ const BiometricForm: React.FC<BiometricFormProps> = ({ onSuccess }) => {
   const getMethodColor = (method: BiometricMethod) => {
     switch (method) {
       case 'fingerprint':
-        return '#4caf50';
+        return brandColors.accent.success;
       case 'face':
-        return '#2196f3';
+        return brandColors.accent.info;
       default:
-        return '#757575';
+        return brandColors.neutral[600];
     }
   };
 

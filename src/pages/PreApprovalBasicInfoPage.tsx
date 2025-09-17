@@ -117,7 +117,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
           </Box>
           <Button
             onClick={handleBack}
-            sx={{ color: brandColors.neutral.dark, textTransform: "none" }}
+            sx={{ color: brandColors.neutral[800], textTransform: "none" }}
           >
             Back
           </Button>
@@ -158,7 +158,7 @@ const PreApprovalBasicInfoPage: React.FC = () => {
 
               <Typography
                 variant="body2"
-                sx={{ color: brandColors.neutral.dark, mb: 4, textAlign: "center" }}
+                sx={{ color: brandColors.neutral[800], mb: 4, textAlign: "center" }}
               >
                 Let's start with your basic contact information and current
                 address.

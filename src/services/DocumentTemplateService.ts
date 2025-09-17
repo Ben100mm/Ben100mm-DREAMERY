@@ -333,7 +333,7 @@ export class DocumentTemplateService {
     // Replace variables with values
     template.variables.forEach(variable => {
       const value = values[variable.name] || variable.defaultValue || '';
-      const placeholder = `{{${variable.name}}}`;
+      const placeholder = `{{variable.name}}`;
       documentContent = documentContent.replace(new RegExp(placeholder, 'g'), String(value));
     });
 

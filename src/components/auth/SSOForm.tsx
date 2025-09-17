@@ -23,6 +23,8 @@ import MicrosoftIcon from '@mui/icons-material/Microsoft';
 
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import WorkIcon from '@mui/icons-material/Work';
+import { brandColors } from "../../theme";
+
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -37,11 +39,11 @@ const ProviderCard = styled(Card)`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px brandColors.shadows.medium;
   }
   
   &.selected {
-    border-color: #1a365d;
+    border-color: brandColors.primary;
     background-color: rgba(26, 54, 93, 0.05);
   }
 `;

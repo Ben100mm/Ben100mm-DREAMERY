@@ -32,7 +32,7 @@ const UnderwritePage = lazy(() => import('./pages/UnderwritePage'));
 const UXDemoPage = lazy(() => import('./pages/UXDemoPage'));
 
 const ClosePage = lazy(() => import('./pages/ClosePage'));
-const CloseBuyerPage = lazy(() => import('./pages/CloseBuyerPage'));
+const CloseBuyerPage = lazy(() => import('./pages/CloseBuyerPageNew'));
 const CloseAgentPage = lazy(() => import('./pages/CloseAgentPage'));
 const CloseBrokeragesPage = lazy(() => import('./pages/CloseBrokeragesPage'));
 const CloseProfessionalSupportPage = lazy(() => import('./pages/CloseProfessionalSupportPage'));

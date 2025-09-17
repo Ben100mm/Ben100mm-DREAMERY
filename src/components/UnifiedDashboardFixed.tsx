@@ -62,6 +62,7 @@ const closeWorkspaceConfig: WorkspaceConfig = {
     { id: 'walkthrough', label: 'Walkthrough', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'post-closing', label: 'Post-Closing', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'assistant', label: 'Closing Assistant', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'integrations', label: 'Integrations', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
   ],
 };

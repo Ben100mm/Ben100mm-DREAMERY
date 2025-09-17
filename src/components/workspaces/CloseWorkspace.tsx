@@ -16,6 +16,7 @@ import FinalWalkthroughHandover from '../close/walkthrough/FinalWalkthroughHando
 import PostClosingServices from '../close/post-closing/PostClosingServices';
 import AIClosingAssistant from '../close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../close/integrations/PartnerIntegrations';
+import CloseMessages from '../close/CloseMessages';
 import ClosingAssistantIcon from '../close/ai-closing-assistant/ClosingAssistantIcon';
 import {
   Dashboard as DashboardIcon,
@@ -28,6 +29,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Support as SupportIcon,
   IntegrationInstructions as IntegrationIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 interface CloseWorkspaceProps {
@@ -97,6 +99,12 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
           subtitle: 'Intelligent assistance for closing processes and decision making',
           icon: <ClosingAssistantIcon size={28} color="white" />,
         };
+      case 'messages':
+        return {
+          title: 'Closing Communications',
+          subtitle: 'Stay connected with everyone involved in your closing process',
+          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
+        };
       case 'integrations':
         return {
           title: 'Partner Integrations',
@@ -134,6 +142,8 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
         return <PostClosingServices />;
       case 'assistant':
         return <AIClosingAssistant />;
+      case 'messages':
+        return <CloseMessages />;
       case 'integrations':
         return <PartnerIntegrations />;
       default:

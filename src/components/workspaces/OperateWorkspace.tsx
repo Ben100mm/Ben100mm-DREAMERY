@@ -5,6 +5,8 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import OperateDashboard from '../operate/OperateDashboard';
+import OperateProjects from '../operate/OperateProjects';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -69,27 +71,9 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Projects Dashboard
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Monitor your property projects, track performance metrics, and view ongoing activities across your portfolio.
-            </Typography>
-          </Box>
-        );
+        return <OperateDashboard />;
       case 'projects':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Projects
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              View and manage all your active operational projects, renovations, and property improvements.
-            </Typography>
-          </Box>
-        );
+        return <OperateProjects />;
       case 'createproject':
         return (
           <Box>

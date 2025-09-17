@@ -5,6 +5,8 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import InvestCrowdfunding from '../invest/InvestCrowdfunding';
+import InvestJointVenture from '../invest/InvestJointVenture';
 import {
   Group as CrowdfundingIcon,
   Handshake as JointVentureIcon,
@@ -55,27 +57,9 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'crowdfunding':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Crowdfunded Deals
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Browse and invest in vetted real estate opportunities through our crowdfunding platform.
-            </Typography>
-          </Box>
-        );
+        return <InvestCrowdfunding />;
       case 'jointventure':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Joint Venture
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Partner with experienced developers and investors on larger real estate projects.
-            </Typography>
-          </Box>
-        );
+        return <InvestJointVenture />;
       case 'fractional':
         return (
           <Box>

@@ -214,7 +214,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
       <Grid container spacing={3}>
         {/* Performance Score Card */}
         {showPerformanceMetrics && (
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12 }} md={4}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -243,7 +243,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
 
         {/* Bundle Size Card */}
         {showBundleAnalysis && bundleReport?.currentBuild && (
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12 }} md={4}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -268,7 +268,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
 
         {/* Alerts Summary Card */}
         {showRegressionAlerts && (
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12 }} md={4}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -380,7 +380,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
               <Box sx={{ mt: 2 }}>
                 {bundleReport?.currentBuild ? (
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <Typography variant="subtitle2" gutterBottom>
                         Current Build Details
                       </Typography>
@@ -396,7 +396,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <Typography variant="subtitle2" gutterBottom>
                         Size Breakdown
                       </Typography>

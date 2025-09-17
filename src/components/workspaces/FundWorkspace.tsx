@@ -5,6 +5,9 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import FundDashboard from '../fund/FundDashboard';
+import FundProjects from '../fund/FundProjects';
+import FundCreateProject from '../fund/FundCreateProject';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -76,38 +79,11 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Fundraising Dashboard
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Monitor your capital raising progress, investor activity, and project performance metrics.
-            </Typography>
-          </Box>
-        );
+        return <FundDashboard />;
       case 'projects':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Projects
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              View and manage all your active and completed fundraising projects.
-            </Typography>
-          </Box>
-        );
+        return <FundProjects />;
       case 'createproject':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Create New Project
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Start a new real estate investment opportunity with step-by-step project setup.
-            </Typography>
-          </Box>
-        );
+        return <FundCreateProject />;
       case 'investor':
         return (
           <Box>

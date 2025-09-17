@@ -21,6 +21,8 @@ import {
   MenuItem,
   Card,
   FormControl,
+  Grid,
+  Chip,
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -52,6 +54,20 @@ const ManagePage: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [accountSubTab, setAccountSubTab] = useState('personal');
+  
+  // Sub-tab states for each component
+  const [dashboardTab, setDashboardTab] = useState('overview');
+  const [calendarTab, setCalendarTab] = useState('scheduling');
+  const [listingsTab, setListingsTab] = useState('property-listings');
+  const [messagesTab, setMessagesTab] = useState('tenant-communication');
+  const [earningsTab, setEarningsTab] = useState('revenue-tracking');
+  const [insightsTab, setInsightsTab] = useState('performance-analytics');
+  const [listingTab, setListingTab] = useState('property-setup');
+  const [leasesTab, setLeasesTab] = useState('lease-management');
+  const [applicationsTab, setApplicationsTab] = useState('application-processing');
+  const [paymentsTab, setPaymentsTab] = useState('payment-processing');
+  const [integrationsTab, setIntegrationsTab] = useState('third-party-services');
+  const [insuranceTab, setInsuranceTab] = useState('property-insurance');
   
   // Messaging state
   const [selectedConversationId, setSelectedConversationId] = useState<string>('1');
@@ -644,6 +660,126 @@ const ManagePage: React.FC = () => {
     { id: 'taxes', label: 'Taxes' }
   ];
 
+  // Tab definitions for each component
+  const dashboardTabs = [
+    { id: 'overview', label: 'Property Overview' },
+    { id: 'metrics', label: 'Performance Metrics' },
+    { id: 'activity', label: 'Tenant Activity' },
+    { id: 'maintenance', label: 'Maintenance Status' }
+  ];
+
+  const calendarTabs = [
+    { id: 'scheduling', label: 'Scheduling' },
+    { id: 'events', label: 'Events' },
+    { id: 'maintenance', label: 'Maintenance' },
+    { id: 'appointments', label: 'Tenant Appointments' },
+    { id: 'tours', label: 'Property Tours' }
+  ];
+
+  const listingsTabs = [
+    { id: 'property-listings', label: 'Property Listings' },
+    { id: 'market-analysis', label: 'Market Analysis' },
+    { id: 'pricing', label: 'Pricing' },
+    { id: 'availability', label: 'Availability' },
+    { id: 'marketing', label: 'Marketing' }
+  ];
+
+  const messagesTabs = [
+    { id: 'tenant-communication', label: 'Tenant Communication' },
+    { id: 'maintenance-requests', label: 'Maintenance Requests' },
+    { id: 'notifications', label: 'Notifications' },
+    { id: 'support', label: 'Support' }
+  ];
+
+  const earningsTabs = [
+    { id: 'revenue-tracking', label: 'Revenue Tracking' },
+    { id: 'rent-collection', label: 'Rent Collection' },
+    { id: 'financial-performance', label: 'Financial Performance' },
+    { id: 'profit-analysis', label: 'Profit Analysis' }
+  ];
+
+  const insightsTabs = [
+    { id: 'performance-analytics', label: 'Performance Analytics' },
+    { id: 'market-trends', label: 'Market Trends' },
+    { id: 'tenant-analytics', label: 'Tenant Analytics' },
+    { id: 'financial-reports', label: 'Financial Reports' }
+  ];
+
+  const listingTabs = [
+    { id: 'property-setup', label: 'Property Setup' },
+    { id: 'photos', label: 'Photos' },
+    { id: 'description', label: 'Description' },
+    { id: 'pricing', label: 'Pricing' },
+    { id: 'marketing-strategy', label: 'Marketing Strategy' }
+  ];
+
+  const leasesTabs = [
+    { id: 'lease-management', label: 'Lease Management' },
+    { id: 'digital-signing', label: 'Digital Signing' },
+    { id: 'renewals', label: 'Renewals' },
+    { id: 'terms', label: 'Terms' },
+    { id: 'compliance', label: 'Compliance' }
+  ];
+
+  const applicationsTabs = [
+    { id: 'application-processing', label: 'Application Processing' },
+    { id: 'tenant-screening', label: 'Tenant Screening' },
+    { id: 'background-checks', label: 'Background Checks' },
+    { id: 'approval', label: 'Approval' }
+  ];
+
+  const paymentsTabs = [
+    { id: 'payment-processing', label: 'Payment Processing' },
+    { id: 'collection', label: 'Collection' },
+    { id: 'late-fees', label: 'Late Fees' },
+    { id: 'financial-tracking', label: 'Financial Tracking' }
+  ];
+
+  const integrationsTabs = [
+    { id: 'third-party-services', label: 'Third-party Services' },
+    { id: 'payment-processors', label: 'Payment Processors' },
+    { id: 'maintenance-vendors', label: 'Maintenance Vendors' },
+    { id: 'utilities', label: 'Utilities' }
+  ];
+
+  const insuranceTabs = [
+    { id: 'property-insurance', label: 'Property Insurance' },
+    { id: 'coverage-management', label: 'Coverage Management' },
+    { id: 'claims', label: 'Claims' },
+    { id: 'risk-assessment', label: 'Risk Assessment' }
+  ];
+
+  // Helper function to render tabs
+  const renderTabs = (tabs: any[], activeTab: string, setActiveTab: (tab: string) => void) => {
+    console.log('Rendering tabs:', tabs, 'activeTab:', activeTab);
+    if (!tabs || tabs.length === 0) {
+      console.log('No tabs provided');
+      return null;
+    }
+    return (
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, backgroundColor: 'white' }}>
+        <Tabs 
+          value={activeTab} 
+          onChange={(e, newValue) => {
+            console.log('Tab changed to:', newValue);
+            setActiveTab(newValue);
+          }}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {tabs.map((tab) => (
+            <Tab 
+              key={tab.id} 
+              label={tab.label} 
+              value={tab.id}
+              sx={{ textTransform: 'none' }}
+            />
+          ))}
+        </Tabs>
+      </Box>
+    );
+  };
+
   const getBanner = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -853,29 +989,295 @@ const ManagePage: React.FC = () => {
       case 'dashboard':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Dashboard
-                      </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Welcome to your property management dashboard.
-                      </Typography>
+            {renderTabs(dashboardTabs, dashboardTab, setDashboardTab)}
+            
+            {dashboardTab === 'overview' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Property Overview
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3, height: 200 }}>
+                      <Typography variant="h6" gutterBottom>Total Properties</Typography>
+                      <Typography variant="h3" color="primary">24</Typography>
+                      <Typography variant="body2" color="text.secondary">+2 this month</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3, height: 200 }}>
+                      <Typography variant="h6" gutterBottom>Occupancy Rate</Typography>
+                      <Typography variant="h3" color="success.main">94%</Typography>
+                      <Typography variant="body2" color="text.secondary">Above market average</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3, height: 200 }}>
+                      <Typography variant="h6" gutterBottom>Monthly Revenue</Typography>
+                      <Typography variant="h3" color="primary">$45,200</Typography>
+                      <Typography variant="body2" color="text.secondary">+8% from last month</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3, height: 200 }}>
+                      <Typography variant="h6" gutterBottom>Maintenance Requests</Typography>
+                      <Typography variant="h3" color="warning.main">12</Typography>
+                      <Typography variant="body2" color="text.secondary">3 urgent</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {dashboardTab === 'metrics' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Performance Metrics
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Rent Collection Rate</Typography>
+                      <Typography variant="h4" color="success.main">98.5%</Typography>
+                      <Typography variant="body2" color="text.secondary">Last 30 days</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Average Rent</Typography>
+                      <Typography variant="h4" color="primary">$1,875</Typography>
+                      <Typography variant="body2" color="text.secondary">Per unit</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Turnover Rate</Typography>
+                      <Typography variant="h4" color="info.main">12%</Typography>
+                      <Typography variant="body2" color="text.secondary">Annual</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {dashboardTab === 'activity' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Tenant Activity
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Recent Activity</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="New lease signed - Unit 3A"
+                        secondary="2 hours ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Rent payment received - Unit 2B"
+                        secondary="4 hours ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Maintenance request - Unit 1C"
+                        secondary="6 hours ago"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {dashboardTab === 'maintenance' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Maintenance Status
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Open Requests</Typography>
+                      <Typography variant="h4" color="warning.main">8</Typography>
+                      <Typography variant="body2" color="text.secondary">3 urgent, 5 normal</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Completed This Month</Typography>
+                      <Typography variant="h4" color="success.main">24</Typography>
+                      <Typography variant="body2" color="text.secondary">Average 2.4 days</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
           </Box>
         );
       case 'calendar':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Calendar
-                      </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Schedule view for tasks, inspections, rent due dates, and lease events.
-                        </Typography>
+            {renderTabs(calendarTabs, calendarTab, setCalendarTab)}
+            
+            {calendarTab === 'scheduling' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Scheduling
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Today's Schedule</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Property Inspection - 123 Main St"
+                        secondary="10:00 AM - 11:00 AM"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Tenant Meeting - Unit 2B"
+                        secondary="2:00 PM - 3:00 PM"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Lease Renewal - Unit 4A"
+                        secondary="4:00 PM - 5:00 PM"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {calendarTab === 'events' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Events
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Upcoming Events</Typography>
+                      <List>
+                        <ListItem>
+                          <ListItemText 
+                            primary="Rent Due Date"
+                            secondary="January 1st"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText 
+                            primary="Lease Expiration"
+                            secondary="January 15th"
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Recurring Events</Typography>
+                      <List>
+                        <ListItem>
+                          <ListItemText 
+                            primary="Monthly Property Walkthrough"
+                            secondary="First Monday of each month"
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {calendarTab === 'maintenance' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Maintenance
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Scheduled Maintenance</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="HVAC Service - Building A"
+                        secondary="January 10th, 9:00 AM"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Fire Safety Inspection"
+                        secondary="January 20th, 2:00 PM"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {calendarTab === 'appointments' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Tenant Appointments
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Upcoming Appointments</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Lease Signing - John Smith"
+                        secondary="Tomorrow, 10:00 AM"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Move-in Inspection - Sarah Johnson"
+                        secondary="Friday, 2:00 PM"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {calendarTab === 'tours' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Property Tours
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Scheduled Tours</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 3A - Prospective Tenant"
+                        secondary="Today, 3:00 PM"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 1B - Family Tour"
+                        secondary="Wednesday, 11:00 AM"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'listing':
         return (
-          <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
-            {/* Listing Creation Form with Multi-Step Layout */}
+          <Box>
+            {renderTabs(listingTabs, listingTab, setListingTab)}
+            
+            {listingTab === 'property-setup' && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
+                {/* Listing Creation Form with Multi-Step Layout */}
             {listingStep === 1 && (
               <>
                 <Box sx={{ 
@@ -4160,126 +4562,645 @@ const ManagePage: React.FC = () => {
                 </Box>
               </Box>
             )}
+              </Box>
+            )}
+
+            {listingTab === 'photos' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Photos
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Property Photos</Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Upload and manage property photos for your listing.
+                  </Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {listingTab === 'description' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Description
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Property Description</Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Write compelling descriptions to attract potential tenants.
+                  </Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {listingTab === 'pricing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Pricing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Rent Pricing</Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Set competitive rent prices based on market analysis.
+                  </Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {listingTab === 'marketing-strategy' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Marketing Strategy
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Marketing Channels</Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Plan your marketing approach across different platforms.
+                  </Typography>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'listings':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Listings
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage active, pending, and archived listings. Add filters, edit details, or publish.
-            </Typography>
+            {renderTabs(listingsTabs, listingsTab, setListingsTab)}
+            
+            {listingsTab === 'property-listings' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Property Listings
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Active Listings</Typography>
+                      <Typography variant="h4" color="success.main">8</Typography>
+                      <Typography variant="body2" color="text.secondary">Currently available</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Pending</Typography>
+                      <Typography variant="h4" color="warning.main">3</Typography>
+                      <Typography variant="body2" color="text.secondary">Under review</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Archived</Typography>
+                      <Typography variant="h4" color="text.secondary">12</Typography>
+                      <Typography variant="body2" color="text.secondary">Previously listed</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {listingsTab === 'market-analysis' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Market Analysis
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Market Trends</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Average Rent in Area</Typography>
+                      <Typography variant="h4" color="primary">$1,850</Typography>
+                      <Typography variant="body2" color="text.secondary">+5% from last quarter</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Days on Market</Typography>
+                      <Typography variant="h4" color="info.main">12</Typography>
+                      <Typography variant="body2" color="text.secondary">Average for similar properties</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
+
+            {listingsTab === 'pricing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Pricing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Rent Pricing Strategy</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 1A - $1,800/month"
+                        secondary="Market rate: $1,850"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 2B - $1,950/month"
+                        secondary="Premium pricing for renovated unit"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 3C - $1,700/month"
+                        secondary="Competitive pricing for quick lease"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {listingsTab === 'availability' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Availability
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Unit Availability</Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Available Now</Typography>
+                      <Typography variant="h4" color="success.main">5</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Available Soon</Typography>
+                      <Typography variant="h4" color="warning.main">3</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
+
+            {listingsTab === 'marketing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Marketing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Marketing Channels</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Zillow"
+                        secondary="Active - 8 listings"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Apartments.com"
+                        secondary="Active - 8 listings"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Rent.com"
+                        secondary="Active - 6 listings"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'messages':
         return (
-          <Box sx={{ 
-            height: 'calc(100vh - 240px)', // Account for header, banner, and padding
-            display: 'flex', 
-            flexDirection: 'column',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{ 
-              display: 'flex', 
-              height: '100%', 
-              border: `1px solid ${brandColors.borders.secondary}`, 
-              borderRadius: 1, 
-              overflow: 'hidden',
-              minHeight: 0 // Allow flex children to shrink
-            }}>
-              {/* Conversation List */}
+          <Box>
+            {renderTabs(messagesTabs, messagesTab, setMessagesTab)}
+            
+            {messagesTab === 'tenant-communication' && (
               <Box sx={{ 
-                width: isMobile ? '100%' : 320, 
-                minWidth: isMobile ? 'auto' : 320, 
-                maxWidth: isMobile ? '100%' : 320,
-                borderRight: isMobile ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
-                display: showConversationList ? 'flex' : 'none',
-                flexShrink: 0,
+                height: 'calc(100vh - 240px)', // Account for header, banner, and padding
+                display: 'flex', 
                 flexDirection: 'column',
-                height: '100%',
                 overflow: 'hidden'
               }}>
-                <ConversationList
-                  conversations={mockConversations}
-                  selectedConversationId={selectedConversationId}
-                  onConversationSelect={handleConversationSelect}
-                  onBackToList={isMobile ? handleBackToList : undefined}
-                />
+                <Box sx={{ 
+                  display: 'flex', 
+                  height: '100%', 
+                  border: `1px solid ${brandColors.borders.secondary}`, 
+                  borderRadius: 1, 
+                  overflow: 'hidden',
+                  minHeight: 0 // Allow flex children to shrink
+                }}>
+                  {/* Conversation List */}
+                  <Box sx={{ 
+                    width: isMobile ? '100%' : 320, 
+                    minWidth: isMobile ? 'auto' : 320, 
+                    maxWidth: isMobile ? '100%' : 320,
+                    borderRight: isMobile ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
+                    display: showConversationList ? 'flex' : 'none',
+                    flexShrink: 0,
+                    flexDirection: 'column',
+                    height: '100%',
+                    overflow: 'hidden'
+                  }}>
+                    <ConversationList
+                      conversations={mockConversations}
+                      selectedConversationId={selectedConversationId}
+                      onConversationSelect={handleConversationSelect}
+                      onBackToList={isMobile ? handleBackToList : undefined}
+                    />
+                  </Box>
+                  
+                  {/* Chat Interface */}
+                  <Box sx={{ 
+                    flex: 1, 
+                    minWidth: 0, // Allow flex item to shrink below content size
+                    borderRight: isMobile || !showDetailsPanel ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
+                    display: selectedConversation ? 'flex' : 'none',
+                    flexDirection: 'column',
+                    height: '100%',
+                    overflow: 'hidden'
+                  }}>
+                    <ChatInterface
+                      conversation={selectedConversation}
+                      messages={conversationMessages}
+                      onSendMessage={handleSendMessage}
+                      onTranslationToggle={handleTranslationToggle}
+                      translationEnabled={translationEnabled}
+                      onBackToList={isMobile ? handleBackToList : undefined}
+                      onShowDetails={handleShowDetails}
+                      isMobile={isMobile}
+                    />
+                  </Box>
+                  
+                  {/* Details Panel */}
+                  <Box sx={{ 
+                    width: isMobile ? '100%' : 320, 
+                    minWidth: isMobile ? 'auto' : 320,
+                    maxWidth: isMobile ? '100%' : 320,
+                    display: showDetailsPanel ? 'flex' : 'none',
+                    flexShrink: 0,
+                    flexDirection: 'column',
+                    height: '100%',
+                    overflow: 'hidden'
+                  }}>
+                    <DetailsPanel
+                      userDetails={selectedConversation ? {
+                        id: selectedConversation.id,
+                        name: selectedConversation.contactName,
+                        organization: selectedConversation.organization,
+                        role: selectedConversation.role,
+                        initials: selectedConversation.initials,
+                        joinDate: selectedConversation.joinDate,
+                        verificationStatus: selectedConversation.verificationStatus,
+                        contactDate: selectedConversation.dateOfContact,
+                        topicOfDiscussion: selectedConversation.topicOfDiscussion,
+                      } : undefined}
+                      onBackToList={isMobile ? handleBackToList : undefined}
+                    />
+                  </Box>
+                </Box>
               </Box>
-              
-              {/* Chat Interface */}
-              <Box sx={{ 
-                flex: 1, 
-                minWidth: 0, // Allow flex item to shrink below content size
-                borderRight: isMobile || !showDetailsPanel ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
-                display: selectedConversation ? 'flex' : 'none',
-                flexDirection: 'column',
-                height: '100%',
-                overflow: 'hidden'
-              }}>
-                <ChatInterface
-                  conversation={selectedConversation}
-                  messages={conversationMessages}
-                  onSendMessage={handleSendMessage}
-                  onTranslationToggle={handleTranslationToggle}
-                  translationEnabled={translationEnabled}
-                  onBackToList={isMobile ? handleBackToList : undefined}
-                  onShowDetails={handleShowDetails}
-                  isMobile={isMobile}
-                />
+            )}
+
+            {messagesTab === 'maintenance-requests' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Maintenance Requests
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Open Requests</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Kitchen Sink Leak - Unit 2A"
+                        secondary="Submitted 2 hours ago - Urgent"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Heating Issue - Unit 1B"
+                        secondary="Submitted 1 day ago - Normal"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Door Lock Problem - Unit 3C"
+                        secondary="Submitted 2 days ago - Normal"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
               </Box>
-              
-              {/* Details Panel */}
-              <Box sx={{ 
-                width: isMobile ? '100%' : 320, 
-                minWidth: isMobile ? 'auto' : 320,
-                maxWidth: isMobile ? '100%' : 320,
-                display: showDetailsPanel ? 'flex' : 'none',
-                flexShrink: 0,
-                flexDirection: 'column',
-                height: '100%',
-                overflow: 'hidden'
-              }}>
-                <DetailsPanel
-                  userDetails={selectedConversation ? {
-                    id: selectedConversation.id,
-                    name: selectedConversation.contactName,
-                    organization: selectedConversation.organization,
-                    role: selectedConversation.role,
-                    initials: selectedConversation.initials,
-                    joinDate: selectedConversation.joinDate,
-                    verificationStatus: selectedConversation.verificationStatus,
-                    contactDate: selectedConversation.dateOfContact,
-                    topicOfDiscussion: selectedConversation.topicOfDiscussion,
-                  } : undefined}
-                  onBackToList={isMobile ? handleBackToList : undefined}
-                />
+            )}
+
+            {messagesTab === 'notifications' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Notifications
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Recent Notifications</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Rent Payment Received"
+                        secondary="Unit 2B - $1,800 - 2 hours ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="New Lease Application"
+                        secondary="Unit 3A - John Smith - 4 hours ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Maintenance Completed"
+                        secondary="Unit 1C - HVAC Repair - 6 hours ago"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
               </Box>
-            </Box>
+            )}
+
+            {messagesTab === 'support' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Support
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Support Tickets</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Account Access Issue"
+                        secondary="Ticket #12345 - In Progress"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Payment Processing Question"
+                        secondary="Ticket #12344 - Resolved"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'earnings':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Earnings
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Summary of rent collections, payouts, and exportable statements.
-            </Typography>
+            {renderTabs(earningsTabs, earningsTab, setEarningsTab)}
+            
+            {earningsTab === 'revenue-tracking' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Revenue Tracking
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Total Revenue</Typography>
+                      <Typography variant="h4" color="success.main">$45,200</Typography>
+                      <Typography variant="body2" color="text.secondary">This month</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Growth Rate</Typography>
+                      <Typography variant="h4" color="primary">+8.2%</Typography>
+                      <Typography variant="body2" color="text.secondary">vs last month</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Average per Unit</Typography>
+                      <Typography variant="h4" color="info.main">$1,885</Typography>
+                      <Typography variant="body2" color="text.secondary">Monthly</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {earningsTab === 'rent-collection' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Rent Collection
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Collection Status</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Collected This Month</Typography>
+                      <Typography variant="h4" color="success.main">$42,100</Typography>
+                      <Typography variant="body2" color="text.secondary">93% of expected</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Outstanding</Typography>
+                      <Typography variant="h4" color="warning.main">$3,100</Typography>
+                      <Typography variant="body2" color="text.secondary">7% pending</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
+
+            {earningsTab === 'financial-performance' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Financial Performance
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Net Operating Income</Typography>
+                      <Typography variant="h4" color="primary">$38,500</Typography>
+                      <Typography variant="body2" color="text.secondary">After expenses</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Cash Flow</Typography>
+                      <Typography variant="h4" color="success.main">$35,200</Typography>
+                      <Typography variant="body2" color="text.secondary">Available for distribution</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {earningsTab === 'profit-analysis' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Profit Analysis
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Profit Margins</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Gross Profit Margin"
+                        secondary="85.2% - Above industry average"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Net Profit Margin"
+                        secondary="78.1% - Excellent performance"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Operating Margin"
+                        secondary="82.3% - Strong operational efficiency"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'insights':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Insights
+            <Typography variant="h4" gutterBottom sx={{ mb: 2 }}>
+              Insights Component - Tabs Test
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              KPIs, trends, and recommended actions across your portfolio.
-            </Typography>
+            
+            {/* Direct tabs test */}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, backgroundColor: 'white' }}>
+              <Tabs 
+                value={insightsTab} 
+                onChange={(e, newValue) => {
+                  console.log('Insights tab changed to:', newValue);
+                  setInsightsTab(newValue);
+                }}
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                <Tab label="Performance Analytics" value="performance-analytics" />
+                <Tab label="Market Trends" value="market-trends" />
+                <Tab label="Tenant Analytics" value="tenant-analytics" />
+                <Tab label="Financial Reports" value="financial-reports" />
+              </Tabs>
+            </Box>
+            
+            {insightsTab === 'performance-analytics' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Performance Analytics
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Portfolio Performance</Typography>
+                      <Typography variant="h4" color="success.main">94.2%</Typography>
+                      <Typography variant="body2" color="text.secondary">Overall efficiency score</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Occupancy Rate</Typography>
+                      <Typography variant="h4" color="primary">96.8%</Typography>
+                      <Typography variant="body2" color="text.secondary">Above market average</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {insightsTab === 'market-trends' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Market Trends
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Local Market Analysis</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Rent Growth Rate"
+                        secondary="+5.2% year-over-year - Strong market"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Vacancy Rate"
+                        secondary="3.1% - Below market average of 5.2%"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Days on Market"
+                        secondary="12 days - Fast leasing market"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {insightsTab === 'tenant-analytics' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Tenant Analytics
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Average Tenancy</Typography>
+                      <Typography variant="h4" color="info.main">28 months</Typography>
+                      <Typography variant="body2" color="text.secondary">Stable tenant base</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Renewal Rate</Typography>
+                      <Typography variant="h4" color="success.main">78%</Typography>
+                      <Typography variant="body2" color="text.secondary">High satisfaction</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Payment On-Time</Typography>
+                      <Typography variant="h4" color="success.main">94%</Typography>
+                      <Typography variant="body2" color="text.secondary">Excellent payment history</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {insightsTab === 'financial-reports' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Financial Reports
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Available Reports</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Monthly Income Statement"
+                        secondary="Download PDF - Last updated: Today"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Annual Performance Report"
+                        secondary="Download PDF - Last updated: 1 week ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Tax Preparation Package"
+                        secondary="Download ZIP - Last updated: 2 weeks ago"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'account':
@@ -4330,57 +5251,664 @@ const ManagePage: React.FC = () => {
       case 'leases':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Online Leases
-                  </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Generate and manage digital lease agreements.
-                  </Typography>
-                </Box>
+            <Typography variant="h4" gutterBottom sx={{ mb: 2 }}>
+              Online Leases Component - Tabs Test
+            </Typography>
+            
+            {/* Direct tabs test */}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, backgroundColor: 'white' }}>
+              <Tabs 
+                value={leasesTab} 
+                onChange={(e, newValue) => {
+                  console.log('Leases tab changed to:', newValue);
+                  setLeasesTab(newValue);
+                }}
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                <Tab label="Lease Management" value="lease-management" />
+                <Tab label="Digital Signing" value="digital-signing" />
+                <Tab label="Renewals" value="renewals" />
+                <Tab label="Terms" value="terms" />
+                <Tab label="Compliance" value="compliance" />
+              </Tabs>
+            </Box>
+            
+            {leasesTab === 'lease-management' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Lease Management
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Active Leases</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 1A - John Smith"
+                        secondary="Lease expires: March 15, 2024"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 2B - Sarah Johnson"
+                        secondary="Lease expires: June 30, 2024"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 3C - Mike Davis"
+                        secondary="Lease expires: December 1, 2024"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {leasesTab === 'digital-signing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Digital Signing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Pending Signatures</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 4A - New Lease"
+                        secondary="Waiting for tenant signature - 2 days"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 1B - Renewal"
+                        secondary="Waiting for landlord signature - 1 day"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {leasesTab === 'renewals' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Renewals
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Upcoming Renewals</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 2A - 30 days notice due"
+                        secondary="Contact tenant for renewal decision"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 3B - 60 days notice due"
+                        secondary="Prepare renewal offer"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {leasesTab === 'terms' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Terms
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Standard Lease Terms</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Security Deposit"
+                        secondary="1.5x monthly rent"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Pet Policy"
+                        secondary="Allowed with additional deposit"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Late Fee"
+                        secondary="$50 after 5-day grace period"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {leasesTab === 'compliance' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Compliance
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Compliance Status</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">Fair Housing</Typography>
+                      <Typography variant="h4" color="success.main">100%</Typography>
+                      <Typography variant="body2" color="text.secondary">Compliant</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="subtitle1">State Regulations</Typography>
+                      <Typography variant="h4" color="success.main">100%</Typography>
+                      <Typography variant="body2" color="text.secondary">Compliant</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
+          </Box>
         );
       case 'applications':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Rental Applications
-        </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Process rental applications and tenant screening.
-                  </Typography>
+            {renderTabs(applicationsTabs, applicationsTab, setApplicationsTab)}
+            
+            {applicationsTab === 'application-processing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Application Processing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Pending Applications</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 3A - John Smith"
+                        secondary="Submitted 2 days ago - Under review"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 1B - Sarah Johnson"
+                        secondary="Submitted 1 week ago - Background check in progress"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Unit 2C - Mike Davis"
+                        secondary="Submitted 3 days ago - References pending"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {applicationsTab === 'tenant-screening' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Tenant Screening
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Screening Criteria</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Credit Score"
+                        secondary="Minimum 650 required"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Income Verification"
+                        secondary="3x monthly rent required"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Employment History"
+                        secondary="2+ years stable employment"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {applicationsTab === 'background-checks' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Background Checks
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Check Status</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Criminal Background"
+                        secondary="Completed - No issues found"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Credit Check"
+                        secondary="Completed - Score: 720"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Previous Landlord"
+                        secondary="In Progress - Contacting references"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {applicationsTab === 'approval' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Approval
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Approval Status</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">Approved</Typography>
+                      <Typography variant="h4" color="success.main">8</Typography>
+                      <Typography variant="body2" color="text.secondary">This month</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">Pending</Typography>
+                      <Typography variant="h4" color="warning.main">3</Typography>
+                      <Typography variant="body2" color="text.secondary">Under review</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">Rejected</Typography>
+                      <Typography variant="h4" color="error.main">1</Typography>
+                      <Typography variant="body2" color="text.secondary">This month</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
           </Box>
         );
       case 'payments':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Online Rent Payments
-                  </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Accept online rent payments and track history.
-                    </Typography>
-                  </Box>
+            {renderTabs(paymentsTabs, paymentsTab, setPaymentsTab)}
+            
+            {paymentsTab === 'payment-processing' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Payment Processing
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Payment Methods</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Credit/Debit Cards"
+                        secondary="Visa, Mastercard, American Express"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Bank Transfer (ACH)"
+                        secondary="Direct from checking/savings"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Digital Wallets"
+                        secondary="PayPal, Apple Pay, Google Pay"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {paymentsTab === 'collection' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Collection
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Collected This Month</Typography>
+                      <Typography variant="h4" color="success.main">$42,100</Typography>
+                      <Typography variant="body2" color="text.secondary">93% of expected</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Outstanding</Typography>
+                      <Typography variant="h4" color="warning.main">$3,100</Typography>
+                      <Typography variant="body2" color="text.secondary">7% pending</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {paymentsTab === 'late-fees' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Late Fees
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Late Fee Policy</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Grace Period"
+                        secondary="5 days after due date"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Late Fee Amount"
+                        secondary="$50 per occurrence"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Additional Fees"
+                        secondary="$25 per week after grace period"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {paymentsTab === 'financial-tracking' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Financial Tracking
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Payment Analytics</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">On-Time Rate</Typography>
+                      <Typography variant="h4" color="success.main">94%</Typography>
+                      <Typography variant="body2" color="text.secondary">Last 12 months</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">Average Payment Time</Typography>
+                      <Typography variant="h4" color="info.main">2.3 days</Typography>
+                      <Typography variant="body2" color="text.secondary">After due date</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="subtitle1">Collection Rate</Typography>
+                      <Typography variant="h4" color="primary">98.5%</Typography>
+                      <Typography variant="body2" color="text.secondary">Overall success</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Box>
+            )}
+          </Box>
         );
       case 'integrations':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Integrations
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Connect with third-party services.
-                      </Typography>
-                    </Box>
+            {renderTabs(integrationsTabs, integrationsTab, setIntegrationsTab)}
+            
+            {integrationsTab === 'third-party-services' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Third-party Services
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Connected Services</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="QuickBooks Online"
+                        secondary="Accounting integration - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Zillow Rental Manager"
+                        secondary="Listing syndication - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="DocuSign"
+                        secondary="Digital signatures - Active"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {integrationsTab === 'payment-processors' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Payment Processors
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Payment Gateways</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Stripe"
+                        secondary="Primary payment processor - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="PayPal"
+                        secondary="Alternative payment method - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Square"
+                        secondary="In-person payments - Inactive"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {integrationsTab === 'maintenance-vendors' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Maintenance Vendors
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Vendor Network</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Handy Pro"
+                        secondary="General maintenance - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="TaskRabbit"
+                        secondary="Quick fixes - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Local HVAC Company"
+                        secondary="HVAC services - Active"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {integrationsTab === 'utilities' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Utilities
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Utility Connections</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Electric Company"
+                        secondary="Bill tracking - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Water Department"
+                        secondary="Usage monitoring - Active"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Gas Company"
+                        secondary="Bill tracking - Active"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+          </Box>
         );
       case 'insurance':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Insurance
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage property insurance policies.
-                      </Typography>
-                    </Box>
+            {renderTabs(insuranceTabs, insuranceTab, setInsuranceTab)}
+            
+            {insuranceTab === 'property-insurance' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Property Insurance
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Active Policies</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Building Insurance - State Farm"
+                        secondary="Coverage: $500,000 - Expires: Dec 2024"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Liability Insurance - Allstate"
+                        secondary="Coverage: $1M - Expires: Mar 2025"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Flood Insurance - FEMA"
+                        secondary="Coverage: $250,000 - Expires: Sep 2024"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {insuranceTab === 'coverage-management' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Coverage Management
+                </Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Total Coverage</Typography>
+                      <Typography variant="h4" color="primary">$1.75M</Typography>
+                      <Typography variant="body2" color="text.secondary">Across all policies</Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Paper sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom>Monthly Premium</Typography>
+                      <Typography variant="h4" color="info.main">$2,450</Typography>
+                      <Typography variant="body2" color="text.secondary">Total cost</Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {insuranceTab === 'claims' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Claims
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Recent Claims</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Water Damage - Unit 2A"
+                        secondary="Claim #12345 - $3,200 - Approved"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="HVAC Repair - Building A"
+                        secondary="Claim #12344 - $1,800 - Pending"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Storm Damage - Roof"
+                        secondary="Claim #12343 - $5,500 - In Review"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+
+            {insuranceTab === 'risk-assessment' && (
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Risk Assessment
+                </Typography>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom>Risk Factors</Typography>
+                  <List>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Property Age"
+                        secondary="15 years - Moderate risk"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Location Risk"
+                        secondary="Low crime area - Low risk"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Natural Disasters"
+                        secondary="Flood zone - High risk"
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            )}
+          </Box>
         );
       default:
         return (

@@ -8,6 +8,7 @@ import { brandColors } from '../../theme';
 import FundDashboard from '../fund/FundDashboard';
 import FundProjects from '../fund/FundProjects';
 import FundCreateProject from '../fund/FundCreateProject';
+import FundMessages from '../fund/FundMessages';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -16,6 +17,7 @@ import {
   Security as ComplianceIcon,
   Calculate as CalculatorIcon,
   AccountBox as PortalIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 interface FundWorkspaceProps {
@@ -66,6 +68,12 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
           title: 'Secure Investor Portal',
           subtitle: 'Protected access for investors to view project updates and manage investments',
           icon: <PortalIcon sx={{ fontSize: 28, color: 'white' }} />,
+        };
+      case 'messages':
+        return {
+          title: 'Fundraising Communications',
+          subtitle: 'Manage communications with investors, advisors, and fundraising partners',
+          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
         };
       default:
         return {
@@ -128,6 +136,8 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
             </Typography>
           </Box>
         );
+      case 'messages':
+        return <FundMessages />;
       default:
         return (
           <Box>

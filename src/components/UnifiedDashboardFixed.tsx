@@ -106,6 +106,7 @@ const fundWorkspaceConfig: WorkspaceConfig = {
     { id: 'compliance', label: 'Capital Raise Compliance Tools', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'calculator', label: 'Waterfall & ROI Calculators', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'portal', label: 'Secure Investor Portal', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -121,6 +122,7 @@ const investWorkspaceConfig: WorkspaceConfig = {
     { id: 'jointventure', label: 'Joint Venture', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'fractional', label: 'Fractional Ownership', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'privatemarket', label: 'Private Market Investment Listings', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
   ],
 };
 
@@ -138,6 +140,7 @@ const operateWorkspaceConfig: WorkspaceConfig = {
     { id: 'expenses', label: 'Expense Tracking', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'contractors', label: 'Contractor & Vendor Scheduling', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
     { id: 'optimization', label: 'Portfolio Optimization Suggestions', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
+    { id: 'messages', label: 'Messages', icon: <Box sx={{ width: 20, height: 20, bgcolor: '#1a365d', borderRadius: 0.5 }} /> },
   ],
 };
 

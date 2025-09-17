@@ -7,6 +7,7 @@ import {
 import { brandColors } from '../../theme';
 import OperateDashboard from '../operate/OperateDashboard';
 import OperateProjects from '../operate/OperateProjects';
+import OperateMessages from '../operate/OperateMessages';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -14,6 +15,7 @@ import {
   Receipt as ExpenseIcon,
   Schedule as ContractorIcon,
   TrendingUp as OptimizationIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 interface OperateWorkspaceProps {
@@ -58,6 +60,12 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
           title: 'Portfolio Optimization Suggestions',
           subtitle: 'AI-powered recommendations for improving property performance and portfolio returns',
           icon: <OptimizationIcon sx={{ fontSize: 28, color: 'white' }} />,
+        };
+      case 'messages':
+        return {
+          title: 'Property Operations Communications',
+          subtitle: 'Manage communications with project teams, contractors, and operations partners',
+          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
         };
       default:
         return {
@@ -118,6 +126,8 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
             </Typography>
           </Box>
         );
+      case 'messages':
+        return <OperateMessages />;
       default:
         return (
           <Box>

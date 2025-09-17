@@ -35,7 +35,7 @@ import { brandColors } from '../../theme';
 import ManageDashboard from '../manage/ManageDashboard';
 import ManageCalendar from '../manage/ManageCalendar';
 import ManageListings from '../manage/ManageListings';
-import ManageMessages from '../manage/ManageMessages';
+import ManageMessagesEnhanced from '../manage/ManageMessagesEnhanced';
 import ManageEarnings from '../manage/ManageEarnings';
 import {
   Dashboard as DashboardIcon,
@@ -424,7 +424,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
       case 'listings':
         return <ManageListings />;
       case 'messages':
-        return <ManageMessages />;
+        return <ManageMessagesEnhanced />;
       case 'earnings':
         return <ManageEarnings />;
       case 'insights':

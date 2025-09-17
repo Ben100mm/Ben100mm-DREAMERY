@@ -7,11 +7,13 @@ import {
 import { brandColors } from '../../theme';
 import InvestCrowdfunding from '../invest/InvestCrowdfunding';
 import InvestJointVenture from '../invest/InvestJointVenture';
+import InvestMessages from '../invest/InvestMessages';
 import {
   Group as CrowdfundingIcon,
   Handshake as JointVentureIcon,
   PieChart as FractionalIcon,
   Business as PrivateMarketIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 interface InvestWorkspaceProps {
@@ -44,6 +46,12 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
           title: 'Private Market Investment Listings',
           subtitle: 'Exclusive access to off-market investment opportunities and private placements',
           icon: <PrivateMarketIcon sx={{ fontSize: 28, color: 'white' }} />,
+        };
+      case 'messages':
+        return {
+          title: 'Investment Communications',
+          subtitle: 'Manage communications with investment opportunities and portfolio partners',
+          icon: <ChatIcon sx={{ fontSize: 28, color: 'white' }} />,
         };
       default:
         return {
@@ -82,6 +90,8 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
             </Typography>
           </Box>
         );
+      case 'messages':
+        return <InvestMessages />;
       default:
         return (
           <Box>

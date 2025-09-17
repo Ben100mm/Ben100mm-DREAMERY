@@ -32,6 +32,11 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { brandColors } from '../../theme';
+import ManageDashboard from '../manage/ManageDashboard';
+import ManageCalendar from '../manage/ManageCalendar';
+import ManageListings from '../manage/ManageListings';
+import ManageMessages from '../manage/ManageMessages';
+import ManageEarnings from '../manage/ManageEarnings';
 import {
   Dashboard as DashboardIcon,
   CalendarToday as CalendarIcon,

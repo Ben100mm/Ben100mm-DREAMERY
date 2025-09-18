@@ -136,7 +136,7 @@ const ClosePage: React.FC = () => {
 
     return (
       <>
-        <PageAppBar title="Dreamery Closing Hub" showBackButton={true} />
+        <PageAppBar title="RBAC" showBackButton={true} />
         <Container maxWidth="md" sx={{ py: 8, marginTop: "64px" }}>
 
 
@@ -150,7 +150,7 @@ const ClosePage: React.FC = () => {
             mb: 2
           }}
         >
-            Dreamery Closing Hub
+            RBAC
             </Typography>
         <Typography 
           variant="h5" 

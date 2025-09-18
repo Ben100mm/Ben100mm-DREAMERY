@@ -42,7 +42,7 @@ const ProfessionalSignupPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [professionalType, setProfessionalType] = useState("");
+  const [professionalType, setProfessionalType] = useState<string[]>([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [zipPostal, setZipPostal] = useState("");
@@ -62,7 +62,7 @@ const ProfessionalSignupPage: React.FC = () => {
     if (
       !email ||
       !password ||
-      !professionalType ||
+      professionalType.length === 0 ||
       !firstName ||
       !lastName ||
       !zipPostal ||
@@ -248,12 +248,129 @@ const ProfessionalSignupPage: React.FC = () => {
 
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel sx={{ color: brandColors.neutral[800], fontWeight: 600 }}>
-                  Professional type
+                  Professional type (select multiple)
                 </InputLabel>
                 <Select
+                  multiple
                   value={professionalType}
-                  onChange={(e) => setProfessionalType(e.target.value)}
+                  onChange={(e) => setProfessionalType(e.target.value as string[])}
                   IconComponent={KeyboardArrowDown}
+                  renderValue={(selected) => {
+                    const roleLabels: { [key: string]: string } = {
+                      "real-estate-agent": "Real Estate Agent",
+                      "real-estate-broker": "Real Estate Broker",
+                      "realtor": "Realtor",
+                      "listing-agent": "Listing Agent",
+                      "buyers-agent": "Buyer's Agent",
+                      "commercial-agent": "Commercial Real Estate Agent",
+                      "luxury-agent": "Luxury Real Estate Agent",
+                      "new-construction-agent": "New Construction Agent",
+                      "wholesaler": "Wholesaler",
+                      "disposition-agent": "Disposition Agent",
+                      "title-agent": "Title Agent",
+                      "escrow-officer": "Escrow Officer",
+                      "notary": "Notary Public",
+                      "appraiser": "Appraiser",
+                      "residential-appraiser": "Residential Appraiser",
+                      "commercial-appraiser": "Commercial Appraiser",
+                      "home-inspector": "Home Inspector",
+                      "commercial-inspector": "Commercial Inspector",
+                      "energy-inspector": "Energy Inspector",
+                      "surveyor": "Surveyor",
+                      "land-surveyor": "Land Surveyor",
+                      "insurance-agent": "Insurance Agent",
+                      "title-insurance-agent": "Title Insurance Agent",
+                      "mortgage-broker": "Mortgage Broker",
+                      "mortgage-lender": "Mortgage Lender",
+                      "loan-officer": "Loan Officer",
+                      "mortgage-underwriter": "Mortgage Underwriter",
+                      "hard-money-lender": "Hard Money Lender",
+                      "private-lender": "Private Lender",
+                      "lp": "Limited Partner (LP)",
+                      "seller-finance-specialist": "Seller Finance Specialist",
+                      "banking-advisor": "Banking Advisor",
+                      "general-contractor": "General Contractor",
+                      "contractor": "Contractor",
+                      "electrical-contractor": "Electrical Contractor",
+                      "plumbing-contractor": "Plumbing Contractor",
+                      "hvac-contractor": "HVAC Contractor",
+                      "roofing-contractor": "Roofing Contractor",
+                      "painting-contractor": "Painting Contractor",
+                      "landscaping-contractor": "Landscaping Contractor",
+                      "flooring-contractor": "Flooring Contractor",
+                      "kitchen-contractor": "Kitchen Contractor",
+                      "bathroom-contractor": "Bathroom Contractor",
+                      "interior-designer": "Interior Designer",
+                      "architect": "Architect",
+                      "landscape-architect": "Landscape Architect",
+                      "kitchen-designer": "Kitchen Designer",
+                      "bathroom-designer": "Bathroom Designer",
+                      "lighting-designer": "Lighting Designer",
+                      "furniture-designer": "Furniture Designer",
+                      "color-consultant": "Color Consultant",
+                      "permit-expeditor": "Permit Expeditor",
+                      "energy-consultant": "Energy Consultant",
+                      "property-manager": "Property Manager",
+                      "ltr-property-manager": "Long-term Rental Property Manager",
+                      "str-property-manager": "Short-term Rental Property Manager",
+                      "str-setup-manager": "STR Setup & Manager",
+                      "housekeeper": "Housekeeper",
+                      "landscape-cleaner": "Landscape Cleaner",
+                      "turnover-specialist": "Turnover Specialist",
+                      "handyman": "Handyman",
+                      "landscaper": "Landscaper",
+                      "arborist": "Arborist",
+                      "tenant-screening-agent": "Tenant Screening Agent",
+                      "leasing-agent": "Leasing Agent",
+                      "bookkeeper": "Bookkeeper",
+                      "cpa": "Certified Public Accountant (CPA)",
+                      "accountant": "Accountant",
+                      "photographer": "Photographer",
+                      "videographer": "Videographer",
+                      "ar-vr-developer": "AR/VR Developer",
+                      "digital-twins-developer": "Digital Twins Developer",
+                      "real-estate-attorney": "Real Estate Attorney",
+                      "estate-planning-attorney": "Estate Planning Attorney",
+                      "1031-exchange-intermediary": "1031 Exchange Intermediary",
+                      "entity-formation-service-provider": "Entity Formation Service Provider",
+                      "escrow-service-provider": "Escrow Service Provider",
+                      "legal-notary-service-provider": "Legal Notary Service Provider",
+                      "investor-buyer": "Investor Buyer",
+                      "retail-buyer": "Retail Buyer",
+                      "ibuyer": "iBuyer",
+                      "property-flipper": "Property Flipper",
+                      "consultant": "Real Estate Consultant",
+                      "educator": "Real Estate Educator",
+                      "trainer": "Real Estate Trainer",
+                      "coach": "Real Estate Coach",
+                      "financial-advisor": "Financial Advisor",
+                      "tax-advisor": "Tax Advisor",
+                      "relocation-specialist": "Relocation Specialist",
+                      "investment-advisor": "Real Estate Investment Advisor",
+                      "other": "Other"
+                    };
+
+                    return (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {(selected as string[]).map((value) => (
+                          <Box
+                            key={value}
+                            sx={{
+                              backgroundColor: brandColors.primary,
+                              color: 'white',
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: 1,
+                              fontSize: '12px',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {roleLabels[value] || value}
+                          </Box>
+                        ))}
+                      </Box>
+                    );
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-notchedOutline": {
                       borderColor: brandColors.borders.secondary,
@@ -668,6 +785,18 @@ const ProfessionalSignupPage: React.FC = () => {
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
               </FormControl>
+              
+              {/* Helper text for multiple selection */}
+              <Typography
+                sx={{
+                  color: brandColors.neutral[600],
+                  fontSize: "12px",
+                  mb: 2,
+                  fontStyle: "italic",
+                }}
+              >
+                You can select multiple professional types that apply to you
+              </Typography>
 
               <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
                 <Box sx={{ flex: 1 }}>

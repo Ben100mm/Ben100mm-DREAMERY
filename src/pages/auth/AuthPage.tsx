@@ -15,7 +15,7 @@ const AuthContainer = styled(Container)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+  background: linear-gradient(135deg, brandColors.neutral[50] 0%, brandColors.neutral[100] 100%);
 `;
 
 const LogoContainer = styled(Box)`

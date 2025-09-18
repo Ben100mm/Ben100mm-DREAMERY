@@ -508,7 +508,7 @@ const FinalWalkthroughHandover: React.FC = () => {
       case 'failed':
         return brandColors.actions.error;
       case 'verified':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -523,7 +523,7 @@ const FinalWalkthroughHandover: React.FC = () => {
       case 'high':
         return brandColors.actions.error;
       case 'critical':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -620,7 +620,7 @@ const FinalWalkthroughHandover: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <KeyIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+            <KeyIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
             <Typography variant="h6" component="div">
               {walkthroughData.keyExchange.keys.length}
             </Typography>
@@ -895,7 +895,7 @@ const FinalWalkthroughHandover: React.FC = () => {
               <Card sx={{ mb: 3 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <KeyIcon sx={{ fontSize: 40, color: '#1976d0' }} />
+                    <KeyIcon sx={{ fontSize: 40, color: brandColors.accent.info }} />
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography variant="h6" gutterBottom>
                         Key Exchange Details
@@ -987,7 +987,7 @@ const FinalWalkthroughHandover: React.FC = () => {
               <Card>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <AssignmentIcon sx={{ fontSize: 40, color: '#1976d0' }} />
+                    <AssignmentIcon sx={{ fontSize: 40, color: brandColors.accent.info }} />
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography variant="h6" gutterBottom>
                         Possession Agreement Details

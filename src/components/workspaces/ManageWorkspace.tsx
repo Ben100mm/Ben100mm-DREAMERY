@@ -3074,7 +3074,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Property Information Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3105,7 +3105,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Moving Details Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3130,7 +3130,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Home Details Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3258,7 +3258,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                     {/* Basement Details Section */}
                     {hasBasement === 'yes' && (
                       <Box sx={{ 
-                        backgroundColor: '#f8f9fa', 
+                        backgroundColor: brandColors.neutral[50], 
                         p: 3, 
                         borderRadius: 2, 
                         mb: 3,
@@ -3294,7 +3294,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Home Quality Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3331,7 +3331,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Additional Information Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3376,7 +3376,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* HOA and Community Features Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 3,
@@ -3413,7 +3413,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Contact Information Section */}
                     <Box sx={{ 
-                      backgroundColor: '#f8f9fa', 
+                      backgroundColor: brandColors.neutral[50], 
                       p: 3, 
                       borderRadius: 2, 
                       mb: 4,
@@ -3575,17 +3575,17 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
                         gap: 2 
                       }}>
-                        <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <Box sx={{ p: 2, backgroundColor: brandColors.neutral[50], borderRadius: 2 }}>
                           <Typography variant="body1" sx={{ fontWeight: 600 }}>
                             Get prime exposure on Dreamery resulting in <strong>75% more views</strong>.
                           </Typography>
                         </Box>
-                        <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <Box sx={{ p: 2, backgroundColor: brandColors.neutral[50], borderRadius: 2 }}>
                           <Typography variant="body1" sx={{ fontWeight: 600 }}>
                             Helps maximize your sale price by reaching more buyers on Dreamery.
                           </Typography>
                         </Box>
-                        <Box sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                        <Box sx={{ p: 2, backgroundColor: brandColors.neutral[50], borderRadius: 2 }}>
                           <Typography variant="body1" sx={{ fontWeight: 600 }}>
                             Sell for <strong>2% more</strong> when using a premium Showcase listing.
                           </Typography>
@@ -3637,13 +3637,13 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                         </Box>
                         
                         <Box sx={{ 
-                          backgroundColor: '#f8f9fa', 
+                          backgroundColor: brandColors.neutral[50], 
                           p: 3, 
                           borderRadius: 2,
                           border: '1px solid brandColors.neutral[100]'
                         }}>
                           <Box sx={{ 
-                            backgroundColor: '#dc3545', 
+                            backgroundColor: brandColors.accent.error, 
                             color: brandColors.text.inverse, 
                             px: 2, 
                             py: 0.5, 
@@ -3782,7 +3782,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                           'Transparent pricing and no hidden fees',
                           'Dedicated support throughout your selling journey'
                         ].map((benefit, index) => (
-                          <Box key={index} sx={{ p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                          <Box key={index} sx={{ p: 2, backgroundColor: brandColors.neutral[50], borderRadius: 2 }}>
                             <Typography variant="body1">{benefit}</Typography>
                           </Box>
                         ))}
@@ -3814,7 +3814,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                             display: 'flex', 
                             alignItems: 'center', 
                             p: 2, 
-                            backgroundColor: '#f8f9fa', 
+                            backgroundColor: brandColors.neutral[50], 
                             borderRadius: 2 
                           }}>
                             <Box sx={{ 
@@ -3840,11 +3840,11 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
 
                     {/* Limited time offer Card */}
                     <Box sx={{ 
-                      backgroundColor: '#fff3cd', 
+                      backgroundColor: brandColors.backgrounds.warning, 
                       p: 4, 
                       borderRadius: 3, 
                       mb: 4,
-                      border: '2px solid #ffeaa7'
+                      border: '2px solid brandColors.accent.warning'
                     }}>
                       <Typography variant="h5" sx={{ 
                         fontWeight: 700, 
@@ -3895,10 +3895,10 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                           alert('Form submitted successfully!');
                         }}
                         sx={{
-                          backgroundColor: '#6c757d',
+                          backgroundColor: brandColors.neutral[600],
                           px: 4,
                           py: 1.5,
-                          '&:hover': { backgroundColor: '#5a6268' }
+                          '&:hover': { backgroundColor: brandColors.neutral[700] }
                         }}
                       >
                         Post

@@ -7058,7 +7058,7 @@ const UnderwritePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: "#f0f4ff",
+                      backgroundColor: brandColors.backgrounds.selected,
                       borderRadius: 1,
                       border: "1px solid brandColors.primary",
                       fontSize: "0.875rem",
@@ -7105,7 +7105,7 @@ const UnderwritePage: React.FC = () => {
                           "&.Mui-selected": {
                             color: brandColors.primary,
                             fontWeight: 700,
-                            backgroundColor: "#f0f4ff",
+                            backgroundColor: brandColors.backgrounds.selected,
                             borderRadius: "4px 4px 0 0",
                           },
                           "&:hover": {
@@ -7463,7 +7463,7 @@ const UnderwritePage: React.FC = () => {
                                     onClick={() =>
                                       deleteCustomPreset(preset.id)
                                     }
-                                    sx={{ color: "#d32f2f" }}
+                                    sx={{ color: brandColors.accent.error }}
                                   >
                                     <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyDeleteIcon fontSize="small" />
@@ -7704,7 +7704,7 @@ const UnderwritePage: React.FC = () => {
                                     sx={{
                                       color:
                                         data.variance > 0
-                                          ? "#d32f2f"
+                                          ? brandColors.accent.error
                                           : brandColors.accent.success,
                                       fontWeight: "bold",
                                     }}
@@ -8114,14 +8114,14 @@ const UnderwritePage: React.FC = () => {
                             </Typography>
                           </Card>
 
-                          <Card sx={{ p: 2, backgroundColor: "#f3e5f5" }}>
+                          <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.info }}>
                             <Typography
                               variant="subtitle2"
-                              sx={{ fontWeight: 600, color: "#7b1fa2", mb: 1 }}
+                              sx={{ fontWeight: 600, color: brandColors.accent.info, mb: 1 }}
                             >
                               Break-Even ADR
                             </Typography>
-                            <Typography variant="h6" sx={{ color: "#7b1fa2" }}>
+                            <Typography variant="h6" sx={{ color: brandColors.accent.info }}>
                               calculateBreakEvenADR().toFixed(0)
                             </Typography>
                             <Typography
@@ -8198,8 +8198,8 @@ const UnderwritePage: React.FC = () => {
                                       key={occupancy}
                                       sx={{
                                         backgroundColor: isProfitable
-                                          ? "#f1f8e9"
-                                          : "#ffebee",
+                                          ? brandColors.backgrounds.success
+                                          : brandColors.backgrounds.error,
                                       }}
                                     >
                                       <TableCell sx={{ fontWeight: "bold" }}>
@@ -8218,7 +8218,7 @@ const UnderwritePage: React.FC = () => {
                                         sx={{
                                           color: isProfitable
                                             ? brandColors.accent.success
-                                            : "#d32f2f",
+                                            : brandColors.accent.error,
                                           fontWeight: "bold",
                                         }}
                                       >
@@ -8248,19 +8248,19 @@ const UnderwritePage: React.FC = () => {
                         <Box
                           sx={{
                             p: 2,
-                            backgroundColor: "#fff3e0",
+                            backgroundColor: brandColors.backgrounds.warning,
                             borderRadius: 1,
                           }}
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "#e65100", mb: 1 }}
+                            sx={{ color: brandColors.accent.warning, mb: 1 }}
                           >
                             <strong>Pro Forma Integration:</strong>
                           </Typography>
                           <Typography
                             variant="caption"
-                            sx={{ color: "#e65100" }}
+                            sx={{ color: brandColors.accent.warning }}
                           >
                             Break-even calculations include your current Pro
                             Forma percentages: Total Variable:{" "}
@@ -8304,7 +8304,7 @@ const UnderwritePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: "#fff3e0",
+                    backgroundColor: brandColors.backgrounds.warning,
                     borderRadius: 1,
                     border: "1px solid brandColors.accent.warningLight",
                     fontSize: "0.875rem",
@@ -8313,7 +8313,7 @@ const UnderwritePage: React.FC = () => {
                 >
                   <Typography
                     variant="body2"
-                    sx={{ color: "#e65100", fontWeight: 500 }}
+                    sx={{ color: brandColors.accent.warning, fontWeight: 500 }}
                   >
                     <strong>Risk Scoring & Mitigation:</strong> Comprehensive
                     risk assessment across market, property, tenant, and
@@ -8387,7 +8387,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography
                           variant="h4"
-                          sx={{ fontWeight: 600, color: "#e65100" }}
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                         >
                           {state.riskScoreResults!.riskBreakdown.marketRisk}/10
                         </Typography>
@@ -8408,7 +8408,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography
                           variant="h4"
-                          sx={{ fontWeight: 600, color: "#e65100" }}
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                         >
                           {state.riskScoreResults!.riskBreakdown.propertyRisk}/10
                         </Typography>
@@ -8429,7 +8429,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography
                           variant="h4"
-                          sx={{ fontWeight: 600, color: "#e65100" }}
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                         >
                           {state.riskScoreResults!.riskBreakdown.tenantRisk}/10
                         </Typography>
@@ -8450,7 +8450,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography
                           variant="h4"
-                          sx={{ fontWeight: 600, color: "#e65100" }}
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                         >
                           {state.riskScoreResults!.riskBreakdown.financingRisk}
                           /10
@@ -8461,14 +8461,14 @@ const UnderwritePage: React.FC = () => {
                     <Box
                       sx={{
                         p: 2,
-                        backgroundColor: "#fff3e0",
+                        backgroundColor: brandColors.backgrounds.warning,
                         borderRadius: 1,
                         border: "1px solid brandColors.accent.warningLight",
                       }}
                     >
                       <Typography
                         variant="subtitle1"
-                        sx={{ fontWeight: 600, color: "#e65100", mb: 1 }}
+                        sx={{ fontWeight: 600, color: brandColors.accent.warning, mb: 1 }}
                       >
                         Key Recommendations:
                       </Typography>
@@ -8478,7 +8478,7 @@ const UnderwritePage: React.FC = () => {
                           <Typography
                             key={index}
                             variant="body2"
-                            sx={{ mb: 0.5, color: "#bf360c" }}
+                            sx={{ mb: 0.5, color: brandColors.accent.warningDark }}
                           >
                             - {rec}
                           </Typography>
@@ -8504,7 +8504,7 @@ const UnderwritePage: React.FC = () => {
                     }}
                     sx={{
                       backgroundColor: brandColors.primary,
-                      "&:hover": { backgroundColor: "#2d3748" },
+                      "&:hover": { backgroundColor: brandColors.primaryDark },
                     }}
                   >
                     {state.riskScoreResults
@@ -9394,7 +9394,7 @@ const UnderwritePage: React.FC = () => {
                     {!isCashOnCashValid(state) && (
                       <Typography
                         variant="caption"
-                        sx={{ color: "#d32f2f", fontStyle: "italic" }}
+                        sx={{ color: brandColors.accent.error, fontStyle: "italic" }}
                       >
                         Cash-on-Cash Return calculation is invalid. Please check
                         that all cash investment amounts are positive.
@@ -9446,7 +9446,7 @@ const UnderwritePage: React.FC = () => {
                         {!isBreakEvenValid(state) && (
                           <Typography
                             variant="caption"
-                            sx={{ color: "#d32f2f", fontStyle: "italic" }}
+                            sx={{ color: brandColors.accent.error, fontStyle: "italic" }}
                           >
                             Break-even calculation is invalid. Variable costs
                             may exceed revenue or revenue is zero.
@@ -9662,7 +9662,7 @@ const UnderwritePage: React.FC = () => {
             }}
             sx={{
               backgroundColor: brandColors.primary,
-              "&:hover": { backgroundColor: "#2d3748" },
+              "&:hover": { backgroundColor: brandColors.primaryDark },
             }}
             startIcon={
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>

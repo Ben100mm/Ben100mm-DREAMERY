@@ -62,16 +62,16 @@ const PageContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: brandColors.neutral[200];
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: brandColors.neutral[400];
     border-radius: 6px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: brandColors.neutral[500];
   }
 `;
 

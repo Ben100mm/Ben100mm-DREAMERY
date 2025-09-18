@@ -133,7 +133,7 @@ const Header: React.FC = () => {
           <Typography
             variant="h4"
             sx={{
-              color: "#FFFFFF",
+              color: brandColors.text.inverse,
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 900,
               letterSpacing: "-1px",

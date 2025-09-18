@@ -183,7 +183,7 @@ const ManageDashboard: React.FC = () => {
                         <Avatar sx={{ 
                           bgcolor: activity.type === 'rent_payment' ? brandColors.accent.success : 
                                   activity.type === 'maintenance' ? brandColors.accent.warning :
-                                  activity.type === 'renewal' ? brandColors.accent.info : '#9c27b0'
+                                  activity.type === 'renewal' ? brandColors.accent.info : brandColors.accent.info
                         }}>
                           {activity.type === 'rent_payment' && <MoneyIcon />}
                           {activity.type === 'maintenance' && <WarningIcon />}

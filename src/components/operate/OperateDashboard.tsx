@@ -134,7 +134,7 @@ const OperateDashboard: React.FC = () => {
       case 'project_completed': return <CheckCircleIcon sx={{ color: brandColors.accent.success }} />;
       case 'expense_approved': return <MoneyIcon sx={{ color: brandColors.accent.info }} />;
       case 'deadline_approaching': return <WarningIcon sx={{ color: brandColors.accent.warning }} />;
-      case 'contractor_added': return <PersonIcon sx={{ color: '#9c27b0' }} />;
+      case 'contractor_added': return <PersonIcon sx={{ color: brandColors.accent.info }} />;
       default: return <ProjectIcon />;
     }
   };

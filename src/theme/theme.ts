@@ -1,205 +1,205 @@
 import { createTheme } from '@mui/material/styles';
 
-// Enhanced Brand Color Palette with Full Complementary Colors
+// Dreamery Brand Color Palette - Official Colors Only
 export const brandColors = {
-  // Primary Brand Colors - Based on #1a365d
-  primary: '#1a365d',        // Dark blue - Primary brand color
-  primaryLight: '#2d5a8a',   // Lighter variant
-  primaryDark: '#0d2340',    // Darker variant for gradients
+  // Primary Brand Colors
+  primary: '#0d2340',        // Dark Blue - Primary brand color
+  primaryLight: '#1a365d',   // Secondary brand color (darker blue)
+  primaryDark: '#0a1a2e',    // Darker variant for gradients
   primary50: '#f0f4f8',      // Very light tint
-  primary100: '#d9e6f2',     // Light tint
-  primary200: '#b3cce5',     // Medium-light tint
-  primary300: '#8db3d8',     // Medium tint
-  primary400: '#6699cb',     // Medium-dark tint
-  primary500: '#1a365d',     // Base color
-  primary600: '#0d2340',     // Dark variant
-  primary700: '#061018',     // Darker variant
-  primary800: '#040c12',     // Very dark variant
-  primary900: '#02080a',     // Darkest variant
+  primary100: '#e3e8ed',     // Light tint
+  primary200: '#c7d2da',     // Medium-light tint
+  primary300: '#a3b4c0',     // Medium tint
+  primary400: '#7f96a6',     // Medium-dark tint
+  primary500: '#0d2340',     // Base color
+  primary600: '#0a1a2e',     // Dark variant
+  primary700: '#07111f',     // Darker variant
+  primary800: '#040810',     // Very dark variant
+  primary900: '#020408',     // Darkest variant
   
-  // Secondary Colors - Complementary palette
-  secondary: '#0d2340',      // Darker blue for gradients
+  // Secondary Colors
+  secondary: '#1a365d',      // Darker Blue for gradients and secondary elements
   secondaryLight: '#2d4a6b', // Lighter variant
-  secondaryDark: '#061018',  // Darker variant
+  secondaryDark: '#0d2340',  // Darker variant
   
-  // Accent Colors - Semantic and complementary
+  // Accent Colors - Status Indicators
   accent: {
-    success: '#4caf50',      // Green for success
-    successLight: '#66bb6a', // Light green
-    successDark: '#388e3c',  // Dark green
-    warning: '#ff9800',      // Orange for pending states
-    warningLight: '#ffb74d', // Light orange
-    warningDark: '#f57c00',  // Dark orange
-    info: '#2196f3',         // Blue for completed states
-    infoLight: '#64b5f6',    // Light blue
-    infoDark: '#1976d2',     // Dark blue
-    error: '#f44336',        // Red for errors
-    errorLight: '#ef5350',   // Light red
-    errorDark: '#d32f2f',    // Dark red
+    success: '#19401a',      // Success Green - "On Track" status and completed milestones
+    successLight: '#2d5a2d', // Light green
+    successDark: '#0f2a0f',  // Dark green
+    warning: '#995c03',      // Warning Orange - "At Risk" indicators and pending states
+    warningLight: '#b8730a', // Light orange
+    warningDark: '#7a4a02',  // Dark orange
+    info: '#113c5e',         // Info Blue - Progress bars and active states
+    infoLight: '#1a5a8a',    // Light blue
+    infoDark: '#0d2a42',     // Dark blue
+    error: '#570701',        // Error Red - High urgency indicators
+    errorLight: '#7a0a02',   // Light red
+    errorDark: '#3d0501',    // Dark red
   },
   
-  // Neutral Colors - Extended grayscale
+  // Neutral Colors - Dreamery Brand Palette
   neutral: {
-    0: '#ffffff',            // Pure white
+    0: '#ffffff',            // White - Primary backgrounds for cards and content areas
     50: '#fafafa',           // Very light gray
-    100: '#f5f5f5',          // Light background
-    200: '#eeeeee',          // Light borders
-    300: '#e0e0e0',          // Medium borders
-    400: '#bdbdbd',          // Medium-light
+    100: '#f5f5f5',          // Light Gray - Secondary backgrounds and subtle sections
+    200: '#d0d0d0',          // Light borders
+    300: '#bdbdbd',          // Medium borders
+    400: '#ababab',          // Medium Gray - Secondary text color
     500: '#9e9e9e',          // Medium gray
-    600: '#757575',          // Medium-dark
+    600: '#858585',          // Dark Gray - Primary text color
     700: '#616161',          // Dark gray
     800: '#424242',          // Very dark gray
     900: '#212121',          // Almost black
     950: '#0a0a0a',          // Pure black
   },
   
-  // Action Colors - Enhanced semantic actions
+  // Action Colors - Dreamery Brand Actions
   actions: {
-    primary: '#1a365d',      // Primary brand color for actions
-    primaryHover: '#0d2340', // Primary hover state
-    secondary: '#1976d2',    // Blue for secondary actions
-    secondaryHover: '#1565c0', // Secondary hover state
-    success: '#4caf50',      // Green for success indicators
-    successHover: '#388e3c', // Success hover state
-    warning: '#ff9800',      // Orange for warnings
-    warningHover: '#f57c00', // Warning hover state
-    error: '#f44336',        // Red for errors
-    errorHover: '#d32f2f',   // Error hover state
-    info: '#2196f3',         // Blue for info actions
-    infoHover: '#1976d2',    // Info hover state
-    disabled: '#9e9e9e',     // Disabled state
+    primary: '#0d2340',      // Primary brand color for actions
+    primaryHover: '#1a365d', // Primary hover state
+    secondary: '#1a365d',    // Secondary brand color for actions
+    secondaryHover: '#0d2340', // Secondary hover state
+    success: '#19401a',      // Success Green for success indicators
+    successHover: '#0f2a0f', // Success hover state
+    warning: '#995c03',      // Warning Orange for warnings
+    warningHover: '#7a4a02', // Warning hover state
+    error: '#570701',        // Error Red for errors
+    errorHover: '#3d0501',   // Error hover state
+    info: '#113c5e',         // Info Blue for info actions
+    infoHover: '#0d2a42',    // Info hover state
+    disabled: '#ababab',     // Disabled state
   },
   
-  // Status Colors - Comprehensive status system
+  // Status Colors - Dreamery Brand Status System
   status: {
-    active: '#1a365d',       // Primary brand for active states
-    completed: '#4caf50',    // Green for completed
-    pending: '#ff9800',      // Orange for pending
-    inactive: '#9e9e9e',     // Gray for inactive
-    draft: '#757575',        // Medium gray for draft states
+    active: '#0d2340',       // Primary brand for active states
+    completed: '#19401a',    // Success Green for completed
+    pending: '#995c03',      // Warning Orange for pending
+    inactive: '#ababab',     // Medium Gray for inactive
+    draft: '#858585',        // Dark Gray for draft states
     archived: '#616161',     // Dark gray for archived
-    cancelled: '#f44336',    // Red for cancelled
-    scheduled: '#2196f3',    // Blue for scheduled
-    inProgress: '#ff9800',   // Orange for in progress
+    cancelled: '#570701',    // Error Red for cancelled
+    scheduled: '#113c5e',    // Info Blue for scheduled
+    inProgress: '#995c03',   // Warning Orange for in progress
   },
   
-  // Surface Colors - Material design surfaces
+  // Surface Colors - Dreamery Brand Surfaces
   surfaces: {
-    primary: '#ffffff',       // White primary surface
-    secondary: '#f8f9fa',    // Light gray secondary surface
+    primary: '#ffffff',       // White - Primary backgrounds for cards and content areas
+    secondary: '#f5f5f5',    // Light Gray - Secondary backgrounds and subtle sections
     tertiary: '#f5f5f5',     // Very light gray tertiary surface
     elevated: '#ffffff',     // Elevated surfaces (cards, modals)
     overlay: 'rgba(0, 0, 0, 0.5)', // Backdrop overlay
     glass: 'rgba(255, 255, 255, 0.25)', // Glass morphism
     glassHover: 'rgba(255, 255, 255, 0.35)', // Glass hover
-    glassDark: 'rgba(26, 54, 93, 0.25)', // Dark glass
-    glassDarkHover: 'rgba(26, 54, 93, 0.35)', // Dark glass hover
+    glassDark: 'rgba(13, 35, 64, 0.25)', // Dark glass
+    glassDarkHover: 'rgba(13, 35, 64, 0.35)', // Dark glass hover
   },
   
-  // Background Colors - Contextual backgrounds
+  // Background Colors - Dreamery Brand Backgrounds
   backgrounds: {
-    primary: '#ffffff',       // White primary background
-    secondary: '#f8f9fa',    // Light gray secondary
+    primary: '#ffffff',       // White - Primary backgrounds for cards and content areas
+    secondary: '#f5f5f5',    // Light Gray - Secondary backgrounds and subtle sections
     tertiary: '#f5f5f5',     // Very light gray
-    selected: '#e3f2fd',     // Light blue for selected states
-    hover: '#f0f8ff',        // Very light blue for hover
-    focus: '#e1f5fe',        // Light blue for focus states
-    success: '#e8f5e8',      // Light green for success states
-    warning: '#fff3cd',      // Light yellow for warning states
-    error: '#fff5f5',        // Light red for error states
-    info: '#e3f2fd',         // Light blue for info states
-    gradient: 'linear-gradient(135deg, #1a365d 0%, #0d2340 100%)',
-    gradientLight: 'linear-gradient(135deg, #2d5a8a 0%, #1a365d 100%)',
-    gradientSubtle: 'linear-gradient(180deg, rgba(26, 54, 93, 0.1) 0%, transparent 100%)',
+    selected: '#e3e8ed',     // Light blue for selected states
+    hover: '#f0f4f8',        // Very light blue for hover
+    focus: '#e3e8ed',        // Light blue for focus states
+    success: '#e8f0e8',      // Light green for success states
+    warning: '#f5f0e8',      // Light orange for warning states
+    error: '#f5e8e8',        // Light red for error states
+    info: '#e8f0f5',         // Light blue for info states
+    gradient: 'linear-gradient(135deg, #0d2340 0%, #1a365d 100%)',
+    gradientLight: 'linear-gradient(135deg, #1a365d 0%, #2d4a6b 100%)',
+    gradientSubtle: 'linear-gradient(180deg, rgba(13, 35, 64, 0.1) 0%, transparent 100%)',
   },
   
-  // Border Colors - Comprehensive border system
+  // Border Colors - Dreamery Brand Borders
   borders: {
-    primary: '#1a365d',      // Primary brand color for borders
-    secondary: '#e0e0e0',    // Light gray for secondary borders
+    primary: '#0d2340',      // Primary brand color for borders
+    secondary: '#e3e1e1',    // Light Gray for secondary borders
     tertiary: '#f5f5f5',     // Very light gray for subtle borders
-    focus: '#1976d2',        // Blue for focus states
-    success: '#4caf50',      // Green for success borders
-    warning: '#ff9800',      // Orange for warning borders
-    error: '#f44336',        // Red for error borders
-    info: '#2196f3',         // Blue for info borders
-    disabled: '#e0e0e0',     // Light gray for disabled borders
-    hover: '#bdbdbd',        // Medium gray for hover borders
+    focus: '#113c5e',        // Info Blue for focus states
+    success: '#19401a',      // Success Green for success borders
+    warning: '#995c03',      // Warning Orange for warning borders
+    error: '#570701',        // Error Red for error borders
+    info: '#113c5e',         // Info Blue for info borders
+    disabled: '#e3e1e1',     // Light Gray for disabled borders
+    hover: '#ababab',        // Medium Gray for hover borders
   },
   
-  // Text Colors - Comprehensive text system
+  // Text Colors - Dreamery Brand Text System
   text: {
-    primary: '#333333',      // Dark gray for main text
-    secondary: '#666666',    // Medium gray for secondary text
+    primary: '#858585',      // Dark Gray - Primary text color
+    secondary: '#ababab',    // Medium Gray - Secondary text color
     tertiary: '#9e9e9e',     // Light gray for tertiary text
-    disabled: '#bdbdbd',     // Light gray for disabled text
+    disabled: '#ababab',     // Medium Gray for disabled text
     inverse: '#ffffff',      // White text for dark backgrounds
-    accent: '#1a365d',       // Primary brand for accent text
-    success: '#4caf50',      // Green for success text
-    warning: '#ff9800',      // Orange for warning text
-    error: '#f44336',        // Red for error text
-    info: '#2196f3',         // Blue for info text
-    link: '#1976d2',         // Blue for links
-    linkHover: '#1565c0',    // Darker blue for link hover
+    accent: '#0d2340',       // Primary brand for accent text
+    success: '#19401a',      // Success Green for success text
+    warning: '#995c03',      // Warning Orange for warning text
+    error: '#570701',        // Error Red for error text
+    info: '#113c5e',         // Info Blue for info text
+    link: '#113c5e',         // Info Blue for links
+    linkHover: '#0d2a42',    // Darker blue for link hover
   },
   
-  // Interactive States - Comprehensive interaction system
+  // Interactive States - Dreamery Brand Interactions
   interactive: {
-    hover: 'rgba(26, 54, 93, 0.08)', // Light blue hover
-    hoverDark: 'rgba(26, 54, 93, 0.12)', // Darker blue hover
-    pressed: 'rgba(26, 54, 93, 0.12)', // Pressed state
-    focus: '#1976d2', // Focus ring
-    focusVisible: 'rgba(25, 118, 210, 0.3)', // Visible focus ring
+    hover: 'rgba(13, 35, 64, 0.08)', // Light blue hover
+    hoverDark: 'rgba(13, 35, 64, 0.12)', // Darker blue hover
+    pressed: 'rgba(13, 35, 64, 0.12)', // Pressed state
+    focus: '#113c5e', // Info Blue focus ring
+    focusVisible: 'rgba(17, 60, 94, 0.3)', // Visible focus ring
     disabled: 'rgba(0, 0, 0, 0.26)', // Disabled state
   },
   
-  // Data Visualization Colors
+  // Data Visualization Colors - Dreamery Brand Data
   data: {
-    primary: '#1a365d',      // Primary data color
-    secondary: '#4caf50',    // Secondary data color
-    tertiary: '#ff9800',     // Tertiary data color
-    quaternary: '#2196f3',   // Quaternary data color
-    quinary: '#9c27b0',      // Quinary data color
-    senary: '#00bcd4',       // Senary data color
-    neutral: '#9e9e9e',      // Neutral data color
+    primary: '#0d2340',      // Primary data color
+    secondary: '#19401a',    // Success Green data color
+    tertiary: '#995c03',     // Warning Orange data color
+    quaternary: '#113c5e',   // Info Blue data color
+    quinary: '#570701',      // Error Red data color
+    senary: '#1a365d',       // Secondary brand data color
+    neutral: '#ababab',      // Medium Gray neutral data color
   },
   
-  // Accessibility Colors
+  // Accessibility Colors - Dreamery Brand Accessibility
   accessibility: {
-    focus: '#1976d2',        // High contrast focus
-    focusRing: 'rgba(25, 118, 210, 0.5)', // Focus ring
+    focus: '#113c5e',        // Info Blue high contrast focus
+    focusRing: 'rgba(17, 60, 94, 0.5)', // Info Blue focus ring
     highContrast: '#0a0a0a', // High contrast text
-    lowContrast: '#666666',  // Low contrast text
-    required: '#f44336',     // Required field indicator
+    lowContrast: '#ababab',  // Medium Gray low contrast text
+    required: '#570701',     // Error Red required field indicator
   },
   
-  // Shadow Colors
+  // Shadow Colors - Dreamery Brand Shadows
   shadows: {
     light: 'rgba(0, 0, 0, 0.1)', // Light shadow
     medium: 'rgba(0, 0, 0, 0.15)', // Medium shadow
     dark: 'rgba(0, 0, 0, 0.25)', // Dark shadow
-    colored: 'rgba(26, 54, 93, 0.15)', // Brand colored shadow
-    coloredHover: '#1976d2', // Brand colored hover shadow
+    colored: 'rgba(13, 35, 64, 0.15)', // Brand colored shadow
+    coloredHover: '#113c5e', // Info Blue colored hover shadow
   }
 };
 
-// Color utility functions for common patterns
+// Color utility functions for Dreamery Brand patterns
 export const colorUtils = {
   // Glass morphism backgrounds
   glass: (opacity = 0.25) => `rgba(255, 255, 255, ${opacity})`,
   glassHover: (opacity = 0.35) => `rgba(255, 255, 255, ${opacity})`,
-  glassDark: (opacity = 0.25) => `rgba(26, 54, 93, ${opacity})`,
-  glassDarkHover: (opacity = 0.35) => `rgba(26, 54, 93, ${opacity})`,
+  glassDark: (opacity = 0.25) => `rgba(13, 35, 64, ${opacity})`,
+  glassDarkHover: (opacity = 0.35) => `rgba(13, 35, 64, ${opacity})`,
   
   // Brand color with opacity
-  primaryWithOpacity: (opacity = 1) => `rgba(26, 54, 93, ${opacity})`,
-  secondaryWithOpacity: (opacity = 1) => `rgba(13, 35, 64, ${opacity})`,
+  primaryWithOpacity: (opacity = 1) => `rgba(13, 35, 64, ${opacity})`,
+  secondaryWithOpacity: (opacity = 1) => `rgba(26, 54, 93, ${opacity})`,
   
   // Common gradients
-  primaryGradient: 'linear-gradient(135deg, #1a365d 0%, #0d2340 100%)',
-  primaryGradientLight: 'linear-gradient(135deg, #2d5a8a 0%, #1a365d 100%)',
-  subtleGradient: 'linear-gradient(180deg, rgba(26, 54, 93, 0.1) 0%, transparent 100%)',
+  primaryGradient: 'linear-gradient(135deg, #0d2340 0%, #1a365d 100%)',
+  primaryGradientLight: 'linear-gradient(135deg, #1a365d 0%, #2d4a6b 100%)',
+  subtleGradient: 'linear-gradient(180deg, rgba(13, 35, 64, 0.1) 0%, transparent 100%)',
   glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
   
   // Interactive states
@@ -215,46 +215,46 @@ export const colorUtils = {
   shadow: (color = '0, 0, 0', opacity = 0.1, blur = 8, spread = 0) => 
     `rgba(${color}, ${opacity}) ${spread}px ${spread}px ${blur}px`,
   shadowColored: (opacity = 0.15, blur = 8, spread = 0) => 
-    `rgba(26, 54, 93, ${opacity}) ${spread}px ${spread}px ${blur}px`,
+    `rgba(13, 35, 64, ${opacity}) ${spread}px ${spread}px ${blur}px`,
 };
 
-// Create Material-UI theme with brand colors
+// Create Material-UI theme with Dreamery brand colors
 export const theme = createTheme({
   palette: {
     primary: {
-      main: brandColors.primary,
-      light: brandColors.primaryLight,
-      dark: brandColors.primaryDark,
+      main: brandColors.primary, // #0d2340
+      light: brandColors.primaryLight, // #1a365d
+      dark: brandColors.primaryDark, // #0a1a2e
       contrastText: brandColors.text.inverse,
     },
     secondary: {
-      main: brandColors.secondary,
-      light: brandColors.secondaryLight,
-      dark: brandColors.secondaryDark,
+      main: brandColors.secondary, // #1a365d
+      light: brandColors.secondaryLight, // #2d4a6b
+      dark: brandColors.secondaryDark, // #0d2340
       contrastText: brandColors.text.inverse,
     },
     success: {
-      main: brandColors.accent.success,
-      light: brandColors.accent.successLight,
-      dark: brandColors.accent.successDark,
+      main: brandColors.accent.success, // #19401a
+      light: brandColors.accent.successLight, // #2d5a2d
+      dark: brandColors.accent.successDark, // #0f2a0f
       contrastText: brandColors.text.inverse,
     },
     warning: {
-      main: brandColors.accent.warning,
-      light: brandColors.accent.warningLight,
-      dark: brandColors.accent.warningDark,
+      main: brandColors.accent.warning, // #995c03
+      light: brandColors.accent.warningLight, // #b8730a
+      dark: brandColors.accent.warningDark, // #7a4a02
       contrastText: brandColors.text.inverse,
     },
     error: {
-      main: brandColors.accent.error,
-      light: brandColors.accent.errorLight,
-      dark: brandColors.accent.errorDark,
+      main: brandColors.accent.error, // #570701
+      light: brandColors.accent.errorLight, // #7a0a02
+      dark: brandColors.accent.errorDark, // #3d0501
       contrastText: brandColors.text.inverse,
     },
     info: {
-      main: brandColors.accent.info,
-      light: brandColors.accent.infoLight,
-      dark: brandColors.accent.infoDark,
+      main: brandColors.accent.info, // #113c5e
+      light: brandColors.accent.infoLight, // #1a5a8a
+      dark: brandColors.accent.infoDark, // #0d2a42
       contrastText: brandColors.text.inverse,
     },
     text: {

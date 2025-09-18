@@ -586,7 +586,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                         key={index}
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <WarningIcon sx={{ color: "#d32f2f", fontSize: 20 }} />
+                        <WarningIcon sx={{ color: brandColors.accent.error, fontSize: 20 }} />
                         <Typography variant="body2">{con}</Typography>
                       </Box>
                     ))}
@@ -636,7 +636,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                     variant="h6"
                     sx={{
                       fontWeight: 600,
-                      color: npv > 0 ? brandColors.accent.success : "#d32f2f",
+                      color: npv > 0 ? brandColors.accent.success : brandColors.accent.error,
                     }}
                   >
                     {formatCurrency(npv.toString())}
@@ -673,7 +673,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                   <Typography variant="body2">Closing Costs:</Typography>
                   <Typography
                     variant="h6"
-                    sx={{ fontWeight: 600, color: "#d32f2f" }}
+                    sx={{ fontWeight: 600, color: brandColors.accent.error }}
                   >
                     {formatCurrency(
                       (
@@ -743,7 +743,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                         (inputs.currentLoanBalance / inputs.propertyValue) *
                           100 >
                         80
-                          ? "#d32f2f"
+                          ? brandColors.accent.error
                           : brandColors.accent.success,
                     }}
                   >

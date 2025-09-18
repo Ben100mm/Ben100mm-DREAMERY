@@ -29,7 +29,7 @@ import { brandColors } from "../theme";
 const SettingsContainer = styled(Container)`
   min-height: 100vh;
   padding: 2rem 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+  background: linear-gradient(135deg, brandColors.neutral[50] 0%, brandColors.neutral[100] 100%);
 `;
 
 const SettingsCard = styled(Paper)`

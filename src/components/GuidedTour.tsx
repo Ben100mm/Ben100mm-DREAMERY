@@ -316,7 +316,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                 <Paper
                   sx={{
                     p: 2,
-                    backgroundColor: "#fff3e0",
+                    backgroundColor: brandColors.backgrounds.warning,
                     border: "2px dashed brandColors.accent.warningDark",
                     borderRadius: 2,
                     mb: 3,

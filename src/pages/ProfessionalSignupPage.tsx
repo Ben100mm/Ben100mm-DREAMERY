@@ -108,7 +108,7 @@ const ProfessionalSignupPage: React.FC = () => {
                 variant="h4"
                 component="h1"
                 sx={{
-                  color: "#1e3a8a",
+                  color: brandColors.primary,
                   fontWeight: 700,
                   mb: 1,
                   fontSize: "2rem",
@@ -159,7 +159,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#1e3a8a",
+                      borderColor: brandColors.primary,
                     },
                   },
                   "& .MuiInputLabel-root": {
@@ -167,7 +167,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1e3a8a",
+                    color: brandColors.primary,
                   },
                 }}
               />
@@ -190,7 +190,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#1e3a8a",
+                      borderColor: brandColors.primary,
                     },
                   },
                   "& .MuiInputLabel-root": {
@@ -198,7 +198,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1e3a8a",
+                    color: brandColors.primary,
                   },
                 }}
                 InputProps={{
@@ -262,7 +262,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#1e3a8a",
+                      borderColor: brandColors.primary,
                     },
                   }}
                 >
@@ -687,7 +687,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#1e3a8a",
+                          borderColor: brandColors.primary,
                         },
                       },
                       "& .MuiInputLabel-root": {
@@ -695,7 +695,7 @@ const ProfessionalSignupPage: React.FC = () => {
                         fontWeight: 600,
                       },
                       "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#1e3a8a",
+                        color: brandColors.primary,
                       },
                     }}
                   />
@@ -717,7 +717,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#1e3a8a",
+                          borderColor: brandColors.primary,
                         },
                       },
                       "& .MuiInputLabel-root": {
@@ -725,7 +725,7 @@ const ProfessionalSignupPage: React.FC = () => {
                         fontWeight: 600,
                       },
                       "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#1e3a8a",
+                        color: brandColors.primary,
                       },
                     }}
                   />
@@ -749,7 +749,7 @@ const ProfessionalSignupPage: React.FC = () => {
                       borderColor: brandColors.neutral[300],
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#1e3a8a",
+                      borderColor: brandColors.primary,
                     },
                   },
                   "& .MuiInputLabel-root": {
@@ -757,7 +757,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     fontWeight: 600,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1e3a8a",
+                    color: brandColors.primary,
                   },
                 }}
               />
@@ -790,7 +790,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#1e3a8a",
+                          borderColor: brandColors.primary,
                         },
                       },
                     }}
@@ -811,7 +811,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#1e3a8a",
+                          borderColor: brandColors.primary,
                         },
                       },
                     }}
@@ -832,7 +832,7 @@ const ProfessionalSignupPage: React.FC = () => {
                           borderColor: brandColors.neutral[300],
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#1e3a8a",
+                          borderColor: brandColors.primary,
                         },
                       },
                     }}
@@ -863,7 +863,7 @@ const ProfessionalSignupPage: React.FC = () => {
                             borderColor: brandColors.neutral[300],
                           },
                           "&.Mui-focused fieldset": {
-                            borderColor: "#1e3a8a",
+                            borderColor: brandColors.primary,
                           },
                         },
                       }}
@@ -879,9 +879,9 @@ const ProfessionalSignupPage: React.FC = () => {
                     checked={consentChecked}
                     onChange={(e) => setConsentChecked(e.target.checked)}
                     sx={{
-                      color: "#1e3a8a",
+                      color: brandColors.primary,
                       "&.Mui-checked": {
-                        color: "#1e3a8a",
+                        color: brandColors.primary,
                       },
                     }}
                   />
@@ -904,7 +904,7 @@ const ProfessionalSignupPage: React.FC = () => {
                 sx={{
                   height: "48px",
                   borderRadius: "8px",
-                  background: "#1e3a8a",
+                  background: brandColors.primary,
                   textTransform: "none",
                   fontSize: "16px",
                   fontWeight: 600,
@@ -923,7 +923,7 @@ const ProfessionalSignupPage: React.FC = () => {
                   By submitting, I accept Dreamery's{" "}
                   <Link
                     sx={{
-                      color: "#1e3a8a",
+                      color: brandColors.primary,
                       textDecoration: "none",
                       "&:hover": {
                         textDecoration: "underline",

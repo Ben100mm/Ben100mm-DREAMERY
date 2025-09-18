@@ -494,10 +494,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -570,10 +570,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -632,10 +632,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -915,10 +915,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -997,10 +997,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -1087,10 +1087,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -1169,10 +1169,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -1245,10 +1245,10 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                bgcolor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
               }}
             >
               <Typography
@@ -1303,7 +1303,7 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                backgroundColor: "#f0f4ff",
+                backgroundColor: brandColors.backgrounds.selected,
                 borderRadius: 1,
                 border: "1px solid",
                 borderColor: brandColors.primary,
@@ -1347,7 +1347,7 @@ const AnalyzePage: React.FC = () => {
                     "&.Mui-selected": {
                       color: brandColors.primary,
                       fontWeight: 700,
-                      backgroundColor: "#f0f4ff",
+                      backgroundColor: brandColors.backgrounds.selected,
                       borderRadius: "4px 4px 0 0",
                     },
                     "&:hover": {
@@ -1698,7 +1698,7 @@ const AnalyzePage: React.FC = () => {
                               onClick={() =>
                                 deleteCustomPreset(preset.id)
                               }
-                              sx={{ color: "#d32f2f" }}
+                              sx={{ color: brandColors.accent.error }}
                             >
                               <DeleteIcon fontSize="small" />
                             </IconButtonComponent>
@@ -1930,7 +1930,7 @@ const AnalyzePage: React.FC = () => {
                               sx={{
                                 color:
                                   data.variance > 0
-                                    ? "#d32f2f"
+                                    ? brandColors.accent.error
                                     : brandColors.accent?.success || brandColors.accent.success,
                                 fontWeight: "bold",
                               }}
@@ -2336,7 +2336,7 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                     </Card>
 
-                    <Card sx={{ p: 2, backgroundColor: "#d5d5d5" }}>
+                    <Card sx={{ p: 2, backgroundColor: brandColors.neutral[300] }}>
                       <Typography
                         variant="subtitle2"
                         sx={{ fontWeight: 600, color: brandColors.neutral[600], mb: 1 }}
@@ -2387,7 +2387,7 @@ const AnalyzePage: React.FC = () => {
                             <TableRow
                               key={occupancy}
                               sx={{
-                                backgroundColor: occupancy === 65.5 ? brandColors.backgrounds?.selected || "#e3f2fd" : "inherit",
+                                backgroundColor: occupancy === 65.5 ? brandColors.backgrounds?.selected || brandColors.backgrounds.selected : "inherit",
                                 fontWeight: occupancy === 65.5 ? "bold" : "normal",
                               }}
                             >
@@ -2397,7 +2397,7 @@ const AnalyzePage: React.FC = () => {
                               <TableCell>annualRevenue.toFixed(0)</TableCell>
                               <TableCell
                                 sx={{
-                                  color: profitLoss >= 0 ? brandColors.accent.successDark : "#d32f2f",
+                                  color: profitLoss >= 0 ? brandColors.accent.successDark : brandColors.accent.error,
                                   fontWeight: "bold",
                                 }}
                               >
@@ -2420,7 +2420,7 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                backgroundColor: '#fff3e0',
+                backgroundColor: brandColors.backgrounds.warning,
                 borderRadius: 1,
                 border: '1px solid brandColors.accent.warningLight',
                 fontSize: '0.875rem',
@@ -2429,7 +2429,7 @@ const AnalyzePage: React.FC = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ color: '#e65100', fontWeight: 500 }}
+                sx={{ color: brandColors.accent.warning, fontWeight: 500 }}
               >
                 <strong>Risk Scoring & Mitigation:</strong> Comprehensive
                 risk assessment across market, property, tenant, and
@@ -2490,7 +2490,7 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                       borderRadius: 1,
                       textAlign: 'center',
                     }}
@@ -2503,7 +2503,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="h4"
-                      sx={{ fontWeight: 600, color: '#e65100' }}
+                      sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                     >
                       {riskScoreResults.riskBreakdown.marketRisk}/10
                     </Typography>
@@ -2511,7 +2511,7 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                       borderRadius: 1,
                       textAlign: 'center',
                     }}
@@ -2524,7 +2524,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="h4"
-                      sx={{ fontWeight: 600, color: '#e65100' }}
+                      sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                     >
                       {riskScoreResults.riskBreakdown.propertyRisk}/10
                     </Typography>
@@ -2532,7 +2532,7 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                       borderRadius: 1,
                       textAlign: 'center',
                     }}
@@ -2545,7 +2545,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="h4"
-                      sx={{ fontWeight: 600, color: '#e65100' }}
+                      sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                     >
                       {riskScoreResults.riskBreakdown.tenantRisk}/10
                     </Typography>
@@ -2553,7 +2553,7 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.backgrounds?.secondary || '#f5f7fb',
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
                       borderRadius: 1,
                       textAlign: 'center',
                     }}
@@ -2566,7 +2566,7 @@ const AnalyzePage: React.FC = () => {
                     </Typography>
                     <Typography
                       variant="h4"
-                      sx={{ fontWeight: 600, color: '#e65100' }}
+                      sx={{ fontWeight: 600, color: brandColors.accent.warning }}
                     >
                       {riskScoreResults.riskBreakdown.financingRisk}
                       /10
@@ -2577,14 +2577,14 @@ const AnalyzePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: '#fff3e0',
+                    backgroundColor: brandColors.backgrounds.warning,
                     borderRadius: 1,
                     border: '1px solid brandColors.accent.warningLight',
                   }}
                 >
                   <Typography
                     variant="subtitle1"
-                    sx={{ fontWeight: 600, color: '#e65100', mb: 1 }}
+                    sx={{ fontWeight: 600, color: brandColors.accent.warning, mb: 1 }}
                   >
                     Key Recommendations:
                   </Typography>
@@ -2594,7 +2594,7 @@ const AnalyzePage: React.FC = () => {
                       <Typography
                         key={index}
                         variant="body2"
-                        sx={{ mb: 0.5, color: '#bf360c' }}
+                        sx={{ mb: 0.5, color: brandColors.accent.warningDark }}
                       >
                         - {rec}
                       </Typography>
@@ -2616,7 +2616,7 @@ const AnalyzePage: React.FC = () => {
                 }}
                 sx={{
                   backgroundColor: brandColors.primary,
-                  '&:hover': { backgroundColor: '#2d3748' },
+                  '&:hover': { backgroundColor: brandColors.primaryDark },
                 }}
               >
                 {riskScoreResults
@@ -2638,20 +2638,20 @@ const AnalyzePage: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                backgroundColor: brandColors.backgrounds?.selected || '#e8f2ff',
+                backgroundColor: brandColors.backgrounds?.selected || brandColors.backgrounds.selected,
                 borderRadius: 1,
                 border: '1px solid',
-                borderColor: brandColors.accent?.info || '#90caf9',
+                borderColor: brandColors.accent?.info || brandColors.accent.info,
                 fontSize: '0.875rem',
               }}
             >
-              <Typography variant="body2" sx={{ color: '#1565c0', fontWeight: 500 }}>
+              <Typography variant="body2" sx={{ color: brandColors.accent.info, fontWeight: 500 }}>
                 <strong>Advanced Modeling Suite:</strong> Full toolset from Advanced Calculations, including seasonal & market adjustments, exit strategies, tax implications, refinance, sensitivity, stress testing, and inflation.
               </Typography>
             </Box>
 
             {/* Tabs (styled to match Documents page) */}
-            <Box sx={{ borderBottom: '1px solid', borderColor: brandColors.borders?.secondary || '#e5e7eb' }}>
+            <Box sx={{ borderBottom: '1px solid', borderColor: brandColors.borders?.secondary || brandColors.neutral[200] }}>
               <Tabs
                 value={advancedModelingTab}
                 onChange={(_, v) => setAdvancedModelingTab(v as typeof advancedModelingTab)}
@@ -2664,7 +2664,7 @@ const AnalyzePage: React.FC = () => {
                     textTransform: 'none',
                     minHeight: 44,
                     fontWeight: 500,
-                    color: brandColors.text?.secondary || '#6b7280',
+                    color: brandColors.text?.secondary || brandColors.text.secondary,
                   },
                   '& .Mui-selected': {
                     color: brandColors.primary,
@@ -2698,7 +2698,7 @@ const AnalyzePage: React.FC = () => {
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
                       Advanced Calculations Overview
                     </Typography>
-                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                       Welcome to the Advanced Calculations Suite. This comprehensive tool provides sophisticated analysis for your real estate investments.
                     </Typography>
                   </Box>
@@ -2709,10 +2709,10 @@ const AnalyzePage: React.FC = () => {
                     <Box
                       sx={{
                         p: 3,
-                        backgroundColor: '#e3f2fd',
+                        backgroundColor: brandColors.backgrounds.selected,
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -2720,42 +2720,42 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Property Type:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             Single Family
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Location:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             , 
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Purchase Price:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $160,000
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Operation Type:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             Buy & Hold
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Financing Type:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             Conventional
                           </Typography>
                         </Box>
@@ -2766,10 +2766,10 @@ const AnalyzePage: React.FC = () => {
                     <Box
                       sx={{
                         p: 3,
-                        backgroundColor: '#e3f2fd',
+                        backgroundColor: brandColors.backgrounds.selected,
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -2799,7 +2799,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -2856,7 +2856,7 @@ const AnalyzePage: React.FC = () => {
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
                       Global Configuration
                     </Typography>
-                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                       Configure market conditions, exit strategies, risk factors, and manage scenarios.
                     </Typography>
                   </Box>
@@ -2870,7 +2870,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: '#f9fafb',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -2885,7 +2885,7 @@ const AnalyzePage: React.FC = () => {
                             size="small"
                             sx={{ flex: 1 }}
                           />
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             %
                           </Typography>
                         </Box>
@@ -2897,7 +2897,7 @@ const AnalyzePage: React.FC = () => {
                             size="small"
                             sx={{ flex: 1 }}
                           />
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             %
                           </Typography>
                         </Box>
@@ -2909,7 +2909,7 @@ const AnalyzePage: React.FC = () => {
                             size="small"
                             sx={{ flex: 1 }}
                           />
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             %
                           </Typography>
                         </Box>
@@ -2923,7 +2923,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: '#f9fafb',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -2938,7 +2938,7 @@ const AnalyzePage: React.FC = () => {
                             size="small"
                             sx={{ flex: 1 }}
                           />
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             %
                           </Typography>
                         </Box>
@@ -2950,7 +2950,7 @@ const AnalyzePage: React.FC = () => {
                             size="small"
                             sx={{ flex: 1 }}
                           />
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             %
                           </Typography>
                         </Box>
@@ -2967,7 +2967,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: '#f9fafb',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3002,7 +3002,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: '#f9fafb',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3029,7 +3029,7 @@ const AnalyzePage: React.FC = () => {
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
                       Seasonal & Market Analysis
                     </Typography>
-                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                       Configure seasonal adjustments and market conditions for accurate financial modeling.
                     </Typography>
                   </Box>
@@ -3043,7 +3043,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: 'white',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
@@ -3073,18 +3073,18 @@ const AnalyzePage: React.FC = () => {
                       {/* Read-only Values */}
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Adjusted Vacancy:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             5.50%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Maintenance Multiplier:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             1.20
                           </Typography>
                         </Box>
@@ -3098,7 +3098,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: 'white',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
@@ -3129,34 +3129,34 @@ const AnalyzePage: React.FC = () => {
                       {/* Read-only Values */}
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Adj Vacancy:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             5.00%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Adj Rent Growth:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             3.09%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Adj Appreciation:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             4.16%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Adj Cap Rate:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             6.00%
                           </Typography>
                         </Box>
@@ -3172,7 +3172,7 @@ const AnalyzePage: React.FC = () => {
                     <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, mb: 1 }}>
                       Exit Strategy Configuration
                     </Typography>
-                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                    <Typography variant="body1" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                       Configure exit strategy parameters and view projected returns over different timeframes.
                     </Typography>
                   </Box>
@@ -3184,7 +3184,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                   >
@@ -3209,13 +3209,13 @@ const AnalyzePage: React.FC = () => {
                               py: 0.75,
                               backgroundColor: '#f3f4f6',
                               border: '1px solid',
-                              borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                               borderRadius: 1,
                               minWidth: 32,
                               textAlign: 'center',
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               %
                             </Typography>
                           </Box>
@@ -3241,13 +3241,13 @@ const AnalyzePage: React.FC = () => {
                               py: 0.75,
                               backgroundColor: '#f3f4f6',
                               border: '1px solid',
-                              borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                              borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                               borderRadius: 1,
                               minWidth: 32,
                               textAlign: 'center',
                             }}
                           >
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               %
                             </Typography>
                           </Box>
@@ -3293,7 +3293,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     {/* Input Fields - Two Columns */}
@@ -3445,7 +3445,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: '#f8fafc',
                         borderRadius: 1,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       }}
                     >
                       <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827', mb: 2 }}>
@@ -3453,34 +3453,34 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Taxable Income:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $91,000
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Tax Savings:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $6,960
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Effective Tax Rate:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             18.2%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Net Income:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $105,120
                           </Typography>
                         </Box>
@@ -3505,7 +3505,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3515,26 +3515,26 @@ const AnalyzePage: React.FC = () => {
                       {/* Left Column */}
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Current Loan Balance:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $200,000
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Current Interest Rate (%):
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             6.5%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Credit Score:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             750
                           </Typography>
                         </Box>
@@ -3542,10 +3542,10 @@ const AnalyzePage: React.FC = () => {
                           Auto-updates new interest rate
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Refinance LTV (%):
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             70%
                           </Typography>
                         </Box>
@@ -3557,34 +3557,34 @@ const AnalyzePage: React.FC = () => {
                       {/* Right Column */}
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Property Value:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $250,000
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Current Monthly Payment:
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             $1,264
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             New Interest Rate (%):
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             5.5%
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                          <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                             Closing Costs (%):
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                             3%
                           </Typography>
                         </Box>
@@ -3602,7 +3602,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3704,7 +3704,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3745,7 +3745,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3786,7 +3786,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3849,7 +3849,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}>
@@ -3940,7 +3940,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                   >
@@ -3966,7 +3966,7 @@ const AnalyzePage: React.FC = () => {
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               '& fieldset': {
-                                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                               },
                               '&:hover fieldset': {
                                 borderColor: brandColors.primary,
@@ -3992,7 +3992,7 @@ const AnalyzePage: React.FC = () => {
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               '& fieldset': {
-                                borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                               },
                               '&:hover fieldset': {
                                 borderColor: brandColors.primary,
@@ -4031,7 +4031,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                   >
@@ -4119,7 +4119,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: 'white',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                         boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                       }}
                     >
@@ -4150,7 +4150,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4176,7 +4176,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4202,7 +4202,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4228,7 +4228,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4246,7 +4246,7 @@ const AnalyzePage: React.FC = () => {
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               Scenario 1:
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 500, color: '#ef4444' }}>
@@ -4254,7 +4254,7 @@ const AnalyzePage: React.FC = () => {
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               Scenario 2:
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 500, color: '#10b981' }}>
@@ -4262,7 +4262,7 @@ const AnalyzePage: React.FC = () => {
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               Scenario 3:
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 500, color: '#10b981' }}>
@@ -4280,7 +4280,7 @@ const AnalyzePage: React.FC = () => {
                         backgroundColor: 'white',
                         borderRadius: 2,
                         border: '1px solid',
-                        borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                        borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                         boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                       }}
                     >
@@ -4311,7 +4311,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4337,7 +4337,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4363,7 +4363,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4390,7 +4390,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4417,7 +4417,7 @@ const AnalyzePage: React.FC = () => {
                               '& .MuiOutlinedInput-root': {
                                 borderRadius: 2,
                                 '& fieldset': {
-                                  borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                                  borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                                 },
                                 '&:hover fieldset': {
                                   borderColor: brandColors.primary,
@@ -4438,18 +4438,18 @@ const AnalyzePage: React.FC = () => {
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               Adjusted Rent:
                             </Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                               $3,200.21
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || '#6b7280' }}>
+                            <Typography variant="body2" sx={{ color: brandColors.text?.secondary || brandColors.text.secondary }}>
                               Adjusted Expenses:
                             </Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                               $1,920.13
                             </Typography>
                           </Box>
@@ -4457,7 +4457,7 @@ const AnalyzePage: React.FC = () => {
                             <Typography variant="body2" sx={{ color: brandColors.text?.primary || '#111827' }}>
                               Adjusted Property Value:
                             </Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || '#111827' }}>
+                            <Typography variant="body2" sx={{ fontWeight: 500, color: brandColors.text?.primary || brandColors.text.primary }}>
                               $448,029.59
                             </Typography>
                           </Box>
@@ -4521,7 +4521,7 @@ const AnalyzePage: React.FC = () => {
                       backgroundColor: 'white',
                       borderRadius: 2,
                       border: '1px solid',
-                      borderColor: brandColors.borders?.secondary || '#e5e7eb',
+                      borderColor: brandColors.borders?.secondary || brandColors.neutral[200],
                       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                   >

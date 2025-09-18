@@ -482,20 +482,20 @@ const SettlementClosingCosts: React.FC = () => {
 
   const getSectionColor = (section: string) => {
     const colors: { [key: string]: string } = {
-      'A': '#f8f9fa',      // Very light grey
+      'A': brandColors.neutral[50],      // Very light grey
       'B': brandColors.neutral[100],      // Light grey
-      'C': '#dee2e6',      // Medium light grey
-      'D': '#ced4da',      // Medium grey
-      'E': '#adb5bd',      // Medium dark grey
-      'F': '#6c757d',      // Dark grey
-      'G': '#495057',      // Darker grey
-      'H': '#343a40',      // Very dark grey
-      'I': '#f8f9fa',      // Very light grey (repeating pattern)
+      'C': brandColors.neutral[200],      // Medium light grey
+      'D': brandColors.neutral[300],      // Medium grey
+      'E': brandColors.neutral[400],      // Medium dark grey
+      'F': brandColors.neutral[600],      // Dark grey
+      'G': brandColors.neutral[700],      // Darker grey
+      'H': brandColors.neutral[800],      // Very dark grey
+      'I': brandColors.neutral[50],      // Very light grey (repeating pattern)
       'J': brandColors.neutral[100],      // Light grey (repeating pattern)
-      'K': '#dee2e6',      // Medium light grey (repeating pattern)
-      'L': '#ced4da',      // Medium grey (repeating pattern)
-      'M': '#adb5bd',      // Medium dark grey (repeating pattern)
-      'N': '#6c757d',      // Dark grey (repeating pattern)
+      'K': brandColors.neutral[200],      // Medium light grey (repeating pattern)
+      'L': brandColors.neutral[300],      // Medium grey (repeating pattern)
+      'M': brandColors.neutral[400],      // Medium dark grey (repeating pattern)
+      'N': brandColors.neutral[600],      // Dark grey (repeating pattern)
     };
     return colors[section] || brandColors.neutral[0]; // Default to white
   };

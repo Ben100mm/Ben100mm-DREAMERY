@@ -267,6 +267,13 @@ export const theme = createTheme({
       paper: brandColors.surfaces.elevated,
     },
     divider: brandColors.borders.secondary,
+    action: {
+      active: brandColors.primary, // Override default blue #1976d2
+      hover: brandColors.interactive.hover,
+      selected: brandColors.backgrounds.selected,
+      disabled: brandColors.text.disabled,
+      disabledBackground: brandColors.backgrounds.secondary,
+    },
   },
   typography: {
     fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',

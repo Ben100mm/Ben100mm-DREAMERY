@@ -8,6 +8,23 @@ import {
 import {
   Star as StarIcon,
   StarBorder as StarBorderIcon,
+  Dashboard as DashboardIcon,
+  Message as MessageIcon,
+  AccountBalance as EscrowIcon,
+  Search as DueDiligenceIcon,
+  CreditCard as FinancingIcon,
+  Gavel as LegalIcon,
+  Receipt as SettlementIcon,
+  Home as InsuranceIcon,
+  DirectionsWalk as WalkthroughIcon,
+  Assignment as PostClosingIcon,
+  Work as WorkIcon,
+  TrendingUp as InvestIcon,
+  AccountBalanceWallet as FundIcon,
+  Build as OperateIcon,
+  Settings as SettingsIcon,
+  Help as HelpIcon,
+  Info as InfoIcon
 } from '@mui/icons-material';
 import { WorkspaceItem } from '../../data/workspaces/types';
 import { brandColors } from '../../theme';
@@ -21,6 +38,30 @@ interface SidebarItemProps {
   showFavoriteButton?: boolean;
 }
 
+const getItemIcon = (itemId: string) => {
+  const iconMap: { [key: string]: React.ComponentType<any> } = {
+    'dashboard': DashboardIcon,
+    'messages': MessageIcon,
+    'escrow-title': EscrowIcon,
+    'due-diligence': DueDiligenceIcon,
+    'financing': FinancingIcon,
+    'legal-compliance': LegalIcon,
+    'settlement': SettlementIcon,
+    'insurance-utilities': InsuranceIcon,
+    'walkthrough': WalkthroughIcon,
+    'post-closing': PostClosingIcon,
+    'manage': WorkIcon,
+    'invest': InvestIcon,
+    'fund': FundIcon,
+    'operate': OperateIcon,
+    'settings': SettingsIcon,
+    'help': HelpIcon,
+    'info': InfoIcon
+  };
+  
+  return iconMap[itemId] || InfoIcon;
+};
+
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
   isActive,
@@ -29,6 +70,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   onToggleFavorite,
   showFavoriteButton = true,
 }) => {
+  const IconComponent = getItemIcon(item.id);
   return (
     <Box
       onClick={() => onClick(item.id)}
@@ -50,7 +92,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       }}
     >
        <Box sx={{ color: isActive ? 'white' : brandColors.primary }}>
-        {item.icon}
+        <IconComponent sx={{ fontSize: 20 }} />
       </Box>
       <Typography 
         variant="body2"

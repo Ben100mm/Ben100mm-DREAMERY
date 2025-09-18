@@ -10,7 +10,14 @@ import {
   Link,
   Alert,
   CircularProgress,
+  InputAdornment,
 } from '@mui/material';
+import {
+  Email as EmailIcon,
+  Lock as LockIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon
+} from '@mui/icons-material';
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
 import { useAuth } from '../../contexts/AuthContext';
@@ -83,6 +90,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           sx={{ mb: 2 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EmailIcon sx={{ color: brandColors.primary }} />
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           margin="normal"
@@ -96,6 +110,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           sx={{ mb: 2 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockIcon sx={{ color: brandColors.primary }} />
+              </InputAdornment>
+            ),
+          }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <FormControlLabel

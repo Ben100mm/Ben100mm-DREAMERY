@@ -379,8 +379,23 @@ const CloseBusinessesPage: React.FC = () => {
             </Paper>
 
             {/* Overview Cards */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 2, md: 3 }, 
+              mb: 4,
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <BusinessIcon sx={{ fontSize: 40, color: brandColors.actions.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   {mockBusinessData.totalBusinesses}
@@ -389,7 +404,14 @@ const CloseBusinessesPage: React.FC = () => {
                   Total Businesses
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <PeopleIcon sx={{ fontSize: 40, color: brandColors.actions.warning, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.warning }}>
                   {mockBusinessData.activeUsers}
@@ -398,7 +420,14 @@ const CloseBusinessesPage: React.FC = () => {
                   Active Users
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.accent.success, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   {mockBusinessData.monthlyTransactions}
@@ -407,7 +436,14 @@ const CloseBusinessesPage: React.FC = () => {
                   Monthly Transactions
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   (mockBusinessData.totalRevenue / 1000000).toFixed(1)M

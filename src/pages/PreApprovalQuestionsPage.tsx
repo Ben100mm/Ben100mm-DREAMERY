@@ -16,6 +16,18 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SearchIcon from "@mui/icons-material/Search";
+import {
+  Person as PersonIcon,
+  Home as HomeIcon,
+  Work as WorkIcon,
+  AccountBalance as BankIcon,
+  CreditCard as CreditCardIcon,
+  TrendingUp as TrendingUpIcon,
+  QuestionMark as QuestionIcon,
+  CheckCircle as CheckIcon,
+  ArrowBack as BackIcon,
+  ArrowForward as NextIcon
+} from "@mui/icons-material";
 import { brandColors } from "../theme";
 
 const PageContainer = styled.div`
@@ -77,6 +89,19 @@ const PreApprovalQuestionsPage: React.FC = () => {
     timeline: "",
     location: "",
   });
+
+  const getQuestionIcon = (questionId: string) => {
+    switch (questionId) {
+      case "timeline":
+        return <TrendingUpIcon sx={{ fontSize: 32, color: brandColors.primary }} />;
+      case "journey":
+        return <HomeIcon sx={{ fontSize: 32, color: brandColors.primary }} />;
+      case "location":
+        return <SearchIcon sx={{ fontSize: 32, color: brandColors.primary }} />;
+      default:
+        return <QuestionIcon sx={{ fontSize: 32, color: brandColors.primary }} />;
+    }
+  };
 
   const questions = [
     {
@@ -192,12 +217,15 @@ const PreApprovalQuestionsPage: React.FC = () => {
               />
 
               {/* Question */}
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: 700, color: brandColors.primary, mb: 2 }}
-              >
-                {currentQuestion.title} *
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                {getQuestionIcon(currentQuestion.id)}
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: 700, color: brandColors.primary }}
+                >
+                  {currentQuestion.title} *
+                </Typography>
+              </Box>
 
               {/* Description */}
               {currentQuestion.description && (
@@ -263,6 +291,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
                   <Button
                     variant="outlined"
                     onClick={handleBackStep}
+                    startIcon={<BackIcon />}
                     sx={{
                       borderColor: brandColors.primary,
                       color: brandColors.primary,
@@ -275,6 +304,7 @@ const PreApprovalQuestionsPage: React.FC = () => {
                 <Button
                   variant="contained"
                   onClick={handleNext}
+                  endIcon={<NextIcon />}
                   disabled={
                     !answers[currentQuestion.id as keyof typeof answers]
                   }

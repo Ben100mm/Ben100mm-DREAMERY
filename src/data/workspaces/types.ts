@@ -3,7 +3,7 @@ import { ReactElement, ComponentType } from 'react';
 export interface WorkspaceItem {
   id: string;
   label: string;
-  icon: ReactElement;
+  icon?: ReactElement;
   component?: ComponentType;
 }
 

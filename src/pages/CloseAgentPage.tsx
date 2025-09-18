@@ -768,8 +768,23 @@ const CloseAgentPage: React.FC = () => {
             </Paper>
 
             {/* Overview Cards - Row 1 */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 1.5, md: 2 }, 
+              mb: 3,
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <PeopleIcon sx={{ fontSize: 32, color: brandColors.actions.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   12
@@ -778,7 +793,14 @@ const CloseAgentPage: React.FC = () => {
                   Active Clients
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <AssignmentIcon sx={{ fontSize: 32, color: brandColors.actions.warning, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.warning }}>
                   8
@@ -787,7 +809,14 @@ const CloseAgentPage: React.FC = () => {
                   Pending Transactions
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <CheckCircleIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   24
@@ -796,7 +825,14 @@ const CloseAgentPage: React.FC = () => {
                   Completed This Month
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <ChecklistIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
                   5
@@ -805,7 +841,14 @@ const CloseAgentPage: React.FC = () => {
                   Incomplete Checklists
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <DescriptionIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   3
@@ -814,7 +857,14 @@ const CloseAgentPage: React.FC = () => {
                   Documents to Review
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <AssignmentTurnedInIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   7
@@ -826,8 +876,23 @@ const CloseAgentPage: React.FC = () => {
             </Box>
 
             {/* Overview Cards - Row 2 */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 1.5, md: 2 }, 
+              mb: 3,
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <TaskIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   9
@@ -836,7 +901,14 @@ const CloseAgentPage: React.FC = () => {
                   Tasks & Reminders
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <ListAltIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   15
@@ -845,7 +917,14 @@ const CloseAgentPage: React.FC = () => {
                   Active Listings
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <ReceiptIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   4
@@ -854,7 +933,14 @@ const CloseAgentPage: React.FC = () => {
                   Pending Offers
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <ManageAccountsIcon sx={{ fontSize: 32, color: brandColors.accent.warning, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.warning }}>
                   6
@@ -863,7 +949,14 @@ const CloseAgentPage: React.FC = () => {
                   Manage Transactions
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <CancelIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
                   2
@@ -872,7 +965,14 @@ const CloseAgentPage: React.FC = () => {
                   Canceled Contracts
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <EditIcon sx={{ fontSize: 32, color: brandColors.primary, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
                   8
@@ -884,8 +984,23 @@ const CloseAgentPage: React.FC = () => {
             </Box>
 
             {/* Overview Cards - Row 3 */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 1.5, md: 2 }, 
+              mb: 4,
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <TrendingUpIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   $2.4M
@@ -894,7 +1009,14 @@ const CloseAgentPage: React.FC = () => {
                   Pipeline Value
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <EventIcon sx={{ fontSize: 32, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
                   7
@@ -903,7 +1025,14 @@ const CloseAgentPage: React.FC = () => {
                   Scheduled Closing This Month
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <AttachMoneyIcon sx={{ fontSize: 32, color: brandColors.accent.warning, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.warning }}>
                   $18.5K
@@ -912,7 +1041,14 @@ const CloseAgentPage: React.FC = () => {
                   Pending Commission
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <AccountBalanceIcon sx={{ fontSize: 32, color: brandColors.accent.success, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
                   $32.1K
@@ -921,7 +1057,14 @@ const CloseAgentPage: React.FC = () => {
                   Commission Earned This Month
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <ScheduleIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
                   3
@@ -930,7 +1073,14 @@ const CloseAgentPage: React.FC = () => {
                   Expired Listings This Month
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 2.5, textAlign: 'center', flex: '1 1 180px', minWidth: '180px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 2.5 }, 
+                textAlign: 'center', 
+                flex: '1 1 180px', 
+                minWidth: { xs: '150px', md: '180px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '180px' }
+              }}>
                 <WarningIcon sx={{ fontSize: 32, color: brandColors.actions.error, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.actions.error }}>
                   1
@@ -942,7 +1092,10 @@ const CloseAgentPage: React.FC = () => {
             </Box>
 
             {/* Recent Transactions */}
-            <Paper elevation={2} sx={{ p: 3 }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
               <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                 Recent Client Transactions
               </Typography>

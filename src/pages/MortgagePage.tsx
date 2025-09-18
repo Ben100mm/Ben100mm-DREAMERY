@@ -112,6 +112,13 @@ const LearningCard = styled(Card)`
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   flex-shrink: 0;
+  margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 320px;
+    height: 250px;
+  }
 `;
 
 // New layout building blocks

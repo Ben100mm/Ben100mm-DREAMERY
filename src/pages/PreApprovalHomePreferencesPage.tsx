@@ -58,10 +58,19 @@ const OptionCard = styled(Box)<{ $selected?: boolean }>`
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 0.5rem;
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
 
   &:hover {
     border-color: ${brandColors.primary};
     background-color: ${props => props.$selected ? brandColors.primary50 : brandColors.backgrounds.secondary};
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+    min-height: 50px;
   }
 `;
 

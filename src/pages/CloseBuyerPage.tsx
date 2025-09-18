@@ -1,17 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Box, useTheme, useMediaQuery, AppBar, Toolbar, Typography, Tabs, Tab, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Tooltip, Badge, Avatar, Button, Paper, Chip, Menu, MenuItem, Divider } from '@mui/material';
+import { Box, useTheme, useMediaQuery, AppBar, Toolbar, Typography, Tabs, Tab, IconButton, Drawer, Tooltip, Badge, Avatar, Button, Paper, Chip, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import {
-  Dashboard as DashboardIcon,
-  Security as SecurityIcon,
-  Search as SearchIcon,
-  AccountBalance as AccountBalanceIcon,
-  Gavel as GavelIcon,
-  Calculate as CalculateIcon,
-  Home as HomeIcon,
-  CheckCircle as CheckCircleIcon,
-  Support as SupportIcon,
-  IntegrationInstructions as IntegrationIcon,
   Menu as MenuIcon,
   Notifications as NotificationIcon,
   ArrowBack as ArrowBackIcon,
@@ -21,7 +11,24 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   Close as CloseIcon,
+  Assignment as AssignmentIcon,
+  Receipt as ReceiptIcon,
+  DirectionsWalk as WalkthroughIcon,
+  AssignmentTurnedIn as PostClosingIcon,
+  CreditCard as CreditCardIcon,
+  Build as BuildIcon,
+  Chat as ChatIcon,
+  Description as DocumentIcon,
+  Assessment as AssessmentIcon,
+  School as SchoolIcon,
+  Archive as ArchiveIcon,
+  TrendingUp as TrendingUpIcon,
+  Business as BusinessIcon,
+  People as PeopleIcon,
 } from '@mui/icons-material';
+
+// ULTIMATE FIX: No icons at all - completely text-only sidebar
+
 import ClosingAssistantIcon from '../components/close/ai-closing-assistant/ClosingAssistantIcon';
 import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
 import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
@@ -213,18 +220,19 @@ const CloseBuyerPage: React.FC = () => {
     navigate('/close');
   };
 
+
   const tabs = [
-    { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { value: 'escrow-title', label: 'Escrow & Title', icon: <SecurityIcon /> },
-    { value: 'due-diligence', label: 'Due Diligence', icon: <SearchIcon /> },
-    { value: 'financing', label: 'Financing', icon: <AccountBalanceIcon /> },
-    { value: 'legal', label: 'Legal & Compliance', icon: <GavelIcon /> },
-    { value: 'settlement', label: 'Settlement', icon: <CalculateIcon /> },
-    { value: 'insurance', label: 'Insurance & Utilities', icon: <HomeIcon /> },
-    { value: 'walkthrough', label: 'Walkthrough', icon: <CheckCircleIcon /> },
-    { value: 'post-closing', label: 'Post-Closing', icon: <SupportIcon /> },
-    { value: 'assistant', label: 'Closing Assistant', icon: <ClosingAssistantIcon size={20} variant="icon" /> },
-    { value: 'integrations', label: 'Integrations', icon: <IntegrationIcon /> },
+    { value: 'dashboard', label: 'Dashboard' },
+    { value: 'escrow-title', label: 'Escrow & Title' },
+    { value: 'due-diligence', label: 'Due Diligence' },
+    { value: 'financing', label: 'Financing' },
+    { value: 'legal', label: 'Legal & Compliance' },
+    { value: 'settlement', label: 'Settlement' },
+    { value: 'insurance', label: 'Insurance & Utilities' },
+    { value: 'walkthrough', label: 'Walkthrough' },
+    { value: 'post-closing', label: 'Post-Closing' },
+    { value: 'assistant', label: 'Closing Assistant' },
+    { value: 'integrations', label: 'Integrations' },
   ];
 
   const renderTabContent = () => {
@@ -344,41 +352,46 @@ const CloseBuyerPage: React.FC = () => {
             </Button>
           </Box>
 
-          {/* Navigation Tabs - Scrollable */}
-          <Box sx={{ flex: 1, overflow: 'auto' }}>
+          {/* COMPLETELY REBUILT SIDEBAR - NO BOX COMPONENTS */}
+          <div style={{ width: '100%', padding: '8px' }}>
             {tabs.map((tab) => (
-              <Box
+              <div
                 key={tab.value}
                 onClick={() => handleTabChange({} as React.SyntheticEvent, tab.value)}
-                sx={{
-                  mx: 1,
-                  mb: 0.5,
-                  p: 2,
-                  borderRadius: 2,
+                style={{
+                  margin: '4px 8px',
+                  padding: '16px',
+                  borderRadius: '8px',
                   cursor: 'pointer',
                   backgroundColor: state.activeTab === tab.value ? brandColors.backgrounds.selected : 'transparent',
-                  '&:hover': {
-                    backgroundColor: brandColors.backgrounds.hover,
-                  },
+                  transition: 'background-color 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (state.activeTab !== tab.value) {
+                    e.currentTarget.style.backgroundColor = brandColors.backgrounds.hover;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (state.activeTab !== tab.value) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
                 }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ color: brandColors.actions.primary }}>
-                    {tab.icon}
-                  </Box>
-                  <Typography 
-                    variant="body2"
-                    sx={{ 
-                      fontWeight: state.activeTab === tab.value ? 'bold' : 'normal',
-                      color: state.activeTab === tab.value ? brandColors.primary : brandColors.text.primary
-                    }}
-                  >
-                    {tab.label}
-                  </Typography>
-                </Box>
-              </Box>
+                <span
+                  style={{
+                    fontWeight: state.activeTab === tab.value ? 600 : 400,
+                    color: state.activeTab === tab.value ? brandColors.primary : brandColors.text.primary,
+                    fontSize: '14px',
+                    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
+                    display: 'block',
+                    width: '100%',
+                  }}
+                >
+                  {tab.label}
+                </span>
+              </div>
             ))}
-          </Box>
+          </div>
         </Box>
       </Box>
 
@@ -411,7 +424,7 @@ const CloseBuyerPage: React.FC = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                 <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                   Closing Dashboard
                 </Typography>
@@ -422,8 +435,24 @@ const CloseBuyerPage: React.FC = () => {
             </Paper>
 
             {/* Overview Cards */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4, ml: 3 }}>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 2, md: 3 }, 
+              mb: 4, 
+              ml: { xs: 1, md: 3 },
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', color: brandColors.primary, mb: 1 }}>
                   3
                 </Typography>
@@ -433,7 +462,14 @@ const CloseBuyerPage: React.FC = () => {
                 <Chip label="On Track" color="success" size="small" />
               </Paper>
               
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', color: brandColors.primary, mb: 1 }}>
                   1
                 </Typography>
@@ -465,7 +501,14 @@ const CloseBuyerPage: React.FC = () => {
                 </Box>
               </Paper>
               
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', color: brandColors.primary, mb: 1 }}>
                   2
                 </Typography>
@@ -475,7 +518,14 @@ const CloseBuyerPage: React.FC = () => {
                 <Chip label="2/5" color="primary" size="small" />
               </Paper>
               
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', color: brandColors.primary, mb: 1 }}>
                   2
                 </Typography>
@@ -502,9 +552,22 @@ const CloseBuyerPage: React.FC = () => {
               </Paper>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', ml: 3 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: { xs: 2, md: 3 }, 
+              flexWrap: 'wrap', 
+              ml: { xs: 1, md: 3 },
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
             {/* Closing Timeline */}
-            <Paper elevation={2} sx={{ p: 3, flex: '1 1 400px', minWidth: '400px' }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              flex: '1 1 400px', 
+              minWidth: { xs: '300px', md: '400px' },
+              width: '100%'
+            }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600 }}>
                   Closing Timeline
@@ -520,8 +583,8 @@ const CloseBuyerPage: React.FC = () => {
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {[
-                  { icon: <CheckCircleIcon sx={{ color: 'green' }} />, title: 'Contract Signed', description: 'Purchase agreement executed by all parties', status: 'completed', date: '1/14/2024' },
-                  { icon: <CheckCircleIcon sx={{ color: 'green' }} />, title: 'Home Inspection', description: 'Property inspection scheduled and completed', status: 'completed', date: '1/19/2024' },
+                  { icon: <Box sx={{ width: 20, height: 20, backgroundColor: 'green', borderRadius: '50%' }} />, title: 'Contract Signed', description: 'Purchase agreement executed by all parties', status: 'completed', date: '1/14/2024' },
+                  { icon: <Box sx={{ width: 20, height: 20, backgroundColor: 'green', borderRadius: '50%' }} />, title: 'Home Inspection', description: 'Property inspection scheduled and completed', status: 'completed', date: '1/19/2024' },
                   { icon: <TimelineIcon sx={{ color: brandColors.accent.info }} />, title: 'Loan Approval', description: 'Mortgage pre-approval received from lender', status: 'in-progress', date: '1/24/2024' },
                   { icon: <TimelineIcon sx={{ color: brandColors.text.disabled }} />, title: 'Title Search', description: 'Title company conducting property research', status: 'pending', date: '1/31/2024' },
                   { icon: <TimelineIcon sx={{ color: brandColors.text.disabled }} />, title: 'Closing Date', description: '', status: 'pending', date: '2/14/2024' }
@@ -563,7 +626,12 @@ const CloseBuyerPage: React.FC = () => {
             </Paper>
 
             {/* Key Milestones */}
-            <Paper elevation={2} sx={{ p: 3, flex: '1 1 400px', minWidth: '400px' }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              flex: '1 1 400px', 
+              minWidth: { xs: '300px', md: '400px' },
+              width: '100%'
+            }}>
               <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 600, mb: 3 }}>
                 Key Milestones
               </Typography>
@@ -631,7 +699,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SecurityIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Escrow & Title Hub
                     </Typography>
@@ -659,7 +727,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SearchIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Due Diligence Tools
                     </Typography>
@@ -687,7 +755,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <AccountBalanceIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Financing Coordination
                     </Typography>
@@ -715,7 +783,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <GavelIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Legal & Compliance
                     </Typography>
@@ -743,7 +811,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <CalculateIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Settlement & Closing Costs
                     </Typography>
@@ -771,7 +839,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <HomeIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Insurance & Utilities
                     </Typography>
@@ -799,7 +867,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <CheckCircleIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Final Walkthrough & Handover
                     </Typography>
@@ -827,7 +895,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <SupportIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Post-Closing Services
                     </Typography>
@@ -883,7 +951,7 @@ const CloseBuyerPage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <IntegrationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
                     <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
                       Partner Integrations
                     </Typography>
@@ -951,7 +1019,7 @@ const CloseBuyerPage: React.FC = () => {
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <SupportIcon fontSize="small" />
+            <Box sx={{ width: 16, height: 16, backgroundColor: brandColors.text.primary, borderRadius: 1 }} />
           </ListItemIcon>
           Support
         </MenuItem>

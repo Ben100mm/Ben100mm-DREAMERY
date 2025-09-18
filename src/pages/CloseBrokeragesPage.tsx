@@ -447,8 +447,23 @@ const CloseBrokeragesPage = () => {
               {state.dashboardTab === 'overview' && (
                 <>
             {/* Overview Cards */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: { xs: 2, md: 3 }, 
+              mb: 4,
+              '& > *': {
+                marginBottom: { xs: '1rem', md: '0' }
+              }
+            }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyPeopleIcon />
                 </React.Suspense>
@@ -459,7 +474,14 @@ const CloseBrokeragesPage = () => {
                   Total Agents
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyBusinessIcon />
                 </React.Suspense>
@@ -470,7 +492,14 @@ const CloseBrokeragesPage = () => {
                   Active Transactions
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyTrendingUpIcon />
                 </React.Suspense>
@@ -481,7 +510,14 @@ const CloseBrokeragesPage = () => {
                   Monthly Volume
                 </Typography>
               </Paper>
-              <Paper elevation={2} sx={{ p: 3, textAlign: 'center', flex: '1 1 200px', minWidth: '200px' }}>
+              <Paper elevation={2} sx={{ 
+                p: { xs: 2, md: 3 }, 
+                textAlign: 'center', 
+                flex: '1 1 200px', 
+                minWidth: { xs: '150px', md: '200px' },
+                width: '100%',
+                maxWidth: { xs: '100%', sm: '200px' }
+              }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCheckCircleIcon />
                 </React.Suspense>
@@ -495,7 +531,11 @@ const CloseBrokeragesPage = () => {
             </Box>
 
             {/* Top Performing Agent */}
-            <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
               <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                 Top Performing Agent
               </Typography>
@@ -522,7 +562,11 @@ const CloseBrokeragesPage = () => {
                 {state.dashboardTab === 'insights' && (
                   <>
                     {/* Insights Section */}
-                    <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                    <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                         <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
                           Insights
@@ -534,7 +578,12 @@ const CloseBrokeragesPage = () => {
                       
                       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
                         {/* Recent Average Deal Card */}
-                        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+                        <Paper sx={{ 
+                          p: { xs: 2, md: 3 }, 
+                          borderRadius: 2, 
+                          boxShadow: 1,
+                          width: '100%'
+                        }}>
                           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                             Recent Average Deal
                           </Typography>
@@ -547,7 +596,12 @@ const CloseBrokeragesPage = () => {
                         </Paper>
 
                         {/* Performance Card */}
-                        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+                        <Paper sx={{ 
+                          p: { xs: 2, md: 3 }, 
+                          borderRadius: 2, 
+                          boxShadow: 1,
+                          width: '100%'
+                        }}>
                           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                             Performance
                           </Typography>
@@ -633,7 +687,12 @@ const CloseBrokeragesPage = () => {
         </Paper>
 
         {/* Home Value Trend Bar Chart Card */}
-        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+        <Paper sx={{ 
+          p: { xs: 2, md: 3 }, 
+          borderRadius: 2, 
+          boxShadow: 1,
+          width: '100%'
+        }}>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
             Home Value Trend
           </Typography>
@@ -693,7 +752,12 @@ const CloseBrokeragesPage = () => {
         </Paper>
 
         {/* Home Value Trend Pie Chart Card */}
-        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+        <Paper sx={{ 
+          p: { xs: 2, md: 3 }, 
+          borderRadius: 2, 
+          boxShadow: 1,
+          width: '100%'
+        }}>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
             Home Value Trend
           </Typography>
@@ -745,7 +809,12 @@ const CloseBrokeragesPage = () => {
         </Paper>
 
         {/* Deals Card */}
-        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+        <Paper sx={{ 
+          p: { xs: 2, md: 3 }, 
+          borderRadius: 2, 
+          boxShadow: 1,
+          width: '100%'
+        }}>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
             Deals
           </Typography>
@@ -767,7 +836,12 @@ const CloseBrokeragesPage = () => {
         </Paper>
 
         {/* 2019 Realized Card */}
-        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+        <Paper sx={{ 
+          p: { xs: 2, md: 3 }, 
+          borderRadius: 2, 
+          boxShadow: 1,
+          width: '100%'
+        }}>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
             2019 Realized
           </Typography>
@@ -928,7 +1002,11 @@ const CloseBrokeragesPage = () => {
               </Typography>
             </Paper>
             {/* Agent Performance Dashboard */}
-            <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                 Agent Performance Dashboard
               </Typography>
@@ -941,7 +1019,10 @@ const CloseBrokeragesPage = () => {
                   { id: 5, name: 'Emily Davis', avatar: 'ED', performance: 89, transactions: 11, revenue: 41000 }
                 ].map((agent) => (
                   <Box key={agent.id}>
-                    <Card sx={{ height: '100%' }}>
+                    <Card sx={{ 
+                      height: '100%',
+                      width: '100%'
+                    }}>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                           <Avatar sx={{ bgcolor: brandColors.primary, mr: 2, width: 56, height: 56 }}>
@@ -1026,7 +1107,10 @@ const CloseBrokeragesPage = () => {
             </Paper>
 
             {/* Add New Agent */}
-            <Paper elevation={2} sx={{ p: 3 }}>
+            <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                 Add New Agent
               </Typography>
@@ -1120,7 +1204,11 @@ const CloseBrokeragesPage = () => {
               {state.listingsTab === 'overview' && (
                 <Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         89
                       </Typography>
@@ -1128,7 +1216,11 @@ const CloseBrokeragesPage = () => {
                         Total Active
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         12
                       </Typography>
@@ -1136,7 +1228,11 @@ const CloseBrokeragesPage = () => {
                         Pending Approval
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         $45.2M
                       </Typography>
@@ -1144,7 +1240,11 @@ const CloseBrokeragesPage = () => {
                         Total Value
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         23
                       </Typography>
@@ -1154,7 +1254,11 @@ const CloseBrokeragesPage = () => {
                     </Paper>
                   </Box>
 
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Recent Listings Activity
                     </Typography>
@@ -1204,7 +1308,11 @@ const CloseBrokeragesPage = () => {
 
               {state.listingsTab === 'active' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         Active Listings (89)
@@ -1229,7 +1337,11 @@ const CloseBrokeragesPage = () => {
                         { id: 4, property: '147 Birch St, Portland', agent: 'Maria Garcia', price: 720000, daysOnMarket: 12, views: 156, offers: 2, propertyType: 'Townhouse' },
                         { id: 5, property: '258 Spruce Ave, Chicago', agent: 'Tom Anderson', price: 890000, daysOnMarket: 19, views: 278, offers: 4, propertyType: 'Single Family' }
                       ].map((listing) => (
-                        <Card key={listing.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                        <Card key={listing.id} sx={{ 
+                          mb: 2, 
+                          '&:last-child': { mb: 0 },
+                          width: '100%'
+                        }}>
                           <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                               <Box sx={{ flex: 1 }}>
@@ -1280,7 +1392,11 @@ const CloseBrokeragesPage = () => {
 
               {state.listingsTab === 'pending' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Listings Pending Approval (12)
                     </Typography>
@@ -1292,7 +1408,11 @@ const CloseBrokeragesPage = () => {
                         { id: 3, property: '987 Cedar Ln, Denver', agent: 'John Smith', price: 890000, submitted: '2024-01-10', issue: 'Title Verification', priority: 'High' },
                         { id: 4, property: '369 Willow St, Boston', agent: 'Jennifer White', price: 1100000, submitted: '2024-01-09', issue: 'Pricing Analysis', priority: 'Low' }
                       ].map((listing) => (
-                        <Card key={listing.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                        <Card key={listing.id} sx={{ 
+                          mb: 2, 
+                          '&:last-child': { mb: 0 },
+                          width: '100%'
+                        }}>
                           <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                               <Box sx={{ flex: 1 }}>
@@ -1343,7 +1463,11 @@ const CloseBrokeragesPage = () => {
 
               {state.listingsTab === 'expired' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         Expired Listings This Month (23)
@@ -1367,7 +1491,11 @@ const CloseBrokeragesPage = () => {
                         { id: 3, property: '258 Spruce Ave, Chicago', agent: 'Tom Anderson', originalPrice: 920000, finalPrice: 890000, daysOnMarket: 88, reason: 'Property Condition' },
                         { id: 4, property: '369 Willow St, Boston', agent: 'Jennifer White', originalPrice: 1150000, finalPrice: 1100000, daysOnMarket: 92, reason: 'Market Conditions' }
                       ].map((listing) => (
-                        <Card key={listing.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                        <Card key={listing.id} sx={{ 
+                          mb: 2, 
+                          '&:last-child': { mb: 0 },
+                          width: '100%'
+                        }}>
                           <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ flex: 1 }}>
@@ -1410,7 +1538,11 @@ const CloseBrokeragesPage = () => {
 
               {state.listingsTab === 'create' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Create New Property Listing
                     </Typography>
@@ -1534,7 +1666,11 @@ const CloseBrokeragesPage = () => {
               {state.offersTab === 'overview' && (
                 <Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         47
                       </Typography>
@@ -1542,7 +1678,11 @@ const CloseBrokeragesPage = () => {
                         Total Offers
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         12
                       </Typography>
@@ -1550,7 +1690,11 @@ const CloseBrokeragesPage = () => {
                         Pending Review
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         8
                       </Typography>
@@ -1558,7 +1702,11 @@ const CloseBrokeragesPage = () => {
                         Under Negotiation
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         $12.8M
                       </Typography>
@@ -1568,7 +1716,11 @@ const CloseBrokeragesPage = () => {
                     </Paper>
                   </Box>
 
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Recent Offers Activity
                     </Typography>
@@ -1619,7 +1771,11 @@ const CloseBrokeragesPage = () => {
 
               {state.offersTab === 'all' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         All Offers (47)
@@ -1700,7 +1856,11 @@ const CloseBrokeragesPage = () => {
 
               {state.offersTab === 'pending' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Offers Pending Review (12)
                     </Typography>
@@ -1766,7 +1926,11 @@ const CloseBrokeragesPage = () => {
 
               {state.offersTab === 'negotiating' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Offers Under Negotiation (8)
                     </Typography>
@@ -1823,7 +1987,11 @@ const CloseBrokeragesPage = () => {
 
               {state.offersTab === 'compare' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Compare Offers
                     </Typography>
@@ -1957,7 +2125,11 @@ const CloseBrokeragesPage = () => {
               {state.documentsTab === 'overview' && (
                 <Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         156
                       </Typography>
@@ -1965,7 +2137,11 @@ const CloseBrokeragesPage = () => {
                         Total Documents
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         23
                       </Typography>
@@ -1973,7 +2149,11 @@ const CloseBrokeragesPage = () => {
                         Pending Review
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         89
                       </Typography>
@@ -1981,7 +2161,11 @@ const CloseBrokeragesPage = () => {
                         Approved
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         44
                       </Typography>
@@ -1991,7 +2175,11 @@ const CloseBrokeragesPage = () => {
                     </Paper>
                   </Box>
 
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Recent Document Activity
                     </Typography>
@@ -2038,7 +2226,11 @@ const CloseBrokeragesPage = () => {
 
               {state.documentsTab === 'pending' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         Documents Pending Review (23)
@@ -2114,7 +2306,11 @@ const CloseBrokeragesPage = () => {
 
               {state.documentsTab === 'categories' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Document Categories
                     </Typography>
@@ -2127,7 +2323,10 @@ const CloseBrokeragesPage = () => {
                         { name: 'Transaction Documents', count: 31, color: 'warning', examples: ['Closing Statements', 'Settlement Documents', 'Transfer Records'] }
                       ].map((category) => (
                         <Box key={category.name}>
-                          <Card sx={{ height: '100%' }}>
+                          <Card sx={{ 
+                      height: '100%',
+                      width: '100%'
+                    }}>
                             <CardContent>
                               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                                 {category.name}
@@ -2156,7 +2355,11 @@ const CloseBrokeragesPage = () => {
 
               {state.documentsTab === 'upload' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Upload New Documents
                     </Typography>
@@ -2251,7 +2454,11 @@ const CloseBrokeragesPage = () => {
 
               {state.documentsTab === 'workflow' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Document Workflow Management
                     </Typography>
@@ -2653,7 +2860,11 @@ const CloseBrokeragesPage = () => {
               {state.transactionTab === 'overview' && (
                 <Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         156
                       </Typography>
@@ -2661,7 +2872,11 @@ const CloseBrokeragesPage = () => {
                         Total Active
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         23
                       </Typography>
@@ -2669,7 +2884,11 @@ const CloseBrokeragesPage = () => {
                         Pending Review
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         89
                       </Typography>
@@ -2677,7 +2896,11 @@ const CloseBrokeragesPage = () => {
                         Completed This Month
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         $28.4M
                       </Typography>
@@ -2687,7 +2910,11 @@ const CloseBrokeragesPage = () => {
                     </Paper>
                   </Box>
 
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Recent Transaction Activity
                     </Typography>
@@ -2737,7 +2964,11 @@ const CloseBrokeragesPage = () => {
 
               {state.transactionTab === 'active' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         Active Transactions (156)
@@ -2810,7 +3041,11 @@ const CloseBrokeragesPage = () => {
 
               {state.transactionTab === 'pending' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Transactions Pending Review (23)
                     </Typography>
@@ -2870,7 +3105,11 @@ const CloseBrokeragesPage = () => {
 
               {state.transactionTab === 'completed' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                       <Typography variant="h6">
                         Completed Transactions This Month (89)
@@ -2935,7 +3174,11 @@ const CloseBrokeragesPage = () => {
 
               {state.transactionTab === 'create' && (
                 <Box>
-                  <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+                  <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
                       Create New Transaction File
                     </Typography>
@@ -3586,7 +3829,11 @@ const CloseBrokeragesPage = () => {
               </Box>
 
               {/* Task Filters and Search */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
                   <TextField
                     size="small"
@@ -3641,7 +3888,10 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Task List */}
-              <Paper elevation={2} sx={{ p: 3 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Active Tasks
                 </Typography>
@@ -3969,7 +4219,11 @@ const CloseBrokeragesPage = () => {
               </Box>
 
               {/* Checklist Categories */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Checklist Categories
                 </Typography>
@@ -4015,7 +4269,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Active Checklists */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
                     Active Checklists
@@ -4158,7 +4416,10 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Checklist Templates */}
-              <Paper elevation={2} sx={{ p: 3 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Checklist Templates
                 </Typography>
@@ -4359,7 +4620,11 @@ const CloseBrokeragesPage = () => {
               </Box>
 
               {/* Compliance Categories */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Compliance Categories
                 </Typography>
@@ -4408,7 +4673,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Active Compliance Issues */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
                     Active Compliance Issues
@@ -4537,7 +4806,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Audit Schedule */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Upcoming Audits & Reviews
                 </Typography>
@@ -4628,7 +4901,10 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Compliance Reports */}
-              <Paper elevation={2} sx={{ p: 3 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Compliance Reports & Documentation
                 </Typography>
@@ -4841,7 +5117,11 @@ const CloseBrokeragesPage = () => {
               </Box>
 
               {/* Featured Courses */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Featured Courses
                 </Typography>
@@ -4977,7 +5257,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Resource Library */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
                     Resource Library
@@ -5101,7 +5385,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Professional Development Paths */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Professional Development Paths
                 </Typography>
@@ -5197,7 +5485,10 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Recent Achievements */}
-              <Paper elevation={2} sx={{ p: 3 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Recent Achievements & Certifications
                 </Typography>
@@ -5319,7 +5610,11 @@ const CloseBrokeragesPage = () => {
 
                   {/* Course Statistics */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         24
                       </Typography>
@@ -5327,7 +5622,11 @@ const CloseBrokeragesPage = () => {
                         Total Courses
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         18
                       </Typography>
@@ -5335,7 +5634,11 @@ const CloseBrokeragesPage = () => {
                         Active Courses
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         6
                       </Typography>
@@ -5343,7 +5646,11 @@ const CloseBrokeragesPage = () => {
                         Draft Courses
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         156
                       </Typography>
@@ -5375,7 +5682,11 @@ const CloseBrokeragesPage = () => {
 
                   {/* Resource Statistics */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         456
                       </Typography>
@@ -5383,7 +5694,11 @@ const CloseBrokeragesPage = () => {
                         Total Resources
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         89
                       </Typography>
@@ -5391,7 +5706,11 @@ const CloseBrokeragesPage = () => {
                         Downloads This Month
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.actions.warning, fontWeight: 'bold' }}>
                         23
                       </Typography>
@@ -5399,7 +5718,11 @@ const CloseBrokeragesPage = () => {
                         New This Week
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         8
                       </Typography>
@@ -5431,7 +5754,11 @@ const CloseBrokeragesPage = () => {
 
                   {/* Path Statistics */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         8
                       </Typography>
@@ -5439,7 +5766,11 @@ const CloseBrokeragesPage = () => {
                         Total Paths
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
                         45
                       </Typography>
@@ -5447,7 +5778,11 @@ const CloseBrokeragesPage = () => {
                         Active Learners
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         12
                       </Typography>
@@ -5455,7 +5790,11 @@ const CloseBrokeragesPage = () => {
                         Completed This Month
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>
                         67%
                       </Typography>
@@ -5487,7 +5826,11 @@ const CloseBrokeragesPage = () => {
 
                   {/* Achievement Statistics */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         89
                       </Typography>
@@ -5495,7 +5838,11 @@ const CloseBrokeragesPage = () => {
                         Total Achievements
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         23
                       </Typography>
@@ -5503,7 +5850,11 @@ const CloseBrokeragesPage = () => {
                         This Month
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         156
                       </Typography>
@@ -5511,7 +5862,11 @@ const CloseBrokeragesPage = () => {
                         CE Credits Issued
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         12
                       </Typography>
@@ -5543,7 +5898,11 @@ const CloseBrokeragesPage = () => {
 
                   {/* Management Statistics */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         24
                       </Typography>
@@ -5551,7 +5910,11 @@ const CloseBrokeragesPage = () => {
                         Active Learners
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         78%
                       </Typography>
@@ -5559,7 +5922,11 @@ const CloseBrokeragesPage = () => {
                         Program Completion Rate
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         4.2
                       </Typography>
@@ -5567,7 +5934,11 @@ const CloseBrokeragesPage = () => {
                         Average Rating
                       </Typography>
                     </Paper>
-                    <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
+                    <Paper elevation={2} sx={{ 
+                      p: { xs: 2, md: 3 }, 
+                      textAlign: 'center',
+                      width: '100%'
+                    }}>
                       <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
                         156
                       </Typography>
@@ -5687,7 +6058,11 @@ const CloseBrokeragesPage = () => {
               </Box>
 
               {/* Support Categories */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Support Categories
                 </Typography>
@@ -5733,7 +6108,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Active Support Tickets */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
                     Active Support Tickets
@@ -5868,7 +6247,11 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Knowledge Base & Resources */}
-              <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 }, 
+              mb: 4,
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Knowledge Base & Resources
                 </Typography>
@@ -5966,7 +6349,10 @@ const CloseBrokeragesPage = () => {
               </Paper>
 
               {/* Contact Information */}
-              <Paper elevation={2} sx={{ p: 3 }}>
+              <Paper elevation={2} sx={{ 
+              p: { xs: 2, md: 3 },
+              width: '100%'
+            }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: brandColors.primary }}>
                   Contact Support
                 </Typography>

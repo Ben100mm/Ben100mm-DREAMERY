@@ -9,7 +9,14 @@ import {
   Checkbox,
   Alert,
   CircularProgress,
+  InputAdornment,
 } from '@mui/material';
+import {
+  Email as EmailIcon,
+  Lock as LockIcon,
+  Person as PersonIcon,
+  Business as BusinessIcon
+} from '@mui/icons-material';
 import styled from 'styled-components';
 import SocialLoginButtons from './SocialLoginButtons';
 import { useAuth } from '../../contexts/AuthContext';
@@ -114,6 +121,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             autoComplete="given-name"
             value={formData.firstName}
             onChange={handleChange('firstName')}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon sx={{ color: brandColors.primary }} />
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             required
@@ -124,6 +138,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
             autoComplete="family-name"
             value={formData.lastName}
             onChange={handleChange('lastName')}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon sx={{ color: brandColors.primary }} />
+                </InputAdornment>
+              ),
+            }}
           />
         </Box>
         <TextField
@@ -137,6 +158,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           value={formData.email}
           onChange={handleChange('email')}
           sx={{ mb: 1.5 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EmailIcon sx={{ color: brandColors.primary }} />
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           margin="normal"
@@ -150,6 +178,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           value={formData.password}
           onChange={handleChange('password')}
           sx={{ mb: 1.5 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockIcon sx={{ color: brandColors.primary }} />
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           margin="normal"
@@ -163,6 +198,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
           value={formData.confirmPassword}
           onChange={handleChange('confirmPassword')}
           sx={{ mb: 1.5 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockIcon sx={{ color: brandColors.primary }} />
+              </InputAdornment>
+            ),
+          }}
         />
         <FormControlLabel
           control={<Checkbox value="terms" color="primary" />}

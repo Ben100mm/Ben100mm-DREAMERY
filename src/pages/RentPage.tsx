@@ -107,9 +107,17 @@ const PropertyCard = styled(Card)`
   border-radius: 8px;
   margin-bottom: 1rem;
   transition: all 0.2s ease;
+  width: 100%;
+  min-height: 120px;
+  
   &:hover {
     box-shadow: 0 4px 12px brandColors.shadows.light;
     transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    margin-bottom: 0.75rem;
+    min-height: 100px;
   }
 `;
 
@@ -1135,8 +1143,25 @@ const RentPage: React.FC = () => {
         <FilterPopover>{renderFilterContent()}</FilterPopover>
       </Popover>
 
-      <Box sx={{ display: "flex", height: "calc(100vh - 200px)" }}>
-        <Box sx={{ flex: "2", position: "relative", p: 2 }}>
+      <Box sx={{ 
+        display: "flex", 
+        height: "calc(100vh - 200px)",
+        "@media (max-width: 768px)": {
+          flexDirection: "column",
+          height: "auto",
+          minHeight: "calc(100vh - 200px)"
+        }
+      }}>
+        <Box sx={{ 
+          flex: "2", 
+          position: "relative", 
+          p: 2,
+          "@media (max-width: 768px)": {
+            flex: "none",
+            height: "300px",
+            p: 1
+          }
+        }}>
           <Box
             sx={{
               height: "100%",
@@ -1170,15 +1195,27 @@ const RentPage: React.FC = () => {
         </Box>
 
         <Box
-          sx={{ flex: "1", overflowY: "auto", borderLeft: "1px solid brandColors.borders.secondary" }}
+          sx={{ 
+            flex: "1", 
+            overflowY: "auto", 
+            borderLeft: "1px solid brandColors.borders.secondary",
+            "@media (max-width: 768px)": {
+              flex: "none",
+              borderLeft: "none",
+              borderTop: "1px solid brandColors.borders.secondary",
+              maxHeight: "60vh"
+            }
+          }}
         >
-          <Container maxWidth="xl" sx={{ p: 2 }}>
+          <Container maxWidth="xl" sx={{ p: { xs: 1, md: 2 } }}>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 mb: 3,
+                flexWrap: "wrap",
+                gap: 2
               }}
             >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -1195,25 +1232,43 @@ const RentPage: React.FC = () => {
               </FormControl>
             </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              gap: { xs: 1.5, md: 2 },
+              pb: 2
+            }}>
               {properties.map((property) => (
-                <PropertyCard key={property.id} sx={{ width: "100%" }}>
-                  <Box sx={{ display: "flex" }}>
+                <PropertyCard key={property.id}>
+                  <Box sx={{ 
+                    display: "flex",
+                    "@media (max-width: 600px)": {
+                      flexDirection: "column"
+                    }
+                  }}>
                     <Box
                       sx={{
-                        width: "120px",
-                        height: "90px",
+                        width: { xs: "100%", sm: "120px" },
+                        height: { xs: "150px", sm: "90px" },
                         flexShrink: 0,
                         background: brandColors.neutral[100],
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         color: brandColors.neutral[800],
+                        "@media (max-width: 600px)": {
+                          height: "120px",
+                          width: "100%"
+                        }
                       }}
                     >
                       {property.image}
                     </Box>
-                    <CardContent sx={{ p: 2, flex: 1 }}>
+                    <CardContent sx={{ 
+                      p: { xs: 1.5, md: 2 }, 
+                      flex: 1,
+                      minWidth: 0
+                    }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -1224,7 +1279,11 @@ const RentPage: React.FC = () => {
                       >
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 700, color: brandColors.primary }}
+                          sx={{ 
+                            fontWeight: 700, 
+                            color: brandColors.primary,
+                            fontSize: { xs: "1.1rem", md: "1.25rem" }
+                          }}
                         >
                           {property.price}
                         </Typography>
@@ -1287,14 +1346,23 @@ const RentPage: React.FC = () => {
                         )}
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 1, color: brandColors.neutral[800] }}>
+                      <Typography variant="body2" sx={{ 
+                        mb: 1, 
+                        color: brandColors.neutral[800],
+                        fontSize: { xs: "0.875rem", md: "0.875rem" }
+                      }}>
                         {property.beds} bds | {property.baths} ba |{" "}
                         {property.sqft.toLocaleString()} sqft - {property.type}
                       </Typography>
 
                       <Typography
                         variant="body2"
-                        sx={{ color: brandColors.text.primary, fontWeight: 500 }}
+                        sx={{ 
+                          color: brandColors.text.primary, 
+                          fontWeight: 500,
+                          fontSize: { xs: "0.875rem", md: "0.875rem" },
+                          wordBreak: "break-word"
+                        }}
                       >
                         {property.address}
                       </Typography>

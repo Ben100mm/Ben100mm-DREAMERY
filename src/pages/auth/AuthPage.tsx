@@ -7,6 +7,11 @@ import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
 import { brandColors } from "../../theme";
+import {
+  Login as LoginIcon,
+  PersonAdd as SignUpIcon,
+  Email as MagicLinkIcon
+} from '@mui/icons-material';
 
 
 
@@ -160,9 +165,24 @@ const AuthPage: React.FC = () => {
                   }
                 }}
               >
-                <Tab label="Sign In" value="signin" />
-                <Tab label="Sign Up" value="signup" />
-                <Tab label="Magic Link" value="magic" />
+                <Tab 
+                  label="Sign In" 
+                  value="signin" 
+                  icon={<LoginIcon />}
+                  iconPosition="start"
+                />
+                <Tab 
+                  label="Sign Up" 
+                  value="signup" 
+                  icon={<SignUpIcon />}
+                  iconPosition="start"
+                />
+                <Tab 
+                  label="Magic Link" 
+                  value="magic" 
+                  icon={<MagicLinkIcon />}
+                  iconPosition="start"
+                />
               </Tabs>
             </Box>
             {tab === 'signin' && (

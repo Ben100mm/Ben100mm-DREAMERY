@@ -526,7 +526,7 @@ const PostClosingServices: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-          <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+          <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
             <Tab label="Tax Exemptions" />
             <Tab label="Mortgage Payments" />
             <Tab label="Home Warranties" />

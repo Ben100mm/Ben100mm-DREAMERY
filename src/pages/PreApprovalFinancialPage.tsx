@@ -237,7 +237,7 @@ const PreApprovalFinancialPage: React.FC = () => {
                       placeholder="$ 0"
                       sx={{
                         "& .MuiOutlinedInput-root": {
-                          backgroundColor: brandColors.neutral.light,
+                          backgroundColor: brandColors.neutral[100],
                           "&:hover": {
                             backgroundColor: brandColors.neutral[100],
                           },

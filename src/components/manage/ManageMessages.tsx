@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -131,7 +132,7 @@ const ManageMessages: React.FC = () => {
 
       <Grid container spacing={3} sx={{ height: 'calc(100vh - 200px)' }}>
         {/* Conversations List */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ md: 4, xs: 12 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 0 }}>
               <Box sx={{ p: 2, borderBottom: '1px solid brandColors.neutral[300]' }}>
@@ -142,17 +143,13 @@ const ManageMessages: React.FC = () => {
               <List sx={{ p: 0 }}>
                 {conversations.map((conversation, index) => (
                   <React.Fragment key={conversation.id}>
-                    <ListItem sx={{
-        backgroundColor: selectedConversation === conversation.id ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
-        cursor: 'pointer',
-        
-        '&:hover': {
-          backgroundColor: 'rgba(25, 118, 210, 0.04)',
-        },
-      }}
+                    <ListItem
                       onClick={() => setSelectedConversation(conversation.id)}
                       sx={{
-                        15`,
+                        backgroundColor: selectedConversation === conversation.id ? brandColors.backgrounds.selected : 'transparent',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: brandColors.interactive.hover,
                         },
                       }}
                     >
@@ -204,7 +201,7 @@ const ManageMessages: React.FC = () => {
         </Grid>
 
         {/* Messages */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ md: 8, xs: 12 }}>
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {selectedConv ? (
               <>

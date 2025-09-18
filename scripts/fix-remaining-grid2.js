@@ -1,40 +1,28 @@
 #!/usr/bin/env node
 
 /**
- * Fix Material-UI Grid component prop usage
- * Replace deprecated Grid item prop with Grid2 or remove item prop
+ * Fix remaining Grid2 instances that were missed
+ * Comprehensive replacement of all Grid2 instances with Grid
  */
 
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 
-function fixGridPropsInFile(filePath) {
+function fixRemainingGrid2InFile(filePath) {
   console.log(`Processing: ${filePath}`);
   
   let content = fs.readFileSync(filePath, 'utf8');
   let hasChanges = false;
   
-  // Fix Grid item prop - remove it since it's deprecated in newer versions
-  const gridItemRegex = /<Grid\s+item\s+([^>]*?)>/g;
-  if (content.match(gridItemRegex)) {
-    const matches = content.match(gridItemRegex);
-    content = content.replace(gridItemRegex, (match, props) => {
-      hasChanges = true;
-      console.log(`  Fixed Grid item prop`);
-      return `<Grid ${props}>`;
-    });
-  }
+  // Count Grid2 instances before replacement
+  const grid2Count = (content.match(/Grid2/g) || []).length;
   
-  // Also handle Grid item on separate lines
-  const gridItemMultilineRegex = /<Grid\s*\n\s*item\s*\n([^>]*?)>/g;
-  if (content.match(gridItemMultilineRegex)) {
-    const matches = content.match(gridItemMultilineRegex);
-    content = content.replace(gridItemMultilineRegex, (match, props) => {
-      hasChanges = true;
-      console.log(`  Fixed Grid item prop (multiline)`);
-      return `<Grid\n${props}>`;
-    });
+  if (grid2Count > 0) {
+    // Replace all Grid2 with Grid
+    content = content.replace(/Grid2/g, 'Grid');
+    hasChanges = true;
+    console.log(`  Replaced ${grid2Count} Grid2 instances with Grid`);
   }
   
   // Write back if changes were made
@@ -42,14 +30,14 @@ function fixGridPropsInFile(filePath) {
     fs.writeFileSync(filePath, content);
     console.log(`  ✅ Updated ${filePath}`);
   } else {
-    console.log(`  ⏭️  No Grid prop issues found in ${filePath}`);
+    console.log(`  ⏭️  No Grid2 issues found in ${filePath}`);
   }
   
   return hasChanges;
 }
 
 function main() {
-  console.log('🔧 Starting Grid props fix...\n');
+  console.log('🔧 Starting remaining Grid2 fix...\n');
   
   // Find all TypeScript and JavaScript files in src
   const files = glob.sync('src/**/*.{ts,tsx,js,jsx}', {
@@ -70,7 +58,7 @@ function main() {
   
   files.forEach(file => {
     try {
-      const hasChanges = fixGridPropsInFile(file);
+      const hasChanges = fixRemainingGrid2InFile(file);
       if (hasChanges) {
         totalChanges++;
         changedFiles.push(file);
@@ -80,7 +68,7 @@ function main() {
     }
   });
   
-  console.log('\n🎉 Grid props fix completed!');
+  console.log('\n🎉 Remaining Grid2 fix completed!');
   console.log(`📊 Summary:`);
   console.log(`   - Files processed: ${files.length}`);
   console.log(`   - Files changed: ${totalChanges}`);
@@ -91,4 +79,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { fixGridPropsInFile };
+module.exports = { fixRemainingGrid2InFile };

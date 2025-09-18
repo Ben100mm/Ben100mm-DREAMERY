@@ -48,9 +48,9 @@ export function useExpensiveCalculation<T>(
  */
 export function useIntersectionObserver(
   options: IntersectionObserverInit = {}
-): { ref: React.RefObject<HTMLElement>; isIntersecting: boolean } {
+): { ref: React.RefObject<HTMLElement | null>; isIntersecting: boolean } {
   const [isIntersecting, setIsIntersecting] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -124,7 +124,7 @@ export function throttle<T extends (...args: any[]) => any>(
   let inThrottle: boolean;
   return ((...args: any[]) => {
     if (!inThrottle) {
-      func.apply(this, args);
+      func.apply(null, args);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
@@ -144,7 +144,7 @@ export function debounce<T extends (...args: any[]) => any>(
   let timeout: NodeJS.Timeout;
   return ((...args: any[]) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
+    timeout = setTimeout(() => func.apply(null, args), wait);
   }) as T;
 }
 
@@ -255,15 +255,13 @@ export function monitorFrameRate(callback: (fps: number) => void) {
 export function createLazyComponent<T extends React.ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   fallback: React.ReactNode = (<div>Loading...</div>)
-) {
+): React.ComponentType<React.ComponentProps<T>> {
   const LazyComponent = lazy(importFn);
   
-  return forwardRef<React.ComponentRef<T>, React.ComponentProps<T>>(
-    (props, ref) => (
-      <Suspense fallback={fallback}>
-        <LazyComponent {...props} ref={ref} />
-      </Suspense>
-    )
+  return (props: React.ComponentProps<T>) => (
+    <Suspense fallback={fallback}>
+      <LazyComponent {...props} />
+    </Suspense>
   );
 }
 

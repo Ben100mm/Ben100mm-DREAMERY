@@ -8,6 +8,11 @@ export interface Conversation {
   verificationStatus: string;
   dateOfContact: string;
   topicOfDiscussion: string;
+  status?: string;
+  propertyDescription?: string;
+  unreadCount?: number;
+  timestamp?: Date;
+  lastMessage?: string;
 }
 
 export interface Message {
@@ -29,4 +34,5 @@ export interface UserDetails {
   verificationStatus: string;
   contactDate: string;
   topicOfDiscussion: string;
+  caseDetails?: any;
 }

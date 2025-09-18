@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -273,7 +274,7 @@ const OperateProjects: React.FC = () => {
       {/* Projects Grid */}
       <Grid container spacing={3}>
         {filteredProjects.map((project) => (
-          <Grid item xs={12} sm={6} md={4} key={project.id}>
+          <Grid size={{ sm: 6, md: 4, xs: 12 }} key={project.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {/* Project Image */}
               <Box
@@ -342,7 +343,7 @@ const OperateProjects: React.FC = () => {
 
                 {/* Project Stats */}
                 <Grid container spacing={1} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <PersonIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -350,7 +351,7 @@ const OperateProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <ScheduleIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -358,7 +359,7 @@ const OperateProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -366,7 +367,7 @@ const OperateProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       {getCategoryIcon(project.category)}
                       <Typography variant="caption">
@@ -384,7 +385,6 @@ const OperateProjects: React.FC = () => {
                   <LinearProgress
                     variant="determinate"
                     value={(project.tasks.filter(t => t.completed).length / project.tasks.length) * 100}
-                    size="small"
                   />
                 </Box>
 
@@ -436,7 +436,7 @@ const OperateProjects: React.FC = () => {
               placeholder="Describe the project scope and objectives..."
             />
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Budget ($)"
                   type="number"
@@ -444,7 +444,7 @@ const OperateProjects: React.FC = () => {
                   placeholder="50000"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel>Category</InputLabel>
                   <Select label="Category">
@@ -457,7 +457,7 @@ const OperateProjects: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Start Date"
                   type="date"
@@ -465,7 +465,7 @@ const OperateProjects: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="End Date"
                   type="date"

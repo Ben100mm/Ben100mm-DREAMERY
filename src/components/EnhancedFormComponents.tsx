@@ -243,7 +243,7 @@ export const EnhancedTextFieldWithValidation: React.FC<{
         }}
         sx={{
           "& .MuiOutlinedInput-root": {
-            backgroundColor: disabled ? brandColors.neutral.light : brandColors.backgrounds.primary,
+            backgroundColor: disabled ? brandColors.neutral[100] : brandColors.backgrounds.primary,
           },
         }}
       />

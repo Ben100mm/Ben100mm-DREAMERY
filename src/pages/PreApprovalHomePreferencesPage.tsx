@@ -51,8 +51,8 @@ const QuestionCard = styled(Card)`
 `;
 
 const OptionCard = styled(Box)<{ $selected?: boolean }>`
-  border: 2px solid (props) => (props.$selected ? brandColors.primary : brandColors.borders.secondary);
-  background-color: (props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.primary);
+  border: 2px solid ${props => props.$selected ? brandColors.primary : brandColors.borders.secondary};
+  background-color: ${props => props.$selected ? brandColors.primary50 : brandColors.backgrounds.primary};
   border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
@@ -60,8 +60,8 @@ const OptionCard = styled(Box)<{ $selected?: boolean }>`
   margin-bottom: 0.5rem;
 
   &:hover {
-    border-color: brandColors.primary;
-    background-color: (props) => (props.$selected ? "#f0f4f8" : brandColors.backgrounds.secondary);
+    border-color: ${brandColors.primary};
+    background-color: ${props => props.$selected ? brandColors.primary50 : brandColors.backgrounds.secondary};
   }
 `;
 
@@ -193,7 +193,7 @@ const PreApprovalHomePreferencesPage: React.FC = () => {
                 {currentQuestion.options?.map((option, index) => (
                   <OptionCard
                     key={index}
-                    $
+                    $selected={answers[currentQuestion.id as keyof typeof answers] === option}
                     onClick={() =>
                       handleOptionSelect(currentQuestion.id, option)
                     }

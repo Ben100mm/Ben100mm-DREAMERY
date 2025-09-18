@@ -36,7 +36,7 @@ export class PerformanceMonitor {
   private budgets: PerformanceBudget[] = [];
   private observers: Map<string, PerformanceObserver> = new Map();
   private isMonitoring: boolean = false;
-  private reportInterval: number = 5000; // 5 seconds
+  private reportIntervalMs: number = 5000; // 5 seconds
   private reportCallback?: (report: PerformanceReport) => void;
 
   constructor() {
@@ -124,7 +124,7 @@ export class PerformanceMonitor {
       const longTaskObserver = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
           if (entry.entryType === 'longtask') {
-            this.recordLongTaskMetrics(entry as PerformanceLongTaskTiming);
+            this.recordLongTaskMetrics(entry as PerformanceEntry);
           }
         });
       });
@@ -151,7 +151,6 @@ export class PerformanceMonitor {
     metrics.forEach(metric => {
       this.recordMetric({
         ...metric,
-        timestamp: Date.now(),
         category: 'navigation' as const,
       });
     });
@@ -165,7 +164,6 @@ export class PerformanceMonitor {
       name: entry.name === 'first-paint' ? 'First Paint' : 'First Contentful Paint',
       value: entry.startTime,
       unit: 'ms',
-      timestamp: Date.now(),
       category: 'paint',
     });
   }
@@ -178,7 +176,6 @@ export class PerformanceMonitor {
       name: `Resource: ${entry.name}`,
       value: entry.duration,
       unit: 'ms',
-      timestamp: Date.now(),
       category: 'resource',
       metadata: {
         size: entry.transferSize,
@@ -191,12 +188,11 @@ export class PerformanceMonitor {
   /**
    * Record long task metrics
    */
-  private recordLongTaskMetrics(entry: PerformanceLongTaskTiming): void {
+  private recordLongTaskMetrics(entry: PerformanceEntry): void {
     this.recordMetric({
       name: 'Long Task',
       value: entry.duration,
       unit: 'ms',
-      timestamp: Date.now(),
       category: 'navigation',
       metadata: {
         startTime: entry.startTime,
@@ -367,7 +363,7 @@ export class PerformanceMonitor {
         const report = this.generateReport();
         this.reportCallback(report);
       }
-    }, this.reportInterval);
+    }, this.reportIntervalMs);
   }
 
   /**
@@ -477,7 +473,6 @@ export class PerformanceMonitor {
     return JSON.stringify({
       metrics: this.metrics,
       budgets: this.budgets,
-      timestamp: Date.now(),
     }, null, 2);
   }
 

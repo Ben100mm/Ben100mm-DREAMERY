@@ -13,7 +13,7 @@ import {
 import ClosingAssistantIcon from '../../components/close/ai-closing-assistant/ClosingAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
-import { brandColors } from "../../../theme";
+import { brandColors } from "../../theme";
 
 
 export const closeWorkspace: WorkspaceConfig = {

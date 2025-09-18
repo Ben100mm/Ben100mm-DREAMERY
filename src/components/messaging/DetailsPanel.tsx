@@ -381,7 +381,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             
             <InfoItem>
               <InfoLabel>Date of Contact</InfoLabel>
-              <InfoValue>{formatDate(userDetails.contactDate)}</InfoValue>
+              <InfoValue>{formatDate(new Date(userDetails.contactDate))}</InfoValue>
             </InfoItem>
             
             <InfoItem>

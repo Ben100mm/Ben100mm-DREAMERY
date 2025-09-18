@@ -240,7 +240,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ isOpen, onClose }) => {
                     transition: "all 0.2s ease",
                     "&:hover": {
                       backgroundColor:
-                        activeStep === index ? brandColors.backgrounds.selected : brandColors.neutral.light,
+                        activeStep === index ? brandColors.backgrounds.selected : brandColors.neutral[100],
                       transform: "translateX(4px)",
                     },
                   }}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -191,7 +192,7 @@ const ManageListings: React.FC = () => {
       {/* Listings Grid */}
       <Grid container spacing={3}>
         {listings.map((listing) => (
-          <Grid item xs={12} sm={6} md={4} key={listing.id}>
+          <Grid size={{ sm: 6, md: 4, xs: 12 }} key={listing.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {/* Property Image */}
               <Box
@@ -310,7 +311,7 @@ const ManageListings: React.FC = () => {
               placeholder="e.g., 123 Main St, City, State"
             />
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Monthly Rent"
                   type="number"
@@ -318,7 +319,7 @@ const ManageListings: React.FC = () => {
                   placeholder="2500"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel>Property Type</InputLabel>
                   <Select label="Property Type">
@@ -331,21 +332,21 @@ const ManageListings: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <TextField
                   label="Bedrooms"
                   type="number"
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <TextField
                   label="Bathrooms"
                   type="number"
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <TextField
                   label="Square Feet"
                   type="number"

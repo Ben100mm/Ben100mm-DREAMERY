@@ -582,7 +582,7 @@ const LegalCompliance: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Compliance Checklist" />
           <Tab label="Document Management" />
           <Tab label="Attorney Referrals" />

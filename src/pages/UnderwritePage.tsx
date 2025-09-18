@@ -4570,7 +4570,7 @@ const UnderwritePage: React.FC = () => {
                         sx={{
                           mt: 2,
                           p: 2,
-                          bgcolor: brandColors.neutral.light,
+                          bgcolor: brandColors.neutral[100],
                           borderRadius: 1,
                         }}
                       >
@@ -4895,7 +4895,7 @@ const UnderwritePage: React.FC = () => {
                   </Box>
 
                   <Box
-                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
+                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral[100], borderRadius: 1 }}
                   >
                     <Typography
                       variant="subtitle2"
@@ -5219,7 +5219,7 @@ const UnderwritePage: React.FC = () => {
                   />
 
                   <Box
-                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}
+                    sx={{ mt: 2, p: 2, bgcolor: brandColors.neutral[100], borderRadius: 1 }}
                   >
                     <Typography
                       variant="subtitle2"
@@ -5525,7 +5525,7 @@ const UnderwritePage: React.FC = () => {
                   )}
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral[100], borderRadius: 1 }}>
                   <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Total Cash Required
                   </Typography>
@@ -6034,7 +6034,7 @@ const UnderwritePage: React.FC = () => {
                   />
                 </Box>
 
-                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral.light, borderRadius: 1 }}>
+                <Box sx={{ mt: 3, p: 2, bgcolor: brandColors.neutral[100], borderRadius: 1 }}>
                   <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Auto-calculated Results
                   </Typography>
@@ -6076,9 +6076,9 @@ const UnderwritePage: React.FC = () => {
                     p: 2,
                     borderRadius: 1,
                     border: "1px solid brandColors.neutral[400]",
-                    bgcolor: inherit,
+                    bgcolor: 'inherit',
                   }}
-                  style={{ backgroundColor: brandColors.neutral.light }}
+                  style={{ backgroundColor: brandColors.neutral[100] }}
                 >
                   <Typography
                     variant="subtitle2"
@@ -6128,7 +6128,7 @@ const UnderwritePage: React.FC = () => {
                       p: 2,
                       borderRadius: 1,
                       border: "1px solid brandColors.text.disabled",
-                      bgcolor: inherit,
+                      bgcolor: 'inherit',
                     }}
                     style={{ backgroundColor: brandColors.neutral[200] }}
                   >
@@ -6180,7 +6180,7 @@ const UnderwritePage: React.FC = () => {
                         p: 2,
                         borderRadius: 1,
                         border: "1px solid brandColors.neutral[600]",
-                        bgcolor: inherit,
+                        bgcolor: 'inherit',
                       }}
                       style={{ backgroundColor: brandColors.borders.secondary }}
                     >
@@ -7400,7 +7400,7 @@ const UnderwritePage: React.FC = () => {
                       <Box
                         sx={{
                           p: 2,
-                          backgroundColor: brandColors.neutral.light,
+                          backgroundColor: brandColors.neutral[100],
                           borderRadius: 1,
                           mb: 3,
                         }}
@@ -7622,7 +7622,7 @@ const UnderwritePage: React.FC = () => {
                                 sx={{
                                   backgroundColor:
                                     row.multiplier === "100%"
-                                      ? brandColors.neutral.light
+                                      ? brandColors.neutral[100]
                                       : "inherit",
                                   fontWeight:
                                     row.multiplier === "100%"
@@ -7738,7 +7738,7 @@ const UnderwritePage: React.FC = () => {
                           sx={{
                             mt: 2,
                             p: 2,
-                            backgroundColor: brandColors.neutral.light,
+                            backgroundColor: brandColors.neutral[100],
                             borderRadius: 1,
                           }}
                         >
@@ -8044,7 +8044,7 @@ const UnderwritePage: React.FC = () => {
                         <Box
                           sx={{
                             p: 2,
-                            backgroundColor: brandColors.neutral.light,
+                            backgroundColor: brandColors.neutral[100],
                             borderRadius: 1,
                           }}
                         >

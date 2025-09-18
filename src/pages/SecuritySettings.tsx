@@ -98,7 +98,7 @@ const SecuritySettings: React.FC = () => {
         <HeaderSection>
           <SecurityIcon sx={{ fontSize: 40, color: brandColors.primary }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight="bold" color=brandColors.primary>
+            <Typography variant="h4" component="h1" fontWeight="bold" sx={{ color: brandColors.primary }}>
               Security Settings
             </Typography>
             <Typography variant="body1" color="text.secondary">

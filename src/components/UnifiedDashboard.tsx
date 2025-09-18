@@ -208,7 +208,7 @@ const UnifiedDashboard: React.FC = () => {
         workspaces={availableWorkspaces}
         selectedWorkspace={selectedWorkspace}
         onWorkspaceChange={handleWorkspaceChange}
-        currentWorkspace={currentWorkspace}
+        currentWorkspace={currentWorkspace || null}
         activeTab={activeTab}
         onTabChange={handleTabChange}
         favoriteItems={preferences.favoriteSidebarItems}

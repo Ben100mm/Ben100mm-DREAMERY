@@ -813,13 +813,13 @@ const ProfilePage: React.FC = () => {
             </Typography>
             <Box sx={{ 
               border: '2px dashed',
-              borderColor: brandColors.neutral.medium,
+              borderColor: brandColors.neutral[500],
               borderRadius: 2,
               p: 4,
               textAlign: 'center',
               mb: 2
             }}>
-              <Upload sx={{ fontSize: 48, color: brandColors.neutral.medium, mb: 2 }} />
+              <Upload sx={{ fontSize: 48, color: brandColors.neutral[500], mb: 2 }} />
               <Typography variant="h6" sx={{ mb: 1 }}>
                 Upload Company Logo
               </Typography>
@@ -849,7 +849,7 @@ const ProfilePage: React.FC = () => {
             onClick={handleBack}
             sx={{ 
               color: brandColors.neutral[800],
-              borderColor: brandColors.neutral.medium,
+              borderColor: brandColors.neutral[500],
               '&:hover': {
                 borderColor: brandColors.primary,
                 color: brandColors.primary

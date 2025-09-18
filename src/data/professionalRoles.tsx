@@ -5,7 +5,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SecurityIcon from '@mui/icons-material/Security';
 import WorkflowIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
-import { brandColors } from "../../../theme";
+import { brandColors } from "../theme";
 
 
 export const professionalRoles = [

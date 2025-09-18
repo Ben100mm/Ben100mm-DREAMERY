@@ -556,7 +556,7 @@ const SettlementClosingCosts: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Cost Breakdown" />
           <Tab label="Commission Calculator" />
           <Tab label="Prorations" />
@@ -640,7 +640,7 @@ const SettlementClosingCosts: React.FC = () => {
                 </TableBody>
               </Table>
 
-              <Box sx={{ mt: 3, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
+              <Box sx={{ mt: 3, p: 2, backgroundColor: brandColors.neutral[100], borderRadius: 1 }}>
                 <Typography variant="h6" gutterBottom>
                   Cost Summary
                 </Typography>
@@ -856,7 +856,7 @@ const SettlementClosingCosts: React.FC = () => {
                     />
                   </Box>
                   
-                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral[100], borderRadius: 1 }}>
                     <Typography variant="body2" color="text.secondary">Seller Credit: settlementData.prorations.propertyTaxes.sellerCredit.toFixed(2)</Typography>
                     <Typography variant="body2" color="text.secondary">Buyer Debit: settlementData.prorations.propertyTaxes.buyerDebit.toFixed(2)</Typography>
                   </Box>
@@ -913,7 +913,7 @@ const SettlementClosingCosts: React.FC = () => {
                     />
                   </Box>
                   
-                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
+                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral[100], borderRadius: 1 }}>
                     <Typography variant="body2" color="text.secondary">Seller Credit: settlementData.prorations.hoa.sellerCredit.toFixed(2)</Typography>
                     <Typography variant="body2" color="text.secondary">Buyer Debit: settlementData.prorations.hoa.buyerDebit.toFixed(2)</Typography>
                   </Box>

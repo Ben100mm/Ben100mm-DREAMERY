@@ -270,7 +270,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -299,7 +299,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -314,7 +314,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -328,7 +328,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -346,7 +346,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -362,7 +362,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -375,7 +375,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -390,7 +390,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -416,7 +416,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -456,7 +456,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -485,7 +485,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -497,7 +497,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -511,7 +511,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -532,7 +532,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -553,7 +553,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -568,7 +568,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -584,7 +584,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -601,7 +601,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -630,7 +630,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >
@@ -645,7 +645,7 @@ const ProfessionalSignupPage: React.FC = () => {
                     sx={{
                       fontWeight: "bold",
                       color: brandColors.neutral[800],
-                      backgroundColor: brandColors.neutral.light,
+                      backgroundColor: brandColors.neutral[100],
                       fontSize: "14px",
                     }}
                   >

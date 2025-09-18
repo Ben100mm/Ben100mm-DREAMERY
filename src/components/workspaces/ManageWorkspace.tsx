@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Paper,
@@ -438,14 +439,14 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                   Performance Analytics
                 </Typography>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Portfolio Performance</Typography>
                       <Typography variant="h4" color="success.main">94.2%</Typography>
                       <Typography variant="body2" color="text.secondary">Overall efficiency score</Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Occupancy Rate</Typography>
                       <Typography variant="h4" color="primary">96.8%</Typography>
@@ -493,21 +494,21 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                   Tenant Analytics
                 </Typography>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{ md: 4, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Average Tenancy</Typography>
                       <Typography variant="h4" color="info.main">28 months</Typography>
                       <Typography variant="body2" color="text.secondary">Stable tenant base</Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{ md: 4, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Renewal Rate</Typography>
                       <Typography variant="h4" color="success.main">78%</Typography>
                       <Typography variant="body2" color="text.secondary">High satisfaction</Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{ md: 4, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Payment On-Time</Typography>
                       <Typography variant="h4" color="success.main">94%</Typography>
@@ -3916,15 +3917,15 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Property Photos</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Main Photo</Typography>
                       <Typography variant="body2" color="text.secondary">Primary listing image</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Interior Photos</Typography>
                       <Typography variant="body2" color="text.secondary">Living spaces, bedrooms, kitchen</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Exterior Photos</Typography>
                       <Typography variant="body2" color="text.secondary">Front, back, and side views</Typography>
                     </Grid>
@@ -3972,12 +3973,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Rental Pricing</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">Monthly Rent</Typography>
                       <Typography variant="h4" color="primary">$2,500</Typography>
                       <Typography variant="body2" color="text.secondary">Base monthly rent</Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">Security Deposit</Typography>
                       <Typography variant="h4" color="info.main">$2,500</Typography>
                       <Typography variant="body2" color="text.secondary">One month's rent</Typography>
@@ -4144,12 +4145,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Compliance Status</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">Fair Housing</Typography>
                       <Typography variant="h4" color="success.main">100%</Typography>
                       <Typography variant="body2" color="text.secondary">Compliant</Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">State Regulations</Typography>
                       <Typography variant="h4" color="success.main">100%</Typography>
                       <Typography variant="body2" color="text.secondary">Compliant</Typography>
@@ -4235,17 +4236,17 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Check Status</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Criminal Background</Typography>
                       <Typography variant="h4" color="success.main">100%</Typography>
                       <Typography variant="body2" color="text.secondary">All clear</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Credit Check</Typography>
                       <Typography variant="h4" color="warning.main">85%</Typography>
                       <Typography variant="body2" color="text.secondary">2 pending</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Reference Check</Typography>
                       <Typography variant="h4" color="info.main">90%</Typography>
                       <Typography variant="body2" color="text.secondary">1 pending</Typography>
@@ -4292,14 +4293,14 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                   Payment Processing
                 </Typography>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Total Processed</Typography>
                       <Typography variant="h4" color="success.main">$45,200</Typography>
                       <Typography variant="body2" color="text.secondary">This month</Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Success Rate</Typography>
                       <Typography variant="h4" color="primary">98.5%</Typography>
@@ -4349,17 +4350,17 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Late Fee Management</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Late Fee Rate</Typography>
                       <Typography variant="h4" color="warning.main">$50</Typography>
                       <Typography variant="body2" color="text.secondary">Per occurrence</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Grace Period</Typography>
                       <Typography variant="h4" color="info.main">5 days</Typography>
                       <Typography variant="body2" color="text.secondary">Before late fee</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Collected This Month</Typography>
                       <Typography variant="h4" color="success.main">$150</Typography>
                       <Typography variant="body2" color="text.secondary">3 late fees</Typography>
@@ -4445,12 +4446,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Payment Gateway</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">Stripe</Typography>
                       <Typography variant="h4" color="success.main">Active</Typography>
                       <Typography variant="body2" color="text.secondary">Primary processor</Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle1">PayPal</Typography>
                       <Typography variant="h4" color="info.main">Backup</Typography>
                       <Typography variant="body2" color="text.secondary">Alternative option</Typography>
@@ -4499,17 +4500,17 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Utility Management</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Electric</Typography>
                       <Typography variant="h4" color="success.main">100%</Typography>
                       <Typography variant="body2" color="text.secondary">Automated billing</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Water</Typography>
                       <Typography variant="h4" color="success.main">100%</Typography>
                       <Typography variant="body2" color="text.secondary">Automated billing</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Gas</Typography>
                       <Typography variant="h4" color="warning.main">75%</Typography>
                       <Typography variant="body2" color="text.secondary">Manual setup needed</Typography>
@@ -4562,14 +4563,14 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                   Coverage Management
                 </Typography>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Total Coverage</Typography>
                       <Typography variant="h4" color="primary">$4M</Typography>
                       <Typography variant="body2" color="text.secondary">Combined coverage</Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ md: 6, xs: 12 }}>
                     <Paper sx={{ p: 3 }}>
                       <Typography variant="h6" gutterBottom>Monthly Premium</Typography>
                       <Typography variant="h4" color="info.main">$2,400</Typography>
@@ -4619,17 +4620,17 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>Risk Factors</Typography>
                   <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Fire Risk</Typography>
                       <Typography variant="h4" color="success.main">Low</Typography>
                       <Typography variant="body2" color="text.secondary">Smoke detectors installed</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Flood Risk</Typography>
                       <Typography variant="h4" color="warning.main">Medium</Typography>
                       <Typography variant="body2" color="text.secondary">Flood zone 2</Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                       <Typography variant="subtitle1">Theft Risk</Typography>
                       <Typography variant="h4" color="success.main">Low</Typography>
                       <Typography variant="body2" color="text.secondary">Security system active</Typography>

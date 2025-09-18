@@ -1,55 +1,48 @@
 #!/usr/bin/env node
 
 /**
- * Fix Material-UI Grid component prop usage
- * Replace deprecated Grid item prop with Grid2 or remove item prop
+ * Remove deprecated Grid item props for Material-UI v7
+ * Remove all item props from Grid components since they're deprecated in v7
  */
 
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 
-function fixGridPropsInFile(filePath) {
+function removeGridItemPropsInFile(filePath) {
   console.log(`Processing: ${filePath}`);
   
   let content = fs.readFileSync(filePath, 'utf8');
   let hasChanges = false;
   
-  // Fix Grid item prop - remove it since it's deprecated in newer versions
-  const gridItemRegex = /<Grid\s+item\s+([^>]*?)>/g;
-  if (content.match(gridItemRegex)) {
-    const matches = content.match(gridItemRegex);
-    content = content.replace(gridItemRegex, (match, props) => {
-      hasChanges = true;
-      console.log(`  Fixed Grid item prop`);
-      return `<Grid ${props}>`;
-    });
-  }
+  // Remove item prop from Grid components
+  // Pattern: <Grid item xs={...}> -> <Grid xs={...}>
+  content = content.replace(/<Grid\s+item\s+([^>]*?)>/g, (match, props) => {
+    hasChanges = true;
+    console.log(`  Removed item prop from Grid`);
+    return `<Grid ${props}>`;
+  });
   
-  // Also handle Grid item on separate lines
-  const gridItemMultilineRegex = /<Grid\s*\n\s*item\s*\n([^>]*?)>/g;
-  if (content.match(gridItemMultilineRegex)) {
-    const matches = content.match(gridItemMultilineRegex);
-    content = content.replace(gridItemMultilineRegex, (match, props) => {
-      hasChanges = true;
-      console.log(`  Fixed Grid item prop (multiline)`);
-      return `<Grid\n${props}>`;
-    });
-  }
+  // Also handle multiline patterns
+  content = content.replace(/<Grid\s*\n\s*item\s*\n([^>]*?)>/g, (match, props) => {
+    hasChanges = true;
+    console.log(`  Removed item prop from Grid (multiline)`);
+    return `<Grid\n${props}>`;
+  });
   
   // Write back if changes were made
   if (hasChanges) {
     fs.writeFileSync(filePath, content);
     console.log(`  ✅ Updated ${filePath}`);
   } else {
-    console.log(`  ⏭️  No Grid prop issues found in ${filePath}`);
+    console.log(`  ⏭️  No Grid item prop issues found in ${filePath}`);
   }
   
   return hasChanges;
 }
 
 function main() {
-  console.log('🔧 Starting Grid props fix...\n');
+  console.log('🔧 Starting Grid item props removal...\n');
   
   // Find all TypeScript and JavaScript files in src
   const files = glob.sync('src/**/*.{ts,tsx,js,jsx}', {
@@ -70,7 +63,7 @@ function main() {
   
   files.forEach(file => {
     try {
-      const hasChanges = fixGridPropsInFile(file);
+      const hasChanges = removeGridItemPropsInFile(file);
       if (hasChanges) {
         totalChanges++;
         changedFiles.push(file);
@@ -80,7 +73,7 @@ function main() {
     }
   });
   
-  console.log('\n🎉 Grid props fix completed!');
+  console.log('\n🎉 Grid item props removal completed!');
   console.log(`📊 Summary:`);
   console.log(`   - Files processed: ${files.length}`);
   console.log(`   - Files changed: ${totalChanges}`);
@@ -91,4 +84,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { fixGridPropsInFile };
+module.exports = { removeGridItemPropsInFile };

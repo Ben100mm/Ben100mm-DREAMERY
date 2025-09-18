@@ -322,8 +322,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         
         <ChatHeaderRight>
           <StatusChip 
-            label={conversation.status} 
-            status={conversation.status}
+            label={conversation.status || 'normal'} 
+            status={conversation.status || 'normal'}
             size="small"
           />
           
@@ -388,7 +388,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              disabled={isLoading}
+              disabled={isLoading || false}
             />
             
             <IconButton>
@@ -399,7 +399,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             
             <SendButton
               onClick={handleSendMessage}
-              disabled={!messageInput.trim() || isLoading}
+              disabled={!messageInput.trim() || (isLoading || false)}
             >
               <React.Suspense fallback={<Box sx={{ width: 20, height: 20 }} />}>
                 <LazySendIcon />

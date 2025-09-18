@@ -1343,7 +1343,7 @@ const AnalyzePage: React.FC = () => {
                     fontSize: "0.875rem",
                     fontWeight: 600,
                     textTransform: "none",
-                    color: brandColors.neutral?.dark || "#333",
+                    color: brandColors.neutral[800] || "#333",
                     "&.Mui-selected": {
                       color: brandColors.primary,
                       fontWeight: 700,
@@ -1398,7 +1398,7 @@ const AnalyzePage: React.FC = () => {
                     border: "1px solid",
                     borderColor: brandColors.borders?.secondary || "#ddd",
                     fontSize: "0.875rem",
-                    color: brandColors.neutral?.dark || "#333",
+                    color: brandColors.neutral[800] || "#333",
                   }}
                 >
                   <Typography
@@ -1465,7 +1465,7 @@ const AnalyzePage: React.FC = () => {
                     alignItems: "center",
                     gap: 3,
                     fontSize: "0.8rem",
-                    color: brandColors.neutral?.dark || "#333",
+                    color: brandColors.neutral[800] || "#333",
                   }}
                 >
                   <Typography>
@@ -1636,14 +1636,14 @@ const AnalyzePage: React.FC = () => {
                 <Box
                   sx={{
                     p: 2,
-                    backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
+                    backgroundColor: brandColors.neutral[100] || brandColors.neutral[100],
                     borderRadius: 1,
                     mb: 3,
                   }}
                 >
                   <Typography
                     variant="body2"
-                    sx={{ color: brandColors.neutral?.dark || "#333", mb: 1 }}
+                    sx={{ color: brandColors.neutral[800] || "#333", mb: 1 }}
                   >
                     <strong>Current Pro Forma Values:</strong>
                   </Typography>
@@ -1707,7 +1707,7 @@ const AnalyzePage: React.FC = () => {
                             <Typography
                               variant="caption"
                               sx={{
-                                color: brandColors.neutral?.dark || "#333",
+                                color: brandColors.neutral[800] || "#333",
                                 mb: 1,
                                 display: "block",
                               }}
@@ -1747,7 +1747,7 @@ const AnalyzePage: React.FC = () => {
                   <Box>
                     <Typography
                       variant="body2"
-                      sx={{ color: brandColors.neutral?.dark || "#333", fontStyle: "italic" }}
+                      sx={{ color: brandColors.neutral[800] || "#333", fontStyle: "italic" }}
                     >
                       No custom presets saved yet. Adjust the values above
                       and use the "Save Current" button to save your
@@ -1849,7 +1849,7 @@ const AnalyzePage: React.FC = () => {
                           sx={{
                             backgroundColor:
                               row.multiplier === "100%"
-                                ? brandColors.neutral?.light || brandColors.neutral[100]
+                                ? brandColors.neutral[100] || brandColors.neutral[100]
                                 : "inherit",
                             fontWeight:
                               row.multiplier === "100%"
@@ -1897,7 +1897,7 @@ const AnalyzePage: React.FC = () => {
                 <Box>
                   <Typography
                     variant="body2"
-                    sx={{ color: brandColors.neutral?.dark || "#333", mb: 2 }}
+                    sx={{ color: brandColors.neutral[800] || "#333", mb: 2 }}
                   >
                     Comparing your assumptions to industry averages for Single Family + Buy & Hold
                   </Typography>
@@ -1964,11 +1964,11 @@ const AnalyzePage: React.FC = () => {
                     sx={{
                       mt: 2,
                       p: 2,
-                      backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
+                      backgroundColor: brandColors.neutral[100] || brandColors.neutral[100],
                       borderRadius: 1,
                     }}
                   >
-                    <Typography variant="body2" sx={{ color: brandColors.neutral?.dark || "#333" }}>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] || "#333" }}>
                       <strong>Note:</strong> Industry benchmarks are based
                       on aggregated data from real estate professionals.
                       Your specific market conditions may vary
@@ -2228,7 +2228,7 @@ const AnalyzePage: React.FC = () => {
                                     </Typography>
                                     <Typography
                                       variant="caption"
-                                      sx={{ color: brandColors.neutral?.dark || "#333" }}
+                                      sx={{ color: brandColors.neutral[800] || "#333" }}
                                     >
                                       monthlyRevenue.toLocaleString()
                                       /mo
@@ -2247,13 +2247,13 @@ const AnalyzePage: React.FC = () => {
                   <Box
                     sx={{
                       p: 2,
-                      backgroundColor: brandColors.neutral?.light || brandColors.neutral[100],
+                      backgroundColor: brandColors.neutral[100] || brandColors.neutral[100],
                       borderRadius: 1,
                     }}
                   >
                     <Typography
                       variant="body2"
-                      sx={{ color: brandColors.neutral?.dark || "#333", mb: 1 }}
+                      sx={{ color: brandColors.neutral[800] || "#333", mb: 1 }}
                     >
                       <strong>Fixed Costs Summary:</strong>
                     </Typography>
@@ -2312,7 +2312,7 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                       <Typography
                         variant="caption"
-                        sx={{ color: brandColors.neutral?.dark || "#333" }}
+                        sx={{ color: brandColors.neutral[800] || "#333" }}
                       >
                         Minimum occupancy needed to cover costs
                       </Typography>
@@ -2330,7 +2330,7 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                       <Typography
                         variant="caption"
-                        sx={{ color: brandColors.neutral?.dark || "#333" }}
+                        sx={{ color: brandColors.neutral[800] || "#333" }}
                       >
                         Minimum daily rate needed to cover costs
                       </Typography>
@@ -2348,7 +2348,7 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                       <Typography
                         variant="caption"
-                        sx={{ color: brandColors.neutral?.dark || "#333" }}
+                        sx={{ color: brandColors.neutral[800] || "#333" }}
                       >
                         Current occupancy above break-even
                       </Typography>
@@ -2462,7 +2462,7 @@ const AnalyzePage: React.FC = () => {
                   />
                   <Typography
                     variant="body1"
-                    sx={{ color: brandColors.neutral?.dark || '#333', fontWeight: 500 }}
+                    sx={{ color: brandColors.neutral[800] || '#333', fontWeight: 500 }}
                   >
                     {riskScoreResults.riskCategory}
                   </Typography>

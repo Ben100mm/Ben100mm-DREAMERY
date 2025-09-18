@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -237,7 +238,7 @@ const InvestCrowdfunding: React.FC = () => {
       {/* Deals Grid */}
       <Grid container spacing={3}>
         {filteredDeals.map((deal) => (
-          <Grid item xs={12} sm={6} md={4} key={deal.id}>
+          <Grid size={{ sm: 6, md: 4, xs: 12 }} key={deal.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {/* Deal Image */}
               <Box
@@ -331,7 +332,7 @@ const InvestCrowdfunding: React.FC = () => {
 
                 {/* Deal Stats */}
                 <Grid container spacing={1} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <GroupIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -339,7 +340,7 @@ const InvestCrowdfunding: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <TrendingUpIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -347,7 +348,7 @@ const InvestCrowdfunding: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -355,7 +356,7 @@ const InvestCrowdfunding: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <SecurityIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Chip

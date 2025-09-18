@@ -1593,7 +1593,7 @@ const MortgagePage: React.FC = () => {
                 width: "100%",
                 height: 260,
                 borderRadius: 2,
-                backgroundColor: brandColors.neutral.light,
+                backgroundColor: brandColors.neutral[100],
               }}
             />
           </Box>
@@ -1646,7 +1646,7 @@ const MortgagePage: React.FC = () => {
                       <Box
                         sx={{
                           height: 160,
-                          backgroundColor: brandColors.neutral.light,
+                          backgroundColor: brandColors.neutral[100],
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -1751,7 +1751,7 @@ const MortgagePage: React.FC = () => {
       </Box>
 
       {/* Footer */}
-      <Box sx={{ backgroundColor: brandColors.neutral.light, py: 3, minHeight: "160px" }}>
+      <Box sx={{ backgroundColor: brandColors.neutral[100], py: 3, minHeight: "160px" }}>
         <Container maxWidth="lg">
           <Box
             sx={{
@@ -2522,7 +2522,7 @@ const MortgagePage: React.FC = () => {
                 </Box>
                 <Box
                   sx={{
-                    backgroundColor: brandColors.neutral.light,
+                    backgroundColor: brandColors.neutral[100],
                     px: 2,
                     py: 1,
                     borderRadius: 1,
@@ -2576,7 +2576,7 @@ const MortgagePage: React.FC = () => {
                 </Box>
                 <Box
                   sx={{
-                    backgroundColor: brandColors.neutral.light,
+                    backgroundColor: brandColors.neutral[100],
                     px: 2,
                     py: 1,
                     borderRadius: 1,
@@ -3210,7 +3210,7 @@ const MortgagePage: React.FC = () => {
             {/* Down Payment Details */}
             <Box
               sx={{
-                backgroundColor: brandColors.neutral.light,
+                backgroundColor: brandColors.neutral[100],
                 borderRadius: 1,
                 p: 2,
                 mb: 3,

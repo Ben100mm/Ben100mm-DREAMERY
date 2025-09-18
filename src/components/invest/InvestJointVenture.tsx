@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -260,7 +261,7 @@ const InvestJointVenture: React.FC = () => {
       {/* JV Opportunities Grid */}
       <Grid container spacing={3}>
         {filteredJVs.map((jv) => (
-          <Grid item xs={12} sm={6} md={4} key={jv.id}>
+          <Grid size={{ sm: 6, md: 4, xs: 12 }} key={jv.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {/* JV Image */}
               <Box
@@ -364,7 +365,7 @@ const InvestJointVenture: React.FC = () => {
 
                 {/* JV Stats */}
                 <Grid container spacing={1} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -372,7 +373,7 @@ const InvestJointVenture: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <TrendingUpIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -380,7 +381,7 @@ const InvestJointVenture: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <SecurityIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Chip
@@ -390,7 +391,7 @@ const InvestJointVenture: React.FC = () => {
                       />
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <HandshakeIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">

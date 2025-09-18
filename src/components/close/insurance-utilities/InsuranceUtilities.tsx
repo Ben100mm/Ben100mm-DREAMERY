@@ -603,7 +603,7 @@ const InsuranceUtilities: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Insurance Quotes" />
           <Tab label="Utility Transfers" />
           <Tab label="Service Providers" />

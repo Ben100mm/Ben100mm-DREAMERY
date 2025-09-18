@@ -185,7 +185,7 @@ const FundCreateProject: React.FC = () => {
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Target Amount ($)"
                   type="number"
@@ -196,7 +196,7 @@ const FundCreateProject: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Minimum Investment ($)"
                   type="number"
@@ -209,7 +209,7 @@ const FundCreateProject: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Expected Annual Return (%)"
                   type="number"
@@ -220,7 +220,7 @@ const FundCreateProject: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <FormControl fullWidth required>
                   <InputLabel>Risk Level</InputLabel>
                   <Select
@@ -257,7 +257,7 @@ const FundCreateProject: React.FC = () => {
               required
             />
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Fundraising Start Date"
                   type="date"
@@ -268,7 +268,7 @@ const FundCreateProject: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Fundraising End Date"
                   type="date"
@@ -370,7 +370,7 @@ const FundCreateProject: React.FC = () => {
                 Project Summary
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ md: 6, xs: 12 }}>
                   <List dense>
                     <ListItem>
                       <ListItemIcon><BusinessIcon /></ListItemIcon>
@@ -396,7 +396,7 @@ const FundCreateProject: React.FC = () => {
                     </ListItem>
                   </List>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ md: 6, xs: 12 }}>
                   <List dense>
                     <ListItem>
                       <ListItemIcon><TrendingUpIcon /></ListItemIcon>

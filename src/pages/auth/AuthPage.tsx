@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import SignInForm from '../../components/auth/SignInForm';
 import SignUpForm from '../../components/auth/SignUpForm';
 import MagicLinkForm from '../../components/auth/MagicLinkForm';
-import { brandColors } from "../theme";
+import { brandColors } from "../../theme";
 
 
 

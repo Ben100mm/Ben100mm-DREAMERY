@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -230,7 +231,7 @@ const FundProjects: React.FC = () => {
       {/* Projects Grid */}
       <Grid container spacing={3}>
         {filteredProjects.map((project) => (
-          <Grid item xs={12} sm={6} md={4} key={project.id}>
+          <Grid size={{ sm: 6, md: 4, xs: 12 }} key={project.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {/* Project Image */}
               <Box
@@ -294,7 +295,7 @@ const FundProjects: React.FC = () => {
 
                 {/* Project Stats */}
                 <Grid container spacing={1} sx={{ mb: 2 }}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <GroupIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -302,7 +303,7 @@ const FundProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <TrendingUpIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -310,7 +311,7 @@ const FundProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
@@ -318,7 +319,7 @@ const FundProjects: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <SecurityIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Chip
@@ -378,7 +379,7 @@ const FundProjects: React.FC = () => {
               placeholder="Describe the project, its benefits, and investment opportunity..."
             />
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Target Amount"
                   type="number"
@@ -386,7 +387,7 @@ const FundProjects: React.FC = () => {
                   placeholder="2000000"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Minimum Investment"
                   type="number"
@@ -396,7 +397,7 @@ const FundProjects: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel>Project Type</InputLabel>
                   <Select label="Project Type">
@@ -407,7 +408,7 @@ const FundProjects: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel>Risk Level</InputLabel>
                   <Select label="Risk Level">
@@ -419,7 +420,7 @@ const FundProjects: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Expected Return (%)"
                   type="number"
@@ -427,7 +428,7 @@ const FundProjects: React.FC = () => {
                   placeholder="12.5"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Location"
                   fullWidth
@@ -436,7 +437,7 @@ const FundProjects: React.FC = () => {
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="Start Date"
                   type="date"
@@ -444,7 +445,7 @@ const FundProjects: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField
                   label="End Date"
                   type="date"

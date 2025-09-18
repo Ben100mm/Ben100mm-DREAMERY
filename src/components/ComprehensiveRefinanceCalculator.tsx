@@ -494,7 +494,7 @@ const ComprehensiveRefinanceCalculator: React.FC<{
                       bgcolor:
                         activeScenario === scenario.type
                           ? brandColors.primary
-                          : brandColors.neutral.light,
+                          : brandColors.neutral[100],
                     },
                   }}
                 >

@@ -50,9 +50,9 @@ const QuestionCard = styled(Card)`
 const OptionButton = styled.button<{ $selected?: boolean }>`
   flex: 1;
   padding: 1rem;
-  border: 1px solid (props) => (props.$selected ? brandColors.primary : brandColors.borders.secondary);
-  background-color: (props) => (props.$selected ? brandColors.primary : brandColors.backgrounds.primary);
-  color: (props) => (props.$selected ? brandColors.backgrounds.primary : brandColors.text.primary);
+  border: 1px solid ${props => props.$selected ? brandColors.primary : brandColors.borders.secondary};
+  background-color: ${props => props.$selected ? brandColors.primary : brandColors.backgrounds.primary};
+  color: ${props => props.$selected ? brandColors.text.inverse : brandColors.text.primary};
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 500;
@@ -61,8 +61,8 @@ const OptionButton = styled.button<{ $selected?: boolean }>`
   min-height: 48px;
 
   &:hover {
-    background-color: (props) => (props.$selected ? brandColors.primary : brandColors.neutral.light);
-    border-color: (props) => (props.$selected ? brandColors.primary : brandColors.primary);
+    background-color: ${props => props.$selected ? brandColors.primaryDark : brandColors.neutral[100]};
+    border-color: ${brandColors.primary};
   }
 `;
 
@@ -237,7 +237,7 @@ const PreApprovalAdditionalQuestionsPage: React.FC = () => {
                   {currentQuestion.options.map((option) => (
                     <OptionButton
                       key={option}
-                      $
+                      $selected={answers[currentQuestion.id as keyof typeof answers] === option}
                       onClick={() =>
                         handleOptionSelect(currentQuestion.id, option)
                       }

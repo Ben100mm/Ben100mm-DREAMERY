@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   Box,
   Card,
@@ -214,7 +215,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
       <Grid container spacing={3}>
         {/* Performance Score Card */}
         {showPerformanceMetrics && (
-          <Grid size={{ xs: 12 }} md={4}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -243,7 +244,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
 
         {/* Bundle Size Card */}
         {showBundleAnalysis && bundleReport?.currentBuild && (
-          <Grid size={{ xs: 12 }} md={4}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -268,7 +269,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
 
         {/* Alerts Summary Card */}
         {showRegressionAlerts && (
-          <Grid size={{ xs: 12 }} md={4}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -380,7 +381,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
               <Box sx={{ mt: 2 }}>
                 {bundleReport?.currentBuild ? (
                   <Grid container spacing={2}>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle2" gutterBottom>
                         Current Build Details
                       </Typography>
@@ -396,7 +397,7 @@ export const PerformanceMetricsDashboard: React.FC<PerformanceMetricsDashboardPr
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid size={{ md: 6, xs: 12 }}>
                       <Typography variant="subtitle2" gutterBottom>
                         Size Breakdown
                       </Typography>

@@ -1,5 +1,40 @@
-import React, { useEffect, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useContext, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Box, useTheme, useMediaQuery, AppBar, Toolbar, Typography, Tabs, Tab, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Tooltip, Badge, Avatar, Button, Paper, Chip, Menu, MenuItem, Divider } from '@mui/material';
+import {
+  Dashboard as DashboardIcon,
+  Security as SecurityIcon,
+  Search as SearchIcon,
+  AccountBalance as AccountBalanceIcon,
+  Gavel as GavelIcon,
+  Calculate as CalculateIcon,
+  Home as HomeIcon,
+  CheckCircle as CheckCircleIcon,
+  Support as SupportIcon,
+  IntegrationInstructions as IntegrationIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationIcon,
+  ArrowBack as ArrowBackIcon,
+  Add as AddIcon,
+  Timeline as TimelineIcon,
+  Person as PersonIcon,
+  Settings as SettingsIcon,
+  Logout as LogoutIcon,
+  Close as CloseIcon,
+} from '@mui/icons-material';
+import ClosingAssistantIcon from '../components/close/ai-closing-assistant/ClosingAssistantIcon';
+import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
+import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
+import DueDiligenceTools from '../components/close/due-diligence/DueDiligenceTools';
+import LazyDueDiligenceTools from '../components/lazy/DueDiligenceToolsLazy';
+import FinancingCoordination from '../components/close/financing/FinancingCoordination';
+import LegalCompliance from '../components/close/legal-compliance/LegalCompliance';
+import SettlementClosingCosts from '../components/close/settlement/SettlementClosingCosts';
+import InsuranceUtilities from '../components/close/insurance-utilities/InsuranceUtilities';
+import FinalWalkthroughHandover from '../components/close/walkthrough/FinalWalkthroughHandover';
+import PostClosingServices from '../components/close/post-closing/PostClosingServices';
+import AIClosingAssistant from '../components/close/ai-closing-assistant/AIClosingAssistant';
+import PartnerIntegrations from '../components/close/partner-integrations/PartnerIntegrations';
 import { RoleContext } from '../context/RoleContext';
 import UnifiedDashboard from '../components/UnifiedDashboard';
 import { brandColors } from "../theme";
@@ -249,7 +284,7 @@ const CloseBuyerPage: React.FC = () => {
                 onClick={handleNotificationsClick}
               >
                 <Badge badgeContent={state.notifications} color="error">
-                  <NotificationsIcon />
+                  <NotificationIcon />
                 </Badge>
               </IconButton>
             </Tooltip>

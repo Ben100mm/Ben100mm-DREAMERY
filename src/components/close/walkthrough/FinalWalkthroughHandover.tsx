@@ -633,7 +633,7 @@ const FinalWalkthroughHandover: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Walkthrough Checklist" />
           <Tab label="Repair Verification" />
           <Tab label="Key Exchange" />

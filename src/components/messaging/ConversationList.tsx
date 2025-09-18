@@ -184,11 +184,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         conv.propertyDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         conv.propertyDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          conv.organization?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesFilter = activeFilter === 'all' || 
-                         (activeFilter === 'unread' && conv.unreadCount > 0);
+                         (activeFilter === 'unread' && (conv.unreadCount || 0) > 0);
     
     return matchesSearch && matchesFilter;
   });
@@ -310,6 +310,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
           {filteredConversations.map((conversation) => (
             <ListItem key={conversation.id} disablePadding>
               <ConversationItem
+                selected={selectedConversationId === conversation.id}
                 onClick={() => onConversationSelect(conversation.id)}
               >
                 <ListItemAvatar>
@@ -337,12 +338,12 @@ const ConversationList: React.FC<ConversationListProps> = ({
                     </Box>
                     <Box display="flex" alignItems="center" gap={1}>
                       <StatusChip 
-                        label={conversation.status} 
-                        status={conversation.status}
+                        label={conversation.status || 'normal'} 
+                        status={conversation.status || 'normal'}
                         size="small"
                       />
                       <ConversationTime>
-                        {formatTime(conversation.timestamp)}
+                        {formatTime(conversation.timestamp || new Date())}
                       </ConversationTime>
                     </Box>
                   </ConversationHeader>
@@ -352,7 +353,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                   </ConversationProperty>
                   
                   <ConversationMessage>
-                    {conversation.lastMessage}
+                    {conversation.lastMessage || 'No messages'}
                   </ConversationMessage>
                 </ConversationContent>
               </ConversationItem>

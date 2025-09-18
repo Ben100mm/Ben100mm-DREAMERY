@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -153,7 +154,7 @@ const ManageCalendar: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Calendar View */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ md: 8, xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -198,7 +199,7 @@ const ManageCalendar: React.FC = () => {
         </Grid>
 
         {/* Upcoming Events */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ md: 4, xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>

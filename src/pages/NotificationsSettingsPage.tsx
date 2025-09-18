@@ -633,7 +633,7 @@ const NotificationsSettingsPage: React.FC = () => {
               onClick={handleNext}
               sx={{ 
                 color: brandColors.neutral[800],
-                borderColor: brandColors.neutral.medium,
+                borderColor: brandColors.neutral[500],
                 '&:hover': {
                   borderColor: brandColors.primary,
                   color: brandColors.primary

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -176,7 +177,7 @@ const ManageEarnings: React.FC = () => {
 
       {/* Key Metrics */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -205,7 +206,7 @@ const ManageEarnings: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -234,7 +235,7 @@ const ManageEarnings: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -263,7 +264,7 @@ const ManageEarnings: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -289,7 +290,7 @@ const ManageEarnings: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Rent Collection */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ md: 8, xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -353,7 +354,7 @@ const ManageEarnings: React.FC = () => {
         </Grid>
 
         {/* Expense Breakdown */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ md: 4, xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>

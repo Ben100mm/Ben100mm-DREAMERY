@@ -235,7 +235,7 @@ const PreApprovalSummaryPage: React.FC = () => {
               {/* Next Steps */}
               <Box
                 sx={{
-                  backgroundColor: brandColors.neutral.light,
+                  backgroundColor: brandColors.neutral[100],
                   p: 2,
                   borderRadius: 2,
                   mb: 4,

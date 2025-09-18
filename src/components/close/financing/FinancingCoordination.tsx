@@ -442,7 +442,7 @@ const FinancingCoordination: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={handleTabChange} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Loan Status" />
           <Tab label="Document Management" />
           <Tab label="Closing Costs" />
@@ -623,7 +623,7 @@ const FinancingCoordination: React.FC = () => {
                 </TableBody>
               </Table>
 
-              <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral.light, borderRadius: 1 }}>
+              <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.neutral[100], borderRadius: 1 }}>
                 <Typography variant="h6" gutterBottom>
                   Total Closing Costs: ${loanData.costs.reduce((sum, cost) => sum + cost.amount, 0).toLocaleString()}
                 </Typography>

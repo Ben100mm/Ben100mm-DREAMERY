@@ -436,7 +436,7 @@ const EscrowTitleHub: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', overflow: 'hidden' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: brandColors.neutral.light }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: brandColors.neutral[100] }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}

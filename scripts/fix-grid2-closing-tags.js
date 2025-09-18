@@ -1,40 +1,32 @@
 #!/usr/bin/env node
 
 /**
- * Fix Material-UI Grid component prop usage
- * Replace deprecated Grid item prop with Grid2 or remove item prop
+ * Fix Grid2 closing tags
+ * Replace </Grid> with </Grid2> where Grid2 is used
  */
 
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 
-function fixGridPropsInFile(filePath) {
+function fixGrid2ClosingTagsInFile(filePath) {
   console.log(`Processing: ${filePath}`);
   
   let content = fs.readFileSync(filePath, 'utf8');
   let hasChanges = false;
   
-  // Fix Grid item prop - remove it since it's deprecated in newer versions
-  const gridItemRegex = /<Grid\s+item\s+([^>]*?)>/g;
-  if (content.match(gridItemRegex)) {
-    const matches = content.match(gridItemRegex);
-    content = content.replace(gridItemRegex, (match, props) => {
-      hasChanges = true;
-      console.log(`  Fixed Grid item prop`);
-      return `<Grid ${props}>`;
-    });
-  }
+  // Check if file contains Grid2 opening tags
+  const hasGrid2Open = content.includes('<Grid2');
   
-  // Also handle Grid item on separate lines
-  const gridItemMultilineRegex = /<Grid\s*\n\s*item\s*\n([^>]*?)>/g;
-  if (content.match(gridItemMultilineRegex)) {
-    const matches = content.match(gridItemMultilineRegex);
-    content = content.replace(gridItemMultilineRegex, (match, props) => {
+  if (hasGrid2Open) {
+    // Replace </Grid> with </Grid2> in files that use Grid2
+    const gridClosingRegex = /<\/Grid>/g;
+    if (content.match(gridClosingRegex)) {
+      const matches = content.match(gridClosingRegex);
+      content = content.replace(gridClosingRegex, '</Grid2>');
       hasChanges = true;
-      console.log(`  Fixed Grid item prop (multiline)`);
-      return `<Grid\n${props}>`;
-    });
+      console.log(`  Fixed ${matches.length} Grid closing tags to Grid2`);
+    }
   }
   
   // Write back if changes were made
@@ -42,14 +34,14 @@ function fixGridPropsInFile(filePath) {
     fs.writeFileSync(filePath, content);
     console.log(`  ✅ Updated ${filePath}`);
   } else {
-    console.log(`  ⏭️  No Grid prop issues found in ${filePath}`);
+    console.log(`  ⏭️  No Grid2 closing tag issues found in ${filePath}`);
   }
   
   return hasChanges;
 }
 
 function main() {
-  console.log('🔧 Starting Grid props fix...\n');
+  console.log('🔧 Starting Grid2 closing tags fix...\n');
   
   // Find all TypeScript and JavaScript files in src
   const files = glob.sync('src/**/*.{ts,tsx,js,jsx}', {
@@ -70,7 +62,7 @@ function main() {
   
   files.forEach(file => {
     try {
-      const hasChanges = fixGridPropsInFile(file);
+      const hasChanges = fixGrid2ClosingTagsInFile(file);
       if (hasChanges) {
         totalChanges++;
         changedFiles.push(file);
@@ -80,7 +72,7 @@ function main() {
     }
   });
   
-  console.log('\n🎉 Grid props fix completed!');
+  console.log('\n🎉 Grid2 closing tags fix completed!');
   console.log(`📊 Summary:`);
   console.log(`   - Files processed: ${files.length}`);
   console.log(`   - Files changed: ${totalChanges}`);
@@ -91,4 +83,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { fixGridPropsInFile };
+module.exports = { fixGrid2ClosingTagsInFile };

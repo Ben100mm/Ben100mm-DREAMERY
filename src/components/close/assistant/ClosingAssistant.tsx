@@ -631,7 +631,7 @@ const ClosingAssistant: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ backgroundColor: brandColors.neutral.light }}>
+        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ backgroundColor: brandColors.neutral[100] }}>
           <Tab label="Lumina Chat" />
           <Tab label="Predictions" />
           <Tab label="Document Analysis" />

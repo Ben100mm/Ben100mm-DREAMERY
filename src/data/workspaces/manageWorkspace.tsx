@@ -15,7 +15,7 @@ import {
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
-import { brandColors } from "../../../theme";
+import { brandColors } from "../../theme";
 
 
 export const manageWorkspace: WorkspaceConfig = {

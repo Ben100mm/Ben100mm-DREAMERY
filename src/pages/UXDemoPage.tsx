@@ -351,7 +351,7 @@ const UXDemoPage: React.FC = () => {
                 <Box
                   sx={{
                     height: 100,
-                    backgroundColor: brandColors.neutral.light,
+                    backgroundColor: brandColors.neutral[100],
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

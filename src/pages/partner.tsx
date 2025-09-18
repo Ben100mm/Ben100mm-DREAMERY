@@ -22,6 +22,7 @@ import {
   Slider,
 } from "@mui/material";
 import { Search, Clear, KeyboardArrowDown, KeyboardArrowUp, Favorite } from "@mui/icons-material";
+import InteractiveMap from "../components/InteractiveMap";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -139,6 +140,20 @@ const PartnersPage: React.FC = () => {
 
   // Data
   const [partners, setPartners] = useState<any[]>([]);
+
+  // Map partners with coordinates for InteractiveMap
+  const mapPartners = [
+    { id: 1, price: "SF Real Estate Group", x: 20, y: 30, specialLabels: ["TOP RATED"] },
+    { id: 2, price: "Golden Gate Mortgage", x: 35, y: 25, specialLabels: ["CERTIFIED"] },
+    { id: 3, price: "Bay Area Inspections", x: 50, y: 40, specialLabels: ["LICENSED"] },
+    { id: 4, price: "Pacific Title Co", x: 60, y: 35, specialLabels: ["BONDED"] },
+    { id: 5, price: "SF Property Law", x: 45, y: 55, specialLabels: ["EXPERIENCED"] },
+    { id: 6, price: "Metro Appraisals", x: 30, y: 50, specialLabels: ["CERTIFIED"] },
+    { id: 7, price: "Bay Area Insurance", x: 55, y: 60, specialLabels: ["INSURED"] },
+    { id: 8, price: "SF Contractors", x: 25, y: 65, specialLabels: ["BONDED"] },
+    { id: 9, price: "Pacific Property Mgmt", x: 40, y: 70, specialLabels: ["TOP RATED"] },
+    { id: 10, price: "SF Design Studio", x: 65, y: 45, specialLabels: ["AWARD WINNING"] },
+  ];
 
   // Demo partners with San Francisco coordinates
   const demoPartners = [
@@ -363,41 +378,63 @@ const PartnersPage: React.FC = () => {
       </HeaderSection>
 
       <Container maxWidth="xl">
-        <Box sx={{ display: "flex", height: "calc(100vh - 200px)", maxHeight: "800px" }}>
-          <Box sx={{ flex: 2, position: "relative", p: 2 }}>
-            <Box
-              sx={{
-                height: "100%",
-                background: "linear-gradient(135deg, #eeeeee 0%, #eeeeee 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: brandColors.backgrounds.primary,
-                fontSize: "1.2rem",
-                position: "relative",
-                borderRadius: "8px",
-                overflow: "hidden",
+        <Box sx={{ 
+          display: "flex", 
+          height: "calc(100vh - 200px)",
+          maxHeight: "800px",
+          "@media (max-width: 768px)": {
+            flexDirection: "column",
+            height: "auto",
+            minHeight: "calc(100vh - 200px)"
+          }
+        }}>
+          <Box sx={{ 
+            flex: "2", 
+            position: "relative", 
+            p: 2,
+            "@media (max-width: 768px)": {
+              flex: "none",
+              height: "300px",
+              p: 1
+            }
+          }}>
+            <InteractiveMap 
+              properties={mapPartners}
+              onPropertyClick={(partner) => {
+                console.log('Partner clicked:', partner);
               }}
-            >
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "1rem",
-                  left: "1rem",
-                  background: "rgba(255, 255, 255, 0.9)",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "4px",
-                  color: brandColors.text.primary,
-                  fontWeight: 600,
-                }}
-              >
-                {filtered.length} of {partners.length || 0} partners
-              </Box>
-              <Typography variant="h6">Interactive Map View</Typography>
-            </Box>
+            />
           </Box>
-          <Box sx={{ flex: 1, pl: 0, height: "100%", overflow: "hidden" }}>
-            <ResultsContainer>
+          <Box sx={{ 
+            flex: "1", 
+            overflowY: "auto", 
+            borderLeft: "1px solid brandColors.borders.secondary",
+            maxHeight: "calc(100vh - 200px)",
+            "@media (max-width: 768px)": {
+              flex: "none",
+              borderLeft: "none",
+              borderTop: "1px solid brandColors.borders.secondary",
+              maxHeight: "60vh"
+            },
+            /* Custom scrollbar styling */
+            "&::-webkit-scrollbar": {
+              width: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+              borderRadius: "3px",
+              margin: "8px 12px 8px 0",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#c1c1c1",
+              borderRadius: "3px",
+              margin: "2px 4px 2px 0",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#a8a8a8",
+            },
+          }}>
+            <Box sx={{ p: { xs: 1, md: 2 } }}>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
                 <Typography variant="h6">{filtered.length} results</Typography>
                 <FormControl size="small">
@@ -408,7 +445,7 @@ const PartnersPage: React.FC = () => {
                     <MenuItem value="reviews">Most Reviewed</MenuItem>
                   </Select>
                 </FormControl>
-                    </Box>
+              </Box>
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 2 }}>
                 {filtered.map((p) => (
                   <PartnerCard key={p.id}>
@@ -418,23 +455,23 @@ const PartnersPage: React.FC = () => {
                           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{p.company}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             {Array.isArray(p.services) ? p.services.join(", ") : p.bio}
-                      </Typography>
+                          </Typography>
                           {p.address && (
                             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5 }}>
                               📍 {p.address}
                             </Typography>
                           )}
-                    </Box>
+                        </Box>
                         <Chip label={(typeof p.rating === "number" ? p.rating.toFixed(1) : "0.0") + "★"} color="primary" size="small" />
-                    </Box>
-                  </CardContent>
-                </PartnerCard>
+                      </Box>
+                    </CardContent>
+                  </PartnerCard>
                 ))}
                 {filtered.length === 0 && (
                   <Typography variant="body2" color="text.secondary">No partners match your filters.</Typography>
                 )}
-                            </Box>
-            </ResultsContainer>
+              </Box>
+            </Box>
                   </Box>
         </Box>
       </Container>

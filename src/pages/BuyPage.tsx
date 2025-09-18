@@ -26,6 +26,7 @@ import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
+import InteractiveMap from "../components/InteractiveMap";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
 
 // Lazy load icons to reduce initial bundle size
@@ -109,7 +110,7 @@ const PropertyCard = styled(Card)`
   height: 100%;
   transition: all 0.2s ease;
   width: 100%;
-  min-height: 120px;
+  min-height: 200px;
   
   &:hover {
     transform: translateY(-2px);
@@ -117,7 +118,7 @@ const PropertyCard = styled(Card)`
   }
   
   @media (max-width: 768px) {
-    min-height: 100px;
+    min-height: 250px;
   }
 `;
 
@@ -210,171 +211,207 @@ const BuyPage: React.FC = () => {
     setAnchorEl(null);
   };
 
+  // Map properties with coordinates aligned to San Francisco neighborhoods
+  const mapProperties = [
+    // Marina District / Presidio area
+    { id: 1, price: "12.5M", x: 15, y: 20, specialLabels: ["3D TOUR"] },
+    { id: 2, price: "10.00M", x: 20, y: 25, specialLabels: ["SHOWCASE"] },
+    
+    // Pacific Heights / Nob Hill
+    { id: 3, price: "5.70M", x: 35, y: 30, specialLabels: ["NEW"] },
+    { id: 4, price: "2.49M", x: 40, y: 35, specialLabels: [] },
+    
+    // Union Square / Financial District
+    { id: 5, price: "1.80M", x: 55, y: 40, specialLabels: [] },
+    { id: 6, price: "3.20M", x: 60, y: 35, specialLabels: ["3D TOUR"] },
+    
+    // Mission District
+    { id: 7, price: "3.89M", x: 45, y: 55, specialLabels: [] },
+    { id: 8, price: "3.00M", x: 50, y: 60, specialLabels: ["SHOWCASE"] },
+    
+    // Haight-Ashbury / Castro
+    { id: 9, price: "2.15M", x: 35, y: 50, specialLabels: [] },
+    { id: 10, price: "3.50M", x: 40, y: 45, specialLabels: ["NEW"] },
+    
+    // Richmond District
+    { id: 11, price: "3.59M", x: 25, y: 40, specialLabels: [] },
+    { id: 12, price: "3.40M", x: 30, y: 45, specialLabels: [] },
+    
+    // Sunset District
+    { id: 13, price: "1.85M", x: 20, y: 60, specialLabels: [] },
+    { id: 14, price: "1.05M", x: 25, y: 65, specialLabels: [] },
+    
+    // Dogpatch / Bay Area
+    { id: 15, price: "1.58M", x: 65, y: 55, specialLabels: [] },
+    { id: 16, price: "1.60M", x: 70, y: 50, specialLabels: [] },
+    { id: 17, price: "1.50M", x: 75, y: 45, specialLabels: [] },
+  ];
+
   const properties = [
     {
       id: 1,
-      price: "$649,900",
+      price: "$1,876,000",
       address: "153 Silliman St, San Francisco, CA 94134",
       beds: 5,
       baths: 3,
       sqft: 1850,
       type: "Foreclosure",
       daysOnMarket: 49,
-      image: "Property 1",
+      image: "P1",
     },
     {
       id: 2,
-      price: "$799,000",
+      price: "$2,150,000",
       address: "275 Teddy Ave, San Francisco, CA 94134",
       beds: 3,
       baths: 2,
       sqft: 1168,
       type: "House for sale",
       priceCut: "$50,000",
-      image: "Property 2",
+      image: "P2",
     },
     {
       id: 3,
-      price: "$899,000",
+      price: "$2,450,000",
       address: "76 Bay View St, San Francisco, CA 94124",
       beds: 2,
       baths: 1,
       sqft: 1515,
       type: "House for sale",
       openHouse: "Sat 2-4pm",
-      image: "Property 3",
+      image: "P3",
     },
     {
       id: 4,
-      price: "$698,000",
+      price: "$1,950,000",
       address: "444 Ellington Ave, San Francisco, CA 94112",
       beds: 2,
       baths: 1,
       sqft: 1275,
       type: "House for sale",
       flexible: true,
-      image: "Property 4",
+      image: "P4",
     },
     {
       id: 5,
-      price: "$925,000",
+      price: "$2,750,000",
       address: "123 Marina Blvd, San Francisco, CA 94123",
       beds: 3,
       baths: 2,
       sqft: 1650,
       type: "Condo for sale",
       daysOnMarket: 12,
-      image: "Property 5",
+      image: "P5",
     },
     {
       id: 6,
-      price: "$1,250,000",
+      price: "$3,200,000",
       address: "456 Pacific Heights, San Francisco, CA 94115",
       beds: 4,
       baths: 3,
       sqft: 2200,
       type: "House for sale",
       priceCut: "$75,000",
-      image: "Property 6",
+      image: "P6",
     },
     {
       id: 7,
-      price: "$550,000",
+      price: "$1,876,000",
       address: "789 Mission Bay, San Francisco, CA 94158",
       beds: 2,
       baths: 2,
       sqft: 1100,
       type: "Condo for sale",
       daysOnMarket: 8,
-      image: "Property 7",
+      image: "P7",
     },
     {
       id: 8,
-      price: "$1,450,000",
+      price: "$3,950,000",
       address: "321 Presidio Heights, San Francisco, CA 94118",
       beds: 5,
       baths: 4,
       sqft: 2800,
       type: "House for sale",
       openHouse: "Sun 1-3pm",
-      image: "Property 8",
+      image: "P8",
     },
     {
       id: 9,
-      price: "$750,000",
+      price: "$2,100,000",
       address: "654 Noe Valley, San Francisco, CA 94114",
       beds: 3,
       baths: 2,
       sqft: 1400,
       type: "House for sale",
       daysOnMarket: 23,
-      image: "Property 9",
+      image: "P9",
     },
     {
       id: 10,
-      price: "$850,000",
+      price: "$2,350,000",
       address: "987 Castro District, San Francisco, CA 94114",
       beds: 2,
       baths: 2,
       sqft: 1200,
       type: "Condo for sale",
       priceCut: "$25,000",
-      image: "Property 10",
+      image: "P10",
     },
     {
       id: 11,
-      price: "$1,100,000",
+      price: "$3,000,000",
       address: "147 Russian Hill, San Francisco, CA 94109",
       beds: 3,
       baths: 2,
       sqft: 1800,
       type: "House for sale",
       daysOnMarket: 15,
-      image: "Property 11",
+      image: "P11",
     },
     {
       id: 12,
-      price: "$650,000",
+      price: "$1,876,000",
       address: "258 Hayes Valley, San Francisco, CA 94102",
       beds: 2,
       baths: 1,
       sqft: 950,
       type: "Condo for sale",
       flexible: true,
-      image: "Property 12",
+      image: "P12",
     },
     {
       id: 13,
-      price: "$1,350,000",
+      price: "$3,650,000",
       address: "369 Nob Hill, San Francisco, CA 94108",
       beds: 4,
       baths: 3,
       sqft: 2400,
       type: "House for sale",
       openHouse: "Sat 11am-1pm",
-      image: "Property 13",
+      image: "P13",
     },
     {
       id: 14,
-      price: "$720,000",
+      price: "$2,000,000",
       address: "741 Potrero Hill, San Francisco, CA 94110",
       beds: 3,
       baths: 2,
       sqft: 1350,
       type: "House for sale",
       daysOnMarket: 31,
-      image: "Property 14",
+      image: "P14",
     },
     {
       id: 15,
-      price: "$980,000",
+      price: "$2,800,000",
       address: "852 Bernal Heights, San Francisco, CA 94110",
       beds: 3,
       baths: 2,
       sqft: 1600,
       type: "House for sale",
       priceCut: "$40,000",
-      image: "Property 15",
+      image: "P15",
     },
   ];
 
@@ -632,23 +669,62 @@ const BuyPage: React.FC = () => {
         );
 
       case "home-type":
+        const allHomeTypes = [
+          { value: "houses", label: "Houses" },
+          { value: "townhomes", label: "Townhomes" },
+          { value: "multi-family", label: "Multi-family" },
+          { value: "condos", label: "Condos/Co-ops" },
+          { value: "lots", label: "Lots/Land" },
+          { value: "apartments", label: "Apartments" },
+          { value: "manufactured", label: "Manufactured" },
+        ];
+
+        const handleSelectAll = () => {
+          setHomeTypes(allHomeTypes.map(type => type.value));
+        };
+
+        const handleDeselectAll = () => {
+          setHomeTypes([]);
+        };
+
         return (
           <Box>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Home Type
             </Typography>
 
+            <Box sx={{ mb: 2, display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleSelectAll}
+                sx={{
+                  textTransform: "none",
+                  fontSize: "0.75rem",
+                  px: 1.5,
+                  py: 0.5,
+                }}
+              >
+                Select All
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleDeselectAll}
+                sx={{
+                  textTransform: "none",
+                  fontSize: "0.75rem",
+                  px: 1.5,
+                  py: 0.5,
+                }}
+              >
+                Deselect All
+              </Button>
+            </Box>
+
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                {[
-                  { value: "houses", label: "Houses" },
-                  { value: "townhomes", label: "Townhomes" },
-                  { value: "multi-family", label: "Multi-family" },
-                  { value: "condos", label: "Condos/Co-ops" },
-                  { value: "lots", label: "Lots/Land" },
-                  { value: "apartments", label: "Apartments" },
-                  { value: "manufactured", label: "Manufactured" },
-                ].map((type) => (
+                {allHomeTypes.map((type) => (
                   <FormControlLabel
                     key={type.value}
                     control={
@@ -1246,36 +1322,12 @@ const BuyPage: React.FC = () => {
             p: 1
           }
         }}>
-          <Box
-            sx={{
-              height: "100%",
-              background: "linear-gradient(135deg, #eeeeee 0%, #eeeeee 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: brandColors.backgrounds.primary,
-              fontSize: "1.2rem",
-              position: "relative",
-              borderRadius: "8px",
-              overflow: "hidden",
+          <InteractiveMap 
+            properties={mapProperties}
+            onPropertyClick={(property) => {
+              console.log('Property clicked:', property);
             }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "1rem",
-                left: "1rem",
-                background: "rgba(255, 255, 255, 0.9)",
-                padding: "0.5rem 1rem",
-                borderRadius: "4px",
-                color: brandColors.text.primary,
-                fontWeight: 600,
-              }}
-            >
-              500 of 1,095 homes
-            </Box>
-            <Typography variant="h6">Interactive Map View</Typography>
-          </Box>
+          />
         </Box>
 
         <Box
@@ -1350,22 +1402,21 @@ const BuyPage: React.FC = () => {
                   }}>
                     <Box
                       sx={{
-                        width: { xs: "100%", sm: "120px" },
-                        height: { xs: "150px", sm: "90px" },
+                        width: { xs: "100%", sm: "200px" },
+                        height: "100%",
+                        minHeight: { xs: "200px", sm: "180px" },
                         flexShrink: 0,
                         background: brandColors.neutral[100],
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: brandColors.neutral[800],
+                        backgroundImage: `url(/P${property.id}.webp), url(/P${property.id}.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
                         "@media (max-width: 600px)": {
-                          height: "120px",
+                          height: "200px",
                           width: "100%"
                         }
                       }}
-                    >
-                      {property.image}
-                    </Box>
+                    />
                     <CardContent sx={{ 
                       p: { xs: 1.5, md: 2 }, 
                       flex: 1,
@@ -1468,6 +1519,33 @@ const BuyPage: React.FC = () => {
                       >
                         {property.address}
                       </Typography>
+
+                      <Box sx={{ mt: 1.5, display: "flex", justifyContent: "flex-end" }}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          href="http://localhost:3000/underwrite"
+                          sx={{
+                            borderColor: brandColors.primary,
+                            color: brandColors.primary,
+                            textTransform: "none",
+                            fontWeight: 500,
+                            fontSize: "0.75rem",
+                            px: 1.5,
+                            py: 0.25,
+                            borderRadius: "4px",
+                            minWidth: "auto",
+                            height: "28px",
+                            "&:hover": {
+                              backgroundColor: brandColors.primary,
+                              color: brandColors.backgrounds.primary,
+                              borderColor: brandColors.primary,
+                            },
+                          }}
+                        >
+                          Underwrite
+                        </Button>
+                      </Box>
                     </CardContent>
                   </Box>
                 </PropertyCard>

@@ -303,6 +303,44 @@ const roleConfigurations: Record<string, RoleConfig> = {
       { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'Remote online notarization (RON), KBA/ID check APIs, digital seals/stamps, GPS on-site check-in' },
     ],
   },
+  'residential-appraiser': {
+    id: 'residential-appraiser',
+    name: 'Residential Appraiser',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'orders', label: 'Orders', icon: <TimelineIcon />, description: 'Queue, Due Dates, Fees' },
+      { value: 'property-data', label: 'Property Data', icon: <SecurityIcon />, description: 'Subject, Photos, Notes' },
+      { value: 'comps-models', label: 'Comps & Models', icon: <AddIcon />, description: 'Sales, Cost, Income' },
+      { value: 'reports', label: 'Reports', icon: <TimelineIcon />, description: 'Templates, Completed, QC, History' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'MLS/AMC feeds, AI-assisted appraisal draft, photo analysis for condition scoring, USPAP compliance tools' },
+    ],
+  },
+  'commercial-appraiser': {
+    id: 'commercial-appraiser',
+    name: 'Commercial Appraiser',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'orders', label: 'Orders', icon: <TimelineIcon />, description: 'Queue, Due Dates, Fees' },
+      { value: 'property-data', label: 'Property Data', icon: <SecurityIcon />, description: 'Subject, Photos, Notes' },
+      { value: 'comps-models', label: 'Comps & Models', icon: <AddIcon />, description: 'Sales, Income, Valuation' },
+      { value: 'reports', label: 'Reports', icon: <TimelineIcon />, description: 'Templates, Completed, QC, History' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'Income-based valuation models, cap rate databases, cost approach calculators, zoning/permit integration' },
+    ],
+  },
 };
 
 const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
@@ -1096,6 +1134,107 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
               </Box>
             )}
 
+            {state.activeTab === 'orders' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="orders tabs">
+                    <Tab label="Queue" />
+                    <Tab label="Due Dates" />
+                    <Tab label="Fees" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Queue</Typography>
+                  <Typography variant="body2" color="text.secondary">Appraisal order queue and workflow management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Due Dates</Typography>
+                  <Typography variant="body2" color="text.secondary">Order due dates and deadline tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Fees</Typography>
+                  <Typography variant="body2" color="text.secondary">Appraisal fees and pricing management</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'property-data' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="property data tabs">
+                    <Tab label="Subject" />
+                    <Tab label="Photos" />
+                    <Tab label="Notes" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Subject Property</Typography>
+                  <Typography variant="body2" color="text.secondary">Subject property information and characteristics</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Photos</Typography>
+                  <Typography variant="body2" color="text.secondary">Property photos and documentation management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Notes</Typography>
+                  <Typography variant="body2" color="text.secondary">Property inspection notes and observations</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'comps-models' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="comps models tabs">
+                    <Tab label="Sales" />
+                    <Tab label="Cost" />
+                    <Tab label="Income" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Sales Comparables</Typography>
+                  <Typography variant="body2" color="text.secondary">Sales comparison analysis and comparable properties</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Cost Analysis</Typography>
+                  <Typography variant="body2" color="text.secondary">Cost approach analysis and construction cost data</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Income Analysis</Typography>
+                  <Typography variant="body2" color="text.secondary">Income approach analysis and rental comparables</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'reports' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="reports tabs">
+                    <Tab label="Templates" />
+                    <Tab label="Completed" />
+                    <Tab label="QC" />
+                    <Tab label="History" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Report Templates</Typography>
+                  <Typography variant="body2" color="text.secondary">Appraisal report templates and forms</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Completed Reports</Typography>
+                  <Typography variant="body2" color="text.secondary">Completed appraisal reports and deliverables</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Quality Control</Typography>
+                  <Typography variant="body2" color="text.secondary">Quality control review and compliance checking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Report History</Typography>
+                  <Typography variant="body2" color="text.secondary">Historical reports and version tracking</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
             {state.activeTab === 'advanced' && (
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -1128,12 +1267,26 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                         <Tab label="Audit Logs" />
                         <Tab label="Fraud Detection" />
                       </>
-                    ) : (
+                    ) : currentRoleKey === 'notary-public' ? (
                       <>
                         <Tab label="RON Platform" />
                         <Tab label="KBA/ID APIs" />
                         <Tab label="Digital Seals" />
                         <Tab label="GPS Check-in" />
+                      </>
+                    ) : currentRoleKey === 'residential-appraiser' ? (
+                      <>
+                        <Tab label="MLS/AMC Feeds" />
+                        <Tab label="AI Appraisal Draft" />
+                        <Tab label="Photo Analysis" />
+                        <Tab label="USPAP Compliance" />
+                      </>
+                    ) : (
+                      <>
+                        <Tab label="Income Models" />
+                        <Tab label="Cap Rate DB" />
+                        <Tab label="Cost Calculator" />
+                        <Tab label="Zoning/Permits" />
                       </>
                     )}
                   </Tabs>
@@ -1214,7 +1367,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                       <Typography variant="body2" color="text.secondary">Advanced fraud detection and prevention tools</Typography>
                     </TabPanel>
                   </>
-                ) : (
+                ) : currentRoleKey === 'notary-public' ? (
                   <>
                     <TabPanel value={state.subTab} index={0}>
                       <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Remote Online Notarization (RON)</Typography>
@@ -1231,6 +1384,44 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                     <TabPanel value={state.subTab} index={3}>
                       <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>GPS On-site Check-in</Typography>
                       <Typography variant="body2" color="text.secondary">GPS-based location verification for mobile notary services</Typography>
+                    </TabPanel>
+                  </>
+                ) : currentRoleKey === 'residential-appraiser' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>MLS/AMC Feeds</Typography>
+                      <Typography variant="body2" color="text.secondary">Automated MLS and AMC data feeds for property information and comparables</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>AI-Assisted Appraisal Draft</Typography>
+                      <Typography variant="body2" color="text.secondary">AI-powered tools to assist with appraisal report drafting and analysis</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Photo Analysis for Condition Scoring</Typography>
+                      <Typography variant="body2" color="text.secondary">AI-powered photo analysis to automatically score property condition and quality</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>USPAP Compliance Tools</Typography>
+                      <Typography variant="body2" color="text.secondary">Tools and checklists to ensure USPAP compliance and regulatory adherence</Typography>
+                    </TabPanel>
+                  </>
+                ) : (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Income-based Valuation Models</Typography>
+                      <Typography variant="body2" color="text.secondary">Advanced income capitalization and DCF valuation models</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Cap Rate Databases</Typography>
+                      <Typography variant="body2" color="text.secondary">Comprehensive capitalization rate databases and market data</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Cost Approach Calculators</Typography>
+                      <Typography variant="body2" color="text.secondary">Cost approach calculators and depreciation analysis tools</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Zoning/Permit Integration</Typography>
+                      <Typography variant="body2" color="text.secondary">Zoning analysis and permit integration for property valuation</Typography>
                     </TabPanel>
                   </>
                 )}

@@ -333,16 +333,6 @@ const UnifiedDashboardFixed: React.FC = () => {
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           {workspace.name}
                         </Typography>
-                        <Chip 
-                          label={workspace.name} 
-                          size="small" 
-                          sx={{ 
-                            backgroundColor: brandColors.primary,
-                            color: brandColors.text.inverse,
-                            fontSize: '0.75rem',
-                            height: 20,
-                          }} 
-                        />
                       </Box>
                     );
                   }}

@@ -71,7 +71,7 @@ const SearchContainer = styled.div`
 const StyledTextField = styled(TextField)`
   flex-grow: 1;
   .MuiInputBase-root {
-    color: brandColors.primary;
+    color: brandColors.text.primary;  // Use high contrast text color
     font-weight: 600;
     &::before,
     &::after {
@@ -80,7 +80,7 @@ const StyledTextField = styled(TextField)`
     input {
       font-size: 1.1rem;
       &::placeholder {
-        color: brandColors.primary;
+        color: brandColors.text.secondary;  // Use improved secondary text color
         opacity: 1;
         font-weight: 500;
       }

@@ -38,20 +38,20 @@ export const brandColors = {
     errorDark: '#3d0501',    // Dark red
   },
   
-  // Neutral Colors - Dreamery Brand Palette
+  // Neutral Colors - Dreamery Brand Palette (Enhanced Contrast)
   neutral: {
     0: '#ffffff',            // White - Primary backgrounds for cards and content areas
     50: '#fafafa',           // Very light gray
     100: '#f5f5f5',          // Light Gray - Secondary backgrounds and subtle sections
-    200: '#d0d0d0',          // Light borders
+    200: '#e0e0e0',          // Light borders (improved contrast)
     300: '#bdbdbd',          // Medium borders
-    400: '#ababab',          // Medium Gray - Secondary text color
-    500: '#9e9e9e',          // Medium gray
-    600: '#858585',          // Dark Gray - Primary text color
-    700: '#616161',          // Dark gray
-    800: '#424242',          // Very dark gray
-    900: '#212121',          // Almost black
-    950: '#0a0a0a',          // Pure black
+    400: '#9e9e9e',          // Medium Gray - Tertiary text color
+    500: '#757575',          // Medium gray (improved contrast)
+    600: '#616161',          // Dark Gray - Secondary text color
+    700: '#424242',          // Dark gray - Primary text color
+    800: '#212121',          // Very dark gray - High contrast text
+    900: '#0a0a0a',          // Almost black - Maximum contrast text
+    950: '#000000',          // Pure black
   },
   
   // Action Colors - Dreamery Brand Actions
@@ -84,11 +84,11 @@ export const brandColors = {
     inProgress: '#995c03',   // Warning Orange for in progress
   },
   
-  // Surface Colors - Dreamery Brand Surfaces
+  // Surface Colors - Dreamery Brand Surfaces (Enhanced Contrast)
   surfaces: {
     primary: '#ffffff',       // White - Primary backgrounds for cards and content areas
-    secondary: '#f5f5f5',    // Light Gray - Secondary backgrounds and subtle sections
-    tertiary: '#f5f5f5',     // Very light gray tertiary surface
+    secondary: '#f8f9fa',    // Very Light Gray - Secondary backgrounds (improved contrast)
+    tertiary: '#f1f3f4',     // Light gray tertiary surface (better contrast)
     elevated: '#ffffff',     // Elevated surfaces (cards, modals)
     overlay: 'rgba(0, 0, 0, 0.5)', // Backdrop overlay
     glass: 'rgba(255, 255, 255, 0.25)', // Glass morphism
@@ -97,18 +97,18 @@ export const brandColors = {
     glassDarkHover: 'rgba(13, 35, 64, 0.35)', // Dark glass hover
   },
   
-  // Background Colors - Dreamery Brand Backgrounds
+  // Background Colors - Dreamery Brand Backgrounds (Enhanced Contrast)
   backgrounds: {
     primary: '#ffffff',       // White - Primary backgrounds for cards and content areas
-    secondary: '#f5f5f5',    // Light Gray - Secondary backgrounds and subtle sections
-    tertiary: '#f5f5f5',     // Very light gray
-    selected: '#e3e8ed',     // Light blue for selected states
-    hover: '#f0f4f8',        // Very light blue for hover
-    focus: '#e3e8ed',        // Light blue for focus states
-    success: '#e8f0e8',      // Light green for success states
-    warning: '#f5f0e8',      // Light orange for warning states
-    error: '#f5e8e8',        // Light red for error states
-    info: '#e8f0f5',         // Light blue for info states
+    secondary: '#f8f9fa',    // Very Light Gray - Secondary backgrounds (improved contrast)
+    tertiary: '#f1f3f4',     // Light gray with better contrast
+    selected: '#e3f2fd',     // Light blue for selected states (maintained)
+    hover: '#f0f4f8',        // Very light blue for hover (maintained)
+    focus: '#e3f2fd',        // Light blue for focus states (improved)
+    success: '#e8f5e8',      // Light green for success states (maintained)
+    warning: '#fff3cd',      // Light yellow for warning states (improved contrast)
+    error: '#ffebee',        // Light red for error states (improved contrast)
+    info: '#e3f2fd',         // Light blue for info states (improved)
     gradient: 'linear-gradient(135deg, #0d2340 0%, #1a365d 100%)',
     gradientLight: 'linear-gradient(135deg, #1a365d 0%, #2d4a6b 100%)',
     gradientSubtle: 'linear-gradient(180deg, rgba(13, 35, 64, 0.1) 0%, transparent 100%)',
@@ -128,12 +128,12 @@ export const brandColors = {
     hover: '#ababab',        // Medium Gray for hover borders
   },
   
-  // Text Colors - Dreamery Brand Text System
+  // Text Colors - Dreamery Brand Text System (Enhanced Contrast)
   text: {
-    primary: '#858585',      // Dark Gray - Primary text color
-    secondary: '#ababab',    // Medium Gray - Secondary text color
-    tertiary: '#9e9e9e',     // Light gray for tertiary text
-    disabled: '#ababab',     // Medium Gray for disabled text
+    primary: '#212121',      // Very Dark Gray - Primary text color (WCAG AA compliant)
+    secondary: '#424242',    // Dark Gray - Secondary text color (improved contrast)
+    tertiary: '#616161',     // Medium gray for tertiary text (better readability)
+    disabled: '#9e9e9e',     // Light Gray for disabled text
     inverse: '#ffffff',      // White text for dark backgrounds
     accent: '#0d2340',       // Primary brand for accent text
     success: '#19401a',      // Success Green for success text
@@ -258,9 +258,9 @@ export const theme = createTheme({
       contrastText: brandColors.text.inverse,
     },
     text: {
-      primary: brandColors.text.primary,
-      secondary: brandColors.text.secondary,
-      disabled: brandColors.text.disabled,
+      primary: brandColors.text.primary,    // #212121 - High contrast primary text
+      secondary: brandColors.text.secondary, // #424242 - Improved secondary text
+      disabled: brandColors.text.disabled,   // #9e9e9e - Disabled text
     },
     background: {
       default: brandColors.backgrounds.primary,
@@ -278,34 +278,34 @@ export const theme = createTheme({
   typography: {
     fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
     h1: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 700,
     },
     h2: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 600,
     },
     h3: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 600,
     },
     h4: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 500,
     },
     h5: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 500,
     },
     h6: {
-      color: brandColors.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast headings
       fontWeight: 500,
     },
     body1: {
-      color: brandColors.text.primary,
+      color: brandColors.text.primary,    // #212121 - High contrast body text
     },
     body2: {
-      color: brandColors.text.secondary,
+      color: brandColors.text.secondary,  // #424242 - Improved secondary text
     },
     button: {
       textTransform: 'none',

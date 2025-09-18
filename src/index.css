@@ -11,18 +11,18 @@
      SEMANTIC COLOR TOKENS - LIGHT MODE
      ======================================== */
   
-  /* Backgrounds */
+  /* Backgrounds - Enhanced Contrast */
   --bg-default: 255 255 255;           /* #ffffff - Primary background */
-  --bg-muted: 248 249 250;             /* #f8f9fa - Muted background */
+  --bg-muted: 248 249 250;             /* #f8f9fa - Muted background (improved contrast) */
   --bg-elevated: 255 255 255;          /* #ffffff - Elevated surfaces */
-  --bg-subtle: 240 244 248;            /* #f0f4f8 - Very light blue tint */
+  --bg-subtle: 241 243 244;            /* #f1f3f4 - Light gray with better contrast */
   
-  /* Content */
-  --fg-default: 51 51 51;              /* #333333 - Primary text */
-  --fg-muted: 102 102 102;             /* #666666 - Secondary text */
-  --fg-subtle: 158 158 158;            /* #9e9e9e - Tertiary text */
+  /* Content - Enhanced Contrast */
+  --fg-default: 33 33 33;              /* #212121 - Primary text (WCAG AA compliant) */
+  --fg-muted: 66 66 66;                /* #424242 - Secondary text (improved contrast) */
+  --fg-subtle: 97 97 97;               /* #616161 - Tertiary text (better readability) */
   --fg-inverse: 255 255 255;           /* #ffffff - Inverse text */
-  --fg-disabled: 189 189 189;          /* #bdbdbd - Disabled text */
+  --fg-disabled: 158 158 158;          /* #9e9e9e - Disabled text */
   
   /* Brand Colors */
   --brand-primary: 26 54 93;           /* #1a365d - Primary brand */

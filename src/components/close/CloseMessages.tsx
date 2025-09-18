@@ -27,32 +27,37 @@ import {
   Search as SearchIcon,
   FilterList as FilterIcon,
   Add as AddIcon,
+  TrendingUp as TrendingUpIcon,
+  Person as PersonIcon,
   Business as BusinessIcon,
   AccountBalance as AccountBalanceIcon,
-  Home as HomeIcon,
+  Group as GroupIcon,
+  PieChart as PieChartIcon,
+  Assessment as AssessmentIcon,
   Support as SupportIcon,
-  Person as PersonIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../../theme';
 
 interface Conversation {
   id: number;
   contactName: string;
-  contactType: 'agent' | 'lender' | 'title' | 'inspector' | 'attorney' | 'insurance' | 'general';
+  contactType: 'buyer' | 'seller' | 'agent' | 'lender' | 'title-company' | 'attorney' | 'general';
   organization: string;
   property?: string;
   lastMessage: string;
   timestamp: string;
   unread: number;
   status: 'urgent' | 'normal' | 'completed';
-  avatar?: string;
+  priority: 'high' | 'medium' | 'low';
+  transactionType?: string;
+  closingDate?: string;
+  role?: string;
   email?: string;
   phone?: string;
-  role?: string;
-  joinDate?: string;
-  verificationStatus?: string;
   dateOfContact?: string;
   topicOfDiscussion?: string;
+  joinDate?: string;
+  verificationStatus?: string;
 }
 
 interface Message {
@@ -64,593 +69,653 @@ interface Message {
 }
 
 const CloseMessages: React.FC = () => {
-  const [selectedConversation, setSelectedConversation] = useState<number | null>(1);
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
   const [activeTab, setActiveTab] = useState(0);
-  const [showDetailsPanel, setShowDetailsPanel] = useState(true);
 
-  // Mock conversations data for closing process
   const conversations: Conversation[] = [
     {
       id: 1,
       contactName: 'Sarah Mitchell',
       contactType: 'agent',
       organization: 'Premier Realty Group',
-      property: '123 Oak Street, Austin TX',
+      property: '123 Main Street, Unit 2A',
       lastMessage: 'The inspection report has been completed. Everything looks good!',
-      timestamp: '2 hours ago',
+      timestamp: '10:30 AM',
       unread: 2,
-      status: 'normal',
+      status: 'urgent',
+      priority: 'high',
+      transactionType: 'Purchase',
+      closingDate: '2024-02-15',
+      role: 'Buyer\'s Agent',
       email: 'sarah.mitchell@premierrealty.com',
-      phone: '(512) 555-0123',
-      role: 'Senior Real Estate Agent',
-      joinDate: '2023-03-15',
-      verificationStatus: 'Verified',
+      phone: '(555) 123-4567',
       dateOfContact: '2024-01-15',
-      topicOfDiscussion: 'Property Inspection & Closing Timeline',
+      topicOfDiscussion: 'Property Inspection',
+      joinDate: '2024-01-10',
+      verificationStatus: 'Verified',
     },
     {
       id: 2,
       contactName: 'Michael Chen',
       contactType: 'lender',
-      organization: 'First National Mortgage',
-      property: '123 Oak Street, Austin TX',
-      lastMessage: 'Your loan approval is ready for review. Please check your email.',
-      timestamp: '1 day ago',
+      organization: 'Chen Mortgage Services',
+      property: '456 Oak Avenue',
+      lastMessage: 'The loan approval has been finalized. We\'re ready to proceed with closing.',
+      timestamp: '9:15 AM',
       unread: 0,
-      status: 'urgent',
-      email: 'michael.chen@firstnational.com',
-      phone: '(512) 555-0456',
-      role: 'Senior Loan Officer',
-      joinDate: '2022-08-20',
+      status: 'normal',
+      priority: 'medium',
+      transactionType: 'Purchase',
+      closingDate: '2024-02-20',
+      role: 'Mortgage Broker',
+      email: 'michael.chen@chenmortgage.com',
+      phone: '(555) 234-5678',
+      dateOfContact: '2024-01-12',
+      topicOfDiscussion: 'Loan Approval',
+      joinDate: '2024-01-08',
       verificationStatus: 'Verified',
-      dateOfContact: '2024-01-10',
-      topicOfDiscussion: 'Loan Approval & Documentation',
     },
     {
       id: 3,
-      contactName: 'Jennifer Torres',
-      contactType: 'title',
-      organization: 'Austin Title Company',
-      property: '123 Oak Street, Austin TX',
-      lastMessage: 'Title search is complete. No issues found.',
-      timestamp: '2 days ago',
+      contactName: 'Emily Rodriguez',
+      contactType: 'title-company',
+      organization: 'Rodriguez Title Services',
+      property: '789 Pine Street',
+      lastMessage: 'The title search is complete. No issues found. Ready for closing.',
+      timestamp: 'Yesterday',
       unread: 1,
-      status: 'normal',
-      email: 'jennifer.torres@austintitle.com',
-      phone: '(512) 555-0789',
+      status: 'completed',
+      priority: 'low',
+      transactionType: 'Purchase',
+      closingDate: '2024-02-18',
       role: 'Title Officer',
-      joinDate: '2021-11-05',
-      verificationStatus: 'Verified',
+      email: 'emily.rodriguez@rodrigueztitle.com',
+      phone: '(555) 345-6789',
       dateOfContact: '2024-01-08',
-      topicOfDiscussion: 'Title Search & Insurance',
+      topicOfDiscussion: 'Title Search',
+      joinDate: '2024-01-05',
+      verificationStatus: 'Pending',
     },
     {
       id: 4,
-      contactName: 'David Rodriguez',
-      contactType: 'inspector',
-      organization: 'Thorough Home Inspections',
-      property: '123 Oak Street, Austin TX',
-      lastMessage: 'Inspection scheduled for tomorrow at 10 AM.',
-      timestamp: '3 days ago',
+      contactName: 'David Thompson',
+      contactType: 'seller',
+      organization: 'Thompson Property Holdings',
+      property: '321 Elm Street',
+      lastMessage: 'The counter-offer has been accepted. We\'re moving forward with the sale.',
+      timestamp: '2 days ago',
       unread: 0,
       status: 'normal',
-      email: 'david.rodriguez@thoroughinspections.com',
-      phone: '(512) 555-0321',
-      role: 'Certified Home Inspector',
-      joinDate: '2020-06-12',
-      verificationStatus: 'Verified',
+      priority: 'high',
+      transactionType: 'Sale',
+      closingDate: '2024-02-25',
+      role: 'Property Owner',
+      email: 'david.thompson@thompsonholdings.com',
+      phone: '(555) 456-7890',
       dateOfContact: '2024-01-05',
-      topicOfDiscussion: 'Home Inspection & Property Condition',
+      topicOfDiscussion: 'Counter-Offer',
+      joinDate: '2024-01-03',
+      verificationStatus: 'Verified',
     },
     {
       id: 5,
-      contactName: 'Lisa Anderson',
+      contactName: 'Lisa Wang',
       contactType: 'attorney',
-      organization: 'Anderson Legal Services',
-      property: '123 Oak Street, Austin TX',
-      lastMessage: 'Contract review completed. All terms look favorable.',
-      timestamp: '4 days ago',
-      unread: 0,
-      status: 'completed',
-      email: 'lisa.anderson@andersonlegal.com',
-      phone: '(512) 555-0654',
+      organization: 'Wang Legal Services',
+      property: 'All Properties',
+      lastMessage: 'The legal review is complete. All documents are in order for closing.',
+      timestamp: '3 days ago',
+      unread: 3,
+      status: 'urgent',
+      priority: 'medium',
+      transactionType: 'Purchase',
+      closingDate: '2024-02-22',
       role: 'Real Estate Attorney',
-      joinDate: '2019-04-18',
-      verificationStatus: 'Verified',
+      email: 'lisa.wang@wanglegal.com',
+      phone: '(555) 567-8901',
       dateOfContact: '2024-01-03',
-      topicOfDiscussion: 'Legal Documentation & Contract Review',
+      topicOfDiscussion: 'Legal Review',
+      joinDate: '2024-01-01',
+      verificationStatus: 'Verified',
     },
     {
       id: 6,
-      contactName: 'Robert Kim',
-      contactType: 'insurance',
-      organization: 'Secure Home Insurance',
-      property: '123 Oak Street, Austin TX',
-      lastMessage: 'Homeowner\'s insurance quote is ready for your review.',
-      timestamp: '5 days ago',
-      unread: 1,
-      status: 'normal',
-      email: 'robert.kim@securehome.com',
-      phone: '(512) 555-0987',
-      role: 'Insurance Agent',
-      joinDate: '2023-01-22',
+      contactName: 'Robert Johnson',
+      contactType: 'buyer',
+      organization: 'Individual Buyer',
+      property: '555 Maple Drive',
+      lastMessage: 'I\'m excited about the property. When can we schedule the final walkthrough?',
+      timestamp: '1 week ago',
+      unread: 0,
+      status: 'completed',
+      priority: 'low',
+      transactionType: 'Purchase',
+      closingDate: '2024-02-28',
+      role: 'Buyer',
+      email: 'robert.johnson@email.com',
+      phone: '(555) 678-9012',
+      dateOfContact: '2023-12-28',
+      topicOfDiscussion: 'Final Walkthrough',
+      joinDate: '2023-12-25',
       verificationStatus: 'Verified',
-      dateOfContact: '2024-01-01',
-      topicOfDiscussion: 'Homeowner\'s Insurance & Coverage Options',
     },
   ];
 
-  const messages: Message[] = [
+  const sampleMessages: Message[] = [
     {
       id: 1,
       sender: 'contact',
-      content: 'Hi! I wanted to give you an update on your closing process.',
+      content: 'The inspection report has been completed. Everything looks good!',
       timestamp: '10:30 AM',
     },
     {
       id: 2,
       sender: 'buyer',
-      content: 'Thank you! I\'m excited to move forward. What\'s the next step?',
+      content: 'Excellent! I\'m excited to move forward. What\'s the next step?',
       timestamp: '10:45 AM',
     },
     {
       id: 3,
       sender: 'contact',
-      content: 'The inspection report has been completed. Everything looks good!',
+      content: 'We\'ll schedule the final walkthrough next week, then we can proceed to closing.',
       timestamp: '2:15 PM',
     },
   ];
 
   const getContactTypeIcon = (type: string) => {
     switch (type) {
-      case 'agent': return <PersonIcon sx={{ color: brandColors.primary }} />;
-      case 'lender': return <AccountBalanceIcon sx={{ color: brandColors.actions.success }} />;
-      case 'title': return <BusinessIcon sx={{ color: brandColors.actions.warning }} />;
-      case 'inspector': return <HomeIcon sx={{ color: brandColors.actions.info }} />;
-      case 'attorney': return <BusinessIcon sx={{ color: brandColors.actions.error }} />;
-      case 'insurance': return <SupportIcon sx={{ color: brandColors.actions.primary }} />;
+      case 'buyer': return <PersonIcon sx={{ color: brandColors.primary }} />;
+      case 'seller': return <BusinessIcon sx={{ color: brandColors.actions.success }} />;
+      case 'agent': return <GroupIcon sx={{ color: brandColors.actions.warning }} />;
+      case 'lender': return <AccountBalanceIcon sx={{ color: brandColors.actions.info }} />;
+      case 'title-company': return <AssessmentIcon sx={{ color: brandColors.actions.error }} />;
+      case 'attorney': return <SupportIcon sx={{ color: brandColors.actions.primary }} />;
       default: return <PersonIcon sx={{ color: brandColors.text.secondary }} />;
     }
   };
 
   const getContactTypeLabel = (type: string) => {
     switch (type) {
+      case 'buyer': return 'Buyer';
+      case 'seller': return 'Seller';
       case 'agent': return 'Real Estate Agent';
       case 'lender': return 'Lender';
-      case 'title': return 'Title Company';
-      case 'inspector': return 'Home Inspector';
-      case 'attorney': return 'Real Estate Attorney';
-      case 'insurance': return 'Insurance Agent';
-      default: return 'Contact';
+      case 'title-company': return 'Title Company';
+      case 'attorney': return 'Attorney';
+      default: return 'General Contact';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'urgent': return 'error';
-      case 'completed': return 'success';
-      case 'normal': return 'default';
-      default: return 'default';
+      case 'urgent': return brandColors.actions.error;
+      case 'normal': return brandColors.actions.info;
+      case 'completed': return brandColors.actions.success;
+      default: return brandColors.text.secondary;
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return brandColors.actions.error;
+      case 'medium': return brandColors.actions.warning;
+      case 'low': return brandColors.actions.success;
+      default: return brandColors.text.secondary;
     }
   };
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      // In a real app, this would send the message to the backend
-      console.log('Sending message:', newMessage);
+      const message: Message = {
+        id: messages.length + 1,
+        sender: 'buyer',
+        content: newMessage,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages([...messages, message]);
       setNewMessage('');
     }
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      handleSendMessage();
-    }
+  const handleConversationSelect = (conversation: Conversation) => {
+    setSelectedConv(conversation);
+    setMessages(sampleMessages);
   };
 
-  const tabCategories = [
-    { label: 'All Communications', filter: 'all' },
-    { label: 'Real Estate Agent', filter: 'agent' },
-    { label: 'Lender', filter: 'lender' },
-    { label: 'Title Company', filter: 'title' },
-    { label: 'Inspector', filter: 'inspector' },
-    { label: 'Attorney', filter: 'attorney' },
-    { label: 'Insurance', filter: 'insurance' },
-  ];
-
-  const filteredConversations = activeTab === 0 
-    ? conversations 
-    : conversations.filter(conv => conv.contactType === tabCategories[activeTab].filter);
-
-  const selectedConv = conversations.find(conv => conv.id === selectedConversation);
+  const filteredConversations = conversations.filter(conv => {
+    const matchesSearch = conv.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         conv.organization.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterStatus === 'all' || conv.status === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
-    <Box>
-      {/* Category Tabs */}
-      <Box sx={{ mb: 3 }}>
-        <Tabs
-          value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{
-            '& .MuiTab-root': {
-              textTransform: 'none',
-              fontWeight: 600,
-              minHeight: 48,
-            },
-          }}
-        >
-          {tabCategories.map((tab, index) => (
-            <Tab key={index} label={tab.label} />
-          ))}
-        </Tabs>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <Box sx={{ 
+        p: 3, 
+        borderBottom: `1px solid ${brandColors.borders.secondary}`,
+        backgroundColor: brandColors.backgrounds.primary
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Typography variant="h4" component="h1" sx={{ color: brandColors.primary, fontWeight: 600 }}>
+            Closing Messages
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              sx={{
+                borderColor: brandColors.primary,
+                color: brandColors.primary,
+                '&:hover': {
+                  borderColor: brandColors.primaryDark,
+                  backgroundColor: brandColors.backgrounds.hover,
+                },
+              }}
+            >
+              New Contact
+            </Button>
+            <IconButton sx={{ color: brandColors.primary }}>
+              <MoreVertIcon />
+            </IconButton>
+          </Box>
+        </Box>
+        
+        <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 3 }}>
+          Manage communications with buyers, sellers, agents, lenders, and closing professionals
+        </Typography>
+
+        {/* Search and Filter */}
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <TextField
+            placeholder="Search conversations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            size="small"
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ mr: 1, color: 'action.active' }} />,
+            }}
+            sx={{
+              flexGrow: 1,
+              '& .MuiOutlinedInput-root': {
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: brandColors.primary,
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: brandColors.primary,
+                },
+              },
+            }}
+          />
+          <Button
+            variant="outlined"
+            startIcon={<FilterIcon />}
+            sx={{
+              borderColor: brandColors.borders.secondary,
+              color: brandColors.text.primary,
+              '&:hover': {
+                borderColor: brandColors.primary,
+                backgroundColor: brandColors.backgrounds.hover,
+              },
+            }}
+          >
+            Filter
+          </Button>
+        </Box>
       </Box>
 
-      <Box sx={{ 
-        height: 'calc(100vh - 240px)', // Account for header, banner, and padding
-        display: 'flex', 
-        flexDirection: 'column',
-        overflow: 'hidden'
-      }}>
+      <Box sx={{ flex: 1, display: 'flex' }}>
+        {/* Conversations List */}
         <Box sx={{ 
-          display: 'flex', 
-          height: '100%', 
-          border: `1px solid ${brandColors.borders.secondary}`, 
-          borderRadius: 1, 
-          overflow: 'hidden',
-          minHeight: 0 // Allow flex children to shrink
+          width: 400, 
+          borderRight: `1px solid ${brandColors.borders.secondary}`,
+          backgroundColor: brandColors.backgrounds.secondary,
+          overflow: 'auto'
         }}>
-          {/* Conversation List */}
-          <Box sx={{ 
-            width: 320, 
-            minWidth: 320, 
-            maxWidth: 320,
-            borderRight: `1px solid ${brandColors.borders.secondary}`, 
-            display: 'flex',
-            flexShrink: 0,
-            flexDirection: 'column',
-            height: '100%',
-            overflow: 'hidden'
-          }}>
-            {/* Search and Filter */}
-            <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <TextField
-                fullWidth
-                placeholder="Search conversations..."
-                size="small"
-                InputProps={{
-                  startAdornment: <SearchIcon sx={{ mr: 1, color: 'action.active' }} />,
+          <List sx={{ p: 0 }}>
+            {filteredConversations.map((conversation) => (
+              <ListItem
+                key={conversation.id}
+                onClick={() => handleConversationSelect(conversation)}
+                sx={{
+                  cursor: 'pointer',
+                  borderBottom: `1px solid ${brandColors.borders.secondary}`,
+                  backgroundColor: selectedConv?.id === conversation.id ? brandColors.backgrounds.selected : 'transparent',
+                  '&:hover': {
+                    backgroundColor: brandColors.backgrounds.hover,
+                  },
                 }}
-              />
-              <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                <IconButton size="small">
-                  <FilterIcon />
-                </IconButton>
-                <IconButton size="small" color="primary">
-                  <AddIcon />
-                </IconButton>
-              </Box>
-            </Box>
-
-            {/* Conversations List */}
-            <Box sx={{ flex: 1, overflow: 'auto' }}>
-              <List sx={{ p: 0 }}>
-                {filteredConversations.map((conversation, index) => (
-                  <React.Fragment key={conversation.id}>
-                    <ListItem
-                      onClick={() => setSelectedConversation(conversation.id)}
-                      sx={{ '&:hover': {
-                          backgroundColor: brandColors.backgrounds.hover,
-                        },
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Badge
-                          badgeContent={conversation.unread}
-                          color="primary"
-                          invisible={conversation.unread === 0}
-                        >
-                          <Avatar sx={{ bgcolor: brandColors.primary }}>
-                            {getContactTypeIcon(conversation.contactType)}
-                          </Avatar>
-                        </Badge>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              {conversation.contactName}
-                            </Typography>
-                            <Chip
-                              label={conversation.status}
-                              size="small"
-                              color={getStatusColor(conversation.status) as any}
-                            />
-                          </Box>
-                        }
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="text.secondary">
-                              {getContactTypeLabel(conversation.contactType)} • {conversation.organization}
-                            </Typography>
-                            <Typography variant="body2" sx={{ 
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: '200px'
-                            }}>
-                              {conversation.lastMessage}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {conversation.timestamp}
-                            </Typography>
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-                    {index < filteredConversations.length - 1 && <Divider />}
-                  </React.Fragment>
-                ))}
-              </List>
-            </Box>
-          </Box>
-          
-          {/* Chat Interface */}
-          <Box sx={{ 
-            flex: 1, 
-            minWidth: 0, // Allow flex item to shrink below content size
-            borderRight: !showDetailsPanel ? 'none' : `1px solid ${brandColors.borders.secondary}`, 
-            display: selectedConversation ? 'flex' : 'none',
-            flexDirection: 'column',
-            height: '100%',
-            overflow: 'hidden'
-          }}>
-            {selectedConv ? (
-              <>
-                {/* Chat Header */}
-                <Box sx={{ 
-                  p: 2, 
-                  borderBottom: 1, 
-                  borderColor: 'divider',
-                  backgroundColor: brandColors.backgrounds.secondary,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              >
+                <ListItemAvatar>
+                  <Badge
+                    invisible={conversation.unread === 0}
+                    badgeContent={conversation.unread}
+                    color="error"
+                  >
                     <Avatar sx={{ bgcolor: brandColors.primary }}>
-                      {getContactTypeIcon(selectedConv.contactType)}
+                      {getContactTypeIcon(conversation.contactType)}
                     </Avatar>
-                    <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        {selectedConv.contactName}
+                  </Badge>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: brandColors.text.primary }}>
+                        {conversation.contactName}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {getContactTypeLabel(selectedConv.contactType)} • {selectedConv.organization}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton size="small" onClick={() => setShowDetailsPanel(!showDetailsPanel)}>
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-
-                {/* Messages */}
-                <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
-                  {messages.map((message, index) => (
-                    <Box
-                      key={message.id}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: message.sender === 'buyer' ? 'flex-end' : 'flex-start',
-                        mb: 2,
-                      }}
-                    >
-                      <Box
+                      <Chip
+                        label={conversation.status}
+                        size="small"
                         sx={{
-                          maxWidth: '70%',
-                          p: 2,
-                          borderRadius: 2,
-                          backgroundColor: message.sender === 'buyer' 
-                            ? brandColors.primary 
-                            : brandColors.backgrounds.secondary,
-                          color: message.sender === 'buyer' ? 'white' : 'text.primary',
+                          backgroundColor: getStatusColor(conversation.status),
+                          color: brandColors.text.inverse,
+                          fontSize: '0.7rem',
+                          height: 20,
                         }}
-                      >
-                        <Typography variant="body1">{message.content}</Typography>
-                        <Typography 
-                          variant="caption" 
-                          sx={{ 
-                            opacity: 0.7,
-                            display: 'block',
-                            mt: 1,
-                            textAlign: 'right'
-                          }}
-                        >
-                          {message.timestamp}
-                        </Typography>
-                      </Box>
+                      />
                     </Box>
-                  ))}
-                </Box>
+                  }
+                  secondary={
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {getContactTypeLabel(conversation.contactType)} • {conversation.organization}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: brandColors.text.secondary, mt: 0.5 }}>
+                        {conversation.lastMessage}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {conversation.timestamp}
+                      </Typography>
+                    </Box>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
 
-                {/* Message Input */}
-                <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <TextField
-                      fullWidth
-                      multiline
-                      maxRows={3}
-                      placeholder="Type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      size="small"
-                    />
-                    <IconButton 
-                      color="primary" 
-                      onClick={handleSendMessage}
-                      disabled={!newMessage.trim()}
-                    >
-                      <SendIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </>
-            ) : (
+        {/* Chat Area */}
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {selectedConv ? (
+            <>
+              {/* Chat Header */}
               <Box sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
+                p: 2, 
+                borderBottom: `1px solid ${brandColors.borders.secondary}`,
+                backgroundColor: brandColors.backgrounds.primary,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2
+              }}>
+                <Avatar sx={{ bgcolor: brandColors.primary }}>
+                  {getContactTypeIcon(selectedConv.contactType)}
+                </Avatar>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.text.primary, fontWeight: 600 }}>
+                    {selectedConv.contactName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {getContactTypeLabel(selectedConv.contactType)} • {selectedConv.organization}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Chip
+                    label={selectedConv.status}
+                    size="small"
+                    sx={{
+                      backgroundColor: getStatusColor(selectedConv.status),
+                      color: brandColors.text.inverse,
+                    }}
+                  />
+                  <Chip
+                    label={selectedConv.priority}
+                    size="small"
+                    sx={{
+                      backgroundColor: getPriorityColor(selectedConv.priority),
+                      color: brandColors.text.inverse,
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              {/* Messages */}
+              <Box sx={{ 
+                flex: 1, 
+                p: 2, 
+                overflow: 'auto',
+                backgroundColor: brandColors.backgrounds.primary,
                 height: '100%',
                 color: 'text.secondary'
               }}>
-                <Typography variant="h6">
-                  Select a conversation to start messaging
-                </Typography>
+                {messages.map((message) => (
+                  <Box
+                    key={message.id}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: message.sender === 'buyer' ? 'flex-end' : 'flex-start',
+                      mb: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        maxWidth: '70%',
+                        p: 2,
+                        borderRadius: 2,
+                        backgroundColor: message.sender === 'buyer' 
+                          ? brandColors.primary 
+                          : brandColors.backgrounds.secondary,
+                      }}
+                    >
+                      <Typography 
+                        variant="body1" 
+                        sx={{ 
+                          color: message.sender === 'buyer' ? brandColors.text.inverse : brandColors.text.primary 
+                        }}
+                      >
+                        {message.content}
+                      </Typography>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          color: message.sender === 'buyer' ? brandColors.text.inverse : brandColors.text.primary,
+                          opacity: 0.7,
+                          display: 'block',
+                          mt: 1,
+                          textAlign: 'right'
+                        }}
+                      >
+                        {message.timestamp}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
               </Box>
-            )}
-          </Box>
-          
-          {/* Details Panel */}
-          <Box sx={{ 
-            width: showDetailsPanel ? 320 : 0, 
-            minWidth: showDetailsPanel ? 320 : 0,
-            maxWidth: showDetailsPanel ? 320 : 0,
-            display: showDetailsPanel ? 'flex' : 'none',
-            flexShrink: 0,
-            flexDirection: 'column',
-            height: '100%',
-            overflow: 'hidden',
-            transition: 'width 0.3s ease'
-          }}>
-            {selectedConv && (
-              <Card sx={{ height: '100%', borderRadius: 0, display: 'flex', flexDirection: 'column' }}>
-                <CardContent sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  {/* Details Header */}
-                  <Box sx={{ 
-                    p: 2, 
-                    borderBottom: 1, 
-                    borderColor: 'divider',
-                    backgroundColor: brandColors.backgrounds.secondary
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Contact Details
-                      </Typography>
-                      <IconButton size="small" onClick={() => setShowDetailsPanel(false)}>
-                        <MoreVertIcon />
-                      </IconButton>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ bgcolor: brandColors.primary, width: 56, height: 56 }}>
-                        {getContactTypeIcon(selectedConv.contactType)}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {selectedConv.contactName}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {selectedConv.role}
-                        </Typography>
-                        <Chip 
-                          label={selectedConv.verificationStatus} 
-                          size="small" 
-                          color="success"
-                          sx={{ mt: 0.5 }}
-                        />
-                      </Box>
-                    </Box>
-                  </Box>
 
-                  {/* Details Content */}
-                  <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
-                        Contact Information
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Email</Typography>
-                          <Typography variant="body2">{selectedConv.email}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Phone</Typography>
-                          <Typography variant="body2">{selectedConv.phone}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Organization</Typography>
-                          <Typography variant="body2">{selectedConv.organization}</Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
-                        Property Information
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Property Address</Typography>
-                          <Typography variant="body2">{selectedConv.property}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Contact Type</Typography>
-                          <Typography variant="body2">{getContactTypeLabel(selectedConv.contactType)}</Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
-                        Communication Details
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Date of Contact</Typography>
-                          <Typography variant="body2">{selectedConv.dateOfContact}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Topic of Discussion</Typography>
-                          <Typography variant="body2">{selectedConv.topicOfDiscussion}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Status</Typography>
-                          <Chip 
-                            label={selectedConv.status} 
-                            size="small" 
-                            color={getStatusColor(selectedConv.status) as any}
-                          />
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
-                        Professional Information
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Join Date</Typography>
-                          <Typography variant="body2">{selectedConv.joinDate}</Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">Verification Status</Typography>
-                          <Typography variant="body2">{selectedConv.verificationStatus}</Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            )}
-          </Box>
+              {/* Message Input */}
+              <Box sx={{ 
+                p: 2, 
+                borderTop: `1px solid ${brandColors.borders.secondary}`,
+                backgroundColor: brandColors.backgrounds.primary,
+                display: 'flex',
+                gap: 1
+              }}>
+                <TextField
+                  fullWidth
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  size="small"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: brandColors.primary,
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: brandColors.primary,
+                      },
+                    },
+                  }}
+                />
+                <IconButton sx={{ color: brandColors.primary }}>
+                  <AttachIcon />
+                </IconButton>
+                <Button
+                  variant="contained"
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim()}
+                  sx={{
+                    backgroundColor: brandColors.primary,
+                    '&:hover': {
+                      backgroundColor: brandColors.primaryDark,
+                    },
+                    '&:disabled': {
+                      backgroundColor: brandColors.text.disabled,
+                    },
+                  }}
+                >
+                  <SendIcon />
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Box sx={{ 
+              flex: 1, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              backgroundColor: brandColors.backgrounds.primary,
+              color: 'text.secondary'
+            }}>
+              <Typography variant="h6" sx={{ color: brandColors.text.secondary }}>
+                Select a conversation to start messaging
+              </Typography>
+            </Box>
+          )}
         </Box>
+
+        {/* Contact Details Sidebar */}
+        {selectedConv && (
+          <Box sx={{ 
+            width: 300, 
+            borderLeft: `1px solid ${brandColors.borders.secondary}`,
+            backgroundColor: brandColors.backgrounds.secondary,
+            overflow: 'auto',
+            p: 2
+          }}>
+            <Typography variant="h6" sx={{ color: brandColors.text.primary, mb: 2 }}>
+              Contact Details
+            </Typography>
+            
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.primary, width: 56, height: 56 }}>
+                  {getContactTypeIcon(selectedConv.contactType)}
+                </Avatar>
+                <Box>
+                  <Typography variant="h6" sx={{ color: brandColors.text.primary, fontWeight: 600 }}>
+                    {selectedConv.contactName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedConv.role}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                Contact Information
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Email</Typography>
+                  <Typography variant="body2">{selectedConv.email}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Phone</Typography>
+                  <Typography variant="body2">{selectedConv.phone}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Organization</Typography>
+                  <Typography variant="body2">{selectedConv.organization}</Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                Transaction Information
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Property</Typography>
+                  <Typography variant="body2">{selectedConv.property}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Transaction Type</Typography>
+                  <Typography variant="body2">{selectedConv.transactionType}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Closing Date</Typography>
+                  <Typography variant="body2">{selectedConv.closingDate}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Contact Type</Typography>
+                  <Typography variant="body2">{getContactTypeLabel(selectedConv.contactType)}</Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                Communication Details
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Date of Contact</Typography>
+                  <Typography variant="body2">{selectedConv.dateOfContact}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Topic of Discussion</Typography>
+                  <Typography variant="body2">{selectedConv.topicOfDiscussion}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Status</Typography>
+                  <Chip 
+                    label={selectedConv.status}
+                    size="small"
+                    sx={{
+                      backgroundColor: getStatusColor(selectedConv.status),
+                      color: brandColors.text.inverse,
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.primary }}>
+                Professional Information
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Join Date</Typography>
+                  <Typography variant="body2">{selectedConv.joinDate}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">Verification Status</Typography>
+                  <Typography variant="body2">{selectedConv.verificationStatus}</Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

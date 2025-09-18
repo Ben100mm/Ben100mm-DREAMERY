@@ -2694,23 +2694,52 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="docs tabs">
-                    <Tab label="Policies" />
-                    <Tab label="Endorsements" />
-                    <Tab label="Templates" />
+                    {currentRoleKey === 'tax-advisor' ? (
+                      <>
+                        <Tab label="Reports" />
+                        <Tab label="Prep" />
+                        <Tab label="Submissions" />
+                      </>
+                    ) : (
+                      <>
+                        <Tab label="Policies" />
+                        <Tab label="Endorsements" />
+                        <Tab label="Templates" />
+                      </>
+                    )}
                   </Tabs>
                 </Box>
-                <TabPanel value={state.subTab} index={0}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Title Policies</Typography>
-                  <Typography variant="body2" color="text.secondary">Manage title insurance policies and coverage documents</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={1}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Endorsements</Typography>
-                  <Typography variant="body2" color="text.secondary">Create and manage title insurance endorsements and amendments</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={2}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Document Templates</Typography>
-                  <Typography variant="body2" color="text.secondary">Title insurance document templates and forms</Typography>
-                </TabPanel>
+                {currentRoleKey === 'tax-advisor' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Tax Reports</Typography>
+                      <Typography variant="body2" color="text.secondary">Generate comprehensive tax reports and analysis for clients</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Tax Preparation</Typography>
+                      <Typography variant="body2" color="text.secondary">Tax return preparation tools and document management</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Submissions</Typography>
+                      <Typography variant="body2" color="text.secondary">Electronic filing and submission management for tax returns</Typography>
+                    </TabPanel>
+                  </>
+                ) : (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Title Policies</Typography>
+                      <Typography variant="body2" color="text.secondary">Manage title insurance policies and coverage documents</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Endorsements</Typography>
+                      <Typography variant="body2" color="text.secondary">Create and manage title insurance endorsements and amendments</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Document Templates</Typography>
+                      <Typography variant="body2" color="text.secondary">Title insurance document templates and forms</Typography>
+                    </TabPanel>
+                  </>
+                )}
               </Box>
             )}
 
@@ -4920,7 +4949,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
               </Box>
             )}
 
-            {state.activeTab === 'docs' && (
+            {state.activeTab === 'docs' && currentRoleKey !== 'tax-advisor' && (
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="docs tabs">

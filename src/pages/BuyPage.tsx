@@ -54,18 +54,20 @@ const HeaderSection = styled.div`
 
 const FilterButton = styled(Button)`
   text-transform: none;
-  color: brandColors.text.primary;
+  color: brandColors.text.primary;  // High contrast text
   border: 1px solid brandColors.borders.secondary;
   background: brandColors.backgrounds.primary;
   padding: 8px 16px;
   min-width: 120px;
   &:hover {
     background: brandColors.backgrounds.secondary;
-    border-color: #e0e0e0;
+    border-color: brandColors.borders.hover;  // Use theme color
+    color: brandColors.text.primary;  // Maintain high contrast
   }
   &.active {
     border-color: brandColors.primary;
     color: brandColors.primary;
+    background: brandColors.backgrounds.selected;  // Add background for active state
   }
 `;
 
@@ -90,11 +92,12 @@ const MapOverlay = styled.div`
   position: absolute;
   top: 1rem;
   left: 1rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);  // Increased opacity for better contrast
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: brandColors.text.primary;
+  color: brandColors.text.primary;  // High contrast text
   font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  // Added shadow for better visibility
 `;
 
 const PropertiesContainer = styled.div`

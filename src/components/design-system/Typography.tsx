@@ -132,7 +132,7 @@ const StyledTypography = styled(MuiTypography)<{
           fontSize: 'var(--text-xs)',
           fontWeight: 'var(--font-weight-semibold)',
           lineHeight: 'var(--line-height-normal)',
-          textTransform: 'uppercase',
+          textTransform: 'uppercase' as const,
           letterSpacing: '0.1em',
         };
       case 'small':

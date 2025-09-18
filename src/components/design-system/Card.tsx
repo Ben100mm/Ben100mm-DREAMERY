@@ -134,7 +134,7 @@ export const Card: React.FC<DesignSystemCardProps> = ({
 }) => {
   return (
     <StyledCard $variant={variant} $padding={padding} {...props}>
-      {header && <StyledCardHeader {...header} />}
+      {header && <StyledCardHeader>{header}</StyledCardHeader>}
       <StyledCardContent $padding={padding}>
         {children}
       </StyledCardContent>

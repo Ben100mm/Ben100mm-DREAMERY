@@ -184,19 +184,40 @@ const roleList = [
 ];
 
 // Role-specific configurations
-const roleConfigurations: Record<string, RoleConfig> = {};
+const roleConfigurations: Record<string, RoleConfig> = {
+  'acquisition-specialist': {
+    id: 'acquisition-specialist',
+    name: 'Acquisition Specialist',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'deal-sourcing', label: 'Deal Sourcing', icon: <TimelineIcon />, description: 'Advanced Filters, Saved Searches, Lists, Skip Trace' },
+      { value: 'underwriting', label: 'Underwriting', icon: <SecurityIcon />, description: 'ARV, MAO, Repairs, Sensitivity' },
+      { value: 'offer-builder', label: 'Offer Builder', icon: <AddIcon />, description: 'Term Sheets, LOIs, PSAs, Counteroffers' },
+      { value: 'pipeline', label: 'Pipeline', icon: <TimelineIcon />, description: 'Leads, Stages, Follow-ups, KPIs' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'MLS/PropStream/Zillow feeds, AI comps/ARV calculator, skip tracing integration, automated seller outreach' },
+    ],
+  },
+};
 
 const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
-  allowedRoles = ['Real Estate Agent', 'Real Estate Broker', 'Realtor', "Buyer's Agent", 'Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent', 'Wholesaler', 'Disposition Agent', 'Financial Advisor', 'Tax Advisor', 'Relocation Specialist', 'Investment Advisor'],
+  allowedRoles = roleList,
   redirectPath = '/close'
 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const userRole = (useContext(RoleContext as any) as any)?.userRole || 'Real Estate Agent';
-  const isAuthorized = allowedRoles.includes(userRole);
+  const { userRole, setUserRole } = (useContext(RoleContext as any) as any) || {};
+  const currentUserRole = userRole || 'Real Estate Agent';
+  const isAuthorized = allowedRoles.includes(currentUserRole);
   
-  console.log('RoleWorkspace - userRole:', userRole, 'isAuthorized:', isAuthorized, 'allowedRoles:', allowedRoles);
+  console.log('RoleWorkspace - userRole:', currentUserRole, 'isAuthorized:', isAuthorized, 'allowedRoles:', allowedRoles);
 
   // Map user role to role configuration key
   const getRoleKey = (role: string): string => {
@@ -204,10 +225,15 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
     return role.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
   };
 
-  const currentRoleKey = getRoleKey(userRole);
+  // Check if role has specific configuration
+  const hasRoleConfig = (roleKey: string): boolean => {
+    return roleConfigurations.hasOwnProperty(roleKey);
+  };
+
+  const currentRoleKey = getRoleKey(currentUserRole);
   const currentRoleConfig = roleConfigurations[currentRoleKey] || {
     id: currentRoleKey,
-    name: userRole,
+    name: currentUserRole,
     description: '',
     icon: <PersonIcon />,
     color: brandColors.primary,
@@ -217,8 +243,8 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
 
   // Debug effect to log role changes
   useEffect(() => {
-    console.log('RoleWorkspace - userRole changed to:', userRole, 'currentRoleKey:', currentRoleKey);
-  }, [userRole, currentRoleKey]);
+    console.log('RoleWorkspace - userRole changed to:', currentUserRole, 'currentRoleKey:', currentRoleKey);
+  }, [currentUserRole, currentRoleKey]);
 
   const [state, setState] = useState<ProfessionalSupportState>({
     activeTab: currentRoleConfig?.defaultTab || 'dashboard',
@@ -274,7 +300,10 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
       favorites: [], // Reset favorites when changing roles
     }));
     setRoleSelectAnchor(null);
-    // Note: In a real app, you would update the user's role in the context/state management
+    // Update the user's role in the context
+    if (setUserRole) {
+      setUserRole(roleName);
+    }
     console.log('Role changed to:', roleName);
   };
 
@@ -309,52 +338,207 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
     
     return (
       <Box sx={{ p: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          {currentTab?.label || 'Professional Support'}
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          {currentTab?.description || 'Professional support workspace ready for configuration.'}
-        </Typography>
-        
-        {/* Role-specific content based on active tab */}
-        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>
-            {currentRoleConfig?.name} - {currentTab?.label}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            This is the {currentTab?.label?.toLowerCase()} section for {currentRoleConfig?.name.toLowerCase()}. 
-            Content and functionality will be implemented based on the specific role and tab requirements.
-          </Typography>
-        </Paper>
+        {hasRoleConfig(currentRoleKey) ? (
+          // Role-specific content only
+          <>
+            {state.activeTab === 'dashboard' && (
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
+                    12
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Active Tasks
+                  </Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
+                    8
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Calendar Events
+                  </Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold' }}>
+                    24
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Files Uploaded
+                  </Typography>
+                </Paper>
+              </Box>
+            )}
 
-        {/* Quick stats for dashboard */}
-        {state.activeTab === 'dashboard' && (
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                12
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Active Items
-              </Typography>
-            </Paper>
-            <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                8
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Completed Today
-              </Typography>
-            </Paper>
-            <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold' }}>
-                3
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Pending Review
-              </Typography>
-            </Paper>
-          </Box>
+            {state.activeTab === 'communications' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Chat</Typography>
+                  <Typography variant="body2" color="text.secondary">Real-time messaging with team and clients</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Email</Typography>
+                  <Typography variant="body2" color="text.secondary">Email management and tracking</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Calls</Typography>
+                  <Typography variant="body2" color="text.secondary">Call logs and recording management</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Notes</Typography>
+                  <Typography variant="body2" color="text.secondary">Meeting notes and documentation</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'contracts-esign' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Templates</Typography>
+                  <Typography variant="body2" color="text.secondary">Contract templates and forms</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Signatures</Typography>
+                  <Typography variant="body2" color="text.secondary">Digital signature management</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Version Control</Typography>
+                  <Typography variant="body2" color="text.secondary">Document version tracking</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Audit Trail</Typography>
+                  <Typography variant="body2" color="text.secondary">Complete activity logging</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'money-billing' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Quotes</Typography>
+                  <Typography variant="body2" color="text.secondary">Price quotes and estimates</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Invoices</Typography>
+                  <Typography variant="body2" color="text.secondary">Invoice generation and tracking</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Payments</Typography>
+                  <Typography variant="body2" color="text.secondary">Payment processing and tracking</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'deal-sourcing' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Advanced Filters</Typography>
+                  <Typography variant="body2" color="text.secondary">Interactive map with property filters</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Saved Searches</Typography>
+                  <Typography variant="body2" color="text.secondary">Pre-configured search criteria</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Lists</Typography>
+                  <Typography variant="body2" color="text.secondary">Property lists and collections</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Skip Trace</Typography>
+                  <Typography variant="body2" color="text.secondary">Owner contact information lookup</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'underwriting' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>ARV</Typography>
+                  <Typography variant="body2" color="text.secondary">After Repair Value calculations</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>MAO</Typography>
+                  <Typography variant="body2" color="text.secondary">Maximum Allowable Offer calculations</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Repairs</Typography>
+                  <Typography variant="body2" color="text.secondary">Repair cost estimation and tracking</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Sensitivity</Typography>
+                  <Typography variant="body2" color="text.secondary">Market sensitivity analysis</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'offer-builder' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Term Sheets</Typography>
+                  <Typography variant="body2" color="text.secondary">Deal term documentation</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>LOIs</Typography>
+                  <Typography variant="body2" color="text.secondary">Letters of Intent creation</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>PSAs</Typography>
+                  <Typography variant="body2" color="text.secondary">Purchase and Sale Agreements</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Counteroffers</Typography>
+                  <Typography variant="body2" color="text.secondary">Counteroffer management</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'pipeline' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Leads</Typography>
+                  <Typography variant="body2" color="text.secondary">Lead management and tracking</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Stages</Typography>
+                  <Typography variant="body2" color="text.secondary">Deal stage progression</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Follow-ups</Typography>
+                  <Typography variant="body2" color="text.secondary">Follow-up task management</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>KPIs</Typography>
+                  <Typography variant="body2" color="text.secondary">Key Performance Indicators</Typography>
+                </Paper>
+              </Box>
+            )}
+
+            {state.activeTab === 'advanced' && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2, mb: 3 }}>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>MLS/PropStream/Zillow Feeds</Typography>
+                  <Typography variant="body2" color="text.secondary">Automated property data feeds from multiple sources</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>AI Comps/ARV Calculator</Typography>
+                  <Typography variant="body2" color="text.secondary">AI-powered comparable analysis and ARV calculations</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Skip Tracing Integration</Typography>
+                  <Typography variant="body2" color="text.secondary">Integrated skip tracing for owner contact information</Typography>
+                </Paper>
+                <Paper elevation={1} sx={{ p: 2 }}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Automated Seller Outreach</Typography>
+                  <Typography variant="body2" color="text.secondary">SMS/Email dialer for automated seller communication</Typography>
+                </Paper>
+              </Box>
+            )}
+          </>
+        ) : (
+          // Minimal content for unconfigured roles
+          <Typography variant="h4" gutterBottom>
+            {currentUserRole} Workspace
+          </Typography>
         )}
       </Box>
     );
@@ -366,7 +550,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
-      {!isAuthorized && userRole && <Navigate to="/" />}
+      {!isAuthorized && currentUserRole && <Navigate to="/" />}
       {/* Top App Bar */}
       <AppBar 
         position="fixed" 
@@ -378,7 +562,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
       >
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: brandColors.text.inverse }}>
-            Dreamery {userRole}
+            Dreamery {currentUserRole}
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -454,7 +638,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                   </Box>
                   <Box sx={{ textAlign: 'left' }}>
                     <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                      {userRole}
+                      {currentUserRole}
                     </Typography>
                   </Box>
                 </Box>

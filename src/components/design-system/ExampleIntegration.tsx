@@ -66,7 +66,7 @@ const ExamplePage: React.FC = () => {
       {/* Main Content Grid */}
       <Grid columns={12} gap="lg" responsive>
         {/* Left Column - Form */}
-        <GridItem span={12} md={6}>
+        <GridItem span={12}>
           <Card variant="elevated" padding="lg">
             <Typography variant="h3" color="brand-primary" style={{ marginBottom: 'var(--space-4)' }}>
               Create Account
@@ -143,7 +143,7 @@ const ExamplePage: React.FC = () => {
         </GridItem>
 
         {/* Right Column - Features */}
-        <GridItem span={12} md={6}>
+        <GridItem span={12}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             <Card variant="glass" padding="lg">
               <Typography variant="h4" color="brand-primary" style={{ marginBottom: 'var(--space-3)' }}>

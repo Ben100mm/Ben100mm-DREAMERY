@@ -227,6 +227,82 @@ const roleConfigurations: Record<string, RoleConfig> = {
       { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'MLS/PropStream/Zillow feeds, AI comps/ARV calculator, skip tracing integration, automated seller outreach' },
     ],
   },
+  'disposition-agent': {
+    id: 'disposition-agent',
+    name: 'Disposition Agent',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes, Campaigns' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'inventory', label: 'Inventory', icon: <TimelineIcon />, description: 'Active Listings, Pending, Sold, Buyers Wanted' },
+      { value: 'buyer-crm', label: 'Buyer CRM', icon: <SecurityIcon />, description: 'Segments, Requirements, Hotlists, Broadcasts' },
+      { value: 'deal-room', label: 'Deal Room', icon: <AddIcon />, description: 'Gallery, Docs, Chat' },
+      { value: 'marketing-studio', label: 'Marketing Studio', icon: <TimelineIcon />, description: 'Flyers, Blast, Social, Virtual Tours' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'Investor marketplace, buyer proof-of-funds verification, e-sign offer acceptance, Property flyers' },
+    ],
+  },
+  'title-agent': {
+    id: 'title-agent',
+    name: 'Title Agent',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'title-search', label: 'Title Search', icon: <TimelineIcon />, description: 'Chain, Liens, Judgments, Reports' },
+      { value: 'curative', label: 'Curative', icon: <SecurityIcon />, description: 'Requirements, Tasks, Evidence, Approvals' },
+      { value: 'closing-pack', label: 'Closing Pack', icon: <AddIcon />, description: 'CD/HUD, Deeds, Policies' },
+      { value: 'vendor-portal', label: 'Vendor Portal', icon: <TimelineIcon />, description: 'Orders, SLAs, Invoices, Scorecards' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'County record integrations, lien/judgment auto-pull, AI-powered title search summaries, escrow integration' },
+    ],
+  },
+  'escrow-officer': {
+    id: 'escrow-officer',
+    name: 'Escrow Officer',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'escrow-files', label: 'Escrow Files', icon: <TimelineIcon />, description: 'Ledger, Disbursements, Conditions' },
+      { value: 'milestones', label: 'Milestones', icon: <SecurityIcon />, description: 'Open, Docs In, Clear to Close, Funded' },
+      { value: 'parties-payoffs', label: 'Parties & Payoffs', icon: <AddIcon />, description: 'Contacts, Requests, Confirmations' },
+      { value: 'reconciliation', label: 'Reconciliation', icon: <TimelineIcon />, description: 'Balancing, Exceptions, Reports' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'Bank/ACH/wire integrations, automated disbursement rules, compliance audit logs, fraud detection tools' },
+    ],
+  },
+  'notary-public': {
+    id: 'notary-public',
+    name: 'Notary Public',
+    description: '',
+    icon: <PersonIcon />,
+    color: brandColors.primary,
+    defaultTab: 'dashboard',
+    tabs: [
+      { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
+      { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
+      { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
+      { value: 'bookings', label: 'Bookings', icon: <TimelineIcon />, description: 'Calendar, Mobile, Remote' },
+      { value: 'signer-workflow', label: 'Signer Workflow', icon: <SecurityIcon />, description: 'KBA, ID Check, Stamps' },
+      { value: 'packages', label: 'Packages', icon: <AddIcon />, description: 'Refi, Purchase, HELOC' },
+      { value: 'route-dispatch', label: 'Route & Dispatch', icon: <TimelineIcon />, description: 'Maps, Time Blocks, Check-ins' },
+      { value: 'advanced', label: 'Advanced', icon: <SettingsIcon />, description: 'Remote online notarization (RON), KBA/ID check APIs, digital seals/stamps, GPS on-site check-in' },
+    ],
+  },
 };
 
 const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
@@ -404,6 +480,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                     <Tab label="Email" />
                     <Tab label="Calls" />
                     <Tab label="Notes" />
+                    {currentRoleKey === 'disposition-agent' && <Tab label="Campaigns" />}
                   </Tabs>
                 </Box>
                 <TabPanel value={state.subTab} index={0}>
@@ -422,6 +499,12 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                   <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Notes</Typography>
                   <Typography variant="body2" color="text.secondary">Meeting notes and documentation</Typography>
                 </TabPanel>
+                {currentRoleKey === 'disposition-agent' && (
+                  <TabPanel value={state.subTab} index={4}>
+                    <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Campaigns</Typography>
+                    <Typography variant="body2" color="text.secondary">Mass SMS/email campaigns for marketing and outreach</Typography>
+                  </TabPanel>
+                )}
               </Box>
             )}
 
@@ -594,32 +677,563 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
               </Box>
             )}
 
+            {state.activeTab === 'inventory' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="inventory tabs">
+                    <Tab label="Active Listings" />
+                    <Tab label="Pending" />
+                    <Tab label="Sold" />
+                    <Tab label="Buyers Wanted" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Active Listings</Typography>
+                  <Typography variant="body2" color="text.secondary">Manage your currently active property listings</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Pending</Typography>
+                  <Typography variant="body2" color="text.secondary">Track properties with pending offers and transactions</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Sold</Typography>
+                  <Typography variant="body2" color="text.secondary">View completed sales and transaction history</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Buyers Wanted</Typography>
+                  <Typography variant="body2" color="text.secondary">Connect with buyers looking for specific properties</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'buyer-crm' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="buyer crm tabs">
+                    <Tab label="Segments" />
+                    <Tab label="Requirements" />
+                    <Tab label="Hotlists" />
+                    <Tab label="Broadcasts" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Segments</Typography>
+                  <Typography variant="body2" color="text.secondary">Organize buyers into targeted segments</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Requirements</Typography>
+                  <Typography variant="body2" color="text.secondary">Track buyer requirements and preferences</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Hotlists</Typography>
+                  <Typography variant="body2" color="text.secondary">Manage priority buyer lists and hot prospects</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Broadcasts</Typography>
+                  <Typography variant="body2" color="text.secondary">Send targeted messages to buyer segments</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'deal-room' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="deal room tabs">
+                    <Tab label="Gallery" />
+                    <Tab label="Docs" />
+                    <Tab label="Chat" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Gallery</Typography>
+                  <Typography variant="body2" color="text.secondary">Property photos and virtual tour galleries</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Docs</Typography>
+                  <Typography variant="body2" color="text.secondary">Property documents, reports, and disclosures</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Chat</Typography>
+                  <Typography variant="body2" color="text.secondary">Real-time communication with interested parties</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'marketing-studio' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="marketing studio tabs">
+                    <Tab label="Flyers" />
+                    <Tab label="Blast" />
+                    <Tab label="Social" />
+                    <Tab label="Virtual Tours" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Flyers</Typography>
+                  <Typography variant="body2" color="text.secondary">Create and manage property marketing flyers</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Blast</Typography>
+                  <Typography variant="body2" color="text.secondary">Mass marketing campaigns and email blasts</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Social</Typography>
+                  <Typography variant="body2" color="text.secondary">Social media marketing and content management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Virtual Tours</Typography>
+                  <Typography variant="body2" color="text.secondary">Create and manage virtual property tours</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'title-search' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="title search tabs">
+                    <Tab label="Chain" />
+                    <Tab label="Liens" />
+                    <Tab label="Judgments" />
+                    <Tab label="Reports" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Chain</Typography>
+                  <Typography variant="body2" color="text.secondary">Title chain of ownership history and verification</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Liens</Typography>
+                  <Typography variant="body2" color="text.secondary">Property liens and encumbrances search and tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Judgments</Typography>
+                  <Typography variant="body2" color="text.secondary">Legal judgments and court records affecting the property</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Reports</Typography>
+                  <Typography variant="body2" color="text.secondary">Title search reports and documentation</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'curative' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="curative tabs">
+                    <Tab label="Requirements" />
+                    <Tab label="Tasks" />
+                    <Tab label="Evidence" />
+                    <Tab label="Approvals" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Requirements</Typography>
+                  <Typography variant="body2" color="text.secondary">Title curative requirements and specifications</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Tasks</Typography>
+                  <Typography variant="body2" color="text.secondary">Curative tasks and action items tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Evidence</Typography>
+                  <Typography variant="body2" color="text.secondary">Documentation and evidence collection for curative work</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Approvals</Typography>
+                  <Typography variant="body2" color="text.secondary">Curative approvals and sign-off management</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'closing-pack' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="closing pack tabs">
+                    <Tab label="CD/HUD" />
+                    <Tab label="Deeds" />
+                    <Tab label="Policies" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>CD/HUD</Typography>
+                  <Typography variant="body2" color="text.secondary">Closing Disclosure and HUD-1 settlement statements</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Deeds</Typography>
+                  <Typography variant="body2" color="text.secondary">Deed preparation and execution management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Policies</Typography>
+                  <Typography variant="body2" color="text.secondary">Title insurance policies and coverage management</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'vendor-portal' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="vendor portal tabs">
+                    <Tab label="Orders" />
+                    <Tab label="SLAs" />
+                    <Tab label="Invoices" />
+                    <Tab label="Scorecards" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Orders</Typography>
+                  <Typography variant="body2" color="text.secondary">Title search and service orders management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>SLAs</Typography>
+                  <Typography variant="body2" color="text.secondary">Service Level Agreements and performance tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Invoices</Typography>
+                  <Typography variant="body2" color="text.secondary">Vendor invoices and payment processing</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Scorecards</Typography>
+                  <Typography variant="body2" color="text.secondary">Vendor performance scorecards and ratings</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'escrow-files' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="escrow files tabs">
+                    <Tab label="Ledger" />
+                    <Tab label="Disbursements" />
+                    <Tab label="Conditions" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Ledger</Typography>
+                  <Typography variant="body2" color="text.secondary">Escrow account ledger and transaction tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Disbursements</Typography>
+                  <Typography variant="body2" color="text.secondary">Fund disbursement management and tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Conditions</Typography>
+                  <Typography variant="body2" color="text.secondary">Escrow conditions and requirements management</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'milestones' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="milestones tabs">
+                    <Tab label="Open" />
+                    <Tab label="Docs In" />
+                    <Tab label="Clear to Close" />
+                    <Tab label="Funded" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Open</Typography>
+                  <Typography variant="body2" color="text.secondary">New escrow files and initial setup tracking</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Docs In</Typography>
+                  <Typography variant="body2" color="text.secondary">Document collection and verification status</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Clear to Close</Typography>
+                  <Typography variant="body2" color="text.secondary">Ready for closing and final preparations</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Funded</Typography>
+                  <Typography variant="body2" color="text.secondary">Completed transactions and funding confirmations</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'parties-payoffs' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="parties payoffs tabs">
+                    <Tab label="Contacts" />
+                    <Tab label="Requests" />
+                    <Tab label="Confirmations" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Contacts</Typography>
+                  <Typography variant="body2" color="text.secondary">Transaction parties and stakeholder contact management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Requests</Typography>
+                  <Typography variant="body2" color="text.secondary">Payoff requests and lender communication</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Confirmations</Typography>
+                  <Typography variant="body2" color="text.secondary">Payoff confirmations and verification tracking</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'reconciliation' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="reconciliation tabs">
+                    <Tab label="Balancing" />
+                    <Tab label="Exceptions" />
+                    <Tab label="Reports" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Balancing</Typography>
+                  <Typography variant="body2" color="text.secondary">Account balancing and reconciliation processes</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Exceptions</Typography>
+                  <Typography variant="body2" color="text.secondary">Exception handling and discrepancy resolution</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Reports</Typography>
+                  <Typography variant="body2" color="text.secondary">Reconciliation reports and audit documentation</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'bookings' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="bookings tabs">
+                    <Tab label="Calendar" />
+                    <Tab label="Mobile" />
+                    <Tab label="Remote" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Calendar</Typography>
+                  <Typography variant="body2" color="text.secondary">Schedule and manage notary appointments and bookings</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Mobile</Typography>
+                  <Typography variant="body2" color="text.secondary">Mobile notary services and on-site appointments</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Remote</Typography>
+                  <Typography variant="body2" color="text.secondary">Remote online notarization (RON) appointments and services</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'signer-workflow' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="signer workflow tabs">
+                    <Tab label="KBA" />
+                    <Tab label="ID Check" />
+                    <Tab label="Stamps" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>KBA</Typography>
+                  <Typography variant="body2" color="text.secondary">Knowledge-Based Authentication for signer verification</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>ID Check</Typography>
+                  <Typography variant="body2" color="text.secondary">Identity verification and document validation processes</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Stamps</Typography>
+                  <Typography variant="body2" color="text.secondary">Digital notary stamps and seal management</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'packages' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="packages tabs">
+                    <Tab label="Refi" />
+                    <Tab label="Purchase" />
+                    <Tab label="HELOC" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Refi</Typography>
+                  <Typography variant="body2" color="text.secondary">Refinancing document packages and notarization services</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Purchase</Typography>
+                  <Typography variant="body2" color="text.secondary">Purchase transaction document packages and services</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>HELOC</Typography>
+                  <Typography variant="body2" color="text.secondary">Home Equity Line of Credit document packages</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
+            {state.activeTab === 'route-dispatch' && (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="route dispatch tabs">
+                    <Tab label="Maps" />
+                    <Tab label="Time Blocks" />
+                    <Tab label="Check-ins" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Maps</Typography>
+                  <Typography variant="body2" color="text.secondary">Route planning and mapping for mobile notary services</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Time Blocks</Typography>
+                  <Typography variant="body2" color="text.secondary">Time block scheduling and appointment management</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Check-ins</Typography>
+                  <Typography variant="body2" color="text.secondary">Location check-ins and appointment verification</Typography>
+                </TabPanel>
+              </Box>
+            )}
+
             {state.activeTab === 'advanced' && (
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="advanced tabs">
-                    <Tab label="Data Feeds" />
-                    <Tab label="AI Calculator" />
-                    <Tab label="Skip Tracing" />
-                    <Tab label="Automated Outreach" />
+                    {currentRoleKey === 'acquisition-specialist' ? (
+                      <>
+                        <Tab label="Data Feeds" />
+                        <Tab label="AI Calculator" />
+                        <Tab label="Skip Tracing" />
+                        <Tab label="Automated Outreach" />
+                      </>
+                    ) : currentRoleKey === 'disposition-agent' ? (
+                      <>
+                        <Tab label="Investor Marketplace" />
+                        <Tab label="Proof of Funds" />
+                        <Tab label="E-sign Offers" />
+                        <Tab label="Property Flyers" />
+                      </>
+                    ) : currentRoleKey === 'title-agent' ? (
+                      <>
+                        <Tab label="County Records" />
+                        <Tab label="Lien/Judgment Pull" />
+                        <Tab label="AI Search Summaries" />
+                        <Tab label="Escrow Integration" />
+                      </>
+                    ) : currentRoleKey === 'escrow-officer' ? (
+                      <>
+                        <Tab label="Bank Integration" />
+                        <Tab label="Automated Rules" />
+                        <Tab label="Audit Logs" />
+                        <Tab label="Fraud Detection" />
+                      </>
+                    ) : (
+                      <>
+                        <Tab label="RON Platform" />
+                        <Tab label="KBA/ID APIs" />
+                        <Tab label="Digital Seals" />
+                        <Tab label="GPS Check-in" />
+                      </>
+                    )}
                   </Tabs>
                 </Box>
-                <TabPanel value={state.subTab} index={0}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>MLS/PropStream/Zillow Feeds</Typography>
-                  <Typography variant="body2" color="text.secondary">Automated property data feeds from multiple sources</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={1}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>AI Comps/ARV Calculator</Typography>
-                  <Typography variant="body2" color="text.secondary">AI-powered comparable analysis and ARV calculations</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={2}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Skip Tracing Integration</Typography>
-                  <Typography variant="body2" color="text.secondary">Integrated skip tracing for owner contact information</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={3}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Automated Seller Outreach</Typography>
-                  <Typography variant="body2" color="text.secondary">SMS/Email dialer for automated seller communication</Typography>
-                </TabPanel>
+                {currentRoleKey === 'acquisition-specialist' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>MLS/PropStream/Zillow Feeds</Typography>
+                      <Typography variant="body2" color="text.secondary">Automated property data feeds from multiple sources</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>AI Comps/ARV Calculator</Typography>
+                      <Typography variant="body2" color="text.secondary">AI-powered comparable analysis and ARV calculations</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Skip Tracing Integration</Typography>
+                      <Typography variant="body2" color="text.secondary">Integrated skip tracing for owner contact information</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Automated Seller Outreach</Typography>
+                      <Typography variant="body2" color="text.secondary">SMS/Email dialer for automated seller communication</Typography>
+                    </TabPanel>
+                  </>
+                ) : currentRoleKey === 'disposition-agent' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Investor Marketplace</Typography>
+                      <Typography variant="body2" color="text.secondary">Connect with investors and funding sources</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Buyer Proof of Funds</Typography>
+                      <Typography variant="body2" color="text.secondary">Verify and manage buyer proof of funds documentation</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>E-sign Offer Acceptance</Typography>
+                      <Typography variant="body2" color="text.secondary">Digital offer acceptance and contract management</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Property Flyers</Typography>
+                      <Typography variant="body2" color="text.secondary">Generate and customize property marketing materials</Typography>
+                    </TabPanel>
+                  </>
+                ) : currentRoleKey === 'title-agent' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>County Record Integrations</Typography>
+                      <Typography variant="body2" color="text.secondary">Automated county record system integrations and data feeds</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Lien/Judgment Auto-pull</Typography>
+                      <Typography variant="body2" color="text.secondary">Automated lien and judgment record retrieval and monitoring</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>AI-powered Title Search Summaries</Typography>
+                      <Typography variant="body2" color="text.secondary">AI-generated title search summaries and analysis</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Escrow Integration</Typography>
+                      <Typography variant="body2" color="text.secondary">Seamless integration with escrow services and closing coordination</Typography>
+                    </TabPanel>
+                  </>
+                ) : currentRoleKey === 'escrow-officer' ? (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Bank/ACH/Wire Integrations</Typography>
+                      <Typography variant="body2" color="text.secondary">Banking system integrations for ACH and wire transfers</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Automated Disbursement Rules</Typography>
+                      <Typography variant="body2" color="text.secondary">Automated disbursement rules and workflow management</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Compliance Audit Logs</Typography>
+                      <Typography variant="body2" color="text.secondary">Comprehensive audit logs for regulatory compliance</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Fraud Detection Tools</Typography>
+                      <Typography variant="body2" color="text.secondary">Advanced fraud detection and prevention tools</Typography>
+                    </TabPanel>
+                  </>
+                ) : (
+                  <>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Remote Online Notarization (RON)</Typography>
+                      <Typography variant="body2" color="text.secondary">Remote online notarization platform and services</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>KBA/ID Check APIs</Typography>
+                      <Typography variant="body2" color="text.secondary">Knowledge-Based Authentication and ID verification APIs</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Digital Seals/Stamps</Typography>
+                      <Typography variant="body2" color="text.secondary">Digital notary seals and stamp management tools</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={3}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>GPS On-site Check-in</Typography>
+                      <Typography variant="body2" color="text.secondary">GPS-based location verification for mobile notary services</Typography>
+                    </TabPanel>
+                  </>
+                )}
               </Box>
             )}
           </>

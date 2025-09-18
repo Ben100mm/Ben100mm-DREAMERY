@@ -28,6 +28,8 @@ import {
   FormControl,
   Select,
   MenuItem as SelectMenuItem,
+  Tabs,
+  Tab,
   Switch,
   FormControlLabel,
 } from '@mui/material';
@@ -90,12 +92,33 @@ interface ProfessionalSupportState {
   favorites: string[];
   selectedRole: string;
   favoritesExpanded: boolean;
+  subTab: number;
 }
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
 }
 
 interface RoleWorkspaceProps {
@@ -260,6 +283,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
     favorites: [],
     selectedRole: currentRoleKey,
     favoritesExpanded: true,
+    subTab: 0,
   });
 
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -267,7 +291,11 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
   const [roleSelectAnchor, setRoleSelectAnchor] = useState<null | HTMLElement>(null);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setState(prev => ({ ...prev, activeTab: newValue }));
+    setState(prev => ({ ...prev, activeTab: newValue, subTab: 0 }));
+  };
+
+  const handleSubTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setState(prev => ({ ...prev, subTab: newValue }));
   };
 
   const toggleDrawer = () => {
@@ -342,195 +370,256 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
           // Role-specific content only
           <>
             {state.activeTab === 'dashboard' && (
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                    12
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Active Tasks
-                  </Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                    8
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Calendar Events
-                  </Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2, flex: '1 1 200px', textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold' }}>
-                    24
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Files Uploaded
-                  </Typography>
-                </Paper>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="dashboard tabs">
+                    <Tab label="Tasks" />
+                    <Tab label="Calendar" />
+                    <Tab label="Files" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Active Tasks</Typography>
+                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>12</Typography>
+                  <Typography variant="body2" color="text.secondary">Manage and track your active tasks</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.accent.success, mb: 2 }}>Calendar Events</Typography>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold', mb: 1 }}>8</Typography>
+                  <Typography variant="body2" color="text.secondary">View and manage your upcoming events</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.accent.warning, mb: 2 }}>Files</Typography>
+                  <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold', mb: 1 }}>24</Typography>
+                  <Typography variant="body2" color="text.secondary">Manage uploaded files and documents</Typography>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'communications' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Chat</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="communications tabs">
+                    <Tab label="Chat" />
+                    <Tab label="Email" />
+                    <Tab label="Calls" />
+                    <Tab label="Notes" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Chat</Typography>
                   <Typography variant="body2" color="text.secondary">Real-time messaging with team and clients</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Email</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Email</Typography>
                   <Typography variant="body2" color="text.secondary">Email management and tracking</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Calls</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Calls</Typography>
                   <Typography variant="body2" color="text.secondary">Call logs and recording management</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Notes</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Notes</Typography>
                   <Typography variant="body2" color="text.secondary">Meeting notes and documentation</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'contracts-esign' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Templates</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="contracts tabs">
+                    <Tab label="Templates" />
+                    <Tab label="Signatures" />
+                    <Tab label="Version Control" />
+                    <Tab label="Audit Trail" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Templates</Typography>
                   <Typography variant="body2" color="text.secondary">Contract templates and forms</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Signatures</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Signatures</Typography>
                   <Typography variant="body2" color="text.secondary">Digital signature management</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Version Control</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Version Control</Typography>
                   <Typography variant="body2" color="text.secondary">Document version tracking</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Audit Trail</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Audit Trail</Typography>
                   <Typography variant="body2" color="text.secondary">Complete activity logging</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'money-billing' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Quotes</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="money billing tabs">
+                    <Tab label="Quotes" />
+                    <Tab label="Invoices" />
+                    <Tab label="Payments" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Quotes</Typography>
                   <Typography variant="body2" color="text.secondary">Price quotes and estimates</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Invoices</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Invoices</Typography>
                   <Typography variant="body2" color="text.secondary">Invoice generation and tracking</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Payments</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Payments</Typography>
                   <Typography variant="body2" color="text.secondary">Payment processing and tracking</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'deal-sourcing' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Advanced Filters</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="deal sourcing tabs">
+                    <Tab label="Advanced Filters" />
+                    <Tab label="Saved Searches" />
+                    <Tab label="Lists" />
+                    <Tab label="Skip Trace" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Advanced Filters</Typography>
                   <Typography variant="body2" color="text.secondary">Interactive map with property filters</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Saved Searches</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Saved Searches</Typography>
                   <Typography variant="body2" color="text.secondary">Pre-configured search criteria</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Lists</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Lists</Typography>
                   <Typography variant="body2" color="text.secondary">Property lists and collections</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Skip Trace</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Skip Trace</Typography>
                   <Typography variant="body2" color="text.secondary">Owner contact information lookup</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'underwriting' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>ARV</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="underwriting tabs">
+                    <Tab label="ARV" />
+                    <Tab label="MAO" />
+                    <Tab label="Repairs" />
+                    <Tab label="Sensitivity" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>ARV</Typography>
                   <Typography variant="body2" color="text.secondary">After Repair Value calculations</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>MAO</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>MAO</Typography>
                   <Typography variant="body2" color="text.secondary">Maximum Allowable Offer calculations</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Repairs</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Repairs</Typography>
                   <Typography variant="body2" color="text.secondary">Repair cost estimation and tracking</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Sensitivity</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Sensitivity</Typography>
                   <Typography variant="body2" color="text.secondary">Market sensitivity analysis</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'offer-builder' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Term Sheets</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="offer builder tabs">
+                    <Tab label="Term Sheets" />
+                    <Tab label="LOIs" />
+                    <Tab label="PSAs" />
+                    <Tab label="Counteroffers" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Term Sheets</Typography>
                   <Typography variant="body2" color="text.secondary">Deal term documentation</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>LOIs</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>LOIs</Typography>
                   <Typography variant="body2" color="text.secondary">Letters of Intent creation</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>PSAs</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>PSAs</Typography>
                   <Typography variant="body2" color="text.secondary">Purchase and Sale Agreements</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Counteroffers</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Counteroffers</Typography>
                   <Typography variant="body2" color="text.secondary">Counteroffer management</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'pipeline' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Leads</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="pipeline tabs">
+                    <Tab label="Leads" />
+                    <Tab label="Stages" />
+                    <Tab label="Follow-ups" />
+                    <Tab label="KPIs" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Leads</Typography>
                   <Typography variant="body2" color="text.secondary">Lead management and tracking</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Stages</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Stages</Typography>
                   <Typography variant="body2" color="text.secondary">Deal stage progression</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Follow-ups</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Follow-ups</Typography>
                   <Typography variant="body2" color="text.secondary">Follow-up task management</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>KPIs</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>KPIs</Typography>
                   <Typography variant="body2" color="text.secondary">Key Performance Indicators</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
 
             {state.activeTab === 'advanced' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2, mb: 3 }}>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>MLS/PropStream/Zillow Feeds</Typography>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="advanced tabs">
+                    <Tab label="Data Feeds" />
+                    <Tab label="AI Calculator" />
+                    <Tab label="Skip Tracing" />
+                    <Tab label="Automated Outreach" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={state.subTab} index={0}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>MLS/PropStream/Zillow Feeds</Typography>
                   <Typography variant="body2" color="text.secondary">Automated property data feeds from multiple sources</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>AI Comps/ARV Calculator</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={1}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>AI Comps/ARV Calculator</Typography>
                   <Typography variant="body2" color="text.secondary">AI-powered comparable analysis and ARV calculations</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Skip Tracing Integration</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={2}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Skip Tracing Integration</Typography>
                   <Typography variant="body2" color="text.secondary">Integrated skip tracing for owner contact information</Typography>
-                </Paper>
-                <Paper elevation={1} sx={{ p: 2 }}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 1 }}>Automated Seller Outreach</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={3}>
+                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Automated Seller Outreach</Typography>
                   <Typography variant="body2" color="text.secondary">SMS/Email dialer for automated seller communication</Typography>
-                </Paper>
+                </TabPanel>
               </Box>
             )}
           </>
@@ -811,7 +900,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
           {/* Collapsed Sidebar Icons */}
           {state.sidebarCollapsed && (
             <Box sx={{ px: 1 }}>
-              {currentTabs.slice(0, 6).map((tab) => (
+              {currentTabs.map((tab) => (
                 <Tooltip key={tab.value} title={tab.label} placement="right">
                   <IconButton
                     onClick={() => handleTabChange({} as React.SyntheticEvent, tab.value)}

@@ -26,6 +26,8 @@ import { Search, Clear, KeyboardArrowDown, KeyboardArrowUp, Favorite } from "@mu
 const PageContainer = styled.div`
   min-height: 100vh;
   background: brandColors.backgrounds.secondary;
+  overflow-x: hidden;
+  position: relative;
 `;
 
 const HeaderSection = styled.div`
@@ -86,6 +88,29 @@ const MapOverlay = styled.div`
 const ResultsContainer = styled.div`
   padding: 2rem;
   background: brandColors.backgrounds.primary;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
 `;
 
 const PartnerCard = styled(Card)`
@@ -115,15 +140,113 @@ const PartnersPage: React.FC = () => {
   // Data
   const [partners, setPartners] = useState<any[]>([]);
 
+  // Demo partners with San Francisco coordinates
+  const demoPartners = [
+    {
+      id: "demo-1",
+      company: "SF Real Estate Group",
+      bio: "Premier real estate services in San Francisco",
+      services: ["Real Estate Agent", "Property Management"],
+      rating: 4.8,
+      location: { lat: 37.7749, lng: -122.4194 },
+      address: "123 Market St, San Francisco, CA"
+    },
+    {
+      id: "demo-2", 
+      company: "Golden Gate Mortgage",
+      bio: "Expert mortgage and lending services",
+      services: ["Mortgage Broker", "Loan Officer"],
+      rating: 4.6,
+      location: { lat: 37.7849, lng: -122.4094 },
+      address: "456 California St, San Francisco, CA"
+    },
+    {
+      id: "demo-3",
+      company: "Bay Area Inspections",
+      bio: "Professional home inspection services",
+      services: ["Home Inspector", "Energy Inspector"],
+      rating: 4.9,
+      location: { lat: 37.7649, lng: -122.4294 },
+      address: "789 Mission St, San Francisco, CA"
+    },
+    {
+      id: "demo-4",
+      company: "Pacific Title Co",
+      bio: "Comprehensive title and escrow services",
+      services: ["Title Agent", "Escrow Officer"],
+      rating: 4.7,
+      location: { lat: 37.7949, lng: -122.3994 },
+      address: "321 Pine St, San Francisco, CA"
+    },
+    {
+      id: "demo-5",
+      company: "SF Property Law",
+      bio: "Real estate legal services and consultation",
+      services: ["Real Estate Attorney", "Estate Planning Attorney"],
+      rating: 4.8,
+      location: { lat: 37.7549, lng: -122.4394 },
+      address: "654 Sutter St, San Francisco, CA"
+    },
+    {
+      id: "demo-6",
+      company: "Metro Appraisals",
+      bio: "Licensed property appraisal services",
+      services: ["Residential Appraiser", "Commercial Appraiser"],
+      rating: 4.5,
+      location: { lat: 37.8049, lng: -122.3894 },
+      address: "987 Geary St, San Francisco, CA"
+    },
+    {
+      id: "demo-7",
+      company: "Bay Area Insurance",
+      bio: "Property and title insurance specialists",
+      services: ["Insurance Agent", "Title Insurance Agent"],
+      rating: 4.4,
+      location: { lat: 37.7449, lng: -122.4494 },
+      address: "147 Post St, San Francisco, CA"
+    },
+    {
+      id: "demo-8",
+      company: "SF Contractors",
+      bio: "General contracting and renovation services",
+      services: ["General Contractor", "Kitchen Contractor"],
+      rating: 4.6,
+      location: { lat: 37.8149, lng: -122.3794 },
+      address: "258 Van Ness Ave, San Francisco, CA"
+    },
+    {
+      id: "demo-9",
+      company: "Pacific Property Management",
+      bio: "Full-service property management",
+      services: ["Property Manager", "Long-term Rental Manager"],
+      rating: 4.7,
+      location: { lat: 37.7349, lng: -122.4594 },
+      address: "369 Fillmore St, San Francisco, CA"
+    },
+    {
+      id: "demo-10",
+      company: "SF Design Studio",
+      bio: "Interior design and architectural services",
+      services: ["Interior Designer", "Architect"],
+      rating: 4.9,
+      location: { lat: 37.8249, lng: -122.3694 },
+      address: "741 Castro St, San Francisco, CA"
+    }
+  ];
+
   useEffect(() => {
     const load = async () => {
       try {
         const res = await fetch(`http://localhost:5055/api/partners`);
         const json = await res.json();
-        setPartners(Array.isArray(json.data) ? json.data : []);
+        const apiPartners = Array.isArray(json.data) ? json.data : [];
+        // Combine API partners with demo partners
+        setPartners([...apiPartners, ...demoPartners]);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error("Failed to load partners", e);
+        // Use demo partners if API fails
+        setPartners(demoPartners);
       }
     };
     load();
@@ -240,12 +363,12 @@ const PartnersPage: React.FC = () => {
       </HeaderSection>
 
       <Container maxWidth="xl">
-        <Box sx={{ display: "flex", height: "calc(100vh - 200px)" }}>
+        <Box sx={{ display: "flex", height: "calc(100vh - 200px)", maxHeight: "800px" }}>
           <Box sx={{ flex: 2, position: "relative", p: 2 }}>
             <Box
               sx={{
                 height: "100%",
-                background: "linear-gradient(135deg, brandColors.neutral[200] 0%, brandColors.neutral[200] 100%)",
+                background: "linear-gradient(135deg, #eeeeee 0%, #eeeeee 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -270,10 +393,10 @@ const PartnersPage: React.FC = () => {
               >
                 {filtered.length} of {partners.length || 0} partners
               </Box>
-              Interactive Map View
+              <Typography variant="h6">Interactive Map View</Typography>
             </Box>
           </Box>
-          <Box sx={{ flex: 1, pl: 0 }}>
+          <Box sx={{ flex: 1, pl: 0, height: "100%", overflow: "hidden" }}>
             <ResultsContainer>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
                 <Typography variant="h6">{filtered.length} results</Typography>
@@ -296,6 +419,11 @@ const PartnersPage: React.FC = () => {
                           <Typography variant="body2" color="text.secondary">
                             {Array.isArray(p.services) ? p.services.join(", ") : p.bio}
                       </Typography>
+                          {p.address && (
+                            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5 }}>
+                              📍 {p.address}
+                            </Typography>
+                          )}
                     </Box>
                         <Chip label={(typeof p.rating === "number" ? p.rating.toFixed(1) : "0.0") + "★"} color="primary" size="small" />
                     </Box>

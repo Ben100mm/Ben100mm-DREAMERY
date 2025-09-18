@@ -1280,12 +1280,30 @@ const BuyPage: React.FC = () => {
             flex: "1", 
             overflowY: "auto", 
             borderLeft: "1px solid brandColors.borders.secondary",
+            maxHeight: "calc(100vh - 200px)",
             "@media (max-width: 768px)": {
               flex: "none",
               borderLeft: "none",
               borderTop: "1px solid brandColors.borders.secondary",
               maxHeight: "60vh"
-            }
+            },
+            /* Custom scrollbar styling */
+            "&::-webkit-scrollbar": {
+              width: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+              borderRadius: "3px",
+              margin: "8px 12px 8px 0",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#c1c1c1",
+              borderRadius: "3px",
+              margin: "2px 4px 2px 0",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#a8a8a8",
+            },
           }}
         >
           <Container maxWidth="xl" sx={{ p: { xs: 1, md: 2 } }}>

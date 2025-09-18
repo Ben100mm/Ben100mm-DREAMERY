@@ -268,28 +268,6 @@ const CloseMessages: React.FC = () => {
 
   return (
     <Box>
-      {/* Header */}
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          mb: 4, 
-          p: 3, 
-          backgroundColor: brandColors.primary,
-          borderRadius: '16px 16px 0 0',
-          color: brandColors.text.inverse
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <PersonIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
-          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
-            Closing Communications
-          </Typography>
-        </Box>
-        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-          Stay connected with everyone involved in your closing process
-        </Typography>
-      </Paper>
-
       {/* Category Tabs */}
       <Box sx={{ mb: 3 }}>
         <Tabs

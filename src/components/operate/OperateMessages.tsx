@@ -291,28 +291,6 @@ const OperateMessages: React.FC = () => {
 
   return (
     <Box>
-      {/* Header */}
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          mb: 4, 
-          p: 3, 
-          backgroundColor: brandColors.primary,
-          borderRadius: '16px 16px 0 0',
-          color: brandColors.text.inverse
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <EngineeringIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />
-          <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
-            Property Operations Communications
-          </Typography>
-        </Box>
-        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-          Manage communications with project teams, contractors, and operations partners
-        </Typography>
-      </Paper>
-
       {/* Category Tabs */}
       <Box sx={{ mb: 3 }}>
         <Tabs

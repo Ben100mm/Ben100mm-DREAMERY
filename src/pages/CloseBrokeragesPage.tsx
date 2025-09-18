@@ -452,6 +452,7 @@ const CloseBrokeragesPage = () => {
               flexWrap: 'wrap', 
               gap: { xs: 2, md: 3 }, 
               mb: 4,
+              justifyContent: 'flex-start',
               '& > *': {
                 marginBottom: { xs: '1rem', md: '0' }
               }
@@ -459,10 +460,10 @@ const CloseBrokeragesPage = () => {
               <Paper elevation={2} sx={{ 
                 p: { xs: 2, md: 3 }, 
                 textAlign: 'center', 
-                flex: '1 1 200px', 
-                minWidth: { xs: '150px', md: '200px' },
+                flex: '1 1 250px', 
+                minWidth: { xs: '200px', md: '250px' },
                 width: '100%',
-                maxWidth: { xs: '100%', sm: '200px' }
+                maxWidth: { xs: '100%', sm: '250px' }
               }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyPeopleIcon />
@@ -477,10 +478,10 @@ const CloseBrokeragesPage = () => {
               <Paper elevation={2} sx={{ 
                 p: { xs: 2, md: 3 }, 
                 textAlign: 'center', 
-                flex: '1 1 200px', 
-                minWidth: { xs: '150px', md: '200px' },
+                flex: '1 1 250px', 
+                minWidth: { xs: '200px', md: '250px' },
                 width: '100%',
-                maxWidth: { xs: '100%', sm: '200px' }
+                maxWidth: { xs: '100%', sm: '250px' }
               }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyBusinessIcon />
@@ -495,16 +496,16 @@ const CloseBrokeragesPage = () => {
               <Paper elevation={2} sx={{ 
                 p: { xs: 2, md: 3 }, 
                 textAlign: 'center', 
-                flex: '1 1 200px', 
-                minWidth: { xs: '150px', md: '200px' },
+                flex: '1 1 250px', 
+                minWidth: { xs: '200px', md: '250px' },
                 width: '100%',
-                maxWidth: { xs: '100%', sm: '200px' }
+                maxWidth: { xs: '100%', sm: '250px' }
               }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyTrendingUpIcon />
                 </React.Suspense>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
-                  (mockBrokerageData.monthlyVolume / 1000000).toFixed(1)M
+                  ${(mockBrokerageData.monthlyVolume / 1000000).toFixed(1)}M
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Monthly Volume
@@ -513,10 +514,10 @@ const CloseBrokeragesPage = () => {
               <Paper elevation={2} sx={{ 
                 p: { xs: 2, md: 3 }, 
                 textAlign: 'center', 
-                flex: '1 1 200px', 
-                minWidth: { xs: '150px', md: '200px' },
+                flex: '1 1 250px', 
+                minWidth: { xs: '200px', md: '250px' },
                 width: '100%',
-                maxWidth: { xs: '100%', sm: '200px' }
+                maxWidth: { xs: '100%', sm: '250px' }
               }}>
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                   <LazyCheckCircleIcon />
@@ -551,7 +552,7 @@ const CloseBrokeragesPage = () => {
                     Top Agent - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </Typography>
                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                    (mockBrokerageData.topAgentVolume / 1000000).toFixed(1)M
+                    ${(mockBrokerageData.topAgentVolume / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
               </Box>
@@ -908,7 +909,7 @@ const CloseBrokeragesPage = () => {
                 Revenue:
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
-                agent.revenue.toLocaleString()
+                ${agent.revenue.toLocaleString()}
               </Typography>
             </Box>
           </Paper>
@@ -1073,7 +1074,7 @@ const CloseBrokeragesPage = () => {
                             Monthly Revenue:
                           </Typography>
                           <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
-                            agent.revenue.toLocaleString()
+                            ${agent.revenue.toLocaleString()}
                           </Typography>
                         </Box>
 
@@ -1286,7 +1287,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                listing.price.toLocaleString()
+                                ${listing.price.toLocaleString()}
                               </Typography>
                               <Chip 
                                 label={listing.status} 
@@ -1370,7 +1371,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  listing.price.toLocaleString()
+                                  ${listing.price.toLocaleString()}
                                 </Typography>
                                 <Box>
                                   <Button size="small" variant="outlined" sx={{ mr: 1 }}>
@@ -1433,7 +1434,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  listing.price.toLocaleString()
+                                  ${listing.price.toLocaleString()}
                                 </Typography>
                                 <Chip 
                                   label={listing.priority} 
@@ -1517,10 +1518,10 @@ const CloseBrokeragesPage = () => {
                               <Box sx={{ textAlign: 'right' }}>
                                 <Box sx={{ mb: 1 }}>
                                   <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                    listing.originalPrice.toLocaleString()
+                                    ${listing.originalPrice.toLocaleString()}
                                   </Typography>
                                   <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                    listing.finalPrice.toLocaleString()
+                                    ${listing.finalPrice.toLocaleString()}
                                   </Typography>
                                 </Box>
                                 <Button size="small" variant="outlined">
@@ -1748,7 +1749,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                offer.price.toLocaleString()
+                                ${offer.price.toLocaleString()}
                               </Typography>
                               <Chip 
                                 label={offer.status} 
@@ -1824,7 +1825,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  offer.price.toLocaleString()
+                                  ${offer.price.toLocaleString()}
                                 </Typography>
                                 <Chip 
                                   label={offer.status} 
@@ -1896,7 +1897,7 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>
-                                  offer.price.toLocaleString()
+                                  ${offer.price.toLocaleString()}
                                 </Typography>
                                 <Chip 
                                   label={offer.priority} 
@@ -1966,10 +1967,10 @@ const CloseBrokeragesPage = () => {
                               <Box sx={{ textAlign: 'right' }}>
                                 <Box sx={{ mb: 1 }}>
                                   <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                    offer.originalPrice.toLocaleString()
+                                    ${offer.originalPrice.toLocaleString()}
                                   </Typography>
                                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                    offer.currentPrice.toLocaleString()
+                                    ${offer.currentPrice.toLocaleString()}
                                   </Typography>
                                 </Box>
                                 <Button size="small" variant="contained">
@@ -2042,10 +2043,10 @@ const CloseBrokeragesPage = () => {
                               </Box>
                               <Box sx={{ mb: 2 }}>
                                 <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                                  offer.price.toLocaleString()
+                                  ${offer.price.toLocaleString()}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Down Payment: offer.downPayment.toLocaleString()
+                                  Down Payment: ${offer.downPayment.toLocaleString()}
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 2 }}>
@@ -2942,7 +2943,7 @@ const CloseBrokeragesPage = () => {
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                transaction.value.toLocaleString()
+                                ${transaction.value.toLocaleString()}
                               </Typography>
                               <Chip 
                                 label={transaction.status} 
@@ -3005,7 +3006,7 @@ const CloseBrokeragesPage = () => {
                                     Agent: {transaction.agent}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
-                                    Value: transaction.value.toLocaleString()
+                                    Value: ${transaction.value.toLocaleString()}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
                                     Days Left: {transaction.daysLeft}
@@ -3148,13 +3149,13 @@ const CloseBrokeragesPage = () => {
                                     Closed: {transaction.closedDate}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
-                                    Value: transaction.value.toLocaleString()
+                                    Value: ${transaction.value.toLocaleString()}
                                   </Typography>
                                 </Box>
                               </Box>
                               <Box sx={{ textAlign: 'right' }}>
                                 <Typography variant="h6" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>
-                                  transaction.commission.toLocaleString()
+                                  ${transaction.commission.toLocaleString()}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                   Commission

@@ -446,7 +446,7 @@ const CloseBusinessesPage: React.FC = () => {
               }}>
                 <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: brandColors.accent.info }}>
-                  (mockBusinessData.totalRevenue / 1000000).toFixed(1)M
+                  ${(mockBusinessData.totalRevenue / 1000000).toFixed(1)}M
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Total Revenue
@@ -471,7 +471,7 @@ const CloseBusinessesPage: React.FC = () => {
                     Top Business - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </Typography>
                   <Typography variant="h5" sx={{ color: brandColors.primary, fontWeight: 'bold' }}>
-                    (mockBusinessData.topBusinessRevenue / 1000000).toFixed(1)M
+                    ${(mockBusinessData.topBusinessRevenue / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
               </Box>

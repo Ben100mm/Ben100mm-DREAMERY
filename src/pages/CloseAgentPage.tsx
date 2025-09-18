@@ -7181,7 +7181,7 @@ const CloseAgentPage: React.FC = () => {
                             {/* Offer Header */}
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                               <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 700 }}>
-                                offer.price.toLocaleString()
+                                ${offer.price.toLocaleString()}
                               </Typography>
                               <Chip
                                 label={`Score: ${offer.score}`}
@@ -7223,7 +7223,7 @@ const CloseAgentPage: React.FC = () => {
                               </Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="caption" color="text.secondary">Down:</Typography>
-                                <Typography variant="caption" sx={{ fontWeight: 600 }}>offer.downPayment.toLocaleString()</Typography>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>${offer.downPayment.toLocaleString()}</Typography>
                               </Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="caption" color="text.secondary">Loan:</Typography>

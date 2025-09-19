@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import ProfessionalSupportDashboard from './dashboards/ProfessionalSupportDashboard';
 import {
   Box,
   AppBar,
@@ -1796,28 +1797,34 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
           <>
             {state.activeTab === 'dashboard' && (
               <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="dashboard tabs">
-                    <Tab label="Tasks" />
-                    <Tab label="Calendar" />
-                    <Tab label="Files" />
-                  </Tabs>
-                </Box>
-                <TabPanel value={state.subTab} index={0}>
-                  <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Active Tasks</Typography>
-                  <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>12</Typography>
-                  <Typography variant="body2" color="text.secondary">Manage and track your active tasks</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={1}>
-                  <Typography variant="h6" sx={{ color: brandColors.accent.success, mb: 2 }}>Calendar Events</Typography>
-                  <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold', mb: 1 }}>8</Typography>
-                  <Typography variant="body2" color="text.secondary">View and manage your upcoming events</Typography>
-                </TabPanel>
-                <TabPanel value={state.subTab} index={2}>
-                  <Typography variant="h6" sx={{ color: brandColors.accent.warning, mb: 2 }}>Files</Typography>
-                  <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold', mb: 1 }}>24</Typography>
-                  <Typography variant="body2" color="text.secondary">Manage uploaded files and documents</Typography>
-                </TabPanel>
+                {currentRoleKey === 'professional-support' ? (
+                  <ProfessionalSupportDashboard />
+                ) : (
+                  <Box>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="dashboard tabs">
+                        <Tab label="Tasks" />
+                        <Tab label="Calendar" />
+                        <Tab label="Files" />
+                      </Tabs>
+                    </Box>
+                    <TabPanel value={state.subTab} index={0}>
+                      <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Active Tasks</Typography>
+                      <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 'bold', mb: 1 }}>12</Typography>
+                      <Typography variant="body2" color="text.secondary">Manage and track your active tasks</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={1}>
+                      <Typography variant="h6" sx={{ color: brandColors.accent.success, mb: 2 }}>Calendar Events</Typography>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold', mb: 1 }}>8</Typography>
+                      <Typography variant="body2" color="text.secondary">View and manage your upcoming events</Typography>
+                    </TabPanel>
+                    <TabPanel value={state.subTab} index={2}>
+                      <Typography variant="h6" sx={{ color: brandColors.accent.warning, mb: 2 }}>Files</Typography>
+                      <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold', mb: 1 }}>24</Typography>
+                      <Typography variant="body2" color="text.secondary">Manage uploaded files and documents</Typography>
+                    </TabPanel>
+                  </Box>
+                )}
               </Box>
             )}
 

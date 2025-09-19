@@ -471,17 +471,17 @@ const ManageMessages: React.FC = () => {
           }}>
             {selectedConv ? (
               <>
-                      <Avatar sx={{ bgcolor: brandColors.primary }}>
+                <Avatar sx={{ bgcolor: brandColors.primary }}>
                   {getContactTypeIcon(selectedConv.contactType)}
-                      </Avatar>
+                </Avatar>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="h6" sx={{ color: brandColors.text.primary, fontWeight: 600 }}>
                     {selectedConv.contactName}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
                     {getContactTypeLabel(selectedConv.contactType)} • {selectedConv.organization}
-                        </Typography>
-                      </Box>
+                  </Typography>
+                </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Chip
                     label={selectedConv.status}
@@ -499,7 +499,6 @@ const ManageMessages: React.FC = () => {
                       color: brandColors.text.inverse,
                     }}
                   />
-                </Box>
                 </Box>
               </>
             ) : (

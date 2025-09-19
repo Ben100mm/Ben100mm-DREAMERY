@@ -103,7 +103,7 @@ const ManageDashboard: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    stats.monthlyRevenue.toLocaleString()
+                    ${stats.monthlyRevenue.toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Monthly Revenue

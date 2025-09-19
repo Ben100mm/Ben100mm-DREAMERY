@@ -760,10 +760,10 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              warranty.annualPremium/year
+                              ${warranty.annualPremium.toLocaleString()}/year
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Deductible: warranty.deductible
+                              Deductible: ${warranty.deductible.toLocaleString()}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Term: {warranty.term} months

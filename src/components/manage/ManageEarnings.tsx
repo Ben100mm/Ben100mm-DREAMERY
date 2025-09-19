@@ -186,7 +186,7 @@ const ManageEarnings: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    earningsData.totalRevenue.toLocaleString()
+                    ${earningsData.totalRevenue.toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Revenue
@@ -215,7 +215,7 @@ const ManageEarnings: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    earningsData.totalExpenses.toLocaleString()
+                    ${earningsData.totalExpenses.toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Expenses
@@ -244,7 +244,7 @@ const ManageEarnings: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    earningsData.netIncome.toLocaleString()
+                    ${earningsData.netIncome.toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Net Income
@@ -281,7 +281,7 @@ const ManageEarnings: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Average rent: earningsData.averageRent.toLocaleString()
+                Average rent: ${earningsData.averageRent.toLocaleString()}
               </Typography>
             </CardContent>
           </Card>
@@ -325,7 +325,7 @@ const ManageEarnings: React.FC = () => {
                         <TableCell>{row.tenant}</TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            row.rent.toLocaleString()
+                            ${row.rent.toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -365,7 +365,7 @@ const ManageEarnings: React.FC = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                     <Typography variant="body2">{expense.category}</Typography>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      expense.amount.toLocaleString()
+                      ${expense.amount.toLocaleString()}
                     </Typography>
                   </Box>
                   <Box sx={{ width: '100%', height: 8, backgroundColor: brandColors.neutral[300], borderRadius: 4 }}>

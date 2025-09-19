@@ -599,7 +599,7 @@ const FinancingCoordination: React.FC = () => {
                       </TableCell>
                       <TableCell>{cost.description}</TableCell>
                       <TableCell align="right">
-                        cost.amount.toLocaleString()
+                        ${cost.amount.toLocaleString()}
                       </TableCell>
                       <TableCell>
                         <Chip 

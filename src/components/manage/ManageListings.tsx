@@ -235,7 +235,7 @@ const ManageListings: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary', mr: 0.5 }} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                    listing.price.toLocaleString()/month
+                    ${listing.price.toLocaleString()}/month
                   </Typography>
                 </Box>
 

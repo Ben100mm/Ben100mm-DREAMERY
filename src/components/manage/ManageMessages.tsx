@@ -68,15 +68,7 @@ interface Message {
   isRead?: boolean;
 }
 
-const ManageMessages: React.FC = () => {
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState(0);
-
-  const conversations: Conversation[] = [
+const conversations: Conversation[] = [
     {
       id: 1,
       contactName: 'Sarah Mitchell',
@@ -226,6 +218,14 @@ const ManageMessages: React.FC = () => {
     },
   ];
 
+const ManageMessages: React.FC = () => {
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[0] || null);
+  const [messages, setMessages] = useState<Message[]>(sampleMessages);
+  const [newMessage, setNewMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState(0);
+
   const getContactTypeIcon = (type: string) => {
     switch (type) {
       case 'tenant': return <PersonIcon sx={{ color: brandColors.primary }} />;
@@ -294,12 +294,18 @@ const ManageMessages: React.FC = () => {
   });
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
       {/* Header */}
       <Box sx={{ 
-        p: 3, 
+        p: 2, 
         borderBottom: `1px solid ${brandColors.borders.secondary}`,
-        backgroundColor: brandColors.backgrounds.primary
+        backgroundColor: brandColors.backgrounds.primary,
+        flexShrink: 0
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h4" component="h1" sx={{ color: brandColors.primary, fontWeight: 600 }}>
@@ -369,13 +375,19 @@ const ManageMessages: React.FC = () => {
         </Box>
       </Box>
 
-      <Box sx={{ flex: 1, display: 'flex' }}>
+      <Box sx={{ 
+        flex: 1, 
+        display: 'flex', 
+        height: 'calc(100vh - 200px)',
+        overflow: 'hidden'
+      }}>
         {/* Conversations List */}
         <Box sx={{ 
-          width: 400, 
+          width: 350, 
           borderRight: `1px solid ${brandColors.borders.secondary}`,
           backgroundColor: brandColors.backgrounds.secondary,
-          overflow: 'auto'
+          overflow: 'auto',
+          flexShrink: 0
         }}>
               <List sx={{ p: 0 }}>
             {filteredConversations.map((conversation) => (
@@ -440,18 +452,25 @@ const ManageMessages: React.FC = () => {
         </Box>
 
         {/* Chat Area */}
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          minWidth: 0,
+          overflow: 'hidden'
+        }}>
+          {/* Chat Header */}
+          <Box sx={{ 
+            p: 2, 
+            borderBottom: `1px solid ${brandColors.borders.secondary}`,
+            backgroundColor: brandColors.backgrounds.primary,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            flexShrink: 0
+          }}>
             {selectedConv ? (
               <>
-                {/* Chat Header */}
-              <Box sx={{ 
-                p: 2, 
-                borderBottom: `1px solid ${brandColors.borders.secondary}`,
-                backgroundColor: brandColors.backgrounds.primary,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2
-              }}>
                       <Avatar sx={{ bgcolor: brandColors.primary }}>
                   {getContactTypeIcon(selectedConv.contactType)}
                       </Avatar>
@@ -482,17 +501,27 @@ const ManageMessages: React.FC = () => {
                   />
                 </Box>
                 </Box>
+              </>
+            ) : (
+              <Box sx={{ flex: 1, textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ color: brandColors.text.secondary }}>
+                  No conversation selected
+                </Typography>
+              </Box>
+            )}
+          </Box>
 
-                {/* Messages */}
-              <Box sx={{ 
-                flex: 1, 
-                p: 2, 
-                overflow: 'auto',
-                backgroundColor: brandColors.backgrounds.primary,
-                height: '100%',
-                color: 'text.secondary'
-              }}>
-                  {messages.map((message) => (
+          {/* Messages */}
+          <Box sx={{ 
+            flex: 1, 
+            p: 2, 
+            overflow: 'auto',
+            backgroundColor: brandColors.backgrounds.primary,
+            color: 'text.secondary',
+            minHeight: 0
+          }}>
+            {selectedConv ? (
+              messages.map((message) => (
                     <Box
                       key={message.id}
                       sx={{
@@ -532,86 +561,87 @@ const ManageMessages: React.FC = () => {
                         </Typography>
                       </Box>
                     </Box>
-                  ))}
-                </Box>
-
-                {/* Message Input */}
-              <Box sx={{ 
-                p: 2, 
-                borderTop: `1px solid ${brandColors.borders.secondary}`,
-                backgroundColor: brandColors.backgrounds.primary,
-                display: 'flex',
-                gap: 1
-              }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  size="small"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: brandColors.primary,
-                      },
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: brandColors.primary,
-                      },
-                    },
-                  }}
-                />
-                <IconButton sx={{ color: brandColors.primary }}>
-                      <AttachIcon />
-                    </IconButton>
-                    <Button
-                      variant="contained"
-                      onClick={handleSendMessage}
-                      disabled={!newMessage.trim()}
-                  sx={{
-                    backgroundColor: brandColors.primary,
-                    '&:hover': {
-                      backgroundColor: brandColors.primaryDark,
-                    },
-                    '&:disabled': {
-                      backgroundColor: brandColors.text.disabled,
-                    },
-                  }}
-                    >
-                      <SendIcon />
-                    </Button>
-                </Box>
-              </>
+              ))
             ) : (
-            <Box sx={{ 
-              flex: 1, 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              backgroundColor: brandColors.backgrounds.primary,
-              color: 'text.secondary'
-            }}>
-              <Typography variant="h6" sx={{ color: brandColors.text.secondary }}>
-                  Select a conversation to start messaging
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                height: '100%'
+              }}>
+                <Typography variant="h6" sx={{ color: brandColors.text.secondary }}>
+                  Select a conversation to view messages
                 </Typography>
               </Box>
             )}
+          </Box>
+
+          {/* Message Input */}
+          <Box sx={{ 
+            p: 2, 
+            borderTop: `1px solid ${brandColors.borders.secondary}`,
+            backgroundColor: brandColors.backgrounds.primary,
+            display: 'flex',
+            gap: 1,
+            flexShrink: 0
+          }}>
+            <TextField
+              fullWidth
+              placeholder={selectedConv ? "Type your message..." : "Select a conversation to start messaging"}
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              size="small"
+              disabled={!selectedConv}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: brandColors.primary,
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: brandColors.primary,
+                  },
+                },
+              }}
+            />
+            <IconButton sx={{ color: brandColors.primary }} disabled={!selectedConv}>
+              <AttachIcon />
+            </IconButton>
+            <Button
+              variant="contained"
+              onClick={handleSendMessage}
+              disabled={!newMessage.trim() || !selectedConv}
+              sx={{
+                backgroundColor: brandColors.primary,
+                '&:hover': {
+                  backgroundColor: brandColors.primaryDark,
+                },
+                '&:disabled': {
+                  backgroundColor: brandColors.text.disabled,
+                },
+              }}
+            >
+              <SendIcon />
+            </Button>
+          </Box>
         </Box>
 
         {/* Contact Details Sidebar */}
-        {selectedConv && (
-          <Box sx={{ 
-            width: 300, 
-            borderLeft: `1px solid ${brandColors.borders.secondary}`,
-            backgroundColor: brandColors.backgrounds.secondary,
-            overflow: 'auto',
-            p: 2
-          }}>
-            <Typography variant="h6" sx={{ color: brandColors.text.primary, mb: 2 }}>
-              Contact Details
-            </Typography>
-            
-            <Box sx={{ mb: 3 }}>
+        <Box sx={{ 
+          width: 300, 
+          borderLeft: `1px solid ${brandColors.borders.secondary}`,
+          backgroundColor: brandColors.backgrounds.secondary,
+          overflow: 'auto',
+          p: 2,
+          flexShrink: 0
+        }}>
+          <Typography variant="h6" sx={{ color: brandColors.text.primary, mb: 2 }}>
+            Contact Details
+          </Typography>
+          
+          {selectedConv ? (
+            <>
+              <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Avatar sx={{ bgcolor: brandColors.primary, width: 56, height: 56 }}>
                   {getContactTypeIcon(selectedConv.contactType)}
@@ -713,8 +743,20 @@ const ManageMessages: React.FC = () => {
                 </Box>
               </Box>
             </Box>
-          </Box>
-        )}
+            </>
+          ) : (
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              height: '200px'
+            }}>
+              <Typography variant="body1" sx={{ color: brandColors.text.secondary, textAlign: 'center' }}>
+                Select a conversation to view contact details
+              </Typography>
+            </Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

@@ -68,15 +68,7 @@ interface Message {
   isRead?: boolean;
 }
 
-const FundMessages: React.FC = () => {
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState(0);
-
-  const conversations: Conversation[] = [
+const conversations: Conversation[] = [
     {
       id: 1,
       contactName: 'Sarah Mitchell',
@@ -226,6 +218,14 @@ const FundMessages: React.FC = () => {
     },
   ];
 
+const FundMessages: React.FC = () => {
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[0] || null);
+  const [messages, setMessages] = useState<Message[]>(sampleMessages);
+  const [newMessage, setNewMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState(0);
+
   const getContactTypeIcon = (type: string) => {
     switch (type) {
       case 'investor': return <TrendingUpIcon sx={{ color: brandColors.primary }} />;
@@ -294,12 +294,18 @@ const FundMessages: React.FC = () => {
   });
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
       {/* Header */}
       <Box sx={{ 
-        p: 3, 
+        p: 2, 
         borderBottom: `1px solid ${brandColors.borders.secondary}`,
-        backgroundColor: brandColors.backgrounds.primary
+        backgroundColor: brandColors.backgrounds.primary,
+        flexShrink: 0
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h4" component="h1" sx={{ color: brandColors.primary, fontWeight: 600 }}>

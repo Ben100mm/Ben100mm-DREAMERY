@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import ProfessionalSupportDashboard from './dashboards/ProfessionalSupportDashboard';
 import {
   Box,
   AppBar,
@@ -34,6 +33,7 @@ import {
   Switch,
   FormControlLabel,
 } from '@mui/material';
+import AcquisitionSpecialistDashboard from './close/dashboard/AcquisitionSpecialistDashboard';
 import {
   Notifications as NotificationsIcon,
   ArrowBack as ArrowBackIcon,
@@ -1797,10 +1797,10 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
           <>
             {state.activeTab === 'dashboard' && (
               <Box sx={{ width: '100%' }}>
-                {currentRoleKey === 'professional-support' ? (
-                  <ProfessionalSupportDashboard />
+                {currentRoleKey === 'acquisition-specialist' ? (
+                  <AcquisitionSpecialistDashboard />
                 ) : (
-                  <Box>
+                  <>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                       <Tabs value={state.subTab} onChange={handleSubTabChange} aria-label="dashboard tabs">
                         <Tab label="Tasks" />
@@ -1823,7 +1823,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                       <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold', mb: 1 }}>24</Typography>
                       <Typography variant="body2" color="text.secondary">Manage uploaded files and documents</Typography>
                     </TabPanel>
-                  </Box>
+                  </>
                 )}
               </Box>
             )}

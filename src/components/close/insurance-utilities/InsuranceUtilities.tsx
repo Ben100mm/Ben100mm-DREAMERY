@@ -520,7 +520,7 @@ const InsuranceUtilities: React.FC = () => {
       case 'pending':
         return brandColors.accent.warning;
       case 'transferred':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -590,7 +590,7 @@ const InsuranceUtilities: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <CheckCircleIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+            <CheckCircleIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
             <Typography variant="h6" component="div">
               {insuranceUtilitiesData.insuranceQuotes.filter(q => q.status === 'bound').length}
             </Typography>
@@ -651,7 +651,7 @@ const InsuranceUtilities: React.FC = () => {
 
                         <Box sx={{ mb: 2 }}>
                           <Typography variant="h5" color="primary" gutterBottom>
-                            quote.annualPremium.toLocaleString()/year
+                            ${quote.annualPremium.toLocaleString()}/year
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Deductible: quote.deductible.toLocaleString()

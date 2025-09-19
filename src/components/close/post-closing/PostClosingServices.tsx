@@ -513,7 +513,7 @@ const PostClosingServices: React.FC = () => {
 
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <SettingsIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+              <SettingsIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
               <Typography variant="h6" component="div">
                 {postClosingData.propertyManagement.length}
               </Typography>
@@ -577,7 +577,7 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              exemption.annualSavings.toLocaleString()/year
+                              ${exemption.annualSavings.toLocaleString()}/year
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Filed: {exemption.filingDate}
@@ -670,7 +670,7 @@ const PostClosingServices: React.FC = () => {
 
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                              payment.monthlyPayment.toLocaleString()/month
+                              ${payment.monthlyPayment.toLocaleString()}/month
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               Due: {payment.dueDate} of each month

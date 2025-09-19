@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { 
   Card, 
@@ -47,6 +47,15 @@ const MetricCard = styled(Card)`
   background: linear-gradient(135deg, brandColors.primary 0%, #2d5a8b 100%);
   color: white;
   height: 100%;
+`;
+
+const LiveTimeCard = styled(Card)`
+  background: white;
+  border: 1px solid brandColors.primary;
+  border-radius: 8px;
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const mockMarketData = {
@@ -104,12 +113,44 @@ const mockInvestmentMetrics = [
 const AnalyzePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [propertyAddress, setPropertyAddress] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDateTime = (date: Date) => {
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  };
 
   return (
     <PageTemplate 
       title="Property Analysis" 
       subtitle="Get comprehensive insights and market data for informed decisions"
     >
+      {/* Live Market Data Card */}
+      <LiveTimeCard>
+        <Typography variant="h6" sx={{ color: brandColors.primary, fontWeight: 700, mb: 1 }}>
+          Live Market Data
+        </Typography>
+        <Typography variant="body1" sx={{ color: brandColors.primary, fontSize: '1rem' }}>
+          {formatDateTime(currentTime)}
+        </Typography>
+      </LiveTimeCard>
+
       {/* Search Section */}
       <Card sx={{ mb: 3 }}>
         <CardContent>

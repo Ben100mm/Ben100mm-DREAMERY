@@ -182,7 +182,7 @@ const MortgagePage: React.FC = () => {
     CARD_WIDTH_PX * CARDS_PER_SLIDE + GAP_PX * (CARDS_PER_SLIDE - 1);
 
   // Mortgage calculation constants
-  const LOAN_AMOUNT = 1000000; // $1,000,000
+  const LOAN_AMOUNT = 1475000; // $1,475,000
   const CLOSING_COSTS = 15000; // $15,000 in closing costs
 
   // Mortgage payment calculation function
@@ -1292,14 +1292,14 @@ const MortgagePage: React.FC = () => {
                   }}
                 >
                   <Box sx={{ textAlign: "center" }}>
-                    <Typography
-                      variant="h5"
-                      sx={{ fontWeight: 700, color: brandColors.primary }}
-                    >
-                      LOAN_AMOUNT.toLocaleString()
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
-                      Target price
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 700, color: brandColors.primary }}
+                  >
+                    {LOAN_AMOUNT.toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                    Target price
                     </Typography>
                   </Box>
                   <Box sx={{ textAlign: "center" }}>
@@ -1307,7 +1307,7 @@ const MortgagePage: React.FC = () => {
                       variant="h5"
                       sx={{ fontWeight: 700, color: brandColors.primary }}
                     >
-                      LOAN_AMOUNT.toLocaleString()
+                      {LOAN_AMOUNT.toLocaleString()}
                     </Typography>
                     <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                       DreamAbility™
@@ -1962,7 +1962,7 @@ const MortgagePage: React.FC = () => {
                   <Typography variant="body1" sx={{ mb: 2, color: brandColors.neutral[800] }}>
                     Interest rate of {selectedLoan.rate.toFixed(3)}% (
                     {selectedLoan.apr.toFixed(3)}% APR) calculated for a
-                    mortgage loan of LOAN_AMOUNT.toLocaleString(), with a
+                    mortgage loan of ${LOAN_AMOUNT.toLocaleString()}, with a
                     monthly payment of $
                     {Math.round(selectedLoan.monthlyPayment).toLocaleString()}.
                   </Typography>

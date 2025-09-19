@@ -497,7 +497,7 @@ const PartnerIntegrations: React.FC = () => {
       case 'cancelled':
         return brandColors.actions.error;
       case 'error':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -534,7 +534,7 @@ const PartnerIntegrations: React.FC = () => {
       case 'high':
         return brandColors.actions.error;
       case 'critical':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -615,7 +615,7 @@ const PartnerIntegrations: React.FC = () => {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <ServiceIcon sx={{ fontSize: 40, color: '#9c27b0', mb: 1 }} />
+            <ServiceIcon sx={{ fontSize: 40, color: brandColors.accent.info, mb: 1 }} />
             <Typography variant="h6" component="div">
               {integrationData.services.length}
             </Typography>
@@ -810,7 +810,7 @@ const PartnerIntegrations: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <ServiceIcon sx={{ fontSize: 32, color: '#9c27b0' }} />
+                <ServiceIcon sx={{ fontSize: 32, color: brandColors.accent.info }} />
                 <Typography variant="h6">
                   Service Providers
                 </Typography>

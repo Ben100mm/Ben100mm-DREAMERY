@@ -770,7 +770,7 @@ const CloseBrokeragesPage = () => {
               width: 80, 
               height: 80, 
               borderRadius: '50%',
-              background: 'conic-gradient(#8b0000 0deg 180deg, brandColors.accent.infoDark 180deg 270deg, #9c27b0 270deg 300deg, #03a9f4 300deg 360deg)',
+              background: 'conic-gradient(#8b0000 0deg 180deg, brandColors.accent.infoDark 180deg 270deg, brandColors.accent.info 270deg 300deg, #03a9f4 300deg 360deg)',
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
@@ -793,7 +793,7 @@ const CloseBrokeragesPage = () => {
                 <Typography variant="caption">Active</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Box sx={{ width: 12, height: 12, backgroundColor: '#9c27b0', borderRadius: 2 }} />
+                <Box sx={{ width: 12, height: 12, backgroundColor: brandColors.accent.info, borderRadius: 2 }} />
                 <Typography variant="caption">Pending</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -948,7 +948,7 @@ const CloseBrokeragesPage = () => {
               borderRadius: '50%', 
               backgroundColor: activity.status === 'completed' ? brandColors.accent.success : 
                                activity.status === 'pending' ? brandColors.accent.warning : 
-                               activity.status === 'scheduled' ? brandColors.accent.info : '#9c27b0',
+                               activity.status === 'scheduled' ? brandColors.accent.info : brandColors.accent.info,
               mr: 2 
             }} />
             <Box sx={{ flexGrow: 1 }}>

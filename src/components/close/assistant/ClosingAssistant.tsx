@@ -532,7 +532,7 @@ const ClosingAssistant: React.FC = () => {
       case 'high':
         return brandColors.actions.error;
       case 'critical':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }
@@ -560,7 +560,7 @@ const ClosingAssistant: React.FC = () => {
       case 'high':
         return brandColors.actions.error;
       case 'critical':
-        return '#9c27b0';
+        return brandColors.accent.info;
       default:
         return brandColors.text.disabled;
     }

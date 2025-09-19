@@ -218,7 +218,7 @@ const FinancingCoordination: React.FC = () => {
       case 'conditional':
         return brandColors.accent.info;
       case 'funded':
-        return '#9c27b0';
+        return brandColors.accent.info;
       case 'closed':
         return '#607d8b';
       default:

@@ -5772,7 +5772,7 @@ const CloseAgentPage: React.FC = () => {
                           amount: '$1,295,000',
                           date: '03/22/2023 04:32:00 P.M.',
                           status: 'Countered',
-                          statusColor: '#e1bee7'
+                          statusColor: brandColors.accent.infoLight
                         },
                         {
                           address: '70 Simmons St, Elder Mills, York, Ontario L4L 1A7',
@@ -7692,8 +7692,8 @@ const CloseAgentPage: React.FC = () => {
           <Typography variant="h4" sx={{ color: '#c2185b', fontWeight: 700 }}>4</Typography>
           <Typography variant="subtitle1" color="text.secondary">Overdue Reviews</Typography>
         </Paper>
-        <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#f3e5f5' }}>
-          <Typography variant="h4" sx={{ color: '#7b1fa2', fontWeight: 700 }}>8</Typography>
+        <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: brandColors.backgrounds.selected }}>
+          <Typography variant="h4" sx={{ color: brandColors.primary, fontWeight: 700 }}>8</Typography>
           <Typography variant="subtitle1" color="text.secondary">High Priority</Typography>
         </Paper>
         <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e0f2f1' }}>
@@ -9927,7 +9927,7 @@ const CloseAgentPage: React.FC = () => {
                     { name: 'Starter Agent', count: 1, color: brandColors.accent.success },
                     { name: 'State-Specific', count: 2, color: brandColors.accent.info },
                     { name: 'MPE Forms', count: 1, color: brandColors.accent.warning },
-                    { name: 'Special Cases', count: 1, color: '#9c27b0' },
+                    { name: 'Special Cases', count: 1, color: brandColors.accent.info },
                     { name: 'Condo', count: 1, color: brandColors.accent.error },
                     { name: 'Brokerage', count: 1, color: '#795548' },
                     { name: 'Client-Specific', count: 1, color: '#607d8b' },

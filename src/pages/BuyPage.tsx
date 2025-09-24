@@ -23,15 +23,21 @@ import {
   Link,
   CircularProgress,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
 import InteractiveMap from "../components/InteractiveMap";
+import EnhancedInteractiveMap from "../components/EnhancedInteractiveMap";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
 import { useRealtorData } from "../hooks/useRealtorData";
 import { RealtorSearchParams, PropertyData } from "../types/realtor";
+import PropertyDetailModal from "../components/PropertyDetailModal";
 
 // Lazy load icons to reduce initial bundle size
 const LazySearchIcon = React.lazy(() => import("@mui/icons-material/Search"));
@@ -147,9 +153,11 @@ const PropertyImage = styled.div`
 `;
 
 const BuyPage: React.FC = () => {
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Filter states
   const [propertyStatus, setPropertyStatus] = useState("for-sale");
@@ -192,7 +200,7 @@ const BuyPage: React.FC = () => {
   const [daysOnZillow, setDaysOnZillow] = useState("any");
   const [keywords, setKeywords] = useState("");
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: string) => {
     const newFavorites = new Set(favorites);
     if (newFavorites.has(id)) {
       newFavorites.delete(id);
@@ -200,6 +208,16 @@ const BuyPage: React.FC = () => {
       newFavorites.add(id);
     }
     setFavorites(newFavorites);
+  };
+
+  const handlePropertyClick = (property: PropertyData) => {
+    setSelectedProperty(property);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedProperty(null);
   };
 
   const handleFilterClick = (
@@ -1345,16 +1363,27 @@ const BuyPage: React.FC = () => {
             p: 1
           }
         }}>
-          <InteractiveMap 
+          <EnhancedInteractiveMap 
             properties={realtorProperties.map(prop => ({
-              id: prop.property_id,
+              id: parseInt(prop.property_id) || Math.random(),
               price: prop.list_price ? `$${(prop.list_price / 1000000).toFixed(1)}M` : 'N/A',
               x: prop.coordinates?.lng ? (prop.coordinates.lng + 122.4) * 100 : Math.random() * 100,
               y: prop.coordinates?.lat ? (prop.coordinates.lat - 37.7) * 100 : Math.random() * 100,
-              specialLabels: []
+              specialLabels: [],
+              coordinates: prop.coordinates || {
+                lat: 37.7749 + (Math.random() - 0.5) * 0.1,
+                lng: -122.4194 + (Math.random() - 0.5) * 0.1
+              }
             }))}
             onPropertyClick={(property) => {
               console.log('Property clicked:', property);
+              // Find the corresponding realtor property and open modal
+              const realtorProperty = realtorProperties.find(prop => 
+                prop.property_id === property.id.toString()
+              );
+              if (realtorProperty) {
+                handlePropertyClick(realtorProperty);
+              }
             }}
           />
         </Box>
@@ -1437,7 +1466,23 @@ const BuyPage: React.FC = () => {
                 </Alert>
               )}
               {!loading && realtorProperties.map((property) => (
-                <PropertyCard key={property.property_id}>
+                <Box
+                  key={property.property_id}
+                  onClick={() => handlePropertyClick(property)}
+                  sx={{ 
+                    cursor: 'pointer',
+                    '&:hover .property-card': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    }
+                  }}
+                >
+                  <PropertyCard 
+                    className="property-card"
+                    sx={{ 
+                      transition: 'all 0.2s ease-in-out'
+                    }}
+                  >
                   <Box sx={{ 
                     display: "flex",
                     "@media (max-width: 600px)": {
@@ -1488,14 +1533,17 @@ const BuyPage: React.FC = () => {
                         </Typography>
                         <IconButton
                           size="small"
-                          onClick={() => toggleFavorite(parseInt(property.property_id))}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(property.property_id);
+                          }}
                           sx={{
-                            color: favorites.has(parseInt(property.property_id))
+                            color: favorites.has(property.property_id)
                               ? brandColors.accent.error
                               : brandColors.neutral[400],
                           }}
                         >
-                          {favorites.has(parseInt(property.property_id)) ? (
+                          {favorites.has(property.property_id) ? (
                             <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                               <LazyFavoriteIcon />
                             </React.Suspense>
@@ -1522,23 +1570,23 @@ const BuyPage: React.FC = () => {
                             color="primary"
                           />
                         )}
-                        {property.priceCut && (
+                        {property.flags?.is_price_reduced && (
                           <Chip
-                            label={`Price cut: ${property.priceCut}`}
+                            label="Price reduced"
                             size="small"
                             color="secondary"
                           />
                         )}
                         {property.open_houses && property.open_houses.length > 0 && (
                           <Chip
-                            label={`Open: ${property.open_houses[0].start_time || 'Check listing'}`}
+                            label={`Open: ${property.open_houses[0].start_date || 'Check listing'}`}
                             size="small"
                             color="success"
                           />
                         )}
-                        {property.flexible && (
+                        {property.flags?.is_new_construction && (
                           <Chip
-                            label="Flexible layout"
+                            label="New construction"
                             size="small"
                             color="info"
                           />
@@ -1551,7 +1599,7 @@ const BuyPage: React.FC = () => {
                         fontSize: { xs: "0.875rem", md: "0.875rem" }
                       }}>
                         {property.description?.beds || 0} bds | {property.description?.baths_full || 0} ba |{" "}
-                        {property.description?.sqft ? property.description.sqft.toLocaleString() : 'N/A'} sqft - {property.description?.property_type || 'Property'}
+                        {property.description?.sqft ? property.description.sqft.toLocaleString() : 'N/A'} sqft - {property.description?.type || 'Property'}
                       </Typography>
 
                       <Typography
@@ -1595,11 +1643,23 @@ const BuyPage: React.FC = () => {
                     </CardContent>
                   </Box>
                 </PropertyCard>
+                </Box>
               ))}
             </Box>
           </Container>
         </Box>
       </Box>
+
+      {/* Property Detail Modal */}
+      <PropertyDetailModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        property={selectedProperty}
+        onFavorite={toggleFavorite}
+        favorites={favorites}
+      />
+      
+      
     </PageContainer>
   );
 };

@@ -387,6 +387,47 @@ export interface PropertyData {
     lng: number;
   };
   mls_data?: Record<string, any>;
+  // Additional properties from Property interface
+  flags?: HomeFlags;
+  details?: HomeDetails[];
+  advertisers?: Advertisers;
+  monthly_fees?: HomeMonthlyFee;
+  one_time_fees?: HomeOneTimeFee[];
+  prc_sqft?: number;
+  
+  // External data enrichment fields
+  walk_score?: number;
+  bike_score?: number;
+  transit_score?: number;
+  amenities?: Array<{
+    name: string;
+    type: string;
+    rating?: number;
+    distance_meters?: number;
+    price_level?: number;
+  }>;
+  transit?: {
+    nearest_stop?: string;
+    distance_meters?: number;
+    routes?: string[];
+  };
+  demographics?: {
+    population?: number;
+    median_age?: number;
+    median_income?: number;
+    education_level?: string;
+    employment_rate?: number;
+    housing_units?: number;
+  };
+  schools?: Array<{
+    name: string;
+    type: string;
+    rating?: number;
+    distance_meters?: number;
+    district?: string;
+    enrollment?: number;
+  }>;
+  enrichment_date?: string;
 }
 
 // Raw API response interfaces

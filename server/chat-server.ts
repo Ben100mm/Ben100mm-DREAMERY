@@ -3,6 +3,8 @@ import http from 'http';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import { PrismaClient } from '@prisma/client';
+import { spawn } from 'child_process';
+import path from 'path';
 
 const app = express();
 app.use(cors());
@@ -315,5 +317,54 @@ app.patch('/api/tasks/:id', async (req, res) => {
     io.to(task.roleId).emit('task_event', { type: 'updated', task });
   } catch (e) {
     res.status(500).json({ error: 'Failed to update task' });
+  }
+});
+
+// Property search endpoint
+app.post('/api/properties/search', async (req, res) => {
+  try {
+    const searchParams = req.body;
+    
+    // Call Python service
+    const pythonProcess = spawn('python3', [
+      path.join(__dirname, 'dreamery_property_api.py'),
+      JSON.stringify(searchParams)
+    ]);
+    
+    let data = '';
+    let error = '';
+    
+    pythonProcess.stdout.on('data', (chunk) => {
+      data += chunk.toString();
+    });
+    
+    pythonProcess.stderr.on('data', (chunk) => {
+      error += chunk.toString();
+    });
+    
+    pythonProcess.on('close', (code) => {
+      if (code === 0) {
+        try {
+          const result = JSON.parse(data);
+          res.json(result);
+        } catch (parseError) {
+          res.status(500).json({ 
+            success: false, 
+            error: 'Failed to parse property data' 
+          });
+        }
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          error: 'Property search failed' 
+        });
+      }
+    });
+    
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error' 
+    });
   }
 });

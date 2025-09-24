@@ -223,7 +223,7 @@ const RealtorPropertySearch: React.FC = () => {
             
             <PropertyGrid container spacing={3}>
               {properties.map((property) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={property.property_id}>
+                <Grid xs={12} sm={6} md={4} lg={3} key={property.property_id}>
                   <RealtorPropertyCard
                     property={property}
                     onPropertyClick={handlePropertyClick}

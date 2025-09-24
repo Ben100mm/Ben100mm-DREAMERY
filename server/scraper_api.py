@@ -4,11 +4,11 @@ High-level property scraping API with comprehensive validation
 
 import warnings
 import pandas as pd
-from typing import Union, Optional, List
-from .enhanced_scraper import ScraperInput
-from .models import ListingType, SearchPropertyType, ReturnType, Property
-from .dreamery_property_scraper import DreameryPropertyScraper
-from .utils import process_result, ordered_properties, validate_input, validate_dates, validate_limit
+from typing import Union, Optional, List, Dict
+from enhanced_scraper import ScraperInput
+from models import ListingType, SearchPropertyType, ReturnType, Property
+from dreamery_property_scraper import DreameryPropertyScraper
+from utils import process_result, ordered_properties, validate_input, validate_dates, validate_limit
 
 
 
@@ -28,7 +28,7 @@ def scrape_property(
     extra_property_data: bool = True,
     exclude_pending: bool = False,
     limit: int = 10000
-) -> Union[pd.DataFrame, list[dict], list[Property]]:
+) -> Union[pd.DataFrame, List[dict], List[Property]]:
     """
     Scrape properties from Realtor.com based on a given location and listing type.
     
@@ -73,7 +73,7 @@ def scrape_property(
     scraper = DreameryPropertyScraper.from_scraper_input(scraper_input)
     
     # Use appropriate search method based on return type
-    if scraper_input.return_type == ReturnType.PANDAS:
+    if scraper_input.return_type == ReturnType.pandas:
         results = scraper.search_properties_comprehensive(
             location=scraper_input.location,
             listing_type=scraper_input.listing_type.value.lower(),
@@ -98,7 +98,7 @@ def scrape_property(
             exclude_pending=scraper_input.exclude_pending
         )
 
-    if scraper_input.return_type != ReturnType.PANDAS:
+    if scraper_input.return_type != ReturnType.pandas:
         return results
 
     properties_dfs = [df for result in results if not (df := process_result(result)).empty]

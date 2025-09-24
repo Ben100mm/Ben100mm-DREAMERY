@@ -4,7 +4,7 @@ from urllib3.util.retry import Retry
 from bs4 import BeautifulSoup
 import json
 import uuid
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Dict, Optional, Union, Any, Union
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import logging
@@ -14,15 +14,15 @@ from urllib.parse import urlencode, urljoin
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from json import JSONDecodeError
-from .models import PropertyData, Property, Address, Description, PropertyType, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
-from .parsers import (
+from models import PropertyData, Property, Address, Description, PropertyType, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
+from parsers import (
     parse_address, parse_description, parse_open_houses, parse_units,
     parse_tax_record, parse_estimates, parse_neighborhoods, calculate_days_on_mls
 )
-from .processors import process_property, process_extra_property_details, get_key
-from .queries import HOMES_DATA, SEARCH_HOMES_DATA, GENERAL_RESULTS_QUERY, HOME_FRAGMENT
-from .enhanced_scraper import EnhancedScraper, ScraperInput
-from .exceptions import AuthenticationError, ScrapingError, ValidationError, RateLimitError
+from processors import process_property, process_extra_property_details, get_key
+from queries import HOMES_DATA, SEARCH_HOMES_DATA, GENERAL_RESULTS_QUERY, HOME_FRAGMENT
+from enhanced_scraper import EnhancedScraper, ScraperInput
+from exceptions import AuthenticationError, ScrapingError, ValidationError, RateLimitError
 
 logger = logging.getLogger(__name__)
 
@@ -478,7 +478,7 @@ class DreameryPropertyScraper:
             total_properties = response_json["data"][search_key]["total"]
             
             # Limit results
-            properties_list = properties_list[:limit]
+            properties_list = properties_List[:limit]
             
             # Format properties for Dreamery
             formatted_properties = []
@@ -538,7 +538,7 @@ class DreameryPropertyScraper:
                                         mls_only: bool = False, 
                                         extra_property_data: bool = False,
                                         exclude_pending: bool = False,
-                                        listing_type: ListingType = ListingType.FOR_SALE) -> Property | None:
+                                        listing_type: ListingType = ListingType.FOR_SALE) -> Union[Property, None]:
         """Process property using the new processors for comprehensive data extraction"""
         try:
             return process_property(

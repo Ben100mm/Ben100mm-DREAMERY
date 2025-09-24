@@ -3,8 +3,8 @@ Processors for realtor.com property data processing
 """
 
 from datetime import datetime
-from typing import Optional
-from .models import (
+from typing import Optional, Union, Union, List, Dict
+from models import (
     Property,
     ListingType,
     Agent,
@@ -14,7 +14,7 @@ from .models import (
     Office,
     ReturnType
 )
-from .parsers import (
+from parsers import (
     parse_open_houses,
     parse_units,
     parse_tax_record,
@@ -28,12 +28,12 @@ from .parsers import (
 )
 
 
-def process_advertisers(advertisers: list[dict] | None) -> Advertisers | None:
+def process_advertisers(advertisers: Union[List[dict], None]) -> Union[Advertisers, None]:
     """Process advertisers data from GraphQL response"""
     if not advertisers:
         return None
 
-    def _parse_fulfillment_id(fulfillment_id: str | None) -> str | None:
+    def _parse_fulfillment_id(fulfillment_id: Union[str, None]) -> Union[str, None]:
         return fulfillment_id if fulfillment_id and fulfillment_id != "0" else None
 
     processed_advertisers = Advertisers()
@@ -78,7 +78,7 @@ def process_advertisers(advertisers: list[dict] | None) -> Advertisers | None:
 
 def process_property(result: dict, mls_only: bool = False, extra_property_data: bool = False, 
                     exclude_pending: bool = False, listing_type: ListingType = ListingType.FOR_SALE,
-                    get_key_func=None, process_extra_property_details_func=None) -> Property | None:
+                    get_key_func=None, process_extra_property_details_func=None) -> Union[Property, None]:
     """Process property data from GraphQL response"""
     mls = result["source"].get("id") if "source" in result and isinstance(result["source"], dict) else None
 

@@ -26,7 +26,8 @@ def install_requirements():
 def start_server():
     """Start the Flask API server"""
     try:
-        from realtor_api import app
+        import realtor_api
+        app = realtor_api.app
         print("🚀 Starting Realtor.com API server...")
         print("📍 Server will be available at: http://localhost:5001")
         print("🔍 API endpoints:")

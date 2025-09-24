@@ -3,11 +3,11 @@ Parsers for realtor.com data processing
 """
 
 from datetime import datetime
-from typing import Optional
-from .models import Address, Description, PropertyType
+from typing import Optional, Union, List, Dict, Dict
+from models import Address, Description, PropertyType
 
 
-def parse_open_houses(open_houses_data: list[dict] | None) -> list[dict] | None:
+def parse_open_houses(open_houses_data: Union[List[dict], None]) -> Union[List[dict], None]:
     """Parse open houses data and convert date strings to datetime objects"""
     if not open_houses_data:
         return None
@@ -34,7 +34,7 @@ def parse_open_houses(open_houses_data: list[dict] | None) -> list[dict] | None:
     return parsed_open_houses
 
 
-def parse_units(units_data: list[dict] | None) -> list[dict] | None:
+def parse_units(units_data: Union[List[dict], None]) -> Union[List[dict], None]:
     """Parse units data and convert date strings to datetime objects"""
     if not units_data:
         return None
@@ -55,7 +55,7 @@ def parse_units(units_data: list[dict] | None) -> list[dict] | None:
     return parsed_units
 
 
-def parse_tax_record(tax_record_data: dict | None) -> dict | None:
+def parse_tax_record(tax_record_data: Union[dict, None]) -> Union[dict, None]:
     """Parse tax record data and convert date strings to datetime objects"""
     if not tax_record_data:
         return None
@@ -72,7 +72,7 @@ def parse_tax_record(tax_record_data: dict | None) -> dict | None:
     return parsed_tax_record
 
 
-def parse_current_estimates(estimates_data: list[dict] | None) -> list[dict] | None:
+def parse_current_estimates(estimates_data: Union[List[dict], None]) -> Union[List[dict], None]:
     """Parse current estimates data and convert date strings to datetime objects"""
     if not estimates_data:
         return None
@@ -101,7 +101,7 @@ def parse_current_estimates(estimates_data: list[dict] | None) -> list[dict] | N
     return parsed_estimates
 
 
-def parse_estimates(estimates_data: dict | None) -> dict | None:
+def parse_estimates(estimates_data: Union[dict, None]) -> Union[dict, None]:
     """Parse estimates data and convert date strings to datetime objects"""
     if not estimates_data:
         return None
@@ -202,7 +202,7 @@ def parse_address(result: dict, search_type: str) -> Address:
     )
 
 
-def parse_description(result: dict) -> Description | None:
+def parse_description(result: dict) -> Union[Description, None]:
     """Parse description data from result"""
     if not result:
         return None
@@ -267,7 +267,7 @@ def calculate_days_on_mls(result: dict) -> Optional[int]:
                 return days
 
 
-def process_alt_photos(photos_info: list[dict]) -> list[str] | None:
+def process_alt_photos(photos_info: List[dict]) -> Union[List[str], None]:
     """Process alternative photos from photos info"""
     if not photos_info:
         return None

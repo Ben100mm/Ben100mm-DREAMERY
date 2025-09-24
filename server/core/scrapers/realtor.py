@@ -2,9 +2,9 @@
 Realtor.com scraper implementation
 """
 
-from typing import List, Union
-from ..models import ScraperInput, Property
-from ...dreamery_property_scraper import DreameryPropertyScraper
+from typing import , List, DictList, Union
+from .models import ScraperInput, Property
+from ..dreamery_property_scraper import DreameryPropertyScraper
 
 
 class RealtorScraper:

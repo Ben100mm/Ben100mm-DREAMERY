@@ -3,15 +3,15 @@ Enhanced scraper class with Pydantic models and improved session management
 """
 
 from __future__ import annotations
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Dict
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import uuid
 import json
 from pydantic import BaseModel
-from .models import Property, ListingType, SiteName, SearchPropertyType, ReturnType
-from .exceptions import AuthenticationError
+from models import Property, ListingType, SiteName, SearchPropertyType, ReturnType
+from exceptions import AuthenticationError
 
 
 class ScraperInput(BaseModel):
@@ -29,7 +29,7 @@ class ScraperInput(BaseModel):
     extra_property_data: Optional[bool] = True
     exclude_pending: Optional[bool] = False
     limit: int = 10000
-    return_type: ReturnType = ReturnType.PANDAS
+    return_type: ReturnType = ReturnType.pandas
 
 
 class EnhancedScraper:

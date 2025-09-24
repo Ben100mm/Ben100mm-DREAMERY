@@ -7,7 +7,7 @@ import datetime
 import os
 import sys
 from pathlib import Path
-from .scraper_api import scrape_property
+from scraper_api import scrape_property
 
 
 def main():

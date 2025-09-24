@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -21,6 +21,8 @@ import {
   Popover,
   Paper,
   Link,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
@@ -28,6 +30,8 @@ import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
 import InteractiveMap from "../components/InteractiveMap";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
+import { useRealtorData } from "../hooks/useRealtorData";
+import { RealtorSearchParams, PropertyData } from "../types/realtor";
 
 // Lazy load icons to reduce initial bundle size
 const LazySearchIcon = React.lazy(() => import("@mui/icons-material/Search"));
@@ -246,6 +250,25 @@ const BuyPage: React.FC = () => {
     { id: 16, price: "1.60M", x: 70, y: 50, specialLabels: [] },
     { id: 17, price: "1.50M", x: 75, y: 45, specialLabels: [] },
   ];
+
+  // Use realtor data hook
+  const { 
+    properties: realtorProperties, 
+    loading, 
+    error, 
+    total, 
+    searchProperties 
+  } = useRealtorData();
+
+  // Load initial data
+  useEffect(() => {
+    const searchParams: RealtorSearchParams = {
+      location: "San Francisco, CA",
+      listing_type: "for_sale",
+      limit: 20
+    };
+    searchProperties(searchParams);
+  }, [searchProperties]);
 
   const properties = [
     {
@@ -1323,7 +1346,13 @@ const BuyPage: React.FC = () => {
           }
         }}>
           <InteractiveMap 
-            properties={mapProperties}
+            properties={realtorProperties.map(prop => ({
+              id: prop.property_id,
+              price: prop.list_price ? `$${(prop.list_price / 1000000).toFixed(1)}M` : 'N/A',
+              x: prop.coordinates?.lng ? (prop.coordinates.lng + 122.4) * 100 : Math.random() * 100,
+              y: prop.coordinates?.lat ? (prop.coordinates.lat - 37.7) * 100 : Math.random() * 100,
+              specialLabels: []
+            }))}
             onPropertyClick={(property) => {
               console.log('Property clicked:', property);
             }}
@@ -1392,8 +1421,23 @@ const BuyPage: React.FC = () => {
               gap: { xs: 1.5, md: 2 },
               pb: 2
             }}>
-              {properties.map((property) => (
-                <PropertyCard key={property.id}>
+              {loading && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                  <CircularProgress />
+                </Box>
+              )}
+              {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
+              {!loading && !error && realtorProperties.length === 0 && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  No properties found. Try adjusting your search criteria.
+                </Alert>
+              )}
+              {!loading && realtorProperties.map((property) => (
+                <PropertyCard key={property.property_id}>
                   <Box sx={{ 
                     display: "flex",
                     "@media (max-width: 600px)": {
@@ -1407,7 +1451,9 @@ const BuyPage: React.FC = () => {
                         minHeight: { xs: "200px", sm: "180px" },
                         flexShrink: 0,
                         background: brandColors.neutral[100],
-                        backgroundImage: `url(/P${property.id}.webp), url(/P${property.id}.jpg)`,
+                        backgroundImage: property.photos && property.photos.length > 0 
+                          ? `url(${property.photos[0].href})` 
+                          : `url(/P1.jpg)`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -1438,18 +1484,18 @@ const BuyPage: React.FC = () => {
                             fontSize: { xs: "1.1rem", md: "1.25rem" }
                           }}
                         >
-                          {property.price}
+                          {property.list_price ? `$${property.list_price.toLocaleString()}` : 'Price not available'}
                         </Typography>
                         <IconButton
                           size="small"
-                          onClick={() => toggleFavorite(property.id)}
+                          onClick={() => toggleFavorite(parseInt(property.property_id))}
                           sx={{
-                            color: favorites.has(property.id)
+                            color: favorites.has(parseInt(property.property_id))
                               ? brandColors.accent.error
                               : brandColors.neutral[400],
                           }}
                         >
-                          {favorites.has(property.id) ? (
+                          {favorites.has(parseInt(property.property_id)) ? (
                             <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                               <LazyFavoriteIcon />
                             </React.Suspense>
@@ -1469,9 +1515,9 @@ const BuyPage: React.FC = () => {
                           flexWrap: "wrap",
                         }}
                       >
-                        {property.daysOnMarket && (
+                        {property.days_on_mls && (
                           <Chip
-                            label={`${property.daysOnMarket} days on Dreamery`}
+                            label={`${property.days_on_mls} days on MLS`}
                             size="small"
                             color="primary"
                           />
@@ -1483,9 +1529,9 @@ const BuyPage: React.FC = () => {
                             color="secondary"
                           />
                         )}
-                        {property.openHouse && (
+                        {property.open_houses && property.open_houses.length > 0 && (
                           <Chip
-                            label={`Open: ${property.openHouse}`}
+                            label={`Open: ${property.open_houses[0].start_time || 'Check listing'}`}
                             size="small"
                             color="success"
                           />
@@ -1504,8 +1550,8 @@ const BuyPage: React.FC = () => {
                         color: brandColors.neutral[800],
                         fontSize: { xs: "0.875rem", md: "0.875rem" }
                       }}>
-                        {property.beds} bds | {property.baths} ba |{" "}
-                        {property.sqft.toLocaleString()} sqft - {property.type}
+                        {property.description?.beds || 0} bds | {property.description?.baths_full || 0} ba |{" "}
+                        {property.description?.sqft ? property.description.sqft.toLocaleString() : 'N/A'} sqft - {property.description?.property_type || 'Property'}
                       </Typography>
 
                       <Typography
@@ -1517,7 +1563,7 @@ const BuyPage: React.FC = () => {
                           wordBreak: "break-word"
                         }}
                       >
-                        {property.address}
+                        {property.address?.formatted_address || property.address?.full_line || 'Address not available'}
                       </Typography>
 
                       <Box sx={{ mt: 1.5, display: "flex", justifyContent: "flex-end" }}>

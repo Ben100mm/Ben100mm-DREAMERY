@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Dict
 from dreamery_property_scraper import DreameryPropertyScraper
 from models import PropertyData, Property, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
 from parsers import parse_address, parse_description, parse_open_houses, parse_units, parse_tax_record, parse_estimates
@@ -264,7 +264,7 @@ def search_properties_enhanced():
         enhanced_scraper = DreameryPropertyScraper.from_scraper_input(scraper_input)
         
         # Perform search based on return type
-        if scraper_input.return_type == ReturnType.PANDAS:
+        if scraper_input.return_type == ReturnType.pandas:
             # For pandas return type, use comprehensive search
             properties = enhanced_scraper.search_properties_comprehensive(
                 location=scraper_input.location,
@@ -496,7 +496,7 @@ def property_data_to_dict(property_data: PropertyData) -> Dict[str, Any]:
                 'rent': unit.rent
             }
             if unit.availability:
-                unit_dict['availability'] = {
+                unit_Dict['availability'] = {
                     'date': unit.availability.get('date'),
                     'status': unit.availability.get('status')
                 }

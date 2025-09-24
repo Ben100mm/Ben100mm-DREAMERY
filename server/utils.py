@@ -1,8 +1,9 @@
 from __future__ import annotations
+from typing import Union, List, Dict
 import pandas as pd
 from datetime import datetime
-from .models import Property, ListingType, Advertisers
-from .exceptions import InvalidListingType, InvalidDate
+from models import Property, ListingType, Advertisers
+from exceptions import InvalidListingType, InvalidDate
 
 ordered_properties = [
     "property_url",
@@ -159,7 +160,7 @@ def validate_input(listing_type: str) -> None:
         raise InvalidListingType(f"Provided listing type, '{listing_type}', does not exist.")
 
 
-def validate_dates(date_from: str | None, date_to: str | None) -> None:
+def validate_dates(date_from: Union[str, None], date_to: Union[str, None]) -> None:
     if isinstance(date_from, str) != isinstance(date_to, str):
         raise InvalidDate("Both date_from and date_to must be provided.")
 

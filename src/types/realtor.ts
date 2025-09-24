@@ -4,53 +4,6 @@
  */
 
 export enum PropertyType {
-  SINGLE_FAMILY = "SINGLE_FAMILY",
-  CONDO = "CONDO",
-  TOWNHOUSE = "TOWNHOUSE",
-  MULTI_FAMILY = "MULTI_FAMILY",
-  LAND = "LAND",
-  MOBILE = "MOBILE",
-  MANUFACTURED = "MANUFACTURED",
-  APARTMENT = "APARTMENT",
-  CO_OP = "CO_OP",
-  OTHER = "OTHER"
-}
-
-export enum ListingType {
-  FOR_SALE = "for_sale",
-  FOR_RENT = "for_rent",
-  SOLD = "sold",
-  PENDING = "pending",
-  OFF_MARKET = "off_market"
-}
-
-export enum ReturnType {
-  PYDANTIC = "pydantic",
-  PANDAS = "pandas",
-  RAW = "raw"
-}
-
-export enum SiteName {
-  ZILLOW = "zillow",
-  REDFIN = "redfin",
-  REALTOR = "realtor.com"
-}
-
-export enum SearchPropertyType {
-  SINGLE_FAMILY = "single_family",
-  APARTMENT = "apartment",
-  CONDOS = "condos",
-  CONDO_TOWNHOME_ROWHOME_COOP = "condo_townhome_rowhome_coop",
-  CONDO_TOWNHOME = "condo_townhome",
-  TOWNHOMES = "townhomes",
-  DUPLEX_TRIPLEX = "duplex_triplex",
-  FARM = "farm",
-  LAND = "land",
-  MULTI_FAMILY = "multi_family",
-  MOBILE = "mobile"
-}
-
-export enum PropertyType {
   APARTMENT = "APARTMENT",
   BUILDING = "BUILDING",
   COMMERCIAL = "COMMERCIAL",
@@ -72,6 +25,41 @@ export enum PropertyType {
   SINGLE_FAMILY = "SINGLE_FAMILY",
   TOWNHOMES = "TOWNHOMES",
   OTHER = "OTHER"
+}
+
+export enum ListingType {
+  FOR_SALE = "for_sale",
+  FOR_RENT = "for_rent",
+  SOLD = "sold",
+  PENDING = "pending",
+  OFF_MARKET = "off_market"
+}
+
+export enum ReturnType {
+  PYDANTIC = "pydantic",
+  PANDAS = "pandas",
+  RAW = "raw",
+  LISTING = "listing"
+}
+
+export enum SiteName {
+  ZILLOW = "zillow",
+  REDFIN = "redfin",
+  REALTOR = "realtor.com"
+}
+
+export enum SearchPropertyType {
+  SINGLE_FAMILY = "single_family",
+  APARTMENT = "apartment",
+  CONDOS = "condos",
+  CONDO_TOWNHOME_ROWHOME_COOP = "condo_townhome_rowhome_coop",
+  CONDO_TOWNHOME = "condo_townhome",
+  TOWNHOMES = "townhomes",
+  DUPLEX_TRIPLEX = "duplex_triplex",
+  FARM = "farm",
+  LAND = "land",
+  MULTI_FAMILY = "multi_family",
+  MOBILE = "mobile"
 }
 
 export interface Address {
@@ -117,17 +105,6 @@ export interface OpenHouse {
   is_appointment_only?: boolean;
 }
 
-export interface Unit {
-  unit_number?: string;
-  beds?: number;
-  baths?: number;
-  sqft?: number;
-  rent?: number;
-  availability?: {
-    date?: string; // ISO date string
-    status?: string;
-  };
-}
 
 export interface TaxRecord {
   assessed_value?: number;
@@ -567,7 +544,6 @@ export interface PropertySearchService {
 
 // Utility types
 export type PropertyStatus = 'for_sale' | 'for_rent' | 'sold' | 'pending' | 'off_market';
-export type ListingType = 'for_sale' | 'for_rent' | 'sold' | 'pending';
 
 // Enhanced scraper input interface
 export interface ScraperInput {

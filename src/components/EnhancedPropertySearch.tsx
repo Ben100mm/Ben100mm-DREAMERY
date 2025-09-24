@@ -399,7 +399,7 @@ const EnhancedPropertySearch: React.FC = () => {
               {properties.map((property) => {
                 const display = formatPropertyForDisplay(property);
                 return (
-                  <Grid item xs={12} key={property.property_id}>
+                  <Grid xs={12} key={property.property_id}>
                     <PropertyCard elevation={2}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Typography variant="h5" color="primary">
@@ -453,7 +453,7 @@ const EnhancedPropertySearch: React.FC = () => {
                         </Typography>
                         
                         <Grid container spacing={2}>
-                          <Grid item xs={12} md={6}>
+                          <Grid xs={12} md={6}>
                             <Typography variant="body2" color="text.secondary">
                               <strong>MLS:</strong> {display.mls || 'N/A'}
                             </Typography>
@@ -484,7 +484,7 @@ const EnhancedPropertySearch: React.FC = () => {
                             )}
                           </Grid>
                           
-                          <Grid item xs={12} md={6}>
+                          <Grid xs={12} md={6}>
                             {display.schools && display.schools.length > 0 && (
                               <Box>
                                 <Typography variant="body2" color="text.secondary" gutterBottom>

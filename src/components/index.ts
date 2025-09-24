@@ -53,3 +53,4 @@ export {
   InflationAdjustmentsCalculator,
 } from "./AdvancedCalculationsExtended";
 export { default as ComprehensiveRefinanceCalculator } from "./ComprehensiveRefinanceCalculator";
+export { default as AppleMapsComponent } from "./AppleMapsComponent";

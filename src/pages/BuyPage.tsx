@@ -32,8 +32,7 @@ import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
-import InteractiveMap from "../components/InteractiveMap";
-import EnhancedInteractiveMap from "../components/EnhancedInteractiveMap";
+import AppleMapsComponent from "../components/AppleMapsComponent";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
 import { useRealtorData } from "../hooks/useRealtorData";
 import { RealtorSearchParams, PropertyData } from "../types/realtor";
@@ -1363,7 +1362,7 @@ const BuyPage: React.FC = () => {
             p: 1
           }
         }}>
-          <EnhancedInteractiveMap 
+          <AppleMapsComponent 
             properties={realtorProperties.map(prop => ({
               id: parseInt(prop.property_id) || Math.random(),
               price: prop.list_price ? `$${(prop.list_price / 1000000).toFixed(1)}M` : 'N/A',

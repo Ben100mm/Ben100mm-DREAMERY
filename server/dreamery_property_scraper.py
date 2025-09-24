@@ -14,7 +14,7 @@ from urllib.parse import urlencode, urljoin
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from json import JSONDecodeError
-from models import PropertyData, Property, Address, Description, PropertyType, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
+from models import PropertyData, Property, Address, Description, PropertyType, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates, Advertisers, Agent, Office, Broker, Builder
 from parsers import (
     parse_address, parse_description, parse_open_houses, parse_units,
     parse_tax_record, parse_estimates, parse_neighborhoods, calculate_days_on_mls
@@ -478,7 +478,7 @@ class DreameryPropertyScraper:
             total_properties = response_json["data"][search_key]["total"]
             
             # Limit results
-            properties_list = properties_List[:limit]
+            properties_list = properties_list[:limit]
             
             # Format properties for Dreamery
             formatted_properties = []
@@ -554,7 +554,7 @@ class DreameryPropertyScraper:
             logger.error(f"Error processing property with processors: {e}")
             return None
 
-    def _format_property_for_dreamery(self, prop: Dict[str, Any]) -> PropertyData:
+    def _format_property_for_dreamery(self, prop: Dict[str, Any]) -> Property:
         """Format property for Dreamery frontend using new parsers"""
         try:
             # Parse address using the new parser
@@ -586,45 +586,167 @@ class DreameryPropertyScraper:
                 except (ValueError, TypeError):
                     list_date = None
             
-            return PropertyData(
+            # Create proper Property model with complex nested structures
+            return Property(
+                property_url=prop.get('href', 'https://realtor.com'),
                 property_id=prop.get('property_id', ''),
                 listing_id=prop.get('listing_id'),
+                permalink=prop.get('permalink'),
+                mls=prop.get('mls'),
+                mls_id=prop.get('mls_id'),
                 status=prop.get('status'),
-                list_price=prop.get('list_price'),
                 address=address,
-                description=description,
-                open_houses=open_houses,
-                units=units,
-                tax_record=tax_record,
-                estimates=estimates,
-                neighborhoods=neighborhoods,
-                days_on_mls=days_on_mls,
-                last_sold_date=last_sold_date,
-                last_sold_price=prop.get('last_sold_price'),
+                list_price=prop.get('list_price'),
+                list_price_min=prop.get('list_price_min'),
+                list_price_max=prop.get('list_price_max'),
                 list_date=list_date,
+                pending_date=prop.get('pending_date'),
+                last_sold_date=last_sold_date,
+                prc_sqft=prop.get('prc_sqft'),
+                new_construction=prop.get('new_construction'),
+                hoa_fee=prop.get('hoa_fee'),
+                days_on_mls=days_on_mls,
+                description=description,
+                tags=prop.get('tags', []),
+                details=prop.get('details', []),
+                latitude=prop.get('coordinates', {}).get('lat') if prop.get('coordinates') else None,
+                longitude=prop.get('coordinates', {}).get('lng') if prop.get('coordinates') else None,
+                neighborhoods=neighborhoods,
+                county=prop.get('county'),
+                fips_code=prop.get('fips_code'),
+                nearby_schools=prop.get('nearby_schools', []),
+                assessed_value=prop.get('assessed_value'),
+                estimated_value=prop.get('estimated_value'),
+                tax=prop.get('tax'),
+                tax_history=prop.get('tax_history', []),
+                mls_status=prop.get('mls_status'),
+                last_sold_price=prop.get('last_sold_price'),
+                open_houses=open_houses,
+                pet_policy=prop.get('pet_policy'),
+                units=units,
+                monthly_fees=prop.get('monthly_fees'),
+                one_time_fees=prop.get('one_time_fees', []),
+                parking=prop.get('parking'),
+                terms=prop.get('terms', []),
+                popularity=prop.get('popularity'),
+                tax_record=tax_record,
+                parcel_info=prop.get('parcel_info'),
+                current_estimates=prop.get('current_estimates', []),
+                estimates=estimates,
                 photos=prop.get('photos', []),
-                agent=prop.get('agent', {}),
-                office=prop.get('office', {}),
-                coordinates=prop.get('coordinates', {}),
-                mls_data=prop.get('mls_data', {})
+                flags=prop.get('flags'),
+                advertisers=Advertisers(
+                    agent=Agent(
+                        name=prop.get('agent', {}).get('name') if prop.get('agent') else None,
+                        uuid=prop.get('agent', {}).get('uuid') if prop.get('agent') else None,
+                        mls_set=prop.get('agent', {}).get('mls_set') if prop.get('agent') else None,
+                        nrds_id=prop.get('agent', {}).get('nrds_id') if prop.get('agent') else None,
+                        email=prop.get('agent', {}).get('email') if prop.get('agent') else None,
+                        phones=prop.get('agent', {}).get('phones', []) if prop.get('agent') else None,
+                        href=prop.get('agent', {}).get('href') if prop.get('agent') else None,
+                        state_license=prop.get('agent', {}).get('state_license') if prop.get('agent') else None
+                    ) if prop.get('agent') else None,
+                    broker=Broker(
+                        name=prop.get('broker', {}).get('name') if prop.get('broker') else None,
+                        uuid=prop.get('broker', {}).get('uuid') if prop.get('broker') else None
+                    ) if prop.get('broker') else None,
+                    builder=Builder(
+                        name=prop.get('builder', {}).get('name') if prop.get('builder') else None,
+                        uuid=prop.get('builder', {}).get('uuid') if prop.get('builder') else None
+                    ) if prop.get('builder') else None,
+                    office=Office(
+                        name=prop.get('office', {}).get('name') if prop.get('office') else None,
+                        uuid=prop.get('office', {}).get('uuid') if prop.get('office') else None,
+                        mls_set=prop.get('office', {}).get('mls_set') if prop.get('office') else None,
+                        email=prop.get('office', {}).get('email') if prop.get('office') else None,
+                        phones=prop.get('office', {}).get('phones', []) if prop.get('office') else None,
+                        href=prop.get('office', {}).get('href') if prop.get('office') else None
+                    ) if prop.get('office') else None
+                ) if any([prop.get('agent'), prop.get('broker'), prop.get('builder'), prop.get('office')]) else None
             )
         except Exception as e:
             logger.error(f"Error formatting property: {e}")
-            # Return a basic property data object if parsing fails
-            return PropertyData(
+            # Return a basic Property object if parsing fails
+            return Property(
+                property_url=prop.get('href', 'https://realtor.com'),
                 property_id=prop.get('property_id', ''),
                 listing_id=prop.get('listing_id'),
+                permalink=prop.get('permalink'),
+                mls=prop.get('mls'),
+                mls_id=prop.get('mls_id'),
                 status=prop.get('status'),
-                list_price=prop.get('list_price'),
                 address=Address(
-                    full_line=prop.get('address', {}).get('line'),
-                    city=prop.get('address', {}).get('city'),
-                    state=prop.get('address', {}).get('state'),
-                    zip=prop.get('address', {}).get('postal_code')
-                ),
+                    full_line=prop.get('address', {}).get('line', '') if prop.get('address') else '',
+                    city=prop.get('address', {}).get('city') if prop.get('address') else None,
+                    state=prop.get('address', {}).get('state') if prop.get('address') else None,
+                    zip=prop.get('address', {}).get('postal_code') if prop.get('address') else None
+                ) if prop.get('address') else None,
+                list_price=prop.get('list_price'),
+                list_price_min=prop.get('list_price_min'),
+                list_price_max=prop.get('list_price_max'),
+                list_date=prop.get('list_date'),
+                pending_date=prop.get('pending_date'),
+                last_sold_date=prop.get('last_sold_date'),
+                prc_sqft=prop.get('prc_sqft'),
+                new_construction=prop.get('new_construction'),
+                hoa_fee=prop.get('hoa_fee'),
+                days_on_mls=prop.get('days_on_mls'),
                 description=Description(
                     beds=prop.get('beds'),
                     baths_full=prop.get('baths'),
-                    sqft=prop.get('sqft')
-                )
+                    sqft=prop.get('sqft'),
+                    lot_sqft=prop.get('lot_sqft'),
+                    year_built=prop.get('year_built'),
+                    garage=prop.get('garage'),
+                    text=prop.get('description'),
+                    type=prop.get('property_type')
+                ) if any([prop.get('beds'), prop.get('baths'), prop.get('sqft')]) else None,
+                tags=prop.get('tags', []),
+                details=prop.get('details', []),
+                latitude=prop.get('coordinates', {}).get('lat') if prop.get('coordinates') else None,
+                longitude=prop.get('coordinates', {}).get('lng') if prop.get('coordinates') else None,
+                neighborhoods=prop.get('neighborhoods'),
+                county=prop.get('county'),
+                fips_code=prop.get('fips_code'),
+                nearby_schools=prop.get('nearby_schools', []),
+                assessed_value=prop.get('assessed_value'),
+                estimated_value=prop.get('estimated_value'),
+                tax=prop.get('tax'),
+                tax_history=prop.get('tax_history', []),
+                mls_status=prop.get('mls_status'),
+                last_sold_price=prop.get('last_sold_price'),
+                open_houses=prop.get('open_houses', []),
+                pet_policy=prop.get('pet_policy'),
+                units=prop.get('units', []),
+                monthly_fees=prop.get('monthly_fees'),
+                one_time_fees=prop.get('one_time_fees', []),
+                parking=prop.get('parking'),
+                terms=prop.get('terms', []),
+                popularity=prop.get('popularity'),
+                tax_record=prop.get('tax_record'),
+                parcel_info=prop.get('parcel_info'),
+                current_estimates=prop.get('current_estimates', []),
+                estimates=prop.get('estimates'),
+                photos=prop.get('photos', []),
+                flags=prop.get('flags'),
+                advertisers=Advertisers(
+                    agent=Agent(
+                        name=prop.get('agent', {}).get('name') if prop.get('agent') else None,
+                        uuid=prop.get('agent', {}).get('uuid') if prop.get('agent') else None,
+                        mls_set=prop.get('agent', {}).get('mls_set') if prop.get('agent') else None,
+                        nrds_id=prop.get('agent', {}).get('nrds_id') if prop.get('agent') else None,
+                        email=prop.get('agent', {}).get('email') if prop.get('agent') else None,
+                        phones=prop.get('agent', {}).get('phones', []) if prop.get('agent') else None,
+                        href=prop.get('agent', {}).get('href') if prop.get('agent') else None,
+                        state_license=prop.get('agent', {}).get('state_license') if prop.get('agent') else None
+                    ) if prop.get('agent') else None,
+                    office=Office(
+                        name=prop.get('office', {}).get('name') if prop.get('office') else None,
+                        uuid=prop.get('office', {}).get('uuid') if prop.get('office') else None,
+                        mls_set=prop.get('office', {}).get('mls_set') if prop.get('office') else None,
+                        email=prop.get('office', {}).get('email') if prop.get('office') else None,
+                        phones=prop.get('office', {}).get('phones', []) if prop.get('office') else None,
+                        href=prop.get('office', {}).get('href') if prop.get('office') else None
+                    ) if prop.get('office') else None
+                ) if any([prop.get('agent'), prop.get('office')]) else None
             )

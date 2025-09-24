@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import logging
-from typing import Dict, Any, List, Dict
+from typing import Dict, Any, List
 from dreamery_property_scraper import DreameryPropertyScraper
 from models import PropertyData, Property, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
 from parsers import parse_address, parse_description, parse_open_houses, parse_units, parse_tax_record, parse_estimates
@@ -41,10 +41,12 @@ def search_properties():
         # Search properties using the scraper
         properties = scraper.search_properties(**search_params)
         
-        # Convert PropertyData objects to dictionaries for JSON serialization
+        # Convert Property objects to dictionaries for JSON serialization
         serialized_properties = []
         for prop in properties:
-            if isinstance(prop, PropertyData):
+            if isinstance(prop, Property):
+                serialized_properties.append(property_to_dict(prop))
+            elif isinstance(prop, PropertyData):
                 serialized_properties.append(property_data_to_dict(prop))
             else:
                 # Handle legacy format
@@ -81,8 +83,10 @@ def get_property_details(property_id):
 
         property_data = properties[0]
         
-        # Convert PropertyData object to dictionary
-        if isinstance(property_data, PropertyData):
+        # Convert Property object to dictionary
+        if isinstance(property_data, Property):
+            serialized_property = property_to_dict(property_data)
+        elif isinstance(property_data, PropertyData):
             serialized_property = property_data_to_dict(property_data)
         else:
             serialized_property = property_data
@@ -264,7 +268,7 @@ def search_properties_enhanced():
         enhanced_scraper = DreameryPropertyScraper.from_scraper_input(scraper_input)
         
         # Perform search based on return type
-        if scraper_input.return_type == ReturnType.pandas:
+        if scraper_input.return_type == ReturnType.PANDAS:
             # For pandas return type, use comprehensive search
             properties = enhanced_scraper.search_properties_comprehensive(
                 location=scraper_input.location,
@@ -423,105 +427,95 @@ def property_data_to_dict(property_data: PropertyData) -> Dict[str, Any]:
     """Convert PropertyData object to dictionary for JSON serialization"""
     result = {
         'property_id': property_data.property_id,
-        'listing_id': property_data.listing_id,
+        'listing_id': getattr(property_data, 'listing_id', None),
         'status': property_data.status,
-        'list_price': property_data.list_price,
+        'list_price': property_data.price,
         'neighborhoods': property_data.neighborhoods,
-        'days_on_mls': property_data.days_on_mls,
-        'last_sold_date': property_data.last_sold_date,
-        'last_sold_price': property_data.last_sold_price,
-        'list_date': property_data.list_date,
+        'days_on_mls': property_data.days_on_market,
+        'last_sold_date': getattr(property_data, 'last_sold_date', None),
+        'last_sold_price': getattr(property_data, 'last_sold_price', None),
+        'list_date': getattr(property_data, 'list_date', None),
         'photos': property_data.photos,
-        'agent': property_data.agent,
-        'office': property_data.office,
-        'coordinates': property_data.coordinates,
-        'mls_data': property_data.mls_data
+        'agent': {
+            'name': property_data.agent_name,
+            'email': property_data.agent_email,
+            'phone': property_data.agent_phone
+        } if property_data.agent_name else None,
+        'office': {
+            'name': property_data.office_name
+        } if property_data.office_name else None,
+        'coordinates': {
+            'lat': property_data.latitude,
+            'lng': property_data.longitude
+        } if property_data.latitude and property_data.longitude else None,
+        'mls_data': getattr(property_data, 'mls_data', {})
     }
 
     # Convert address
     if property_data.address:
         result['address'] = {
-            'full_line': property_data.address.full_line,
-            'street': property_data.address.street,
-            'unit': property_data.address.unit,
-            'city': property_data.address.city,
-            'state': property_data.address.state,
-            'zip': property_data.address.zip,
-            'street_direction': property_data.address.street_direction,
-            'street_number': property_data.address.street_number,
-            'street_name': property_data.address.street_name,
-            'street_suffix': property_data.address.street_suffix
+            'full_line': property_data.address,
+            'street': None,
+            'unit': None,
+            'city': None,
+            'state': None,
+            'zip': None,
+            'street_direction': None,
+            'street_number': None,
+            'street_name': None,
+            'street_suffix': None
         }
 
     # Convert description
     if property_data.description:
         result['description'] = {
-            'primary_photo': property_data.description.primary_photo,
-            'alt_photos': property_data.description.alt_photos,
-            'style': property_data.description.style.value if property_data.description.style else None,
-            'beds': property_data.description.beds,
-            'baths_full': property_data.description.baths_full,
-            'baths_half': property_data.description.baths_half,
-            'sqft': property_data.description.sqft,
-            'lot_sqft': property_data.description.lot_sqft,
-            'sold_price': property_data.description.sold_price,
-            'year_built': property_data.description.year_built,
-            'garage': property_data.description.garage,
-            'stories': property_data.description.stories,
-            'text': property_data.description.text,
-            'name': property_data.description.name,
-            'type': property_data.description.type
+            'primary_photo': None,
+            'alt_photos': None,
+            'style': None,
+            'beds': property_data.beds,
+            'baths_full': int(property_data.baths) if property_data.baths else None,
+            'baths_half': int((property_data.baths % 1) * 2) if property_data.baths else None,
+            'sqft': property_data.sqft,
+            'lot_sqft': property_data.lot_size,
+            'sold_price': None,
+            'year_built': property_data.year_built,
+            'garage': property_data.garage,
+            'stories': None,
+            'text': property_data.description,
+            'name': None,
+            'type': property_data.property_type
         }
 
     # Convert open houses
     if property_data.open_houses:
-        result['open_houses'] = []
-        for oh in property_data.open_houses:
-            result['open_houses'].append({
-                'start_date': oh.start_date.isoformat() if oh.start_date else None,
-                'end_date': oh.end_date.isoformat() if oh.end_date else None,
-                'description': oh.description,
-                'is_appointment_only': oh.is_appointment_only
-            })
+        result['open_houses'] = property_data.open_houses
 
     # Convert units
     if property_data.units:
-        result['units'] = []
-        for unit in property_data.units:
-            unit_dict = {
-                'unit_number': unit.unit_number,
-                'beds': unit.beds,
-                'baths': unit.baths,
-                'sqft': unit.sqft,
-                'rent': unit.rent
-            }
-            if unit.availability:
-                unit_Dict['availability'] = {
-                    'date': unit.availability.get('date'),
-                    'status': unit.availability.get('status')
-                }
-            result['units'].append(unit_dict)
+        result['units'] = property_data.units
 
     # Convert tax record
-    if property_data.tax_record:
+    if property_data.tax_history:
         result['tax_record'] = {
-            'assessed_value': property_data.tax_record.assessed_value,
-            'tax_amount': property_data.tax_record.tax_amount,
-            'last_update_date': property_data.tax_record.last_update_date.isoformat() if property_data.tax_record.last_update_date else None,
-            'tax_year': property_data.tax_record.tax_year
+            'assessed_value': property_data.assessed_value,
+            'tax_amount': None,
+            'last_update_date': None,
+            'tax_year': None
         }
 
     # Convert estimates
-    if property_data.estimates:
-        result['estimates'] = property_data.estimates
+    if property_data.estimated_value:
+        result['estimates'] = {
+            'estimated_value': property_data.estimated_value
+        }
 
     return result
 
 def property_to_dict(property_obj: Property) -> Dict[str, Any]:
     """Convert Property object to dictionary for JSON serialization"""
-    # Use Pydantic's model_dump for clean serialization
+    # Use Pydantic's model_dump with mode='json' to handle HttpUrl serialization
     if hasattr(property_obj, 'model_dump'):
-        return property_obj.model_dump()
+        return property_obj.model_dump(mode='json')
     
     # Fallback for legacy objects
     result = {

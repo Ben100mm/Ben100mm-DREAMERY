@@ -99,8 +99,8 @@
 
 **Overall Compliance**: **FULLY COMPLIANT**
 
-**Last Review Date**: December 2024  
-**Next Review Date**: March 2025  
+**Last Review Date**: [To be assigned] 
+**Next Review Date**: [To be assigned]  
 **Compliance Officer**: [To be assigned]  
 **Legal Counsel**: [To be assigned]
 

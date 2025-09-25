@@ -6,7 +6,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
 
 ## What Was Added
 
-### ✅ **Command-Line Interface**
+### **Command-Line Interface**
 
 1. **Main CLI Module** (`server/cli.py`):
    - `main()` - Command-line interface with comprehensive argument parsing
@@ -26,7 +26,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
    - Dependency installation
    - Cross-platform compatibility
 
-### ✅ **Enhanced Dependencies**
+### **Enhanced Dependencies**
 
 1. **Updated Requirements** (`server/requirements.txt`):
    - Added `pandas>=1.5.0` for data processing
@@ -41,7 +41,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
 
 ## Key Features Added
 
-### 🔧 **Comprehensive Command-Line Options**
+### **Comprehensive Command-Line Options**
 
 **Basic Options:**
 - `location` - Required location parameter
@@ -65,7 +65,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
 - `--extra_data` - Additional property data
 - `--output_dir` - Custom output directory
 
-### 🚀 **Multiple Output Formats**
+### **Multiple Output Formats**
 
 1. **Excel (.xlsx)**:
    - Best for data analysis
@@ -85,7 +85,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
    - Nested objects
    - Programming friendly
 
-### 📊 **Advanced Data Processing**
+### **Advanced Data Processing**
 
 - **Automatic Filename Generation**: Timestamp-based naming
 - **Directory Creation**: Automatic output directory creation
@@ -161,25 +161,25 @@ python3 run_cli.py "San Francisco, CA" \
 
 ## Enhanced Features
 
-### 🔐 **Comprehensive Validation**
+### **Comprehensive Validation**
 - **Parameter Validation**: All command-line parameters validated
 - **Date Validation**: Date format and range validation
 - **Limit Validation**: Maximum limit enforcement (10,000)
 - **Type Validation**: Parameter type checking and conversion
 
-### 🌐 **Data Processing**
+### **Data Processing**
 - **Format Conversion**: Automatic conversion between pandas, pydantic, and raw formats
 - **File Export**: Support for Excel, CSV, and JSON formats
 - **Data Cleaning**: None value replacement and data cleaning
 - **Progress Reporting**: Real-time progress updates
 
-### 📝 **Error Handling**
+### **Error Handling**
 - **Validation Errors**: Detailed validation error messages
 - **File Errors**: Comprehensive file operation error handling
 - **Network Errors**: Enhanced network error handling
 - **Data Processing Errors**: Robust data processing error handling
 
-### 🎛️ **Advanced Configuration**
+### **Advanced Configuration**
 - **Multiple Output Formats**: Excel, CSV, JSON support
 - **Flexible Parameters**: All parameters optional with sensible defaults
 - **Custom Filenames**: Automatic or custom filename generation

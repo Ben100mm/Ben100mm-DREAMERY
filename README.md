@@ -167,20 +167,20 @@ dreamery-operating-software/
 
 This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthorized access is strictly prohibited and may result in legal action.
 
-### ✅ Authorized Access
+### Authorized Access
 - Full-time employees of Dreamery Software LLC
 - Contractors with signed Non-Disclosure Agreements
 - Partners with explicit written authorization
 - Third-party developers with valid service agreements
 
-### 🚫 Prohibited Activities
-- ❌ Copying, reproducing, or distributing any code
-- ❌ Reverse engineering or decompiling software
-- ❌ Creating competing products or services
-- ❌ Sharing code with unauthorized parties
-- ❌ Using proprietary information for personal gain
+### Prohibited Activities
+- Copying, reproducing, or distributing any code
+- Reverse engineering or decompiling software
+- Creating competing products or services
+- Sharing code with unauthorized parties
+- Using proprietary information for personal gain
 
-### 📋 For Authorized Developers
+### For Authorized Developers
 - Follow all security protocols and coding standards
 - Maintain strict confidentiality of all proprietary information
 - Report any security concerns immediately
@@ -209,7 +209,7 @@ This software contains **PROPRIETARY AND CONFIDENTIAL INFORMATION** protected by
 - Legal action for intellectual property infringement
 - Termination of access and employment/contractual relationships
 
-**REPORT VIOLATIONS**: security@dreamerysoftware.com
+**REPORT VIOLATIONS**: benjamin@dreameryestates.com
 
 ## Acknowledgments
 

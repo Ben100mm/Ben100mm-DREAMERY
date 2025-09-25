@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+"""
+
 from __future__ import annotations
 from enum import Enum
 from typing import Optional, Union, Union, Any, List, Dict, Dict

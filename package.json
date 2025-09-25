@@ -2,6 +2,10 @@
   "name": "dreamery-operating-software",
   "version": "0.1.0",
   "private": true,
+  "description": "Proprietary real estate platform - Dreamery Software LLC",
+  "author": "Dreamery Software LLC",
+  "license": "PROPRIETARY",
+  "copyright": "Copyright (c) 2024 Dreamery Software LLC. All rights reserved.",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -83,5 +87,20 @@
     "prisma": "^6.14.0",
     "source-map-explorer": "^2.5.3",
     "ts-node": "^10.9.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ben100mm/Ben100mm-dreamery-operating-software.git",
+    "private": true
+  },
+  "keywords": [
+    "proprietary",
+    "real-estate",
+    "confidential",
+    "private"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }

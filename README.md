@@ -1,5 +1,17 @@
 # Dreamery Homepage
 
+# ⚠️ PROPRIETARY SOFTWARE - CONFIDENTIAL ⚠️
+
+**DREAMERY SOFTWARE LLC - PRIVATE REPOSITORY**
+
+Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+
+This software and associated documentation files are **PROPRIETARY AND CONFIDENTIAL**. Unauthorized copying, distribution, or use is **STRICTLY PROHIBITED** and may result in legal action.
+
+**CLASSIFICATION**: CONFIDENTIAL - PROPRIETARY  
+**ACCESS LEVEL**: AUTHORIZED PERSONNEL ONLY  
+**LEGAL STATUS**: PROTECTED BY COPYRIGHT AND TRADE SECRET LAWS
+
 A modern, responsive real estate platform homepage built with React and Material-UI, featuring a comprehensive authentication system, advanced security features, and elegant user interface.
 
 ## Features
@@ -149,17 +161,55 @@ dreamery-operating-software/
 - `/auth` - Basic authentication (Sign In, Sign Up, Magic Link)
 - `/security` - Advanced security settings (2FA, Biometric, OTP, SSO)
 
-## Contributing
+## 🔒 ACCESS AND USAGE RESTRICTIONS
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+**AUTHORIZED PERSONNEL ONLY**
 
-## License
+This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthorized access is strictly prohibited and may result in legal action.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### ✅ Authorized Access
+- Full-time employees of Dreamery Software LLC
+- Contractors with signed Non-Disclosure Agreements
+- Partners with explicit written authorization
+- Third-party developers with valid service agreements
+
+### 🚫 Prohibited Activities
+- ❌ Copying, reproducing, or distributing any code
+- ❌ Reverse engineering or decompiling software
+- ❌ Creating competing products or services
+- ❌ Sharing code with unauthorized parties
+- ❌ Using proprietary information for personal gain
+
+### 📋 For Authorized Developers
+- Follow all security protocols and coding standards
+- Maintain strict confidentiality of all proprietary information
+- Report any security concerns immediately
+- Complete required security training
+- Use only company-approved development tools
+- Contact legal@dreamerysoftware.com for licensing inquiries
+
+## Legal Information
+
+This is proprietary software owned by Dreamery Software LLC. All rights reserved.
+
+- **License**: Proprietary - see LICENSE file for details
+- **Privacy Policy**: See legal/PRIVACY_POLICY.md
+- **Terms of Service**: See legal/TERMS_OF_SERVICE.md
+- **Security Policy**: See legal/SECURITY_POLICY.md
+
+## ⚠️ LEGAL WARNING ⚠️
+
+**UNAUTHORIZED USE IS ILLEGAL**
+
+This software contains **PROPRIETARY AND CONFIDENTIAL INFORMATION** protected by copyright, trade secret, and other intellectual property laws. 
+
+**UNAUTHORIZED ACCESS, USE, COPYING, OR DISTRIBUTION IS STRICTLY PROHIBITED** and may result in:
+- Civil and criminal penalties under applicable law
+- Injunctive relief and monetary damages
+- Legal action for intellectual property infringement
+- Termination of access and employment/contractual relationships
+
+**REPORT VIOLATIONS**: security@dreamerysoftware.com
 
 ## Acknowledgments
 

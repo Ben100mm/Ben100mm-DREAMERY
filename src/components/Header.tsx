@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+ */
+
 import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";

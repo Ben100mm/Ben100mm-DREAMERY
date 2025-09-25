@@ -1,0 +1,70 @@
+# Git Attributes for Proprietary Software Protection
+# Dreamery Software LLC - Confidential and Proprietary
+
+# Mark all source files as proprietary
+*.tsx linguist-language=TypeScript
+*.ts linguist-language=TypeScript
+*.js linguist-language=JavaScript
+*.py linguist-language=Python
+*.md linguist-language=Markdown
+
+# Ensure proper line endings
+* text=auto
+*.tsx text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+
+# Configuration files
+*.json text
+*.yml text
+*.yaml text
+*.toml text
+*.ini text
+*.cfg text
+*.conf text
+
+# Documentation
+*.md text
+*.txt text
+*.rst text
+
+# Legal and proprietary files
+LICENSE text
+legal/* text
+*.legal text
+*.proprietary text
+*.confidential text
+
+# Security and sensitive files
+*.key text
+*.pem text
+*.p12 text
+*.pfx text
+.env* text
+secrets/* text
+confidential/* text
+
+# Database files
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+
+# Archive files
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+*.7z binary

@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+ */
+
 import React from "react";
 import styled from "styled-components";
 import { TextField, IconButton } from "@mui/material";

@@ -130,7 +130,7 @@ const LuminaPage: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               component="img"
-              src="/Lumina%20Logo.png"
+              src="/Lumina Logo.png"
               alt="Lumina logo"
               sx={{ height: 72, width: 'auto' }}
             />

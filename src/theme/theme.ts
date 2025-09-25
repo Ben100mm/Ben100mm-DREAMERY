@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+ */
+
 import { createTheme } from '@mui/material/styles';
 
 // Dreamery Brand Color Palette - Official Colors Only

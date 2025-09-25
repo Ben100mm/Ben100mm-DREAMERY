@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+ */
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";

@@ -1,4 +1,7 @@
 """
+Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
+
 Flask API endpoint for Realtor.com data processing
 Serves parsed property data to the TypeScript frontend
 """

@@ -6,7 +6,7 @@ Successfully integrated the enhanced scraper class with Pydantic models and impr
 
 ## What Was Added
 
-### ✅ **Enhanced Scraper Architecture**
+### **Enhanced Scraper Architecture**
 
 1. **Pydantic Models** (`server/enhanced_scraper.py`):
    - `ScraperInput` - Validated input model with comprehensive field validation

@@ -2,7 +2,7 @@
 
 **DREAMERY SOFTWARE LLC - CONFIDENTIAL AND PROPRIETARY**
 
-## ⚠️ IMPORTANT LEGAL NOTICE ⚠️
+## IMPORTANT LEGAL NOTICE
 
 This software and all associated documentation, source code, algorithms, designs, and intellectual property (collectively, the "Software") are **PROPRIETARY AND CONFIDENTIAL** to Dreamery Software LLC.
 

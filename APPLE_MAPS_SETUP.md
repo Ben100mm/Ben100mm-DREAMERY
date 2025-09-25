@@ -91,13 +91,13 @@ const MyComponent = () => {
 
 ## Features
 
-✅ **Free Usage**: 250,000 map loads per day  
-✅ **Property Markers**: Custom property annotations  
-✅ **Map Types**: Standard, Satellite, and Hybrid views  
-✅ **Interactive Controls**: Zoom, compass, scale  
-✅ **Street View**: Look Around integration  
-✅ **Privacy Focused**: No user tracking  
-✅ **Responsive Design**: Works on all devices  
+**Free Usage**: 250,000 map loads per day  
+**Property Markers**: Custom property annotations  
+**Map Types**: Standard, Satellite, and Hybrid views  
+**Interactive Controls**: Zoom, compass, scale  
+**Street View**: Look Around integration  
+**Privacy Focused**: No user tracking  
+**Responsive Design**: Works on all devices  
 
 ## Configuration
 

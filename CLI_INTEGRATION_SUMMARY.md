@@ -6,7 +6,7 @@ Successfully integrated the command-line interface (`cli.py`) into the existing 
 
 ## What Was Added
 
-### ✅ **Command-Line Interface**
+### **Command-Line Interface**
 
 1. **Main CLI Module** (`server/cli.py`):
    - `main()` - Command-line interface with comprehensive argument parsing

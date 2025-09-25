@@ -6,7 +6,7 @@ Successfully integrated the enhanced `models.py` file with comprehensive Pydanti
 
 ## What Was Added
 
-### ✅ **Enhanced Pydantic Models**
+### **Enhanced Pydantic Models**
 
 1. **Comprehensive Enums**:
    - `ReturnType` - pydantic, pandas, raw return types

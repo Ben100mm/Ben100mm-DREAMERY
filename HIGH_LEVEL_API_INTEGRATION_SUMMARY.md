@@ -6,7 +6,7 @@ Successfully integrated the high-level scraping API (`__init__.py`) into the exi
 
 ## What Was Added
 
-### ✅ **High-Level Scraping API**
+### **High-Level Scraping API**
 
 1. **Main API Function** (`server/scraper_api.py`):
    - `scrape_property()` - High-level function with comprehensive validation

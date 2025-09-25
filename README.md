@@ -1,6 +1,6 @@
 # Dreamery Homepage
 
-# ⚠️ PROPRIETARY SOFTWARE - CONFIDENTIAL ⚠️
+# PROPRIETARY SOFTWARE - CONFIDENTIAL
 
 **DREAMERY SOFTWARE LLC - PRIVATE REPOSITORY**
 
@@ -161,26 +161,26 @@ dreamery-operating-software/
 - `/auth` - Basic authentication (Sign In, Sign Up, Magic Link)
 - `/security` - Advanced security settings (2FA, Biometric, OTP, SSO)
 
-## 🔒 ACCESS AND USAGE RESTRICTIONS
+## ACCESS AND USAGE RESTRICTIONS
 
 **AUTHORIZED PERSONNEL ONLY**
 
 This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthorized access is strictly prohibited and may result in legal action.
 
-### ✅ Authorized Access
+### Authorized Access
 - Full-time employees of Dreamery Software LLC
 - Contractors with signed Non-Disclosure Agreements
 - Partners with explicit written authorization
 - Third-party developers with valid service agreements
 
-### 🚫 Prohibited Activities
-- ❌ Copying, reproducing, or distributing any code
-- ❌ Reverse engineering or decompiling software
-- ❌ Creating competing products or services
-- ❌ Sharing code with unauthorized parties
-- ❌ Using proprietary information for personal gain
+### Prohibited Activities
+- Copying, reproducing, or distributing any code
+- Reverse engineering or decompiling software
+- Creating competing products or services
+- Sharing code with unauthorized parties
+- Using proprietary information for personal gain
 
-### 📋 For Authorized Developers
+### For Authorized Developers
 - Follow all security protocols and coding standards
 - Maintain strict confidentiality of all proprietary information
 - Report any security concerns immediately
@@ -197,7 +197,7 @@ This is proprietary software owned by Dreamery Software LLC. All rights reserved
 - **Terms of Service**: See legal/TERMS_OF_SERVICE.md
 - **Security Policy**: See legal/SECURITY_POLICY.md
 
-## ⚠️ LEGAL WARNING ⚠️
+## LEGAL WARNING
 
 **UNAUTHORIZED USE IS ILLEGAL**
 

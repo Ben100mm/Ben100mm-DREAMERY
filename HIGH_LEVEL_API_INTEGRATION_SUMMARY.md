@@ -6,7 +6,7 @@ Successfully integrated the high-level scraping API (`__init__.py`) into the exi
 
 ## What Was Added
 
-### ✅ **High-Level Scraping API**
+### **High-Level Scraping API**
 
 1. **Main API Function** (`server/scraper_api.py`):
    - `scrape_property()` - High-level function with comprehensive validation
@@ -26,7 +26,7 @@ Successfully integrated the high-level scraping API (`__init__.py`) into the exi
    - `models.py` - Scraper model exports
    - Modular architecture for easy extension
 
-### ✅ **Enhanced API Endpoints**
+### **Enhanced API Endpoints**
 
 1. **New Endpoint** (`server/realtor_api.py`):
    - **POST** `/api/realtor/scrape` - High-level scraping API endpoint
@@ -46,18 +46,18 @@ Successfully integrated the high-level scraping API (`__init__.py`) into the exi
 
 ## Key Features Added
 
-### 🔧 **Comprehensive Validation**
+### **Comprehensive Validation**
 - **Input Validation**: All parameters validated before processing
 - **Date Validation**: Date format and range validation
 - **Limit Validation**: Maximum limit enforcement (10,000)
 - **Type Validation**: Parameter type checking and conversion
 
-### 🚀 **Multiple Return Types**
+### **Multiple Return Types**
 1. **Pandas**: DataFrames optimized for data analysis
 2. **Pydantic**: Full model validation and serialization
 3. **Raw**: Raw data without processing
 
-### 📊 **Advanced Data Processing**
+### **Advanced Data Processing**
 - **DataFrame Creation**: Automatic conversion to pandas DataFrames
 - **Column Ordering**: Consistent column ordering for DataFrames
 - **Data Cleaning**: None value replacement and data cleaning
@@ -65,7 +65,7 @@ Successfully integrated the high-level scraping API (`__init__.py`) into the exi
 - **Property Sorting**: Sort by any field in ascending/descending order
 - **Summary Statistics**: Property count, averages, min/max values
 
-### 🎯 **Comprehensive Parameters**
+### **Comprehensive Parameters**
 - **Location**: City, state, address, or coordinates
 - **Listing Type**: for_sale, for_rent, sold, pending
 - **Property Types**: All supported property types
@@ -146,14 +146,14 @@ for property in properties:
 
 ## Enhanced Features
 
-### 🔐 **Input Validation**
+### **Input Validation**
 - **Listing Type**: Validates against allowed values
 - **Date Format**: Validates YYYY-MM-DD format
 - **Date Range**: Ensures date_from < date_to
 - **Limit**: Enforces maximum limit of 10,000
 - **Parameter Types**: Automatic type conversion and validation
 
-### 🌐 **Data Processing**
+### **Data Processing**
 - **DataFrame Creation**: Automatic conversion to pandas DataFrames
 - **Column Ordering**: Consistent column ordering for analysis
 - **Data Cleaning**: None value replacement and data cleaning
@@ -161,13 +161,13 @@ for property in properties:
 - **Property Sorting**: Sort by any field
 - **Summary Statistics**: Comprehensive property statistics
 
-### 📝 **Error Handling**
+### **Error Handling**
 - **Validation Errors**: Detailed validation error messages
 - **API Errors**: Comprehensive API error handling
 - **Data Processing Errors**: Robust data processing error handling
 - **Network Errors**: Enhanced network error handling
 
-### 🎛️ **Advanced Configuration**
+### **Advanced Configuration**
 - **Multiple Return Types**: Pandas, Pydantic, Raw data formats
 - **Flexible Parameters**: All parameters optional with sensible defaults
 - **Data Processing**: Advanced data processing and analysis

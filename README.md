@@ -1,6 +1,6 @@
 # DREAMERY
 
-**DREAMERY SOFTWARE LLC - PRIVATE REPOSITORY**
+**DREAMERY - PRIVATE REPOSITORY**
 
 ## Overview
 
@@ -129,7 +129,7 @@ This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthoriz
 ## Legal Information
 
 - **License**: Proprietary - See LICENSE file
-- **Copyright**: © 2024 Dreamery Software LLC. All rights reserved.
+- **Copyright**: © 2025 Dreamery. All rights reserved.
 - **Privacy Policy**: See legal/PRIVACY_POLICY.md
 - **Terms of Service**: See legal/TERMS_OF_SERVICE.md
 - **Security Policy**: See legal/SECURITY_POLICY.md
@@ -151,4 +151,4 @@ For technical support or questions:
 
 **Classification**: PROPRIETARY - CONFIDENTIAL  
 **Access Level**: AUTHORIZED PERSONNEL ONLY  
-**Copyright**: © 2024 Dreamery Software LLC. All rights reserved.
+**Copyright**: © 2025 Dreamery. All rights reserved.

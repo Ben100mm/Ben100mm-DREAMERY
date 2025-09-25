@@ -1,4 +1,4 @@
-# Dreamery Homepage
+# Dreamery
 
 # ⚠️ PROPRIETARY SOFTWARE - CONFIDENTIAL ⚠️
 

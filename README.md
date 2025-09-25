@@ -1,167 +1,107 @@
-# Dreamery
-
-# ⚠️ PROPRIETARY SOFTWARE - CONFIDENTIAL ⚠️
+# Dreamery Homepage
 
 **DREAMERY SOFTWARE LLC - PRIVATE REPOSITORY**
 
-Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+## Overview
 
-This software and associated documentation files are **PROPRIETARY AND CONFIDENTIAL**. Unauthorized copying, distribution, or use is **STRICTLY PROHIBITED** and may result in legal action.
+The Dreamery Homepage is a comprehensive real estate platform built with React, TypeScript, and Material-UI. It provides property search, analysis, and related services for real estate professionals and consumers.
 
-**CLASSIFICATION**: CONFIDENTIAL - PROPRIETARY  
-**ACCESS LEVEL**: AUTHORIZED PERSONNEL ONLY  
-**LEGAL STATUS**: PROTECTED BY COPYRIGHT AND TRADE SECRET LAWS
+## Quick Start
 
-A modern, responsive real estate platform homepage built with React and Material-UI, featuring a comprehensive authentication system, advanced security features, and elegant user interface.
+### Development Setup
+```bash
+# Install dependencies
+npm install
+cd server && pip install -r requirements.txt
+
+# Start development servers
+npm start                    # Frontend (port 3000)
+cd server && python start_realtor_api.py  # Backend (port 5001)
+```
+
+### Documentation
+- **[Development Guide](docs/DEVELOPMENT.md)** - Setup and development
+- **[API Documentation](docs/API.md)** - API integration and endpoints
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
+
+## Technology Stack
+
+### Frontend
+- **React 18.2.0** - UI framework
+- **TypeScript 4.9.5** - Type safety
+- **Material-UI v5.15.10** - Component library
+- **Styled Components** - CSS-in-JS styling
+
+### Backend
+- **Python Flask** - API server
+- **Prisma ORM** - Database toolkit
+- **PostgreSQL/SQLite** - Database
 
 ## Features
 
-### Authentication System
-- **Basic Authentication Methods:**
-  - Traditional email/password login
-  - Social login (Google, Apple, Microsoft, Facebook, Twitter)
-  - Passwordless authentication via Magic Link
-- **Advanced Security Features:**
-  - One-Time Password (OTP) via SMS, email, or authenticator apps
-  - Biometric authentication (fingerprint and face recognition)
-  - Two-Factor Authentication (2FA) with authenticator apps and hardware tokens
-  - Single Sign-On (SSO) with OAuth2/OpenID Connect
-  - Enterprise SSO support (Okta, Auth0, Azure AD, SAML)
-- **Security Management:**
-  - Dedicated Security Settings page
-  - Security score tracking
-  - Method status management
-  - Progressive security enhancement
+### Core Functionality
+- Property search and filtering
+- Interactive maps with Apple Maps integration
+- Real estate data analysis
+- User authentication and role management
+- Responsive design for all devices
 
-### Core Features
-- **Hero Section:**
-  - Advanced search interface with autocomplete
-  - Geolocation support
-  - Search history with localStorage persistence
-  - Map icon and navy blue search button
-- **Navigation:**
-  - Responsive header with logo and navigation buttons
-  - Security settings access
-  - Clean, modern design
-- **User Experience:**
-  - Responsive design for all devices
-  - Loading states and error handling
-  - Success feedback and user guidance
-  - Accessibility features
-
-### Design & UI
-- Clean, modern design with full-screen hero image
-- Transparent, elegant search interface
-- Material-UI components with custom styling
-- Styled with styled-components
-- Consistent color scheme and typography
-
-## Technologies Used
-
-### Frontend Framework & Libraries
-- React 18.2.0
-- TypeScript 4.9.5
-- Material-UI (MUI) v5.15.10
-- Styled Components v6.1.19
-- React Router v6.22.0
-
-### Development Tools
-- Create React App
-- ESLint
-- Prettier
-- Git
-
-## Getting Started
-
-### Prerequisites
-- Node.js 16.x or higher
-- npm 8.x or higher
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/Ben100mm/Ben100mm-dreamery-operating-software.git
-cd dreamery-operating-software
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Run the development server:
-```bash
-npm start
-```
-
-The app will be available at `http://localhost:3000`
+### User Roles
+- **Buyer** - Individual homebuyers
+- **Buying Agent** - Agents representing buyers
+- **Listing Agent** - Agents representing sellers
+- **Broker** - Office-level oversight
+- **Brand Manager** - Multi-office management
+- **Enterprise** - Large brokerage operations
 
 ## Project Structure
 
 ```
-dreamery-operating-software/
-├── public/                 # Static assets
-│   ├── favicon.png
-│   ├── hero-background.jpg
-│   └── logo.png
-├── src/
-│   ├── components/        # Reusable React components
-│   │   ├── auth/         # Authentication components
-│   │   │   ├── SignInForm.tsx
-│   │   │   ├── SignUpForm.tsx
-│   │   │   ├── MagicLinkForm.tsx
-│   │   │   ├── OTPForm.tsx
-│   │   │   ├── BiometricForm.tsx
-│   │   │   ├── TwoFactorForm.tsx
-│   │   │   ├── SSOForm.tsx
-│   │   │   └── SocialLoginButtons.tsx
-│   │   ├── Header.tsx
-│   │   ├── Hero.tsx
-│   │   └── Navigation.tsx
+dreamery-homepage/
+├── src/                    # React frontend
+│   ├── components/        # Reusable components
 │   ├── pages/            # Page components
-│   │   ├── auth/
-│   │   │   └── AuthPage.tsx
-│   │   └── SecuritySettings.tsx
-│   ├── assets/           # Project assets (images, icons)
-│   │   └── social-logos/ # Social media icons
-│   └── App.tsx           # Root component
-└── package.json
+│   ├── services/         # API services
+│   └── theme/            # Design system
+├── server/               # Python backend
+├── public/               # Static assets
+└── docs/                 # Documentation
 ```
 
-## Recent Updates
+## Environment Variables
 
-### Authentication & Security Enhancements
-- **Reorganized Authentication Flow**: Separated basic auth from advanced security features
-- **Security Settings Page**: Dedicated page for managing advanced authentication methods
-- **Progressive Security**: Users can enhance security after initial sign-in
-- **Security Scoring**: Visual feedback on account security level
+### Frontend (.env)
+```
+REACT_APP_API_URL=http://localhost:5001
+REACT_APP_APPLE_MAPS_JWT_TOKEN=your_jwt_token
+```
 
-### Hero Section Improvements
-- **Advanced Search**: Autocomplete with geolocation and search history
-- **UI Enhancements**: Map icon, navy blue search button, improved placeholder text
-- **Responsive Design**: Optimized for all device sizes
-
-### Component Architecture
-- **Modular Design**: Separated concerns between basic auth and security features
-- **Type Safety**: Full TypeScript implementation
-- **Error Handling**: Comprehensive error states and user feedback
-- **Loading States**: Smooth user experience with loading indicators
+### Backend (server/.env)
+```
+FLASK_ENV=development
+DATABASE_URL=sqlite:///dev.db
+SECRET_KEY=your_secret_key
+```
 
 ## Development
 
 ### Available Scripts
-- `npm start` - Run development server
-- `npm run build` - Build for production
-- `npm test` - Run tests
-- `npm run eject` - Eject from Create React App
+```bash
+npm start          # Start development server
+npm run build      # Build for production
+npm test           # Run tests
+npm run lint       # Run linting
+npm run type-check # TypeScript checking
+```
 
-### Key Routes
-- `/` - Homepage with hero section
-- `/auth` - Basic authentication (Sign In, Sign Up, Magic Link)
-- `/security` - Advanced security settings (2FA, Biometric, OTP, SSO)
+### Database Commands
+```bash
+npm run db:push    # Push schema changes
+npm run db:seed    # Seed database
+npm run db:studio  # Open Prisma Studio
+```
 
-## 🔒 ACCESS AND USAGE RESTRICTIONS
+## Access and Usage Restrictions
 
 **AUTHORIZED PERSONNEL ONLY**
 
@@ -184,35 +124,31 @@ This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthoriz
 - Follow all security protocols and coding standards
 - Maintain strict confidentiality of all proprietary information
 - Report any security concerns immediately
-- Complete required security training
-- Use only company-approved development tools
-- Contact legal@dreamerysoftware.com for licensing inquiries
+- Use only for authorized business purposes
 
 ## Legal Information
 
-This is proprietary software owned by Dreamery Software LLC. All rights reserved.
-
-- **License**: Proprietary - see LICENSE file for details
+- **License**: Proprietary - See LICENSE file
+- **Copyright**: © 2024 Dreamery Software LLC. All rights reserved.
 - **Privacy Policy**: See legal/PRIVACY_POLICY.md
 - **Terms of Service**: See legal/TERMS_OF_SERVICE.md
 - **Security Policy**: See legal/SECURITY_POLICY.md
 
-## ⚠️ LEGAL WARNING ⚠️
+## Legal Warning
 
 **UNAUTHORIZED USE IS ILLEGAL**
 
-This software contains **PROPRIETARY AND CONFIDENTIAL INFORMATION** protected by copyright, trade secret, and other intellectual property laws. 
+This software is proprietary and confidential. Any unauthorized use, copying, distribution, or reverse engineering is strictly prohibited and may result in civil and criminal penalties under applicable law.
 
-**UNAUTHORIZED ACCESS, USE, COPYING, OR DISTRIBUTION IS STRICTLY PROHIBITED** and may result in:
-- Civil and criminal penalties under applicable law
-- Injunctive relief and monetary damages
-- Legal action for intellectual property infringement
-- Termination of access and employment/contractual relationships
+## Support
 
-**REPORT VIOLATIONS**: benjamin@dreameryestates.com
+For technical support or questions:
+- Check documentation in `docs/` directory
+- Review existing GitHub issues
+- Contact authorized development team
 
-## Acknowledgments
+---
 
-- Material-UI team for the excellent component library
-- The React community for inspiration and best practices
-- Web Authentication API for biometric authentication concepts
+**Classification**: PROPRIETARY - CONFIDENTIAL  
+**Access Level**: AUTHORIZED PERSONNEL ONLY  
+**Copyright**: © 2024 Dreamery Software LLC. All rights reserved.

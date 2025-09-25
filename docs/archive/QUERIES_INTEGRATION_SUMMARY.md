@@ -6,7 +6,7 @@ Successfully integrated the `queries.py` file into the existing Dreamery homepag
 
 ## What Was Added
 
-### ✅ **Enhanced GraphQL Queries**
+### **Enhanced GraphQL Queries**
 
 1. **Query Templates** (`server/queries.py`):
    - `_SEARCH_HOMES_DATA_BASE` - Base query template with core property fields

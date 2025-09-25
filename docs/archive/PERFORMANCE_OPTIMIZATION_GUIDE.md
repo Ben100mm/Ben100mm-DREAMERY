@@ -1,9 +1,9 @@
-# 🚀 Performance Optimization Guide
+# Performance Optimization Guide
 
 ## Overview
 This guide documents the performance optimizations implemented in the Dreamery Homepage application to improve page loading times and user experience.
 
-## ✅ Implemented Optimizations
+## Implemented Optimizations
 
 ### 1. Icon Lazy Loading
 **Status**: Partially Complete

@@ -99,7 +99,7 @@ npm run db:seed
 npm run db:studio
 ```
 
-## 📝 Usage Examples
+## Usage Examples
 
 ### 1. Using the Database Service
 

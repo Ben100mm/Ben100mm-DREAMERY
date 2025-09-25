@@ -6,7 +6,7 @@ Successfully integrated the `processors.py` file into the existing Dreamery home
 
 ## What Was Added
 
-### ✅ **Enhanced Python Backend**
+### **Enhanced Python Backend**
 
 1. **Updated Models** (`server/models.py`):
    - Added `Agent`, `Broker`, `Builder`, `Office`, `Advertisers` classes

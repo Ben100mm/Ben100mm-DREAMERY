@@ -50,7 +50,7 @@ import {
   Security as SecurityIcon,
 } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
-import { brandColors } from "../../../theme";
+import { brandColors } from "../../theme";
 
 // Custom Lumina Logo Component
 const LuminaIcon: React.FC<{ sx?: any; size?: number }> = ({ sx = {}, size = 24 }) => (

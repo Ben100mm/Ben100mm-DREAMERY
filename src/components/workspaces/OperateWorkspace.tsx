@@ -8,6 +8,7 @@ import { brandColors } from '../../theme';
 import OperateDashboard from '../operate/OperateDashboard';
 import OperateProjects from '../operate/OperateProjects';
 import OperateMessages from '../operate/OperateMessages';
+import Calendar from '../common/Calendar';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -127,7 +128,14 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
           </Box>
         );
       case 'messages':
-        return <OperateMessages />;
+        return (
+          <Box>
+            <Calendar workspaceType="operate" />
+            <Box sx={{ mt: 4 }}>
+              <OperateMessages />
+            </Box>
+          </Box>
+        );
       default:
         return (
           <Box>

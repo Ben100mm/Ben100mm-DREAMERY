@@ -18,6 +18,7 @@ import AIClosingAssistant from '../close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../close/integrations/PartnerIntegrations';
 import CloseMessages from '../close/CloseMessages';
 import ClosingAssistantIcon from '../close/ai-closing-assistant/ClosingAssistantIcon';
+import Calendar from '../common/Calendar';
 import {
   Dashboard as DashboardIcon,
   Security as SecurityIcon,
@@ -143,7 +144,14 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
       case 'assistant':
         return <AIClosingAssistant />;
       case 'messages':
-        return <CloseMessages />;
+        return (
+          <Box>
+            <Calendar workspaceType="close" />
+            <Box sx={{ mt: 4 }}>
+              <CloseMessages />
+            </Box>
+          </Box>
+        );
       case 'integrations':
         return <PartnerIntegrations />;
       default:

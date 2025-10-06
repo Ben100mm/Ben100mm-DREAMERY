@@ -179,7 +179,7 @@ const OperateDashboard: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    (stats.totalBudget / 1000000).toFixed(1)M
+                    ${(stats.totalBudget / 1000000).toFixed(1)}M
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Budget
@@ -188,7 +188,7 @@ const OperateDashboard: React.FC = () => {
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="caption" color="text.secondary">
-                  stats.spentBudget.toLocaleString() spent
+                  ${stats.spentBudget.toLocaleString()} spent
                 </Typography>
               </Box>
             </CardContent>
@@ -227,7 +227,7 @@ const OperateDashboard: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    stats.monthlySavings.toLocaleString()
+                    ${stats.monthlySavings.toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Monthly Savings

@@ -3,6 +3,7 @@ import {
   Handshake as JointVentureIcon,
   PieChart as FractionalIcon,
   Business as PrivateMarketIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
@@ -36,6 +37,11 @@ export const investWorkspace: WorkspaceConfig = {
       id: 'privatemarket', 
       label: 'Private Market Investment Listings', 
       icon: <PrivateMarketIcon />,
+    },
+    { 
+      id: 'messages', 
+      label: 'Messages', 
+      icon: <ChatIcon />,
     },
   ],
 };

@@ -6,6 +6,7 @@ import {
   Security as ComplianceIcon,
   Calculate as CalculatorIcon,
   AccountBox as PortalIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
@@ -54,6 +55,11 @@ export const fundWorkspace: WorkspaceConfig = {
       id: 'portal', 
       label: 'Secure Investor Portal', 
       icon: <PortalIcon />,
+    },
+    { 
+      id: 'messages', 
+      label: 'Messages', 
+      icon: <ChatIcon />,
     },
   ],
 };

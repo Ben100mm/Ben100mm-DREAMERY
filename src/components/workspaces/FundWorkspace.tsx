@@ -9,6 +9,7 @@ import FundDashboard from '../fund/FundDashboard';
 import FundProjects from '../fund/FundProjects';
 import FundCreateProject from '../fund/FundCreateProject';
 import FundMessages from '../fund/FundMessages';
+import Calendar from '../common/Calendar';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -137,7 +138,14 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
           </Box>
         );
       case 'messages':
-        return <FundMessages />;
+        return (
+          <Box>
+            <Calendar workspaceType="fund" />
+            <Box sx={{ mt: 4 }}>
+              <FundMessages />
+            </Box>
+          </Box>
+        );
       default:
         return (
           <Box>

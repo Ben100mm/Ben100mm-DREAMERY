@@ -120,7 +120,7 @@ const FundDashboard: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    (stats.totalRaised / 1000000).toFixed(1)M
+                    ${(stats.totalRaised / 1000000).toFixed(1)}M
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Raised
@@ -177,7 +177,7 @@ const FundDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Avg: stats.averageInvestment.toLocaleString()
+                Avg: ${stats.averageInvestment.toLocaleString()}
               </Typography>
             </CardContent>
           </Card>
@@ -200,7 +200,7 @@ const FundDashboard: React.FC = () => {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                Commission: stats.totalCommissions.toLocaleString()
+                Commission: ${stats.totalCommissions.toLocaleString()}
               </Typography>
             </CardContent>
           </Card>

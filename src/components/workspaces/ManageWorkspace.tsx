@@ -38,6 +38,7 @@ import ManageCalendar from '../manage/ManageCalendar';
 import ManageListings from '../manage/ManageListings';
 import ManageMessagesEnhanced from '../manage/ManageMessagesEnhanced';
 import ManageEarnings from '../manage/ManageEarnings';
+import Calendar from '../common/Calendar';
 import {
   Dashboard as DashboardIcon,
   CalendarToday as CalendarIcon,
@@ -425,7 +426,14 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
       case 'listings':
         return <ManageListings />;
       case 'messages':
-        return <ManageMessagesEnhanced />;
+        return (
+          <Box>
+            <Calendar workspaceType="manage" />
+            <Box sx={{ mt: 4 }}>
+              <ManageMessagesEnhanced />
+            </Box>
+          </Box>
+        );
       case 'earnings':
         return <ManageEarnings />;
       case 'insights':

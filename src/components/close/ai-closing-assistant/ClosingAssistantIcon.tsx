@@ -121,7 +121,7 @@ const ClosingAssistantIcon: React.FC<ClosingAssistantIconProps> = ({
   return (
     <Box
       component="img"
-      src="/Lumina%20Logo.png"
+      src="/lumina-logo.png"
       alt="Lumina logo"
       sx={{
         width: size,

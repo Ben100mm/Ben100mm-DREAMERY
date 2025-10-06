@@ -56,7 +56,7 @@ import { brandColors } from "../../../theme";
 const LuminaIcon: React.FC<{ sx?: any; size?: number }> = ({ sx = {}, size = 24 }) => (
   <Box
     component="img"
-    src="/Lumina%20Logo.png"
+    src="/lumina-logo.png"
     alt="Lumina logo"
     sx={{
       width: size,

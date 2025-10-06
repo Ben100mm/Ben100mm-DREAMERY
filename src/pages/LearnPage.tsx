@@ -29,7 +29,7 @@ const LearnPage: React.FC = () => {
     { id: 'casestudies', label: 'Case Studies', icon: <CaseStudiesIcon /> },
     { id: 'qa', label: 'Q&A', icon: <QAIcon /> },
     { id: 'livesessions', label: 'Live Sessions', icon: <LiveSessionsIcon /> },
-    { id: 'aitutor', label: 'Lumina', icon: <Box component="img" src="/Lumina%20Logo.png" alt="Lumina logo" sx={{ width: 24, height: 24 }} /> }
+    { id: 'aitutor', label: 'Lumina', icon: <Box component="img" src="/lumina-logo.png" alt="Lumina logo" sx={{ width: 24, height: 24 }} /> }
   ];
 
   const getBanner = () => {
@@ -82,7 +82,7 @@ const LearnPage: React.FC = () => {
       case 'livesessions':
         return <LiveSessionsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
       case 'aitutor':
-        return <Box component="img" src="/Lumina%20Logo.png" alt="Lumina logo" sx={{ width: 28, height: 28 }} />;
+        return <Box component="img" src="/lumina-logo.png" alt="Lumina logo" sx={{ width: 28, height: 28 }} />;
       default:
         return <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
     }

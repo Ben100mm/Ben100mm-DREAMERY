@@ -9,7 +9,6 @@ import {
   CheckCircle as CheckCircleIcon,
   Support as SupportIcon,
   IntegrationInstructions as IntegrationIcon,
-  Chat as ChatIcon,
 } from '@mui/icons-material';
 import ClosingAssistantIcon from '../../components/close/ai-closing-assistant/ClosingAssistantIcon';
 
@@ -74,11 +73,6 @@ export const closeWorkspace: WorkspaceConfig = {
       id: 'assistant', 
       label: 'Closing Assistant', 
       icon: <ClosingAssistantIcon size={20} variant="icon" />,
-    },
-    { 
-      id: 'messages', 
-      label: 'Messages', 
-      icon: <ChatIcon />,
     },
     { 
       id: 'integrations', 

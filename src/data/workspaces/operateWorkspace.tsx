@@ -5,7 +5,6 @@ import {
   Receipt as ExpenseIcon,
   Schedule as ContractorIcon,
   TrendingUp as OptimizationIcon,
-  Chat as ChatIcon,
 } from '@mui/icons-material';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
@@ -49,11 +48,6 @@ export const operateWorkspace: WorkspaceConfig = {
       id: 'optimization', 
       label: 'Portfolio Optimization Suggestions', 
       icon: <OptimizationIcon />,
-    },
-    { 
-      id: 'messages', 
-      label: 'Messages', 
-      icon: <ChatIcon />,
     },
   ],
 };

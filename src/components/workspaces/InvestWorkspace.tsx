@@ -8,7 +8,6 @@ import { brandColors } from '../../theme';
 import InvestCrowdfunding from '../invest/InvestCrowdfunding';
 import InvestJointVenture from '../invest/InvestJointVenture';
 import InvestMessages from '../invest/InvestMessages';
-import Calendar from '../common/Calendar';
 import {
   Group as CrowdfundingIcon,
   Handshake as JointVentureIcon,
@@ -92,14 +91,7 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
           </Box>
         );
       case 'messages':
-        return (
-          <Box>
-            <Calendar workspaceType="invest" />
-            <Box sx={{ mt: 4 }}>
-              <InvestMessages />
-            </Box>
-          </Box>
-        );
+        return <InvestMessages />;
       default:
         return (
           <Box>

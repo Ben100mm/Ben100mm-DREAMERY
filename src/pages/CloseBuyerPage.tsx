@@ -223,6 +223,8 @@ const CloseBuyerPage: React.FC = () => {
 
   const tabs = [
     { value: 'dashboard', label: 'Dashboard' },
+    { value: 'calendar', label: 'Calendar' },
+    { value: 'messages', label: 'Messages' },
     { value: 'escrow-title', label: 'Escrow & Title' },
     { value: 'due-diligence', label: 'Due Diligence' },
     { value: 'financing', label: 'Financing' },
@@ -239,6 +241,28 @@ const CloseBuyerPage: React.FC = () => {
     switch (state.activeTab) {
       case 'dashboard':
         return <ClosingDashboard />;
+      case 'calendar':
+        return (
+          <Box sx={{ p: 3, textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ mb: 2, color: brandColors.primary }}>
+              Calendar
+            </Typography>
+            <Typography variant="body1" sx={{ color: brandColors.text.secondary }}>
+              Calendar functionality coming soon...
+            </Typography>
+          </Box>
+        );
+      case 'messages':
+        return (
+          <Box sx={{ p: 3, textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ mb: 2, color: brandColors.primary }}>
+              Messages
+            </Typography>
+            <Typography variant="body1" sx={{ color: brandColors.text.secondary }}>
+              Messages functionality coming soon...
+            </Typography>
+          </Box>
+        );
       case 'escrow-title':
         return <EscrowTitleHub />;
       case 'due-diligence':
@@ -686,6 +710,62 @@ const CloseBuyerPage: React.FC = () => {
         ) : (
           /* Other Tab Content */
           <Box>
+            {state.activeTab === 'calendar' && (
+              <>
+                <Paper 
+                  elevation={0} 
+                  sx={{ 
+                    mb: 4, 
+                    p: 3, 
+                    backgroundColor: brandColors.primary,
+                    borderRadius: '16px 16px 0 0',
+                    color: brandColors.text.inverse
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
+                      Calendar
+                    </Typography>
+                  </Box>
+                  <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    Schedule and manage closing-related appointments and deadlines
+                  </Typography>
+                </Paper>
+                <Box sx={{ pl: 0, ml: 3 }}>
+                  {renderTabContent()}
+                </Box>
+              </>
+            )}
+            
+            {state.activeTab === 'messages' && (
+              <>
+                <Paper 
+                  elevation={0} 
+                  sx={{ 
+                    mb: 4, 
+                    p: 3, 
+                    backgroundColor: brandColors.primary,
+                    borderRadius: '16px 16px 0 0',
+                    color: brandColors.text.inverse
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
+                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
+                      Messages
+                    </Typography>
+                  </Box>
+                  <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                    Communication hub for closing-related messages and updates
+                  </Typography>
+                </Paper>
+                <Box sx={{ pl: 0, ml: 3 }}>
+                  {renderTabContent()}
+                </Box>
+              </>
+            )}
+            
             {state.activeTab === 'escrow-title' && (
               <>
                 <Paper 

@@ -47,7 +47,7 @@ import {
   AttachMoney as MoneyIcon,
   Info as InfoIcon,
   PhotoLibrary as PhotoLibraryIcon,
-  VirtualTour as VirtualTourIcon,
+  ViewInAr as VirtualTourIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Fullscreen as FullscreenIcon,

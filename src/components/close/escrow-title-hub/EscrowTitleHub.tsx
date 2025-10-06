@@ -31,7 +31,7 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material';
-import { brandColors } from '../../../theme';
+import { brandColors } from '../../theme';
 import {
   Security as SecurityIcon,
   Search as SearchIcon,

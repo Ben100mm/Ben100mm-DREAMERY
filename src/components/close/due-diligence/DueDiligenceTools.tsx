@@ -26,7 +26,7 @@ import {
   Tab,
   Paper,
 } from '@mui/material';
-import { brandColors } from '../../../theme';
+import { brandColors } from '../../theme';
 import {
   Search as SearchIcon,
   Edit as EditIcon,

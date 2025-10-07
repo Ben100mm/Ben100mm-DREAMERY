@@ -1171,6 +1171,123 @@ function calculateExitProceeds(
   return netProceeds;
 }
 
+/**
+ * Calculates comprehensive MOIC (Multiple on Invested Capital / Equity Multiple)
+ * Includes both operating cash flows AND exit proceeds
+ * @param state - Current deal state
+ * @param holdingPeriod - Years to hold property (default 5)
+ * @returns Object with MOIC value and detailed breakdown
+ */
+function calculateComprehensiveMOIC(
+  state: DealState,
+  holdingPeriod: number = 5
+): {
+  moic: number;
+  breakdown: {
+    cashInvested: number;
+    totalCashFlows: number;
+    exitProceeds: {
+      futureValue: number;
+      sellingCosts: number;
+      remainingBalance: number;
+      netSaleProceeds: number;
+    };
+    totalReturn: number;
+  };
+} {
+  // Calculate total cash invested
+  const cashInvested =
+    state.operationType === "Rental Arbitrage"
+      ? (state.arbitrage?.deposit ?? 0) +
+        (state.arbitrage?.estimateCostOfRepairs ?? 0) +
+        (state.arbitrage?.furnitureCost ?? 0) +
+        (state.arbitrage?.otherStartupCosts ?? 0)
+      : (state.loan.downPayment || 0) +
+        (state.loan.closingCosts || 0) +
+        (state.loan.rehabCosts || 0) +
+        (state.operationType === "Short Term Rental"
+          ? state.arbitrage?.furnitureCost || 0
+          : 0) +
+        state.subjectTo.paymentToSeller;
+
+  // Calculate annual cash flow (Year 1 steady state)
+  const monthlyIncome = computeIncome(state);
+  const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
+  const monthlyVariableOps = variableMonthlyFromPercentages(
+    computeGrossPotentialIncome(state),
+    state.ops
+  );
+  const monthlyDebtService = totalMonthlyDebtService({
+    newLoanMonthly: state.loan.monthlyPayment || 0,
+    subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+    hybridMonthly: state.hybrid?.monthlyPayment,
+  });
+
+  const annualCashFlow =
+    (monthlyIncome - monthlyFixedOps - monthlyVariableOps - monthlyDebtService) * 12;
+  
+  // Total cash flows over holding period (simplified - no growth assumed)
+  const totalCashFlows = annualCashFlow * holdingPeriod;
+
+  // Calculate exit proceeds
+  const appreciationRate =
+    (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+  const futureValue =
+    state.purchasePrice * Math.pow(1 + appreciationRate, holdingPeriod);
+
+  // Selling costs (default 6% per industry standard)
+  const sellingCostsPct = 0.06;
+  const sellingCosts = futureValue * sellingCostsPct;
+
+  // Calculate remaining loan balance
+  const loanAmount = computeLoanAmount(state);
+  let remainingBalance = 0;
+
+  if (loanAmount > 0 && !state.loan.interestOnly) {
+    // Use remainingPrincipalAfterPayments utility
+    const spec: LoanSpec = {
+      principal: loanAmount,
+      annualRate: (state.loan.annualInterestRate || 0) / 100,
+      termMonths: (state.loan.amortizationYears || 30) * 12,
+      interestOnly: state.loan.interestOnly || false,
+    };
+    
+    const paymentsMatched = holdingPeriod * 12;
+    try {
+      remainingBalance = remainingPrincipalAfterPayments(spec, paymentsMatched);
+    } catch (error) {
+      // If payments exceed term, loan is paid off
+      remainingBalance = 0;
+    }
+  } else if (state.loan.interestOnly) {
+    // Interest-only: full principal remains
+    remainingBalance = loanAmount;
+  }
+
+  const netSaleProceeds = futureValue - sellingCosts - remainingBalance;
+
+  // Total return = operating cash flows + exit proceeds
+  const totalReturn = totalCashFlows + netSaleProceeds;
+
+  // MOIC = Total Return / Cash Invested
+  const moic = cashInvested > 0 ? totalReturn / cashInvested : 0;
+
+  return {
+    moic,
+    breakdown: {
+      cashInvested,
+      totalCashFlows,
+      exitProceeds: {
+        futureValue,
+        sellingCosts,
+        remainingBalance,
+        netSaleProceeds,
+      },
+      totalReturn,
+    },
+  };
+}
+
 // Helper function to check if cash-on-cash calculation is valid
 function isCashOnCashValid(state: DealState): boolean {
   const invested =
@@ -9246,30 +9363,109 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Equity Multiple (MOIC)"
                       value={(() => {
-                        // Simplified calculation - can be enhanced with actual distribution tracking
-                        const totalCashInvested =
-                          state.loan.downPayment +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0);
-                        const annualCashFlow =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            })) *
-                          12;
-                        // Assume 5-year hold period for MOIC calculation
-                        const totalDistributions = annualCashFlow * 5;
-                        return totalCashInvested > 0
-                          ? (totalDistributions / totalCashInvested).toFixed(2)
-                          : "N/A";
+                        const holdingPeriod = state.irrHoldPeriodYears || 5;
+                        const result = calculateComprehensiveMOIC(state, holdingPeriod);
+                        return result.moic > 0 ? result.moic.toFixed(2) + "x" : "N/A";
                       })()}
                       InputProps={{ readOnly: true }}
-                      helperText="Total Distributions ÷ Total Cash Invested"
+                      helperText="Total Return (Cash Flows + Exit) ÷ Cash Invested"
                     />
+                    
+                    {/* MOIC Breakdown */}
+                    <Box
+                      sx={{
+                        gridColumn: "1 / -1",
+                        p: 2,
+                        bgcolor: brandColors.backgrounds.secondary,
+                        borderRadius: 1,
+                        border: `1px solid ${brandColors.borders.primary}`,
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                        MOIC Breakdown
+                      </Typography>
+                      {(() => {
+                        const holdingPeriod = state.irrHoldPeriodYears || 5;
+                        const result = calculateComprehensiveMOIC(state, holdingPeriod);
+                        const { breakdown } = result;
+                        
+                        return (
+                          <Box sx={{ display: "grid", gap: 1.5 }}>
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Total Cash Invested:
+                              </Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                {formatCurrency(breakdown.cashInvested)}
+                              </Typography>
+                            </Box>
+                            <Divider />
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Operating Cash Flows ({holdingPeriod} years):
+                              </Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                {formatCurrency(breakdown.totalCashFlows)}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ pl: 2 }}>
+                              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  Future Property Value:
+                                </Typography>
+                                <Typography variant="caption">
+                                  {formatCurrency(breakdown.exitProceeds.futureValue)}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  Less: Selling Costs (6%):
+                                </Typography>
+                                <Typography variant="caption" color="error.main">
+                                  -{formatCurrency(breakdown.exitProceeds.sellingCosts)}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  Less: Remaining Loan:
+                                </Typography>
+                                <Typography variant="caption" color="error.main">
+                                  -{formatCurrency(breakdown.exitProceeds.remainingBalance)}
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Net Exit Proceeds:
+                              </Typography>
+                              <Typography variant="body2" fontWeight={500}>
+                                {formatCurrency(breakdown.exitProceeds.netSaleProceeds)}
+                              </Typography>
+                            </Box>
+                            <Divider />
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <Typography variant="body2" fontWeight={600}>
+                                Total Return:
+                              </Typography>
+                              <Typography variant="body2" fontWeight={600} color="primary.main">
+                                {formatCurrency(breakdown.totalReturn)}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 1, p: 1, bgcolor: brandColors.backgrounds.tertiary, borderRadius: 1 }}>
+                              <Typography variant="body1" fontWeight={700}>
+                                Equity Multiple (MOIC):
+                              </Typography>
+                              <Typography variant="body1" fontWeight={700} color="success.main">
+                                {result.moic > 0 ? result.moic.toFixed(2) + "x" : "N/A"}
+                              </Typography>
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                              Formula: (Operating Cash Flows + Net Exit Proceeds) ÷ Cash Invested
+                            </Typography>
+                          </Box>
+                        );
+                      })()}
+                    </Box>
                     
                     {/* IRR Configuration Parameters */}
                     <Box

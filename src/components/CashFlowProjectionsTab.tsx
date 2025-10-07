@@ -30,7 +30,6 @@ import {
   TrendingUp,
   Settings
 } from '@mui/icons-material';
-import { DealState } from '../types/deal';
 import {
   generateCashFlowProjections,
   CashFlowProjectionParams,
@@ -46,45 +45,45 @@ import { downloadExcelFile } from '../utils/excelExport';
 // ============================================================================
 
 interface CashFlowProjectionsTabProps {
-  dealState: DealState;
+  dealState: any; // Accept any dealState structure to support different DealState types
 }
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
 
-function extractProjectionParams(dealState: DealState, settings: ProjectionSettings): CashFlowProjectionParams {
-  // Extract initial monthly rent
+function extractProjectionParams(dealState: any, settings: ProjectionSettings): CashFlowProjectionParams {
+  // Extract initial monthly rent (handle different property types)
   const monthlyRent = dealState.revenueInputs?.averageDailyRate 
     ? dealState.revenueInputs.averageDailyRate * 30 * (dealState.revenueInputs.occupancyRate / 100)
-    : 0;
+    : (dealState.sfr?.totalMonthlyRent || dealState.multi?.totalMonthlyRent || dealState.str?.totalMonthlyRevenue || 0);
 
   // Calculate annual expenses
-  const annualTaxes = (dealState.ops.taxes || 0) * 12;
-  const annualInsurance = (dealState.ops.insurance || 0) * 12;
-  const annualMaintenance = (dealState.ops.maintenance / 100) * monthlyRent * 12; // Maintenance is percentage
-  const annualManagement = (dealState.ops.management / 100) * monthlyRent * 12; // Management is percentage
-  const annualCapEx = (dealState.ops.capEx / 100) * monthlyRent * 12; // CapEx is percentage
+  const annualTaxes = (dealState.ops?.taxes || 0) * 12;
+  const annualInsurance = (dealState.ops?.insurance || 0) * 12;
+  const annualMaintenance = (dealState.ops?.maintenance || 0) / 100 * monthlyRent * 12; // Maintenance is percentage
+  const annualManagement = (dealState.ops?.management || 0) / 100 * monthlyRent * 12; // Management is percentage
+  const annualCapEx = (dealState.ops?.capEx || 0) / 100 * monthlyRent * 12; // CapEx is percentage
 
   // Calculate initial investment (down payment + closing costs estimate)
-  const downPayment = dealState.purchasePrice - dealState.loan.loanAmount;
-  const closingCosts = dealState.purchasePrice * 0.03; // Estimate 3% closing costs
+  const downPayment = (dealState.purchasePrice || 0) - (dealState.loan?.loanAmount || 0);
+  const closingCosts = (dealState.purchasePrice || 0) * 0.03; // Estimate 3% closing costs
   const initialInvestment = downPayment + closingCosts;
 
   return {
-    purchasePrice: dealState.purchasePrice,
-    currentPropertyValue: dealState.purchasePrice,
+    purchasePrice: dealState.purchasePrice || 0,
+    currentPropertyValue: dealState.purchasePrice || 0,
     initialMonthlyRent: monthlyRent,
-    vacancyRate: (dealState.ops.vacancy || 0) / 100,
+    vacancyRate: (dealState.ops?.vacancy || 0) / 100,
     annualTaxes,
     annualInsurance,
     annualMaintenance,
     annualManagement,
     annualCapEx,
-    loanAmount: dealState.loan.loanAmount,
-    annualInterestRate: dealState.loan.annualInterestRate,
-    loanTermMonths: dealState.loan.amortizationYears * 12,
-    interestOnly: dealState.loan.interestOnly,
+    loanAmount: dealState.loan?.loanAmount || 0,
+    annualInterestRate: dealState.loan?.annualInterestRate || 0,
+    loanTermMonths: (dealState.loan?.amortizationYears || 30) * 12,
+    interestOnly: dealState.loan?.interestOnly || false,
     growthRates: settings.growthRates,
     capitalEvents: settings.capitalEvents,
     projectionYears: settings.projectionYears,
@@ -131,9 +130,10 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
   // Handle export to Excel
   const handleExportToExcel = () => {
     if (projectionResults) {
+      const location = dealState.city || dealState.propertyAddress || 'Property';
       downloadExcelFile(
         projectionResults,
-        `CashFlow_${dealState.city}_${new Date().toISOString().split('T')[0]}.xlsx`
+        `CashFlow_${location.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`
       );
     }
   };

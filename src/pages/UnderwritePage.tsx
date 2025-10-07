@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
 import ProfessionalSupportMessages from "../components/professional-support/ProfessionalSupportMessages";
+import CashFlowProjectionsTab from "../components/CashFlowProjectionsTab";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -2641,6 +2642,7 @@ const UnderwritePage: React.FC = () => {
   }
 
   const [showMessages, setShowMessages] = useState(false);
+  const [mainTab, setMainTab] = useState<'analysis' | 'cashflow'>('analysis');
 
   const [state, setState] = useState<DealState>(() => {
     try {
@@ -4888,6 +4890,29 @@ const UnderwritePage: React.FC = () => {
             </Typography>
           </CardContent>
         </Card>
+
+        {/* Main Tabs */}
+        <Box sx={{ mt: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs 
+            value={mainTab} 
+            onChange={(_, newValue) => setMainTab(newValue)}
+            sx={{
+              '& .MuiTab-root': {
+                textTransform: 'none',
+                fontWeight: 600,
+                fontSize: '1rem',
+                minWidth: 120
+              }
+            }}
+          >
+            <Tab label="Deal Analysis" value="analysis" />
+            <Tab label="Cash Flow Projections" value="cashflow" />
+          </Tabs>
+        </Box>
+
+        {/* Analysis Tab Content */}
+        {mainTab === 'analysis' && (
+        <Box sx={{ mt: 2 }}>
 
         {/* Validation messages */}
         {state.validationMessages && state.validationMessages.length > 0 && (
@@ -12085,6 +12110,14 @@ const UnderwritePage: React.FC = () => {
             Reset
           </Button>
         </Box>
+        </Box>
+        )}
+
+        {/* Cash Flow Projections Tab Content */}
+        {mainTab === 'cashflow' && (
+          <CashFlowProjectionsTab dealState={state} />
+        )}
+
       </Container>
       </Box>
       )}

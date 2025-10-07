@@ -754,11 +754,13 @@ export const calculateRiskScore = (
   }
 
   // Weighted average for overall risk score
+  // Financing risk weighted at 2x (40%) due to higher impact on deal viability
+  // Other factors weighted equally at 20% each (market, property, tenant)
   const overallRiskScore =
-    marketRisk * 0.25 +
-    propertyRisk * 0.25 +
-    tenantRisk * 0.25 +
-    financingRisk * 0.25;
+    marketRisk * 0.2 +
+    propertyRisk * 0.2 +
+    tenantRisk * 0.2 +
+    financingRisk * 0.4;
 
   // Determine risk category
   let riskCategory: "Low" | "Medium" | "High" | "Very High";

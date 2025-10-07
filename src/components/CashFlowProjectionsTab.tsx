@@ -21,14 +21,17 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Tabs,
+  Tab
 } from '@mui/material';
 import {
   ExpandMore,
   Download,
   Refresh,
   TrendingUp,
-  Settings
+  Settings,
+  ShowChart
 } from '@mui/icons-material';
 import {
   generateCashFlowProjections,
@@ -38,6 +41,7 @@ import {
 } from '../utils/cashFlowProjections';
 import CashFlowProjectionChart from './CashFlowProjectionChart';
 import CapitalEventsConfiguration from './CapitalEventsConfiguration';
+import MonteCarloSimulationTab from './MonteCarloSimulationTab';
 import { downloadExcelFile } from '../utils/excelExport';
 
 // ============================================================================
@@ -115,6 +119,7 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
   });
 
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
+  const [analysisTab, setAnalysisTab] = useState<'deterministic' | 'montecarlo'>('deterministic');
 
   // Generate projections
   const projectionResults = useMemo(() => {
@@ -157,16 +162,47 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            Year-by-Year Cash Flow Projections
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Detailed annual projections with rent growth, expense inflation, and capital events
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h5" gutterBottom>
+          Year-by-Year Cash Flow Projections
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Detailed annual projections with rent growth, expense inflation, and capital events
+        </Typography>
+      </Box>
+
+      {/* Analysis Type Tabs */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs 
+          value={analysisTab} 
+          onChange={(_, newValue) => setAnalysisTab(newValue)}
+          sx={{
+            '& .MuiTab-root': {
+              textTransform: 'none',
+              fontWeight: 600,
+              fontSize: '0.95rem'
+            }
+          }}
+        >
+          <Tab 
+            label="Deterministic Analysis" 
+            value="deterministic" 
+            icon={<TrendingUp />} 
+            iconPosition="start" 
+          />
+          <Tab 
+            label="Monte Carlo Simulation" 
+            value="montecarlo" 
+            icon={<ShowChart />} 
+            iconPosition="start" 
+          />
+        </Tabs>
+      </Box>
+
+      {/* Deterministic Analysis Tab */}
+      {analysisTab === 'deterministic' && (
+      <>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 3 }}>
           <Button
             variant="outlined"
             startIcon={<Refresh />}
@@ -184,7 +220,6 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
             Export to Excel
           </Button>
         </Box>
-      </Box>
 
       {/* Projection Settings */}
       <Accordion
@@ -357,6 +392,15 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
           </Grid>
         </Grid>
       </Paper>
+      </>
+      )}
+
+      {/* Monte Carlo Simulation Tab */}
+      {analysisTab === 'montecarlo' && projectionResults && (
+        <MonteCarloSimulationTab
+          baseParams={extractProjectionParams(dealState, settings)}
+        />
+      )}
     </Box>
   );
 };

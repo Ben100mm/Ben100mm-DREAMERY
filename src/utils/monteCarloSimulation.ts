@@ -95,6 +95,52 @@ export interface MonteCarloStatistics {
 }
 
 /**
+ * Risk-adjusted metrics
+ */
+export interface RiskMetrics {
+  // Value at Risk (VaR) - 5% and 1% levels
+  var95: number; // 95% confidence - 5% worst case
+  var99: number; // 99% confidence - 1% worst case
+  
+  // Conditional Value at Risk (CVaR/Expected Shortfall)
+  cvar95: number;
+  cvar99: number;
+  
+  // Sharpe Ratio (return per unit of risk)
+  sharpeRatio: number;
+  
+  // Sortino Ratio (return per unit of downside risk)
+  sortinoRatio: number;
+  
+  // Downside deviation
+  downsideDeviation: number;
+  
+  // Maximum drawdown
+  maxDrawdown: number;
+  
+  // Probability of loss
+  probabilityOfLoss: number;
+}
+
+/**
+ * Sensitivity analysis results
+ */
+export interface SensitivityAnalysis {
+  // Correlation coefficients between inputs and outputs
+  rentGrowthCorrelation: number;
+  expenseGrowthCorrelation: number;
+  appreciationCorrelation: number;
+  vacancyRateCorrelation: number;
+  
+  // Rank importance (1 = most important)
+  inputImportance: {
+    input: string;
+    correlation: number;
+    rank: number;
+  }[];
+}
+
+/**
  * Complete Monte Carlo simulation results
  */
 export interface MonteCarloResults {
@@ -106,6 +152,13 @@ export interface MonteCarloResults {
   annualizedReturnStats: MonteCarloStatistics;
   cashFlowStats: MonteCarloStatistics;
   finalEquityStats: MonteCarloStatistics;
+  irrStats: MonteCarloStatistics;
+  
+  // Risk-adjusted metrics
+  riskMetrics: RiskMetrics;
+  
+  // Sensitivity analysis
+  sensitivityAnalysis?: SensitivityAnalysis;
   
   // Probability analysis
   probabilityOfPositiveReturn: number;
@@ -356,6 +409,146 @@ export function createHistogram(values: number[], binCount: number = 50): {
 }
 
 // ============================================================================
+// Risk Metrics Calculations
+// ============================================================================
+
+/**
+ * Calculate downside deviation (volatility of negative returns)
+ */
+export function downsideDeviation(values: number[], targetReturn: number = 0): number {
+  const downsideValues = values.filter(v => v < targetReturn);
+  if (downsideValues.length === 0) return 0;
+  
+  const squaredDownsideDeviations = downsideValues.map(v => Math.pow(v - targetReturn, 2));
+  const meanSquaredDeviation = squaredDownsideDeviations.reduce((sum, v) => sum + v, 0) / values.length;
+  
+  return Math.sqrt(meanSquaredDeviation);
+}
+
+/**
+ * Calculate Value at Risk (VaR) at specified confidence level
+ */
+export function valueAtRisk(values: number[], confidenceLevel: number): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = Math.floor((1 - confidenceLevel) * sorted.length);
+  return sorted[index];
+}
+
+/**
+ * Calculate Conditional Value at Risk (CVaR/Expected Shortfall)
+ */
+export function conditionalValueAtRisk(values: number[], confidenceLevel: number): number {
+  const var_value = valueAtRisk(values, confidenceLevel);
+  const tailValues = values.filter(v => v <= var_value);
+  
+  if (tailValues.length === 0) return var_value;
+  
+  return mean(tailValues);
+}
+
+/**
+ * Calculate Sharpe Ratio (risk-adjusted return)
+ * @param returns - Array of returns
+ * @param riskFreeRate - Risk-free rate (default 0.02 for 2%)
+ */
+export function sharpeRatio(returns: number[], riskFreeRate: number = 0.02): number {
+  const meanReturn = mean(returns);
+  const stdDevReturn = stdDev(returns);
+  
+  if (stdDevReturn === 0) return 0;
+  
+  return (meanReturn - riskFreeRate) / stdDevReturn;
+}
+
+/**
+ * Calculate Sortino Ratio (return per unit of downside risk)
+ * @param returns - Array of returns
+ * @param targetReturn - Minimum acceptable return (default 0)
+ */
+export function sortinoRatio(returns: number[], targetReturn: number = 0): number {
+  const meanReturn = mean(returns);
+  const downsideDev = downsideDeviation(returns, targetReturn);
+  
+  if (downsideDev === 0) return 0;
+  
+  return (meanReturn - targetReturn) / downsideDev;
+}
+
+/**
+ * Calculate correlation coefficient between two arrays
+ */
+export function correlation(x: number[], y: number[]): number {
+  if (x.length !== y.length || x.length === 0) return 0;
+  
+  const n = x.length;
+  const meanX = mean(x);
+  const meanY = mean(y);
+  
+  let sumXY = 0;
+  let sumX2 = 0;
+  let sumY2 = 0;
+  
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    sumXY += dx * dy;
+    sumX2 += dx * dx;
+    sumY2 += dy * dy;
+  }
+  
+  const denominator = Math.sqrt(sumX2 * sumY2);
+  if (denominator === 0) return 0;
+  
+  return sumXY / denominator;
+}
+
+/**
+ * Calculate comprehensive risk metrics
+ */
+export function calculateRiskMetrics(
+  returns: number[],
+  riskFreeRate: number = 0.02
+): RiskMetrics {
+  const sorted = [...returns].sort((a, b) => a - b);
+  
+  // Value at Risk
+  const var95 = valueAtRisk(returns, 0.95);
+  const var99 = valueAtRisk(returns, 0.99);
+  
+  // Conditional Value at Risk
+  const cvar95 = conditionalValueAtRisk(returns, 0.95);
+  const cvar99 = conditionalValueAtRisk(returns, 0.99);
+  
+  // Sharpe and Sortino Ratios
+  const sharpe = sharpeRatio(returns, riskFreeRate);
+  const sortino = sortinoRatio(returns, 0);
+  
+  // Downside deviation
+  const downsideDev = downsideDeviation(returns, 0);
+  
+  // Maximum drawdown (simplified - actual would need time series)
+  const maxReturn = Math.max(...returns);
+  const minReturn = Math.min(...returns);
+  const maxDrawdown = maxReturn - minReturn;
+  
+  // Probability of loss
+  const lossCount = returns.filter(r => r < 0).length;
+  const probabilityOfLoss = lossCount / returns.length;
+  
+  return {
+    var95,
+    var99,
+    cvar95,
+    cvar99,
+    sharpeRatio: sharpe,
+    sortinoRatio: sortino,
+    downsideDeviation: downsideDev,
+    maxDrawdown,
+    probabilityOfLoss
+  };
+}
+
+// ============================================================================
 // Monte Carlo Simulation Engine
 // ============================================================================
 
@@ -392,9 +585,9 @@ function runSingleSimulation(
   // Run cash flow projection
   const results = generateCashFlowProjections(simParams);
   
-  // Calculate IRR (simplified - could be enhanced)
+  // Calculate IRR using Newton-Raphson method for accuracy
   const cashFlows = results.yearlyProjections.map(p => p.cashFlowAfterCapEx);
-  const irr = calculateSimpleIRR(-simParams.initialInvestment, cashFlows, results.summary.finalEquity);
+  const irr = calculateNewtonRaphsonIRR(-simParams.initialInvestment, cashFlows, results.summary.finalEquity);
   
   return {
     totalReturn: results.summary.totalReturn,
@@ -410,17 +603,71 @@ function runSingleSimulation(
 }
 
 /**
- * Simple IRR calculation
+ * Calculate IRR using Newton-Raphson method
+ * @param initialInvestment - Initial cash outlay (negative number)
+ * @param cashFlows - Array of annual cash flows
+ * @param finalValue - Exit proceeds
+ * @param maxIterations - Maximum iterations for convergence (default 100)
+ * @param tolerance - Convergence tolerance (default 0.0001)
+ * @returns IRR as a percentage (e.g., 15 for 15%)
  */
-function calculateSimpleIRR(initialInvestment: number, cashFlows: number[], finalValue: number): number {
-  const totalCashFlow = cashFlows.reduce((sum, cf) => sum + cf, 0);
-  const totalReturn = totalCashFlow + finalValue;
-  const years = cashFlows.length;
+function calculateNewtonRaphsonIRR(
+  initialInvestment: number,
+  cashFlows: number[],
+  finalValue: number,
+  maxIterations: number = 100,
+  tolerance: number = 0.0001
+): number {
+  // Handle edge cases
+  if (initialInvestment >= 0) return 0; // No investment
+  if (cashFlows.length === 0) return 0; // No cash flows
   
-  if (initialInvestment <= 0 || years === 0) return 0;
+  // Start with 10% initial guess
+  let irr = 0.1;
   
-  // Simple approximation
-  return ((Math.pow(totalReturn / initialInvestment, 1 / years) - 1) * 100);
+  for (let i = 0; i < maxIterations; i++) {
+    let npv = initialInvestment; // Already negative
+    let derivative = 0;
+    
+    // Calculate NPV and its derivative
+    cashFlows.forEach((cf, year) => {
+      const period = year + 1;
+      const discountFactor = Math.pow(1 + irr, period);
+      npv += cf / discountFactor;
+      derivative -= period * cf / Math.pow(1 + irr, period + 1);
+    });
+    
+    // Add final sale value
+    const finalYear = cashFlows.length + 1;
+    npv += finalValue / Math.pow(1 + irr, finalYear);
+    derivative -= finalYear * finalValue / Math.pow(1 + irr, finalYear + 1);
+    
+    // Check for derivative too close to zero (prevent division issues)
+    if (Math.abs(derivative) < 0.000001) {
+      break;
+    }
+    
+    // Newton-Raphson iteration
+    const newIrr = irr - npv / derivative;
+    
+    // Check convergence
+    if (Math.abs(newIrr - irr) < tolerance) {
+      return newIrr * 100; // Convert to percentage
+    }
+    
+    // Prevent negative or extremely high IRR
+    if (newIrr < -0.99) {
+      return -99; // Cap at -99%
+    }
+    if (newIrr > 10) {
+      return 1000; // Cap at 1000%
+    }
+    
+    irr = newIrr;
+  }
+  
+  // Return best estimate if not converged
+  return irr * 100; // Convert to percentage
 }
 
 /**
@@ -454,6 +701,7 @@ export function runMonteCarloSimulation(config: MonteCarloConfig): MonteCarloRes
   const annualizedReturns = results.map(r => r.annualizedReturn);
   const cashFlows = results.map(r => r.totalCashFlow);
   const finalEquities = results.map(r => r.finalEquity);
+  const irrs = results.map(r => r.irr);
   
   // Calculate statistics
   const confidenceLevel = config.confidenceLevel || 0.95;
@@ -461,6 +709,10 @@ export function runMonteCarloSimulation(config: MonteCarloConfig): MonteCarloRes
   const annualizedReturnStats = calculateStatistics(annualizedReturns, confidenceLevel);
   const cashFlowStats = calculateStatistics(cashFlows, confidenceLevel);
   const finalEquityStats = calculateStatistics(finalEquities, confidenceLevel);
+  const irrStats = calculateStatistics(irrs, confidenceLevel);
+  
+  // Calculate risk metrics
+  const riskMetrics = calculateRiskMetrics(totalReturns);
   
   // Calculate probabilities
   const positiveReturns = totalReturns.filter(r => r > 0).length;
@@ -481,6 +733,8 @@ export function runMonteCarloSimulation(config: MonteCarloConfig): MonteCarloRes
     annualizedReturnStats,
     cashFlowStats,
     finalEquityStats,
+    irrStats,
+    riskMetrics,
     probabilityOfPositiveReturn,
     probabilityOfTargetReturn,
     histogramData,

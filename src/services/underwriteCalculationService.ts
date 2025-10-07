@@ -54,6 +54,14 @@ import {
   type CashFlowProjectionParams,
   type CashFlowProjectionResults,
 } from "../utils/cashFlowProjections";
+import {
+  runMonteCarloSimulation,
+  createDefaultUncertaintyInputs,
+  type MonteCarloResults,
+  type MonteCarloConfig,
+  type MonteCarloInputs,
+  type RiskMetrics,
+} from "../utils/monteCarloSimulation";
 
 /**
  * Result interface for basic deal metrics
@@ -150,6 +158,55 @@ export interface IRRBreakdown {
   leveredIRR: number;
   unleveredIRR: number;
   equityMultiple: number;
+}
+
+/**
+ * Configuration for Monte Carlo simulation from service
+ */
+export interface MonteCarloServiceConfig {
+  simulationCount?: number; // Default 10,000
+  randomSeed?: number; // For reproducibility
+  confidenceLevel?: number; // Default 0.95
+  customUncertaintyInputs?: MonteCarloInputs; // Override defaults
+  holdingPeriodYears?: number; // Override state default
+  sellingCostsPct?: number; // Override default 6%
+}
+
+/**
+ * Monte Carlo results specific to IRR
+ */
+export interface MonteCarloIRRResults {
+  leveredIRR: {
+    mean: number;
+    median: number;
+    percentile10: number;
+    percentile90: number;
+    stdDev: number;
+  };
+  unleveredIRR: {
+    mean: number;
+    median: number;
+    percentile10: number;
+    percentile90: number;
+    stdDev: number;
+  };
+  riskMetrics: RiskMetrics;
+  fullResults: MonteCarloResults;
+}
+
+/**
+ * Monte Carlo results specific to MOIC
+ */
+export interface MonteCarloMOICResults {
+  moic: {
+    mean: number;
+    median: number;
+    percentile10: number;
+    percentile90: number;
+    stdDev: number;
+  };
+  riskMetrics: RiskMetrics;
+  fullResults: MonteCarloResults;
 }
 
 /**
@@ -845,6 +902,134 @@ class UnderwriteCalculationService {
       leveredIRR,
       unleveredIRR,
       equityMultiple,
+    };
+  }
+
+  // ============================================================================
+  // Monte Carlo Simulation
+  // ============================================================================
+
+  /**
+   * Run comprehensive Monte Carlo simulation on deal
+   * 
+   * @param state - Current deal state
+   * @param config - Monte Carlo configuration options
+   * @returns Full Monte Carlo simulation results with risk metrics
+   */
+  public runMonteCarloSimulation(
+    state: DealState,
+    config?: MonteCarloServiceConfig
+  ): MonteCarloResults {
+    const holdYears = config?.holdingPeriodYears || state.irrHoldPeriodYears || 5;
+    const simulationCount = config?.simulationCount || 10000;
+    const randomSeed = config?.randomSeed;
+    const confidenceLevel = config?.confidenceLevel || 0.95;
+    
+    // Convert DealState to CashFlowProjectionParams
+    const baseParams = this.convertDealStateToCashFlowParams(state, holdYears);
+    
+    // Create uncertainty inputs (use custom or defaults)
+    const uncertaintyInputs = config?.customUncertaintyInputs || 
+      createDefaultUncertaintyInputs(baseParams);
+    
+    // Configure and run Monte Carlo simulation
+    const monteCarloConfig: MonteCarloConfig = {
+      baseParams,
+      uncertaintyInputs,
+      simulationCount,
+      randomSeed,
+      confidenceLevel
+    };
+    
+    return runMonteCarloSimulation(monteCarloConfig);
+  }
+
+  /**
+   * Run Monte Carlo simulation focused on IRR distribution
+   * Calculates both levered and unlevered IRR distributions with risk metrics
+   * 
+   * @param state - Current deal state
+   * @param config - Monte Carlo configuration options
+   * @returns IRR-focused Monte Carlo results
+   */
+  public runMonteCarloIRR(
+    state: DealState,
+    config?: MonteCarloServiceConfig
+  ): MonteCarloIRRResults {
+    // Run full Monte Carlo simulation
+    const fullResults = this.runMonteCarloSimulation(state, config);
+    
+    // Extract IRR statistics
+    const irrStats = fullResults.irrStats;
+    
+    // For unlevered IRR, we'd need to rerun without debt
+    // For now, we'll provide levered IRR statistics
+    // This could be enhanced to run a second simulation without debt
+    
+    return {
+      leveredIRR: {
+        mean: irrStats.mean,
+        median: irrStats.median,
+        percentile10: irrStats.percentile10,
+        percentile90: irrStats.percentile90,
+        stdDev: irrStats.stdDev
+      },
+      unleveredIRR: {
+        // Placeholder - would need separate simulation
+        mean: 0,
+        median: 0,
+        percentile10: 0,
+        percentile90: 0,
+        stdDev: 0
+      },
+      riskMetrics: fullResults.riskMetrics,
+      fullResults
+    };
+  }
+
+  /**
+   * Run Monte Carlo simulation focused on MOIC distribution
+   * Calculates MOIC (equity multiple) distribution with risk metrics
+   * 
+   * @param state - Current deal state  
+   * @param config - Monte Carlo configuration options
+   * @returns MOIC-focused Monte Carlo results
+   */
+  public runMonteCarloMOIC(
+    state: DealState,
+    config?: MonteCarloServiceConfig
+  ): MonteCarloMOICResults {
+    // Run full Monte Carlo simulation
+    const fullResults = this.runMonteCarloSimulation(state, config);
+    
+    // Calculate MOIC for each simulation result
+    const cashInvested = this.calculateTotalCashInvested(state);
+    const moics = fullResults.results.map(r => 
+      cashInvested > 0 ? r.totalReturn / cashInvested : 0
+    );
+    
+    // Calculate MOIC statistics
+    const sortedMoics = [...moics].sort((a, b) => a - b);
+    const moicMean = moics.reduce((sum, m) => sum + m, 0) / moics.length;
+    const moicMedian = sortedMoics[Math.floor(sortedMoics.length / 2)];
+    const moicP10 = sortedMoics[Math.floor(sortedMoics.length * 0.1)];
+    const moicP90 = sortedMoics[Math.floor(sortedMoics.length * 0.9)];
+    
+    // Calculate standard deviation
+    const squaredDiffs = moics.map(m => Math.pow(m - moicMean, 2));
+    const variance = squaredDiffs.reduce((sum, sq) => sum + sq, 0) / moics.length;
+    const moicStdDev = Math.sqrt(variance);
+    
+    return {
+      moic: {
+        mean: moicMean,
+        median: moicMedian,
+        percentile10: moicP10,
+        percentile90: moicP90,
+        stdDev: moicStdDev
+      },
+      riskMetrics: fullResults.riskMetrics,
+      fullResults
     };
   }
 

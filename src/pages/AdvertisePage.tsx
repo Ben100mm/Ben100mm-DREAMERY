@@ -233,32 +233,26 @@ const AdvertisePage: React.FC = () => {
                   onClick={() => setActiveTab(item.id)}
                   sx={{ 
                     borderRadius: 2, 
+                    backgroundColor: activeTab === item.id ? brandColors.primary : 'transparent',
                     '& .MuiListItemIcon-root': {
-                      color: brandColors.text.inverse,
+                      color: activeTab === item.id ? brandColors.text.inverse : brandColors.text.primary,
                     },
                     '& .MuiListItemText-primary': {
-                      color: brandColors.text.inverse,
-                      fontWeight: 600,
+                      color: activeTab === item.id ? brandColors.text.inverse : brandColors.text.primary,
+                      fontWeight: activeTab === item.id ? 600 : 500,
                     },
                     '&:hover': {
-                      backgroundColor: brandColors.interactive.hover,
+                      backgroundColor: activeTab === item.id ? brandColors.primary : brandColors.interactive.hover,
                     },
                   }}
                 >
-                  <ListItemIcon 
-                    sx={{ 
-                      minWidth: 40,
-                      color: activeTab === item.id ? 'white' : 'inherit'
-                    }}
-                  >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText 
                     primary={item.label} 
                     primaryTypographyProps={{
-                      fontSize: '0.9rem',
-                      fontWeight: activeTab === item.id ? 600 : 400,
-                      color: activeTab === item.id ? 'white' : 'inherit'
+                      fontSize: '0.9rem'
                     }}
                   />
                 </ListItemButton>

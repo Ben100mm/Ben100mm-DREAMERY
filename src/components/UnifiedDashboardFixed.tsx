@@ -35,6 +35,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext';
+import { useWorkspace } from '../context/WorkspaceContext';
 import { useUserPreferences } from '../hooks/useUserPreferences';
 import CloseWorkspace from './workspaces/CloseWorkspace';
 import ManageWorkspace from './workspaces/ManageWorkspace';
@@ -191,6 +192,7 @@ const UnifiedDashboardFixed: React.FC = () => {
   const isBuyerAuthorized = allowedRoles.includes(userRole);
   
   const { preferences, setDefaultWorkspace, toggleFavoriteSidebarItem, updateWorkspaceSettings } = useUserPreferences();
+  const { selectedWorkspace, setSelectedWorkspace: setGlobalWorkspace } = useWorkspace();
   
   // Available workspaces for buyers
   const availableWorkspaces: WorkspaceConfig[] = [
@@ -203,19 +205,15 @@ const UnifiedDashboardFixed: React.FC = () => {
     advertiseWorkspaceConfig,
   ];
 
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace || 'close');
+  // Wrapper to update both global and preference contexts
+  const setSelectedWorkspace = (workspaceId: string) => {
+    setGlobalWorkspace(workspaceId);
+  };
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(preferences.customLayout.sidebarCollapsed);
 
-  // Handle workspace query parameter
-  useEffect(() => {
-    const workspaceParam = searchParams.get('workspace');
-    if (workspaceParam && availableWorkspaces.some(w => w.id === workspaceParam)) {
-      setSelectedWorkspace(workspaceParam);
-    }
-  }, [searchParams, availableWorkspaces]);
 
   // Update active tab when workspace changes
   useEffect(() => {

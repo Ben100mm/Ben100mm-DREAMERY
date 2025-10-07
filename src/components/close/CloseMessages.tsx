@@ -219,7 +219,7 @@ const sampleMessages: Message[] = [
   ];
 
 const CloseMessages: React.FC = () => {
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[0] || null);
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[conversations.length - 1] || null);
   const [messages, setMessages] = useState<Message[]>(sampleMessages);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');

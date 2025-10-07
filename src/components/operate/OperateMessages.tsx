@@ -69,7 +69,7 @@ interface Message {
 }
 
 const OperateMessages: React.FC = () => {
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[conversations.length - 1] || null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');

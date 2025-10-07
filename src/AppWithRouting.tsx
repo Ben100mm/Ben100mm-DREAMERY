@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import styled from 'styled-components';
 import { AuthProvider } from './contexts/AuthContext';
 import { RoleProvider, RoleContext } from './context/RoleContext';
+import { WorkspaceProvider } from './context/WorkspaceContext';
 import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
 import { AnalysisProvider } from './context/AnalysisContext';
 import { theme } from "./theme";
@@ -145,11 +146,13 @@ function App() {
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <RoleProvider>
-          <ProfessionalSupportProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </ProfessionalSupportProvider>
+          <WorkspaceProvider>
+            <ProfessionalSupportProvider>
+              <Router>
+                <AppContent />
+              </Router>
+            </ProfessionalSupportProvider>
+          </WorkspaceProvider>
         </RoleProvider>
       </ThemeProvider>
     </AuthProvider>

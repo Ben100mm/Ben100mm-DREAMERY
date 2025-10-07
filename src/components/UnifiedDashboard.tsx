@@ -27,6 +27,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext';
+import { useWorkspace } from '../context/WorkspaceContext';
 import { useUserPreferences } from '../hooks/useUserPreferences';
 import DynamicSidebar from './sidebar/DynamicSidebar';
 import CloseWorkspace from './workspaces/CloseWorkspace';
@@ -51,6 +52,7 @@ const UnifiedDashboard: React.FC = () => {
   const isBuyerAuthorized = allowedRoles.includes(userRole);
   
   const { preferences, setDefaultWorkspace, toggleFavoriteSidebarItem, updateWorkspaceSettings } = useUserPreferences();
+  const { selectedWorkspace, setSelectedWorkspace: setGlobalWorkspace } = useWorkspace();
   
   // Available workspaces for buyers
   const availableWorkspaces: WorkspaceConfig[] = [
@@ -61,16 +63,10 @@ const UnifiedDashboard: React.FC = () => {
     operateWorkspace,
   ];
 
-  // Get workspace from URL parameters
-  const getWorkspaceFromURL = () => {
-    const urlParams = new URLSearchParams(location.search);
-    const workspaceParam = urlParams.get('workspace');
-    return workspaceParam && availableWorkspaces.some(w => w.id === workspaceParam) 
-      ? workspaceParam 
-      : preferences.defaultWorkspace;
+  // Wrapper to update both global and preference contexts
+  const setSelectedWorkspace = (workspaceId: string) => {
+    setGlobalWorkspace(workspaceId);
   };
-
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string>(getWorkspaceFromURL());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
@@ -87,14 +83,6 @@ const UnifiedDashboard: React.FC = () => {
   useEffect(() => {
     setDefaultWorkspace(selectedWorkspace);
   }, [selectedWorkspace, setDefaultWorkspace]);
-
-  // Handle URL parameter changes
-  useEffect(() => {
-    const workspaceFromURL = getWorkspaceFromURL();
-    if (workspaceFromURL !== selectedWorkspace) {
-      setSelectedWorkspace(workspaceFromURL);
-    }
-  }, [location.search, preferences.defaultWorkspace]);
 
   const currentWorkspace = availableWorkspaces.find(w => w.id === selectedWorkspace);
 

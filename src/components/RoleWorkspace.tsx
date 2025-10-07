@@ -34,6 +34,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import AcquisitionSpecialistDashboard from './close/dashboard/AcquisitionSpecialistDashboard';
+import BuyerMessages from './buyer/BuyerMessages';
 import {
   Notifications as NotificationsIcon,
   ArrowBack as ArrowBackIcon,
@@ -54,9 +55,15 @@ import {
   Analytics as AnalyticsIcon,
   Settings as SettingsIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
+  Home as HomeIcon,
+  ManageAccounts as ManageAccountsIcon,
+  AccountBalance as AccountBalanceIcon,
+  TrendingUp as TrendingUpIcon,
+  Build as BuildIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext.js';
+import { useWorkspace } from '../context/WorkspaceContext';
 import UnifiedRoleSelector from './UnifiedRoleSelector';
 
 // Types
@@ -1664,6 +1671,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { userRole, setUserRole } = (useContext(RoleContext as any) as any) || {};
+  const { selectedMode, setSelectedMode, activeTab, setActiveTab, subTab, setSubTab } = useWorkspace();
   const currentUserRole = userRole || 'Real Estate Agent';
   const isAuthorized = allowedRoles.includes(currentUserRole);
   
@@ -1697,7 +1705,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
   }, [currentUserRole, currentRoleKey]);
 
   const [state, setState] = useState<ProfessionalSupportState>({
-    activeTab: currentRoleConfig?.defaultTab || 'dashboard',
+    activeTab: activeTab,
     userRole: {
       id: '1',
       name: 'Professional Support',
@@ -1710,7 +1718,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
     favorites: [],
     selectedRole: currentRoleKey,
     favoritesExpanded: true,
-    subTab: 0,
+    subTab: subTab,
   });
 
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -1718,10 +1726,13 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
   const [roleSelectAnchor, setRoleSelectAnchor] = useState<null | HTMLElement>(null);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+    setSubTab(0);
     setState(prev => ({ ...prev, activeTab: newValue, subTab: 0 }));
   };
 
   const handleSubTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSubTab(newValue);
     setState(prev => ({ ...prev, subTab: newValue }));
   };
 
@@ -1751,7 +1762,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
     setState(prev => ({
       ...prev,
       selectedRole: roleKey,
-      activeTab: 'dashboard',
+      activeTab: activeTab, // Keep current active tab
       favorites: [], // Reset favorites when changing roles
     }));
     setRoleSelectAnchor(null);
@@ -2071,6 +2082,7 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                     <Tab label="Requirements" />
                     <Tab label="Hotlists" />
                     <Tab label="Broadcasts" />
+                    <Tab label="Messages" />
                   </Tabs>
                 </Box>
                 <TabPanel value={state.subTab} index={0}>
@@ -2088,6 +2100,9 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                 <TabPanel value={state.subTab} index={3}>
                   <Typography variant="h6" sx={{ color: brandColors.primary, mb: 2 }}>Broadcasts</Typography>
                   <Typography variant="body2" color="text.secondary">Send targeted messages to buyer segments</Typography>
+                </TabPanel>
+                <TabPanel value={state.subTab} index={4}>
+                  <BuyerMessages />
                 </TabPanel>
               </Box>
             )}
@@ -6117,6 +6132,73 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
         }}
       >
         <Box sx={{ py: 2 }}>
+          {/* Mode Selector */}
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+            <FormControl fullWidth size="small">
+              <Select
+                value={selectedMode}
+                onChange={(e) => setSelectedMode(e.target.value)}
+                displayEmpty
+                IconComponent={KeyboardArrowDownIcon}
+                sx={{
+                  backgroundColor: brandColors.surfaces.primary,
+                  borderRadius: 2,
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'transparent',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: brandColors.borders.secondary,
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: brandColors.primary,
+                  },
+                }}
+                renderValue={(value) => {
+                  const modeOptions = [
+                    { id: 'close', name: 'Close', icon: <HomeIcon /> },
+                    { id: 'manage', name: 'Manage', icon: <ManageAccountsIcon /> },
+                    { id: 'fund', name: 'Fund', icon: <AccountBalanceIcon /> },
+                    { id: 'invest', name: 'Invest', icon: <TrendingUpIcon /> },
+                    { id: 'operate', name: 'Operate', icon: <BuildIcon /> },
+                  ];
+                  const selectedModeConfig = modeOptions.find(m => m.id === value);
+                  if (!selectedModeConfig) return 'Select Mode';
+                  return (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ color: brandColors.primary }}>
+                        {selectedModeConfig.icon}
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {selectedModeConfig.name}
+                      </Typography>
+                    </Box>
+                  );
+                }}
+              >
+                {[
+                  { id: 'close', name: 'Close', icon: <HomeIcon /> },
+                  { id: 'manage', name: 'Manage', icon: <ManageAccountsIcon /> },
+                  { id: 'fund', name: 'Fund', icon: <AccountBalanceIcon /> },
+                  { id: 'invest', name: 'Invest', icon: <TrendingUpIcon /> },
+                  { id: 'operate', name: 'Operate', icon: <BuildIcon /> },
+                ].map((mode) => (
+                  <MenuItem key={mode.id} value={mode.id}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                      <Box sx={{ color: brandColors.primary }}>
+                        {mode.icon}
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          {mode.name}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
           {/* Role Selector */}
           {!state.sidebarCollapsed && (
             <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>

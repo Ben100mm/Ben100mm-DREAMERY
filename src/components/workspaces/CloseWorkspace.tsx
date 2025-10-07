@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import ClosingDashboard from '../close/closing-dashboard/ClosingDashboard';
+import CloseMessages from '../close/CloseMessages';
 import EscrowTitleHub from '../close/escrow-title-hub/EscrowTitleHub';
 import LazyDueDiligenceTools from '../lazy/DueDiligenceToolsLazy';
 import FinancingCoordination from '../close/financing/FinancingCoordination';
@@ -21,6 +22,8 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
     switch (activeTab) {
       case 'dashboard':
         return <ClosingDashboard />;
+      case 'messages':
+        return <CloseMessages />;
       case 'escrow-title':
         return <EscrowTitleHub />;
       case 'due-diligence':

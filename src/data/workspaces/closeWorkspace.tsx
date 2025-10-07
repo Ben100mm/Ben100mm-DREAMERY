@@ -9,6 +9,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Support as SupportIcon,
   IntegrationInstructions as IntegrationIcon,
+  Message as MessageIcon,
 } from '@mui/icons-material';
 import ClosingAssistantIcon from '../../components/close/ai-closing-assistant/ClosingAssistantIcon';
 
@@ -28,6 +29,11 @@ export const closeWorkspace: WorkspaceConfig = {
       id: 'dashboard', 
       label: 'Dashboard', 
       icon: <DashboardIcon />,
+    },
+    { 
+      id: 'messages', 
+      label: 'Messages', 
+      icon: <MessageIcon />,
     },
     { 
       id: 'escrow-title', 

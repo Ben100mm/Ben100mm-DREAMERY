@@ -36,6 +36,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext';
+import { useWorkspace } from '../context/WorkspaceContext';
 import { useUserPreferences } from '../hooks/useUserPreferences';
 import CloseWorkspace from './workspaces/CloseWorkspace';
 import ManageWorkspace from './workspaces/ManageWorkspace';
@@ -52,6 +53,7 @@ const UnifiedDashboardSimple: React.FC = () => {
   const isBuyerAuthorized = allowedRoles.includes(userRole);
   
   const { preferences, setDefaultWorkspace, toggleFavoriteSidebarItem, updateWorkspaceSettings } = useUserPreferences();
+  const { selectedWorkspace, setSelectedWorkspace: setGlobalWorkspace } = useWorkspace();
   
   // Simple workspace configuration
   const workspaces = [
@@ -62,7 +64,10 @@ const UnifiedDashboardSimple: React.FC = () => {
     { id: 'operate', name: 'Operate', icon: <OptimizationIcon />, color: brandColors.primary },
   ];
 
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace || 'close');
+  // Wrapper to update both global and preference contexts
+  const setSelectedWorkspace = (workspaceId: string) => {
+    setGlobalWorkspace(workspaceId);
+  };
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);

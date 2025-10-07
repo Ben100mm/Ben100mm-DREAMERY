@@ -174,6 +174,7 @@ const WorkspacesBuyerPage: React.FC = () => {
       case 'close':
         return [
           { value: 'dashboard', label: 'Dashboard' },
+          { value: 'messages', label: 'Messages' },
           { value: 'escrow-title', label: 'Escrow & Title' },
           { value: 'due-diligence', label: 'Due Diligence' },
           { value: 'financing', label: 'Financing' },

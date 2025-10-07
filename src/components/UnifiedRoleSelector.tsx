@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FormControl,
@@ -53,6 +53,22 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
     { value: 'brokerages', label: 'Brokerages', icon: <AccountBalanceIcon />, route: '/workspaces/brokerages', roleMapping: 'Real Estate Broker' },
     { value: 'businesses', label: 'Businesses', icon: <BusinessIcon />, route: '/workspaces/businesses', roleMapping: 'Business' },
   ];
+
+  // Map buyer roles to "buyer" category
+  const buyerRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
+
+  // Sync local state with context when userRole changes
+  useEffect(() => {
+    const roleToDisplay = currentRole || userRole;
+    if (roleToDisplay) {
+      // If it's a buyer role, display as "buyer" category
+      if (buyerRoles.includes(roleToDisplay)) {
+        setSelectedValue('buyer');
+      } else {
+        setSelectedValue(roleToDisplay);
+      }
+    }
+  }, [userRole, currentRole]);
 
   // All 80+ professional roles (sorted A-Z)
   const professionalRoles = [

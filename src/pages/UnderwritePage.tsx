@@ -697,6 +697,89 @@ function buildSubjectToAmortization(
 
   return schedule;
 }
+
+/**
+ * Computes Gross Potential Income (GPI) - the maximum possible income if property were 100% occupied.
+ * This is used as the base for calculating variable expenses (which should be % of GPI, not EGI).
+ * Does NOT apply vacancy, occupancy rates, or seasonal adjustments.
+ */
+function computeGrossPotentialIncome(state: DealState): number {
+  const { propertyType, operationType } = state;
+
+  // Fix & Flip has no rental income during hold period in this calculator
+  if (operationType === "Fix & Flip") {
+    return 0;
+  }
+
+  // Office/Retail: use per-SF model at 100% occupancy
+  if (propertyType === "Office" || propertyType === "Retail") {
+    const sf = state.officeRetail?.squareFootage ?? 0;
+    const rentPerSF = state.officeRetail?.rentPerSFMonthly ?? 0;
+    const other = state.officeRetail?.extraMonthlyIncome ?? 0;
+    const base = sf * rentPerSF;
+    // GPI = base rent at 100% occupancy + other income
+    return base + other;
+  }
+
+  // STR/Arbitrage nightly model for SFR/Multi/Hotel only
+  if (
+    (operationType === "Short Term Rental" ||
+      operationType === "Rental Arbitrage") &&
+    propertyType !== "Land"
+  ) {
+    // Hotel properties use revenueInputs
+    if (propertyType === "Hotel") {
+      const {
+        totalRooms,
+        averageDailyRate,
+        occupancyRate,
+      } = state.revenueInputs;
+      if (totalRooms > 0 && averageDailyRate > 0) {
+        // GPI = potential revenue at stated occupancy rate WITHOUT seasonal/vacancy adjustments
+        const annualRevenue =
+          totalRooms * averageDailyRate * (occupancyRate / 100) * 365;
+        return annualRevenue / 12; // Convert to monthly
+      }
+    }
+
+    // STR model without vacancy adjustments
+    const nights = state.str?.avgNightsPerMonth ?? 0;
+    const nightly = state.str?.unitDailyRents?.[0] ?? 0;
+    const rent = nights * nightly;
+    const fees =
+      (state.str?.dailyCleaningFee ?? 0) *
+      (nights > 0 ? Math.ceil(nights) : 0);
+    const extra =
+      (state.str?.laundry ?? 0) +
+      (state.str?.activities ?? 0) +
+      (state.str?.grossMonthlyIncome ?? 0);
+    return rent + fees + extra;
+  }
+
+  if (propertyType === "Single Family") {
+    const baseIncome =
+      (state.sfr?.monthlyRent ?? 0) + (state.sfr?.grossMonthlyIncome ?? 0);
+    // GPI without seasonal variations
+    return baseIncome;
+  }
+
+  if (propertyType === "Multi Family") {
+    const rents = state.multi?.unitRents ?? [];
+    const rentTotal = rents.reduce((a, b) => a + b, 0);
+    const baseIncome = rentTotal + (state.multi?.grossMonthlyIncome ?? 0);
+    // GPI without seasonal variations
+    return baseIncome;
+  }
+
+  if (propertyType === "Land") {
+    // Land typically has no rent; allow optional extra income (e.g., grazing)
+    return state.land?.extraMonthlyIncome ?? 0;
+  }
+
+  // BRRRR/Seller Finance/etc. fall through to 0 if no property-type income
+  return 0;
+}
+
 function computeIncome(state: DealState): number {
   const { propertyType, operationType } = state;
 
@@ -893,7 +976,7 @@ function computeCocAnnual(state: DealState, annualCashFlow: number): number {
         // reserves modeled as months or fixed (optional flags exist in state)
         (state.reservesCalculationMethod === "months"
           ? (computeFixedMonthlyOps(state.ops) +
-              (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
+              (computeGrossPotentialIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
                 100) *
             (state.reservesMonths || 0)
           : state.reservesFixedAmount || 0);
@@ -924,7 +1007,7 @@ function isCashOnCashValid(state: DealState): boolean {
         state.subjectTo.paymentToSeller +
         (state.reservesCalculationMethod === "months"
           ? (computeFixedMonthlyOps(state.ops) +
-              (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
+              (computeGrossPotentialIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
                 100) *
             (state.reservesMonths || 0)
           : state.reservesFixedAmount || 0);
@@ -8734,7 +8817,7 @@ const UnderwritePage: React.FC = () => {
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
                             variableMonthlyFromPercentages(
-                              computeIncome(state),
+                              computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
                           12;
@@ -8754,7 +8837,7 @@ const UnderwritePage: React.FC = () => {
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
                             variableMonthlyFromPercentages(
-                              computeIncome(state),
+                              computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
                           12;
@@ -8781,7 +8864,7 @@ const UnderwritePage: React.FC = () => {
                           (computeIncome(state) * 1.05 -
                             computeFixedMonthlyOps(state.ops) * 1.03 -
                             variableMonthlyFromPercentages(
-                              computeIncome(state) * 1.05,
+                              computeGrossPotentialIncome(state) * 1.05,
                               state.ops,
                             )) *
                           12;
@@ -8807,7 +8890,7 @@ const UnderwritePage: React.FC = () => {
                         const operatingExpenses =
                           (computeFixedMonthlyOps(state.ops) +
                             variableMonthlyFromPercentages(
-                              computeIncome(state),
+                              computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
                           12;
@@ -8829,7 +8912,7 @@ const UnderwritePage: React.FC = () => {
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
                             variableMonthlyFromPercentages(
-                              computeIncome(state),
+                              computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
                           12;
@@ -8863,7 +8946,7 @@ const UnderwritePage: React.FC = () => {
                               ? (state.officeRetail?.squareFootage || 0) *
                                   (state.officeRetail?.rentPerSFMonthly || 0) +
                                 (state.officeRetail?.extraMonthlyIncome || 0)
-                              : computeIncome(state);
+                              : computeGrossPotentialIncome(state);
 
                           if (monthlyRevenue > 0) {
                             const expenses =
@@ -8897,7 +8980,7 @@ const UnderwritePage: React.FC = () => {
                               ? (state.officeRetail?.squareFootage || 0) *
                                   (state.officeRetail?.rentPerSFMonthly || 0) +
                                 (state.officeRetail?.extraMonthlyIncome || 0)
-                              : computeIncome(state);
+                              : computeGrossPotentialIncome(state);
 
                           if (monthlyRevenue > 0) {
                             const expenses =
@@ -9202,7 +9285,7 @@ const UnderwritePage: React.FC = () => {
                           const operatingExpenses =
                             (computeFixedMonthlyOps(state.ops) +
                               variableMonthlyFromPercentages(
-                                computeIncome(state),
+                                computeGrossPotentialIncome(state),
                                 state.ops,
                               )) *
                             12;
@@ -9334,7 +9417,7 @@ const UnderwritePage: React.FC = () => {
                       value={formatCurrency(
                         computeFixedMonthlyOps(state.ops) +
                           variableMonthlyFromPercentages(
-                            computeIncome(state),
+                            computeGrossPotentialIncome(state),
                             state.ops,
                           ),
                       )}
@@ -9529,7 +9612,7 @@ const UnderwritePage: React.FC = () => {
                       value={formatCurrency(
                         computeFixedMonthlyOps(state.ops) +
                           variableMonthlyFromPercentages(
-                            computeIncome(state),
+                            computeGrossPotentialIncome(state),
                             state.ops,
                           ),
                       )}
@@ -9541,7 +9624,7 @@ const UnderwritePage: React.FC = () => {
                       value={formatCurrency(
                         (computeFixedMonthlyOps(state.ops) +
                           variableMonthlyFromPercentages(
-                            computeIncome(state),
+                            computeGrossPotentialIncome(state),
                             state.ops,
                           )) *
                           12,
@@ -9582,11 +9665,12 @@ const UnderwritePage: React.FC = () => {
                       label="DSCR at -10% Rent"
                       value={(() => {
                         const reducedIncome = computeIncome(state) * 0.9;
+                        const reducedGPI = computeGrossPotentialIncome(state) * 0.9;
                         const annualNOI =
                           (reducedIncome -
                             computeFixedMonthlyOps(state.ops) -
                             variableMonthlyFromPercentages(
-                              reducedIncome,
+                              reducedGPI,
                               state.ops,
                             )) *
                           12;
@@ -9611,7 +9695,7 @@ const UnderwritePage: React.FC = () => {
                         const increasedExpenses =
                           (computeFixedMonthlyOps(state.ops) +
                             variableMonthlyFromPercentages(
-                              computeIncome(state),
+                              computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
                           1.1;

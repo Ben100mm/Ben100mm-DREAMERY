@@ -120,9 +120,9 @@ const InfoSection = styled(Box)(({ theme }) => ({
 const ModelInfo = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   padding: theme.spacing(2),
-  backgroundColor: theme.palette.primary.50,
+  backgroundColor: theme.palette.primary.light,
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.primary.200}`,
+  border: `1px solid ${theme.palette.primary.main}`,
 }));
 
 const EnhancedModelDemo: React.FC = () => {

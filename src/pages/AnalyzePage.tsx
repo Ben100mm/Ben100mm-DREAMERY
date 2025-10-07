@@ -2224,14 +2224,13 @@ const AnalyzePage: React.FC = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      annualRevenue.toLocaleString()
+                                      {annualRevenue.toLocaleString()}
                                     </Typography>
                                     <Typography
                                       variant="caption"
                                       sx={{ color: brandColors.neutral[800] || "#333" }}
                                     >
-                                      monthlyRevenue.toLocaleString()
-                                      /mo
+                                      {monthlyRevenue.toLocaleString()}/mo
                                     </Typography>
                                   </Box>
                                 </TableCell>

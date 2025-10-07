@@ -68,15 +68,8 @@ interface Message {
   isRead?: boolean;
 }
 
-const ManageMessagesEnhanced: React.FC = () => {
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[conversations.length - 1] || null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState(0);
-
-  const conversations: Conversation[] = [
+// Define conversations data outside the component to avoid initialization issues
+const conversations: Conversation[] = [
     {
       id: 1,
       contactName: 'Sarah Mitchell',
@@ -204,6 +197,14 @@ const ManageMessagesEnhanced: React.FC = () => {
       verificationStatus: 'Verified',
     },
   ];
+
+const ManageMessagesEnhanced: React.FC = () => {
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(conversations[conversations.length - 1] || null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState(0);
 
   const sampleMessages: Message[] = [
     {

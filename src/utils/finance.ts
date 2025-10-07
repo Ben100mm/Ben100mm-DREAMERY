@@ -3,6 +3,7 @@ export type LoanSpec = {
   annualRate: number; // e.g. 0.075 for 7.5%
   termMonths: number; // amortization length
   interestOnly?: boolean; // default false
+  ioPeriodMonths?: number; // NEW: IO period length (hybrid IO loans)
 };
 
 export function monthlyRate(annualRate: number) {
@@ -24,7 +25,7 @@ export function pmt(annualRate: number, nper: number, pv: number) {
   return (pv * r) / (1 - Math.pow(1 + r, -nper));
 }
 
-// Remaining principal after k payments on a fully-amortizing loan
+// Remaining principal after k payments on a loan (supports IO, hybrid IO, and amortizing)
 // Formula: B_k = PV*(1+r)^k - PMT*[(1+r)^k - 1]/r
 export function remainingPrincipalAfterPayments(
   spec: LoanSpec,
@@ -42,11 +43,41 @@ export function remainingPrincipalAfterPayments(
     throw new Error("Payments made cannot exceed loan term.");
   }
 
-  const { principal: pv, annualRate, termMonths, interestOnly } = spec;
-  if (interestOnly) {
-    // IO: principal doesn't change until IO period ends; if paymentsMade <= termMonths, balance == pv
+  const { principal: pv, annualRate, termMonths, interestOnly, ioPeriodMonths } = spec;
+  
+  // Pure IO loan (IO for entire term)
+  if (interestOnly && !ioPeriodMonths) {
     return Math.max(0, pv);
   }
+  
+  // Hybrid IO loan (IO period followed by amortization)
+  if (interestOnly && ioPeriodMonths) {
+    if (ioPeriodMonths > termMonths) {
+      throw new Error("IO period cannot exceed total loan term.");
+    }
+    
+    if (paymentsMade <= ioPeriodMonths) {
+      // Still in IO period - principal unchanged
+      return pv;
+    } else {
+      // Now in amortization period
+      const amortizingPayments = paymentsMade - ioPeriodMonths;
+      const amortizingTerm = termMonths - ioPeriodMonths;
+      const r = monthlyRate(annualRate);
+      
+      if (r === 0) {
+        const principalPaid = (pv / amortizingTerm) * amortizingPayments;
+        return Math.max(0, pv - principalPaid);
+      }
+      
+      const mPmt = pmt(annualRate, amortizingTerm, pv);
+      const pow = Math.pow(1 + r, amortizingPayments);
+      const balance = pv * pow - mPmt * ((pow - 1) / r);
+      return Math.max(0, balance);
+    }
+  }
+  
+  // Standard amortizing loan
   const r = monthlyRate(annualRate);
   if (r === 0) {
     const principalPaid = (pv / termMonths) * paymentsMade;

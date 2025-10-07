@@ -120,6 +120,7 @@ interface LoanTerms {
   amortizationYears: number;
   closingCosts?: number;
   rehabCosts?: number;
+  ioPeriodMonths?: number; // NEW: IO period for hybrid IO loans
 }
 
 interface SubjectToLoan {
@@ -848,12 +849,14 @@ function buildAmortization(
   years: number,
   interestOnly: boolean,
   startBalance?: number,
+  ioPeriodMonths?: number,
 ): Array<{
   index: number;
   payment: number;
   interest: number;
   principal: number;
   balance: number;
+  isIOPhase?: boolean; // NEW: Track if this payment is in IO phase
 }> {
   const schedule: Array<{
     index: number;
@@ -861,18 +864,82 @@ function buildAmortization(
     interest: number;
     principal: number;
     balance: number;
+    isIOPhase?: boolean;
   }> = [];
   const n = Math.min(600, Math.round(years * 12)); // cap at 50 years
   let balance = startBalance ?? loanAmount;
   const monthlyRate = annualRatePct / 100 / 12;
-  const pmt = interestOnly
-    ? balance * monthlyRate
-    : monthlyPayment(balance, annualRatePct, years, false);
-  for (let i = 1; i <= n; i += 1) {
-    const interest = balance * monthlyRate;
-    const principal = interestOnly ? 0 : Math.max(0, pmt - interest);
-    balance = Math.max(0, interestOnly ? balance : balance - principal);
-    schedule.push({ index: i, payment: pmt, interest, principal, balance });
+  
+  // Hybrid IO loan: IO period followed by amortization
+  if (interestOnly && ioPeriodMonths && ioPeriodMonths > 0) {
+    const ioPeriod = Math.min(ioPeriodMonths, n);
+    const ioPmt = balance * monthlyRate; // Interest-only payment
+    
+    // IO phase
+    for (let i = 1; i <= ioPeriod; i += 1) {
+      const interest = balance * monthlyRate;
+      schedule.push({ 
+        index: i, 
+        payment: ioPmt, 
+        interest, 
+        principal: 0, 
+        balance,
+        isIOPhase: true,
+      });
+    }
+    
+    // Amortization phase (if any months remain)
+    if (ioPeriod < n) {
+      const remainingMonths = n - ioPeriod;
+      const amortYears = remainingMonths / 12;
+      const amortPmt = monthlyPayment(balance, annualRatePct, amortYears, false);
+      
+      for (let i = ioPeriod + 1; i <= n; i += 1) {
+        const interest = balance * monthlyRate;
+        const principal = Math.max(0, amortPmt - interest);
+        balance = Math.max(0, balance - principal);
+        schedule.push({ 
+          index: i, 
+          payment: amortPmt, 
+          interest, 
+          principal, 
+          balance,
+          isIOPhase: false,
+        });
+      }
+    }
+  } 
+  // Pure IO loan (entire term)
+  else if (interestOnly) {
+    const pmt = balance * monthlyRate;
+    for (let i = 1; i <= n; i += 1) {
+      const interest = balance * monthlyRate;
+      schedule.push({ 
+        index: i, 
+        payment: pmt, 
+        interest, 
+        principal: 0, 
+        balance,
+        isIOPhase: true,
+      });
+    }
+  } 
+  // Standard amortizing loan
+  else {
+    const pmt = monthlyPayment(balance, annualRatePct, years, false);
+    for (let i = 1; i <= n; i += 1) {
+      const interest = balance * monthlyRate;
+      const principal = Math.max(0, pmt - interest);
+      balance = Math.max(0, balance - principal);
+      schedule.push({ 
+        index: i, 
+        payment: pmt, 
+        interest, 
+        principal, 
+        balance,
+        isIOPhase: false,
+      });
+    }
   }
 
   return schedule;
@@ -2414,9 +2481,10 @@ const UnderwritePage: React.FC = () => {
     const rate = state.loan?.annualInterestRate || 0;
     const years = state.loan?.amortizationYears || 0;
     const io = state.loan?.interestOnly || false;
-    if (amount <= 0 || years <= 0) return [] as Array<{ index: number; payment: number; interest: number; principal: number; balance: number }>;
-    return buildAmortization(amount, rate, years, io);
-  }, [state.loan?.loanAmount, state.loan?.annualInterestRate, state.loan?.amortizationYears, state.loan?.interestOnly]);
+    const ioPeriod = state.loan?.ioPeriodMonths || 0;
+    if (amount <= 0 || years <= 0) return [] as Array<{ index: number; payment: number; interest: number; principal: number; balance: number; isIOPhase?: boolean }>;
+    return buildAmortization(amount, rate, years, io, undefined, ioPeriod);
+  }, [state.loan?.loanAmount, state.loan?.annualInterestRate, state.loan?.amortizationYears, state.loan?.interestOnly, state.loan?.ioPeriodMonths]);
 
   const [currentDate, setCurrentDate] = useState(() => {
     // Get the current date directly from the user's system
@@ -5542,6 +5610,32 @@ const UnderwritePage: React.FC = () => {
                         }
                         label="Interest Only"
                       />
+                      {state.loan.interestOnly && (
+                        <TextField
+                          fullWidth
+                          label="Interest-Only Period (months)"
+                          type="number"
+                          value={state.loan.ioPeriodMonths || 0}
+                          onChange={(e) =>
+                            updateLoan(
+                              "ioPeriodMonths",
+                              Math.max(0, parseInt(e.target.value) || 0),
+                            )
+                          }
+                          helperText="Leave as 0 for pure IO loan, or specify months for hybrid IO"
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                months
+                              </InputAdornment>
+                            ),
+                          }}
+                          inputProps={{
+                            min: 0,
+                            max: state.loan.amortizationYears * 12,
+                          }}
+                        />
+                      )}
                       <TextField
                         fullWidth
                         label="Balloon Due (years)"
@@ -6526,6 +6620,36 @@ const UnderwritePage: React.FC = () => {
                       />
                     </Box>
 
+                    {state.loan.interestOnly && state.loan.ioPeriodMonths && state.loan.ioPeriodMonths > 0 && (
+                      <Alert severity="info" sx={{ mb: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Hybrid IO Loan: {state.loan.ioPeriodMonths} month IO period
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                          • IO Payment: {formatCurrency((state.loan.loanAmount * state.loan.annualInterestRate / 100) / 12)} (months 1-{state.loan.ioPeriodMonths})
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block' }}>
+                          • Amortizing Payment: {formatCurrency(
+                            monthlyPayment(
+                              state.loan.loanAmount,
+                              state.loan.annualInterestRate,
+                              (state.loan.amortizationYears * 12 - state.loan.ioPeriodMonths) / 12,
+                              false
+                            )
+                          )} (months {state.loan.ioPeriodMonths + 1}-{state.loan.amortizationYears * 12})
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', color: brandColors.accent.error, mt: 0.5 }}>
+                          ⚠️ Payment increases by {formatCurrency(
+                            monthlyPayment(
+                              state.loan.loanAmount,
+                              state.loan.annualInterestRate,
+                              (state.loan.amortizationYears * 12 - state.loan.ioPeriodMonths) / 12,
+                              false
+                            ) - ((state.loan.loanAmount * state.loan.annualInterestRate / 100) / 12)
+                          )} after IO period
+                        </Typography>
+                      </Alert>
+                    )}
                     <Box sx={{ overflowX: "auto" }}>
                       <Table>
                         <TableHead>
@@ -6543,11 +6667,33 @@ const UnderwritePage: React.FC = () => {
                             state.loan.annualInterestRate,
                             state.loan.amortizationYears,
                             state.loan.interestOnly,
+                            undefined,
+                            state.loan.ioPeriodMonths,
                           ).map((row) => (
-                            <TableRow key={row.index}>
+                            <TableRow 
+                              key={row.index}
+                              sx={{
+                                bgcolor: row.isIOPhase 
+                                  ? brandColors.backgrounds.tertiary 
+                                  : 'inherit',
+                                borderLeft: row.isIOPhase 
+                                  ? `3px solid ${brandColors.accent.warning}` 
+                                  : row.index === (state.loan.ioPeriodMonths || 0) + 1
+                                    ? `3px solid ${brandColors.accent.success}`
+                                    : 'none',
+                              }}
+                            >
                               <TableCell>{row.index}</TableCell>
                               <TableCell>
                                 {formatCurrency(row.payment)}
+                                {row.index === (state.loan.ioPeriodMonths || 0) + 1 && state.loan.ioPeriodMonths && (
+                                  <Chip 
+                                    label="Amort Starts" 
+                                    size="small" 
+                                    color="success" 
+                                    sx={{ ml: 1 }}
+                                  />
+                                )}
                               </TableCell>
                               <TableCell>
                                 {formatCurrency(row.interest)}

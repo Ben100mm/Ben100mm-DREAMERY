@@ -238,12 +238,12 @@ const FundDashboard: React.FC = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            project.targetAmount.toLocaleString()
+                            ${project.targetAmount.toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            project.raisedAmount.toLocaleString()
+                            ${project.raisedAmount.toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -305,7 +305,7 @@ const FundDashboard: React.FC = () => {
                               {investment.investor}
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                              investment.amount.toLocaleString()
+                              ${investment.amount.toLocaleString()}
                             </Typography>
                           </Box>
                         }

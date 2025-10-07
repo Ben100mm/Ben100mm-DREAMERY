@@ -285,10 +285,10 @@ const FundProjects: React.FC = () => {
                   />
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
-                      project.raisedAmount.toLocaleString() raised
+                      ${project.raisedAmount.toLocaleString()} raised
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      project.targetAmount.toLocaleString() target
+                      ${project.targetAmount.toLocaleString()} target
                     </Typography>
                   </Box>
                 </Box>

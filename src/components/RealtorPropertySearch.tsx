@@ -44,9 +44,6 @@ const ResultsContainer = styled(Box)({
   marginTop: '24px',
 });
 
-const PropertyGrid = styled(Grid)({
-  marginTop: '16px',
-});
 
 const LoadingContainer = styled(Box)({
   display: 'flex',
@@ -221,17 +218,26 @@ const RealtorPropertySearch: React.FC = () => {
               Found {total} properties
             </Typography>
             
-            <PropertyGrid container spacing={3}>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { 
+                xs: '1fr', 
+                sm: 'repeat(2, 1fr)', 
+                md: 'repeat(3, 1fr)', 
+                lg: 'repeat(4, 1fr)' 
+              }, 
+              gap: 3 
+            }}>
               {properties.map((property) => (
-                <Grid xs={12} sm={6} md={4} lg={3} key={property.property_id}>
+                <Box key={property.property_id}>
                   <RealtorPropertyCard
                     property={property}
                     onPropertyClick={handlePropertyClick}
                     onToggleFavorite={handleToggleFavorite}
                   />
-                </Grid>
+                </Box>
               ))}
-            </PropertyGrid>
+            </Box>
           </>
         )}
 

@@ -8021,14 +8021,13 @@ const UnderwritePage: React.FC = () => {
                                               fontWeight: "bold",
                                             }}
                                           >
-                                            annualRevenue.toLocaleString()
+                                            {annualRevenue.toLocaleString()}
                                           </Typography>
                                           <Typography
                                             variant="caption"
                                             sx={{ color: brandColors.neutral[800] }}
                                           >
-                                            monthlyRevenue.toLocaleString()
-                                            /mo
+                                            {monthlyRevenue.toLocaleString()}/mo
                                           </Typography>
                                         </Box>
                                       </TableCell>

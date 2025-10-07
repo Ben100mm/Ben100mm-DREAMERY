@@ -628,7 +628,7 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                               {estimate.source?.name || 'Estimate'}
                             </Typography>
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                              {formatPrice(estimate.estimate)}
+                              {formatPrice(estimate.estimate_high || 0)}
                             </Typography>
                           </Box>
                         ))}

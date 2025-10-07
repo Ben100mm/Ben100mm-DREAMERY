@@ -395,6 +395,11 @@ export interface PropertyData {
   one_time_fees?: HomeOneTimeFee[];
   prc_sqft?: number;
   
+  // Missing properties that are used in components
+  popularity?: Popularity;
+  county?: string;
+  nearby_schools?: string[];
+  
   // External data enrichment fields
   walk_score?: number;
   bike_score?: number;

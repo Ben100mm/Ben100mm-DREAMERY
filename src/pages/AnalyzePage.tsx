@@ -2392,16 +2392,16 @@ const AnalyzePage: React.FC = () => {
                               }}
                             >
                               <TableCell>{occupancy}%</TableCell>
-                              <TableCell>dailyRevenue.toFixed(0)</TableCell>
-                              <TableCell>monthlyRevenue.toFixed(0)</TableCell>
-                              <TableCell>annualRevenue.toFixed(0)</TableCell>
+                              <TableCell>{dailyRevenue.toFixed(0)}</TableCell>
+                              <TableCell>{monthlyRevenue.toFixed(0)}</TableCell>
+                              <TableCell>{annualRevenue.toFixed(0)}</TableCell>
                               <TableCell
                                 sx={{
                                   color: profitLoss >= 0 ? brandColors.accent.successDark : brandColors.accent.error,
                                   fontWeight: "bold",
                                 }}
                               >
-                                {profitLoss >= 0 ? "+" : ""}profitLoss.toFixed(0)
+                                {profitLoss >= 0 ? "+" : ""}{profitLoss.toFixed(0)}
                               </TableCell>
                             </TableRow>
                           );

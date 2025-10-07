@@ -319,7 +319,11 @@ class RealtorService implements PropertySearchService {
     }
 
     if (filters.listingTypes && filters.listingTypes.length > 0) {
-      params.listing_type = filters.listingTypes[0]; // Use first listing type
+      // Convert ListingType enum to string literal
+      const listingType = filters.listingTypes[0].toString();
+      if (listingType === 'for_sale' || listingType === 'for_rent' || listingType === 'sold' || listingType === 'pending') {
+        params.listing_type = listingType;
+      }
     }
 
     if (filters.yearBuilt) {

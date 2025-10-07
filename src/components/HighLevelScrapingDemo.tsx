@@ -195,7 +195,7 @@ const HighLevelScrapingDemo: React.FC = () => {
               {property.property_id}
             </Typography>
             <Grid container spacing={2}>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="body2">
                   <strong>Price:</strong> {property.list_price ? `$${property.list_price.toLocaleString()}` : 'N/A'}
                 </Typography>
@@ -212,7 +212,7 @@ const HighLevelScrapingDemo: React.FC = () => {
                   <strong>SQFT:</strong> {property.description?.sqft || 'N/A'}
                 </Typography>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="body2">
                   <strong>Status:</strong> {property.status || 'N/A'}
                 </Typography>

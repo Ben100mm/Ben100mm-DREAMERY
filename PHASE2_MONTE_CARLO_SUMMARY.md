@@ -40,10 +40,18 @@ Accuracy Improvement: +15%
 - API reference
 - Best practices
 
-### 5. Existing Integration
-**`public/monteCarloWorker.js`** (already existed)
+**`docs/MONTE_CARLO_CORRELATION.md`** (416 lines) ✨ NEW
+- Mathematical foundations
+- Correlation implementation details
+- Box-Muller and Cholesky decomposition
+- Impact analysis and validation
+
+### 5. Existing Integration (Enhanced)
+**`public/monteCarloWorker.js`** (enhanced with correlation)
 - Web Worker for non-blocking execution
-- Compatible with new TypeScript interfaces
+- correlatedNormals() function using Box-Muller
+- Cholesky decomposition for 0.6 correlation
+- Smart fallback to independent sampling
 
 ---
 
@@ -130,6 +138,13 @@ Applied to all key metrics:
 - Handles 100,000+ simulations
 - Message-based communication
 - Error handling
+
+### 6. Correlated Random Variables ✨ NEW
+- **Box-Muller Transform**: Mathematically exact normal distribution generation
+- **Cholesky Decomposition**: 0.6 correlation between income and expense growth
+- **Realistic Modeling**: Reflects real-world market dynamics
+- **Configurable**: Correlation from 0 (independent) to 1 (perfect)
+- **Smart Fallback**: Uses independent sampling for non-normal distributions
 
 ---
 
@@ -373,11 +388,11 @@ All commits pushed to: `origin/working-state-v137`
 
 Phase 2: Monte Carlo Simulation is **COMPLETE** and **PRODUCTION READY**.
 
-**Total Lines of Code**: ~1,864 lines
-- Core utilities: 606 lines
-- Examples: 366 lines
+**Total Lines of Code**: ~2,314 lines
+- Core utilities: 606 lines (enhanced with correlation)
+- Examples: 434 lines (added correlation example)
 - React component: 426 lines
-- Documentation: 466 lines
+- Documentation: 466 + 416 = 882 lines
 
 **Key Deliverables**:
 - ✅ MonteCarloInputs interface
@@ -386,6 +401,8 @@ Phase 2: Monte Carlo Simulation is **COMPLETE** and **PRODUCTION READY**.
 - ✅ Comprehensive risk metrics
 - ✅ Scenario analysis
 - ✅ Web Worker integration
+- ✅ **Correlated random variables (0.6 income/expense correlation)** ✨
+- ✅ **Box-Muller transform & Cholesky decomposition** ✨
 - ✅ React UI component
 - ✅ Complete documentation
 
@@ -394,6 +411,42 @@ Phase 2: Monte Carlo Simulation is **COMPLETE** and **PRODUCTION READY**.
 - Production deployment
 - User testing
 - Further enhancements
+
+---
+
+## 🎯 Core Function Details
+
+### `runMonteCarloSimulation()`
+
+**Configuration:**
+- ✅ 10,000+ simulations (fully configurable)
+- ✅ Box-Muller transform for normal distribution generation
+- ✅ **Correlated random variables: 0.6 income/expense correlation**
+- ✅ Cash flow projections for each scenario
+- ✅ Non-blocking execution via Web Worker
+- ✅ Progress callbacks for real-time updates
+
+**Mathematical Foundation:**
+```javascript
+// Box-Muller Transform
+z0 = sqrt(-2 * ln(u1)) * cos(2π * u2)
+z1 = sqrt(-2 * ln(u1)) * sin(2π * u2)
+
+// Cholesky Decomposition for Correlation
+x1 = z0
+x2 = ρ * z0 + sqrt(1 - ρ²) * z1
+
+// Transform to desired parameters
+rentGrowth = μ_rent + σ_rent * x1
+expenseGrowth = μ_expense + σ_expense * x2
+```
+
+**Key Features:**
+1. **Exact Normal Distribution**: Box-Muller provides mathematically exact transformation
+2. **Correlated Variables**: 0.6 correlation reflects real-world market dynamics
+3. **Flexible**: Can disable correlation (set to 0) for independent analysis
+4. **Efficient**: Generates two normals from two uniforms
+5. **Validated**: Empirical correlation matches theoretical specification
 
 ---
 

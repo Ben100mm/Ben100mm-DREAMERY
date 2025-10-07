@@ -236,6 +236,22 @@ interface IncomeInputsStr {
   grossYearlyIncome: number;
 }
 
+interface MetricWithConfidence {
+  low: number; // 10th percentile (pessimistic)
+  base: number; // Expected value (most likely)
+  high: number; // 90th percentile (optimistic)
+  standardDeviation: number;
+  confidenceLevel: number; // e.g., 80 for 80% confidence interval
+}
+
+interface UncertaintyParameters {
+  incomeUncertainty: number; // ±% uncertainty in income projections (e.g., 0.15 for ±15%)
+  expenseUncertainty: number; // ±% uncertainty in expense projections (e.g., 0.10 for ±10%)
+  occupancyUncertainty: number; // ±% uncertainty in occupancy rates (e.g., 0.10 for ±10%)
+  appreciationUncertainty: number; // ±% uncertainty in appreciation (e.g., 0.20 for ±20%)
+  confidenceLevel: number; // 80, 90, or 95 for confidence interval width
+}
+
 interface EnhancedSTRInputs {
   // Existing basic inputs
   averageDailyRate: number;
@@ -498,6 +514,9 @@ interface DealState {
   showIrrCashFlowBreakdown: boolean; // Toggle for cash flow detail view
   // Capital Events
   capitalEvents: CapitalEventInputs;
+  // Confidence Intervals
+  showConfidenceIntervals: boolean;
+  uncertaintyParameters: UncertaintyParameters;
   // UX/logic helpers
   proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
   validationMessages: string[];
@@ -608,6 +627,178 @@ function getCapitalEventsForYear(events: CapitalEvent[], year: number): number {
   return events
     .filter(event => event.year === year)
     .reduce((sum, event) => sum + (event.estimatedCost * event.likelihood / 100), 0);
+}
+
+// Calculate confidence intervals for a metric
+function calculateConfidenceInterval(
+  baseValue: number,
+  uncertaintyFactor: number,
+  confidenceLevel: number = 80
+): MetricWithConfidence {
+  // For 80% confidence: 10th percentile (low) to 90th percentile (high)
+  // For 90% confidence: 5th percentile (low) to 95th percentile (high)
+  // For 95% confidence: 2.5th percentile (low) to 97.5th percentile (high)
+  
+  // Z-scores for different confidence levels (assuming normal distribution)
+  const zScore = confidenceLevel === 80 ? 1.28 : confidenceLevel === 90 ? 1.645 : 1.96;
+  
+  const standardDeviation = baseValue * uncertaintyFactor;
+  const low = baseValue - (zScore * standardDeviation);
+  const high = baseValue + (zScore * standardDeviation);
+  
+  return {
+    low: Math.round(low * 100) / 100,
+    base: Math.round(baseValue * 100) / 100,
+    high: Math.round(high * 100) / 100,
+    standardDeviation: Math.round(standardDeviation * 100) / 100,
+    confidenceLevel,
+  };
+}
+
+// Calculate Cash-on-Cash Return with confidence intervals
+function calculateCoCWithConfidence(state: DealState): MetricWithConfidence {
+  const monthlyIncome = computeIncome(state);
+  const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
+  const monthlyVariableOps = computeVariableExpenseFromPercentages(
+    computeGrossPotentialIncome(state),
+    state.ops
+  );
+  const monthlyDebtService = totalMonthlyDebtService({
+    newLoanMonthly: state.loan.monthlyPayment || 0,
+    subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+    hybridMonthly: state.hybrid?.monthlyPayment,
+  });
+  
+  const monthlyCashFlow = monthlyIncome - monthlyFixedOps - monthlyVariableOps - monthlyDebtService;
+  const annualCashFlow = monthlyCashFlow * 12;
+  
+  const cashInvested = state.loan.downPayment +
+    (state.loan.closingCosts || 0) +
+    (state.loan.rehabCosts || 0) +
+    (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
+  
+  if (cashInvested <= 0) {
+    return {
+      low: 0,
+      base: 0,
+      high: 0,
+      standardDeviation: 0,
+      confidenceLevel: state.uncertaintyParameters.confidenceLevel,
+    };
+  }
+  
+  const baseCoC = (annualCashFlow / cashInvested) * 100;
+  
+  // Combined uncertainty from income and expenses
+  const combinedUncertainty = Math.sqrt(
+    Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
+    Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
+  );
+  
+  return calculateConfidenceInterval(
+    baseCoC,
+    combinedUncertainty,
+    state.uncertaintyParameters.confidenceLevel
+  );
+}
+
+// Calculate NOI with confidence intervals
+function calculateNOIWithConfidence(state: DealState): MetricWithConfidence {
+  const monthlyIncome = computeIncome(state);
+  const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
+  const monthlyVariableOps = computeVariableExpenseFromPercentages(
+    computeGrossPotentialIncome(state),
+    state.ops
+  );
+  
+  const monthlyNOI = monthlyIncome - monthlyFixedOps - monthlyVariableOps;
+  const annualNOI = monthlyNOI * 12;
+  
+  const combinedUncertainty = Math.sqrt(
+    Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
+    Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
+  );
+  
+  return calculateConfidenceInterval(
+    annualNOI,
+    combinedUncertainty,
+    state.uncertaintyParameters.confidenceLevel
+  );
+}
+
+// Calculate Cap Rate with confidence intervals
+function calculateCapRateWithConfidence(state: DealState): MetricWithConfidence {
+  const monthlyIncome = computeIncome(state);
+  const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
+  const monthlyVariableOps = computeVariableExpenseFromPercentages(
+    computeGrossPotentialIncome(state),
+    state.ops
+  );
+  
+  const annualNOI = (monthlyIncome - monthlyFixedOps - monthlyVariableOps) * 12;
+  
+  if (state.purchasePrice <= 0) {
+    return {
+      low: 0,
+      base: 0,
+      high: 0,
+      standardDeviation: 0,
+      confidenceLevel: state.uncertaintyParameters.confidenceLevel,
+    };
+  }
+  
+  const baseCapRate = (annualNOI / state.purchasePrice) * 100;
+  
+  const combinedUncertainty = Math.sqrt(
+    Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
+    Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
+  );
+  
+  return calculateConfidenceInterval(
+    baseCapRate,
+    combinedUncertainty,
+    state.uncertaintyParameters.confidenceLevel
+  );
+}
+
+// Calculate ROI with confidence intervals
+function calculateROIWithConfidence(state: DealState): MetricWithConfidence {
+  const cashInvested = state.loan.downPayment +
+    (state.loan.closingCosts || 0) +
+    (state.loan.rehabCosts || 0) +
+    (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
+  
+  if (cashInvested <= 0) {
+    return {
+      low: 0,
+      base: 0,
+      high: 0,
+      standardDeviation: 0,
+      confidenceLevel: state.uncertaintyParameters.confidenceLevel,
+    };
+  }
+  
+  // Simplified ROI: (Current Equity - Cash Invested) / Cash Invested
+  const currentEquity = state.purchasePrice - computeLoanAmount(state);
+  const baseROI = ((currentEquity - cashInvested) / cashInvested) * 100;
+  
+  // ROI uncertainty primarily from property value uncertainty
+  return calculateConfidenceInterval(
+    baseROI,
+    state.uncertaintyParameters.appreciationUncertainty,
+    state.uncertaintyParameters.confidenceLevel
+  );
+}
+
+// Format confidence interval for display
+function formatConfidenceInterval(metric: MetricWithConfidence, isPercentage: boolean = false, isCurrency: boolean = false): string {
+  const suffix = isPercentage ? '%' : '';
+  
+  if (isCurrency) {
+    return `${formatCurrency(metric.low)} - ${formatCurrency(metric.base)} - ${formatCurrency(metric.high)}`;
+  }
+  
+  return `${metric.low.toFixed(1)}${suffix} - ${metric.base.toFixed(1)}${suffix} - ${metric.high.toFixed(1)}${suffix}`;
 }
 
 // Calculate enhanced STR revenue with channel fees and dynamic pricing
@@ -2396,6 +2587,15 @@ const defaultState: DealState = {
     events: [],
     totalExpectedCost: 0,
     averageAnnualCost: 0,
+  },
+  // Confidence Intervals Defaults
+  showConfidenceIntervals: false, // Disabled by default
+  uncertaintyParameters: {
+    incomeUncertainty: 0.15, // ±15% income uncertainty
+    expenseUncertainty: 0.10, // ±10% expense uncertainty
+    occupancyUncertainty: 0.10, // ±10% occupancy uncertainty
+    appreciationUncertainty: 0.20, // ±20% appreciation uncertainty
+    confidenceLevel: 80, // 80% confidence interval (10th-90th percentile)
   },
   proFormaAuto: true,
   validationMessages: [],
@@ -9408,6 +9608,176 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                     />
                   </Box>
+                </Box>
+
+                {/* Confidence Intervals Section */}
+                <Box
+                  sx={{
+                    p: 2,
+                    bgcolor: brandColors.backgrounds.tertiary,
+                    borderRadius: 2,
+                    border: `1px solid ${brandColors.borders.primary}`,
+                  }}
+                >
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontWeight: 600,
+                          color: brandColors.primary,
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Confidence Intervals
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Show ranges instead of point estimates to communicate uncertainty
+                      </Typography>
+                    </Box>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.showConfidenceIntervals || false}
+                          onChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              showConfidenceIntervals: e.target.checked,
+                            }));
+                          }}
+                        />
+                      }
+                      label="Show Ranges"
+                    />
+                  </Box>
+
+                  {state.showConfidenceIntervals && (
+                    <>
+                      <Alert severity="info" sx={{ mb: 2 }}>
+                        <Typography variant="caption">
+                          <strong>{state.uncertaintyParameters.confidenceLevel}% Confidence Interval</strong> - Shows pessimistic (low), expected (base), and optimistic (high) scenarios based on uncertainty assumptions.
+                          Income: ±{(state.uncertaintyParameters.incomeUncertainty * 100).toFixed(0)}%, 
+                          Expenses: ±{(state.uncertaintyParameters.expenseUncertainty * 100).toFixed(0)}%, 
+                          Appreciation: ±{(state.uncertaintyParameters.appreciationUncertainty * 100).toFixed(0)}%
+                        </Typography>
+                      </Alert>
+
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gap: 2,
+                          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                        }}
+                      >
+                        {/* Cash-on-Cash Return with CI */}
+                        <Box>
+                          <TextField
+                            fullWidth
+                            label="Cash-on-Cash Return (with Range)"
+                            value={(() => {
+                              const cocCI = calculateCoCWithConfidence(state);
+                              return formatConfidenceInterval(cocCI, true);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Low - Base - High (80% confidence)"
+                          />
+                          <LinearProgress
+                            variant="determinate"
+                            value={50}
+                            sx={{
+                              mt: 1,
+                              height: 8,
+                              borderRadius: 4,
+                              bgcolor: brandColors.accent.error + '30',
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: brandColors.accent.success,
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        {/* NOI with CI */}
+                        <Box>
+                          <TextField
+                            fullWidth
+                            label="Annual NOI (with Range)"
+                            value={(() => {
+                              const noiCI = calculateNOIWithConfidence(state);
+                              return formatConfidenceInterval(noiCI, false, true);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Low - Base - High (80% confidence)"
+                          />
+                          <LinearProgress
+                            variant="determinate"
+                            value={50}
+                            sx={{
+                              mt: 1,
+                              height: 8,
+                              borderRadius: 4,
+                              bgcolor: brandColors.accent.error + '30',
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: brandColors.accent.success,
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        {/* Cap Rate with CI */}
+                        <Box>
+                          <TextField
+                            fullWidth
+                            label="Cap Rate (with Range)"
+                            value={(() => {
+                              const capRateCI = calculateCapRateWithConfidence(state);
+                              return formatConfidenceInterval(capRateCI, true);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Low - Base - High (80% confidence)"
+                          />
+                          <LinearProgress
+                            variant="determinate"
+                            value={50}
+                            sx={{
+                              mt: 1,
+                              height: 8,
+                              borderRadius: 4,
+                              bgcolor: brandColors.accent.error + '30',
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: brandColors.accent.success,
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        {/* ROI with CI */}
+                        <Box>
+                          <TextField
+                            fullWidth
+                            label="ROI (with Range)"
+                            value={(() => {
+                              const roiCI = calculateROIWithConfidence(state);
+                              return formatConfidenceInterval(roiCI, true);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Low - Base - High (80% confidence)"
+                          />
+                          <LinearProgress
+                            variant="determinate"
+                            value={50}
+                            sx={{
+                              mt: 1,
+                              height: 8,
+                              borderRadius: 4,
+                              bgcolor: brandColors.accent.error + '30',
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: brandColors.accent.success,
+                              },
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </>
+                  )}
                 </Box>
 
                 {/* Key Financial Metrics */}

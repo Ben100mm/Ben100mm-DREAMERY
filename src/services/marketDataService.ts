@@ -92,6 +92,20 @@ export interface MarketComparison {
 }
 
 /**
+ * Market risk data for risk analysis integration
+ */
+export interface MarketRiskData {
+  address: string;
+  zipCode: string;
+  marketVolatilityScore: number; // 1-10, higher = more volatile
+  locationStabilityScore: number; // 1-10, higher = more stable
+  recommendations: string[];
+  dataQuality: 'High' | 'Medium' | 'Low';
+  lastUpdated: Date;
+  underlyingData?: MarketDataPoint; // Optional raw data
+}
+
+/**
  * API configuration
  */
 interface APIConfig {
@@ -603,6 +617,325 @@ export class MarketDataService {
       suggestedVacancy,
       adjustmentRationale: rationale,
     };
+  }
+
+  /**
+   * Fetch market risk data for a given address
+   * Returns data-driven risk scores and recommendations
+   * 
+   * @param address - Full address or zip code
+   * @returns MarketRiskData with volatility and stability scores
+   */
+  async fetchMarketRiskData(address: string): Promise<MarketRiskData> {
+    // Extract zip code from address
+    const zipCode = this.extractZipCode(address);
+    
+    if (!zipCode) {
+      throw new Error(`Unable to extract valid zip code from address: ${address}`);
+    }
+
+    // Fetch market data
+    const data = await this.fetchMarketData(zipCode);
+
+    // Calculate market volatility score (1-10, higher = more volatile)
+    const marketVolatilityScore = this.calculateMarketVolatility(data);
+
+    // Calculate location stability score (1-10, higher = more stable)
+    const locationStabilityScore = this.calculateLocationStability(data);
+
+    // Generate recommendations
+    const recommendations = this.generateRiskRecommendations(
+      data,
+      marketVolatilityScore,
+      locationStabilityScore,
+    );
+
+    // Assess data quality
+    const dataQuality = this.assessDataQuality(data);
+
+    return {
+      address,
+      zipCode,
+      marketVolatilityScore,
+      locationStabilityScore,
+      recommendations,
+      dataQuality,
+      lastUpdated: data.dateUpdated,
+      underlyingData: data,
+    };
+  }
+
+  /**
+   * Calculate market volatility score (1-10)
+   * Higher score = more volatile/risky market
+   */
+  private calculateMarketVolatility(data: MarketDataPoint): number {
+    let volatilityPoints = 0;
+
+    // Price appreciation volatility (0-3 points)
+    const absAppreciation = Math.abs(data.appreciationRate12mo);
+    if (absAppreciation > 15) {
+      volatilityPoints += 3; // Very volatile
+    } else if (absAppreciation > 10) {
+      volatilityPoints += 2; // Moderately volatile
+    } else if (absAppreciation > 6) {
+      volatilityPoints += 1; // Slightly volatile
+    }
+    // else 0 points for stable appreciation
+
+    // Rent growth volatility (0-2 points)
+    const absRentGrowth = Math.abs(data.rentGrowth12mo);
+    if (absRentGrowth > 10) {
+      volatilityPoints += 2;
+    } else if (absRentGrowth > 5) {
+      volatilityPoints += 1;
+    }
+
+    // Vacancy rate (0-2 points)
+    if (data.vacancyRate > 12) {
+      volatilityPoints += 2; // High vacancy = unstable market
+    } else if (data.vacancyRate > 8) {
+      volatilityPoints += 1;
+    }
+
+    // Days on market (0-1 point)
+    if (data.daysOnMarket > 75) {
+      volatilityPoints += 1; // Slow market = less liquidity
+    }
+
+    // Foreclosure rate (0-2 points)
+    if (data.foreclosureRate > 2.5) {
+      volatilityPoints += 2; // High foreclosures = market stress
+    } else if (data.foreclosureRate > 1.5) {
+      volatilityPoints += 1;
+    }
+
+    // Convert to 1-10 scale (max 10 points possible)
+    const score = Math.min(10, Math.max(1, volatilityPoints + 1));
+    
+    return Math.round(score * 10) / 10; // Round to 1 decimal
+  }
+
+  /**
+   * Calculate location stability score (1-10)
+   * Higher score = more stable/desirable location
+   */
+  private calculateLocationStability(data: MarketDataPoint): number {
+    let stabilityPoints = 0;
+
+    // Economic diversity (0-3 points)
+    if (data.economicDiversityIndex > 80) {
+      stabilityPoints += 3; // Highly diverse economy
+    } else if (data.economicDiversityIndex > 65) {
+      stabilityPoints += 2;
+    } else if (data.economicDiversityIndex > 50) {
+      stabilityPoints += 1;
+    }
+
+    // Crime and safety (0-3 points)
+    if (data.crimeSafetyScore > 85) {
+      stabilityPoints += 3; // Very safe
+    } else if (data.crimeSafetyScore > 70) {
+      stabilityPoints += 2;
+    } else if (data.crimeSafetyScore > 55) {
+      stabilityPoints += 1;
+    }
+
+    // School ratings (0-2 points)
+    if (data.schoolRating > 8) {
+      stabilityPoints += 2; // Excellent schools
+    } else if (data.schoolRating > 6) {
+      stabilityPoints += 1;
+    }
+
+    // Foreclosure rate (inverse - 0-1 point)
+    if (data.foreclosureRate < 1.0) {
+      stabilityPoints += 1; // Low foreclosures = stable community
+    }
+
+    // Market liquidity (0-1 point)
+    if (data.daysOnMarket < 45) {
+      stabilityPoints += 1; // Quick sales = desirable area
+    }
+
+    // Convert to 1-10 scale (max 10 points possible)
+    const score = Math.min(10, Math.max(1, stabilityPoints + 1));
+    
+    return Math.round(score * 10) / 10; // Round to 1 decimal
+  }
+
+  /**
+   * Generate risk-specific recommendations
+   */
+  private generateRiskRecommendations(
+    data: MarketDataPoint,
+    volatilityScore: number,
+    stabilityScore: number,
+  ): string[] {
+    const recommendations: string[] = [];
+
+    // Market volatility recommendations
+    if (volatilityScore >= 8) {
+      recommendations.push(
+        `High market volatility (${volatilityScore}/10): Consider larger cash reserves and conservative projections`,
+      );
+      recommendations.push(
+        'Factor in wider margin of safety due to market instability',
+      );
+    } else if (volatilityScore >= 6) {
+      recommendations.push(
+        `Moderate market volatility (${volatilityScore}/10): Use stress testing for downside scenarios`,
+      );
+    } else {
+      recommendations.push(
+        `Low market volatility (${volatilityScore}/10): Market shows stable characteristics`,
+      );
+    }
+
+    // Location stability recommendations
+    if (stabilityScore <= 4) {
+      recommendations.push(
+        `Low location stability (${stabilityScore}/10): Higher tenant turnover and management challenges likely`,
+      );
+      recommendations.push(
+        'Consider exit strategy carefully - lower liquidity expected',
+      );
+    } else if (stabilityScore <= 6) {
+      recommendations.push(
+        `Moderate location stability (${stabilityScore}/10): Standard property management practices recommended`,
+      );
+    } else {
+      recommendations.push(
+        `High location stability (${stabilityScore}/10): Desirable area with strong fundamentals`,
+      );
+    }
+
+    // Specific metric-based recommendations
+    if (data.appreciationRate12mo < 0) {
+      recommendations.push(
+        `Negative price appreciation (${data.appreciationRate12mo.toFixed(1)}%): Market may be in correction phase`,
+      );
+    }
+
+    if (data.vacancyRate > 10) {
+      recommendations.push(
+        `High vacancy rate (${data.vacancyRate.toFixed(1)}%): Plan for extended lease-up periods`,
+      );
+    }
+
+    if (data.foreclosureRate > 2) {
+      recommendations.push(
+        `Elevated foreclosure rate (${data.foreclosureRate.toFixed(1)}%): Economic stress in market`,
+      );
+    }
+
+    if (data.economicDiversityIndex < 50) {
+      recommendations.push(
+        'Low economic diversity: Single-industry risk - research primary employers',
+      );
+    }
+
+    if (data.crimeSafetyScore < 60) {
+      recommendations.push(
+        'Safety concerns: May impact insurance costs and tenant quality',
+      );
+    }
+
+    if (data.schoolRating < 5) {
+      recommendations.push(
+        'Below-average schools: May limit appeal to family tenants',
+      );
+    }
+
+    // Combined risk assessment
+    if (volatilityScore > 7 && stabilityScore < 5) {
+      recommendations.push(
+        '⚠️ HIGH RISK COMBINATION: Volatile market + unstable location = significant investment risk',
+      );
+    } else if (volatilityScore < 4 && stabilityScore > 7) {
+      recommendations.push(
+        '✓ FAVORABLE PROFILE: Stable market + strong location = lower-risk investment',
+      );
+    }
+
+    // Minimum buffer recommendation
+    recommendations.push(
+      `Recommended cash reserve buffer: ${this.calculateRecommendedBuffer(volatilityScore, stabilityScore)} months`,
+    );
+
+    return recommendations;
+  }
+
+  /**
+   * Calculate recommended cash reserve buffer based on risk scores
+   */
+  private calculateRecommendedBuffer(
+    volatilityScore: number,
+    stabilityScore: number,
+  ): number {
+    // Base buffer is 3 months
+    let buffer = 3;
+
+    // Add months for high volatility
+    if (volatilityScore > 7) {
+      buffer += 3;
+    } else if (volatilityScore > 5) {
+      buffer += 2;
+    } else if (volatilityScore > 3) {
+      buffer += 1;
+    }
+
+    // Add months for low stability
+    if (stabilityScore < 4) {
+      buffer += 3;
+    } else if (stabilityScore < 6) {
+      buffer += 2;
+    } else if (stabilityScore < 8) {
+      buffer += 1;
+    }
+
+    return Math.min(12, buffer); // Cap at 12 months
+  }
+
+  /**
+   * Assess the quality of the underlying data
+   */
+  private assessDataQuality(data: MarketDataPoint): 'High' | 'Medium' | 'Low' {
+    const now = new Date();
+    const dataAge = now.getTime() - data.dateUpdated.getTime();
+    const daysOld = dataAge / (1000 * 60 * 60 * 24);
+
+    // Check data freshness
+    if (daysOld > 90) return 'Low'; // Data older than 3 months
+    if (daysOld > 30) return 'Medium'; // Data older than 1 month
+
+    // Check completeness
+    const hasAllQualityMetrics =
+      data.economicDiversityIndex > 0 &&
+      data.crimeSafetyScore > 0 &&
+      data.schoolRating > 0;
+
+    if (!hasAllQualityMetrics) return 'Medium';
+
+    return 'High';
+  }
+
+  /**
+   * Extract zip code from an address string
+   */
+  private extractZipCode(address: string): string | null {
+    // Try to find 5-digit zip code
+    const zipMatch = address.match(/\b\d{5}(?:-\d{4})?\b/);
+    if (zipMatch) {
+      return zipMatch[0];
+    }
+
+    // If address is already just a zip code
+    if (this.isValidZipCode(address)) {
+      return address;
+    }
+
+    return null;
   }
 
   // ============================================================================

@@ -9,6 +9,9 @@ import {
   runMonteCarloSimulation,
   createDefaultUncertaintyParameters,
   generateSummaryText,
+  generateRandomScenario,
+  generateRandomScenarios,
+  formatPercentage,
   type MonteCarloInputs,
   type BaseState,
   type UncertaintyParameters,
@@ -381,6 +384,68 @@ export async function compareProperties(): Promise<void> {
 }
 
 /**
+ * Example 7: Random Scenario Generation
+ * Demonstrates generateRandomScenario() with market-correlated factors
+ */
+export function exampleRandomScenarios(): void {
+  console.log('\n=== RANDOM SCENARIO GENERATION ===\n');
+  
+  // Generate 10 random scenarios
+  const scenarios = generateRandomScenarios(10);
+  
+  console.log('Generated 10 random scenarios with market correlation:\n');
+  
+  scenarios.forEach((scenario, i) => {
+    console.log(`Scenario ${i + 1}: ${scenario.scenario.toUpperCase()}`);
+    console.log(`  Market Factor: ${scenario.marketFactor.toFixed(2)}`);
+    console.log(`  Income Growth: ${formatPercentage(scenario.incomeGrowthRate * 100)} (correlated)`);
+    console.log(`  Expense Growth: ${formatPercentage(scenario.expenseGrowthRate * 100)} (0.6 correlation)`);
+    console.log(`  Occupancy: ${formatPercentage(scenario.occupancyRate * 100)} (independent)`);
+    console.log(`  Appreciation: ${formatPercentage(scenario.appreciationRate * 100)}`);
+    console.log('');
+  });
+  
+  // Analyze correlation
+  console.log('CORRELATION VERIFICATION:');
+  const incomeGrowths = scenarios.map(s => s.incomeGrowthRate);
+  const expenseGrowths = scenarios.map(s => s.expenseGrowthRate);
+  const marketFactors = scenarios.map(s => s.marketFactor);
+  
+  // Calculate correlation between market and income
+  const meanIncome = incomeGrowths.reduce((a, b) => a + b) / incomeGrowths.length;
+  const meanMarket = marketFactors.reduce((a, b) => a + b) / marketFactors.length;
+  const meanExpense = expenseGrowths.reduce((a, b) => a + b) / expenseGrowths.length;
+  
+  const covMarketIncome = incomeGrowths.reduce((sum, income, i) => 
+    sum + (income - meanIncome) * (marketFactors[i] - meanMarket), 0) / incomeGrowths.length;
+  const varMarket = marketFactors.reduce((sum, m) => sum + Math.pow(m - meanMarket, 2), 0) / marketFactors.length;
+  const varIncome = incomeGrowths.reduce((sum, i) => sum + Math.pow(i - meanIncome, 2), 0) / incomeGrowths.length;
+  
+  const corrMarketIncome = covMarketIncome / (Math.sqrt(varMarket) * Math.sqrt(varIncome));
+  
+  console.log(`  Market-Income Correlation: ${corrMarketIncome.toFixed(2)} (target: 0.70)`);
+  console.log(`  Note: With only 10 samples, empirical correlation varies. Run with 1000+ for accuracy.`);
+  
+  // Custom parameters example
+  console.log('\n=== CUSTOM SCENARIO PARAMETERS ===\n');
+  
+  const customScenario = generateRandomScenario({
+    incomeGrowthMean: 0.05,  // Higher income growth
+    expenseGrowthMean: 0.04, // Higher expense growth
+    occupancyMean: 0.95,     // Higher occupancy
+    marketExpenseCorrelation: 0.8,  // Stronger correlation
+  });
+  
+  console.log('Custom Scenario (Hot Market):');
+  console.log(`  Market: ${customScenario.scenario}`);
+  console.log(`  Market Factor: ${customScenario.marketFactor.toFixed(2)}`);
+  console.log(`  Income Growth: ${formatPercentage(customScenario.incomeGrowthRate * 100)}`);
+  console.log(`  Expense Growth: ${formatPercentage(customScenario.expenseGrowthRate * 100)}`);
+  console.log(`  Occupancy: ${formatPercentage(customScenario.occupancyRate * 100)}`);
+  console.log(`  Appreciation: ${formatPercentage(customScenario.appreciationRate * 100)}`);
+}
+
+/**
  * Run all examples
  */
 export async function runAllExamples(): Promise<void> {
@@ -412,6 +477,10 @@ export async function runAllExamples(): Promise<void> {
     console.log('\n--- Example 6: Property Comparison ---');
     await compareProperties();
 
+    // Example 6: Random scenario generation
+    console.log('\n--- Example 7: Random Scenario Generation ---');
+    exampleRandomScenarios();
+
     console.log('\n' + '='.repeat(60));
     console.log('ALL EXAMPLES COMPLETED SUCCESSFULLY');
     console.log('='.repeat(60));
@@ -427,6 +496,7 @@ export default {
   exampleCustomUncertainty,
   exampleConservativeAnalysis,
   exampleCorrelationImpact,
+  exampleRandomScenarios,
   analyzeResults,
   compareProperties,
   runAllExamples,

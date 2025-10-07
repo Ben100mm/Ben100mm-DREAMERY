@@ -600,6 +600,134 @@ export function formatCurrency(value: number, decimals: number = 0): string {
 }
 
 /**
+ * Scenario parameters for random scenario generation
+ */
+export interface ScenarioParameters {
+  incomeGrowthMean: number;
+  incomeGrowthStdDev: number;
+  expenseGrowthMean: number;
+  expenseGrowthStdDev: number;
+  occupancyMean: number;
+  occupancyStdDev: number;
+  appreciationMean: number;
+  appreciationStdDev: number;
+  marketIncomeCorrelation: number;  // Correlation between market factor and income
+  marketExpenseCorrelation: number; // Correlation between market factor and expenses (default: 0.6)
+}
+
+/**
+ * Random scenario output
+ */
+export interface RandomScenario {
+  marketFactor: number;           // Overall market condition factor
+  incomeGrowthRate: number;       // Annual income growth rate (correlated with market)
+  expenseGrowthRate: number;      // Annual expense growth rate (0.6 correlated with market)
+  occupancyRate: number;          // Occupancy rate (independent of market)
+  appreciationRate: number;       // Property appreciation rate
+  scenario: 'recession' | 'stagnant' | 'stable' | 'growth' | 'boom';  // Market scenario label
+}
+
+/**
+ * Generate a random scenario with correlated market factors
+ * 
+ * This function creates a complete random scenario incorporating:
+ * - Market factor (overall market conditions)
+ * - Income variation (correlated with market)
+ * - Expense variation (0.6 correlation with market by default)
+ * - Occupancy variation (independent)
+ * - Appreciation variation
+ * 
+ * @param params Scenario parameters (optional, uses defaults if not provided)
+ * @returns RandomScenario with all correlated factors
+ */
+export function generateRandomScenario(params?: Partial<ScenarioParameters>): RandomScenario {
+  // Default parameters
+  const defaults: ScenarioParameters = {
+    incomeGrowthMean: 0.03,
+    incomeGrowthStdDev: 0.015,
+    expenseGrowthMean: 0.03,
+    expenseGrowthStdDev: 0.01,
+    occupancyMean: 0.92,
+    occupancyStdDev: 0.05,
+    appreciationMean: 0.03,
+    appreciationStdDev: 0.02,
+    marketIncomeCorrelation: 0.7,     // Strong correlation between market and income
+    marketExpenseCorrelation: 0.6,    // Moderate correlation between market and expenses
+  };
+  
+  const p = { ...defaults, ...params };
+  
+  // Generate market factor (standard normal, represents overall market conditions)
+  const marketFactor = boxMullerRandom();
+  
+  // Generate independent random factors using Box-Muller
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const u3 = Math.random();
+  const u4 = Math.random();
+  
+  // Box-Muller transform for independent normals
+  const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);  // For income
+  const z2 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);  // For expenses
+  const z3 = Math.sqrt(-2 * Math.log(u3)) * Math.cos(2 * Math.PI * u4);  // For occupancy
+  const z4 = Math.sqrt(-2 * Math.log(u3)) * Math.sin(2 * Math.PI * u4);  // For appreciation
+  
+  // Apply correlation to income (correlated with market factor)
+  // Using Cholesky decomposition: x = ρ * market + sqrt(1 - ρ²) * independent
+  const incomeIndependent = p.marketIncomeCorrelation * marketFactor + 
+    Math.sqrt(1 - p.marketIncomeCorrelation * p.marketIncomeCorrelation) * z1;
+  const incomeGrowthRate = p.incomeGrowthMean + p.incomeGrowthStdDev * incomeIndependent;
+  
+  // Apply correlation to expenses (0.6 correlated with market factor by default)
+  const expenseIndependent = p.marketExpenseCorrelation * marketFactor + 
+    Math.sqrt(1 - p.marketExpenseCorrelation * p.marketExpenseCorrelation) * z2;
+  const expenseGrowthRate = p.expenseGrowthMean + p.expenseGrowthStdDev * expenseIndependent;
+  
+  // Occupancy is independent of market factor (but still random)
+  const occupancyRate = Math.max(0.5, Math.min(1.0, p.occupancyMean + p.occupancyStdDev * z3));
+  
+  // Appreciation can be independent or you could correlate it with market
+  const appreciationRate = p.appreciationMean + p.appreciationStdDev * z4;
+  
+  // Determine scenario label based on market factor
+  let scenario: 'recession' | 'stagnant' | 'stable' | 'growth' | 'boom';
+  if (marketFactor < -1.5) {
+    scenario = 'recession';
+  } else if (marketFactor < -0.5) {
+    scenario = 'stagnant';
+  } else if (marketFactor < 0.5) {
+    scenario = 'stable';
+  } else if (marketFactor < 1.5) {
+    scenario = 'growth';
+  } else {
+    scenario = 'boom';
+  }
+  
+  return {
+    marketFactor,
+    incomeGrowthRate,
+    expenseGrowthRate,
+    occupancyRate,
+    appreciationRate,
+    scenario,
+  };
+}
+
+/**
+ * Generate multiple random scenarios
+ * 
+ * @param count Number of scenarios to generate
+ * @param params Optional scenario parameters
+ * @returns Array of random scenarios
+ */
+export function generateRandomScenarios(
+  count: number,
+  params?: Partial<ScenarioParameters>
+): RandomScenario[] {
+  return Array.from({ length: count }, () => generateRandomScenario(params));
+}
+
+/**
  * Generate summary statistics text
  */
 export function generateSummaryText(results: MonteCarloResults): string {

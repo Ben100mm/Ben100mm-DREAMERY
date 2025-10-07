@@ -435,6 +435,12 @@ interface DealState {
       adjustedPropertyValue: number;
     };
   };
+  // IRR Configuration Parameters
+  irrHoldPeriodYears: number; // Default 5 years
+  irrIncomeGrowthRate: number; // Annual income growth % (default 2%)
+  irrExpenseGrowthRate: number; // Annual expense growth % (default 3%)
+  irrSellingCostsPct: number; // Selling costs as % of sale price (default 7%)
+  showIrrCashFlowBreakdown: boolean; // Toggle for cash flow detail view
   // UX/logic helpers
   proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
   validationMessages: string[];
@@ -1062,15 +1068,14 @@ function calculateTrueIRR(
  * Builds year-by-year cash flow projections for IRR calculation
  * @param state - Current deal state
  * @param isLevered - True for levered (with debt), false for unlevered
- * @param holdYears - Number of years to hold property
  * @returns Array of annual cash flows
  */
 function buildCashFlowProjections(
   state: DealState,
-  isLevered: boolean,
-  holdYears: number = 5
+  isLevered: boolean
 ): number[] {
   const cashFlows: number[] = [];
+  const holdYears = state.irrHoldPeriodYears || 5;
   
   // Base annual income and expenses
   const monthlyIncome = computeIncome(state);
@@ -1089,10 +1094,9 @@ function buildCashFlowProjections(
       })
     : 0;
   
-  // Project cash flows with growth assumptions
-  // Assume 2% annual income growth and 3% annual expense growth
-  const incomeGrowth = 1.02;
-  const expenseGrowth = 1.03;
+  // Project cash flows with configurable growth assumptions
+  const incomeGrowth = 1 + (state.irrIncomeGrowthRate || 2) / 100;
+  const expenseGrowth = 1 + (state.irrExpenseGrowthRate || 3) / 100;
   
   for (let year = 0; year < holdYears; year++) {
     const yearMultiplier = year; // Year 0 = first full year
@@ -1112,20 +1116,20 @@ function buildCashFlowProjections(
  * Calculates net exit proceeds from property sale
  * @param state - Current deal state
  * @param isLevered - True for levered (subtract remaining loan balance)
- * @param holdYears - Number of years held before sale
  * @returns Net proceeds after selling costs and loan payoff
  */
 function calculateExitProceeds(
   state: DealState,
-  isLevered: boolean,
-  holdYears: number = 5
+  isLevered: boolean
 ): number {
+  const holdYears = state.irrHoldPeriodYears || 5;
+  
   // Future value with appreciation
   const appreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
   const futureValue = state.purchasePrice * Math.pow(1 + appreciationRate, holdYears);
   
-  // Selling costs (typically 6-8% for real estate)
-  const sellingCostsPct = 0.07; // 7% (agent commissions, closing costs, etc.)
+  // Selling costs (configurable, default 7%)
+  const sellingCostsPct = (state.irrSellingCostsPct || 7) / 100;
   const sellingCosts = futureValue * sellingCostsPct;
   
   // Gross proceeds before loan payoff
@@ -1919,6 +1923,12 @@ const defaultState: DealState = {
   riskScoreResults: undefined,
   confidenceIntervalResults: undefined,
   inflationProjections: undefined,
+  // IRR Configuration Defaults
+  irrHoldPeriodYears: 5, // Default 5-year hold
+  irrIncomeGrowthRate: 2, // 2% annual income growth
+  irrExpenseGrowthRate: 3, // 3% annual expense growth
+  irrSellingCostsPct: 7, // 7% selling costs (agent + closing)
+  showIrrCashFlowBreakdown: false, // Hidden by default
   proFormaAuto: true,
   validationMessages: [],
   showAmortizationOverride: false,
@@ -9260,6 +9270,90 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Total Distributions ÷ Total Cash Invested"
                     />
+                    
+                    {/* IRR Configuration Parameters */}
+                    <Box
+                      sx={{
+                        gridColumn: "1 / -1",
+                        p: 2,
+                        bgcolor: brandColors.backgrounds.tertiary,
+                        borderRadius: 1,
+                        border: `1px solid ${brandColors.borders.primary}`,
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                        IRR Assumptions (Configurable)
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gap: 2,
+                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Hold Period (Years)"
+                          type="number"
+                          value={state.irrHoldPeriodYears}
+                          onChange={(e) => {
+                            const val = Math.max(1, Math.min(30, Number(e.target.value)));
+                            setState((prev) => ({
+                              ...prev,
+                              irrHoldPeriodYears: val,
+                            }));
+                          }}
+                          inputProps={{ min: 1, max: 30, step: 1 }}
+                          helperText="Years before property sale (1-30)"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Income Growth Rate (%)"
+                          type="number"
+                          value={state.irrIncomeGrowthRate}
+                          onChange={(e) => {
+                            const val = Math.max(-10, Math.min(20, Number(e.target.value)));
+                            setState((prev) => ({
+                              ...prev,
+                              irrIncomeGrowthRate: val,
+                            }));
+                          }}
+                          inputProps={{ min: -10, max: 20, step: 0.1 }}
+                          helperText="Annual income growth (-10% to +20%)"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Expense Growth Rate (%)"
+                          type="number"
+                          value={state.irrExpenseGrowthRate}
+                          onChange={(e) => {
+                            const val = Math.max(-10, Math.min(20, Number(e.target.value)));
+                            setState((prev) => ({
+                              ...prev,
+                              irrExpenseGrowthRate: val,
+                            }));
+                          }}
+                          inputProps={{ min: -10, max: 20, step: 0.1 }}
+                          helperText="Annual expense growth (-10% to +20%)"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Selling Costs (%)"
+                          type="number"
+                          value={state.irrSellingCostsPct}
+                          onChange={(e) => {
+                            const val = Math.max(0, Math.min(15, Number(e.target.value)));
+                            setState((prev) => ({
+                              ...prev,
+                              irrSellingCostsPct: val,
+                            }));
+                          }}
+                          inputProps={{ min: 0, max: 15, step: 0.1 }}
+                          helperText="Agent commissions + closing costs (0-15%)"
+                        />
+                      </Box>
+                    </Box>
+                    
                     <TextField
                       fullWidth
                       label="IRR (Levered)"
@@ -9276,14 +9370,11 @@ const UnderwritePage: React.FC = () => {
                           
                           if (totalCashInvested <= 0) return "N/A";
                           
-                          // Hold period (default 5 years, or use state if available)
-                          const holdYears = 5;
+                          // Build year-by-year cash flows (levered) - uses state.irrHoldPeriodYears
+                          const cashFlows = buildCashFlowProjections(state, true);
                           
-                          // Build year-by-year cash flows (levered)
-                          const cashFlows = buildCashFlowProjections(state, true, holdYears);
-                          
-                          // Calculate exit proceeds (levered)
-                          const exitProceeds = calculateExitProceeds(state, true, holdYears);
+                          // Calculate exit proceeds (levered) - uses state.irrHoldPeriodYears
+                          const exitProceeds = calculateExitProceeds(state, true);
                           
                           // Calculate true IRR using Newton-Raphson
                           const irr = calculateTrueIRR(
@@ -9317,14 +9408,11 @@ const UnderwritePage: React.FC = () => {
                           
                           if (totalCashInvested <= 0) return "N/A";
                           
-                          // Hold period (default 5 years)
-                          const holdYears = 5;
+                          // Build year-by-year cash flows (unlevered = no debt) - uses state.irrHoldPeriodYears
+                          const cashFlows = buildCashFlowProjections(state, false);
                           
-                          // Build year-by-year cash flows (unlevered = no debt)
-                          const cashFlows = buildCashFlowProjections(state, false, holdYears);
-                          
-                          // Calculate exit proceeds (unlevered = no loan payoff)
-                          const exitProceeds = calculateExitProceeds(state, false, holdYears);
+                          // Calculate exit proceeds (unlevered = no loan payoff) - uses state.irrHoldPeriodYears
+                          const exitProceeds = calculateExitProceeds(state, false);
                           
                           // Calculate true IRR using Newton-Raphson
                           const irr = calculateTrueIRR(
@@ -9342,6 +9430,241 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Internal Rate of Return (Unlevered) - True IRR with Newton-Raphson"
                     />
+                    
+                    {/* IRR Sensitivity Analysis */}
+                    <Box
+                      sx={{
+                        gridColumn: "1 / -1",
+                        p: 2,
+                        bgcolor: brandColors.backgrounds.tertiary,
+                        borderRadius: 1,
+                        border: `1px solid ${brandColors.borders.primary}`,
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                        IRR Sensitivity Analysis
+                      </Typography>
+                      <Box sx={{ display: "grid", gap: 2 }}>
+                        {/* Hold Period Sensitivity */}
+                        <Box>
+                          <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: "block" }}>
+                            IRR by Hold Period (Levered)
+                          </Typography>
+                          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                            {[3, 5, 7, 10, 15].map((years) => {
+                              try {
+                                const testState = { ...state, irrHoldPeriodYears: years };
+                                const cashFlows = buildCashFlowProjections(testState, true);
+                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                                const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
+                                return (
+                                  <Box
+                                    key={years}
+                                    sx={{
+                                      px: 2,
+                                      py: 1,
+                                      bgcolor: years === state.irrHoldPeriodYears ? "primary.main" : brandColors.backgrounds.secondary,
+                                      color: years === state.irrHoldPeriodYears ? "white" : "text.primary",
+                                      borderRadius: 1,
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    <Typography variant="caption">{years}yr</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                      {(irr * 100).toFixed(1)}%
+                                    </Typography>
+                                  </Box>
+                                );
+                              } catch {
+                                return null;
+                              }
+                            })}
+                          </Box>
+                        </Box>
+                        
+                        {/* Appreciation Sensitivity */}
+                        <Box>
+                          <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: "block" }}>
+                            IRR by Appreciation Rate (Levered, {state.irrHoldPeriodYears}yr hold)
+                          </Typography>
+                          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                            {[0, 2, 3, 5, 7].map((appRate) => {
+                              try {
+                                const testState = {
+                                  ...state,
+                                  appreciation: { ...state.appreciation, appreciationPercentPerYear: appRate },
+                                };
+                                const cashFlows = buildCashFlowProjections(testState, true);
+                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                                const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
+                                return (
+                                  <Box
+                                    key={appRate}
+                                    sx={{
+                                      px: 2,
+                                      py: 1,
+                                      bgcolor: appRate === (state.appreciation?.appreciationPercentPerYear || 3) ? "primary.main" : brandColors.backgrounds.secondary,
+                                      color: appRate === (state.appreciation?.appreciationPercentPerYear || 3) ? "white" : "text.primary",
+                                      borderRadius: 1,
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    <Typography variant="caption">{appRate}% App</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                      {(irr * 100).toFixed(1)}%
+                                    </Typography>
+                                  </Box>
+                                );
+                              } catch {
+                                return null;
+                              }
+                            })}
+                          </Box>
+                        </Box>
+                        
+                        {/* Income Growth Sensitivity */}
+                        <Box>
+                          <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: "block" }}>
+                            IRR by Income Growth Rate (Levered, {state.irrHoldPeriodYears}yr hold)
+                          </Typography>
+                          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                            {[0, 2, 3, 4, 6].map((growthRate) => {
+                              try {
+                                const testState = { ...state, irrIncomeGrowthRate: growthRate };
+                                const cashFlows = buildCashFlowProjections(testState, true);
+                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
+                                const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
+                                return (
+                                  <Box
+                                    key={growthRate}
+                                    sx={{
+                                      px: 2,
+                                      py: 1,
+                                      bgcolor: growthRate === state.irrIncomeGrowthRate ? "primary.main" : brandColors.backgrounds.secondary,
+                                      color: growthRate === state.irrIncomeGrowthRate ? "white" : "text.primary",
+                                      borderRadius: 1,
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    <Typography variant="caption">{growthRate}% Growth</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                      {(irr * 100).toFixed(1)}%
+                                    </Typography>
+                                  </Box>
+                                );
+                              } catch {
+                                return null;
+                              }
+                            })}
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    
+                    {/* Year-by-Year Cash Flow Breakdown */}
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() =>
+                          setState((prev) => ({
+                            ...prev,
+                            showIrrCashFlowBreakdown: !prev.showIrrCashFlowBreakdown,
+                          }))
+                        }
+                        sx={{ mb: state.showIrrCashFlowBreakdown ? 2 : 0 }}
+                      >
+                        {state.showIrrCashFlowBreakdown ? "Hide" : "Show"} Year-by-Year Cash Flow Projections
+                      </Button>
+                      
+                      {state.showIrrCashFlowBreakdown && (() => {
+                        try {
+                          const leveredCashFlows = buildCashFlowProjections(state, true);
+                          const unleveredCashFlows = buildCashFlowProjections(state, false);
+                          const leveredExit = calculateExitProceeds(state, true);
+                          const unleveredExit = calculateExitProceeds(state, false);
+                          
+                          return (
+                            <Box
+                              sx={{
+                                p: 2,
+                                bgcolor: brandColors.backgrounds.secondary,
+                                borderRadius: 1,
+                                border: `1px solid ${brandColors.borders.secondary}`,
+                              }}
+                            >
+                              <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                                Cash Flow Projections ({state.irrHoldPeriodYears} Year Hold)
+                              </Typography>
+                              <Box
+                                sx={{
+                                  display: "grid",
+                                  gap: 1,
+                                  gridTemplateColumns: { xs: "1fr", md: "auto 1fr 1fr 1fr" },
+                                  "& > *": { py: 1, px: 2 },
+                                }}
+                              >
+                                {/* Header Row */}
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                  Year
+                                </Typography>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                  Levered Cash Flow
+                                </Typography>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                  Unlevered Cash Flow
+                                </Typography>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                  Notes
+                                </Typography>
+                                
+                                {/* Year Rows */}
+                                {leveredCashFlows.map((leveredCF, idx) => (
+                                  <React.Fragment key={idx}>
+                                    <Typography variant="body2">
+                                      {idx + 1}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: leveredCF >= 0 ? "success.main" : "error.main" }}>
+                                      {formatCurrency(leveredCF)}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: unleveredCashFlows[idx] >= 0 ? "success.main" : "error.main" }}>
+                                      {formatCurrency(unleveredCashFlows[idx])}
+                                    </Typography>
+                                    <Typography variant="caption" sx={{ fontStyle: "italic" }}>
+                                      {idx === 0 ? "Base year" : `+${state.irrIncomeGrowthRate}% income, +${state.irrExpenseGrowthRate}% expenses`}
+                                    </Typography>
+                                  </React.Fragment>
+                                ))}
+                                
+                                {/* Exit Row */}
+                                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                  Exit (Yr {state.irrHoldPeriodYears})
+                                </Typography>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color: "success.main" }}>
+                                  {formatCurrency(leveredExit)}
+                                </Typography>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color: "success.main" }}>
+                                  {formatCurrency(unleveredExit)}
+                                </Typography>
+                                <Typography variant="caption" sx={{ fontStyle: "italic" }}>
+                                  After {state.appreciation?.appreciationPercentPerYear || 3}% appreciation & {state.irrSellingCostsPct}% selling costs
+                                </Typography>
+                              </Box>
+                            </Box>
+                          );
+                        } catch (error) {
+                          return (
+                            <Typography variant="body2" color="error">
+                              Error generating cash flow breakdown
+                            </Typography>
+                          );
+                        }
+                      })()}
+                    </Box>
+                    
                     <TextField
                       fullWidth
                       label="Return on Equity (Current)"

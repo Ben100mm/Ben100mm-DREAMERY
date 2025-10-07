@@ -158,10 +158,11 @@ class UnderwriteCalculationService {
 
   /**
    * Calculate monthly variable operating expenses
+   * Uses EGI (Effective Gross Income) per industry standard
    */
   public calculateMonthlyVariableOps(state: DealState): number {
-    const gpi = this.calculateGrossPotentialIncome(state);
-    return computeVariableExpenseFromPercentages(gpi, state.ops);
+    const egi = computeIncome(state);
+    return computeVariableExpenseFromPercentages(egi, state.ops);
   }
 
   /**

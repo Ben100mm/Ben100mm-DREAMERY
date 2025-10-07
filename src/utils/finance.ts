@@ -195,7 +195,7 @@ export function computeVariableExpensePct(i: OperatingInputs): number {
 
 /**
  * Calculates variable operating expenses in dollar amounts.
- * @param grossIncome - Gross income to apply percentage against (typically GPI)
+ * @param grossIncome - Gross income to apply percentage against (should be EGI per industry standard)
  * @param i - Operating inputs with percentage values as decimals (e.g., 0.05 for 5%)
  * @returns Variable expenses in dollars
  * @throws Error if grossIncome is negative or percentages are invalid

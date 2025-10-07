@@ -708,7 +708,7 @@ export function computeCocAnnual(state: DealState, annualCashFlow: number): numb
         state.subjectTo.paymentToSeller +
         (state.reservesCalculationMethod === "months"
           ? (computeFixedMonthlyOps(state.ops) +
-              (computeGrossPotentialIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
+              (computeIncome(state) * computeVariableMonthlyOpsPct(state.ops)) /
                 100) *
             (state.reservesMonths || 0)
           : state.reservesFixedAmount || 0);

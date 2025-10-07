@@ -337,6 +337,21 @@ interface BreakEvenAnalysis {
   marginOfSafety: number;
 }
 
+interface CapitalEvent {
+  id: string;
+  year: number; // Year from purchase
+  description: string;
+  estimatedCost: number;
+  category: 'roof' | 'hvac' | 'foundation' | 'electrical' | 'plumbing' | 'other';
+  likelihood: number; // 0-100%
+}
+
+interface CapitalEventInputs {
+  events: CapitalEvent[];
+  totalExpectedCost: number; // Sum of all events
+  averageAnnualCost: number; // Amortized over hold period
+}
+
 interface DealState {
   propertyType: PropertyType;
   operationType: OperationType;
@@ -448,11 +463,118 @@ interface DealState {
   irrExpenseGrowthRate: number; // Annual expense growth % (default 3%)
   irrSellingCostsPct: number; // Selling costs as % of sale price (default 7%)
   showIrrCashFlowBreakdown: boolean; // Toggle for cash flow detail view
+  // Capital Events
+  capitalEvents: CapitalEventInputs;
   // UX/logic helpers
   proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
   validationMessages: string[];
   showAmortizationOverride?: boolean;
   snackbarOpen?: boolean;
+}
+
+// Capital Event Template Generator
+function generateCapitalEventTemplates(propertyAge: number, purchasePrice: number): CapitalEvent[] {
+  const templates: CapitalEvent[] = [];
+  
+  // Roof replacement (typical lifespan: 20-25 years)
+  if (propertyAge >= 15) {
+    templates.push({
+      id: `roof-${Date.now()}-1`,
+      year: Math.max(1, 22 - propertyAge),
+      description: 'Roof Replacement',
+      estimatedCost: Math.round(purchasePrice * 0.05), // ~5% of property value
+      category: 'roof',
+      likelihood: propertyAge >= 18 ? 80 : 50,
+    });
+  }
+
+  // HVAC replacement (typical lifespan: 15-20 years)
+  if (propertyAge >= 10) {
+    templates.push({
+      id: `hvac-${Date.now()}-1`,
+      year: Math.max(1, 17 - propertyAge),
+      description: 'HVAC System Replacement',
+      estimatedCost: Math.round(purchasePrice * 0.03), // ~3% of property value
+      category: 'hvac',
+      likelihood: propertyAge >= 15 ? 70 : 40,
+    });
+  }
+
+  // Water heater (typical lifespan: 10-15 years)
+  if (propertyAge >= 8) {
+    templates.push({
+      id: `plumbing-${Date.now()}-1`,
+      year: Math.max(1, 12 - propertyAge),
+      description: 'Water Heater Replacement',
+      estimatedCost: Math.round(purchasePrice * 0.005), // ~0.5% of property value
+      category: 'plumbing',
+      likelihood: propertyAge >= 12 ? 75 : 35,
+    });
+  }
+
+  // Electrical panel upgrade (older properties)
+  if (propertyAge >= 30) {
+    templates.push({
+      id: `electrical-${Date.now()}-1`,
+      year: Math.max(1, 3),
+      description: 'Electrical Panel Upgrade',
+      estimatedCost: Math.round(purchasePrice * 0.02), // ~2% of property value
+      category: 'electrical',
+      likelihood: 60,
+    });
+  }
+
+  // Foundation repairs (older properties)
+  if (propertyAge >= 40) {
+    templates.push({
+      id: `foundation-${Date.now()}-1`,
+      year: Math.max(1, 5),
+      description: 'Foundation Repairs',
+      estimatedCost: Math.round(purchasePrice * 0.04), // ~4% of property value
+      category: 'foundation',
+      likelihood: 40,
+    });
+  }
+
+  // Exterior painting (every 7-10 years)
+  if (propertyAge >= 5) {
+    templates.push({
+      id: `other-${Date.now()}-1`,
+      year: Math.max(1, 8 - (propertyAge % 8)),
+      description: 'Exterior Painting',
+      estimatedCost: Math.round(purchasePrice * 0.015), // ~1.5% of property value
+      category: 'other',
+      likelihood: 85,
+    });
+  }
+
+  return templates;
+}
+
+// Calculate capital event metrics
+function calculateCapitalEventMetrics(
+  events: CapitalEvent[],
+  holdPeriodYears: number
+): { totalExpectedCost: number; averageAnnualCost: number } {
+  const totalExpectedCost = events.reduce((sum, event) => {
+    return sum + (event.estimatedCost * event.likelihood / 100);
+  }, 0);
+
+  const averageAnnualCost = holdPeriodYears > 0 
+    ? totalExpectedCost / holdPeriodYears 
+    : 0;
+
+  return {
+    totalExpectedCost: Math.round(totalExpectedCost),
+    averageAnnualCost: Math.round(averageAnnualCost),
+  };
+}
+
+// Get capital events for a specific year
+function getCapitalEventsForYear(events: CapitalEvent[], year: number): number {
+  return events
+    .filter(event => event.year === year)
+    .reduce((sum, event) => sum + (event.estimatedCost * event.likelihood / 100), 0);
 }
 
 // Helper: should show ADR/rooms tabs (Revenue/Break-Even)
@@ -1112,7 +1234,10 @@ function buildCashFlowProjections(
     const annualVariableOps = monthlyVariableOps * 12 * Math.pow(expenseGrowth, yearMultiplier);
     const annualDebtService = monthlyDebtService * 12; // Debt service stays constant
     
-    const annualCashFlow = annualIncome - annualFixedOps - annualVariableOps - annualDebtService;
+    // Include capital events for this year (year + 1 because year 0 = first full year)
+    const capitalEventCost = getCapitalEventsForYear(state.capitalEvents.events, year + 1);
+    
+    const annualCashFlow = annualIncome - annualFixedOps - annualVariableOps - annualDebtService - capitalEventCost;
     cashFlows.push(annualCashFlow);
   }
   
@@ -2057,6 +2182,12 @@ const defaultState: DealState = {
   irrExpenseGrowthRate: 3, // 3% annual expense growth
   irrSellingCostsPct: 7, // 7% selling costs (agent + closing)
   showIrrCashFlowBreakdown: false, // Hidden by default
+  // Capital Events Defaults
+  capitalEvents: {
+    events: [],
+    totalExpectedCost: 0,
+    averageAnnualCost: 0,
+  },
   proFormaAuto: true,
   validationMessages: [],
   showAmortizationOverride: false,
@@ -9560,6 +9691,284 @@ const UnderwritePage: React.FC = () => {
                         />
                       </Box>
                     </Box>
+
+                    {/* Capital Events Section */}
+                    <Box
+                      sx={{
+                        gridColumn: "1 / -1",
+                        p: 2,
+                        bgcolor: brandColors.backgrounds.tertiary,
+                        borderRadius: 1,
+                        border: `1px solid ${brandColors.borders.primary}`,
+                      }}
+                    >
+                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          Capital Events Planning
+                        </Typography>
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => {
+                              const propertyAge = state.propertyAge?.age || 15;
+                              const templates = generateCapitalEventTemplates(propertyAge, state.purchasePrice);
+                              const metrics = calculateCapitalEventMetrics(templates, state.irrHoldPeriodYears);
+                              setState((prev) => ({
+                                ...prev,
+                                capitalEvents: {
+                                  events: templates,
+                                  ...metrics,
+                                },
+                              }));
+                            }}
+                          >
+                            Load Templates
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                              const newEvent: CapitalEvent = {
+                                id: `event-${Date.now()}`,
+                                year: 1,
+                                description: '',
+                                estimatedCost: 0,
+                                category: 'other',
+                                likelihood: 50,
+                              };
+                              setState((prev) => {
+                                const newEvents = [...prev.capitalEvents.events, newEvent];
+                                const metrics = calculateCapitalEventMetrics(newEvents, prev.irrHoldPeriodYears);
+                                return {
+                                  ...prev,
+                                  capitalEvents: {
+                                    events: newEvents,
+                                    ...metrics,
+                                  },
+                                };
+                              });
+                            }}
+                          >
+                            Add Event
+                          </Button>
+                        </Box>
+                      </Box>
+
+                      <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2 }}>
+                        Track major capital expenditures beyond annual CapEx reserves for more realistic long-term projections
+                      </Typography>
+
+                      {/* Capital Events Table */}
+                      {state.capitalEvents.events.length > 0 && (
+                        <Box sx={{ mb: 2, overflowX: "auto" }}>
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Year</TableCell>
+                                <TableCell>Category</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell align="right">Est. Cost</TableCell>
+                                <TableCell align="right">Likelihood</TableCell>
+                                <TableCell align="right">Expected</TableCell>
+                                <TableCell align="center">Actions</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {state.capitalEvents.events.map((event) => (
+                                <TableRow key={event.id}>
+                                  <TableCell>
+                                    <TextField
+                                      type="number"
+                                      size="small"
+                                      value={event.year}
+                                      onChange={(e) => {
+                                        const val = Math.max(1, Math.min(30, Number(e.target.value)));
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.map((ev) =>
+                                            ev.id === event.id ? { ...ev, year: val } : ev
+                                          );
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      inputProps={{ min: 1, max: 30, step: 1 }}
+                                      sx={{ width: 80 }}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Select
+                                      size="small"
+                                      value={event.category}
+                                      onChange={(e) => {
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.map((ev) =>
+                                            ev.id === event.id ? { ...ev, category: e.target.value as CapitalEvent['category'] } : ev
+                                          );
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      sx={{ minWidth: 120 }}
+                                    >
+                                      <MenuItem value="roof">Roof</MenuItem>
+                                      <MenuItem value="hvac">HVAC</MenuItem>
+                                      <MenuItem value="foundation">Foundation</MenuItem>
+                                      <MenuItem value="electrical">Electrical</MenuItem>
+                                      <MenuItem value="plumbing">Plumbing</MenuItem>
+                                      <MenuItem value="other">Other</MenuItem>
+                                    </Select>
+                                  </TableCell>
+                                  <TableCell>
+                                    <TextField
+                                      size="small"
+                                      value={event.description}
+                                      onChange={(e) => {
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.map((ev) =>
+                                            ev.id === event.id ? { ...ev, description: e.target.value } : ev
+                                          );
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      placeholder="Description"
+                                      sx={{ minWidth: 200 }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <TextField
+                                      type="number"
+                                      size="small"
+                                      value={event.estimatedCost}
+                                      onChange={(e) => {
+                                        const val = Math.max(0, Number(e.target.value));
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.map((ev) =>
+                                            ev.id === event.id ? { ...ev, estimatedCost: val } : ev
+                                          );
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      InputProps={{
+                                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                      }}
+                                      sx={{ width: 120 }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <TextField
+                                      type="number"
+                                      size="small"
+                                      value={event.likelihood}
+                                      onChange={(e) => {
+                                        const val = Math.max(0, Math.min(100, Number(e.target.value)));
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.map((ev) =>
+                                            ev.id === event.id ? { ...ev, likelihood: val } : ev
+                                          );
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      InputProps={{
+                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                      }}
+                                      inputProps={{ min: 0, max: 100, step: 1 }}
+                                      sx={{ width: 90 }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Typography variant="body2">
+                                      {formatCurrency(event.estimatedCost * event.likelihood / 100)}
+                                    </Typography>
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => {
+                                        setState((prev) => {
+                                          const updatedEvents = prev.capitalEvents.events.filter((ev) => ev.id !== event.id);
+                                          const metrics = calculateCapitalEventMetrics(updatedEvents, prev.irrHoldPeriodYears);
+                                          return {
+                                            ...prev,
+                                            capitalEvents: {
+                                              events: updatedEvents,
+                                              ...metrics,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                    >
+                                      <React.Suspense fallback={<span>×</span>}>
+                                        <LazyDeleteIcon />
+                                      </React.Suspense>
+                                    </IconButton>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      )}
+
+                      {/* Summary Metrics */}
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gap: 2,
+                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                          mt: 2,
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Total Expected Cost"
+                          value={formatCurrency(state.capitalEvents.totalExpectedCost)}
+                          InputProps={{ readOnly: true }}
+                          helperText="Sum of all events weighted by likelihood"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Average Annual Impact"
+                          value={formatCurrency(state.capitalEvents.averageAnnualCost)}
+                          InputProps={{ readOnly: true }}
+                          helperText={`Amortized over ${state.irrHoldPeriodYears} years`}
+                        />
+                      </Box>
+                    </Box>
                     
                     <TextField
                       fullWidth
@@ -9829,22 +10238,34 @@ const UnderwritePage: React.FC = () => {
                                 </Typography>
                                 
                                 {/* Year Rows */}
-                                {leveredCashFlows.map((leveredCF, idx) => (
-                                  <React.Fragment key={idx}>
-                                    <Typography variant="body2">
-                                      {idx + 1}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: leveredCF >= 0 ? "success.main" : "error.main" }}>
-                                      {formatCurrency(leveredCF)}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: unleveredCashFlows[idx] >= 0 ? "success.main" : "error.main" }}>
-                                      {formatCurrency(unleveredCashFlows[idx])}
-                                    </Typography>
-                                    <Typography variant="caption" sx={{ fontStyle: "italic" }}>
-                                      {idx === 0 ? "Base year" : `+${state.irrIncomeGrowthRate}% income, +${state.irrExpenseGrowthRate}% expenses`}
-                                    </Typography>
-                                  </React.Fragment>
-                                ))}
+                                {leveredCashFlows.map((leveredCF, idx) => {
+                                  const year = idx + 1;
+                                  const capitalEventCost = getCapitalEventsForYear(state.capitalEvents.events, year);
+                                  const capitalEvents = state.capitalEvents.events.filter(e => e.year === year);
+                                  
+                                  return (
+                                    <React.Fragment key={idx}>
+                                      <Typography variant="body2">
+                                        {year}
+                                      </Typography>
+                                      <Typography variant="body2" sx={{ color: leveredCF >= 0 ? "success.main" : "error.main" }}>
+                                        {formatCurrency(leveredCF)}
+                                      </Typography>
+                                      <Typography variant="body2" sx={{ color: unleveredCashFlows[idx] >= 0 ? "success.main" : "error.main" }}>
+                                        {formatCurrency(unleveredCashFlows[idx])}
+                                      </Typography>
+                                      <Typography variant="caption" sx={{ fontStyle: "italic" }}>
+                                        {idx === 0 ? "Base year" : `+${state.irrIncomeGrowthRate}% income, +${state.irrExpenseGrowthRate}% expenses`}
+                                        {capitalEventCost > 0 && (
+                                          <span style={{ color: brandColors.accent.warning, display: 'block', marginTop: 4 }}>
+                                            Capital Events: {formatCurrency(capitalEventCost)}
+                                            {capitalEvents.length > 0 && ` (${capitalEvents.map(e => e.category).join(', ')})`}
+                                          </span>
+                                        )}
+                                      </Typography>
+                                    </React.Fragment>
+                                  );
+                                })}
                                 
                                 {/* Exit Row */}
                                 <Typography variant="body2" sx={{ fontWeight: 600 }}>

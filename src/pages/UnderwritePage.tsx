@@ -401,6 +401,33 @@ interface CapitalEventInputs {
   averageAnnualCost: number; // Amortized over hold period
 }
 
+interface Exchange1031Inputs {
+  enabled: boolean;
+  // Relinquished Property (property being sold)
+  relinquishedPropertyValue: number;
+  relinquishedPropertyBasis: number; // Original cost + improvements - depreciation
+  relinquishedPropertyDepreciation: number;
+  relinquishedPropertyMortgage: number;
+  // Replacement Property (property being purchased)
+  replacementPropertyValue: number;
+  replacementPropertyMortgage: number;
+  // Costs
+  qualifiedIntermediaryFee: number;
+  otherExchangeCosts: number;
+  // Timeline tracking
+  identificationDeadline: string; // 45 days from closing
+  closingDeadline: string; // 180 days from closing
+  // Results (calculated)
+  deferredGain: number;
+  recognizedGain: number; // Boot
+  carryoverBasis: number;
+  cashBoot: number;
+  mortgageBoot: number;
+  totalTaxableGain: number;
+  estimatedTaxLiability: number;
+  netProceedsToReinvest: number;
+}
+
 interface DealState {
   propertyType: PropertyType;
   operationType: OperationType;
@@ -518,6 +545,8 @@ interface DealState {
   // Confidence Intervals
   showConfidenceIntervals: boolean;
   uncertaintyParameters: UncertaintyParameters;
+  // 1031 Exchange Calculator
+  exchange1031?: Exchange1031Inputs;
   // UX/logic helpers
   proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
   validationMessages: string[];
@@ -1800,6 +1829,123 @@ function calculateComprehensiveMOIC(
   };
 }
 
+/**
+ * Calculates 1031 Exchange metrics including deferred gains, boot, and carryover basis
+ * @param inputs - 1031 Exchange input parameters
+ * @param capitalGainsTaxRate - Federal + State capital gains tax rate (default 20%)
+ * @returns Comprehensive 1031 exchange calculation results
+ */
+function calculate1031Exchange(
+  inputs: Exchange1031Inputs,
+  capitalGainsTaxRate: number = 20
+): Exchange1031Inputs {
+  if (!inputs.enabled) {
+    return inputs;
+  }
+
+  // Calculate realized gain on relinquished property
+  const realizedGain = inputs.relinquishedPropertyValue - inputs.relinquishedPropertyBasis;
+
+  // Calculate equity in relinquished property
+  const relinquishedEquity = inputs.relinquishedPropertyValue - inputs.relinquishedPropertyMortgage;
+
+  // Calculate equity in replacement property
+  const replacementEquity = inputs.replacementPropertyValue - inputs.replacementPropertyMortgage;
+
+  // Calculate cash boot (if receiving cash)
+  // Positive boot occurs when replacement value < relinquished value
+  const cashBoot = Math.max(0, relinquishedEquity - replacementEquity);
+
+  // Calculate mortgage boot (if debt is reduced)
+  // Mortgage boot = debt relief (when replacement debt < relinquished debt)
+  const mortgageBoot = Math.max(0, inputs.relinquishedPropertyMortgage - inputs.replacementPropertyMortgage);
+
+  // Total boot (taxable portion)
+  const totalBoot = cashBoot + mortgageBoot;
+
+  // Recognized gain (taxable) = lesser of realized gain or total boot
+  const recognizedGain = Math.min(realizedGain, totalBoot);
+
+  // Deferred gain = realized gain - recognized gain
+  const deferredGain = Math.max(0, realizedGain - recognizedGain);
+
+  // Carryover basis calculation
+  // New basis = cost of replacement property - deferred gain + recognized gain
+  // Or alternatively: original basis - cash paid + debt assumed + boot recognized
+  const carryoverBasis = inputs.replacementPropertyValue - deferredGain;
+
+  // Calculate total taxable gain (recognized gain)
+  const totalTaxableGain = recognizedGain;
+
+  // Estimate tax liability
+  // Includes capital gains tax on recognized gain
+  const capitalGainsTax = (recognizedGain * capitalGainsTaxRate) / 100;
+  
+  // Depreciation recapture on recognized gain (25% rate on depreciation portion)
+  const depreciationRecaptureAmount = Math.min(
+    recognizedGain,
+    inputs.relinquishedPropertyDepreciation
+  );
+  const depreciationRecaptureTax = (depreciationRecaptureAmount * 25) / 100;
+
+  const estimatedTaxLiability = capitalGainsTax + depreciationRecaptureTax;
+
+  // Net proceeds to reinvest (equity minus boot and costs)
+  const totalExchangeCosts = inputs.qualifiedIntermediaryFee + inputs.otherExchangeCosts;
+  const netProceedsToReinvest = relinquishedEquity - cashBoot - totalExchangeCosts;
+
+  return {
+    ...inputs,
+    deferredGain,
+    recognizedGain,
+    carryoverBasis,
+    cashBoot,
+    mortgageBoot,
+    totalTaxableGain,
+    estimatedTaxLiability,
+    netProceedsToReinvest,
+  };
+}
+
+/**
+ * Calculates the 1031 exchange deadlines based on the relinquished property closing date
+ * @param closingDate - Date string in format YYYY-MM-DD
+ * @returns Object with identification and closing deadlines
+ */
+function calculate1031Deadlines(closingDate: string): {
+  identificationDeadline: string;
+  closingDeadline: string;
+} {
+  if (!closingDate) {
+    return {
+      identificationDeadline: '',
+      closingDeadline: '',
+    };
+  }
+
+  try {
+    const closing = new Date(closingDate);
+    
+    // 45-day identification deadline
+    const identification = new Date(closing);
+    identification.setDate(identification.getDate() + 45);
+    
+    // 180-day closing deadline
+    const finalClosing = new Date(closing);
+    finalClosing.setDate(finalClosing.getDate() + 180);
+    
+    return {
+      identificationDeadline: identification.toISOString().split('T')[0],
+      closingDeadline: finalClosing.toISOString().split('T')[0],
+    };
+  } catch (error) {
+    return {
+      identificationDeadline: '',
+      closingDeadline: '',
+    };
+  }
+}
+
 // Helper function to check if cash-on-cash calculation is valid
 function isCashOnCashValid(state: DealState): boolean {
   const invested =
@@ -2597,6 +2743,28 @@ const defaultState: DealState = {
     occupancyUncertainty: 0.10, // ±10% occupancy uncertainty
     appreciationUncertainty: 0.20, // ±20% appreciation uncertainty
     confidenceLevel: 80, // 80% confidence interval (10th-90th percentile)
+  },
+  // 1031 Exchange Defaults
+  exchange1031: {
+    enabled: false,
+    relinquishedPropertyValue: 0,
+    relinquishedPropertyBasis: 0,
+    relinquishedPropertyDepreciation: 0,
+    relinquishedPropertyMortgage: 0,
+    replacementPropertyValue: 0,
+    replacementPropertyMortgage: 0,
+    qualifiedIntermediaryFee: 1500,
+    otherExchangeCosts: 500,
+    identificationDeadline: '',
+    closingDeadline: '',
+    deferredGain: 0,
+    recognizedGain: 0,
+    carryoverBasis: 0,
+    cashBoot: 0,
+    mortgageBoot: 0,
+    totalTaxableGain: 0,
+    estimatedTaxLiability: 0,
+    netProceedsToReinvest: 0,
   },
   proFormaAuto: true,
   validationMessages: [],
@@ -12050,6 +12218,464 @@ const UnderwritePage: React.FC = () => {
                     />
                   </Box>
                 </Box>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+
+        {/* 1031 Exchange Calculator */}
+        <Card sx={{ mb: 2 }}>
+          <Accordion defaultExpanded={state.exchange1031?.enabled || false}>
+            <AccordionSummary expandIcon={
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyExpandMoreIcon />
+              </React.Suspense>
+            }>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  1031 Exchange Calculator
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={state.exchange1031?.enabled || false}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setState((prev) => ({
+                          ...prev,
+                          exchange1031: {
+                            ...(prev.exchange1031 || defaultState.exchange1031!),
+                            enabled: e.target.checked,
+                          },
+                        }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                  label="Enable 1031 Exchange Analysis"
+                  sx={{ ml: 'auto' }}
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ p: 2 }}>
+                {state.exchange1031?.enabled && (
+                  <>
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        1031 Exchange Requirements:
+                      </Typography>
+                      <Typography variant="body2" component="ul" sx={{ pl: 2, mb: 0 }}>
+                        <li>Identify replacement property within 45 days of closing</li>
+                        <li>Close on replacement property within 180 days of closing</li>
+                        <li>Use a qualified intermediary (cannot touch proceeds)</li>
+                        <li>Purchase equal or greater value to defer all gains</li>
+                        <li>Reinvest all equity to avoid taxable boot</li>
+                      </Typography>
+                    </Alert>
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Relinquished Property (Selling)
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Property Sale Value"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyValue || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyValue: value,
+                              },
+                            };
+                            // Recalculate
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Sale price of property being sold"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Adjusted Basis"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyBasis || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyBasis: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Original cost + improvements - depreciation"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Total Depreciation Taken"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyDepreciation || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyDepreciation: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Total depreciation deducted over ownership"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Existing Mortgage Balance"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyMortgage || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyMortgage: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Outstanding loan balance at closing"
+                      />
+                    </Box>
+
+                    <Divider sx={{ my: 3 }} />
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Replacement Property (Buying)
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Purchase Price"
+                        type="number"
+                        value={state.exchange1031?.replacementPropertyValue || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                replacementPropertyValue: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Purchase price of replacement property"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="New Mortgage Amount"
+                        type="number"
+                        value={state.exchange1031?.replacementPropertyMortgage || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                replacementPropertyMortgage: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="New loan amount on replacement property"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Qualified Intermediary Fee"
+                        type="number"
+                        value={state.exchange1031?.qualifiedIntermediaryFee || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                qualifiedIntermediaryFee: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Fee for 1031 exchange facilitator"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Other Exchange Costs"
+                        type="number"
+                        value={state.exchange1031?.otherExchangeCosts || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                otherExchangeCosts: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Legal fees, title, etc."
+                      />
+                    </Box>
+
+                    <Divider sx={{ my: 3 }} />
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Exchange Analysis Results
+                    </Typography>
+
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+                      gap: 2,
+                      mb: 3,
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds.secondary,
+                      borderRadius: 1,
+                    }}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Deferred Gain
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.successDark }}>
+                          ${(state.exchange1031?.deferredGain || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Tax deferred to future sale
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Recognized Gain (Boot)
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700, 
+                          color: (state.exchange1031?.recognizedGain || 0) > 0 
+                            ? brandColors.accent.warning 
+                            : brandColors.accent.successDark 
+                        }}>
+                          ${(state.exchange1031?.recognizedGain || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Taxable portion this year
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Estimated Tax Liability
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700, 
+                          color: (state.exchange1031?.estimatedTaxLiability || 0) > 0 
+                            ? 'error.main' 
+                            : brandColors.accent.successDark 
+                        }}>
+                          ${(state.exchange1031?.estimatedTaxLiability || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Capital gains + recapture tax
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Carryover Basis
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                          ${(state.exchange1031?.carryoverBasis || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          New property tax basis
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Cash Boot
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700,
+                          color: (state.exchange1031?.cashBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                        }}>
+                          ${(state.exchange1031?.cashBoot || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Equity not reinvested
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Mortgage Boot
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700,
+                          color: (state.exchange1031?.mortgageBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                        }}>
+                          ${(state.exchange1031?.mortgageBoot || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Debt relief (taxable)
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Net Proceeds to Reinvest
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                          ${(state.exchange1031?.netProceedsToReinvest || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Available for down payment
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Trading Up Scenario Analysis */}
+                    <Box sx={{ 
+                      p: 2, 
+                      backgroundColor: 
+                        (state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
+                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0)
+                          ? 'success.light' 
+                          : 'warning.light',
+                      borderRadius: 1,
+                      mb: 2,
+                    }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Exchange Status
+                      </Typography>
+                      {(state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
+                       (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0) ? (
+                        <Typography variant="body2" sx={{ color: 'success.dark' }}>
+                          ✓ Trading Up: Replacement property value and debt meet or exceed relinquished property. 
+                          All gains can be deferred if all equity is reinvested.
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" sx={{ color: 'warning.dark' }}>
+                          ⚠ Trading Down: Replacement property value or debt is less than relinquished property. 
+                          This will result in taxable boot of ${((state.exchange1031?.cashBoot || 0) + (state.exchange1031?.mortgageBoot || 0)).toLocaleString()}.
+                        </Typography>
+                      )}
+                    </Box>
+
+                    {/* Timeline Requirements */}
+                    <Box sx={{ p: 2, backgroundColor: 'info.light', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Critical Timeline Requirements
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Day 1-45: Identification Period
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Must identify replacement property in writing to qualified intermediary within 45 days of closing on relinquished property.
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Day 1-180: Exchange Period
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Must close on replacement property within 180 days of closing on relinquished property (or tax return due date, whichever is earlier).
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </>
+                )}
+
+                {!state.exchange1031?.enabled && (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Enable the 1031 Exchange Calculator to model like-kind exchange scenarios and calculate deferred capital gains.
+                      A 1031 exchange allows you to defer capital gains taxes when selling an investment property by reinvesting the proceeds into a similar property.
+                    </Typography>
+                  </Alert>
+                )}
               </Box>
             </AccordionDetails>
           </Accordion>

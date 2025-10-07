@@ -514,8 +514,9 @@ export function calculateSTRRevenue(inputs: EnhancedSTRInputs): {
   
   let averageRate = inputs.averageDailyRate;
   if (inputs.dynamicPricing) {
-    const weekendNights = bookedNights * 0.3;
-    const weekdayNights = bookedNights * 0.7;
+    // Assume 28.57% of nights are weekends (2 out of 7 days: Fri/Sat)
+    const weekendNights = bookedNights * 0.2857;
+    const weekdayNights = bookedNights * 0.7143;
     const weekendRate = inputs.averageDailyRate * (1 + inputs.weekendPremium / 100);
     
     averageRate = (weekendNights * weekendRate + weekdayNights * inputs.averageDailyRate) / bookedNights;

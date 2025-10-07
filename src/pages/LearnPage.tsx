@@ -29,7 +29,7 @@ const LearnPage: React.FC = () => {
     { id: 'casestudies', label: 'Case Studies', icon: <CaseStudiesIcon /> },
     { id: 'qa', label: 'Q&A', icon: <QAIcon /> },
     { id: 'livesessions', label: 'Live Sessions', icon: <LiveSessionsIcon /> },
-    { id: 'aitutor', label: 'Lumina', icon: <Box component="img" src="/lumina-logo.png" alt="Lumina logo" sx={{ width: 24, height: 24 }} /> }
+    { id: 'aitutor', label: 'Lumina', icon: null } // Will be handled specially
   ];
 
   const getBanner = () => {
@@ -226,7 +226,20 @@ const LearnPage: React.FC = () => {
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: 40 }}>
-                    {item.icon}
+                    {item.id === 'aitutor' ? (
+                      <Box 
+                        component="img" 
+                        src="/lumina-logo.png" 
+                        alt="Lumina logo" 
+                        sx={{ 
+                          width: 24, 
+                          height: 24,
+                          filter: activeTab === item.id ? 'brightness(0) invert(1)' : 'brightness(0) saturate(100%)'
+                        }} 
+                      />
+                    ) : (
+                      item.icon
+                    )}
                   </ListItemIcon>
                   <ListItemText 
                     primary={item.label} 

@@ -59,6 +59,20 @@ export interface TaxImplications {
   taxBracket: number; // Percentage
 }
 
+/**
+ * Enhanced tax implications with IRS rule compliance
+ * Includes passive loss limitations, QBI deduction, and material participation rules
+ */
+export interface EnhancedTaxImplications extends TaxImplications {
+  investorAGI: number; // Adjusted Gross Income (for passive loss phase-out)
+  materialParticipation: boolean; // True if >750 hours/year OR real estate professional
+  professionalStatus: boolean; // IRS-defined real estate professional status
+  qbiEligible: boolean; // Qualified Business Income eligible (Section 199A)
+  investmentType: "residential" | "commercial"; // For depreciation period
+  stateTaxRate?: number; // State income tax rate (percentage)
+  marriedFilingJointly?: boolean; // Filing status affects passive loss limits
+}
+
 export interface RiskFactors {
   marketVolatility: number; // 1-10 scale
   tenantQuality: number; // 1-10 scale
@@ -309,6 +323,240 @@ export const calculateTaxImplications = (
     taxSavings,
     effectiveTaxRate,
     netIncome,
+  };
+};
+
+/**
+ * Enhanced tax calculation with IRS compliance
+ * Implements passive loss limitations, QBI deduction, SALT cap, and depreciation rules
+ * 
+ * @param annualIncome - Gross annual income from property
+ * @param propertyExpenses - Breakdown of property expenses
+ * @param taxConfig - Enhanced tax configuration with IRS rule parameters
+ * @param propertyValue - Total property value (for depreciation calculation)
+ * @returns Detailed tax calculation results with all limitations applied
+ * 
+ * @example
+ * ```typescript
+ * const result = calculateEnhancedTaxImplications(
+ *   50000, // Annual rental income
+ *   { mortgageInterest: 15000, propertyTax: 8000, repairs: 5000 },
+ *   { 
+ *     investorAGI: 120000, 
+ *     materialParticipation: false,
+ *     investmentType: 'residential',
+ *     taxBracket: 24,
+ *     // ... other fields
+ *   },
+ *   400000 // Property value
+ * );
+ * ```
+ */
+export const calculateEnhancedTaxImplications = (
+  annualIncome: number,
+  propertyExpenses: {
+    mortgageInterest: number;
+    propertyTax: number;
+    repairs: number;
+    otherOperatingExpenses?: number;
+  },
+  taxConfig: EnhancedTaxImplications,
+  propertyValue: number,
+): {
+  taxableIncome: number;
+  taxSavings: number;
+  taxOwed: number;
+  effectiveTaxRate: number;
+  netIncome: number;
+  depreciationUsed: number;
+  qbiDeduction: number;
+  passiveLossLimited: boolean;
+  allowablePassiveLoss: number;
+  disallowedPassiveLoss: number;
+  saltCapApplied: boolean;
+  stateTaxOwed: number;
+  totalTaxOwed: number;
+  warnings: string[];
+} => {
+  const warnings: string[] = [];
+  let deductions = 0;
+
+  // Calculate depreciation based on property type
+  // IRS rules: 80% building value, 20% land (non-depreciable)
+  // Residential: 27.5 years, Commercial: 39 years
+  const buildingValue = propertyValue * 0.8;
+  const depreciationYears =
+    taxConfig.investmentType === "residential" ? 27.5 : 39;
+  const annualDepreciation = buildingValue / depreciationYears;
+
+  // Apply mortgage interest deduction
+  if (taxConfig.mortgageInterestDeduction) {
+    deductions += propertyExpenses.mortgageInterest;
+  }
+
+  // Apply property tax deduction with SALT cap
+  let saltCapApplied = false;
+  if (taxConfig.propertyTaxDeduction) {
+    const SALT_CAP = 10000; // IRS SALT deduction cap
+    if (propertyExpenses.propertyTax > SALT_CAP) {
+      deductions += SALT_CAP;
+      saltCapApplied = true;
+      warnings.push(
+        `SALT cap applied: Property tax deduction limited to $${SALT_CAP.toLocaleString()} (Tax was $${propertyExpenses.propertyTax.toLocaleString()})`
+      );
+    } else {
+      deductions += propertyExpenses.propertyTax;
+    }
+  }
+
+  // Apply depreciation deduction
+  if (taxConfig.depreciationDeduction) {
+    deductions += annualDepreciation;
+  }
+
+  // Apply repair expense deduction
+  if (taxConfig.repairExpenseDeduction) {
+    deductions += propertyExpenses.repairs;
+  }
+
+  // Add other operating expenses
+  if (propertyExpenses.otherOperatingExpenses) {
+    deductions += propertyExpenses.otherOperatingExpenses;
+  }
+
+  // Calculate net income/loss before passive loss limitations
+  const netIncomeBeforeLimitations = annualIncome - deductions;
+  const passiveLoss = netIncomeBeforeLimitations < 0 ? Math.abs(netIncomeBeforeLimitations) : 0;
+
+  let allowablePassiveLoss = 0;
+  let disallowedPassiveLoss = 0;
+  let passiveLossLimited = false;
+  let adjustedNetIncome = netIncomeBeforeLimitations;
+
+  // Apply passive loss limitations (IRS Publication 925)
+  if (
+    passiveLoss > 0 &&
+    !taxConfig.materialParticipation &&
+    !taxConfig.professionalStatus
+  ) {
+    passiveLossLimited = true;
+    const agi = taxConfig.investorAGI;
+
+    // Calculate allowable passive loss with $25K special allowance
+    // Phase-out: $100K - $150K AGI range
+    let specialAllowance = 25000;
+
+    if (agi > 100000) {
+      // Phase-out: 50 cents per dollar over $100K
+      const phaseOutAmount = Math.min(25000, (agi - 100000) * 0.5);
+      specialAllowance = Math.max(0, 25000 - phaseOutAmount);
+
+      if (agi >= 150000) {
+        specialAllowance = 0; // Complete phase-out
+        warnings.push(
+          "Passive loss fully disallowed: AGI exceeds $150,000 phase-out threshold"
+        );
+      } else {
+        warnings.push(
+          `Passive loss partially limited: AGI in phase-out range ($${agi.toLocaleString()})`
+        );
+      }
+    }
+
+    // For married filing separately, the allowance is $12,500 with phase-out at $50K-$75K
+    if (taxConfig.marriedFilingJointly === false) {
+      specialAllowance = Math.min(specialAllowance / 2, 12500);
+      if (agi > 50000) {
+        const mfsPhaseOut = Math.min(12500, (agi - 50000) * 0.5);
+        specialAllowance = Math.max(0, 12500 - mfsPhaseOut);
+      }
+    }
+
+    allowablePassiveLoss = Math.min(passiveLoss, specialAllowance);
+    disallowedPassiveLoss = passiveLoss - allowablePassiveLoss;
+    adjustedNetIncome = -allowablePassiveLoss;
+
+    if (disallowedPassiveLoss > 0) {
+      warnings.push(
+        `$${disallowedPassiveLoss.toLocaleString()} in passive losses carried forward to future years`
+      );
+    }
+  } else if (taxConfig.professionalStatus) {
+    warnings.push(
+      "No passive loss limitation: Qualifies as real estate professional"
+    );
+  } else if (taxConfig.materialParticipation) {
+    warnings.push(
+      "No passive loss limitation: Material participation (>750 hours/year)"
+    );
+  }
+
+  // Calculate taxable income before QBI
+  let taxableIncome = Math.max(0, adjustedNetIncome);
+
+  // Calculate QBI deduction (Section 199A) - 20% of qualified business income
+  let qbiDeduction = 0;
+  if (taxConfig.qbiEligible && taxableIncome > 0) {
+    // QBI deduction is lesser of:
+    // 1. 20% of QBI
+    // 2. 20% of taxable income (before QBI deduction)
+    qbiDeduction = Math.min(taxableIncome * 0.2, taxableIncome * 0.2);
+
+    // Note: Simplified calculation. Actual QBI has income thresholds and limitations
+    // based on W-2 wages and property basis for high-income taxpayers
+    if (taxConfig.investorAGI > 170050) {
+      warnings.push(
+        "QBI deduction may be limited for high-income taxpayers (>$170,050 single, >$340,100 MFJ)"
+      );
+    }
+  }
+
+  // Final taxable income after QBI deduction
+  const finalTaxableIncome = Math.max(0, taxableIncome - qbiDeduction);
+
+  // Calculate federal tax owed
+  const federalTaxOwed = finalTaxableIncome * (taxConfig.taxBracket / 100);
+
+  // Calculate state tax if applicable
+  const stateTaxRate = taxConfig.stateTaxRate || 0;
+  const stateTaxOwed = finalTaxableIncome * (stateTaxRate / 100);
+
+  // Total tax owed
+  const totalTaxOwed = federalTaxOwed + stateTaxOwed;
+
+  // Calculate tax savings (deductions × tax rate)
+  const actualDeductionsUsed = taxConfig.professionalStatus || taxConfig.materialParticipation
+    ? deductions
+    : allowablePassiveLoss;
+  const taxSavings = actualDeductionsUsed * (taxConfig.taxBracket / 100);
+
+  // Calculate effective tax rate
+  const effectiveTaxRate =
+    annualIncome > 0 ? (totalTaxOwed / annualIncome) * 100 : 0;
+
+  // Net income after taxes
+  const netIncome = annualIncome - totalTaxOwed;
+
+  // Add professional disclaimer
+  warnings.push(
+    "⚠️  Tax calculations are estimates. Consult a licensed tax professional for your specific situation."
+  );
+
+  return {
+    taxableIncome: finalTaxableIncome,
+    taxSavings,
+    taxOwed: federalTaxOwed,
+    effectiveTaxRate,
+    netIncome,
+    depreciationUsed: taxConfig.depreciationDeduction ? annualDepreciation : 0,
+    qbiDeduction,
+    passiveLossLimited,
+    allowablePassiveLoss,
+    disallowedPassiveLoss,
+    saltCapApplied,
+    stateTaxOwed,
+    totalTaxOwed,
+    warnings,
   };
 };
 

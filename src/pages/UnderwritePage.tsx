@@ -57,6 +57,7 @@ import {
   calculateExitStrategies,
   calculateRefinanceScenarios,
   calculateTaxImplications,
+  calculateEnhancedTaxImplications,
   calculateRiskScore,
   calculateConfidenceIntervals,
   calculateStressTest,
@@ -69,6 +70,7 @@ import {
   type ExitStrategy,
   type RefinanceScenario,
   type TaxImplications,
+  type EnhancedTaxImplications,
   type RiskFactors,
   type PropertyAgeFactors,
   type LocationFactors,
@@ -392,6 +394,9 @@ interface DealState {
   locationFactors: LocationFactors;
   riskFactors: RiskFactors;
   taxImplications: TaxImplications;
+  // Enhanced tax configuration with IRS compliance
+  enhancedTaxConfig?: EnhancedTaxImplications;
+  useEnhancedTaxCalculation?: boolean;
   // Advanced Analysis Results
   exitStrategyResults?: Array<{
     timeframe: number;
@@ -2024,6 +2029,21 @@ const defaultState: DealState = {
     repairExpenseDeduction: true,
     taxBracket: 24,
   },
+  enhancedTaxConfig: {
+    propertyTaxDeduction: true,
+    mortgageInterestDeduction: true,
+    depreciationDeduction: true,
+    repairExpenseDeduction: true,
+    taxBracket: 24,
+    investorAGI: 100000, // Default AGI
+    materialParticipation: false, // Default to passive investor
+    professionalStatus: false, // Default to non-professional
+    qbiEligible: true, // Default to QBI eligible
+    investmentType: "residential", // Default to residential
+    stateTaxRate: 0, // Default no state tax
+    marriedFilingJointly: true, // Default married filing jointly
+  },
+  useEnhancedTaxCalculation: false, // Default to legacy calculation
   // Advanced Analysis Results - initialized as undefined
   exitStrategyResults: undefined,
   refinanceScenarioResults: undefined,

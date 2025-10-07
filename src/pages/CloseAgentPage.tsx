@@ -7285,7 +7285,7 @@ const CloseAgentPage: React.FC = () => {
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Down Payment</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 600 }}>offers[currentOfferIndex].downPayment.toLocaleString()</Typography>
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>${offers[currentOfferIndex].downPayment.toLocaleString()}</Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Finance Type</Typography>
@@ -7293,7 +7293,7 @@ const CloseAgentPage: React.FC = () => {
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Initial Deposit</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 600 }}>offers[currentOfferIndex].initialDeposit.toLocaleString()</Typography>
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>${offers[currentOfferIndex].initialDeposit.toLocaleString()}</Typography>
                           </Box>
                           <Box>
                             <Typography variant="subtitle2" color="text.secondary">Days on Market</Typography>

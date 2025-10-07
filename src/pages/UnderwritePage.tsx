@@ -8121,7 +8121,7 @@ const UnderwritePage: React.FC = () => {
                               Break-Even ADR
                             </Typography>
                             <Typography variant="h6" sx={{ color: brandColors.accent.info }}>
-                              calculateBreakEvenADR().toFixed(0)
+                              {calculateBreakEvenADR().toFixed(0)}
                             </Typography>
                             <Typography
                               variant="caption"

@@ -205,7 +205,7 @@ export const ExitStrategiesTab: React.FC<ExitStrategiesTabProps> = ({
                       ).toLocaleString()}
                     </Typography>
                   </TableCell>
-                  <TableCell>result.netProceeds.toLocaleString()</TableCell>
+                  <TableCell>${result.netProceeds.toLocaleString()}</TableCell>
                   <TableCell
                     sx={{ color: result.roi > 0 ? brandColors.accent.success : "#d32f2f" }}
                   >

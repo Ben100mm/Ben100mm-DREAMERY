@@ -2325,7 +2325,7 @@ const AnalyzePage: React.FC = () => {
                         Break-Even ADR
                       </Typography>
                       <Typography variant="h6" sx={{ color: brandColors.neutral[700] }}>
-                        calculateBreakEvenADR().toFixed(0)
+                        {calculateBreakEvenADR().toFixed(0)}
                       </Typography>
                       <Typography
                         variant="caption"

@@ -544,9 +544,9 @@ const MortgagePage: React.FC = () => {
                     alignContent: "start",
                   }}
                 >
-                  <Typography>Loan: loanAmount.toLocaleString()</Typography>
+                  <Typography>Loan: {loanAmount.toLocaleString()}</Typography>
                   <Typography>
-                    Debt svc: Math.round(debtService).toLocaleString()/mo
+                    Debt svc: {Math.round(debtService).toLocaleString()}/mo
                   </Typography>
                   <Typography>DSCR: {dscr.toFixed(2)}</Typography>
                   <Typography>LTV: {(ltv * 100).toFixed(1)}%</Typography>

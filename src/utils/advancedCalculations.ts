@@ -851,107 +851,116 @@ export const calculateRiskScore = (
   };
 };
 
-// Helper function to calculate metric risk adjustments
+// Helper function to calculate metric risk adjustments with exact thresholds
 const calculateMetricRiskAdjustments = (metrics: {
   dscr: number;
   ltv: number;
   coc: number;
   capRate: number;
 }): {
-  dscr: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-  ltv: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-  coc: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-  capRate: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
+  dscr: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+  ltv: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Moderate" | "High" | "Critical" };
+  coc: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+  capRate: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+  totalAdjustment: number;
 } => {
-  // DSCR Risk Assessment (Debt Service Coverage Ratio)
-  // Ideal: > 1.25, Acceptable: > 1.0, Risky: < 1.0
-  let dscrRisk = 0;
-  let dscrRiskLevel: "Low" | "Moderate" | "High" | "Critical" = "Low";
-  if (metrics.dscr >= 1.5) {
-    dscrRisk = 1;
-    dscrRiskLevel = "Low";
+  // DSCR Risk Adjustment (Debt Service Coverage Ratio)
+  // Lower DSCR = Higher Risk (worse debt coverage)
+  let dscrAdjustment = 0;
+  let dscrRiskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" = "Good";
+  
+  if (metrics.dscr > 2.0) {
+    dscrAdjustment = -0.5; // Excellent coverage - reduce risk
+    dscrRiskLevel = "Excellent";
+  } else if (metrics.dscr >= 1.5) {
+    dscrAdjustment = 0; // Good coverage - no adjustment
+    dscrRiskLevel = "Good";
   } else if (metrics.dscr >= 1.25) {
-    dscrRisk = 3;
-    dscrRiskLevel = "Low";
+    dscrAdjustment = 0.5; // Acceptable but tight
+    dscrRiskLevel = "Acceptable";
   } else if (metrics.dscr >= 1.0) {
-    dscrRisk = 5;
-    dscrRiskLevel = "Moderate";
-  } else if (metrics.dscr >= 0.8) {
-    dscrRisk = 7;
-    dscrRiskLevel = "High";
+    dscrAdjustment = 1.0; // Marginal coverage - increase risk
+    dscrRiskLevel = "Marginal";
   } else {
-    dscrRisk = 9;
-    dscrRiskLevel = "Critical";
+    dscrAdjustment = 2.0; // Poor coverage - significant risk increase
+    dscrRiskLevel = "Poor";
   }
 
-  // LTV Risk Assessment (Loan-to-Value)
-  // Ideal: < 70%, Acceptable: < 80%, Risky: > 80%
-  let ltvRisk = 0;
-  let ltvRiskLevel: "Low" | "Moderate" | "High" | "Critical" = "Low";
-  if (metrics.ltv <= 60) {
-    ltvRisk = 1;
-    ltvRiskLevel = "Low";
+  // LTV Risk Adjustment (Loan-to-Value)
+  // Higher LTV = Higher Risk (more leverage)
+  let ltvAdjustment = 0;
+  let ltvRiskLevel: "Excellent" | "Good" | "Acceptable" | "Moderate" | "High" | "Critical" = "Acceptable";
+  
+  if (metrics.ltv < 60) {
+    ltvAdjustment = -0.5; // Low leverage - reduce risk
+    ltvRiskLevel = "Excellent";
   } else if (metrics.ltv <= 70) {
-    ltvRisk = 3;
-    ltvRiskLevel = "Low";
+    ltvAdjustment = 0; // Moderate leverage - no adjustment
+    ltvRiskLevel = "Good";
   } else if (metrics.ltv <= 80) {
-    ltvRisk = 5;
-    ltvRiskLevel = "Moderate";
+    ltvAdjustment = 0.5; // Standard leverage - slight risk increase
+    ltvRiskLevel = "Acceptable";
   } else if (metrics.ltv <= 90) {
-    ltvRisk = 7;
+    ltvAdjustment = 1.0; // High leverage - increase risk
     ltvRiskLevel = "High";
   } else {
-    ltvRisk = 9;
+    ltvAdjustment = 1.5; // Very high leverage - significant risk increase
     ltvRiskLevel = "Critical";
   }
 
-  // CoC Risk Assessment (Cash-on-Cash Return)
-  // Ideal: > 10%, Acceptable: > 6%, Risky: < 6%
-  let cocRisk = 0;
-  let cocRiskLevel: "Low" | "Moderate" | "High" | "Critical" = "Low";
-  if (metrics.coc >= 12) {
-    cocRisk = 1;
-    cocRiskLevel = "Low";
+  // CoC Risk Adjustment (Cash-on-Cash Return)
+  // Lower CoC = Higher Risk (worse return)
+  let cocAdjustment = 0;
+  let cocRiskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" = "Acceptable";
+  
+  if (metrics.coc > 15) {
+    cocAdjustment = -0.5; // Excellent return - reduce risk
+    cocRiskLevel = "Excellent";
   } else if (metrics.coc >= 8) {
-    cocRisk = 3;
-    cocRiskLevel = "Low";
-  } else if (metrics.coc >= 6) {
-    cocRisk = 5;
-    cocRiskLevel = "Moderate";
+    cocAdjustment = 0; // Good return - no adjustment
+    cocRiskLevel = "Good";
+  } else if (metrics.coc >= 5) {
+    cocAdjustment = 0.5; // Acceptable return - slight risk increase
+    cocRiskLevel = "Acceptable";
   } else if (metrics.coc >= 3) {
-    cocRisk = 7;
-    cocRiskLevel = "High";
+    cocAdjustment = 1.0; // Marginal return - increase risk
+    cocRiskLevel = "Marginal";
   } else {
-    cocRisk = 9;
-    cocRiskLevel = "Critical";
+    cocAdjustment = 1.0; // Poor return - increase risk (capping at 1.0 for <5)
+    cocRiskLevel = "Poor";
   }
 
-  // Cap Rate Risk Assessment
-  // Ideal: > 8%, Acceptable: > 5%, Risky: < 5%
-  let capRateRisk = 0;
-  let capRateRiskLevel: "Low" | "Moderate" | "High" | "Critical" = "Low";
-  if (metrics.capRate >= 8) {
-    capRateRisk = 1;
-    capRateRiskLevel = "Low";
-  } else if (metrics.capRate >= 6) {
-    capRateRisk = 3;
-    capRateRiskLevel = "Low";
+  // Cap Rate Risk Adjustment
+  // Lower Cap Rate = Higher Risk (worse yield)
+  let capRateAdjustment = 0;
+  let capRateRiskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" = "Acceptable";
+  
+  if (metrics.capRate > 8) {
+    capRateAdjustment = -0.5; // Excellent cap rate - reduce risk
+    capRateRiskLevel = "Excellent";
+  } else if (metrics.capRate >= 5) {
+    capRateAdjustment = 0; // Good cap rate - no adjustment
+    capRateRiskLevel = "Good";
   } else if (metrics.capRate >= 4) {
-    capRateRisk = 5;
-    capRateRiskLevel = "Moderate";
+    capRateAdjustment = 0.5; // Acceptable cap rate - slight risk increase
+    capRateRiskLevel = "Acceptable";
   } else if (metrics.capRate >= 2) {
-    capRateRisk = 7;
-    capRateRiskLevel = "High";
+    capRateAdjustment = 1.0; // Marginal cap rate - increase risk
+    capRateRiskLevel = "Marginal";
   } else {
-    capRateRisk = 9;
-    capRateRiskLevel = "Critical";
+    capRateAdjustment = 1.0; // Poor cap rate - increase risk (capping at 1.0 for <4)
+    capRateRiskLevel = "Poor";
   }
+
+  // Calculate total adjustment
+  const totalAdjustment = dscrAdjustment + ltvAdjustment + cocAdjustment + capRateAdjustment;
 
   return {
-    dscr: { value: metrics.dscr, risk: dscrRisk, riskLevel: dscrRiskLevel },
-    ltv: { value: metrics.ltv, risk: ltvRisk, riskLevel: ltvRiskLevel },
-    coc: { value: metrics.coc, risk: cocRisk, riskLevel: cocRiskLevel },
-    capRate: { value: metrics.capRate, risk: capRateRisk, riskLevel: capRateRiskLevel },
+    dscr: { value: metrics.dscr, adjustment: dscrAdjustment, riskLevel: dscrRiskLevel },
+    ltv: { value: metrics.ltv, adjustment: ltvAdjustment, riskLevel: ltvRiskLevel },
+    coc: { value: metrics.coc, adjustment: cocAdjustment, riskLevel: cocRiskLevel },
+    capRate: { value: metrics.capRate, adjustment: capRateAdjustment, riskLevel: capRateRiskLevel },
+    totalAdjustment: Math.round(totalAdjustment * 10) / 10,
   };
 };
 
@@ -983,10 +992,11 @@ export const calculateEnhancedRiskScore = (
     tenantQuality: { score: number; weight: number; weightedScore: number };
   };
   metricRiskAdjustments: {
-    dscr: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-    ltv: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-    coc: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
-    capRate: { value: number; risk: number; riskLevel: "Low" | "Moderate" | "High" | "Critical" };
+    dscr: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+    ltv: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Moderate" | "High" | "Critical" };
+    coc: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+    capRate: { value: number; adjustment: number; riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor" };
+    totalAdjustment: number;
   };
   probabilityOfLoss: number;
   riskCategory: "Low" | "Medium" | "High" | "Very High";
@@ -1083,13 +1093,20 @@ export const calculateEnhancedRiskScore = (
   // Calculate metric risk adjustments
   const metricRiskAdjustments = calculateMetricRiskAdjustments(metrics);
 
-  // Calculate overall weighted risk score
-  const overallRiskScore =
+  // Calculate base weighted risk score
+  const baseRiskScore =
     marketRisk * weights.marketVolatility +
     financingRisk * weights.financingRisk +
     propertyRisk * weights.propertyCondition +
     locationRisk * weights.locationStability +
     tenantRisk * weights.tenantQuality;
+
+  // Apply metric adjustments to overall risk score
+  // Adjustments can be positive (increase risk) or negative (decrease risk)
+  const overallRiskScore = Math.max(
+    1,
+    Math.min(10, baseRiskScore + metricRiskAdjustments.totalAdjustment)
+  ); // Keep within 1-10 scale
 
   // Logistic Regression for Probability of Loss
   // Formula: P(loss) = 1 / (1 + e^(-z))
@@ -1100,10 +1117,11 @@ export const calculateEnhancedRiskScore = (
   const beta0 = -6.5; // Intercept (baseline probability)
   const coefficients = {
     overallRiskScore: 0.8,        // Primary risk indicator
-    dscrRisk: 0.6,                // Debt coverage is critical
-    ltvRisk: 0.5,                 // Leverage risk
-    cocRisk: 0.4,                 // Cash flow risk
-    capRateRisk: 0.3,             // Return risk
+    metricAdjustment: 0.7,        // Metric adjustments are highly predictive
+    dscrAdjustment: 0.6,          // Debt coverage is critical
+    ltvAdjustment: 0.5,           // Leverage risk
+    cocAdjustment: 0.4,           // Cash flow risk
+    capRateAdjustment: 0.3,       // Return risk
     marketCondition: marketConditions.type === "slow" ? 0.5 : 
                      marketConditions.type === "stable" ? 0 : -0.3, // Market adjustment
   };
@@ -1111,10 +1129,11 @@ export const calculateEnhancedRiskScore = (
   // Calculate linear combination (z-score)
   const z = beta0 +
     coefficients.overallRiskScore * overallRiskScore +
-    coefficients.dscrRisk * metricRiskAdjustments.dscr.risk +
-    coefficients.ltvRisk * metricRiskAdjustments.ltv.risk +
-    coefficients.cocRisk * metricRiskAdjustments.coc.risk +
-    coefficients.capRateRisk * metricRiskAdjustments.capRate.risk +
+    coefficients.metricAdjustment * metricRiskAdjustments.totalAdjustment +
+    coefficients.dscrAdjustment * metricRiskAdjustments.dscr.adjustment +
+    coefficients.ltvAdjustment * metricRiskAdjustments.ltv.adjustment +
+    coefficients.cocAdjustment * metricRiskAdjustments.coc.adjustment +
+    coefficients.capRateAdjustment * metricRiskAdjustments.capRate.adjustment +
     coefficients.marketCondition;
 
   // Apply logistic function
@@ -1152,18 +1171,44 @@ export const calculateEnhancedRiskScore = (
     recommendations.push("Consider more conservative financing terms");
   }
 
-  // Metric-based recommendations
-  if (metricRiskAdjustments.dscr.riskLevel === "High" || metricRiskAdjustments.dscr.riskLevel === "Critical") {
-    recommendations.push(`DSCR too low (${metrics.dscr.toFixed(2)}): Increase income or reduce debt payments`);
+  // Metric-based recommendations with adjustment context
+  if (metricRiskAdjustments.dscr.riskLevel === "Poor" || metricRiskAdjustments.dscr.riskLevel === "Marginal") {
+    recommendations.push(
+      `DSCR ${metricRiskAdjustments.dscr.riskLevel.toLowerCase()} (${metrics.dscr.toFixed(2)}, +${metricRiskAdjustments.dscr.adjustment} risk): Increase income or reduce debt payments`
+    );
   }
   if (metricRiskAdjustments.ltv.riskLevel === "High" || metricRiskAdjustments.ltv.riskLevel === "Critical") {
-    recommendations.push(`LTV too high (${metrics.ltv.toFixed(1)}%): Consider larger down payment`);
+    recommendations.push(
+      `LTV ${metricRiskAdjustments.ltv.riskLevel.toLowerCase()} (${metrics.ltv.toFixed(1)}%, +${metricRiskAdjustments.ltv.adjustment} risk): Consider larger down payment`
+    );
   }
-  if (metricRiskAdjustments.coc.riskLevel === "High" || metricRiskAdjustments.coc.riskLevel === "Critical") {
-    recommendations.push(`CoC return too low (${metrics.coc.toFixed(1)}%): Improve cash flow or reduce investment`);
+  if (metricRiskAdjustments.coc.riskLevel === "Poor" || metricRiskAdjustments.coc.riskLevel === "Marginal") {
+    recommendations.push(
+      `CoC return ${metricRiskAdjustments.coc.riskLevel.toLowerCase()} (${metrics.coc.toFixed(1)}%, +${metricRiskAdjustments.coc.adjustment} risk): Improve cash flow or reduce investment`
+    );
   }
-  if (metricRiskAdjustments.capRate.riskLevel === "High" || metricRiskAdjustments.capRate.riskLevel === "Critical") {
-    recommendations.push(`Cap rate too low (${metrics.capRate.toFixed(1)}%): Property may be overpriced`);
+  if (metricRiskAdjustments.capRate.riskLevel === "Poor" || metricRiskAdjustments.capRate.riskLevel === "Marginal") {
+    recommendations.push(
+      `Cap rate ${metricRiskAdjustments.capRate.riskLevel.toLowerCase()} (${metrics.capRate.toFixed(1)}%, +${metricRiskAdjustments.capRate.adjustment} risk): Property may be overpriced`
+    );
+  }
+
+  // Positive adjustments (excellent metrics)
+  const excellentMetrics: string[] = [];
+  if (metricRiskAdjustments.dscr.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent DSCR (${metrics.dscr.toFixed(2)})`);
+  }
+  if (metricRiskAdjustments.ltv.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent LTV (${metrics.ltv.toFixed(1)}%)`);
+  }
+  if (metricRiskAdjustments.coc.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent CoC (${metrics.coc.toFixed(1)}%)`);
+  }
+  if (metricRiskAdjustments.capRate.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent Cap Rate (${metrics.capRate.toFixed(1)}%)`);
+  }
+  if (excellentMetrics.length > 0) {
+    recommendations.push(`Strong metrics: ${excellentMetrics.join(", ")} - Risk reduced by ${Math.abs(metricRiskAdjustments.totalAdjustment).toFixed(1)}`);
   }
 
   // Probability of loss recommendations

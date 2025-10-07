@@ -348,24 +348,25 @@ export interface WeightedRiskFactors {
 export interface MetricRiskAdjustments {
   dscr: {
     value: number;
-    risk: number;        // 1-10 scale
-    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+    adjustment: number;  // Risk adjustment value
+    riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor";
   };
   ltv: {
     value: number;
-    risk: number;        // 1-10 scale
-    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+    adjustment: number;  // Risk adjustment value
+    riskLevel: "Excellent" | "Good" | "Acceptable" | "Moderate" | "High" | "Critical";
   };
   coc: {
     value: number;
-    risk: number;        // 1-10 scale
-    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+    adjustment: number;  // Risk adjustment value
+    riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor";
   };
   capRate: {
     value: number;
-    risk: number;        // 1-10 scale
-    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+    adjustment: number;  // Risk adjustment value
+    riskLevel: "Excellent" | "Good" | "Acceptable" | "Marginal" | "Poor";
   };
+  totalAdjustment: number; // Sum of all adjustments
 }
 
 // Enhanced Risk Score Result

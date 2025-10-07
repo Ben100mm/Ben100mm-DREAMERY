@@ -565,7 +565,7 @@ function currentDateInputValue(): string {
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-month-${day}`;
+  return `${year}-${month}-${day}`;
 }
 
 // Returns today's date in MM / DD / YY format directly from system time
@@ -1428,7 +1428,7 @@ const defaultState: DealState = {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-month-${day}`;
+    return `${year}-${month}-${day}`;
   })(),
   listedPrice: 160000,
   purchasePrice: 160000,
@@ -1721,7 +1721,7 @@ const UnderwritePage: React.FC = () => {
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, "0");
             const day = String(now.getDate()).padStart(2, "0");
-            const today = `${year}-month-${day}`;
+            const today = `${year}-${month}-${day}`;
             console.log(
               "Overriding localStorage analysisDate with today:",
               today,
@@ -1753,7 +1753,7 @@ const UnderwritePage: React.FC = () => {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    const dateString = `${year}-month-${day}`;
+    const dateString = `${year}-${month}-${day}`;
     console.log(
       "Initial date set to:",
       dateString,
@@ -1774,7 +1774,7 @@ const UnderwritePage: React.FC = () => {
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, "0");
       const day = String(now.getDate()).padStart(2, "0");
-      const currentDateString = `${year}-month-${day}`;
+      const currentDateString = `${year}-${month}-${day}`;
       console.log(
         "Updating date to:",
         currentDateString,
@@ -1831,7 +1831,7 @@ const UnderwritePage: React.FC = () => {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    const today = `${year}-month-${day}`;
+    const today = `${year}-${month}-${day}`;
     console.log("Component mount - forcing analysis date to:", today);
     setState((prev) => ({
       ...prev,

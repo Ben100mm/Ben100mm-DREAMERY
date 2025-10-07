@@ -274,6 +274,7 @@ export interface DealState {
       propertyRisk: number;
       tenantRisk: number;
       financingRisk: number;
+      locationRisk: number;
     };
     recommendations: string[];
   };

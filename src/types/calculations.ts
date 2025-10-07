@@ -30,6 +30,7 @@ export interface RiskAnalysisResult {
     propertyRisk: number;
     tenantRisk: number;
     financingRisk: number;
+    locationRisk: number;
   };
   riskCategory: "Low" | "Medium" | "High" | "Very High";
   recommendations: string[];
@@ -326,6 +327,82 @@ export const isCompleteTaxResults = (
     typeof results.effectiveTaxRate === "number"
   );
 };
+
+// Weighted Risk Factors for enhanced risk scoring
+export interface WeightedRiskFactors {
+  marketVolatility: number;
+  tenantQuality: number;
+  propertyCondition: number;
+  locationStability: number;
+  financingRisk: number;
+  weights?: {
+    marketVolatility: number;      // 25% - Market conditions impact
+    financingRisk: number;         // 30% - Highest impact on deal viability
+    propertyCondition: number;     // 20% - Property quality and maintenance
+    locationStability: number;     // 15% - Location and neighborhood factors
+    tenantQuality: number;         // 10% - Tenant screening and reliability
+  };
+}
+
+// Metric Risk Adjustments for enhanced risk scoring
+export interface MetricRiskAdjustments {
+  dscr: {
+    value: number;
+    risk: number;        // 1-10 scale
+    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+  };
+  ltv: {
+    value: number;
+    risk: number;        // 1-10 scale
+    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+  };
+  coc: {
+    value: number;
+    risk: number;        // 1-10 scale
+    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+  };
+  capRate: {
+    value: number;
+    risk: number;        // 1-10 scale
+    riskLevel: "Low" | "Moderate" | "High" | "Critical";
+  };
+}
+
+// Enhanced Risk Score Result
+export interface EnhancedRiskScoreResult {
+  overallRiskScore: number;        // 1-10 scale
+  weightedBreakdown: {
+    marketVolatility: {
+      score: number;
+      weight: number;
+      weightedScore: number;
+    };
+    financingRisk: {
+      score: number;
+      weight: number;
+      weightedScore: number;
+    };
+    propertyCondition: {
+      score: number;
+      weight: number;
+      weightedScore: number;
+    };
+    locationStability: {
+      score: number;
+      weight: number;
+      weightedScore: number;
+    };
+    tenantQuality: {
+      score: number;
+      weight: number;
+      weightedScore: number;
+    };
+  };
+  metricRiskAdjustments: MetricRiskAdjustments;
+  probabilityOfLoss: number;       // 0-1 scale (percentage as decimal)
+  riskCategory: "Low" | "Medium" | "High" | "Very High";
+  recommendations: string[];
+}
 
 // Helper function to get result type from key
 export const getResultType = <K extends keyof CalculatorResults>(

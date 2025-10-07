@@ -478,6 +478,7 @@ export interface DealState {
       propertyRisk: number;
       tenantRisk: number;
       financingRisk: number;
+      locationRisk: number;
     };
     riskCategory: "Low" | "Medium" | "High" | "Very High";
     recommendations: string[];

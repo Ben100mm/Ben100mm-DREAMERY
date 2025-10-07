@@ -2612,6 +2612,27 @@ const AnalyzePage: React.FC = () => {
                       /10
                     </Typography>
                   </Box>
+                  <Box
+                    sx={{
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds?.secondary || brandColors.neutral[100],
+                      borderRadius: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ color: brandColors.primary, mb: 1 }}
+                    >
+                      Location Risk
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                    >
+                      {riskScoreResults.riskBreakdown.locationRisk}/10
+                    </Typography>
+                  </Box>
                 </Box>
 
                 <Box

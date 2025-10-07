@@ -851,6 +851,159 @@ export const calculateRiskScore = (
   };
 };
 
+// Helper function to determine risk category based on overall score and probability of loss
+export const getRiskCategory = (
+  overallRiskScore: number,
+  probabilityOfLoss: number,
+): "Low" | "Medium" | "High" | "Very High" => {
+  // Use both risk score and probability of loss for more accurate categorization
+  if (overallRiskScore <= 3 && probabilityOfLoss < 0.2) {
+    return "Low";
+  } else if (overallRiskScore <= 5 && probabilityOfLoss < 0.4) {
+    return "Medium";
+  } else if (overallRiskScore <= 7 && probabilityOfLoss < 0.6) {
+    return "High";
+  } else {
+    return "Very High";
+  }
+};
+
+// Helper function to generate comprehensive risk recommendations
+export const generateRiskRecommendations = (params: {
+  marketRisk: number;
+  propertyRisk: number;
+  tenantRisk: number;
+  locationRisk: number;
+  financingRisk: number;
+  metricRiskAdjustments: {
+    dscr: { value: number; adjustment: number; riskLevel: string };
+    ltv: { value: number; adjustment: number; riskLevel: string };
+    coc: { value: number; adjustment: number; riskLevel: string };
+    capRate: { value: number; adjustment: number; riskLevel: string };
+    totalAdjustment: number;
+  };
+  probabilityOfLoss: number;
+  financingDetails?: {
+    type: string;
+    balloonPayment: number;
+    balloonDueYears: number;
+    interestOnly: boolean;
+    totalLoanAmount: number;
+  };
+}): string[] => {
+  const recommendations: string[] = [];
+  const {
+    marketRisk,
+    propertyRisk,
+    tenantRisk,
+    locationRisk,
+    financingRisk,
+    metricRiskAdjustments,
+    probabilityOfLoss,
+    financingDetails,
+  } = params;
+
+  // Risk factor recommendations
+  if (marketRisk > 5) {
+    recommendations.push("Consider market timing and local economic factors");
+  }
+  if (propertyRisk > 5) {
+    recommendations.push("Budget for increased maintenance and repairs");
+  }
+  if (tenantRisk > 5) {
+    recommendations.push("Implement stricter tenant screening and lease terms");
+  }
+  if (locationRisk > 5) {
+    recommendations.push("Evaluate location stability and neighborhood trends");
+  }
+  if (financingRisk > 5) {
+    recommendations.push("Consider more conservative financing terms");
+  }
+
+  // Metric-based recommendations with adjustment context
+  if (metricRiskAdjustments.dscr.riskLevel === "Poor" || metricRiskAdjustments.dscr.riskLevel === "Marginal") {
+    recommendations.push(
+      `DSCR ${metricRiskAdjustments.dscr.riskLevel.toLowerCase()} (${metricRiskAdjustments.dscr.value.toFixed(2)}, +${metricRiskAdjustments.dscr.adjustment} risk): Increase income or reduce debt payments`
+    );
+  }
+  if (metricRiskAdjustments.ltv.riskLevel === "High" || metricRiskAdjustments.ltv.riskLevel === "Critical") {
+    recommendations.push(
+      `LTV ${metricRiskAdjustments.ltv.riskLevel.toLowerCase()} (${metricRiskAdjustments.ltv.value.toFixed(1)}%, +${metricRiskAdjustments.ltv.adjustment} risk): Consider larger down payment`
+    );
+  }
+  if (metricRiskAdjustments.coc.riskLevel === "Poor" || metricRiskAdjustments.coc.riskLevel === "Marginal") {
+    recommendations.push(
+      `CoC return ${metricRiskAdjustments.coc.riskLevel.toLowerCase()} (${metricRiskAdjustments.coc.value.toFixed(1)}%, +${metricRiskAdjustments.coc.adjustment} risk): Improve cash flow or reduce investment`
+    );
+  }
+  if (metricRiskAdjustments.capRate.riskLevel === "Poor" || metricRiskAdjustments.capRate.riskLevel === "Marginal") {
+    recommendations.push(
+      `Cap rate ${metricRiskAdjustments.capRate.riskLevel.toLowerCase()} (${metricRiskAdjustments.capRate.value.toFixed(1)}%, +${metricRiskAdjustments.capRate.adjustment} risk): Property may be overpriced`
+    );
+  }
+
+  // Positive adjustments (excellent metrics)
+  const excellentMetrics: string[] = [];
+  if (metricRiskAdjustments.dscr.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent DSCR (${metricRiskAdjustments.dscr.value.toFixed(2)})`);
+  }
+  if (metricRiskAdjustments.ltv.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent LTV (${metricRiskAdjustments.ltv.value.toFixed(1)}%)`);
+  }
+  if (metricRiskAdjustments.coc.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent CoC (${metricRiskAdjustments.coc.value.toFixed(1)}%)`);
+  }
+  if (metricRiskAdjustments.capRate.riskLevel === "Excellent") {
+    excellentMetrics.push(`Excellent Cap Rate (${metricRiskAdjustments.capRate.value.toFixed(1)}%)`);
+  }
+  if (excellentMetrics.length > 0) {
+    recommendations.push(
+      `Strong metrics: ${excellentMetrics.join(", ")} - Risk reduced by ${Math.abs(metricRiskAdjustments.totalAdjustment).toFixed(1)}`
+    );
+  }
+
+  // Probability of loss recommendations
+  if (probabilityOfLoss > 0.6) {
+    recommendations.push(
+      `High probability of loss (${(probabilityOfLoss * 100).toFixed(1)}%): Consider passing on this deal`
+    );
+  } else if (probabilityOfLoss > 0.4) {
+    recommendations.push(
+      `Moderate probability of loss (${(probabilityOfLoss * 100).toFixed(1)}%): Ensure adequate cash reserves`
+    );
+  }
+
+  // Balloon payment recommendations
+  if (financingDetails?.balloonPayment && financingDetails.balloonPayment > 0) {
+    if (financingDetails.balloonDueYears <= 3) {
+      recommendations.push(
+        "High balloon payment risk: Plan exit strategy within 3 years"
+      );
+    } else if (financingDetails.balloonDueYears <= 5) {
+      recommendations.push(
+        "Medium balloon payment risk: Ensure sufficient cash flow for balloon payment"
+      );
+    }
+
+    if (
+      financingDetails.balloonPayment >
+      (financingDetails.totalLoanAmount || 0) * 0.5
+    ) {
+      recommendations.push(
+        "Large balloon payment: Consider refinancing before balloon due date"
+      );
+    }
+  }
+
+  if (financingDetails?.interestOnly) {
+    recommendations.push(
+      "Interest-only loan: Plan for principal payments or refinancing"
+    );
+  }
+
+  return recommendations;
+};
+
 // Helper function to calculate metric risk adjustments with exact thresholds
 const calculateMetricRiskAdjustments = (metrics: {
   dscr: number;
@@ -1139,112 +1292,20 @@ export const calculateEnhancedRiskScore = (
   // Apply logistic function
   const probabilityOfLoss = 1 / (1 + Math.exp(-z));
 
-  // Determine risk category based on combined factors
-  let riskCategory: "Low" | "Medium" | "High" | "Very High";
-  if (overallRiskScore <= 3 && probabilityOfLoss < 0.2) {
-    riskCategory = "Low";
-  } else if (overallRiskScore <= 5 && probabilityOfLoss < 0.4) {
-    riskCategory = "Medium";
-  } else if (overallRiskScore <= 7 && probabilityOfLoss < 0.6) {
-    riskCategory = "High";
-  } else {
-    riskCategory = "Very High";
-  }
+  // Determine risk category using helper function
+  const riskCategory = getRiskCategory(overallRiskScore, probabilityOfLoss);
 
-  // Generate comprehensive recommendations
-  const recommendations: string[] = [];
-
-  // Risk factor recommendations
-  if (marketRisk > 5) {
-    recommendations.push("Consider market timing and local economic factors");
-  }
-  if (propertyRisk > 5) {
-    recommendations.push("Budget for increased maintenance and repairs");
-  }
-  if (tenantRisk > 5) {
-    recommendations.push("Implement stricter tenant screening and lease terms");
-  }
-  if (locationRisk > 5) {
-    recommendations.push("Evaluate location stability and neighborhood trends");
-  }
-  if (financingRisk > 5) {
-    recommendations.push("Consider more conservative financing terms");
-  }
-
-  // Metric-based recommendations with adjustment context
-  if (metricRiskAdjustments.dscr.riskLevel === "Poor" || metricRiskAdjustments.dscr.riskLevel === "Marginal") {
-    recommendations.push(
-      `DSCR ${metricRiskAdjustments.dscr.riskLevel.toLowerCase()} (${metrics.dscr.toFixed(2)}, +${metricRiskAdjustments.dscr.adjustment} risk): Increase income or reduce debt payments`
-    );
-  }
-  if (metricRiskAdjustments.ltv.riskLevel === "High" || metricRiskAdjustments.ltv.riskLevel === "Critical") {
-    recommendations.push(
-      `LTV ${metricRiskAdjustments.ltv.riskLevel.toLowerCase()} (${metrics.ltv.toFixed(1)}%, +${metricRiskAdjustments.ltv.adjustment} risk): Consider larger down payment`
-    );
-  }
-  if (metricRiskAdjustments.coc.riskLevel === "Poor" || metricRiskAdjustments.coc.riskLevel === "Marginal") {
-    recommendations.push(
-      `CoC return ${metricRiskAdjustments.coc.riskLevel.toLowerCase()} (${metrics.coc.toFixed(1)}%, +${metricRiskAdjustments.coc.adjustment} risk): Improve cash flow or reduce investment`
-    );
-  }
-  if (metricRiskAdjustments.capRate.riskLevel === "Poor" || metricRiskAdjustments.capRate.riskLevel === "Marginal") {
-    recommendations.push(
-      `Cap rate ${metricRiskAdjustments.capRate.riskLevel.toLowerCase()} (${metrics.capRate.toFixed(1)}%, +${metricRiskAdjustments.capRate.adjustment} risk): Property may be overpriced`
-    );
-  }
-
-  // Positive adjustments (excellent metrics)
-  const excellentMetrics: string[] = [];
-  if (metricRiskAdjustments.dscr.riskLevel === "Excellent") {
-    excellentMetrics.push(`Excellent DSCR (${metrics.dscr.toFixed(2)})`);
-  }
-  if (metricRiskAdjustments.ltv.riskLevel === "Excellent") {
-    excellentMetrics.push(`Excellent LTV (${metrics.ltv.toFixed(1)}%)`);
-  }
-  if (metricRiskAdjustments.coc.riskLevel === "Excellent") {
-    excellentMetrics.push(`Excellent CoC (${metrics.coc.toFixed(1)}%)`);
-  }
-  if (metricRiskAdjustments.capRate.riskLevel === "Excellent") {
-    excellentMetrics.push(`Excellent Cap Rate (${metrics.capRate.toFixed(1)}%)`);
-  }
-  if (excellentMetrics.length > 0) {
-    recommendations.push(`Strong metrics: ${excellentMetrics.join(", ")} - Risk reduced by ${Math.abs(metricRiskAdjustments.totalAdjustment).toFixed(1)}`);
-  }
-
-  // Probability of loss recommendations
-  if (probabilityOfLoss > 0.6) {
-    recommendations.push(`High probability of loss (${(probabilityOfLoss * 100).toFixed(1)}%): Consider passing on this deal`);
-  } else if (probabilityOfLoss > 0.4) {
-    recommendations.push(`Moderate probability of loss (${(probabilityOfLoss * 100).toFixed(1)}%): Ensure adequate cash reserves`);
-  }
-
-  // Balloon payment recommendations
-  if (financingDetails?.balloonPayment && financingDetails.balloonPayment > 0) {
-    if (financingDetails.balloonDueYears <= 3) {
-      recommendations.push(
-        "High balloon payment risk: Plan exit strategy within 3 years",
-      );
-    } else if (financingDetails.balloonDueYears <= 5) {
-      recommendations.push(
-        "Medium balloon payment risk: Ensure sufficient cash flow for balloon payment",
-      );
-    }
-
-    if (
-      financingDetails.balloonPayment >
-      (financingDetails.totalLoanAmount || 0) * 0.5
-    ) {
-      recommendations.push(
-        "Large balloon payment: Consider refinancing before balloon due date",
-      );
-    }
-  }
-
-  if (financingDetails?.interestOnly) {
-    recommendations.push(
-      "Interest-only loan: Plan for principal payments or refinancing",
-    );
-  }
+  // Generate comprehensive recommendations using helper function
+  const recommendations = generateRiskRecommendations({
+    marketRisk,
+    propertyRisk,
+    tenantRisk,
+    locationRisk,
+    financingRisk,
+    metricRiskAdjustments,
+    probabilityOfLoss,
+    financingDetails,
+  });
 
   return {
     overallRiskScore: Math.round(overallRiskScore * 10) / 10,

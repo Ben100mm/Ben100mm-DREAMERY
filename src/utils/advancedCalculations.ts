@@ -804,9 +804,14 @@ export type {
   OperatingShockScenario,
   MarketCorrectionScenario,
   StressTestResult,
+  StressTestResultWithMetrics,
 } from './stressTests';
 
-export { DEFAULT_STRESS_SCENARIOS } from './stressTests';
+export { 
+  DEFAULT_STRESS_SCENARIOS,
+  runStressTests,
+  getStressTestSummary,
+} from './stressTests';
 
 // Risk scoring system with weighted factors
 export const calculateRiskScore = (

@@ -535,3 +535,181 @@ export const createCustomScenario = (
   };
 };
 
+// ============================================================================
+// DealState Integration
+// ============================================================================
+
+/**
+ * Interface for stress test result with calculated metrics
+ */
+export interface StressTestResultWithMetrics {
+  scenarioName: string;
+  cashFlow: number; // Monthly cash flow
+  cocReturn: number; // Cash on Cash Return (%)
+  dscr: number; // Debt Service Coverage Ratio
+  passesTest: boolean; // Whether the scenario passes stress test
+  severity: "Low" | "Medium" | "High" | "Critical";
+  description: string;
+  impactPercentage: number;
+}
+
+/**
+ * Run all stress tests on a DealState and return formatted results
+ * 
+ * @param baseState - The base DealState to stress test
+ * @returns Array of stress test results with calculated metrics
+ */
+export const runStressTests = (
+  baseState: any, // Using any to avoid circular dependency, should be DealState
+): StressTestResultWithMetrics[] => {
+  // Extract base metrics from DealState
+  const purchasePrice = baseState.purchasePrice || 0;
+  const downPaymentPct = baseState.loan?.downPayment || 20;
+  const downPayment = purchasePrice * (downPaymentPct / 100);
+  const loanAmount = baseState.loan?.amount || (purchasePrice - downPayment);
+  const interestRate = baseState.loan?.rate || 0;
+  const loanTermYears = baseState.loan?.term || 30;
+  const loanTermMonths = loanTermYears * 12;
+
+  // Calculate monthly payment
+  const monthlyRate = interestRate / 100 / 12;
+  let monthlyPayment = 0;
+  if (monthlyRate > 0) {
+    monthlyPayment =
+      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, loanTermMonths)) /
+      (Math.pow(1 + monthlyRate, loanTermMonths) - 1);
+  } else {
+    monthlyPayment = loanAmount / loanTermMonths;
+  }
+
+  // Extract operating expenses
+  const ops = baseState.ops || {};
+  const monthlyTaxes = (ops.taxes || 0) / 12;
+  const monthlyInsurance = (ops.insurance || 0) / 12;
+  const monthlyMaintenance = (ops.maintenance || 0) / 12;
+  const monthlyManagement = (ops.management || 0) / 12;
+  const monthlyCapEx = (ops.capEx || 0) / 12;
+  const monthlyOpEx = (ops.opEx || 0) / 12;
+
+  const totalMonthlyExpenses =
+    monthlyPayment +
+    monthlyTaxes +
+    monthlyInsurance +
+    monthlyMaintenance +
+    monthlyManagement +
+    monthlyCapEx +
+    monthlyOpEx;
+
+  // Calculate monthly rent (handle different property types)
+  let monthlyRent = 0;
+  if (baseState.propertyType === "Hotel" || baseState.propertyType === "Short Term Rental") {
+    const revenueInputs = baseState.revenueInputs || {};
+    const totalRooms = revenueInputs.totalRooms || 1;
+    const adr = revenueInputs.averageDailyRate || 0;
+    const occupancy = revenueInputs.occupancyRate || 0;
+    monthlyRent = totalRooms * adr * 30 * (occupancy / 100);
+  } else {
+    monthlyRent = baseState.baseMonthlyRent || 0;
+  }
+
+  // Calculate base cash flow and metrics
+  const baseMonthlyCashFlow = monthlyRent - totalMonthlyExpenses;
+  const baseAnnualCashFlow = baseMonthlyCashFlow * 12;
+  const baseCoCReturn = downPayment > 0 ? (baseAnnualCashFlow / downPayment) * 100 : 0;
+  
+  // Calculate NOI (Net Operating Income) - excludes debt service
+  const monthlyNOI = monthlyRent - (totalMonthlyExpenses - monthlyPayment);
+  const annualNOI = monthlyNOI * 12;
+  const annualDebtService = monthlyPayment * 12;
+  const baseDSCR = annualDebtService > 0 ? annualNOI / annualDebtService : 0;
+
+  // Prepare inputs for stress tests
+  const inputs: StressTestInputs = {
+    propertyValue: purchasePrice,
+    monthlyRent,
+    monthlyExpenses: totalMonthlyExpenses,
+    monthlyCashFlow: baseMonthlyCashFlow,
+    currentInterestRate: interestRate,
+    loanAmount,
+    loanTerm: loanTermMonths,
+    downPayment,
+    annualRoi: baseCoCReturn,
+  };
+
+  // Run comprehensive stress tests
+  const comprehensiveResults = runComprehensiveStressTest(inputs);
+
+  // Format results for each scenario
+  const results: StressTestResultWithMetrics[] = [];
+
+  // Process each scenario
+  Object.entries(comprehensiveResults.scenarios).forEach(([key, scenario]) => {
+    // Calculate adjusted metrics
+    const adjustedMonthlyCashFlow = scenario.adjustedCashFlow;
+    const adjustedAnnualCashFlow = adjustedMonthlyCashFlow * 12;
+    const adjustedCoCReturn = downPayment > 0 ? (adjustedAnnualCashFlow / downPayment) * 100 : 0;
+    
+    // Calculate adjusted NOI and DSCR
+    const adjustedMonthlyNOI = scenario.adjustedMonthlyRent - (scenario.adjustedMonthlyExpenses - monthlyPayment);
+    const adjustedAnnualNOI = adjustedMonthlyNOI * 12;
+    const adjustedDSCR = annualDebtService > 0 ? adjustedAnnualNOI / annualDebtService : 0;
+
+    // Determine if test passes (basic criteria)
+    const passesTest = 
+      adjustedMonthlyCashFlow > 0 && // Positive cash flow
+      adjustedDSCR >= 1.0 && // Can cover debt service
+      adjustedCoCReturn > 0; // Positive return
+
+    results.push({
+      scenarioName: scenario.scenarioName,
+      cashFlow: adjustedMonthlyCashFlow,
+      cocReturn: adjustedCoCReturn,
+      dscr: adjustedDSCR,
+      passesTest,
+      severity: scenario.riskLevel,
+      description: scenario.description,
+      impactPercentage: scenario.impactPercentage,
+    });
+  });
+
+  return results;
+};
+
+/**
+ * Get a summary of stress test results
+ */
+export const getStressTestSummary = (
+  results: StressTestResultWithMetrics[],
+): {
+  totalTests: number;
+  passed: number;
+  failed: number;
+  passRate: number;
+  worstScenario: string;
+  criticalCount: number;
+  highRiskCount: number;
+} => {
+  const totalTests = results.length;
+  const passed = results.filter((r) => r.passesTest).length;
+  const failed = totalTests - passed;
+  const passRate = (passed / totalTests) * 100;
+
+  const worstScenario =
+    results.reduce((worst, current) =>
+      current.cashFlow < worst.cashFlow ? current : worst,
+    ).scenarioName;
+
+  const criticalCount = results.filter((r) => r.severity === "Critical").length;
+  const highRiskCount = results.filter((r) => r.severity === "High").length;
+
+  return {
+    totalTests,
+    passed,
+    failed,
+    passRate,
+    worstScenario,
+    criticalCount,
+    highRiskCount,
+  };
+};
+

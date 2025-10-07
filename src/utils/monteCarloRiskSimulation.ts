@@ -213,6 +213,33 @@ export interface MonteCarloResults {
 // ==================== UTILITY FUNCTIONS ====================
 
 /**
+ * Box-Muller transform for generating normal random variables
+ * Generates a standard normal random variable (mean=0, stdDev=1)
+ * 
+ * @returns A random number from standard normal distribution N(0,1)
+ */
+export function boxMullerRandom(): number {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  
+  // Box-Muller transform
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  
+  return z0;
+}
+
+/**
+ * Box-Muller transform with custom mean and standard deviation
+ * 
+ * @param mean - The mean of the normal distribution
+ * @param stdDev - The standard deviation of the normal distribution
+ * @returns A random number from N(mean, stdDev²)
+ */
+export function boxMullerRandomCustom(mean: number, stdDev: number): number {
+  return mean + stdDev * boxMullerRandom();
+}
+
+/**
  * Calculate percentile from sorted array
  */
 function calculatePercentile(sortedArray: number[], percentile: number): number {
@@ -291,6 +318,7 @@ function calculatePercentileDistribution(values: number[]): PercentileDistributi
 
 /**
  * Calculate all percentile distributions from simulation results
+ * Alias: calculateDistributionStats
  */
 export function calculatePercentiles(results: SimulationResult[]): Distributions {
   return {
@@ -304,6 +332,12 @@ export function calculatePercentiles(results: SimulationResult[]): Distributions
     cashOnCashReturn: calculatePercentileDistribution(extractMetric(results, 'cashOnCashReturn')),
   };
 }
+
+/**
+ * Calculate distribution statistics (percentiles, mean, stdDev)
+ * Alias for calculatePercentiles
+ */
+export const calculateDistributionStats = calculatePercentiles;
 
 /**
  * Calculate comprehensive risk metrics
@@ -373,7 +407,8 @@ export function calculateRiskMetrics(
 }
 
 /**
- * Perform scenario analysis
+ * Perform scenario analysis (worst/base/best case)
+ * Alias: generateScenarioAnalysis
  */
 export function performScenarioAnalysis(
   results: SimulationResult[],
@@ -399,11 +434,17 @@ export function performScenarioAnalysis(
   return {
     bestCase: sortedByReturn[sortedByReturn.length - 1],
     worstCase: sortedByReturn[0],
-    expectedCase: findClosestToPercentile(50), // Median case
+    expectedCase: findClosestToPercentile(50), // Median case (base case)
     pessimisticCase: findClosestToPercentile(25), // 25th percentile
     optimisticCase: findClosestToPercentile(75), // 75th percentile
   };
 }
+
+/**
+ * Generate scenario analysis (worst/base/best case)
+ * Alias for performScenarioAnalysis
+ */
+export const generateScenarioAnalysis = performScenarioAnalysis;
 
 /**
  * Run Monte Carlo simulation using Web Worker

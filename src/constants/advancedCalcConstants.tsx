@@ -16,11 +16,13 @@ import SecurityIcon from "@mui/icons-material/Security";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import WarningIcon from "@mui/icons-material/Warning";
 import { OverviewTab } from "../components/OverviewTab";
 import { GlobalConfigTab } from "../components/GlobalConfigTab";
 import { ExitStrategiesTab } from "../components/ExitStrategiesTab";
 import { RiskAnalysisTab } from "../components/RiskAnalysisTab";
 import { ScenarioComparisonTab } from "../components/ScenarioComparisonTab";
+import { StressTestingTab } from "../components/StressTestingTab";
 import {
   SeasonalAdjustmentsCalculator,
   MarketConditionsCalculator,
@@ -186,6 +188,19 @@ export const createTabConfig = (
     ),
   },
   {
+    label: "Stress Testing",
+    icon: <WarningIcon aria-label="Warning" />,
+    className: "stress-testing-tab",
+    component: (
+      <StressTestingTab
+        dealState={dealState}
+        onResultsChange={(results: any) =>
+          handleResultsChange("stressTesting", results)
+        }
+      />
+    ),
+  },
+  {
     label: "Sensitivity & Inflation",
     icon: <ShowChartIcon aria-label="Show Chart" />,
     className: "sensitivity-analysis-tab",
@@ -243,6 +258,7 @@ export const TAB_LABELS = {
   TAX: "Tax",
   REFINANCE: "Refinance",
   RISK_ANALYSIS: "Risk Analysis",
+  STRESS_TESTING: "Stress Testing",
   SENSITIVITY_INFLATION: "Sensitivity & Inflation",
   SCENARIO_COMPARISON: "Scenario Comparison",
 } as const;
@@ -255,6 +271,7 @@ export const TAB_CLASSES = {
   TAX: "tax-implications-tab",
   REFINANCE: "refinance-tab",
   RISK_ANALYSIS: "risk-analysis-tab",
+  STRESS_TESTING: "stress-testing-tab",
   SENSITIVITY_ANALYSIS: "sensitivity-analysis-tab",
   SCENARIO_COMPARISON: "scenario-comparison-tab",
 } as const;

@@ -54,3 +54,6 @@ export {
 } from "./AdvancedCalculationsExtended";
 export { default as ComprehensiveRefinanceCalculator } from "./ComprehensiveRefinanceCalculator";
 export { default as AppleMapsComponent } from "./AppleMapsComponent";
+export { StressTestingTab } from "./StressTestingTab";
+export { RiskAnalysisTab } from "./RiskAnalysisTab";
+export { MonteCarloSimulationTab } from "./MonteCarloSimulationTab";

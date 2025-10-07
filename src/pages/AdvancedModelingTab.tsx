@@ -980,7 +980,7 @@ const AdvancedModelingTab: React.FC = () => {
   // ============================================================================
 
   const completedCalculators = Object.keys(allResults).length;
-  const totalCalculators = 9; // Total number of available calculators (including Scenario Comparison)
+  const totalCalculators = 10; // Total number of available calculators (including Stress Testing and Scenario Comparison)
 
   // ============================================================================
   // RENDER

@@ -990,6 +990,183 @@ function computeCocAnnual(state: DealState, annualCashFlow: number): number {
   return (annualCashFlow / invested) * 100;
 }
 
+/**
+ * Calculates true IRR using Newton-Raphson method
+ * @param initialInvestment - Initial cash outlay (negative value expected)
+ * @param cashFlows - Array of annual cash flows
+ * @param finalValue - Exit proceeds (after selling costs)
+ * @param maxIterations - Maximum iterations for convergence
+ * @param tolerance - Convergence tolerance
+ * @returns IRR as decimal (e.g., 0.15 = 15%)
+ */
+function calculateTrueIRR(
+  initialInvestment: number,
+  cashFlows: number[],
+  finalValue: number,
+  maxIterations: number = 100,
+  tolerance: number = 0.0001
+): number {
+  // Handle edge cases
+  if (initialInvestment >= 0) return 0; // No investment
+  if (cashFlows.length === 0) return 0; // No cash flows
+  
+  // Start with 10% initial guess
+  let irr = 0.1;
+  
+  for (let i = 0; i < maxIterations; i++) {
+    let npv = initialInvestment; // Already negative
+    let derivative = 0;
+    
+    // Calculate NPV and its derivative
+    cashFlows.forEach((cf, year) => {
+      const period = year + 1;
+      const discountFactor = Math.pow(1 + irr, period);
+      npv += cf / discountFactor;
+      derivative -= period * cf / Math.pow(1 + irr, period + 1);
+    });
+    
+    // Add final sale value
+    const finalYear = cashFlows.length + 1;
+    npv += finalValue / Math.pow(1 + irr, finalYear);
+    derivative -= finalYear * finalValue / Math.pow(1 + irr, finalYear + 1);
+    
+    // Check for derivative too close to zero (prevent division issues)
+    if (Math.abs(derivative) < 0.000001) {
+      break;
+    }
+    
+    // Newton-Raphson iteration
+    const newIrr = irr - npv / derivative;
+    
+    // Check convergence
+    if (Math.abs(newIrr - irr) < tolerance) {
+      return newIrr;
+    }
+    
+    // Prevent negative or extremely high IRR
+    if (newIrr < -0.99) {
+      return -0.99; // Cap at -99%
+    }
+    if (newIrr > 10) {
+      return 10; // Cap at 1000%
+    }
+    
+    irr = newIrr;
+  }
+  
+  // Return best estimate if not converged
+  return irr;
+}
+
+/**
+ * Builds year-by-year cash flow projections for IRR calculation
+ * @param state - Current deal state
+ * @param isLevered - True for levered (with debt), false for unlevered
+ * @param holdYears - Number of years to hold property
+ * @returns Array of annual cash flows
+ */
+function buildCashFlowProjections(
+  state: DealState,
+  isLevered: boolean,
+  holdYears: number = 5
+): number[] {
+  const cashFlows: number[] = [];
+  
+  // Base annual income and expenses
+  const monthlyIncome = computeIncome(state);
+  const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
+  const monthlyVariableOps = variableMonthlyFromPercentages(
+    computeGrossPotentialIncome(state),
+    state.ops
+  );
+  
+  // Debt service (only for levered)
+  const monthlyDebtService = isLevered
+    ? totalMonthlyDebtService({
+        newLoanMonthly: state.loan.monthlyPayment || 0,
+        subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
+        hybridMonthly: state.hybrid?.monthlyPayment,
+      })
+    : 0;
+  
+  // Project cash flows with growth assumptions
+  // Assume 2% annual income growth and 3% annual expense growth
+  const incomeGrowth = 1.02;
+  const expenseGrowth = 1.03;
+  
+  for (let year = 0; year < holdYears; year++) {
+    const yearMultiplier = year; // Year 0 = first full year
+    const annualIncome = monthlyIncome * 12 * Math.pow(incomeGrowth, yearMultiplier);
+    const annualFixedOps = monthlyFixedOps * 12 * Math.pow(expenseGrowth, yearMultiplier);
+    const annualVariableOps = monthlyVariableOps * 12 * Math.pow(expenseGrowth, yearMultiplier);
+    const annualDebtService = monthlyDebtService * 12; // Debt service stays constant
+    
+    const annualCashFlow = annualIncome - annualFixedOps - annualVariableOps - annualDebtService;
+    cashFlows.push(annualCashFlow);
+  }
+  
+  return cashFlows;
+}
+
+/**
+ * Calculates net exit proceeds from property sale
+ * @param state - Current deal state
+ * @param isLevered - True for levered (subtract remaining loan balance)
+ * @param holdYears - Number of years held before sale
+ * @returns Net proceeds after selling costs and loan payoff
+ */
+function calculateExitProceeds(
+  state: DealState,
+  isLevered: boolean,
+  holdYears: number = 5
+): number {
+  // Future value with appreciation
+  const appreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+  const futureValue = state.purchasePrice * Math.pow(1 + appreciationRate, holdYears);
+  
+  // Selling costs (typically 6-8% for real estate)
+  const sellingCostsPct = 0.07; // 7% (agent commissions, closing costs, etc.)
+  const sellingCosts = futureValue * sellingCostsPct;
+  
+  // Gross proceeds before loan payoff
+  const grossProceeds = futureValue - sellingCosts;
+  
+  if (!isLevered) {
+    return grossProceeds; // Unlevered = no loan to pay off
+  }
+  
+  // Calculate remaining loan balance after holdYears
+  const loanAmount = computeLoanAmount(state);
+  const monthlyRate = (state.loan.annualInterestRate || 0) / 100 / 12;
+  const totalMonths = (state.loan.amortizationYears || 30) * 12;
+  const monthsElapsed = holdYears * 12;
+  
+  let remainingBalance = loanAmount;
+  
+  if (loanAmount > 0 && monthlyRate > 0 && !state.loan.interestOnly) {
+    // Calculate remaining balance using amortization formula
+    const monthlyPayment = state.loan.monthlyPayment || 0;
+    
+    if (monthsElapsed >= totalMonths) {
+      remainingBalance = 0; // Loan fully paid off
+    } else {
+      // Remaining balance formula
+      const remainingMonths = totalMonths - monthsElapsed;
+      remainingBalance =
+        (monthlyPayment / monthlyRate) *
+        (1 - Math.pow(1 + monthlyRate, -remainingMonths));
+    }
+  } else if (state.loan.interestOnly) {
+    // Interest-only: principal stays the same until balloon
+    remainingBalance = loanAmount;
+  }
+  
+  // Net proceeds = gross proceeds - remaining loan balance
+  const netProceeds = grossProceeds - remainingBalance;
+  
+  return netProceeds;
+}
+
 // Helper function to check if cash-on-cash calculation is valid
 function isCashOnCashValid(state: DealState): boolean {
   const invested =
@@ -9087,69 +9264,83 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="IRR (Levered)"
                       value={(() => {
-                        // Simplified IRR calculation - can be enhanced with actual cash flow projections
-                        const totalCashInvested =
-                          state.loan.downPayment +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0);
-                        const annualCashFlow =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            })) *
-                          12;
-                        // Assume 5-year hold and 3% annual appreciation
-                        const futureValue =
-                          state.purchasePrice * Math.pow(1.03, 5);
-                        const totalReturn =
-                          annualCashFlow * 5 + futureValue - totalCashInvested;
-                        const irr =
-                          totalCashInvested > 0
-                            ? Math.pow(
-                                (totalReturn + totalCashInvested) /
-                                  totalCashInvested,
-                                1 / 5,
-                              ) - 1
-                            : 0;
-                        return (irr * 100).toFixed(1) + "%";
+                        try {
+                          // Calculate initial investment (negative cash flow)
+                          const totalCashInvested =
+                            state.loan.downPayment +
+                            (state.loan.closingCosts || 0) +
+                            (state.loan.rehabCosts || 0) +
+                            (state.operationType === "Short Term Rental"
+                              ? state.arbitrage?.furnitureCost || 0
+                              : 0);
+                          
+                          if (totalCashInvested <= 0) return "N/A";
+                          
+                          // Hold period (default 5 years, or use state if available)
+                          const holdYears = 5;
+                          
+                          // Build year-by-year cash flows (levered)
+                          const cashFlows = buildCashFlowProjections(state, true, holdYears);
+                          
+                          // Calculate exit proceeds (levered)
+                          const exitProceeds = calculateExitProceeds(state, true, holdYears);
+                          
+                          // Calculate true IRR using Newton-Raphson
+                          const irr = calculateTrueIRR(
+                            -totalCashInvested, // Negative = cash outflow
+                            cashFlows,
+                            exitProceeds
+                          );
+                          
+                          return (irr * 100).toFixed(1) + "%";
+                        } catch (error) {
+                          console.error("Error calculating levered IRR:", error);
+                          return "N/A";
+                        }
                       })()}
                       InputProps={{ readOnly: true }}
-                      helperText="Internal Rate of Return (Levered)"
+                      helperText="Internal Rate of Return (Levered) - True IRR with Newton-Raphson"
                     />
                     <TextField
                       fullWidth
                       label="IRR (Unlevered)"
                       value={(() => {
-                        // Simplified unlevered IRR calculation
-                        const totalCashInvested =
-                          state.purchasePrice +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0);
-                        const annualCashFlow =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops)) *
-                          12;
-                        // Assume 5-year hold and 3% annual appreciation
-                        const futureValue =
-                          state.purchasePrice * Math.pow(1.03, 5);
-                        const totalReturn =
-                          annualCashFlow * 5 + futureValue - totalCashInvested;
-                        const irr =
-                          totalCashInvested > 0
-                            ? Math.pow(
-                                (totalReturn + totalCashInvested) /
-                                  totalCashInvested,
-                                1 / 5,
-                              ) - 1
-                            : 0;
-                        return (irr * 100).toFixed(1) + "%";
+                        try {
+                          // Calculate initial investment for all-cash purchase (negative cash flow)
+                          const totalCashInvested =
+                            state.purchasePrice +
+                            (state.loan.closingCosts || 0) +
+                            (state.loan.rehabCosts || 0) +
+                            (state.operationType === "Short Term Rental"
+                              ? state.arbitrage?.furnitureCost || 0
+                              : 0);
+                          
+                          if (totalCashInvested <= 0) return "N/A";
+                          
+                          // Hold period (default 5 years)
+                          const holdYears = 5;
+                          
+                          // Build year-by-year cash flows (unlevered = no debt)
+                          const cashFlows = buildCashFlowProjections(state, false, holdYears);
+                          
+                          // Calculate exit proceeds (unlevered = no loan payoff)
+                          const exitProceeds = calculateExitProceeds(state, false, holdYears);
+                          
+                          // Calculate true IRR using Newton-Raphson
+                          const irr = calculateTrueIRR(
+                            -totalCashInvested, // Negative = cash outflow
+                            cashFlows,
+                            exitProceeds
+                          );
+                          
+                          return (irr * 100).toFixed(1) + "%";
+                        } catch (error) {
+                          console.error("Error calculating unlevered IRR:", error);
+                          return "N/A";
+                        }
                       })()}
                       InputProps={{ readOnly: true }}
-                      helperText="Internal Rate of Return (Unlevered)"
+                      helperText="Internal Rate of Return (Unlevered) - True IRR with Newton-Raphson"
                     />
                     <TextField
                       fullWidth

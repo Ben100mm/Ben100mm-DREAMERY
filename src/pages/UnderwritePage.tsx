@@ -235,6 +235,37 @@ interface IncomeInputsStr {
   grossYearlyIncome: number;
 }
 
+interface EnhancedSTRInputs {
+  // Existing basic inputs
+  averageDailyRate: number;
+  occupancyRate: number;
+  
+  // Channel management
+  channelFees: {
+    airbnb: number; // e.g., 14%
+    vrbo: number; // e.g., 8%
+    direct: number; // e.g., 0%
+  };
+  channelMix: {
+    airbnb: number; // % of bookings
+    vrbo: number;
+    direct: number;
+  };
+  
+  // Booking logistics
+  averageLengthOfStay: number; // Nights per booking
+  turnoverDays: number; // Days between guests for cleaning/prep
+  minimumStay: number; // Minimum nights required
+  blockedDays: number; // Owner usage + maintenance days per year
+  
+  // Dynamic pricing
+  dynamicPricing: boolean;
+  weekendPremium: number; // % increase for weekend nights
+  
+  // Use enhanced model flag
+  useEnhancedModel: boolean;
+}
+
 // New inputs for Office/Retail properties
 interface OfficeRetailInputs {
   squareFootage: number;
@@ -373,6 +404,7 @@ interface DealState {
   sfr?: IncomeInputsSfr;
   multi?: IncomeInputsMulti;
   str?: IncomeInputsStr;
+  enhancedSTR?: EnhancedSTRInputs;
   officeRetail?: OfficeRetailInputs;
   land?: LandInputs;
   arbitrage?: ArbitrageInputs;
@@ -575,6 +607,89 @@ function getCapitalEventsForYear(events: CapitalEvent[], year: number): number {
   return events
     .filter(event => event.year === year)
     .reduce((sum, event) => sum + (event.estimatedCost * event.likelihood / 100), 0);
+}
+
+// Calculate enhanced STR revenue with channel fees and dynamic pricing
+function calculateSTRRevenue(inputs: EnhancedSTRInputs): {
+  monthlyRevenue: number;
+  metrics: {
+    availableNights: number;
+    bookedNights: number;
+    effectiveOccupancy: number;
+    grossRevenue: number;
+    totalChannelFees: number;
+    netRevenue: number;
+    revPAN: number; // Revenue Per Available Night
+    netADR: number; // Net Average Daily Rate after fees
+  };
+} {
+  // Calculate available nights accounting for blocked days
+  const availableNights = 365 - inputs.blockedDays;
+  
+  // Calculate number of turnovers based on length of stay + turnover days
+  const daysPerBookingCycle = inputs.averageLengthOfStay + inputs.turnoverDays;
+  const turnovers = daysPerBookingCycle > 0 
+    ? Math.floor(availableNights / daysPerBookingCycle) 
+    : 0;
+  
+  // Calculate bookable nights (only the actual guest nights, not turnover days)
+  const bookableNights = turnovers * inputs.averageLengthOfStay;
+  
+  // Calculate booked nights based on occupancy rate
+  const bookedNights = bookableNights * (inputs.occupancyRate / 100);
+  
+  // Calculate effective occupancy (booked nights / total available nights)
+  const effectiveOccupancy = availableNights > 0 
+    ? (bookedNights / availableNights) * 100 
+    : 0;
+  
+  // Apply dynamic pricing if enabled
+  let averageRate = inputs.averageDailyRate;
+  if (inputs.dynamicPricing) {
+    // Assume 30% of nights are weekends (Fri/Sat)
+    const weekendNights = bookedNights * 0.3;
+    const weekdayNights = bookedNights * 0.7;
+    const weekendRate = inputs.averageDailyRate * (1 + inputs.weekendPremium / 100);
+    
+    averageRate = (weekendNights * weekendRate + weekdayNights * inputs.averageDailyRate) / bookedNights;
+  }
+  
+  // Calculate gross revenue
+  const grossRevenue = bookedNights * averageRate;
+  
+  // Calculate channel fees based on mix
+  const airbnbRevenue = grossRevenue * (inputs.channelMix.airbnb / 100);
+  const vrboRevenue = grossRevenue * (inputs.channelMix.vrbo / 100);
+  const directRevenue = grossRevenue * (inputs.channelMix.direct / 100);
+  
+  const airbnbFees = airbnbRevenue * (inputs.channelFees.airbnb / 100);
+  const vrboFees = vrboRevenue * (inputs.channelFees.vrbo / 100);
+  const directFees = directRevenue * (inputs.channelFees.direct / 100);
+  
+  const totalChannelFees = airbnbFees + vrboFees + directFees;
+  
+  // Calculate net revenue after channel fees
+  const netRevenue = grossRevenue - totalChannelFees;
+  
+  // Calculate RevPAN (Revenue Per Available Night)
+  const revPAN = availableNights > 0 ? netRevenue / availableNights : 0;
+  
+  // Calculate Net ADR (after channel fees)
+  const netADR = bookedNights > 0 ? netRevenue / bookedNights : 0;
+  
+  return {
+    monthlyRevenue: netRevenue / 12, // Convert annual to monthly
+    metrics: {
+      availableNights,
+      bookedNights: Math.round(bookedNights),
+      effectiveOccupancy: Math.round(effectiveOccupancy * 10) / 10,
+      grossRevenue: Math.round(grossRevenue),
+      totalChannelFees: Math.round(totalChannelFees),
+      netRevenue: Math.round(netRevenue),
+      revPAN: Math.round(revPAN * 100) / 100,
+      netADR: Math.round(netADR * 100) / 100,
+    },
+  };
 }
 
 // Helper: should show ADR/rooms tabs (Revenue/Break-Even)
@@ -939,6 +1054,12 @@ function computeIncome(state: DealState): number {
       operationType === "Rental Arbitrage") &&
     propertyType !== "Land"
   ) {
+    // Check if enhanced STR model is enabled and configured
+    if (state.enhancedSTR?.useEnhancedModel && state.enhancedSTR.averageDailyRate > 0) {
+      const { monthlyRevenue } = calculateSTRRevenue(state.enhancedSTR);
+      return monthlyRevenue;
+    }
+    
     // Hotel properties use revenueInputs for more accurate calculations
     if (propertyType === "Hotel") {
       const {
@@ -2043,6 +2164,27 @@ const defaultState: DealState = {
     grossDailyIncome: 0,
     grossMonthlyIncome: 0,
     grossYearlyIncome: 0,
+  },
+  enhancedSTR: {
+    averageDailyRate: 150,
+    occupancyRate: 75,
+    channelFees: {
+      airbnb: 14, // 14% Airbnb host fee
+      vrbo: 8, // 8% VRBO commission
+      direct: 0, // 0% for direct bookings
+    },
+    channelMix: {
+      airbnb: 60, // 60% of bookings via Airbnb
+      vrbo: 30, // 30% via VRBO
+      direct: 10, // 10% direct bookings
+    },
+    averageLengthOfStay: 3, // 3 nights average
+    turnoverDays: 1, // 1 day between guests for cleaning
+    minimumStay: 2, // 2 night minimum
+    blockedDays: 30, // 30 days owner usage/maintenance per year
+    dynamicPricing: true,
+    weekendPremium: 20, // 20% premium for weekend nights
+    useEnhancedModel: false, // Disabled by default, user can enable
   },
   officeRetail: {
     squareFootage: 5000,
@@ -10367,6 +10509,363 @@ const UnderwritePage: React.FC = () => {
                   </Box>
                 </Box>
 
+                {/* Enhanced STR Settings */}
+                {(state.propertyType === "Hotel" ||
+                  state.operationType === "Short Term Rental") && (
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: brandColors.backgrounds.tertiary,
+                      borderRadius: 2,
+                      border: `1px solid ${brandColors.borders.primary}`,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                      <Typography
+                        sx={{
+                          fontWeight: 600,
+                          color: brandColors.primary,
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Enhanced STR Revenue Model
+                      </Typography>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={state.enhancedSTR?.useEnhancedModel || false}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  useEnhancedModel: e.target.checked,
+                                },
+                              }));
+                            }}
+                          />
+                        }
+                        label="Enable Enhanced Model"
+                      />
+                    </Box>
+                    
+                    {state.enhancedSTR?.useEnhancedModel && (
+                      <>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2 }}>
+                          More accurate STR projections with channel fees, dynamic pricing, and turnover costs
+                        </Typography>
+                        
+                        {/* Basic Inputs */}
+                        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Average Daily Rate"
+                            type="number"
+                            value={state.enhancedSTR?.averageDailyRate || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  averageDailyRate: Math.max(0, Number(e.target.value)),
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Target Occupancy Rate"
+                            type="number"
+                            value={state.enhancedSTR?.occupancyRate || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  occupancyRate: Math.max(0, Math.min(100, Number(e.target.value))),
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 1 }}
+                          />
+                        </Box>
+                        
+                        {/* Channel Fees */}
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Channel Fees (% of revenue)
+                        </Typography>
+                        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Airbnb Fee"
+                            type="number"
+                            value={state.enhancedSTR?.channelFees.airbnb || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelFees: {
+                                    ...prev.enhancedSTR!.channelFees,
+                                    airbnb: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 0.5 }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="VRBO Fee"
+                            type="number"
+                            value={state.enhancedSTR?.channelFees.vrbo || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelFees: {
+                                    ...prev.enhancedSTR!.channelFees,
+                                    vrbo: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 0.5 }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Direct Booking Fee"
+                            type="number"
+                            value={state.enhancedSTR?.channelFees.direct || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelFees: {
+                                    ...prev.enhancedSTR!.channelFees,
+                                    direct: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 0.5 }}
+                          />
+                        </Box>
+                        
+                        {/* Channel Mix */}
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Channel Mix (% of bookings)
+                        </Typography>
+                        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Airbnb %"
+                            type="number"
+                            value={state.enhancedSTR?.channelMix.airbnb || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelMix: {
+                                    ...prev.enhancedSTR!.channelMix,
+                                    airbnb: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 1 }}
+                            helperText={
+                              (state.enhancedSTR?.channelMix.airbnb || 0) +
+                              (state.enhancedSTR?.channelMix.vrbo || 0) +
+                              (state.enhancedSTR?.channelMix.direct || 0) !== 100
+                                ? "Total should equal 100%"
+                                : ""
+                            }
+                            error={
+                              (state.enhancedSTR?.channelMix.airbnb || 0) +
+                              (state.enhancedSTR?.channelMix.vrbo || 0) +
+                              (state.enhancedSTR?.channelMix.direct || 0) !== 100
+                            }
+                          />
+                          <TextField
+                            fullWidth
+                            label="VRBO %"
+                            type="number"
+                            value={state.enhancedSTR?.channelMix.vrbo || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelMix: {
+                                    ...prev.enhancedSTR!.channelMix,
+                                    vrbo: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 1 }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Direct %"
+                            type="number"
+                            value={state.enhancedSTR?.channelMix.direct || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  channelMix: {
+                                    ...prev.enhancedSTR!.channelMix,
+                                    direct: Math.max(0, Math.min(100, Number(e.target.value))),
+                                  },
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 100, step: 1 }}
+                          />
+                        </Box>
+                        
+                        {/* Booking Logistics */}
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                          Booking Logistics
+                        </Typography>
+                        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Avg Length of Stay"
+                            type="number"
+                            value={state.enhancedSTR?.averageLengthOfStay || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  averageLengthOfStay: Math.max(1, Number(e.target.value)),
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">nights</InputAdornment>,
+                            }}
+                            inputProps={{ min: 1, max: 365, step: 1 }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Turnover Days"
+                            type="number"
+                            value={state.enhancedSTR?.turnoverDays || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  turnoverDays: Math.max(0, Number(e.target.value)),
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">days</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 7, step: 1 }}
+                            helperText="Days between guests"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Blocked Days/Year"
+                            type="number"
+                            value={state.enhancedSTR?.blockedDays || 0}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                enhancedSTR: {
+                                  ...prev.enhancedSTR!,
+                                  blockedDays: Math.max(0, Math.min(365, Number(e.target.value))),
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">days</InputAdornment>,
+                            }}
+                            inputProps={{ min: 0, max: 365, step: 1 }}
+                            helperText="Owner use + maintenance"
+                          />
+                        </Box>
+                        
+                        {/* Dynamic Pricing */}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={state.enhancedSTR?.dynamicPricing || false}
+                                onChange={(e) => {
+                                  setState((prev) => ({
+                                    ...prev,
+                                    enhancedSTR: {
+                                      ...prev.enhancedSTR!,
+                                      dynamicPricing: e.target.checked,
+                                    },
+                                  }));
+                                }}
+                              />
+                            }
+                            label="Dynamic Pricing"
+                          />
+                          {state.enhancedSTR?.dynamicPricing && (
+                            <TextField
+                              label="Weekend Premium"
+                              type="number"
+                              value={state.enhancedSTR?.weekendPremium || 0}
+                              onChange={(e) => {
+                                setState((prev) => ({
+                                  ...prev,
+                                  enhancedSTR: {
+                                    ...prev.enhancedSTR!,
+                                    weekendPremium: Math.max(0, Math.min(200, Number(e.target.value))),
+                                  },
+                                }));
+                              }}
+                              InputProps={{
+                                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                              }}
+                              inputProps={{ min: 0, max: 200, step: 5 }}
+                              sx={{ width: 200 }}
+                            />
+                          )}
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                )}
+                
                 {/* STR/Hotel Specific Metrics */}
                 {(state.propertyType === "Hotel" ||
                   state.operationType === "Short Term Rental") && (
@@ -10386,7 +10885,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: "0.9rem",
                       }}
                     >
-                      STR/Hotel Specific Metrics
+                      {state.enhancedSTR?.useEnhancedModel ? "Enhanced STR Metrics" : "STR/Hotel Specific Metrics"}
                     </Typography>
                     <Box
                       sx={{
@@ -10395,18 +10894,148 @@ const UnderwritePage: React.FC = () => {
                         gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
                       }}
                     >
-                      <TextField
-                        fullWidth
-                        label="ADR"
-                        value={
-                          state.revenueInputs?.averageDailyRate
-                            ? formatCurrency(
-                                state.revenueInputs.averageDailyRate,
-                              )
-                            : "N/A"
-                        }
-                        InputProps={{ readOnly: true }}
-                      />
+                      {state.enhancedSTR?.useEnhancedModel ? (
+                        /* Enhanced STR Metrics */
+                        <>
+                          <TextField
+                            fullWidth
+                            label="Gross ADR"
+                            value={formatCurrency(state.enhancedSTR.averageDailyRate)}
+                            InputProps={{ readOnly: true }}
+                            helperText="Average Daily Rate (before fees)"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Net ADR"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(metrics.netADR);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="After channel fees"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Target Occupancy"
+                            value={`${state.enhancedSTR.occupancyRate}%`}
+                            InputProps={{ readOnly: true }}
+                            helperText="Of bookable nights"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Effective Occupancy"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return `${metrics.effectiveOccupancy}%`;
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Of all available nights"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Booked Nights/Year"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return `${metrics.bookedNights} nights`;
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText={`${state.enhancedSTR.blockedDays} days blocked`}
+                          />
+                          <TextField
+                            fullWidth
+                            label="RevPAN"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(metrics.revPAN);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Revenue Per Available Night"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Gross Annual Revenue"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(metrics.grossRevenue);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Before channel fees"
+                          />
+                          <TextField
+                            fullWidth
+                            label="Total Channel Fees"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(metrics.totalChannelFees);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return `${((metrics.totalChannelFees / metrics.grossRevenue) * 100).toFixed(1)}% of gross`;
+                            })()}
+                            sx={{
+                              '& .MuiInputBase-input': {
+                                color: brandColors.accent.error,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Net Annual Revenue"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { metrics } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(metrics.netRevenue);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="After channel fees"
+                            sx={{
+                              '& .MuiInputBase-input': {
+                                color: brandColors.accent.success,
+                                fontWeight: 600,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Monthly Net Revenue"
+                            value={(() => {
+                              if (!state.enhancedSTR?.useEnhancedModel) return "N/A";
+                              const { monthlyRevenue } = calculateSTRRevenue(state.enhancedSTR);
+                              return formatCurrency(monthlyRevenue);
+                            })()}
+                            InputProps={{ readOnly: true }}
+                            helperText="Used in cash flow calculations"
+                            sx={{
+                              '& .MuiInputBase-input': {
+                                color: brandColors.accent.success,
+                                fontWeight: 600,
+                              },
+                            }}
+                          />
+                        </>
+                      ) : (
+                        /* Original STR Metrics */
+                        <>
+                          <TextField
+                            fullWidth
+                            label="ADR"
+                            value={
+                              state.revenueInputs?.averageDailyRate
+                                ? formatCurrency(
+                                    state.revenueInputs.averageDailyRate,
+                                  )
+                                : "N/A"
+                            }
+                            InputProps={{ readOnly: true }}
+                          />
                       <TextField
                         fullWidth
                         label="Occupancy Rate"
@@ -10461,6 +11090,8 @@ const UnderwritePage: React.FC = () => {
                         InputProps={{ readOnly: true }}
                         helperText="(Gross Revenue - Operating Expenses) ÷ Gross Revenue"
                       />
+                        </>
+                      )}
                     </Box>
                   </Box>
                 )}

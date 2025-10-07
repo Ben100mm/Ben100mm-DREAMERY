@@ -29,6 +29,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import { brandColors } from "../theme";
+import UnifiedRoleSelector from '../components/UnifiedRoleSelector';
 import TemplatesComponent from '../components/TemplatesComponent';
 import { RoleContext } from "../context/RoleContext";
 import { AGENT_ROLES } from "../data";
@@ -183,7 +184,7 @@ interface CloseState {
   notifications: number;
 }
 
-const CloseBrokeragesPage = () => {
+const WorkspacesBrokeragesPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { userRole } = (React.useContext(RoleContext) as any) || {};
@@ -256,7 +257,7 @@ const CloseBrokeragesPage = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/close');
+    navigate('/workspaces');
   };
 
   const mockBrokerageData = {
@@ -337,6 +338,24 @@ const CloseBrokeragesPage = () => {
         }}
       >
         <Box sx={{ py: 2 }}>
+          {/* Role Selector */}
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+            <UnifiedRoleSelector 
+              currentRole={userRole}
+              variant="outlined"
+              size="small"
+              sx={{ 
+                width: '100%',
+                '& .MuiOutlinedInput-root': {
+                  borderColor: brandColors.borders.secondary,
+                  '&:hover': {
+                    borderColor: brandColors.primary,
+                  }
+                }
+              }}
+            />
+          </Box>
+
           {/* Station Button */}
           <Box sx={{ px: 2, mb: 2 }}>
             <Button
@@ -6509,4 +6528,4 @@ const CloseBrokeragesPage = () => {
   );
 };
 
-export default CloseBrokeragesPage;
+export default WorkspacesBrokeragesPage;

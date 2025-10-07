@@ -44,35 +44,35 @@ const ClosePage: React.FC = () => {
     label: 'Buyer',
       description: 'Complete your real estate purchase with our closing tools',
       icon: <PersonIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/close/buyer'
+      route: '/workspaces/buyer'
     },
     {
       value: 'agent',
       label: 'Agent',
       description: 'Manage your client closings and transactions',
       icon: <PersonIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/close/agent'
+      route: '/workspaces/agent'
     },
     {
       value: 'brokerages',
       label: 'Brokerages',
       description: 'Enterprise solutions for brokerage operations',
       icon: <AccountBalanceIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/close/brokerages'
+      route: '/workspaces/brokerages'
     },
     {
       value: 'professional-support',
       label: 'Professional Support',
       description: 'Legal, title, and escrow professional tools',
       icon: <SupportIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/close/professional-support'
+      route: '/workspaces/professional-support'
     },
     {
       value: 'businesses',
       label: 'Businesses',
       description: 'Corporate real estate and investment solutions',
       icon: <BusinessIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/close/businesses'
+      route: '/workspaces/businesses'
     }
   ];
 
@@ -112,20 +112,20 @@ const ClosePage: React.FC = () => {
   React.useEffect(() => {
     if (!allowRoleSelector && userRole) {
       const roleToRoute: Record<string, string> = {
-        'Retail Buyer': '/close/buyer',
-        'Investor Buyer': '/close/buyer',
-        'iBuyer': '/close/buyer',
-        'Property Flipper': '/close/buyer',
-        'Real Estate Agent': '/close/agent',
-        'Buyer’s Agent': '/close/agent',
-        'Listing Agent': '/close/agent',
-        'Commercial Agent': '/close/agent',
-        'Luxury Agent': '/close/agent',
-        'New Construction Agent': '/close/agent',
-        'Wholesaler': '/close/agent',
-        'Disposition Agent': '/close/agent',
-        'Real Estate Broker': '/close/brokerages',
-        'Title Agent': '/close/professional-support'
+        'Retail Buyer': '/workspaces/buyer',
+        'Investor Buyer': '/workspaces/buyer',
+        'iBuyer': '/workspaces/buyer',
+        'Property Flipper': '/workspaces/buyer',
+        'Real Estate Agent': '/workspaces/agent',
+        'Buyer\'s Agent': '/workspaces/agent',
+        'Listing Agent': '/workspaces/agent',
+        'Commercial Agent': '/workspaces/agent',
+        'Luxury Agent': '/workspaces/agent',
+        'New Construction Agent': '/workspaces/agent',
+        'Wholesaler': '/workspaces/agent',
+        'Disposition Agent': '/workspaces/agent',
+        'Real Estate Broker': '/workspaces/brokerages',
+        'Title Agent': '/workspaces/professional-support'
       };
       const next = roleToRoute[userRole];
       if (next) navigate(next);

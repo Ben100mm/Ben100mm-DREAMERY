@@ -122,7 +122,7 @@ const UnifiedDashboard: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/close');
+    navigate('/workspaces');
   };
 
   const toggleSidebarCollapse = () => {

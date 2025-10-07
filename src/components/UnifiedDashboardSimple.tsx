@@ -102,7 +102,7 @@ const UnifiedDashboardSimple: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/close');
+    navigate('/workspaces');
   };
 
   const renderWorkspaceContent = () => {

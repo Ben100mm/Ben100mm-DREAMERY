@@ -22,7 +22,7 @@ A comprehensive, professional-grade real estate platform built with React, TypeS
 ### **Financial & Investment Pages:**
 5. **Analyze** (`/analyze`) - Property analysis tools and market data
 6. **Underwrite** (`/underwrite`) - Loan underwriting with risk assessment
-7. **Close** (`/close`) - Transaction closing workflow and document management
+7. **Workspaces** (`/workspaces`) - Transaction closing workflow and document management
 8. **Invest** (`/invest`) - Investment opportunities and portfolio management
 9. **Fund** (`/fund`) - Funding sources and loan applications
 

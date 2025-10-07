@@ -32,16 +32,16 @@ const UnderwritePage = lazy(() => import('./pages/UnderwritePage'));
 const UXDemoPage = lazy(() => import('./pages/UXDemoPage'));
 
 const ClosePage = lazy(() => import('./pages/ClosePage'));
-const CloseBuyerPage = lazy(() => import('./pages/CloseBuyerPageNew'));
-const CloseAgentPage = lazy(() => import('./pages/CloseAgentPage'));
-const CloseBrokeragesPage = lazy(() => import('./pages/CloseBrokeragesPage'));
-const CloseProfessionalSupportPage = lazy(() => import('./pages/CloseProfessionalSupportPage'));
+const WorkspacesPage = lazy(() => import('./pages/WorkspacesPage'));
+const WorkspacesBuyerPage = lazy(() => import('./pages/WorkspacesBuyerPage'));
+const WorkspacesAgentPage = lazy(() => import('./pages/WorkspacesAgentPage'));
+const WorkspacesBrokeragesPage = lazy(() => import('./pages/WorkspacesBrokeragesPage'));
+const WorkspacesProfessionalSupportPage = lazy(() => import('./pages/WorkspacesProfessionalSupportPage'));
+const WorkspacesBusinessesPage = lazy(() => import('./pages/WorkspacesBusinessesPage'));
 const PartnerPage = lazy(() => import('./pages/partner'));
 const PartnerProfileCompletionPage = lazy(() => import('./pages/PartnerProfileCompletionPage'));
 const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage'));
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
-
-const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PerformanceDashboardPage = lazy(() => import('./pages/PerformanceDashboardPage'));
 
@@ -67,14 +67,14 @@ const AppContent = () => {
   const getRouteForRole = (role: string) => {
     if ([
       'Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'
-    ].includes(role)) return '/close/buyer';
+    ].includes(role)) return '/workspaces/buyer';
     if ([
-      'Real Estate Agent', 'Real Estate Broker', 'Realtor', "Buyer’s Agent",
+      'Real Estate Agent', 'Real Estate Broker', 'Realtor', "Buyer's Agent",
       'Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent',
       'Wholesaler', 'Disposition Agent'
-    ].includes(role)) return '/close/agent';
-    if (['Real Estate Broker'].includes(role)) return '/close/brokerages';
-    return '/close/other';
+    ].includes(role)) return '/workspaces/agent';
+    if (['Real Estate Broker'].includes(role)) return '/workspaces/brokerages';
+    return '/workspaces/other';
   };
 
   return (
@@ -104,20 +104,31 @@ const AppContent = () => {
       <Route path="/pre-approval-summary" element={<PreApprovalSummaryPage />} />
       <Route path="/pre-approval-results" element={<PreApprovalResultsPage />} />
       <Route path="/underwrite" element={<UnderwritePage />} />
-      <Route path="/close" element={<ClosePage />} />
-      <Route path="/close/buyer" element={<CloseBuyerPage />} />
-      <Route path="/close/agent" element={<CloseAgentPage />} />
-      <Route path="/close/brokerages" element={<CloseBrokeragesPage />} />
-      <Route path="/close/other" element={<OtherProfessionalPage />} />
-      <Route path="/close/professional-support" element={<CloseProfessionalSupportPage />} />
-      <Route path="/close/businesses" element={<CloseBusinessesPage />} />
+      
+      {/* New Workspaces Routes */}
+      <Route path="/workspaces" element={<WorkspacesPage />} />
+      <Route path="/workspaces/buyer" element={<WorkspacesBuyerPage />} />
+      <Route path="/workspaces/agent" element={<WorkspacesAgentPage />} />
+      <Route path="/workspaces/brokerages" element={<WorkspacesBrokeragesPage />} />
+      <Route path="/workspaces/businesses" element={<WorkspacesBusinessesPage />} />
+      <Route path="/workspaces/professional-support" element={<WorkspacesProfessionalSupportPage />} />
+      <Route path="/workspaces/other" element={<OtherProfessionalPage />} />
+      
+      {/* Redirects from old /close/* routes to new /workspaces/* routes */}
+      <Route path="/close" element={<Navigate to="/workspaces" replace />} />
+      <Route path="/close/buyer" element={<Navigate to="/workspaces/buyer" replace />} />
+      <Route path="/close/agent" element={<Navigate to="/workspaces/agent" replace />} />
+      <Route path="/close/brokerages" element={<Navigate to="/workspaces/brokerages" replace />} />
+      <Route path="/close/businesses" element={<Navigate to="/workspaces/businesses" replace />} />
+      <Route path="/close/professional-support" element={<Navigate to="/workspaces/professional-support" replace />} />
+      
       <Route path="/analyze" element={<AnalysisProvider><AnalyzePage /></AnalysisProvider>} />
-      <Route path="/manage" element={<Navigate to="/close/buyer?workspace=manage" replace />} />
-      <Route path="/invest" element={<Navigate to="/close/buyer?workspace=invest" replace />} />
-      <Route path="/fund" element={<Navigate to="/close/buyer?workspace=fund" replace />} />
-      <Route path="/operate" element={<Navigate to="/close/buyer?workspace=operate" replace />} />
-      <Route path="/learn" element={<Navigate to="/close/buyer?workspace=learn" replace />} />
-      <Route path="/advertise" element={<Navigate to="/close/buyer?workspace=advertise" replace />} />
+      <Route path="/manage" element={<Navigate to="/workspaces/buyer?workspace=manage" replace />} />
+      <Route path="/invest" element={<Navigate to="/workspaces/buyer?workspace=invest" replace />} />
+      <Route path="/fund" element={<Navigate to="/workspaces/buyer?workspace=fund" replace />} />
+      <Route path="/operate" element={<Navigate to="/workspaces/buyer?workspace=operate" replace />} />
+      <Route path="/learn" element={<Navigate to="/workspaces/buyer?workspace=learn" replace />} />
+      <Route path="/advertise" element={<Navigate to="/workspaces/buyer?workspace=advertise" replace />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />

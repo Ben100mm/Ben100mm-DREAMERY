@@ -1,7 +1,7 @@
 import React from 'react';
 import RoleWorkspace from '../components/RoleWorkspace';
 
-const CloseProfessionalSupportPage: React.FC = () => {
+const WorkspacesProfessionalSupportPage: React.FC = () => {
   return (
     <RoleWorkspace 
       allowedRoles={[
@@ -92,9 +92,9 @@ const CloseProfessionalSupportPage: React.FC = () => {
         'Wholesaler',
         'Investment Advisor'
       ]}
-      redirectPath="/close"
+      redirectPath="/workspaces"
     />
   );
 };
 
-export default CloseProfessionalSupportPage;
+export default WorkspacesProfessionalSupportPage;

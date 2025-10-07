@@ -57,6 +57,7 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext';
+import UnifiedRoleSelector from './UnifiedRoleSelector';
 
 // Types
 interface UserRole {
@@ -1657,7 +1658,7 @@ const roleConfigurations: Record<string, RoleConfig> = {
 
 const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
   allowedRoles = roleList,
-  redirectPath = '/close'
+  redirectPath = '/workspaces'
 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -6119,33 +6120,20 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
           {/* Role Selector */}
           {!state.sidebarCollapsed && (
             <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
-              <Button
+              <UnifiedRoleSelector 
+                currentRole={currentUserRole}
                 variant="outlined"
-                fullWidth
-                onClick={handleRoleSelectClick}
-                endIcon={<KeyboardArrowDownIcon />}
-                sx={{
-                  justifyContent: 'space-between',
-                  textTransform: 'none',
-                  borderColor: brandColors.borders.secondary,
-                  color: brandColors.text.primary,
-                  '&:hover': {
-                    borderColor: brandColors.primary,
-                    backgroundColor: brandColors.backgrounds.hover,
+                size="small"
+                sx={{ 
+                  width: '100%',
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: brandColors.borders.secondary,
+                    '&:hover': {
+                      borderColor: brandColors.primary,
+                    }
                   }
                 }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ color: currentRoleConfig?.color }}>
-                    {currentRoleConfig?.icon}
-                  </Box>
-                  <Box sx={{ textAlign: 'left' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                      {currentUserRole}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Button>
+              />
             </Box>
           )}
 

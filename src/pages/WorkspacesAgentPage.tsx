@@ -111,6 +111,8 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
 import { RoleContext } from "../context/RoleContext";
+import UnifiedRoleSelector from '../components/UnifiedRoleSelector';
+import OfficeSelector from '../components/OfficeSelector';
 import AgentMessages from "../components/agent/AgentMessages";
 
 // Custom Atom Icon Component
@@ -226,7 +228,7 @@ interface CloseState {
   showImportSuccess?: boolean;
 }
 
-const CloseAgentPage: React.FC = () => {
+const WorkspacesAgentPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -237,11 +239,11 @@ const CloseAgentPage: React.FC = () => {
   const listingRoles = ['Listing Agent', 'Commercial Agent', 'Luxury Agent', 'New Construction Agent', 'Disposition Agent'];
   const isAgentAuthorized = !!userRole && (buyingRoles.includes(userRole) || listingRoles.includes(userRole));
   
-  console.log('CloseAgentPage - userRole:', userRole, 'isAgentAuthorized:', isAgentAuthorized, 'buyingRoles:', buyingRoles, 'listingRoles:', listingRoles);
+  console.log('WorkspacesAgentPage - userRole:', userRole, 'isAgentAuthorized:', isAgentAuthorized, 'buyingRoles:', buyingRoles, 'listingRoles:', listingRoles);
   
   // Debug effect to log role changes
   useEffect(() => {
-    console.log('CloseAgentPage - userRole changed to:', userRole);
+    console.log('WorkspacesAgentPage - userRole changed to:', userRole);
   }, [userRole]);
 
   const [state, setState] = useState<CloseState>({
@@ -527,7 +529,7 @@ const CloseAgentPage: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/close');
+    navigate('/workspaces');
   };
 
   const mockClientTransactions = [
@@ -634,6 +636,43 @@ const CloseAgentPage: React.FC = () => {
         }}
       >
         <Box sx={{ py: 2 }}>
+          {/* Role Selector */}
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+            <UnifiedRoleSelector 
+              currentRole={userRole}
+              variant="outlined"
+              size="small"
+              sx={{ 
+                width: '100%',
+                '& .MuiOutlinedInput-root': {
+                  borderColor: brandColors.borders.secondary,
+                  '&:hover': {
+                    borderColor: brandColors.primary,
+                  }
+                }
+              }}
+            />
+          </Box>
+
+          {/* Office Selector */}
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+            <OfficeSelector 
+              selectedOffice={selectedOffice}
+              onOfficeChange={setSelectedOffice}
+              variant="outlined"
+              size="small"
+              sx={{ 
+                width: '100%',
+                '& .MuiOutlinedInput-root': {
+                  borderColor: brandColors.borders.secondary,
+                  '&:hover': {
+                    borderColor: brandColors.primary,
+                  }
+                }
+              }}
+            />
+          </Box>
+
           {/* Station Button */}
           <Box sx={{ px: 2, mb: 2 }}>
             <Button
@@ -654,45 +693,6 @@ const CloseAgentPage: React.FC = () => {
             </Button>
           </Box>
 
-          {/* Office Selection */}
-          <Box sx={{ px: 2, mb: 2 }}>
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                color: 'text.secondary', 
-                mb: 1, 
-                fontWeight: 500,
-                fontSize: '0.875rem'
-              }}
-            >
-              Select Office:
-            </Typography>
-            <FormControl fullWidth size="small">
-              <Select
-                value={selectedOffice}
-                onChange={(e) => setSelectedOffice(e.target.value)}
-                sx={{
-                  backgroundColor: 'white',
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  '& .MuiSelect-select': {
-                    fontWeight: 600,
-                    color: 'text.primary',
-                  },
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                }}
-              >
-                <MenuItem value="ALL">ALL</MenuItem>
-                <MenuItem value="MAIN">Main Office</MenuItem>
-                <MenuItem value="NORTH">North Branch</MenuItem>
-                <MenuItem value="SOUTH">South Branch</MenuItem>
-                <MenuItem value="EAST">East Branch</MenuItem>
-                <MenuItem value="WEST">West Branch</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
 
           <List>
             {tabs.map((tab) => (
@@ -3257,24 +3257,6 @@ const CloseAgentPage: React.FC = () => {
                           <option value="agent2">Michael Renfroe</option>
                           <option value="agent3">Angela Davis</option>
                           <option value="agent4">Clarence King</option>
-                        </select>
-                      </Box>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Office *</Typography>
-                        <select 
-                          style={{ 
-                            width: '100%', 
-                            padding: '12px', 
-                            border: '1px solid brandColors.neutral[400]', 
-                            borderRadius: '4px', 
-                            fontSize: '14px' 
-                          }}
-                        >
-                          <option value="">Select Office</option>
-                          <option value="eric">Eric Office</option>
-                          <option value="main">Main Office</option>
-                          <option value="north">North Office</option>
-                          <option value="east">East Office</option>
                         </select>
                       </Box>
                       <Box>
@@ -11430,4 +11412,4 @@ const CloseAgentPage: React.FC = () => {
   );
 };
 
-export default CloseAgentPage;
+export default WorkspacesAgentPage;

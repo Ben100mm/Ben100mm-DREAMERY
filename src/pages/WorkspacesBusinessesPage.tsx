@@ -42,6 +42,7 @@ import {
   Chat as ChatIcon,
 } from '@mui/icons-material';
 import { brandColors } from "../theme";
+import UnifiedRoleSelector from '../components/UnifiedRoleSelector';
 import BusinessMessages from "../components/business/BusinessMessages";
 
 // Custom Atom Icon Component
@@ -156,7 +157,7 @@ interface CloseState {
   notifications: number;
 }
 
-const CloseBusinessesPage: React.FC = () => {
+const WorkspacesBusinessesPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -209,7 +210,7 @@ const CloseBusinessesPage: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/close');
+    navigate('/workspaces');
   };
 
   const mockBusinessData = {
@@ -285,6 +286,23 @@ const CloseBusinessesPage: React.FC = () => {
         }}
       >
         <Box sx={{ py: 2 }}>
+          {/* Role Selector */}
+          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+            <UnifiedRoleSelector 
+              variant="outlined"
+              size="small"
+              sx={{ 
+                width: '100%',
+                '& .MuiOutlinedInput-root': {
+                  borderColor: brandColors.borders.secondary,
+                  '&:hover': {
+                    borderColor: brandColors.primary,
+                  }
+                }
+              }}
+            />
+          </Box>
+
           {/* Station Button */}
           <Box sx={{ px: 2, mb: 2 }}>
             <Button
@@ -724,4 +742,4 @@ const CloseBusinessesPage: React.FC = () => {
   );
 };
 
-export default CloseBusinessesPage;
+export default WorkspacesBusinessesPage;

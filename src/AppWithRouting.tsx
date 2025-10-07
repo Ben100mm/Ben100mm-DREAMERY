@@ -40,8 +40,6 @@ const PartnerPage = lazy(() => import('./pages/partner'));
 const PartnerProfileCompletionPage = lazy(() => import('./pages/PartnerProfileCompletionPage'));
 const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage'));
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
-const LearnPage = lazy(() => import('./pages/LearnPage'));
-const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
 
 const CloseBusinessesPage = lazy(() => import('./pages/CloseBusinessesPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -118,8 +116,8 @@ const AppContent = () => {
       <Route path="/invest" element={<Navigate to="/close/buyer?workspace=invest" replace />} />
       <Route path="/fund" element={<Navigate to="/close/buyer?workspace=fund" replace />} />
       <Route path="/operate" element={<Navigate to="/close/buyer?workspace=operate" replace />} />
-      <Route path="/learn" element={<LearnPage />} />
-      <Route path="/advertise" element={<AdvertisePage />} />
+      <Route path="/learn" element={<Navigate to="/close/buyer?workspace=learn" replace />} />
+      <Route path="/advertise" element={<Navigate to="/close/buyer?workspace=advertise" replace />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />

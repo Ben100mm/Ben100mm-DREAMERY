@@ -194,8 +194,8 @@ const HighLevelScrapingDemo: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               {property.property_id}
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box>
                 <Typography variant="body2">
                   <strong>Price:</strong> {property.list_price ? `$${property.list_price.toLocaleString()}` : 'N/A'}
                 </Typography>
@@ -211,8 +211,8 @@ const HighLevelScrapingDemo: React.FC = () => {
                 <Typography variant="body2">
                   <strong>SQFT:</strong> {property.description?.sqft || 'N/A'}
                 </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
+              </Box>
+              <Box>
                 <Typography variant="body2">
                   <strong>Status:</strong> {property.status || 'N/A'}
                 </Typography>
@@ -228,8 +228,8 @@ const HighLevelScrapingDemo: React.FC = () => {
                 <Typography variant="body2">
                   <strong>Days on MLS:</strong> {property.days_on_mls || 'N/A'}
                 </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Paper>
         ))}
       </Box>

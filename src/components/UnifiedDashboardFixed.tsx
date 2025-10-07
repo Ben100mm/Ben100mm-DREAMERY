@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Box,
   AppBar,
@@ -41,6 +41,8 @@ import ManageWorkspace from './workspaces/ManageWorkspace';
 import FundWorkspace from './workspaces/FundWorkspace';
 import InvestWorkspace from './workspaces/InvestWorkspace';
 import OperateWorkspace from './workspaces/OperateWorkspace';
+import LearnWorkspace from './workspaces/LearnWorkspace';
+import AdvertiseWorkspace from './workspaces/AdvertiseWorkspace';
 import { WorkspaceConfig } from '../data/workspaces/types';
 
 // Inline workspace configurations to avoid import issues
@@ -144,10 +146,46 @@ const operateWorkspaceConfig: WorkspaceConfig = {
   ],
 };
 
+const learnWorkspaceConfig: WorkspaceConfig = {
+  id: 'learn',
+  name: 'Learn',
+  description: 'Real estate education and learning platform',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
+  defaultTab: 'dashboard',
+  sidebarItems: [
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'courses', label: 'Courses' },
+    { id: 'casestudies', label: 'Case Studies' },
+    { id: 'qa', label: 'Q&A' },
+    { id: 'livesessions', label: 'Live Sessions' },
+    { id: 'aitutor', label: 'Lumina' },
+  ],
+};
+
+const advertiseWorkspaceConfig: WorkspaceConfig = {
+  id: 'advertise',
+  name: 'Advertise',
+  description: 'Marketing tools and advertising platform',
+  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
+  color: brandColors.primary,
+  defaultTab: 'dashboard',
+  sidebarItems: [
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'calendar', label: 'Calendar' },
+    { id: 'ads', label: 'Ads' },
+    { id: 'promotions', label: 'Promotions' },
+    { id: 'create', label: 'Create' },
+    { id: 'analytics', label: 'Analytics' },
+    { id: 'settings', label: 'Settings' },
+  ],
+};
+
 const UnifiedDashboardFixed: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [searchParams] = useSearchParams();
   const userRole = (useContext(RoleContext as any) as any)?.userRole || 'Retail Buyer';
   const allowedRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
   const isBuyerAuthorized = allowedRoles.includes(userRole);
@@ -161,13 +199,28 @@ const UnifiedDashboardFixed: React.FC = () => {
     fundWorkspaceConfig,
     investWorkspaceConfig,
     operateWorkspaceConfig,
+    learnWorkspaceConfig,
+    advertiseWorkspaceConfig,
   ];
 
   const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace || 'close');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  
+  // Debug activeTab changes
+  useEffect(() => {
+    console.log('UnifiedDashboardFixed - activeTab changed to:', activeTab, 'selectedWorkspace:', selectedWorkspace);
+  }, [activeTab, selectedWorkspace]);
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(preferences.customLayout.sidebarCollapsed);
+
+  // Handle workspace query parameter
+  useEffect(() => {
+    const workspaceParam = searchParams.get('workspace');
+    if (workspaceParam && availableWorkspaces.some(w => w.id === workspaceParam)) {
+      setSelectedWorkspace(workspaceParam);
+    }
+  }, [searchParams, availableWorkspaces]);
 
   // Update active tab when workspace changes
   useEffect(() => {
@@ -225,6 +278,10 @@ const UnifiedDashboardFixed: React.FC = () => {
         return <InvestWorkspace activeTab={activeTab} />;
       case 'operate':
         return <OperateWorkspace activeTab={activeTab} />;
+      case 'learn':
+        return <LearnWorkspace activeTab={activeTab} />;
+      case 'advertise':
+        return <AdvertiseWorkspace activeTab={activeTab} />;
       default:
         return <CloseWorkspace activeTab={activeTab} />;
     }

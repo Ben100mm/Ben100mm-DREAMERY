@@ -8,7 +8,6 @@ import {
   Box,
   TextField,
   Button,
-  Grid,
   Typography,
   Alert,
   CircularProgress,
@@ -64,9 +63,6 @@ const ResultsContainer = styled(Box)({
   marginTop: '24px',
 });
 
-const PropertyGrid = styled(Grid)({
-  marginTop: '16px',
-});
 
 const LoadingContainer = styled(Box)({
   display: 'flex',
@@ -105,7 +101,7 @@ const EnhancedPropertySearch: React.FC = () => {
   const [scraperInput, setScraperInput] = useState<ScraperInput>({
     location: 'San Francisco, CA',
     listing_type: ListingType.FOR_SALE,
-    property_type: [SearchPropertyType.SINGLE_FAMILY, SearchPropertyType.CONDO],
+    property_type: [SearchPropertyType.SINGLE_FAMILY, SearchPropertyType.CONDOS],
     radius: 5.0,
     mls_only: false,
     last_x_days: 30,
@@ -395,11 +391,11 @@ const EnhancedPropertySearch: React.FC = () => {
               Found {properties.length} properties
             </Typography>
             
-            <PropertyGrid container spacing={2}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {properties.map((property) => {
                 const display = formatPropertyForDisplay(property);
                 return (
-                  <Grid item xs={12} key={property.property_id}>
+                  <Box key={property.property_id}>
                     <PropertyCard elevation={2}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Typography variant="h5" color="primary">
@@ -452,8 +448,8 @@ const EnhancedPropertySearch: React.FC = () => {
                           Enhanced Property Data (Pydantic Validated)
                         </Typography>
                         
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} md={6}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          <Box>
                             <Typography variant="body2" color="text.secondary">
                               <strong>MLS:</strong> {display.mls || 'N/A'}
                             </Typography>
@@ -482,9 +478,9 @@ const EnhancedPropertySearch: React.FC = () => {
                                 <strong>HOA Fee:</strong> ${display.hoaFee}/month
                               </Typography>
                             )}
-                          </Grid>
+                          </Box>
                           
-                          <Grid item xs={12} md={6}>
+                          <Box>
                             {display.schools && display.schools.length > 0 && (
                               <Box>
                                 <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -509,8 +505,8 @@ const EnhancedPropertySearch: React.FC = () => {
                                 </Box>
                               </Box>
                             )}
-                          </Grid>
-                        </Grid>
+                          </Box>
+                        </Box>
 
                         {display.advertisers?.agent && (
                           <Box sx={{ mt: 2, p: 2, backgroundColor: 'primary.50', borderRadius: 1 }}>
@@ -569,10 +565,10 @@ const EnhancedPropertySearch: React.FC = () => {
                         )}
                       </InfoSection>
                     </PropertyCard>
-                  </Grid>
+                  </Box>
                 );
               })}
-            </PropertyGrid>
+            </Box>
           </>
         )}
 

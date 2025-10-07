@@ -1,6 +1,15 @@
 // Advanced calculation utilities for enhanced financial analysis
 // These utilities can be integrated with existing calculations without breaking current functionality
 
+import {
+  StressTestInputs,
+  ComprehensiveStressTestResults,
+  StressTestScenarios,
+  DEFAULT_STRESS_SCENARIOS,
+  runComprehensiveStressTest,
+  createCustomScenario,
+} from './stressTests';
+
 export interface MarketConditions {
   type: "hot" | "stable" | "slow";
   vacancyRateAdjustment: number; // Percentage adjustment to base vacancy rate
@@ -681,6 +690,123 @@ export const calculateStressTest = (
     riskLevel,
   };
 };
+
+/**
+ * Enhanced stress test function that runs comprehensive analysis across 4 scenarios:
+ * 1. Recession - income -20%, expenses +15%, vacancy +10%, depreciation -10%
+ * 2. Interest Rate Shock - rate +3%, refinance impact
+ * 3. Operating Shock - major repair $50k, legal $15k, 6mo vacancy
+ * 4. Market Correction - price -15%, rent -10%, 12mo time to sell
+ * 
+ * @param inputs - Property and financial inputs for stress testing
+ * @param customScenarios - Optional custom scenarios (uses defaults if not provided)
+ * @returns Comprehensive stress test results with all scenarios and recommendations
+ */
+export const calculateAdvancedStressTest = (
+  inputs: StressTestInputs,
+  customScenarios?: Partial<StressTestScenarios>,
+): ComprehensiveStressTestResults => {
+  const scenarios = customScenarios
+    ? createCustomScenario(customScenarios)
+    : DEFAULT_STRESS_SCENARIOS;
+
+  return runComprehensiveStressTest(inputs, scenarios);
+};
+
+/**
+ * Helper function to convert common property data to StressTestInputs format
+ */
+export const prepareStressTestInputs = (
+  propertyValue: number,
+  downPaymentPercentage: number,
+  loanInterestRate: number,
+  loanTermYears: number,
+  monthlyRent: number,
+  monthlyExpenses: number,
+  monthlyCashFlow: number,
+  annualRoi: number,
+): StressTestInputs => {
+  const downPayment = propertyValue * (downPaymentPercentage / 100);
+  const loanAmount = propertyValue - downPayment;
+  const loanTermMonths = loanTermYears * 12;
+
+  return {
+    propertyValue,
+    monthlyRent,
+    monthlyExpenses,
+    monthlyCashFlow,
+    currentInterestRate: loanInterestRate,
+    loanAmount,
+    loanTerm: loanTermMonths,
+    downPayment,
+    annualRoi,
+  };
+};
+
+/**
+ * Quick stress test that returns simplified results
+ * Useful for UI components that need summary information
+ */
+export const quickStressTestSummary = (
+  inputs: StressTestInputs,
+): {
+  overallRisk: "Low" | "Medium" | "High" | "Critical";
+  worstCaseScenario: string;
+  worstCaseImpact: number;
+  criticalScenarios: string[];
+  highRiskScenarios: string[];
+  passedScenarios: string[];
+} => {
+  const results = runComprehensiveStressTest(inputs);
+
+  const criticalScenarios: string[] = [];
+  const highRiskScenarios: string[] = [];
+  const passedScenarios: string[] = [];
+
+  Object.entries(results.scenarios).forEach(([key, scenario]) => {
+    if (scenario.riskLevel === "Critical") {
+      criticalScenarios.push(scenario.scenarioName);
+    } else if (scenario.riskLevel === "High") {
+      highRiskScenarios.push(scenario.scenarioName);
+    } else {
+      passedScenarios.push(scenario.scenarioName);
+    }
+  });
+
+  let overallRisk: "Low" | "Medium" | "High" | "Critical";
+  if (results.overallRiskScore >= 75) {
+    overallRisk = "Critical";
+  } else if (results.overallRiskScore >= 50) {
+    overallRisk = "High";
+  } else if (results.overallRiskScore >= 25) {
+    overallRisk = "Medium";
+  } else {
+    overallRisk = "Low";
+  }
+
+  return {
+    overallRisk,
+    worstCaseScenario: results.worstCaseScenario.scenarioName,
+    worstCaseImpact: results.worstCaseScenario.impact,
+    criticalScenarios,
+    highRiskScenarios,
+    passedScenarios,
+  };
+};
+
+// Re-export stress test types for convenience
+export type {
+  StressTestInputs,
+  ComprehensiveStressTestResults,
+  StressTestScenarios,
+  RecessionScenario,
+  InterestRateShockScenario,
+  OperatingShockScenario,
+  MarketCorrectionScenario,
+  StressTestResult,
+} from './stressTests';
+
+export { DEFAULT_STRESS_SCENARIOS } from './stressTests';
 
 // Risk scoring system with weighted factors
 export const calculateRiskScore = (

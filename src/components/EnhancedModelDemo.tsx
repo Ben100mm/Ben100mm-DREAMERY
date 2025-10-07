@@ -406,12 +406,11 @@ const EnhancedModelDemo: React.FC = () => {
               Found {properties.length} properties with enhanced model validation
             </Typography>
             
-            <PropertyGrid container spacing={2}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {properties.map((property) => {
                 const display = formatPropertyForDisplay(property);
                 return (
-                  <Grid item xs={12} key={property.property_id}>
-                    <PropertyCard elevation={2}>
+                  <PropertyCard elevation={2} key={property.property_id}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Typography variant="h5" color="primary">
                           {display.price}
@@ -463,8 +462,8 @@ const EnhancedModelDemo: React.FC = () => {
                           Enhanced Property Data (Pydantic Validated)
                         </Typography>
                         
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} md={6}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
+                          <Box>
                             <Typography variant="body2" color="text.secondary">
                               <strong>MLS:</strong> {display.mls || 'N/A'}
                             </Typography>
@@ -493,9 +492,9 @@ const EnhancedModelDemo: React.FC = () => {
                                 <strong>HOA Fee:</strong> ${display.hoaFee}/month
                               </Typography>
                             )}
-                          </Grid>
+                          </Box>
                           
-                          <Grid item xs={12} md={6}>
+                          <Box>
                             {display.schools && display.schools.length > 0 && (
                               <Box>
                                 <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -520,8 +519,8 @@ const EnhancedModelDemo: React.FC = () => {
                                 </Box>
                               </Box>
                             )}
-                          </Grid>
-                        </Grid>
+                          </Box>
+                        </Box>
 
                         {display.advertisers?.agent && (
                           <Box sx={{ mt: 2, p: 2, backgroundColor: 'primary.50', borderRadius: 1 }}>
@@ -599,10 +598,9 @@ const EnhancedModelDemo: React.FC = () => {
                         </ModelInfo>
                       </InfoSection>
                     </PropertyCard>
-                  </Grid>
                 );
               })}
-            </PropertyGrid>
+            </Box>
           </>
         )}
 

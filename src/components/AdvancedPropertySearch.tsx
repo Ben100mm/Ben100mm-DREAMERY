@@ -312,12 +312,11 @@ const AdvancedPropertySearch: React.FC = () => {
               Found {properties.length} properties
             </Typography>
             
-            <PropertyGrid container spacing={2}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
               {properties.map((property) => {
                 const display = formatPropertyForDisplay(property);
                 return (
-                  <Grid item xs={12} md={6} key={property.property_id}>
-                    <PropertyCard elevation={2}>
+                  <PropertyCard elevation={2} key={property.property_id}>
                       <Typography variant="h6" gutterBottom>
                         {display.price}
                       </Typography>
@@ -399,10 +398,9 @@ const AdvancedPropertySearch: React.FC = () => {
                         </Box>
                       )}
                     </PropertyCard>
-                  </Grid>
                 );
               })}
-            </PropertyGrid>
+            </Box>
           </>
         )}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { brandColors } from '../../theme';
+import { brandColors } from '../../../theme';
 
 interface ClosingAssistantIconProps {
   sx?: any;

@@ -53,7 +53,6 @@ const closeWorkspaceConfig: WorkspaceConfig = {
   defaultTab: 'dashboard',
   sidebarItems: [
     { id: 'dashboard', label: 'Dashboard' },
-    { id: 'calendar', label: 'Calendar' },
     { id: 'messages', label: 'Messages' },
     { id: 'escrow-title', label: 'Escrow & Title' },
     { id: 'due-diligence', label: 'Due Diligence' },

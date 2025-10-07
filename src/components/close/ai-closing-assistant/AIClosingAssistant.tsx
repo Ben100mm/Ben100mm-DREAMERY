@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Alert } from '@mui/material';
-import { brandColors } from "../../theme";
+import { brandColors } from "../../../theme";
 import ClosingAssistantIcon from './ClosingAssistantIcon';
 
 const AIClosingAssistant: React.FC = () => {

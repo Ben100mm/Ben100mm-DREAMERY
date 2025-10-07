@@ -377,8 +377,8 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
       </Box>
 
       {/* Key Metrics */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 3, mb: 4 }}>
+        <Box>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -402,9 +402,9 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Box>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -428,9 +428,9 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Box>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -454,9 +454,9 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Box>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -480,8 +480,8 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       {/* Progress Alert */}
       <Alert severity="info" sx={{ mb: 3 }}>
@@ -629,9 +629,9 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
           <Typography variant="h6" sx={{ color: brandColors.primary, mb: 3 }}>
             Active Tasks
           </Typography>
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
             {tasks.map((task) => (
-              <Grid item xs={12} md={6} lg={4} key={task.id}>
+              <Box key={task.id}>
                 <Card sx={{ height: '100%' }}>
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -675,9 +675,9 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Box>
       )}
 
@@ -728,8 +728,8 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
           <Typography variant="h6" sx={{ color: brandColors.primary, mb: 3 }}>
             Performance Analytics
           </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2 }}>
@@ -774,8 +774,8 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Box>
+            <Box>
               <Card>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2 }}>
@@ -809,8 +809,8 @@ const AcquisitionSpecialistDashboard: React.FC = () => {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Box>
       )}
     </Box>

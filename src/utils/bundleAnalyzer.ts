@@ -147,9 +147,9 @@ export class BundleSizeTracker {
     const percentage = (change / previous.metrics.totalSize) * 100;
     
     if (change > 0) {
-      return `+(change / 1024).toFixed(1)KB (+percentage.toFixed(1)%)`;
+      return `+${(change / 1024).toFixed(1)}KB (+${percentage.toFixed(1)}%)`;
     } else {
-      return `${(change / 1024).toFixed(1)}KB (percentage.toFixed(1)%)`;
+      return `${(change / 1024).toFixed(1)}KB (${percentage.toFixed(1)}%)`;
     }
   }
   

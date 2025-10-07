@@ -31,7 +31,6 @@ import {
 
 import ClosingAssistantIcon from '../components/close/ai-closing-assistant/ClosingAssistantIcon';
 import ClosingDashboard from '../components/close/closing-dashboard/ClosingDashboard';
-import ClosingCalendar from '../components/close/calendar/ClosingCalendar';
 import EscrowTitleHub from '../components/close/escrow-title-hub/EscrowTitleHub';
 import DueDiligenceTools from '../components/close/due-diligence/DueDiligenceTools';
 import LazyDueDiligenceTools from '../components/lazy/DueDiligenceToolsLazy';
@@ -224,7 +223,6 @@ const CloseBuyerPage: React.FC = () => {
 
   const tabs = [
     { value: 'dashboard', label: 'Dashboard' },
-    { value: 'calendar', label: 'Calendar' },
     { value: 'escrow-title', label: 'Escrow & Title' },
     { value: 'due-diligence', label: 'Due Diligence' },
     { value: 'financing', label: 'Financing' },
@@ -241,8 +239,6 @@ const CloseBuyerPage: React.FC = () => {
     switch (state.activeTab) {
       case 'dashboard':
         return <ClosingDashboard />;
-      case 'calendar':
-        return <ClosingCalendar />;
       case 'escrow-title':
         return <EscrowTitleHub />;
       case 'due-diligence':
@@ -714,34 +710,6 @@ const CloseBuyerPage: React.FC = () => {
                 </Paper>
                 <Box sx={{ pl: 0, ml: 3 }}>
                   <EscrowTitleHub />
-                </Box>
-              </>
-            )}
-            
-            {state.activeTab === 'calendar' && (
-              <>
-                <Paper 
-                  elevation={0} 
-                  sx={{ 
-                    mb: 4, 
-                    p: 3, 
-                    backgroundColor: brandColors.primary,
-                    borderRadius: '16px 16px 0 0',
-                    color: brandColors.text.inverse
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <Box sx={{ width: 28, height: 28, backgroundColor: brandColors.text.inverse, borderRadius: 1 }} />
-                    <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
-                      Closing Calendar
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                    Schedule and track all closing-related events and milestones
-                  </Typography>
-                </Paper>
-                <Box sx={{ pl: 0, ml: 3 }}>
-                  <ClosingCalendar />
                 </Box>
               </>
             )}

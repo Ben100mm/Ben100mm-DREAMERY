@@ -521,7 +521,7 @@ const AppleMapsComponent: React.FC<AppleMapsComponentProps> = ({
               min={0}
               max={10000000}
               step={100000}
-              valueLabelFormat={(value) => `$${(value / 1000000).toFixed(1)}M`}
+              valueLabelFormat={(value) => `${(value / 1000000).toFixed(1)}M`}
               color="primary"
             />
           </Box>

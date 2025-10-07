@@ -699,32 +699,32 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                               </Typography>
                               <Grid container spacing={1}>
                                 {period.views_total && (
-                                  <Grid item xs={6}>
+                                  <Box sx={{ gridColumn: 'span 6' }}>
                                     <Typography variant="caption" sx={{ color: brandColors.text.secondary }}>
                                       Views: {period.views_total.toLocaleString()}
                                     </Typography>
-                                  </Grid>
+                                  </Box>
                                 )}
                                 {period.saves_total && (
-                                  <Grid item xs={6}>
+                                  <Box sx={{ gridColumn: 'span 6' }}>
                                     <Typography variant="caption" sx={{ color: brandColors.text.secondary }}>
                                       Saves: {period.saves_total.toLocaleString()}
                                     </Typography>
-                                  </Grid>
+                                  </Box>
                                 )}
                                 {period.clicks_total && (
-                                  <Grid item xs={6}>
+                                  <Box sx={{ gridColumn: 'span 6' }}>
                                     <Typography variant="caption" sx={{ color: brandColors.text.secondary }}>
                                       Clicks: {period.clicks_total.toLocaleString()}
                                     </Typography>
-                                  </Grid>
+                                  </Box>
                                 )}
                                 {period.leads_total && (
-                                  <Grid item xs={6}>
+                                  <Box sx={{ gridColumn: 'span 6' }}>
                                     <Typography variant="caption" sx={{ color: brandColors.text.secondary }}>
                                       Leads: {period.leads_total.toLocaleString()}
                                     </Typography>
-                                  </Grid>
+                                  </Box>
                                 )}
                               </Grid>
                             </Box>

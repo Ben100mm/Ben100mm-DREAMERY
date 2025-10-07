@@ -702,10 +702,18 @@ function calculateCoCWithConfidence(state: DealState): MetricWithConfidence {
   const monthlyCashFlow = monthlyIncome - monthlyFixedOps - monthlyVariableOps - monthlyDebtService;
   const annualCashFlow = monthlyCashFlow * 12;
   
-  const cashInvested = state.loan.downPayment +
-    (state.loan.closingCosts || 0) +
-    (state.loan.rehabCosts || 0) +
-    (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
+  const cashInvested = state.operationType === "Rental Arbitrage"
+    ? // Rental Arbitrage: only startup costs, no purchase/down payment/closing
+      (state.arbitrage?.deposit || 0) +
+      (state.arbitrage?.estimateCostOfRepairs || 0) +
+      (state.arbitrage?.furnitureCost || 0) +
+      (state.arbitrage?.otherStartupCosts || 0) +
+      (state.loan.rehabCosts || 0)
+    : // Traditional purchase: down payment + closing + rehab + furniture (if STR)
+      state.loan.downPayment +
+      (state.loan.closingCosts || 0) +
+      (state.loan.rehabCosts || 0) +
+      (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
   
   if (cashInvested <= 0) {
     return {
@@ -793,10 +801,18 @@ function calculateCapRateWithConfidence(state: DealState): MetricWithConfidence 
 
 // Calculate ROI with confidence intervals
 function calculateROIWithConfidence(state: DealState): MetricWithConfidence {
-  const cashInvested = state.loan.downPayment +
-    (state.loan.closingCosts || 0) +
-    (state.loan.rehabCosts || 0) +
-    (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
+  const cashInvested = state.operationType === "Rental Arbitrage"
+    ? // Rental Arbitrage: only startup costs, no purchase/down payment/closing
+      (state.arbitrage?.deposit || 0) +
+      (state.arbitrage?.estimateCostOfRepairs || 0) +
+      (state.arbitrage?.furnitureCost || 0) +
+      (state.arbitrage?.otherStartupCosts || 0) +
+      (state.loan.rehabCosts || 0)
+    : // Traditional purchase: down payment + closing + rehab + furniture (if STR)
+      state.loan.downPayment +
+      (state.loan.closingCosts || 0) +
+      (state.loan.rehabCosts || 0) +
+      (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
   
   if (cashInvested <= 0) {
     return {
@@ -1508,7 +1524,8 @@ function computeCocAnnual(state: DealState, annualCashFlow: number): number {
       ? (state.arbitrage?.deposit ?? 0) +
         (state.arbitrage?.estimateCostOfRepairs ?? 0) +
         (state.arbitrage?.furnitureCost ?? 0) +
-        (state.arbitrage?.otherStartupCosts ?? 0)
+        (state.arbitrage?.otherStartupCosts ?? 0) +
+        (state.loan.rehabCosts || 0)
       : // Buyer's entry cash for non-arbitrage: Down + Closing + Rehab + STR furniture (if STR) + Subject-To seller payment + reserves (if modeled)
         (state.loan.downPayment || 0) +
         (state.loan.closingCosts || 0) +
@@ -1742,7 +1759,8 @@ function calculateComprehensiveMOIC(
       ? (state.arbitrage?.deposit ?? 0) +
         (state.arbitrage?.estimateCostOfRepairs ?? 0) +
         (state.arbitrage?.furnitureCost ?? 0) +
-        (state.arbitrage?.otherStartupCosts ?? 0)
+        (state.arbitrage?.otherStartupCosts ?? 0) +
+        (state.loan.rehabCosts || 0)
       : (state.loan.downPayment || 0) +
         (state.loan.closingCosts || 0) +
         (state.loan.rehabCosts || 0) +
@@ -1953,7 +1971,8 @@ function isCashOnCashValid(state: DealState): boolean {
       ? (state.arbitrage?.deposit ?? 0) +
         (state.arbitrage?.estimateCostOfRepairs ?? 0) +
         (state.arbitrage?.furnitureCost ?? 0) +
-        (state.arbitrage?.otherStartupCosts ?? 0)
+        (state.arbitrage?.otherStartupCosts ?? 0) +
+        (state.loan.rehabCosts || 0)
       : (state.loan.downPayment || 0) +
         (state.loan.closingCosts || 0) +
         (state.loan.rehabCosts || 0) +
@@ -6696,8 +6715,8 @@ const UnderwritePage: React.FC = () => {
                   >
                     <TextField
                       fullWidth
-                      label="Purchase Price"
-                      value={formatCurrency(state.purchasePrice || 0)}
+                      label={state.operationType === "Rental Arbitrage" ? "Property Value (Ref Only)" : "Purchase Price"}
+                      value={formatCurrency(state.operationType === "Rental Arbitrage" ? 0 : state.purchasePrice || 0)}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -6725,7 +6744,9 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Total Cash Required"
                       value={formatCurrency(
-                        (state.purchasePrice || 0) +
+                        (state.operationType === "Rental Arbitrage"
+                          ? 0
+                          : state.purchasePrice || 0) +
                           (state.operationType === "Rental Arbitrage" &&
                           (state.propertyType === "Office" ||
                             state.propertyType === "Retail")
@@ -7878,7 +7899,9 @@ const UnderwritePage: React.FC = () => {
                       gridTemplateColumns: { xs: "1fr" },
                     }}
                   >
-                    {state.propertyType === "Single Family" ? (
+                    {state.propertyType === "Single Family" &&
+                    state.operationType !== "Short Term Rental" &&
+                    state.operationType !== "Rental Arbitrage" ? (
                       <TextField
                         fullWidth
                         label="Monthly Rent"
@@ -7895,7 +7918,9 @@ const UnderwritePage: React.FC = () => {
                           ),
                         }}
                       />
-                    ) : (
+                    ) : state.propertyType !== "Single Family" ||
+                      (state.operationType !== "Short Term Rental" &&
+                       state.operationType !== "Rental Arbitrage") ? (
                       <TextField
                         fullWidth
                         label="Extra Monthly Income"
@@ -7930,7 +7955,7 @@ const UnderwritePage: React.FC = () => {
                           ),
                         }}
                       />
-                    )}
+                    ) : null}
                   </Box>
                 </Box>
               </AccordionDetails>
@@ -11220,7 +11245,8 @@ const UnderwritePage: React.FC = () => {
 
                 {/* Enhanced STR Settings */}
                 {(state.propertyType === "Hotel" ||
-                  state.operationType === "Short Term Rental") && (
+                  state.operationType === "Short Term Rental" ||
+                  state.operationType === "Rental Arbitrage") && (
                   <Box
                     sx={{
                       p: 2,
@@ -11237,7 +11263,7 @@ const UnderwritePage: React.FC = () => {
                           fontSize: "0.9rem",
                         }}
                       >
-                        Enhanced STR Revenue Model
+                        Enhanced STR/Arbitrage Revenue Model
                       </Typography>
                       <FormControlLabel
                         control={
@@ -11577,7 +11603,8 @@ const UnderwritePage: React.FC = () => {
                 
                 {/* STR/Hotel Specific Metrics */}
                 {(state.propertyType === "Hotel" ||
-                  state.operationType === "Short Term Rental") && (
+                  state.operationType === "Short Term Rental" ||
+                  state.operationType === "Rental Arbitrage") && (
                   <Box
                     sx={{
                       p: 2,

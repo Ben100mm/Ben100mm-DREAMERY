@@ -62,8 +62,9 @@ export async function exampleBasicSimulation(): Promise<MonteCarloResults> {
 }
 
 /**
- * Example 2: Custom Uncertainty Parameters
+ * Example 2: Custom Uncertainty Parameters with Correlation
  * More aggressive assumptions for a high-growth market
+ * Demonstrates correlated income and expense growth (0.6 correlation)
  */
 export async function exampleCustomUncertainty(): Promise<MonteCarloResults> {
   const baseState: BaseState = {
@@ -82,12 +83,12 @@ export async function exampleCustomUncertainty(): Promise<MonteCarloResults> {
   };
 
   // Custom uncertainty parameters for high-growth market
+  // Using normal distributions to enable correlation modeling
   const uncertaintyParameters: UncertaintyParameters = {
     rentGrowthDistribution: {
-      type: 'triangular',
-      min: 0.03, // 3% minimum rent growth
-      mode: 0.05, // 5% most likely
-      max: 0.08, // 8% maximum
+      type: 'normal',
+      mean: 0.05, // 5% average rent growth
+      stdDev: 0.015, // 1.5% standard deviation
     },
     initialRentDistribution: {
       type: 'normal',
@@ -95,10 +96,9 @@ export async function exampleCustomUncertainty(): Promise<MonteCarloResults> {
       stdDev: baseState.initialMonthlyRent * 0.08, // 8% variation
     },
     expenseGrowthDistribution: {
-      type: 'triangular',
-      min: 0.02,
-      mode: 0.035,
-      max: 0.06,
+      type: 'normal',
+      mean: 0.04, // 4% average expense growth
+      stdDev: 0.012, // 1.2% standard deviation
     },
     appreciationDistribution: {
       type: 'triangular',
@@ -123,6 +123,7 @@ export async function exampleCustomUncertainty(): Promise<MonteCarloResults> {
       mean: baseState.purchasePrice,
       stdDev: baseState.purchasePrice * 0.03, // 3% negotiation range
     },
+    incomeExpenseCorrelation: 0.6, // 60% correlation between income and expense growth
   };
 
   const inputs: MonteCarloInputs = {
@@ -217,7 +218,69 @@ export async function exampleConservativeAnalysis(): Promise<MonteCarloResults> 
 }
 
 /**
- * Example 4: Analyzing Results
+ * Example 4: Correlation Impact Analysis
+ * Compares results with and without correlation to show the impact
+ */
+export async function exampleCorrelationImpact(): Promise<void> {
+  console.log('\n=== CORRELATION IMPACT ANALYSIS ===\n');
+  
+  const baseState: BaseState = {
+    purchasePrice: 500000,
+    initialMonthlyRent: 3000,
+    annualTaxes: 6000,
+    annualInsurance: 1800,
+    annualMaintenance: 2500,
+    annualManagement: 3600,
+    annualCapEx: 3000,
+    loanAmount: 400000,
+    annualInterestRate: 0.065,
+    loanTermMonths: 360,
+    initialInvestment: 100000,
+    projectionYears: 10,
+  };
+
+  // Run with correlation (0.6)
+  const withCorrelation = await runMonteCarloSimulation({
+    baseState,
+    uncertaintyParameters: createDefaultUncertaintyParameters(baseState, true),
+    simulations: 10000,
+    yearsToProject: 10,
+    randomSeed: 42,
+  });
+
+  // Run without correlation (independent)
+  const withoutCorrelation = await runMonteCarloSimulation({
+    baseState,
+    uncertaintyParameters: createDefaultUncertaintyParameters(baseState, false),
+    simulations: 10000,
+    yearsToProject: 10,
+    randomSeed: 42,
+  });
+
+  console.log('WITH CORRELATION (0.6):');
+  console.log(`  Expected Return: ${withCorrelation.distributions.annualizedReturn.mean.toFixed(2)}%`);
+  console.log(`  Standard Deviation: ${withCorrelation.distributions.annualizedReturn.stdDev.toFixed(2)}%`);
+  console.log(`  Probability of Loss: ${withCorrelation.riskMetrics.probabilityOfLoss.toFixed(2)}%`);
+  console.log(`  Sharpe Ratio: ${withCorrelation.riskMetrics.sharpeRatio.toFixed(2)}`);
+  console.log(`  P10-P90 Range: ${withCorrelation.distributions.annualizedReturn.p10.toFixed(2)}% to ${withCorrelation.distributions.annualizedReturn.p90.toFixed(2)}%`);
+  
+  console.log('\nWITHOUT CORRELATION (Independent):');
+  console.log(`  Expected Return: ${withoutCorrelation.distributions.annualizedReturn.mean.toFixed(2)}%`);
+  console.log(`  Standard Deviation: ${withoutCorrelation.distributions.annualizedReturn.stdDev.toFixed(2)}%`);
+  console.log(`  Probability of Loss: ${withoutCorrelation.riskMetrics.probabilityOfLoss.toFixed(2)}%`);
+  console.log(`  Sharpe Ratio: ${withoutCorrelation.riskMetrics.sharpeRatio.toFixed(2)}`);
+  console.log(`  P10-P90 Range: ${withoutCorrelation.distributions.annualizedReturn.p10.toFixed(2)}% to ${withoutCorrelation.distributions.annualizedReturn.p90.toFixed(2)}%`);
+  
+  console.log('\nIMPACT OF CORRELATION:');
+  const stdDevDiff = ((withCorrelation.distributions.annualizedReturn.stdDev - withoutCorrelation.distributions.annualizedReturn.stdDev) / withoutCorrelation.distributions.annualizedReturn.stdDev) * 100;
+  console.log(`  Volatility Change: ${stdDevDiff > 0 ? '+' : ''}${stdDevDiff.toFixed(1)}%`);
+  console.log(`  Risk Adjustment: ${stdDevDiff > 0 ? 'Higher' : 'Lower'} risk when correlation is modeled`);
+  console.log(`  \nKey Insight: Correlated variables ${stdDevDiff > 0 ? 'increase' : 'decrease'} portfolio volatility`);
+  console.log(`  because income and expenses tend to move together in real markets.`);
+}
+
+/**
+ * Example 5: Analyzing Results
  * Demonstrates how to extract and use specific metrics
  */
 export function analyzeResults(results: MonteCarloResults): void {
@@ -275,7 +338,7 @@ export function analyzeResults(results: MonteCarloResults): void {
 }
 
 /**
- * Example 5: Comparing Multiple Properties
+ * Example 6: Comparing Multiple Properties
  */
 export async function compareProperties(): Promise<void> {
   console.log('Comparing three different investment properties...\n');
@@ -341,8 +404,12 @@ export async function runAllExamples(): Promise<void> {
     const conservativeResults = await exampleConservativeAnalysis();
     analyzeResults(conservativeResults);
 
-    // Example 4: Property comparison
-    console.log('\n--- Example 5: Property Comparison ---');
+    // Example 4: Correlation impact
+    console.log('\n--- Example 4: Correlation Impact Analysis ---');
+    await exampleCorrelationImpact();
+
+    // Example 5: Property comparison
+    console.log('\n--- Example 6: Property Comparison ---');
     await compareProperties();
 
     console.log('\n' + '='.repeat(60));
@@ -359,6 +426,7 @@ export default {
   exampleBasicSimulation,
   exampleCustomUncertainty,
   exampleConservativeAnalysis,
+  exampleCorrelationImpact,
   analyzeResults,
   compareProperties,
   runAllExamples,

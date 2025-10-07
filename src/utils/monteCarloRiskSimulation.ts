@@ -81,6 +81,7 @@ export interface UncertaintyParameters {
   purchasePriceDistribution: Distribution;
   capRateDistribution?: Distribution;
   exitCapRateDistribution?: Distribution;
+  incomeExpenseCorrelation?: number; // Correlation between rent growth and expense growth (default: 0.6)
 }
 
 /**
@@ -489,16 +490,17 @@ export async function runMonteCarloSimulation(
 
 /**
  * Create default uncertainty parameters with reasonable defaults
+ * Uses normal distributions for rent and expense growth to enable correlation
  */
 export function createDefaultUncertaintyParameters(
-  baseState: BaseState
+  baseState: BaseState,
+  useCorrelation: boolean = true
 ): UncertaintyParameters {
   return {
     rentGrowthDistribution: {
-      type: 'triangular',
-      min: 0.01,
-      mode: 0.03,
-      max: 0.06,
+      type: 'normal',
+      mean: 0.03,
+      stdDev: 0.015, // 1.5% standard deviation
     },
     initialRentDistribution: {
       type: 'normal',
@@ -506,10 +508,9 @@ export function createDefaultUncertaintyParameters(
       stdDev: baseState.initialMonthlyRent * 0.05,
     },
     expenseGrowthDistribution: {
-      type: 'triangular',
-      min: 0.02,
-      mode: 0.03,
-      max: 0.05,
+      type: 'normal',
+      mean: 0.03,
+      stdDev: 0.01, // 1% standard deviation
     },
     appreciationDistribution: {
       type: 'triangular',
@@ -534,6 +535,7 @@ export function createDefaultUncertaintyParameters(
       mean: baseState.purchasePrice,
       stdDev: baseState.purchasePrice * 0.02,
     },
+    incomeExpenseCorrelation: useCorrelation ? 0.6 : 0, // 0.6 correlation by default
   };
 }
 

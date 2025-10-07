@@ -36,6 +36,27 @@ function normal(mean, stdDev) {
   return mean + z0 * stdDev;
 }
 
+// Generate two correlated normal random variables using Box-Muller and correlation
+function correlatedNormals(mean1, stdDev1, mean2, stdDev2, correlation) {
+  // Generate two independent standard normal variables using Box-Muller
+  const u1 = random.next();
+  const u2 = random.next();
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+  
+  // Apply correlation using Cholesky decomposition
+  // For 2x2 correlation matrix with correlation ρ:
+  // L = [[1, 0], [ρ, sqrt(1-ρ²)]]
+  const x1 = z0;
+  const x2 = correlation * z0 + Math.sqrt(1 - correlation * correlation) * z1;
+  
+  // Transform to desired mean and standard deviation
+  return {
+    value1: mean1 + x1 * stdDev1,
+    value2: mean2 + x2 * stdDev2
+  };
+}
+
 function triangular(min, mode, max) {
   const u = random.next();
   const f = (mode - min) / (max - min);
@@ -136,9 +157,32 @@ function calculateSimplifiedCashFlow(params, growthRates, vacancyRate) {
 
 // Run a single simulation
 function runSingleSimulation(baseParams, uncertaintyInputs) {
-  const rentGrowth = sampleDistribution(uncertaintyInputs.rentGrowthDistribution);
+  // Use correlated random variables for rent growth and expense growth
+  // Default correlation is 0.6 (income and expenses tend to move together)
+  const incomeExpenseCorrelation = uncertaintyInputs.incomeExpenseCorrelation || 0.6;
+  
+  let rentGrowth, expenseGrowth;
+  
+  // If both are normal distributions and correlation is enabled, use correlated sampling
+  if (uncertaintyInputs.rentGrowthDistribution.type === 'normal' && 
+      uncertaintyInputs.expenseGrowthDistribution.type === 'normal' &&
+      incomeExpenseCorrelation !== 0) {
+    const correlated = correlatedNormals(
+      uncertaintyInputs.rentGrowthDistribution.mean,
+      uncertaintyInputs.rentGrowthDistribution.stdDev,
+      uncertaintyInputs.expenseGrowthDistribution.mean,
+      uncertaintyInputs.expenseGrowthDistribution.stdDev,
+      incomeExpenseCorrelation
+    );
+    rentGrowth = correlated.value1;
+    expenseGrowth = correlated.value2;
+  } else {
+    // Fall back to independent sampling for non-normal distributions
+    rentGrowth = sampleDistribution(uncertaintyInputs.rentGrowthDistribution);
+    expenseGrowth = sampleDistribution(uncertaintyInputs.expenseGrowthDistribution);
+  }
+  
   const initialRent = sampleDistribution(uncertaintyInputs.initialRentDistribution);
-  const expenseGrowth = sampleDistribution(uncertaintyInputs.expenseGrowthDistribution);
   const appreciation = sampleDistribution(uncertaintyInputs.appreciationDistribution);
   const vacancyRate = Math.max(0, Math.min(1, sampleDistribution(uncertaintyInputs.vacancyRateDistribution)));
   const maintenanceMultiplier = sampleDistribution(uncertaintyInputs.maintenanceDistribution);

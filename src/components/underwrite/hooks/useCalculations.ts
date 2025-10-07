@@ -1,37 +1,10 @@
 /**
  * Calculations hook for UnderwritePage
- * Handles all financial calculations and metrics
+ * Handles all financial calculations and metrics using the centralized calculation service
  */
 
 import { useMemo } from "react";
-import {
-  totalMonthlyDebtService,
-  computeFixedMonthlyOps,
-  computeVariableMonthlyOpsPct,
-  computeVariableExpenseFromPercentages,
-} from "../../../utils/finance";
-import {
-  calculateSeasonalAdjustments,
-  calculateMarketAdjustments,
-  calculateExitStrategies,
-  calculateRefinanceScenarios,
-  calculateTaxImplications,
-  calculateEnhancedTaxImplications,
-  calculateRiskScore,
-  calculateConfidenceIntervals,
-  calculateStressTest,
-  calculateInflationAdjustments,
-  calculateYearsUntilRefinance,
-  calculateRefinancePotential,
-} from "../../../utils/advancedCalculations";
-import {
-  computeIncome,
-  computeGrossPotentialIncome,
-  computeLoanAmount,
-  computeCocAnnual,
-  buildAmortization,
-  calculateConfidenceInterval,
-} from "../utils";
+import { underwriteCalculationService } from "../../../services/underwriteCalculationService";
 import { DealState, MetricWithConfidence, AmortizationRow } from "../types";
 
 export interface CalculatedMetrics {
@@ -66,257 +39,61 @@ export interface CalculatedMetrics {
 
 /**
  * Hook for all financial calculations
+ * Now using the centralized calculation service for better maintainability
  */
 export function useCalculations(state: DealState) {
-  // ============================================================================
-  // Basic Income & Expense Calculations
-  // ============================================================================
+  const service = underwriteCalculationService;
   
-  const monthlyIncome = useMemo(() => computeIncome(state), [state]);
+  // Calculate all metrics using the service with memoization
+  const basicMetrics = useMemo(() => service.calculateBasicMetrics(state), [state]);
+  const noiMetrics = useMemo(() => service.calculateNOIMetrics(state), [state]);
+  const returnMetrics = useMemo(() => service.calculateReturnMetrics(state), [state]);
+  const equityMetrics = useMemo(() => service.calculateEquityMetrics(state), [state]);
+  const amortizationSchedule = useMemo(() => service.calculateAmortizationSchedule(state), [state]);
   
-  const grossPotentialIncome = useMemo(
-    () => computeGrossPotentialIncome(state),
-    [state]
+  // Confidence intervals (if enabled)
+  const cocWithConfidence = useMemo(
+    () => service.calculateCoCWithConfidence(state),
+    [state, state.showConfidenceIntervals, state.uncertaintyParameters]
   );
   
-  const monthlyFixedOps = useMemo(
-    () => computeFixedMonthlyOps(state.ops),
-    [state.ops]
+  const noiWithConfidence = useMemo(
+    () => service.calculateNOIWithConfidence(state),
+    [state, state.showConfidenceIntervals, state.uncertaintyParameters]
   );
   
-  const monthlyVariableOps = useMemo(
-    () => computeVariableExpenseFromPercentages(grossPotentialIncome, state.ops),
-    [grossPotentialIncome, state.ops]
+  const capRateWithConfidence = useMemo(
+    () => service.calculateCapRateWithConfidence(state),
+    [state, state.showConfidenceIntervals, state.uncertaintyParameters]
   );
   
-  const monthlyDebtService = useMemo(
-    () =>
-      totalMonthlyDebtService({
-        newLoanMonthly: state.loan.monthlyPayment || 0,
-        subjectToMonthlyTotal: state.subjectTo?.totalMonthlyPayment,
-        hybridMonthly: state.hybrid?.monthlyPayment,
-      }),
-    [state.loan.monthlyPayment, state.subjectTo?.totalMonthlyPayment, state.hybrid?.monthlyPayment]
-  );
-  
-  const monthlyExpenses = useMemo(
-    () => monthlyFixedOps + monthlyVariableOps + monthlyDebtService,
-    [monthlyFixedOps, monthlyVariableOps, monthlyDebtService]
-  );
-  
-  // ============================================================================
-  // Cash Flow Calculations
-  // ============================================================================
-  
-  const monthlyCashFlow = useMemo(
-    () => monthlyIncome - monthlyFixedOps - monthlyVariableOps - monthlyDebtService,
-    [monthlyIncome, monthlyFixedOps, monthlyVariableOps, monthlyDebtService]
-  );
-  
-  const annualCashFlow = useMemo(() => monthlyCashFlow * 12, [monthlyCashFlow]);
-  
-  // ============================================================================
-  // NOI & Cap Rate
-  // ============================================================================
-  
-  const monthlyNOI = useMemo(
-    () => monthlyIncome - monthlyFixedOps - monthlyVariableOps,
-    [monthlyIncome, monthlyFixedOps, monthlyVariableOps]
-  );
-  
-  const annualNOI = useMemo(() => monthlyNOI * 12, [monthlyNOI]);
-  
-  const capRate = useMemo(() => {
-    if (state.purchasePrice <= 0) return 0;
-    return (annualNOI / state.purchasePrice) * 100;
-  }, [annualNOI, state.purchasePrice]);
-  
-  // ============================================================================
-  // Returns & Metrics
-  // ============================================================================
-  
-  const loanAmount = useMemo(() => computeLoanAmount(state), [state]);
-  
-  const totalCashInvested = useMemo(() => {
-    if (state.operationType === "Rental Arbitrage") {
-      return (
-        (state.arbitrage?.deposit ?? 0) +
-        (state.arbitrage?.estimateCostOfRepairs ?? 0) +
-        (state.arbitrage?.furnitureCost ?? 0) +
-        (state.arbitrage?.otherStartupCosts ?? 0)
-      );
-    }
-    
-    return (
-      (state.loan.downPayment || 0) +
-      (state.loan.closingCosts || 0) +
-      (state.loan.rehabCosts || 0) +
-      (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0) +
-      state.subjectTo.paymentToSeller +
-      (state.reservesCalculationMethod === "months"
-        ? (monthlyFixedOps + monthlyVariableOps) * (state.reservesMonths || 0)
-        : state.reservesFixedAmount || 0)
-    );
-  }, [
-    state.operationType,
-    state.arbitrage,
-    state.loan,
-    state.subjectTo,
-    state.reservesCalculationMethod,
-    state.reservesMonths,
-    state.reservesFixedAmount,
-    monthlyFixedOps,
-    monthlyVariableOps,
-  ]);
-  
-  const cocReturn = useMemo(
-    () => computeCocAnnual(state, annualCashFlow),
-    [state, annualCashFlow]
-  );
-  
-  const dscr = useMemo(() => {
-    if (monthlyDebtService <= 0) return 0;
-    return monthlyNOI / monthlyDebtService;
-  }, [monthlyNOI, monthlyDebtService]);
-  
-  const equity = useMemo(
-    () => state.purchasePrice - loanAmount,
-    [state.purchasePrice, loanAmount]
-  );
-  
-  // ============================================================================
-  // Amortization Schedule
-  // ============================================================================
-  
-  const amortizationSchedule = useMemo(() => {
-    const amount = state.loan?.loanAmount || 0;
-    const rate = state.loan?.annualInterestRate || 0;
-    const years = state.loan?.amortizationYears || 0;
-    const io = state.loan?.interestOnly || false;
-    const ioPeriod = state.loan?.ioPeriodMonths || 0;
-    
-    if (amount <= 0 || years <= 0) return [];
-    
-    return buildAmortization(amount, rate, years, io, undefined, ioPeriod);
-  }, [
-    state.loan?.loanAmount,
-    state.loan?.annualInterestRate,
-    state.loan?.amortizationYears,
-    state.loan?.interestOnly,
-    state.loan?.ioPeriodMonths,
-  ]);
-  
-  // ============================================================================
-  // Confidence Intervals (if enabled)
-  // ============================================================================
-  
-  const cocWithConfidence = useMemo((): MetricWithConfidence | null => {
-    if (!state.showConfidenceIntervals) return null;
-    
-    if (totalCashInvested <= 0) {
-      return {
-        low: 0,
-        base: 0,
-        high: 0,
-        standardDeviation: 0,
-        confidenceLevel: state.uncertaintyParameters.confidenceLevel,
-      };
-    }
-    
-    const baseCoC = cocReturn;
-    
-    const combinedUncertainty = Math.sqrt(
-      Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
-        Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
-    );
-    
-    return calculateConfidenceInterval(
-      baseCoC,
-      combinedUncertainty,
-      state.uncertaintyParameters.confidenceLevel
-    );
-  }, [
-    state.showConfidenceIntervals,
-    state.uncertaintyParameters,
-    totalCashInvested,
-    cocReturn,
-  ]);
-  
-  const noiWithConfidence = useMemo((): MetricWithConfidence | null => {
-    if (!state.showConfidenceIntervals) return null;
-    
-    const combinedUncertainty = Math.sqrt(
-      Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
-        Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
-    );
-    
-    return calculateConfidenceInterval(
-      annualNOI,
-      combinedUncertainty,
-      state.uncertaintyParameters.confidenceLevel
-    );
-  }, [state.showConfidenceIntervals, state.uncertaintyParameters, annualNOI]);
-  
-  const capRateWithConfidence = useMemo((): MetricWithConfidence | null => {
-    if (!state.showConfidenceIntervals) return null;
-    
-    if (state.purchasePrice <= 0) {
-      return {
-        low: 0,
-        base: 0,
-        high: 0,
-        standardDeviation: 0,
-        confidenceLevel: state.uncertaintyParameters.confidenceLevel,
-      };
-    }
-    
-    const combinedUncertainty = Math.sqrt(
-      Math.pow(state.uncertaintyParameters.incomeUncertainty, 2) +
-        Math.pow(state.uncertaintyParameters.expenseUncertainty, 2)
-    );
-    
-    return calculateConfidenceInterval(
-      capRate,
-      combinedUncertainty,
-      state.uncertaintyParameters.confidenceLevel
-    );
-  }, [
-    state.showConfidenceIntervals,
-    state.uncertaintyParameters,
-    state.purchasePrice,
-    capRate,
-  ]);
-  
-  // ============================================================================
-  // Return all calculated metrics
-  // ============================================================================
-  
+  // Return all calculated metrics in the same format as before
   return {
     // Basic metrics
-    monthlyIncome,
-    grossPotentialIncome,
-    monthlyFixedOps,
-    monthlyVariableOps,
-    monthlyDebtService,
-    monthlyExpenses,
+    monthlyIncome: basicMetrics.monthlyIncome,
+    grossPotentialIncome: basicMetrics.grossPotentialIncome,
+    monthlyFixedOps: basicMetrics.monthlyFixedOps,
+    monthlyVariableOps: basicMetrics.monthlyVariableOps,
+    monthlyDebtService: basicMetrics.monthlyDebtService,
+    monthlyExpenses: basicMetrics.monthlyExpenses,
     
     // Cash flow
-    monthlyCashFlow,
-    annualCashFlow,
+    monthlyCashFlow: basicMetrics.monthlyCashFlow,
+    annualCashFlow: basicMetrics.annualCashFlow,
     
     // NOI & Cap Rate
-    monthlyNOI,
-    annualNOI,
-    capRate,
+    monthlyNOI: noiMetrics.monthlyNOI,
+    annualNOI: noiMetrics.annualNOI,
+    capRate: noiMetrics.capRate,
     
     // Returns
-    cocReturn,
-    dscr,
+    cocReturn: returnMetrics.cocReturn,
+    dscr: returnMetrics.dscr,
     
     // Loan & Equity
-    loanAmount,
-    totalCashInvested,
-    equity,
+    loanAmount: equityMetrics.loanAmount,
+    totalCashInvested: equityMetrics.totalCashInvested,
+    equity: equityMetrics.equity,
     
     // Amortization
     amortizationSchedule,

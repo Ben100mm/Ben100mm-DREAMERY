@@ -37,6 +37,17 @@ const analysis = underwriteCalculationService.calculateDealAnalysis(state);
 console.log(analysis.monthlyCashFlow);
 console.log(analysis.cocReturn);
 console.log(analysis.capRate);
+
+// Calculate year-specific metrics (accounts for equity growth)
+const year1Metrics = underwriteCalculationService.calculateYearSpecificMetrics(state, 1);
+const year5Metrics = underwriteCalculationService.calculateYearSpecificMetrics(state, 5);
+console.log('Year 1 ROE:', year1Metrics.roe, '%');
+console.log('Year 5 ROE:', year5Metrics.roe, '%'); // Will be different due to equity growth
+console.log('Year 5 Equity:', year5Metrics.equity);
+
+// Or calculate individual year-specific values
+const year10ROE = underwriteCalculationService.calculateROEAtYear(state, 10);
+const year10Equity = underwriteCalculationService.calculateEquityAtYear(state, 10);
 ```
 
 ### Available Methods
@@ -59,20 +70,25 @@ console.log(analysis.capRate);
 #### Cash Flow
 - `calculateMonthlyCashFlow(state)` - Monthly cash flow after all expenses
 - `calculateAnnualCashFlow(state)` - Annual cash flow
+- `calculateAnnualCashFlowAtYear(state, year)` - Annual cash flow at specific year (with growth)
 
 #### Returns
 - `calculateCoC(state)` - Cash on Cash Return
 - `calculateDSCR(state)` - Debt Service Coverage Ratio
-- `calculateROE(state)` - Return on Equity
+- `calculateROE(state)` - Return on Equity (initial equity)
+- `calculateROEAtYear(state, year)` - Return on Equity at specific year (tracks equity growth)
 - `calculateLTV(state)` - Loan to Value ratio
 - `calculateReturnMetrics(state)` - All return metrics at once
 
 #### Equity & Investment
 - `calculateLoanAmount(state)` - Total loan amount
-- `calculateEquity(state)` - Equity in the deal
+- `calculateEquity(state)` - Equity in the deal (initial)
 - `calculateEquityPercentage(state)` - Equity as percentage
 - `calculateTotalCashInvested(state)` - Total cash required
 - `calculateEquityMetrics(state)` - All equity metrics at once
+- `calculatePropertyValueAtYear(state, year)` - Property value at specific year (with appreciation)
+- `calculateLoanBalanceAtYear(state, year)` - Loan balance at specific year (with paydown)
+- `calculateEquityAtYear(state, year)` - Equity at specific year (accounts for paydown + appreciation)
 
 #### Amortization
 - `calculateAmortizationSchedule(state)` - Full amortization table
@@ -89,6 +105,9 @@ console.log(analysis.capRate);
 - `calculateNOIWithConfidence(state)` - NOI with confidence bands
 - `calculateCapRateWithConfidence(state)` - Cap Rate with confidence bands
 
+#### Multi-Year Projections
+- `calculateYearSpecificMetrics(state, year)` - All metrics for a specific year (equity, ROE, cash flow, etc.)
+
 #### Validation
 - `validateDealState(state)` - Validates deal state for calculations
 
@@ -100,6 +119,7 @@ The service provides several comprehensive return types:
 - `NOIMetrics` - NOI and cap rate calculations
 - `ReturnMetrics` - CoC, DSCR, ROE, LTV
 - `EquityMetrics` - Loan, equity, cash invested
+- `YearSpecificMetrics` - Year-specific metrics with equity growth tracking
 - `IRRMetrics` - IRR and equity multiple (planned)
 - `DealAnalysis` - All metrics combined
 

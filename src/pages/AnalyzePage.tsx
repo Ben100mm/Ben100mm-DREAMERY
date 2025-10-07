@@ -72,6 +72,7 @@ import { AnalysisProvider, useAnalysis } from '../context/AnalysisContext';
 import { brandColors } from '../theme';
 import { useNavigate } from 'react-router-dom';
 import { calculateRiskScore, defaultMarketConditions } from '../utils/advancedCalculations';
+import { underwriteCalculationService } from '../services/underwriteCalculationService';
 import AdvancedModelingTab from './AdvancedModelingTab';
 import { GuidedTour } from '../components/GuidedTour';
 
@@ -877,25 +878,25 @@ const AnalyzePage: React.FC = () => {
                 />
                 <TextField
                   fullWidth
-                  label="Return on Equity (Current)"
+                  label="Return on Equity (Initial)"
                   value={(() => {
                     const equity = purchasePrice - computeLoanAmountSimple();
                     const annualCashFlow = (computeMonthlyIncome() - computeFixedMonthlyOps(ops as any) - (loan.monthlyPayment || 0)) * 12;
                     return equity > 0 ? ((annualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
                   })()}
                   InputProps={{ readOnly: true }}
-                  helperText="Annual Cash Flow ÷ Current Equity"
+                  helperText="Annual Cash Flow ÷ Initial Equity"
                 />
                 <TextField
                   fullWidth
-                  label="Return on Equity (Stabilized)"
+                  label="Return on Equity (Stabilized Estimate)"
                   value={(() => {
                     const equity = purchasePrice - computeLoanAmountSimple();
                     const stabilizedAnnualCashFlow = (computeMonthlyIncome() * 1.05 - computeFixedMonthlyOps(ops as any) * 1.03 - (loan.monthlyPayment || 0)) * 12;
                     return equity > 0 ? ((stabilizedAnnualCashFlow / equity) * 100).toFixed(1) + '%' : 'N/A';
                   })()}
                   InputProps={{ readOnly: true }}
-                  helperText="Stabilized Annual Cash Flow ÷ Current Equity"
+                  helperText="Stabilized Cash Flow ÷ Initial Equity (estimate only)"
                 />
                 <TextField
                   fullWidth

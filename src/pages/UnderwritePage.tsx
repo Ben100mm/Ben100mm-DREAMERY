@@ -76,6 +76,7 @@ import {
   type PropertyAgeFactors,
   type LocationFactors,
 } from "../utils/advancedCalculations";
+import { underwriteCalculationService } from "../services/underwriteCalculationService";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -11171,52 +11172,23 @@ const UnderwritePage: React.FC = () => {
                     
                     <TextField
                       fullWidth
-                      label="Return on Equity (Current)"
+                      label="Return on Equity (Year 1)"
                       value={(() => {
-                        const equity =
-                          state.purchasePrice - computeLoanAmount(state);
-                        const annualCashFlow =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            })) *
-                          12;
-                        return equity > 0
-                          ? ((annualCashFlow / equity) * 100).toFixed(1) + "%"
-                          : "N/A";
+                        const roe = underwriteCalculationService.calculateROE(state);
+                        return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
                       })()}
                       InputProps={{ readOnly: true }}
-                      helperText="Annual Cash Flow ÷ Current Equity"
+                      helperText="Year 1 Cash Flow ÷ Initial Equity"
                     />
                     <TextField
                       fullWidth
-                      label="Return on Equity (Stabilized)"
+                      label="Return on Equity (Year 5)"
                       value={(() => {
-                        const equity =
-                          state.purchasePrice - computeLoanAmount(state);
-                        // Assume 5% rent growth and 3% expense growth for stabilized
-                        const stabilizedAnnualCashFlow =
-                          (computeIncome(state) * 1.05 -
-                            computeFixedMonthlyOps(state.ops) * 1.03 -
-                            totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            })) *
-                          12;
-                        return equity > 0
-                          ? ((stabilizedAnnualCashFlow / equity) * 100).toFixed(
-                              1,
-                            ) + "%"
-                          : "N/A";
+                        const roe = underwriteCalculationService.calculateROEAtYear(state, 5);
+                        return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
                       })()}
                       InputProps={{ readOnly: true }}
-                      helperText="Stabilized Annual Cash Flow ÷ Current Equity"
+                      helperText="Year 5 Cash Flow ÷ Year 5 Equity (accounts for paydown & appreciation)"
                     />
                     <TextField
                       fullWidth

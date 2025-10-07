@@ -84,6 +84,19 @@ export interface ReturnMetrics {
 }
 
 /**
+ * Result interface for year-specific metrics
+ * Accounts for equity growth from principal paydown and appreciation
+ */
+export interface YearSpecificMetrics {
+  year: number;
+  propertyValue: number;
+  loanBalance: number;
+  equity: number;
+  annualCashFlow: number;
+  roe: number;
+}
+
+/**
  * Result interface for equity and investment metrics
  */
 export interface EquityMetrics {
@@ -276,6 +289,34 @@ class UnderwriteCalculationService {
     return this.calculateMonthlyCashFlow(state) * 12;
   }
 
+  /**
+   * Calculate annual cash flow at a specific year
+   * Accounts for rent growth and expense growth
+   */
+  public calculateAnnualCashFlowAtYear(state: DealState, year: number): number {
+    if (year <= 0) return this.calculateAnnualCashFlow(state);
+    
+    // Get initial values
+    const initialMonthlyIncome = this.calculateMonthlyIncome(state);
+    const initialMonthlyFixedOps = this.calculateMonthlyFixedOps(state);
+    const initialMonthlyVariableOps = this.calculateMonthlyVariableOps(state);
+    
+    // Apply growth rates
+    const rentGrowthRate = state.appreciation?.rentGrowthRate || 0;
+    const expenseGrowthRate = state.appreciation?.expenseGrowthRate || 0;
+    
+    const projectedMonthlyIncome = initialMonthlyIncome * Math.pow(1 + rentGrowthRate / 100, year - 1);
+    const projectedMonthlyFixedOps = initialMonthlyFixedOps * Math.pow(1 + expenseGrowthRate / 100, year - 1);
+    const projectedMonthlyVariableOps = initialMonthlyVariableOps * Math.pow(1 + expenseGrowthRate / 100, year - 1);
+    
+    // Debt service typically stays constant (unless it's variable rate)
+    const monthlyDebtService = this.calculateMonthlyDebtService(state);
+    
+    const monthlyCashFlow = projectedMonthlyIncome - projectedMonthlyFixedOps - projectedMonthlyVariableOps - monthlyDebtService;
+    
+    return monthlyCashFlow * 12;
+  }
+
   // ============================================================================
   // Return Metrics
   // ============================================================================
@@ -333,7 +374,8 @@ class UnderwriteCalculationService {
   }
 
   /**
-   * Calculate Return on Equity
+   * Calculate Return on Equity (using initial equity)
+   * Note: For multi-year projections, use calculateROEAtYear() instead
    */
   public calculateROE(state: DealState): number {
     const annualCashFlow = this.calculateAnnualCashFlow(state);
@@ -342,6 +384,78 @@ class UnderwriteCalculationService {
     if (equity <= 0) return 0;
 
     return (annualCashFlow / equity) * 100;
+  }
+
+  /**
+   * Calculate property value at a specific year with appreciation
+   */
+  public calculatePropertyValueAtYear(state: DealState, year: number): number {
+    if (year <= 0) return state.purchasePrice;
+    
+    const appreciationRate = state.appreciation?.annualAppreciation || 0;
+    return state.purchasePrice * Math.pow(1 + appreciationRate / 100, year);
+  }
+
+  /**
+   * Calculate loan balance at a specific year
+   */
+  public calculateLoanBalanceAtYear(state: DealState, year: number): number {
+    if (year <= 0) return this.calculateLoanAmount(state);
+    
+    const schedule = this.calculateAmortizationSchedule(state);
+    const monthIndex = Math.min(year * 12 - 1, schedule.length - 1);
+    
+    if (monthIndex < 0 || monthIndex >= schedule.length) {
+      return 0;
+    }
+    
+    return schedule[monthIndex].balance;
+  }
+
+  /**
+   * Calculate equity at a specific year
+   * Accounts for principal paydown and property appreciation
+   */
+  public calculateEquityAtYear(state: DealState, year: number): number {
+    const propertyValue = this.calculatePropertyValueAtYear(state, year);
+    const loanBalance = this.calculateLoanBalanceAtYear(state, year);
+    return propertyValue - loanBalance;
+  }
+
+  /**
+   * Calculate Return on Equity at a specific year
+   * Uses the equity at that year (not initial equity)
+   * Also uses cash flow at that year (accounting for rent and expense growth)
+   * This provides a more accurate ROE that reflects principal paydown and appreciation
+   */
+  public calculateROEAtYear(state: DealState, year: number): number {
+    const annualCashFlow = this.calculateAnnualCashFlowAtYear(state, year);
+    const equity = this.calculateEquityAtYear(state, year);
+
+    if (equity <= 0) return 0;
+
+    return (annualCashFlow / equity) * 100;
+  }
+
+  /**
+   * Get all metrics for a specific year
+   * Useful for multi-year projections where equity grows over time
+   */
+  public calculateYearSpecificMetrics(state: DealState, year: number): YearSpecificMetrics {
+    const propertyValue = this.calculatePropertyValueAtYear(state, year);
+    const loanBalance = this.calculateLoanBalanceAtYear(state, year);
+    const equity = this.calculateEquityAtYear(state, year);
+    const annualCashFlow = this.calculateAnnualCashFlowAtYear(state, year);
+    const roe = this.calculateROEAtYear(state, year);
+
+    return {
+      year,
+      propertyValue,
+      loanBalance,
+      equity,
+      annualCashFlow,
+      roe,
+    };
   }
 
   /**

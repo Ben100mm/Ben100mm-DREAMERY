@@ -8831,6 +8831,25 @@ const UnderwritePage: React.FC = () => {
                     />
                     <TextField
                       fullWidth
+                      label="Cap Rate"
+                      value={(() => {
+                        const annualNOI =
+                          (computeIncome(state) -
+                            computeFixedMonthlyOps(state.ops) -
+                            variableMonthlyFromPercentages(
+                              computeGrossPotentialIncome(state),
+                              state.ops,
+                            )) *
+                          12;
+                        return state.purchasePrice > 0
+                          ? ((annualNOI / state.purchasePrice) * 100).toFixed(2) + "%"
+                          : "N/A";
+                      })()}
+                      InputProps={{ readOnly: true }}
+                      helperText="Annual NOI ÷ Purchase Price (Unlevered Return)"
+                    />
+                    <TextField
+                      fullWidth
                       label="DSCR (Y1)"
                       value={(() => {
                         const annualNOI =

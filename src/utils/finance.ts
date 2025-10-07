@@ -129,7 +129,13 @@ export function computeFixedMonthlyOps(i: OperatingInputs): number {
   return values.reduce((a, b) => a + b, 0);
 }
 
-export function computeVariableMonthlyOpsPct(i: OperatingInputs): number {
+/**
+ * Calculates the total variable operating expense percentage.
+ * @param i - Operating inputs with percentage values as decimals (e.g., 0.05 for 5%)
+ * @returns Total variable expense percentage as a decimal (e.g., 0.15 for 15%)
+ * @throws Error if percentages are negative or exceed 100%
+ */
+export function computeVariableExpensePct(i: OperatingInputs): number {
   const values = [
     i.mgmtPct || 0,
     i.repairsPct || 0,
@@ -153,7 +159,74 @@ export function computeVariableMonthlyOpsPct(i: OperatingInputs): number {
   }
 
   const pct = values.reduce((a, b) => a + b, 0);
-  return pct; // applied to revenue later
+  return pct;
+}
+
+/**
+ * Calculates variable operating expenses in dollar amounts.
+ * @param grossIncome - Gross income to apply percentage against (typically GPI)
+ * @param i - Operating inputs with percentage values as decimals (e.g., 0.05 for 5%)
+ * @returns Variable expenses in dollars
+ * @throws Error if grossIncome is negative or percentages are invalid
+ */
+export function computeVariableExpenseDollars(
+  grossIncome: number,
+  i: OperatingInputs
+): number {
+  if (grossIncome < 0) {
+    throw new Error("Gross income cannot be negative.");
+  }
+  
+  const pct = computeVariableExpensePct(i);
+  return grossIncome * pct;
+}
+
+/**
+ * Calculates variable operating expenses from percentage inputs (0-100 format).
+ * This is a convenience function for components that store percentages as 0-100 values.
+ * @param grossIncome - Gross income to apply percentage against (typically GPI)
+ * @param percentages - Object with percentage values in 0-100 format
+ * @returns Variable expenses in dollars
+ */
+export function computeVariableExpenseFromPercentages(
+  grossIncome: number,
+  percentages: {
+    management?: number;
+    maintenance?: number;
+    utilitiesPct?: number;
+    capEx?: number;
+    opEx?: number;
+  }
+): number {
+  if (grossIncome < 0) {
+    throw new Error("Gross income cannot be negative.");
+  }
+
+  const mgmt = (percentages.management || 0) / 100;
+  const repairs = (percentages.maintenance || 0) / 100;
+  const utilities = (percentages.utilitiesPct || 0) / 100;
+  const capex = (percentages.capEx || 0) / 100;
+  const opex = (percentages.opEx || 0) / 100;
+
+  // Validate values
+  const values = [mgmt, repairs, utilities, capex, opex];
+  for (const value of values) {
+    if (value < 0) {
+      throw new Error("Variable expense percentages cannot be negative.");
+    }
+    if (value > 1) {
+      throw new Error("Variable expense percentages cannot exceed 100%.");
+    }
+  }
+
+  const pct = mgmt + repairs + utilities + capex + opex;
+  return grossIncome * pct;
+}
+
+// Deprecated: Use computeVariableExpensePct instead
+// Kept for backwards compatibility
+export function computeVariableMonthlyOpsPct(i: OperatingInputs): number {
+  return computeVariableExpensePct(i);
 }
 
 // Break‑even occupancy = (fixed + (includeVar ? var% * revenueAt100% : 0)) / revenueAt100%

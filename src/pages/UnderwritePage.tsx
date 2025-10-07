@@ -41,6 +41,8 @@ import {
   totalMonthlyDebtService,
   computeFixedMonthlyOps,
   computeVariableMonthlyOpsPct,
+  computeVariableExpenseFromPercentages,
+  computeVariableExpensePct,
   breakEvenOccupancy as financeBreakEvenOccupancy,
   remainingPrincipalAfterPayments,
   brrrrAnnualCashFlowPostRefi,
@@ -1080,7 +1082,7 @@ function buildCashFlowProjections(
   // Base annual income and expenses
   const monthlyIncome = computeIncome(state);
   const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
-  const monthlyVariableOps = variableMonthlyFromPercentages(
+  const monthlyVariableOps = computeVariableExpenseFromPercentages(
     computeGrossPotentialIncome(state),
     state.ops
   );
@@ -1213,7 +1215,7 @@ function calculateComprehensiveMOIC(
   // Calculate annual cash flow (Year 1 steady state)
   const monthlyIncome = computeIncome(state);
   const monthlyFixedOps = computeFixedMonthlyOps(state.ops);
-  const monthlyVariableOps = variableMonthlyFromPercentages(
+  const monthlyVariableOps = computeVariableExpenseFromPercentages(
     computeGrossPotentialIncome(state),
     state.ops
   );
@@ -1769,19 +1771,8 @@ function getOfferTypeOptions(
   ];
 }
 
-// Wrapper to compute variable monthly expenses (% of income) from state.ops
-function variableMonthlyFromPercentages(
-  currentIncome: number,
-  ops: OperatingInputsCommon,
-): number {
-  const mgmt = (ops.management || 0) / 100;
-  const repairs = (ops.maintenance || 0) / 100;
-  const utilities = (ops.utilitiesPct || 0) / 100;
-  const capex = (ops.capEx || 0) / 100;
-  const opex = (ops.opEx || 0) / 100;
-  const pct = mgmt + repairs + utilities + capex + opex;
-  return currentIncome * pct;
-}
+// Note: Variable expense calculations now use computeVariableExpenseFromPercentages()
+// imported from utils/finance.ts for consistency across the codebase
 
 function Kpi(props: { label: string; value: string }) {
   return (
@@ -9120,7 +9111,7 @@ const UnderwritePage: React.FC = () => {
                         const annualNOI =
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
@@ -9140,7 +9131,7 @@ const UnderwritePage: React.FC = () => {
                         const annualNOI =
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
@@ -9159,7 +9150,7 @@ const UnderwritePage: React.FC = () => {
                         const annualNOI =
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
@@ -9186,7 +9177,7 @@ const UnderwritePage: React.FC = () => {
                         const stabilizedAnnualNOI =
                           (computeIncome(state) * 1.05 -
                             computeFixedMonthlyOps(state.ops) * 1.03 -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state) * 1.05,
                               state.ops,
                             )) *
@@ -9212,7 +9203,7 @@ const UnderwritePage: React.FC = () => {
                         const grossIncome = computeIncome(state) * 12;
                         const operatingExpenses =
                           (computeFixedMonthlyOps(state.ops) +
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
@@ -9234,7 +9225,7 @@ const UnderwritePage: React.FC = () => {
                         const annualNOI =
                           (computeIncome(state) -
                             computeFixedMonthlyOps(state.ops) -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *
@@ -9274,7 +9265,7 @@ const UnderwritePage: React.FC = () => {
                           if (monthlyRevenue > 0) {
                             const expenses =
                               computeFixedMonthlyOps(state.ops) +
-                              variableMonthlyFromPercentages(
+                              computeVariableExpenseFromPercentages(
                                 monthlyRevenue,
                                 state.ops,
                               );
@@ -9308,7 +9299,7 @@ const UnderwritePage: React.FC = () => {
                           if (monthlyRevenue > 0) {
                             const expenses =
                               computeFixedMonthlyOps(state.ops) +
-                              variableMonthlyFromPercentages(
+                              computeVariableExpenseFromPercentages(
                                 monthlyRevenue,
                                 state.ops,
                               );
@@ -10013,7 +10004,7 @@ const UnderwritePage: React.FC = () => {
                             365;
                           const operatingExpenses =
                             (computeFixedMonthlyOps(state.ops) +
-                              variableMonthlyFromPercentages(
+                              computeVariableExpenseFromPercentages(
                                 computeGrossPotentialIncome(state),
                                 state.ops,
                               )) *
@@ -10145,7 +10136,7 @@ const UnderwritePage: React.FC = () => {
                       label="Monthly Operating Expenses"
                       value={formatCurrency(
                         computeFixedMonthlyOps(state.ops) +
-                          variableMonthlyFromPercentages(
+                          computeVariableExpenseFromPercentages(
                             computeGrossPotentialIncome(state),
                             state.ops,
                           ),
@@ -10328,7 +10319,7 @@ const UnderwritePage: React.FC = () => {
                       fullWidth
                       label="Variable Monthly Expenses"
                       value={formatCurrency(
-                        variableMonthlyFromPercentages(
+                        computeVariableExpenseFromPercentages(
                           computeIncome(state),
                           state.ops,
                         ),
@@ -10340,7 +10331,7 @@ const UnderwritePage: React.FC = () => {
                       label="Total Monthly Expenses"
                       value={formatCurrency(
                         computeFixedMonthlyOps(state.ops) +
-                          variableMonthlyFromPercentages(
+                          computeVariableExpenseFromPercentages(
                             computeGrossPotentialIncome(state),
                             state.ops,
                           ),
@@ -10352,7 +10343,7 @@ const UnderwritePage: React.FC = () => {
                       label="Total Annual Expenses"
                       value={formatCurrency(
                         (computeFixedMonthlyOps(state.ops) +
-                          variableMonthlyFromPercentages(
+                          computeVariableExpenseFromPercentages(
                             computeGrossPotentialIncome(state),
                             state.ops,
                           )) *
@@ -10398,7 +10389,7 @@ const UnderwritePage: React.FC = () => {
                         const annualNOI =
                           (reducedIncome -
                             computeFixedMonthlyOps(state.ops) -
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               reducedGPI,
                               state.ops,
                             )) *
@@ -10423,7 +10414,7 @@ const UnderwritePage: React.FC = () => {
                       value={(() => {
                         const increasedExpenses =
                           (computeFixedMonthlyOps(state.ops) +
-                            variableMonthlyFromPercentages(
+                            computeVariableExpenseFromPercentages(
                               computeGrossPotentialIncome(state),
                               state.ops,
                             )) *

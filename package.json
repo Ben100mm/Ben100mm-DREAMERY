@@ -37,11 +37,13 @@
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^7.7.1",
     "react-scripts": "5.0.1",
+    "recharts": "^3.2.1",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "styled-components": "^6.1.19",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.0"
   },
   "scripts": {

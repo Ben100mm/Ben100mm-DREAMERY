@@ -540,6 +540,186 @@ export const createCustomScenario = (
 // ============================================================================
 
 /**
+ * Get severity classification based on DSCR (Debt Service Coverage Ratio)
+ * 
+ * @param dscr - Debt Service Coverage Ratio
+ * @returns Severity level classification
+ * 
+ * Classification:
+ * - Critical: DSCR < 1.0 (Cannot cover debt service)
+ * - Severe: 1.0 <= DSCR < 1.2 (Marginal coverage)
+ * - Moderate: 1.2 <= DSCR < 1.5 (Acceptable but tight)
+ * - Mild: DSCR >= 1.5 (Good coverage)
+ */
+export const getSeverity = (
+  dscr: number,
+): "Mild" | "Moderate" | "Severe" | "Critical" => {
+  if (dscr < 1.0) {
+    return "Critical";
+  } else if (dscr < 1.2) {
+    return "Severe";
+  } else if (dscr < 1.5) {
+    return "Moderate";
+  } else {
+    return "Mild";
+  }
+};
+
+/**
+ * Apply a specific stress scenario to a DealState and return the modified state
+ * 
+ * @param baseState - The original DealState
+ * @param scenarioType - Type of stress scenario to apply
+ * @param customScenario - Optional custom scenario parameters (uses defaults if not provided)
+ * @returns Modified DealState with stress scenario applied
+ */
+export const applyStressScenario = (
+  baseState: any, // Using any to avoid circular dependency, should be DealState
+  scenarioType: "recession" | "interestRateShock" | "operatingShock" | "marketCorrection",
+  customScenario?: RecessionScenario | InterestRateShockScenario | OperatingShockScenario | MarketCorrectionScenario,
+): any => {
+  // Create a deep copy of the base state
+  const stressedState = JSON.parse(JSON.stringify(baseState));
+
+  // Get the appropriate scenario
+  let scenario: any;
+  if (customScenario) {
+    scenario = customScenario;
+  } else {
+    scenario = DEFAULT_STRESS_SCENARIOS[scenarioType];
+  }
+
+  // Apply scenario based on type
+  switch (scenarioType) {
+    case "recession":
+      const recessionScenario = scenario as RecessionScenario;
+      
+      // Reduce income by percentage
+      if (stressedState.baseMonthlyRent) {
+        stressedState.baseMonthlyRent *= (1 + recessionScenario.incomeReduction / 100);
+      }
+      
+      // Reduce revenue for Hotel/STR
+      if (stressedState.revenueInputs) {
+        if (stressedState.revenueInputs.occupancyRate) {
+          // Reduce occupancy rate by income reduction percentage
+          stressedState.revenueInputs.occupancyRate *= (1 + recessionScenario.incomeReduction / 100);
+        }
+      }
+      
+      // Increase operating expenses
+      if (stressedState.ops) {
+        const expenseMultiplier = 1 + recessionScenario.expenseIncrease / 100;
+        stressedState.ops.taxes *= expenseMultiplier;
+        stressedState.ops.insurance *= expenseMultiplier;
+        stressedState.ops.maintenance *= expenseMultiplier;
+        stressedState.ops.management *= expenseMultiplier;
+        stressedState.ops.capEx *= expenseMultiplier;
+        stressedState.ops.opEx *= expenseMultiplier;
+      }
+      
+      // Increase vacancy rate
+      if (stressedState.ops && stressedState.ops.vacancy !== undefined) {
+        stressedState.ops.vacancy += recessionScenario.vacancyIncrease;
+      }
+      
+      break;
+
+    case "interestRateShock":
+      const rateShockScenario = scenario as InterestRateShockScenario;
+      
+      // Increase interest rate
+      if (stressedState.loan && stressedState.loan.rate !== undefined) {
+        stressedState.loan.rate += rateShockScenario.rateIncrease;
+      }
+      
+      // Add refinance costs if applicable
+      if (rateShockScenario.refinanceImpact && rateShockScenario.refinanceCosts) {
+        // Add one-time cost to expenses (amortized over 12 months)
+        const monthlyRefinanceCost = rateShockScenario.refinanceCosts / 12;
+        if (stressedState.ops) {
+          stressedState.ops.opEx = (stressedState.ops.opEx || 0) + monthlyRefinanceCost * 12;
+        }
+      }
+      
+      break;
+
+    case "operatingShock":
+      const operatingScenario = scenario as OperatingShockScenario;
+      
+      // Add major repair and legal costs as one-time expenses
+      const totalOneTimeCosts = operatingScenario.majorRepairCost + operatingScenario.legalCost;
+      if (stressedState.ops) {
+        // Amortize one-time costs over first year for monthly impact
+        stressedState.ops.opEx = (stressedState.ops.opEx || 0) + totalOneTimeCosts;
+      }
+      
+      // Set extended vacancy period
+      if (stressedState.ops) {
+        // Convert months to percentage (e.g., 6 months = 50% annual vacancy)
+        const vacancyPercentage = (operatingScenario.vacancyMonths / 12) * 100;
+        stressedState.ops.vacancy = Math.max(stressedState.ops.vacancy || 0, vacancyPercentage);
+      }
+      
+      // Store the vacancy duration for reference
+      stressedState._stressTestMetadata = {
+        ...stressedState._stressTestMetadata,
+        extendedVacancyMonths: operatingScenario.vacancyMonths,
+        oneTimeCosts: totalOneTimeCosts,
+      };
+      
+      break;
+
+    case "marketCorrection":
+      const marketScenario = scenario as MarketCorrectionScenario;
+      
+      // Reduce property value
+      if (stressedState.purchasePrice) {
+        stressedState.purchasePrice *= (1 + marketScenario.priceReduction / 100);
+      }
+      
+      // Reduce rental income
+      if (stressedState.baseMonthlyRent) {
+        stressedState.baseMonthlyRent *= (1 + marketScenario.rentReduction / 100);
+      }
+      
+      // Reduce revenue for Hotel/STR
+      if (stressedState.revenueInputs) {
+        if (stressedState.revenueInputs.averageDailyRate) {
+          stressedState.revenueInputs.averageDailyRate *= (1 + marketScenario.rentReduction / 100);
+        }
+      }
+      
+      // Add additional carrying costs if specified
+      if (marketScenario.additionalCarryingCosts && stressedState.ops) {
+        const costIncrease = 1.1; // 10% increase in operating costs
+        stressedState.ops.maintenance *= costIncrease;
+        stressedState.ops.management *= costIncrease;
+      }
+      
+      // Store time to sell for reference
+      stressedState._stressTestMetadata = {
+        ...stressedState._stressTestMetadata,
+        timeToSellMonths: marketScenario.timeToSellMonths,
+      };
+      
+      break;
+
+    default:
+      throw new Error(`Unknown scenario type: ${scenarioType}`);
+  }
+
+  // Add metadata to track which scenario was applied
+  stressedState._stressTestMetadata = {
+    ...stressedState._stressTestMetadata,
+    scenarioType,
+    appliedAt: new Date().toISOString(),
+  };
+
+  return stressedState;
+};
+
+/**
  * Interface for stress test result with calculated metrics
  */
 export interface StressTestResultWithMetrics {
@@ -548,7 +728,7 @@ export interface StressTestResultWithMetrics {
   cocReturn: number; // Cash on Cash Return (%)
   dscr: number; // Debt Service Coverage Ratio
   passesTest: boolean; // Whether the scenario passes stress test
-  severity: "Low" | "Medium" | "High" | "Critical";
+  severity: "Mild" | "Moderate" | "Severe" | "Critical";
   description: string;
   impactPercentage: number;
 }
@@ -660,13 +840,16 @@ export const runStressTests = (
       adjustedDSCR >= 1.0 && // Can cover debt service
       adjustedCoCReturn > 0; // Positive return
 
+    // Get severity based on DSCR
+    const severity = getSeverity(adjustedDSCR);
+
     results.push({
       scenarioName: scenario.scenarioName,
       cashFlow: adjustedMonthlyCashFlow,
       cocReturn: adjustedCoCReturn,
       dscr: adjustedDSCR,
       passesTest,
-      severity: scenario.riskLevel,
+      severity,
       description: scenario.description,
       impactPercentage: scenario.impactPercentage,
     });
@@ -687,7 +870,9 @@ export const getStressTestSummary = (
   passRate: number;
   worstScenario: string;
   criticalCount: number;
-  highRiskCount: number;
+  severeCount: number;
+  moderateCount: number;
+  mildCount: number;
 } => {
   const totalTests = results.length;
   const passed = results.filter((r) => r.passesTest).length;
@@ -700,7 +885,9 @@ export const getStressTestSummary = (
     ).scenarioName;
 
   const criticalCount = results.filter((r) => r.severity === "Critical").length;
-  const highRiskCount = results.filter((r) => r.severity === "High").length;
+  const severeCount = results.filter((r) => r.severity === "Severe").length;
+  const moderateCount = results.filter((r) => r.severity === "Moderate").length;
+  const mildCount = results.filter((r) => r.severity === "Mild").length;
 
   return {
     totalTests,
@@ -709,7 +896,9 @@ export const getStressTestSummary = (
     passRate,
     worstScenario,
     criticalCount,
-    highRiskCount,
+    severeCount,
+    moderateCount,
+    mildCount,
   };
 };
 

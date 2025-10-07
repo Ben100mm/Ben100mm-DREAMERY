@@ -811,6 +811,8 @@ export {
   DEFAULT_STRESS_SCENARIOS,
   runStressTests,
   getStressTestSummary,
+  getSeverity,
+  applyStressScenario,
 } from './stressTests';
 
 // Risk scoring system with weighted factors

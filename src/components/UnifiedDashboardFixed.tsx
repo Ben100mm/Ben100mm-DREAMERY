@@ -254,7 +254,7 @@ const UnifiedDashboardFixed: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/workspaces');
+    navigate('/');
   };
 
   const toggleSidebarCollapse = () => {
@@ -327,7 +327,7 @@ const UnifiedDashboardFixed: React.FC = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Back to Close Hub">
+            <Tooltip title="Back to Homepage">
               <IconButton
                 color="inherit"
                 onClick={handleBackToClose}

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Box, AppBar, Toolbar, Typography, IconButton, Tooltip, Badge, Avatar, Button, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, IconButton, Tooltip, Badge, Avatar, Button, Menu, MenuItem, Divider, ListItemIcon, useTheme } from '@mui/material';
 import {
   Notifications as NotificationIcon,
   ArrowBack as ArrowBackIcon,
@@ -164,7 +164,7 @@ const WorkspacesBuyerPage: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/workspaces');
+    navigate('/');
   };
 
 
@@ -312,7 +312,7 @@ const WorkspacesBuyerPage: React.FC = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Back to Close Hub">
+            <Tooltip title="Back to Homepage">
               <IconButton
                 color="inherit"
                 onClick={handleBackToClose}

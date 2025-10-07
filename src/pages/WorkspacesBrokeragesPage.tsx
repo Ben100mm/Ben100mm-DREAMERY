@@ -257,7 +257,7 @@ const WorkspacesBrokeragesPage = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/workspaces');
+    navigate('/');
   };
 
   const mockBrokerageData = {
@@ -312,7 +312,7 @@ const WorkspacesBrokeragesPage = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Back to Close Hub">
+            <Tooltip title="Back to Homepage">
               <IconButton
                 color="inherit"
                 onClick={handleBackToClose}

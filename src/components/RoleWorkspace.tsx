@@ -56,7 +56,7 @@ import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
-import { RoleContext } from '../context/RoleContext';
+import { RoleContext } from '../context/RoleContext.js';
 import UnifiedRoleSelector from './UnifiedRoleSelector';
 
 // Types

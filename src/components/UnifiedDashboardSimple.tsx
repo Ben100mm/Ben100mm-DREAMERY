@@ -102,7 +102,7 @@ const UnifiedDashboardSimple: React.FC = () => {
   };
 
   const handleBackToClose = () => {
-    navigate('/workspaces');
+    navigate('/');
   };
 
   const renderWorkspaceContent = () => {
@@ -167,7 +167,7 @@ const UnifiedDashboardSimple: React.FC = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Back to Close Hub">
+            <Tooltip title="Back to Homepage">
               <IconButton
                 color="inherit"
                 onClick={handleBackToClose}

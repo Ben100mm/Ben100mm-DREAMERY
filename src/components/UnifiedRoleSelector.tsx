@@ -46,7 +46,7 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
   const { userRole, setUserRole } = useContext(RoleContext as any) as any || {};
   const [selectedValue, setSelectedValue] = useState(currentRole || userRole || '');
 
-  // Category-level options
+  // Category-level options (Buyer first, then A-Z)
   const categoryOptions = [
     { value: 'buyer', label: 'Buyer', icon: <PersonIcon />, route: '/workspaces/buyer', roleMapping: 'Retail Buyer' },
     { value: 'agent', label: 'Agent', icon: <PersonIcon />, route: '/workspaces/agent', roleMapping: 'Real Estate Agent' },
@@ -54,84 +54,84 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
     { value: 'businesses', label: 'Businesses', icon: <BusinessIcon />, route: '/workspaces/businesses', roleMapping: 'Business' },
   ];
 
-  // All 80+ professional roles
+  // All 80+ professional roles (sorted A-Z)
   const professionalRoles = [
+    '1031 Exchange Intermediary',
+    'Accountant',
     'Acquisition Specialist',
-    'Disposition Agent',
-    'Title Agent',
-    'Escrow Officer',
-    'Notary Public',
-    'Residential Appraiser',
-    'Commercial Appraiser',
-    'Home Inspector',
-    'Commercial Inspector',
-    'Energy Inspector',
-    'Land Surveyor',
-    'Insurance Agent',
-    'Title Insurance Agent',
-    'Mortgage Broker',
-    'Mortgage Lender',
-    'Loan Officer',
-    'Mortgage Underwriter',
-    'Hard Money Lender',
-    'Private Lender',
-    'Limited Partner (LP)',
-    'Banking Advisor',
-    'Seller Finance Purchase Specialist',
-    'Subject To Existing Mortgage Purchase Specialist',
-    'Trust Acquisition Specialist',
-    'Hybrid Purchase Specialist',
-    'Lease Option Specialist',
-    'General Contractor',
-    'Electrical Contractor',
-    'Plumbing Contractor',
-    'HVAC Contractor',
-    'Roofing Contractor',
-    'Painting Contractor',
-    'Landscaping Contractor',
-    'Flooring Contractor',
-    'Kitchen Contractor',
-    'Bathroom Contractor',
-    'Interior Designer',
+    'AR/VR Developer',
     'Architect',
-    'Landscape Architect',
-    'Kitchen Designer',
-    'Bathroom Designer',
-    'Lighting Designer',
-    'Furniture Designer',
-    'Color Consultant',
-    'Permit Expeditor',
-    'Energy Consultant',
-    'Property Manager',
-    'Long-term Rental Property Manager',
-    'Short-term Rental Property Manager',
-    'STR Setup & Manager',
-    'Housekeeper',
-    'Landscape Cleaner',
-    'Turnover Specialist',
-    'Handyman',
-    'Landscaper',
     'Arborist',
-    'Tenant Screening Agent',
-    'Leasing Agent',
+    'Banking Advisor',
+    'Bathroom Contractor',
+    'Bathroom Designer',
     'Bookkeeper',
     'Certified Public Accountant (CPA)',
-    'Accountant',
-    'Photographer',
-    'Videographer',
-    'AR/VR Developer',
+    'Color Consultant',
+    'Commercial Appraiser',
+    'Commercial Inspector',
     'Digital Twins Developer',
-    'Estate Planning Attorney',
-    '1031 Exchange Intermediary',
+    'Disposition Agent',
+    'Electrical Contractor',
+    'Energy Consultant',
+    'Energy Inspector',
     'Entity Formation Service Provider',
+    'Escrow Officer',
     'Escrow Service Provider',
+    'Estate Planning Attorney',
+    'Financial Advisor',
+    'Flooring Contractor',
+    'Furniture Designer',
+    'General Contractor',
+    'Handyman',
+    'Hard Money Lender',
+    'Home Inspector',
+    'Housekeeper',
+    'HVAC Contractor',
+    'Hybrid Purchase Specialist',
+    'Insurance Agent',
+    'Interior Designer',
+    'Kitchen Contractor',
+    'Kitchen Designer',
+    'Land Surveyor',
+    'Landscape Architect',
+    'Landscape Cleaner',
+    'Landscaper',
+    'Landscaping Contractor',
+    'Lease Option Specialist',
+    'Leasing Agent',
     'Legal Notary Service Provider',
+    'Lighting Designer',
+    'Limited Partner (LP)',
+    'Loan Officer',
+    'Long-term Rental Property Manager',
+    'Mortgage Broker',
+    'Mortgage Lender',
+    'Mortgage Underwriter',
+    'Notary Public',
+    'Painting Contractor',
+    'Permit Expeditor',
+    'Photographer',
+    'Plumbing Contractor',
+    'Private Lender',
+    'Property Manager',
     'Real Estate Consultant',
     'Real Estate Educator',
-    'Financial Advisor',
-    'Tax Advisor',
-    'Relocation Specialist',
     'Real Estate Investment Advisor',
+    'Relocation Specialist',
+    'Residential Appraiser',
+    'Roofing Contractor',
+    'Seller Finance Purchase Specialist',
+    'Short-term Rental Property Manager',
+    'STR Setup & Manager',
+    'Subject To Existing Mortgage Purchase Specialist',
+    'Tax Advisor',
+    'Tenant Screening Agent',
+    'Title Agent',
+    'Title Insurance Agent',
+    'Trust Acquisition Specialist',
+    'Turnover Specialist',
+    'Videographer',
   ];
 
   const handleRoleChange = (event: any) => {
@@ -191,15 +191,10 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
         }}
       >
         <MenuItem value="" disabled>
-          <em>Select Workspace / Role</em>
+          <em>Select Workspace</em>
         </MenuItem>
 
-        {/* Category Options */}
-        <Box sx={{ px: 2, py: 1, backgroundColor: brandColors.backgrounds.secondary }}>
-          <Typography variant="caption" sx={{ fontWeight: 600, color: brandColors.text.secondary }}>
-            WORKSPACES
-          </Typography>
-        </Box>
+        {/* Unified list: Buyer first, then all roles A-Z */}
         {categoryOptions.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -212,15 +207,7 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
             </Box>
           </MenuItem>
         ))}
-
-        <Divider sx={{ my: 1 }} />
-
-        {/* Professional Roles */}
-        <Box sx={{ px: 2, py: 1, backgroundColor: brandColors.backgrounds.secondary }}>
-          <Typography variant="caption" sx={{ fontWeight: 600, color: brandColors.text.secondary }}>
-            PROFESSIONAL ROLES
-          </Typography>
-        </Box>
+        
         {professionalRoles.map((role) => (
           <MenuItem key={role} value={role}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>

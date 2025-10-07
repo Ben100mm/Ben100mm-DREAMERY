@@ -49,6 +49,11 @@ import {
   calculateConfidenceInterval,
   shouldShowAdrTabs,
 } from "../components/underwrite/utils";
+import {
+  generateCashFlowProjections,
+  type CashFlowProjectionParams,
+  type CashFlowProjectionResults,
+} from "../utils/cashFlowProjections";
 
 /**
  * Result interface for basic deal metrics
@@ -114,6 +119,37 @@ export interface IRRMetrics {
   unleveredIRR: number;
   equityMultiple: number;
   moic: number;
+}
+
+/**
+ * Detailed breakdown for MOIC calculation
+ */
+export interface MOICBreakdown {
+  cashInvested: number;
+  totalCashFlows: number;
+  principalPaydown: number;
+  appreciation: number;
+  exitProceeds: {
+    futureValue: number;
+    sellingCosts: number;
+    remainingLoanBalance: number;
+    netSaleProceeds: number;
+  };
+  totalReturn: number;
+  moic: number;
+}
+
+/**
+ * Detailed breakdown for IRR calculation
+ */
+export interface IRRBreakdown {
+  initialInvestment: number;
+  annualCashFlows: number[];
+  exitValue: number;
+  holdingPeriodYears: number;
+  leveredIRR: number;
+  unleveredIRR: number;
+  equityMultiple: number;
 }
 
 /**
@@ -529,17 +565,18 @@ class UnderwriteCalculationService {
 
   /**
    * Calculate Internal Rate of Return
-   * Simplified version - full implementation would need cash flow projections
+   * @deprecated Use calculateComprehensiveIRR() for accurate calculations
+   * This simplified version does not account for year-by-year cash flows
    */
   public calculateIRR(state: DealState): number {
-    // This is a placeholder - the actual implementation is complex
-    // and requires building year-by-year cash flow projections
-    // See the original UnderwritePage.tsx for the full implementation
+    // This is a placeholder - use calculateComprehensiveIRR() instead
     return 0;
   }
 
   /**
    * Calculate Multiple on Invested Capital
+   * @deprecated Use calculateComprehensiveMOIC() for accurate calculations
+   * This simplified version does not account for principal paydown
    */
   public calculateMOIC(state: DealState): number {
     const cashInvested = this.calculateTotalCashInvested(state);
@@ -555,9 +592,260 @@ class UnderwriteCalculationService {
 
   /**
    * Calculate equity multiple
+   * @deprecated Use calculateComprehensiveMOIC() for accurate calculations
    */
   public calculateEquityMultiple(state: DealState): number {
     return this.calculateMOIC(state);
+  }
+
+  // ============================================================================
+  // Comprehensive IRR & MOIC Calculations
+  // ============================================================================
+
+  /**
+   * Convert DealState to CashFlowProjectionParams
+   * Helper method to bridge between deal state and cash flow projection inputs
+   */
+  private convertDealStateToCashFlowParams(
+    state: DealState,
+    holdingPeriodYears?: number
+  ): CashFlowProjectionParams {
+    const monthlyIncome = this.calculateMonthlyIncome(state);
+    const monthlyFixedOps = this.calculateMonthlyFixedOps(state);
+    const monthlyVariableOps = this.calculateMonthlyVariableOps(state);
+    const loanAmount = this.calculateLoanAmount(state);
+    const totalCashInvested = this.calculateTotalCashInvested(state);
+    
+    // Get growth rates from state
+    const rentGrowthRate = (state.appreciation?.rentGrowthRate || 2) / 100;
+    const expenseGrowthRate = (state.appreciation?.expenseGrowthRate || 3) / 100;
+    const propertyAppreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+    
+    // Calculate annual expenses (approximation from monthly)
+    const annualOps = (monthlyFixedOps + monthlyVariableOps) * 12;
+    
+    return {
+      purchasePrice: state.purchasePrice,
+      currentPropertyValue: state.purchasePrice,
+      initialMonthlyRent: monthlyIncome,
+      otherMonthlyIncome: 0,
+      vacancyRate: 0, // Already factored into monthlyIncome
+      annualTaxes: (state.ops.taxes || 0) * 12,
+      annualInsurance: (state.ops.insurance || 0) * 12,
+      annualMaintenance: (state.ops.maintenance || 0) * 12,
+      annualManagement: (state.ops.managementFees || 0) * 12,
+      annualCapEx: (state.ops.capEx || 0) * 12,
+      otherAnnualExpenses: annualOps - ((state.ops.taxes || 0) + (state.ops.insurance || 0) + 
+                          (state.ops.maintenance || 0) + (state.ops.managementFees || 0) + 
+                          (state.ops.capEx || 0)) * 12,
+      loanAmount,
+      annualInterestRate: (state.loan.annualInterestRate || 0) / 100,
+      loanTermMonths: (state.loan.amortizationYears || 30) * 12,
+      interestOnly: state.loan.interestOnly || false,
+      ioPeriodMonths: state.loan.ioPeriodMonths,
+      growthRates: {
+        rentGrowthRate,
+        expenseGrowthRate,
+        propertyAppreciationRate,
+      },
+      capitalEvents: [], // Could be extended to include state.capitalEvents if needed
+      projectionYears: holdingPeriodYears || state.irrHoldPeriodYears || 5,
+      initialInvestment: totalCashInvested,
+    };
+  }
+
+  /**
+   * Calculate IRR using Newton-Raphson method
+   * @param initialInvestment - Initial cash outlay (negative number)
+   * @param cashFlows - Array of annual cash flows
+   * @param finalValue - Exit proceeds
+   * @param maxIterations - Maximum iterations for convergence (default 100)
+   * @param tolerance - Convergence tolerance (default 0.0001)
+   * @returns IRR as a decimal (e.g., 0.15 for 15%)
+   */
+  private calculateIRRNewtonRaphson(
+    initialInvestment: number,
+    cashFlows: number[],
+    finalValue: number,
+    maxIterations: number = 100,
+    tolerance: number = 0.0001
+  ): number {
+    // Handle edge cases
+    if (initialInvestment >= 0) return 0; // No investment
+    if (cashFlows.length === 0) return 0; // No cash flows
+    
+    // Start with 10% initial guess
+    let irr = 0.1;
+    
+    for (let i = 0; i < maxIterations; i++) {
+      let npv = initialInvestment; // Already negative
+      let derivative = 0;
+      
+      // Calculate NPV and its derivative
+      cashFlows.forEach((cf, year) => {
+        const period = year + 1;
+        const discountFactor = Math.pow(1 + irr, period);
+        npv += cf / discountFactor;
+        derivative -= period * cf / Math.pow(1 + irr, period + 1);
+      });
+      
+      // Add final sale value
+      const finalYear = cashFlows.length + 1;
+      npv += finalValue / Math.pow(1 + irr, finalYear);
+      derivative -= finalYear * finalValue / Math.pow(1 + irr, finalYear + 1);
+      
+      // Check for derivative too close to zero (prevent division issues)
+      if (Math.abs(derivative) < 0.000001) {
+        break;
+      }
+      
+      // Newton-Raphson iteration
+      const newIrr = irr - npv / derivative;
+      
+      // Check convergence
+      if (Math.abs(newIrr - irr) < tolerance) {
+        return newIrr;
+      }
+      
+      // Prevent negative or extremely high IRR
+      if (newIrr < -0.99) {
+        return -0.99; // Cap at -99%
+      }
+      if (newIrr > 10) {
+        return 10; // Cap at 1000%
+      }
+      
+      irr = newIrr;
+    }
+    
+    // Return best estimate if not converged
+    return irr;
+  }
+
+  /**
+   * Calculate comprehensive MOIC with detailed breakdown
+   * Accounts for principal paydown, appreciation, and operating cash flows
+   * 
+   * @param state - Current deal state
+   * @param holdingPeriodYears - Holding period in years (default from state or 5)
+   * @param sellingCostsPct - Selling costs as percentage (default 6%)
+   * @returns Detailed MOIC breakdown
+   */
+  public calculateComprehensiveMOIC(
+    state: DealState,
+    holdingPeriodYears?: number,
+    sellingCostsPct: number = 6
+  ): MOICBreakdown {
+    const holdYears = holdingPeriodYears || state.irrHoldPeriodYears || 5;
+    const cashInvested = this.calculateTotalCashInvested(state);
+    
+    // Generate year-by-year projections using sophisticated cash flow module
+    const params = this.convertDealStateToCashFlowParams(state, holdYears);
+    const projections = generateCashFlowProjections(params);
+    
+    // Extract summary data
+    const totalCashFlows = projections.summary.totalCashFlow;
+    const principalPaydown = projections.summary.totalPrincipalPaydown;
+    const appreciation = projections.summary.totalAppreciation;
+    
+    // Calculate exit proceeds
+    const finalProjection = projections.yearlyProjections[projections.yearlyProjections.length - 1];
+    const futureValue = finalProjection.propertyValue;
+    const sellingCosts = futureValue * (sellingCostsPct / 100);
+    const remainingLoanBalance = finalProjection.loanBalance;
+    const netSaleProceeds = futureValue - sellingCosts - remainingLoanBalance;
+    
+    // Total return = cash flows + net sale proceeds
+    const totalReturn = totalCashFlows + netSaleProceeds;
+    
+    // MOIC = Total Return / Cash Invested
+    const moic = cashInvested > 0 ? totalReturn / cashInvested : 0;
+    
+    return {
+      cashInvested,
+      totalCashFlows,
+      principalPaydown,
+      appreciation,
+      exitProceeds: {
+        futureValue,
+        sellingCosts,
+        remainingLoanBalance,
+        netSaleProceeds,
+      },
+      totalReturn,
+      moic,
+    };
+  }
+
+  /**
+   * Calculate comprehensive IRR with detailed breakdown
+   * Uses year-by-year cash flow projections and Newton-Raphson solver
+   * 
+   * @param state - Current deal state
+   * @param holdingPeriodYears - Holding period in years (default from state or 5)
+   * @param sellingCostsPct - Selling costs as percentage (default 6%)
+   * @returns Detailed IRR breakdown with levered and unlevered IRR
+   */
+  public calculateComprehensiveIRR(
+    state: DealState,
+    holdingPeriodYears?: number,
+    sellingCostsPct: number = 6
+  ): IRRBreakdown {
+    const holdYears = holdingPeriodYears || state.irrHoldPeriodYears || 5;
+    const initialInvestment = this.calculateTotalCashInvested(state);
+    
+    // Generate cash flow projections
+    const params = this.convertDealStateToCashFlowParams(state, holdYears);
+    const projections = generateCashFlowProjections(params);
+    
+    // Extract annual cash flows
+    const annualCashFlows = projections.yearlyProjections.map(p => p.cashFlowAfterCapEx);
+    
+    // Calculate exit value
+    const finalProjection = projections.yearlyProjections[projections.yearlyProjections.length - 1];
+    const futureValue = finalProjection.propertyValue;
+    const sellingCosts = futureValue * (sellingCostsPct / 100);
+    const remainingLoanBalance = finalProjection.loanBalance;
+    const exitValue = futureValue - sellingCosts - remainingLoanBalance;
+    
+    // Calculate levered IRR (with debt)
+    const leveredIRR = this.calculateIRRNewtonRaphson(
+      -initialInvestment,
+      annualCashFlows,
+      exitValue
+    );
+    
+    // Calculate unlevered IRR (as if all cash purchase)
+    // For unlevered, we need to recalculate without debt service
+    const unleveredParams = {
+      ...params,
+      loanAmount: 0,
+      annualInterestRate: 0,
+      loanTermMonths: 0,
+      initialInvestment: state.purchasePrice, // Full purchase price
+    };
+    const unleveredProjections = generateCashFlowProjections(unleveredParams);
+    const unleveredCashFlows = unleveredProjections.yearlyProjections.map(p => p.cashFlowAfterCapEx);
+    const unleveredExitValue = futureValue - sellingCosts; // No loan to pay off
+    const unleveredIRR = this.calculateIRRNewtonRaphson(
+      -state.purchasePrice,
+      unleveredCashFlows,
+      unleveredExitValue
+    );
+    
+    // Calculate equity multiple (same as MOIC)
+    const totalReturn = annualCashFlows.reduce((sum, cf) => sum + cf, 0) + exitValue;
+    const equityMultiple = initialInvestment > 0 ? totalReturn / initialInvestment : 0;
+    
+    return {
+      initialInvestment,
+      annualCashFlows,
+      exitValue,
+      holdingPeriodYears: holdYears,
+      leveredIRR,
+      unleveredIRR,
+      equityMultiple,
+    };
   }
 
   // ============================================================================

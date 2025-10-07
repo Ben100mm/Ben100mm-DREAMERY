@@ -205,11 +205,6 @@ const UnifiedDashboardFixed: React.FC = () => {
 
   const [selectedWorkspace, setSelectedWorkspace] = useState<string>(preferences.defaultWorkspace || 'close');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  
-  // Debug activeTab changes
-  useEffect(() => {
-    console.log('UnifiedDashboardFixed - activeTab changed to:', activeTab, 'selectedWorkspace:', selectedWorkspace);
-  }, [activeTab, selectedWorkspace]);
   const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(preferences.customLayout.sidebarCollapsed);

@@ -73,6 +73,13 @@ import { brandColors } from '../theme';
 import { useNavigate } from 'react-router-dom';
 import { calculateRiskScore, defaultMarketConditions } from '../utils/advancedCalculations';
 import { underwriteCalculationService } from '../services/underwriteCalculationService';
+import { 
+  getLocationAdjustedPreset, 
+  detectRegionFromAddress, 
+  getAllRegions, 
+  type RegionKey, 
+  type RegionData 
+} from '../utils/regionalMultipliers';
 import AdvancedModelingTab from './AdvancedModelingTab';
 import { GuidedTour } from '../components/GuidedTour';
 
@@ -102,6 +109,11 @@ const AnalyzePage: React.FC = () => {
     opEx: number;
   }>>([]);
   const [selectedCustomPreset, setSelectedCustomPreset] = useState<string | null>(null);
+  
+  // Regional Adjustment State
+  const [selectedRegion, setSelectedRegion] = useState<RegionKey>('national-average');
+  const [useRegionalAdjustment, setUseRegionalAdjustment] = useState(false);
+  const [propertyAddress, setPropertyAddress] = useState('');
   const [sensitivityAnalysis, setSensitivityAnalysis] = useState({
     sensitivityRange: 90,
     sensitivitySteps: 14,
@@ -188,13 +200,41 @@ const AnalyzePage: React.FC = () => {
 
   // Pro Forma Analysis Helper Functions
   const applyProFormaPreset = (preset: 'conservative' | 'moderate' | 'aggressive') => {
-    const presets = {
-      conservative: { maintenance: 8, vacancy: 6, management: 12, capEx: 6, opEx: 4 },
-      moderate: { maintenance: 6, vacancy: 4, management: 9, capEx: 4, opEx: 3 },
-      aggressive: { maintenance: 4, vacancy: 2, management: 6, capEx: 2, opEx: 2 },
-    };
-    setOps(presets[preset]);
+    let adjustedPreset;
+    
+    if (useRegionalAdjustment) {
+      // Apply regional multipliers
+      adjustedPreset = getLocationAdjustedPreset(preset, selectedRegion);
+    } else {
+      // Use base presets
+      const presets = {
+        conservative: { maintenance: 8, vacancy: 6, management: 12, capEx: 6, opEx: 4 },
+        moderate: { maintenance: 6, vacancy: 4, management: 9, capEx: 4, opEx: 3 },
+        aggressive: { maintenance: 4, vacancy: 2, management: 6, capEx: 2, opEx: 2 },
+      };
+      adjustedPreset = presets[preset];
+    }
+    
+    setOps(adjustedPreset);
     setProFormaPreset(preset);
+  };
+  
+  // Auto-detect region from address
+  const handleAddressChange = (address: string) => {
+    setPropertyAddress(address);
+    if (address && useRegionalAdjustment) {
+      const detectedRegion = detectRegionFromAddress(address);
+      setSelectedRegion(detectedRegion);
+      // Re-apply current preset with new region
+      applyProFormaPreset(proFormaPreset);
+    }
+  };
+  
+  // Toggle regional adjustment
+  const toggleRegionalAdjustment = (enabled: boolean) => {
+    setUseRegionalAdjustment(enabled);
+    // Re-apply current preset with or without regional adjustment
+    applyProFormaPreset(proFormaPreset);
   };
 
   const saveCustomPreset = (name: string, description?: string) => {

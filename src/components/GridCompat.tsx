@@ -11,6 +11,12 @@ interface GridCompatProps extends Omit<GridProps, 'container' | 'item'> {
   container?: boolean;
   item?: boolean;
   children?: React.ReactNode;
+  spacing?: number;
+  xs?: number | boolean;
+  sm?: number | boolean;
+  md?: number | boolean;
+  lg?: number | boolean;
+  xl?: number | boolean;
 }
 
 /**

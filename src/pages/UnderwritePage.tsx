@@ -8934,7 +8934,7 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
 
-        {/* 1031 Exchange Calculator */}
+        {/* Tax-Deferred Exchanges (1031 & 721) */}
         {isAccordionVisible(calculatorMode, 'exchange1031') && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
@@ -8945,9 +8945,10 @@ const UnderwritePage: React.FC = () => {
             }>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
                 <Typography sx={{ fontWeight: 700 }}>
-                  1031 Exchange Calculator
+                  Tax-Deferred Exchanges (1031 & 721)
                 </Typography>
-                {state.exchange1031?.enabled && (
+                {(state.exchange1031?.enabled || state.acquiring1031?.enabled || 
+                  state.exchange721?.enabled || state.acquiring721?.enabled) && (
                   <Chip 
                     label="Active"
                     color="success"
@@ -8955,31 +8956,33 @@ const UnderwritePage: React.FC = () => {
                     sx={{ fontWeight: 600 }}
                   />
                 )}
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={state.exchange1031?.enabled || false}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        setState((prev) => ({
-                          ...prev,
-                          exchange1031: {
-                            ...(prev.exchange1031 || defaultState.exchange1031!),
-                            enabled: e.target.checked,
-                          },
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
-                    label="Enable"
-                    sx={{ ml: 'auto' }}
-                />
+                <Tooltip title="Enable to access 1031 like-kind exchanges and 721 UPREIT exchanges">
+                  <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    ⓘ
+                  </Typography>
+                </Tooltip>
+                <Box sx={{ ml: 'auto' }} />
               </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ p: 2 }}>
-                {state.exchange1031?.enabled && (
+                {/* Tabs for different exchange strategies */}
+                <Tabs 
+                  value={exchangeTabValue} 
+                  onChange={(_, newValue) => setExchangeTabValue(newValue)}
+                  variant="fullWidth"
+                  sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}
+                >
+                  <Tab label="1031 - Exit" />
+                  <Tab label="1031 Acquisition" />
+                  <Tab label="721 - Exit" />
+                  <Tab label="721 Acquisition" />
+                </Tabs>
+
+                {/* Tab 1: 1031 Exchange - Exit/Selling */}
+                {exchangeTabValue === 0 && (
+                  <Box>
+                    {state.exchange1031?.enabled && (
                   <>
                     <Alert severity="info" sx={{ mb: 2 }}>
                       <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
@@ -9553,57 +9556,12 @@ const UnderwritePage: React.FC = () => {
                     </Typography>
                   </Alert>
                 )}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-        )}
-
-        {/* 1031 Exchange Acquisition Tracking (when buying via 1031) */}
-        {isAccordionVisible(calculatorMode, 'exchange1031') && (
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-          <Accordion>
-            <AccordionSummary expandIcon={
-              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                <LazyExpandMoreIcon />
-              </React.Suspense>
-            }>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Acquiring via 1031 Exchange
-                </Typography>
-                {state.acquiring1031?.enabled && (
-                  <Chip 
-                    label="Replacement Property"
-                    color="info"
-                    size="small"
-                    sx={{ fontWeight: 600 }}
-                  />
+                  </Box>
                 )}
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={state.acquiring1031?.enabled || false}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        setState((prev) => ({
-                          ...prev,
-                          acquiring1031: {
-                            ...(prev.acquiring1031 || defaultState.acquiring1031!),
-                            enabled: e.target.checked,
-                          },
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
-                    label="Enable"
-                    sx={{ ml: 'auto' }}
-                />
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ p: 2 }}>
+
+                {/* Tab 2: 1031 Exchange - Acquisition/Tracking */}
+                {exchangeTabValue === 1 && (
+                  <Box>
                 {state.acquiring1031?.enabled ? (
                   <>
                     <Alert severity="info" sx={{ mb: 3 }}>
@@ -9777,6 +9735,593 @@ const UnderwritePage: React.FC = () => {
                     </Typography>
                   </Alert>
                 )}
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.acquiring1031?.enabled || false}
+                          onChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              acquiring1031: {
+                                ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                                enabled: e.target.checked,
+                              },
+                            }));
+                          }}
+                        />
+                      }
+                      label="Enable 1031 Acquisition Tracking"
+                      sx={{ mt: 2 }}
+                    />
+                  </Box>
+                )}
+
+                {/* Tab 3: 721 Exchange (UPREIT) - Exit/Contributing */}
+                {exchangeTabValue === 2 && (
+                  <Box>
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        721 Exchange (UPREIT) - Contribute Property for Partnership Units
+                      </Typography>
+                      <Typography variant="body2">
+                        A 721 exchange allows you to contribute your property to a REIT or partnership in exchange for operating partnership (OP) units, deferring capital gains with no strict deadlines.
+                      </Typography>
+                    </Alert>
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.exchange721?.enabled || false}
+                          onChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              exchange721: {
+                                ...(prev.exchange721 || defaultState.exchange721!),
+                                enabled: e.target.checked,
+                              },
+                            }));
+                          }}
+                        />
+                      }
+                      label="Enable 721 Exchange Calculator"
+                      sx={{ mb: 3 }}
+                    />
+
+                    {state.exchange721?.enabled ? (
+                      <>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                          Property Contribution
+                        </Typography>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Property Value"
+                            type="number"
+                            value={state.exchange721?.propertyValue || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => {
+                                const updated = {
+                                  ...prev,
+                                  exchange721: {
+                                    ...(prev.exchange721 || defaultState.exchange721!),
+                                    propertyValue: value,
+                                  },
+                                };
+                                const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                                updated.exchange721 = calculate721Exchange(updated.exchange721!, taxRate);
+                                return updated;
+                              });
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Current market value of property"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Adjusted Basis"
+                            type="number"
+                            value={state.exchange721?.adjustedBasis || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => {
+                                const updated = {
+                                  ...prev,
+                                  exchange721: {
+                                    ...(prev.exchange721 || defaultState.exchange721!),
+                                    adjustedBasis: value,
+                                  },
+                                };
+                                const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                                updated.exchange721 = calculate721Exchange(updated.exchange721!, taxRate);
+                                return updated;
+                              });
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Original cost + improvements - depreciation"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Outstanding Mortgage"
+                            type="number"
+                            value={state.exchange721?.outstandingMortgage || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                exchange721: {
+                                  ...(prev.exchange721 || defaultState.exchange721!),
+                                  outstandingMortgage: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="REIT/partnership will assume or pay off"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="REIT/Partnership Name"
+                            value={state.exchange721?.reitName || ''}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                exchange721: {
+                                  ...(prev.exchange721 || defaultState.exchange721!),
+                                  reitName: e.target.value,
+                                },
+                              }));
+                            }}
+                            helperText="Name of REIT or partnership"
+                          />
+                        </Box>
+
+                        <Divider sx={{ my: 3 }} />
+
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                          OP Units Received
+                        </Typography>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="Number of OP Units"
+                            type="number"
+                            value={state.exchange721?.opUnitsReceived || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => {
+                                const updated = {
+                                  ...prev,
+                                  exchange721: {
+                                    ...(prev.exchange721 || defaultState.exchange721!),
+                                    opUnitsReceived: value,
+                                  },
+                                };
+                                const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                                updated.exchange721 = calculate721Exchange(updated.exchange721!, taxRate);
+                                return updated;
+                              });
+                            }}
+                            helperText="Operating partnership units to receive"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Unit Valuation"
+                            type="number"
+                            value={state.exchange721?.unitValuation || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => {
+                                const updated = {
+                                  ...prev,
+                                  exchange721: {
+                                    ...(prev.exchange721 || defaultState.exchange721!),
+                                    unitValuation: value,
+                                  },
+                                };
+                                const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                                updated.exchange721 = calculate721Exchange(updated.exchange721!, taxRate);
+                                return updated;
+                              });
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Value per OP unit"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Annual Distribution Rate"
+                            type="number"
+                            value={state.exchange721?.annualDistributionRate || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => {
+                                const updated = {
+                                  ...prev,
+                                  exchange721: {
+                                    ...(prev.exchange721 || defaultState.exchange721!),
+                                    annualDistributionRate: value,
+                                  },
+                                };
+                                const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                                updated.exchange721 = calculate721Exchange(updated.exchange721!, taxRate);
+                                return updated;
+                              });
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            helperText="Annual distribution yield (typical: 4-8%)"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Holding Period Requirement"
+                            type="number"
+                            value={state.exchange721?.holdingPeriodRequirement || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                exchange721: {
+                                  ...(prev.exchange721 || defaultState.exchange721!),
+                                  holdingPeriodRequirement: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">years</InputAdornment>,
+                            }}
+                            helperText="Minimum hold period (typically 1 year)"
+                          />
+                        </Box>
+
+                        {(() => {
+                          const warnings = validate721Exchange(state.exchange721!);
+                          return warnings.length > 0 ? (
+                            <Alert severity="warning" sx={{ mb: 3 }}>
+                              <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                                Validation Warnings:
+                              </Typography>
+                              {warnings.map((warning, idx) => (
+                                <Typography key={idx} variant="body2" sx={{ mb: 0.5 }}>
+                                  {warning}
+                                </Typography>
+                              ))}
+                            </Alert>
+                          ) : null;
+                        })()}
+
+                        <Divider sx={{ my: 3 }} />
+
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                          721 Exchange Results
+                        </Typography>
+
+                        <Box sx={{ 
+                          display: 'grid', 
+                          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+                          gap: 2,
+                          mb: 3,
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                        }}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Total OP Units Value
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                              ${(state.exchange721?.totalUnitsValue || 0).toLocaleString()}
+                            </Typography>
+                          </Box>
+
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Deferred Gain
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.successDark }}>
+                              ${(state.exchange721?.deferredGain || 0).toLocaleString()}
+                            </Typography>
+                          </Box>
+
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Carryover Basis in Units
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                              ${(state.exchange721?.carryoverBasisInUnits || 0).toLocaleString()}
+                            </Typography>
+                          </Box>
+
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Annual Distribution Income
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.info }}>
+                              ${(state.exchange721?.annualDistributionIncome || 0).toLocaleString()}/yr
+                            </Typography>
+                          </Box>
+
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Est. Tax on Future Sale
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: 'warning.main' }}>
+                              ${(state.exchange721?.estimatedTaxOnFutureSale || 0).toLocaleString()}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Alert severity="success" sx={{ mt: 2 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Passive Income Strategy
+                          </Typography>
+                          <Typography variant="caption">
+                            You'll receive ${(state.exchange721?.annualDistributionIncome || 0).toLocaleString()} annually in passive income from REIT distributions, 
+                            with all capital gains deferred until you sell or convert the OP units.
+                          </Typography>
+                        </Alert>
+                      </>
+                    ) : (
+                      <Alert severity="info">
+                        <Typography variant="body2">
+                          Enable the 721 Exchange Calculator to model UPREIT contributions. This strategy provides passive income through REIT distributions
+                          while deferring capital gains, with more flexibility than traditional 1031 exchanges.
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Box>
+                )}
+
+                {/* Tab 4: 721 Exchange - Acquisition/Tracking */}
+                {exchangeTabValue === 3 && (
+                  <Box>
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        721 OP Units Tracking
+                      </Typography>
+                      <Typography variant="body2">
+                        Track the operating partnership units you received from a 721 UPREIT exchange, including your carryover basis and deferred gains.
+                      </Typography>
+                    </Alert>
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.acquiring721?.enabled || false}
+                          onChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              acquiring721: {
+                                ...(prev.acquiring721 || defaultState.acquiring721!),
+                                enabled: e.target.checked,
+                              },
+                            }));
+                          }}
+                        />
+                      }
+                      label="Enable 721 OP Units Tracking"
+                      sx={{ mb: 3 }}
+                    />
+
+                    {state.acquiring721?.enabled ? (
+                      <>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                          OP Units Information
+                        </Typography>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                          <TextField
+                            fullWidth
+                            label="REIT/Partnership Name"
+                            value={state.acquiring721?.reitName || ''}
+                            onChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  reitName: e.target.value,
+                                },
+                              }));
+                            }}
+                            helperText="Name of REIT or partnership"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="OP Units Received"
+                            type="number"
+                            value={state.acquiring721?.opUnitsReceived || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  opUnitsReceived: value,
+                                },
+                              }));
+                            }}
+                            helperText="Number of OP units received"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Current Unit Value"
+                            type="number"
+                            value={state.acquiring721?.currentUnitValue || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  currentUnitValue: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Current value per unit"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Annual Distribution Rate"
+                            type="number"
+                            value={state.acquiring721?.annualDistributionRate || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  annualDistributionRate: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            }}
+                            helperText="Current distribution yield"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Carryover Basis in Units"
+                            type="number"
+                            value={state.acquiring721?.carryoverBasisInUnits || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  carryoverBasisInUnits: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Tax basis from contributed property"
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Deferred Gain Carried"
+                            type="number"
+                            value={state.acquiring721?.deferredGainCarried || 0}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...(prev.acquiring721 || defaultState.acquiring721!),
+                                  deferredGainCarried: value,
+                                },
+                              }));
+                            }}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            }}
+                            helperText="Capital gains deferred from contribution"
+                          />
+                        </Box>
+
+                        {state.exchange721?.enabled && state.exchange721.carryoverBasisInUnits > 0 && (
+                          <Button
+                            variant="outlined"
+                            size="medium"
+                            onClick={() => {
+                              setState((prev) => ({
+                                ...prev,
+                                acquiring721: {
+                                  ...prev.acquiring721!,
+                                  enabled: true,
+                                  reitName: prev.exchange721?.reitName || '',
+                                  opUnitsReceived: prev.exchange721?.opUnitsReceived || 0,
+                                  currentUnitValue: prev.exchange721?.unitValuation || 0,
+                                  carryoverBasisInUnits: prev.exchange721?.carryoverBasisInUnits || 0,
+                                  deferredGainCarried: prev.exchange721?.deferredGain || 0,
+                                  annualDistributionRate: prev.exchange721?.annualDistributionRate || 0,
+                                },
+                              }));
+                            }}
+                            sx={{ mb: 3 }}
+                          >
+                            Import from 721 Exchange Calculator Above
+                          </Button>
+                        )}
+
+                        <Box sx={{ 
+                          p: 2, 
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          mb: 2,
+                        }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
+                            OP Units Summary
+                          </Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} md={4}>
+                              <Typography variant="caption" color="text.secondary">
+                                Total Units Value
+                              </Typography>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                ${((state.acquiring721?.opUnitsReceived || 0) * (state.acquiring721?.currentUnitValue || 0)).toLocaleString()}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                              <Typography variant="caption" color="text.secondary">
+                                Annual Distributions
+                              </Typography>
+                              <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.info }}>
+                                ${(((state.acquiring721?.opUnitsReceived || 0) * (state.acquiring721?.currentUnitValue || 0) * (state.acquiring721?.annualDistributionRate || 0)) / 100).toLocaleString()}/yr
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                              <Typography variant="caption" color="text.secondary">
+                                Deferred Gain
+                              </Typography>
+                              <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.main' }}>
+                                ${(state.acquiring721?.deferredGainCarried || 0).toLocaleString()}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Alert severity="info" sx={{ mt: 2 }}>
+                            <Typography variant="caption">
+                              Your OP units generate ${(((state.acquiring721?.opUnitsReceived || 0) * (state.acquiring721?.currentUnitValue || 0) * (state.acquiring721?.annualDistributionRate || 0)) / 100).toLocaleString()} in passive income annually. 
+                              The deferred gain of ${(state.acquiring721?.deferredGainCarried || 0).toLocaleString()} will be recognized when you sell or convert the units.
+                            </Typography>
+                          </Alert>
+                        </Box>
+                      </>
+                    ) : (
+                      <Alert severity="info">
+                        <Typography variant="body2">
+                          Enable this section if you're holding OP units from a 721 UPREIT exchange.
+                          This will track your passive income, unit value, and deferred tax obligations.
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Box>
+                )}
+
               </Box>
             </AccordionDetails>
           </Accordion>

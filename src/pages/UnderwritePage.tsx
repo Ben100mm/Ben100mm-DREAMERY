@@ -448,43 +448,113 @@ interface Exchange1031Inputs {
 }
 
 // DealState interface is now imported from types/deal.ts
-// interface DealState {
-  propertyType: PropertyType;
-  operationType: OperationType;
-  offerType: OfferType;
-  propertyAddress: string;
-  agentOwner: string;
-  call: string;
-  email: string;
-  analysisDate: string;
-  listedPrice: number;
-  purchasePrice: number;
-  percentageDifference: number;
-  loan: LoanTerms;
-  subjectTo: SubjectToInputs;
-  hybrid: HybridInputs;
-  fixFlip?: FixFlipInputs;
-  brrrr?: BRRRRInputs;
-  ops: OperatingInputsCommon;
-  sfr?: IncomeInputsSfr;
-  multi?: IncomeInputsMulti;
-  str?: IncomeInputsStr;
-  enhancedSTR?: EnhancedSTRInputs;
-  officeRetail?: OfficeRetailInputs;
-  land?: LandInputs;
-  arbitrage?: ArbitrageInputs;
-  appreciation: AppreciationInputs;
-  // Settings
-  showBothPaybackMethods: boolean;
-  paybackCalculationMethod: "initial" | "remaining";
-  reservesCalculationMethod: "months" | "fixed";
-  reservesMonths: number;
-  reservesFixedAmount: number;
-  includeVariableExpensesInBreakEven: boolean;
-  includeVariablePctInBreakeven?: boolean;
-  proFormaPreset: "conservative" | "moderate" | "aggressive" | "custom";
-  customProFormaPresets: CustomProFormaPreset[];
-  selectedCustomPreset?: string;
+
+const defaultState: DealState = {
+  propertyType: "Single Family",
+  operationType: "Buy & Hold",
+  offerType: "Conventional",
+  calculatorMode: "standard",
+  propertyAddress: "",
+  agentOwner: "",
+  call: "",
+  email: "",
+  analysisDate: (() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  })(),
+  listedPrice: 160000,
+  purchasePrice: 160000,
+  percentageDifference: 0,
+  loan: {
+    downPayment: 32000,
+    loanAmount: 128000,
+    annualInterestRate: 7,
+    monthlyPayment: 800,
+    annualPayment: 9600,
+    interestOnly: false,
+    balloonDue: 0,
+    amortizationAmount: 128000,
+    amortizationYears: 30,
+    closingCosts: 0,
+    rehabCosts: 0,
+    ioPeriodMonths: 0,
+    totalInterest: 0,
+    totalPayment: 0,
+    amortizationSchedule: [],
+  },
+  subjectTo: {
+    paymentToSeller: 0,
+    totalBalance: 0,
+    totalMonthlyPayment: 0,
+  },
+  hybrid: {
+    loanAmount: 0,
+    loanTerm: 0,
+    annualInterestRate: 0,
+    monthlyPayment: 0,
+    annualPayment: 0,
+    balloonDue: 0,
+    interestOnly: false,
+    subjectToLoans: [],
+    totalLoanBalance: 0,
+    totalMonthlyPayment: 0,
+    totalAnnualPayment: 0,
+    amortizationSchedule: [],
+  },
+  ops: {
+    taxes: 200,
+    insurance: 100,
+    maintenance: 5,
+    vacancy: 5,
+    management: 10,
+    capEx: 5,
+    opEx: 5,
+  },
+  sfr: {
+    monthlyRent: 1500,
+    grossMonthlyIncome: 0,
+  },
+  multi: {
+    unitRents: [1500],
+    grossMonthlyIncome: 0,
+  },
+  str: {
+    avgNightsPerMonth: 20,
+    unitDailyRents: [100],
+    dailyCleaningFee: 50,
+    laundry: 100,
+    activities: 0,
+    grossMonthlyIncome: 0,
+  },
+  officeRetail: {
+    squareFootage: 1000,
+    rentPerSFMonthly: 2.5,
+    extraMonthlyIncome: 0,
+  },
+  land: {
+    extraMonthlyIncome: 0,
+  },
+  arbitrage: {
+    monthlyRent: 1500,
+    grossMonthlyIncome: 0,
+  },
+  appreciation: {
+    annualAppreciationRate: 3,
+    holdingPeriodYears: 5,
+  },
+  showBothPaybackMethods: false,
+  paybackCalculationMethod: "initial",
+  reservesCalculationMethod: "months",
+  reservesMonths: 6,
+  reservesFixedAmount: 0,
+  includeVariableExpensesInBreakEven: true,
+  includeVariablePctInBreakeven: false,
+  proFormaPreset: "conservative",
+  customProFormaPresets: [],
+  selectedCustomPreset: undefined,
   sensitivityAnalysis: SensitivityAnalysis;
   benchmarkComparison: BenchmarkComparison;
   revenueInputs: RevenueInputs;

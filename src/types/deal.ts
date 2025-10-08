@@ -1,3 +1,5 @@
+import { CalculatorMode } from './calculatorMode';
+
 export interface HybridInputs {
   loanAmount: number;
   loanTerm: number;
@@ -157,7 +159,9 @@ export interface DealState {
     | "Condo"
     | "Townhouse"
     | "Land"
-    | "Hotel";
+    | "Hotel"
+    | "Office"
+    | "Retail";
   operationType:
     | "Buy & Hold"
     | "Fix & Flip"
@@ -167,6 +171,9 @@ export interface DealState {
   purchasePrice: number;
   city: string;
   state: string;
+  
+  // Calculator Mode
+  calculatorMode?: CalculatorMode;
 
   // Financing Type
   offerType?:

@@ -8882,6 +8882,7 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
 
+
         {/* Cash Flow Projections */}
         {isAccordionVisible(calculatorMode, 'cashFlowProjections') && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>

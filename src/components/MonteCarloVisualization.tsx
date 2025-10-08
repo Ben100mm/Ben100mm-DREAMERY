@@ -43,6 +43,7 @@ import {
   Speed
 } from '@mui/icons-material';
 import { MonteCarloResults } from '../utils/monteCarloSimulation';
+import { brandColors } from '../theme';
 
 // ============================================================================
 // Types
@@ -125,39 +126,39 @@ export const MonteCarloVisualization: React.FC<MonteCarloVisualizationProps> = (
       title: 'Mean Return',
       value: formatCurrency(results.totalReturnStats.mean),
       subtitle: `Annualized: ${formatPercent(results.annualizedReturnStats.mean)}`,
-      icon: <TrendingUp color="primary" />,
-      color: theme.palette.primary.main
+      icon: <TrendingUp sx={{ color: brandColors.neutral[600] }} />,
+      color: brandColors.neutral[600]
     },
     {
       title: 'Median Return',
       value: formatCurrency(results.totalReturnStats.median),
       subtitle: `50th Percentile`,
-      icon: <Assessment color="info" />,
-      color: theme.palette.info.main
+      icon: <Assessment sx={{ color: brandColors.neutral[600] }} />,
+      color: brandColors.neutral[600]
     },
     {
       title: 'Standard Deviation',
       value: formatCurrency(results.totalReturnStats.stdDev),
       subtitle: `Risk measure`,
-      icon: <Speed color="warning" />,
-      color: theme.palette.warning.main
+      icon: <Speed sx={{ color: brandColors.neutral[700] }} />,
+      color: brandColors.neutral[700]
     },
     {
       title: 'Positive Return Probability',
       value: formatProbability(results.probabilityOfPositiveReturn),
       subtitle: `${results.results.filter(r => r.totalReturn > 0).length} of ${results.simulationCount}`,
-      icon: <ShowChart color="success" />,
-      color: theme.palette.success.main
+      icon: <ShowChart sx={{ color: brandColors.neutral[800] }} />,
+      color: brandColors.neutral[800]
     }
   ];
 
   // Percentile data
   const percentileData = [
-    { label: '10th Percentile', value: results.totalReturnStats.percentile10, color: theme.palette.error.main },
-    { label: '25th Percentile', value: results.totalReturnStats.percentile25, color: theme.palette.warning.main },
-    { label: '50th Percentile (Median)', value: results.totalReturnStats.median, color: theme.palette.info.main },
-    { label: '75th Percentile', value: results.totalReturnStats.percentile75, color: theme.palette.success.light },
-    { label: '90th Percentile', value: results.totalReturnStats.percentile90, color: theme.palette.success.main }
+    { label: '10th Percentile', value: results.totalReturnStats.percentile10, color: brandColors.neutral[700] },
+    { label: '25th Percentile', value: results.totalReturnStats.percentile25, color: brandColors.neutral[600] },
+    { label: '50th Percentile (Median)', value: results.totalReturnStats.median, color: brandColors.neutral[600] },
+    { label: '75th Percentile', value: results.totalReturnStats.percentile75, color: brandColors.neutral[800] },
+    { label: '90th Percentile', value: results.totalReturnStats.percentile90, color: brandColors.neutral[800] }
   ];
 
   // Custom tooltip
@@ -192,7 +193,17 @@ export const MonteCarloVisualization: React.FC<MonteCarloVisualizationProps> = (
   return (
     <Box>
       {/* Performance Metrics */}
-      <Alert severity="info" sx={{ mb: 3 }}>
+      <Alert 
+        sx={{
+          mb: 3,
+          backgroundColor: brandColors.neutral[50],
+          color: brandColors.neutral[800],
+          border: `1px solid ${brandColors.neutral[200]}`,
+          '& .MuiAlert-icon': {
+            color: brandColors.neutral[600]
+          }
+        }}
+      >
         <Typography variant="body2" fontWeight={600}>
           Simulation completed in {results.executionTimeMs.toFixed(0)}ms
         </Typography>
@@ -354,7 +365,7 @@ export const MonteCarloVisualization: React.FC<MonteCarloVisualizationProps> = (
             sx={{ width: 200 }}
           />
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h4" sx={{ color: theme.palette.success.main, fontWeight: 700 }}>
+            <Typography variant="h4" sx={{ color: brandColors.neutral[800], fontWeight: 700 }}>
               {formatProbability(targetProbability)}
             </Typography>
             <Typography variant="caption" color="text.secondary">
@@ -368,21 +379,21 @@ export const MonteCarloVisualization: React.FC<MonteCarloVisualizationProps> = (
             <Grid item xs={12} md={4}>
               <Chip 
                 label={`Best Case: ${formatCurrency(results.totalReturnStats.max)}`}
-                color="success"
+                sx={{ backgroundColor: brandColors.neutral[800], color: brandColors.neutral[50] }}
                 sx={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <Chip 
                 label={`Most Likely: ${formatCurrency(results.totalReturnStats.median)}`}
-                color="primary"
+                sx={{ backgroundColor: brandColors.neutral[600], color: brandColors.neutral[50] }}
                 sx={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <Chip 
                 label={`Worst Case: ${formatCurrency(results.totalReturnStats.min)}`}
-                color="error"
+                sx={{ backgroundColor: brandColors.neutral[700], color: brandColors.neutral[50] }}
                 sx={{ width: '100%' }}
               />
             </Grid>

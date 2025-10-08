@@ -5280,7 +5280,7 @@ const UnderwritePage: React.FC = () => {
                       fontSize: 18, 
                       color: 'text.secondary', 
                       cursor: 'pointer',
-                      '&:hover': { color: 'primary.main' },
+                      '&:hover': { color: brandColors.neutral[600] },
                       mr: 1
                     }}
                     onClick={(e) => {
@@ -5510,7 +5510,7 @@ const UnderwritePage: React.FC = () => {
                           fontSize: 18, 
                           color: 'text.secondary', 
                           cursor: 'pointer',
-                          '&:hover': { color: 'primary.main' },
+                          '&:hover': { color: brandColors.neutral[600] },
                           mr: 1
                         }}
                         onClick={(e) => {
@@ -6086,7 +6086,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: 18, 
                         color: 'text.secondary', 
                         cursor: 'pointer',
-                        '&:hover': { color: 'primary.main' },
+                        '&:hover': { color: brandColors.neutral[600] },
                         mr: 1
                       }}
                       onClick={(e) => {
@@ -6446,7 +6446,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: 18, 
                         color: 'text.secondary', 
                         cursor: 'pointer',
-                        '&:hover': { color: 'primary.main' },
+                        '&:hover': { color: brandColors.neutral[600] },
                         mr: 1
                       }}
                       onClick={(e) => {
@@ -6681,7 +6681,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: 18, 
                         color: 'text.secondary', 
                         cursor: 'pointer',
-                        '&:hover': { color: 'primary.main' },
+                        '&:hover': { color: brandColors.neutral[600] },
                         mr: 1
                       }}
                       onClick={(e) => {
@@ -7026,7 +7026,7 @@ const UnderwritePage: React.FC = () => {
                           fontSize: 18, 
                           color: 'text.secondary', 
                           cursor: 'pointer',
-                          '&:hover': { color: 'primary.main' },
+                          '&:hover': { color: brandColors.neutral[600] },
                           mr: 1
                         }}
                         onClick={(e) => {
@@ -7407,7 +7407,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: 18, 
                         color: 'text.secondary', 
                         cursor: 'pointer',
-                        '&:hover': { color: 'primary.main' },
+                        '&:hover': { color: brandColors.neutral[600] },
                         mr: 1
                       }}
                       onClick={(e) => {
@@ -7751,7 +7751,7 @@ const UnderwritePage: React.FC = () => {
                         fontSize: 18, 
                         color: 'text.secondary', 
                         cursor: 'pointer',
-                        '&:hover': { color: 'primary.main' },
+                        '&:hover': { color: brandColors.neutral[600] },
                         mr: 1
                       }}
                       onClick={(e) => {
@@ -8265,7 +8265,7 @@ const UnderwritePage: React.FC = () => {
                       fontSize: 18, 
                       color: 'text.secondary', 
                       cursor: 'pointer',
-                      '&:hover': { color: 'primary.main' },
+                      '&:hover': { color: brandColors.neutral[600] },
                       mr: 1
                     }}
                     onClick={(e) => {
@@ -8876,27 +8876,43 @@ const UnderwritePage: React.FC = () => {
                 <LazyExpandMoreIcon />
               </React.Suspense>
             }>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontWeight: 700 }}>
                   Cash Flow Projections
                 </Typography>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={state.cashFlowProjectionsEnabled || false}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        setState((prev) => ({
-                          ...prev,
-                          cashFlowProjectionsEnabled: e.target.checked,
-                        }));
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={state.cashFlowProjectionsEnabled || false}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setState((prev) => ({
+                            ...prev,
+                            cashFlowProjectionsEnabled: e.target.checked,
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
+                    label="Enable"
+                  />
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: brandColors.neutral[600] },
+                        mr: 1
                       }}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Add reset function for cash flow projections if needed
+                      }}
                     />
-                  }
-                  label="Enable"
-                  sx={{ ml: 'auto' }}
-                />
+                  </React.Suspense>
+                </Box>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
@@ -8928,30 +8944,46 @@ const UnderwritePage: React.FC = () => {
                 <LazyExpandMoreIcon />
               </React.Suspense>
             }>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontWeight: 700 }}>
                   1031 Exchange Calculator
                 </Typography>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={state.exchange1031?.enabled || false}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        setState((prev) => ({
-                          ...prev,
-                          exchange1031: {
-                            ...(prev.exchange1031 || defaultState.exchange1031!),
-                            enabled: e.target.checked,
-                          },
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={state.exchange1031?.enabled || false}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setState((prev) => ({
+                            ...prev,
+                            exchange1031: {
+                              ...(prev.exchange1031 || defaultState.exchange1031!),
+                              enabled: e.target.checked,
+                            },
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
                     label="Enable"
-                    sx={{ ml: 'auto' }}
-                />
+                  />
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: brandColors.neutral[600] },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Add reset function for 1031 exchange if needed
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
@@ -9245,8 +9277,8 @@ const UnderwritePage: React.FC = () => {
                         <Typography variant="h6" sx={{ 
                           fontWeight: 700, 
                           color: (state.exchange1031?.estimatedTaxLiability || 0) > 0 
-                            ? 'error.main' 
-                            : brandColors.accent.successDark 
+                            ? brandColors.neutral[700] 
+                            : brandColors.neutral[600] 
                         }}>
                           ${(state.exchange1031?.estimatedTaxLiability || 0).toLocaleString()}
                         </Typography>
@@ -9273,7 +9305,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography variant="h6" sx={{ 
                           fontWeight: 700,
-                          color: (state.exchange1031?.cashBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                          color: (state.exchange1031?.cashBoot || 0) > 0 ? brandColors.neutral[700] : 'text.primary'
                         }}>
                           ${(state.exchange1031?.cashBoot || 0).toLocaleString()}
                         </Typography>
@@ -9288,7 +9320,7 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                         <Typography variant="h6" sx={{ 
                           fontWeight: 700,
-                          color: (state.exchange1031?.mortgageBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                          color: (state.exchange1031?.mortgageBoot || 0) > 0 ? brandColors.neutral[700] : 'text.primary'
                         }}>
                           ${(state.exchange1031?.mortgageBoot || 0).toLocaleString()}
                         </Typography>
@@ -9316,8 +9348,8 @@ const UnderwritePage: React.FC = () => {
                       backgroundColor: 
                         (state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
                         (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0)
-                          ? 'success.light' 
-                          : 'warning.light',
+                          ? brandColors.neutral[200] 
+                          : brandColors.neutral[300],
                       borderRadius: 1,
                       mb: 2,
                     }}>
@@ -9326,12 +9358,12 @@ const UnderwritePage: React.FC = () => {
                       </Typography>
                       {(state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0) ? (
-                        <Typography variant="body2" sx={{ color: 'success.dark' }}>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
                           ✓ Trading Up: Replacement property value and debt meet or exceed relinquished property. 
                           All gains can be deferred if all equity is reinvested.
                         </Typography>
                       ) : (
-                        <Typography variant="body2" sx={{ color: 'warning.dark' }}>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[700] }}>
                           ⚠ Trading Down: Replacement property value or debt is less than relinquished property. 
                           This will result in taxable boot of ${((state.exchange1031?.cashBoot || 0) + (state.exchange1031?.mortgageBoot || 0)).toLocaleString()}.
                         </Typography>
@@ -9339,7 +9371,7 @@ const UnderwritePage: React.FC = () => {
                     </Box>
 
                     {/* Timeline Requirements */}
-                    <Box sx={{ p: 2, backgroundColor: 'info.light', borderRadius: 1 }}>
+                    <Box sx={{ p: 2, backgroundColor: brandColors.neutral[100], borderRadius: 1 }}>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                         Critical Timeline Requirements
                       </Typography>
@@ -9392,21 +9424,6 @@ const UnderwritePage: React.FC = () => {
                     Pro Forma Analysis
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
-                      <LazyRestartAltIcon 
-                        sx={{ 
-                          fontSize: 18, 
-                          color: 'text.secondary', 
-                          cursor: 'pointer',
-                          '&:hover': { color: 'primary.main' },
-                          mr: 1
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          resetProForma();
-                        }}
-                      />
-                    </React.Suspense>
                     <FormControlLabel
                       control={
                         <Switch
@@ -9423,6 +9440,21 @@ const UnderwritePage: React.FC = () => {
                       }
                       label="Enable"
                     />
+                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                      <LazyRestartAltIcon 
+                        sx={{ 
+                          fontSize: 18, 
+                          color: 'text.secondary', 
+                          cursor: 'pointer',
+                          '&:hover': { color: brandColors.neutral[600] },
+                          mr: 1
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          resetProForma();
+                        }}
+                      />
+                    </React.Suspense>
                   </Box>
                 </Box>
               </AccordionSummary>
@@ -10673,27 +10705,43 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', justifyContent: 'space-between' }}>
                   <Typography sx={{ fontWeight: 700 }}>
                     Advanced Modeling & Analysis
                   </Typography>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={state.advancedModelingEnabled || false}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          setState((prev) => ({
-                            ...prev,
-                            advancedModelingEnabled: e.target.checked,
-                          }));
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.advancedModelingEnabled || false}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setState((prev) => ({
+                              ...prev,
+                              advancedModelingEnabled: e.target.checked,
+                            }));
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      }
+                      label="Enable"
+                    />
+                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                      <LazyRestartAltIcon 
+                        sx={{ 
+                          fontSize: 18, 
+                          color: 'text.secondary', 
+                          cursor: 'pointer',
+                          '&:hover': { color: brandColors.neutral[600] },
+                          mr: 1
                         }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Add reset function for advanced modeling if needed
+                        }}
                       />
-                    }
-                    label="Enable"
-                    sx={{ ml: 'auto' }}
-                  />
+                    </React.Suspense>
+                  </Box>
                 </Box>
             </AccordionSummary>
             <AccordionDetails>
@@ -10744,7 +10792,7 @@ const UnderwritePage: React.FC = () => {
                       fontSize: 18, 
                       color: 'text.secondary', 
                       cursor: 'pointer',
-                      '&:hover': { color: 'primary.main' },
+                      '&:hover': { color: brandColors.neutral[600] },
                       mr: 1
                     }}
                     onClick={(e) => {
@@ -11433,7 +11481,7 @@ const UnderwritePage: React.FC = () => {
                                 <Typography variant="caption" color="text.secondary">
                                   Less: Selling Costs (6%):
                                 </Typography>
-                                <Typography variant="caption" color="error.main">
+                                <Typography variant="caption" color={brandColors.neutral[700]}>
                                   -{formatCurrency(breakdown.exitProceeds.sellingCosts)}
                                 </Typography>
                               </Box>
@@ -11441,7 +11489,7 @@ const UnderwritePage: React.FC = () => {
                                 <Typography variant="caption" color="text.secondary">
                                   Less: Remaining Loan:
                                 </Typography>
-                                <Typography variant="caption" color="error.main">
+                                <Typography variant="caption" color={brandColors.neutral[700]}>
                                   -{formatCurrency(breakdown.exitProceeds.remainingBalance)}
                                 </Typography>
                               </Box>
@@ -11459,7 +11507,7 @@ const UnderwritePage: React.FC = () => {
                               <Typography variant="body2" fontWeight={600}>
                                 Total Return:
                               </Typography>
-                              <Typography variant="body2" fontWeight={600} color="primary.main">
+                              <Typography variant="body2" fontWeight={600} color={brandColors.neutral[800]}>
                                 {formatCurrency(breakdown.totalReturn)}
                               </Typography>
                             </Box>
@@ -11467,7 +11515,7 @@ const UnderwritePage: React.FC = () => {
                               <Typography variant="body1" fontWeight={700}>
                                 Equity Multiple (MOIC):
                               </Typography>
-                              <Typography variant="body1" fontWeight={700} color="success.main">
+                              <Typography variant="body1" fontWeight={700} color={brandColors.neutral[800]}>
                                 {result.moic > 0 ? result.moic.toFixed(2) + "x" : "N/A"}
                               </Typography>
                             </Box>
@@ -11952,7 +12000,7 @@ const UnderwritePage: React.FC = () => {
                                     sx={{
                                       px: 2,
                                       py: 1,
-                                      bgcolor: years === state.irrHoldPeriodYears ? "primary.main" : brandColors.backgrounds.secondary,
+                                      bgcolor: years === state.irrHoldPeriodYears ? brandColors.neutral[800] : brandColors.backgrounds.secondary,
                                       color: years === state.irrHoldPeriodYears ? "white" : "text.primary",
                                       borderRadius: 1,
                                       textAlign: "center",
@@ -11993,7 +12041,7 @@ const UnderwritePage: React.FC = () => {
                                     sx={{
                                       px: 2,
                                       py: 1,
-                                      bgcolor: appRate === (state.appreciation?.appreciationPercentPerYear || 3) ? "primary.main" : brandColors.backgrounds.secondary,
+                                      bgcolor: appRate === (state.appreciation?.appreciationPercentPerYear || 3) ? brandColors.neutral[800] : brandColors.backgrounds.secondary,
                                       color: appRate === (state.appreciation?.appreciationPercentPerYear || 3) ? "white" : "text.primary",
                                       borderRadius: 1,
                                       textAlign: "center",
@@ -12031,7 +12079,7 @@ const UnderwritePage: React.FC = () => {
                                     sx={{
                                       px: 2,
                                       py: 1,
-                                      bgcolor: growthRate === state.irrIncomeGrowthRate ? "primary.main" : brandColors.backgrounds.secondary,
+                                      bgcolor: growthRate === state.irrIncomeGrowthRate ? brandColors.neutral[800] : brandColors.backgrounds.secondary,
                                       color: growthRate === state.irrIncomeGrowthRate ? "white" : "text.primary",
                                       borderRadius: 1,
                                       textAlign: "center",
@@ -12120,10 +12168,10 @@ const UnderwritePage: React.FC = () => {
                                       <Typography variant="body2">
                                         {year}
                                       </Typography>
-                                      <Typography variant="body2" sx={{ color: leveredCF >= 0 ? "success.main" : "error.main" }}>
+                                      <Typography variant="body2" sx={{ color: leveredCF >= 0 ? brandColors.neutral[800] : brandColors.neutral[700] }}>
                                         {formatCurrency(leveredCF)}
                                       </Typography>
-                                      <Typography variant="body2" sx={{ color: unleveredCashFlows[idx] >= 0 ? "success.main" : "error.main" }}>
+                                      <Typography variant="body2" sx={{ color: unleveredCashFlows[idx] >= 0 ? brandColors.neutral[800] : brandColors.neutral[700] }}>
                                         {formatCurrency(unleveredCashFlows[idx])}
                                       </Typography>
                                       <Typography variant="caption" sx={{ fontStyle: "italic" }}>
@@ -12143,10 +12191,10 @@ const UnderwritePage: React.FC = () => {
                                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                                   Exit (Yr {state.irrHoldPeriodYears})
                                 </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: "success.main" }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.neutral[800] }}>
                                   {formatCurrency(leveredExit)}
                                 </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: "success.main" }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.neutral[800] }}>
                                   {formatCurrency(unleveredExit)}
                                 </Typography>
                                 <Typography variant="caption" sx={{ fontStyle: "italic" }}>

@@ -40,6 +40,7 @@ import {
   DistributionType,
   CashFlowProjectionParams
 } from '../utils/monteCarloSimulation';
+import { brandColors } from '../theme';
 
 // ============================================================================
 // Types
@@ -143,7 +144,7 @@ export const MonteCarloConfiguration: React.FC<MonteCarloConfigurationProps> = (
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <ShowChart color="primary" />
+          <ShowChart sx={{ color: brandColors.neutral[600] }} />
           <Typography variant="h6">Monte Carlo Configuration</Typography>
         </Box>
         <Button
@@ -209,15 +210,32 @@ export const MonteCarloConfiguration: React.FC<MonteCarloConfigurationProps> = (
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <TrendingUp color="primary" />
+            <TrendingUp sx={{ color: brandColors.neutral[600] }} />
             <Typography>Rent Growth Uncertainty</Typography>
-            <Chip label={`${rentGrowthMean}% ± ${rentGrowthStdDev}%`} size="small" />
+            <Chip 
+              label={`${rentGrowthMean}% ± ${rentGrowthStdDev}%`} 
+              size="small" 
+              sx={{
+                backgroundColor: brandColors.neutral[200],
+                color: brandColors.neutral[800]
+              }}
+            />
           </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Alert severity="info" sx={{ mb: 2 }}>
+              <Alert 
+                sx={{
+                  mb: 2,
+                  backgroundColor: brandColors.neutral[50],
+                  color: brandColors.neutral[800],
+                  border: `1px solid ${brandColors.neutral[200]}`,
+                  '& .MuiAlert-icon': {
+                    color: brandColors.neutral[600]
+                  }
+                }}
+              >
                 Normal distribution: Most likely {rentGrowthMean}%, with variability of ±{rentGrowthStdDev}%
               </Alert>
             </Grid>
@@ -291,15 +309,32 @@ export const MonteCarloConfiguration: React.FC<MonteCarloConfigurationProps> = (
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AttachMoney color="error" />
+            <AttachMoney sx={{ color: brandColors.neutral[700] }} />
             <Typography>Expense Uncertainty</Typography>
-            <Chip label={`${expenseGrowthMean}% ± ${expenseGrowthStdDev}%`} size="small" color="error" />
+            <Chip 
+              label={`${expenseGrowthMean}% ± ${expenseGrowthStdDev}%`} 
+              size="small" 
+              sx={{
+                backgroundColor: brandColors.neutral[700],
+                color: brandColors.neutral[50]
+              }}
+            />
           </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Alert severity="warning" sx={{ mb: 2 }}>
+              <Alert 
+                sx={{
+                  mb: 2,
+                  backgroundColor: brandColors.neutral[100],
+                  color: brandColors.neutral[800],
+                  border: `1px solid ${brandColors.neutral[300]}`,
+                  '& .MuiAlert-icon': {
+                    color: brandColors.neutral[700]
+                  }
+                }}
+              >
                 Models inflation and unexpected expense variations
               </Alert>
             </Grid>
@@ -381,15 +416,32 @@ export const MonteCarloConfiguration: React.FC<MonteCarloConfigurationProps> = (
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Home color="success" />
+            <Home sx={{ color: brandColors.neutral[800] }} />
             <Typography>Property Value Uncertainty</Typography>
-            <Chip label={`${appreciationMean}% ± ${appreciationStdDev}%`} size="small" color="success" />
+            <Chip 
+              label={`${appreciationMean}% ± ${appreciationStdDev}%`} 
+              size="small" 
+              sx={{
+                backgroundColor: brandColors.neutral[800],
+                color: brandColors.neutral[50]
+              }}
+            />
           </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Alert severity="success" sx={{ mb: 2 }}>
+              <Alert 
+                sx={{
+                  mb: 2,
+                  backgroundColor: brandColors.neutral[100],
+                  color: brandColors.neutral[800],
+                  border: `1px solid ${brandColors.neutral[300]}`,
+                  '& .MuiAlert-icon': {
+                    color: brandColors.neutral[700]
+                  }
+                }}
+              >
                 Market appreciation and purchase price variability
               </Alert>
             </Grid>
@@ -468,19 +520,32 @@ export const MonteCarloConfiguration: React.FC<MonteCarloConfigurationProps> = (
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Settings color="warning" />
+            <Settings sx={{ color: brandColors.neutral[600] }} />
             <Typography>Vacancy Rate Uncertainty</Typography>
             <Chip 
               label={`${(vacancyMode * 100).toFixed(1)}% (${(vacancyMin * 100).toFixed(1)}%-${(vacancyMax * 100).toFixed(1)}%)`} 
               size="small" 
-              color="warning" 
+              sx={{
+                backgroundColor: brandColors.neutral[600],
+                color: brandColors.neutral[50]
+              }}
             />
           </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Alert severity="warning" sx={{ mb: 2 }}>
+              <Alert 
+                sx={{
+                  mb: 2,
+                  backgroundColor: brandColors.neutral[100],
+                  color: brandColors.neutral[800],
+                  border: `1px solid ${brandColors.neutral[300]}`,
+                  '& .MuiAlert-icon': {
+                    color: brandColors.neutral[700]
+                  }
+                }}
+              >
                 Triangular distribution for vacancy rate variations
               </Alert>
             </Grid>

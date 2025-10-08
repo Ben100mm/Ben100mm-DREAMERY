@@ -41,6 +41,7 @@ import {
 import CashFlowProjectionChart from './CashFlowProjectionChart';
 import CapitalEventsConfiguration from './CapitalEventsConfiguration';
 import MonteCarloSimulationTab from './MonteCarloSimulationTab';
+import { brandColors } from '../theme';
 
 // ============================================================================
 // Types
@@ -139,7 +140,16 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
   if (!projectionResults) {
     return (
       <Box sx={{ p: 3 }}>
-        <Alert severity="error">
+        <Alert 
+          sx={{
+            backgroundColor: brandColors.neutral[100],
+            color: brandColors.neutral[800],
+            border: `1px solid ${brandColors.neutral[300]}`,
+            '& .MuiAlert-icon': {
+              color: brandColors.neutral[700]
+            }
+          }}
+        >
           Unable to generate cash flow projections. Please check your deal inputs.
         </Alert>
       </Box>
@@ -331,13 +341,22 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
       {/* Key Insights */}
       <Paper sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <TrendingUp color="primary" />
+          <TrendingUp sx={{ color: brandColors.neutral[600] }} />
           <Typography variant="h6">Key Insights</Typography>
         </Box>
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            <Alert severity="info">
+            <Alert 
+              sx={{
+                backgroundColor: brandColors.neutral[50],
+                color: brandColors.neutral[800],
+                border: `1px solid ${brandColors.neutral[200]}`,
+                '& .MuiAlert-icon': {
+                  color: brandColors.neutral[600]
+                }
+              }}
+            >
               <Typography variant="body2" fontWeight={600} gutterBottom>
                 Total Return Breakdown
               </Typography>
@@ -354,7 +373,16 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Alert severity="success">
+            <Alert 
+              sx={{
+                backgroundColor: brandColors.neutral[100],
+                color: brandColors.neutral[800],
+                border: `1px solid ${brandColors.neutral[300]}`,
+                '& .MuiAlert-icon': {
+                  color: brandColors.neutral[700]
+                }
+              }}
+            >
               <Typography variant="body2" fontWeight={600} gutterBottom>
                 Final Position (Year {settings.projectionYears})
               </Typography>

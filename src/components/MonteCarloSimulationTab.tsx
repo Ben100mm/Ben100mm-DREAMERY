@@ -27,6 +27,7 @@ import {
 } from '../utils/monteCarloSimulation';
 import MonteCarloConfiguration from './MonteCarloConfiguration';
 import MonteCarloVisualization from './MonteCarloVisualization';
+import { brandColors } from '../theme';
 
 // ============================================================================
 // Types
@@ -248,7 +249,18 @@ export const MonteCarloSimulationTab: React.FC<MonteCarloSimulationTabProps> = (
 
       {/* Error Alert */}
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+        <Alert 
+          sx={{
+            mb: 3,
+            backgroundColor: brandColors.neutral[100],
+            color: brandColors.neutral[800],
+            border: `1px solid ${brandColors.neutral[300]}`,
+            '& .MuiAlert-icon': {
+              color: brandColors.neutral[700]
+            }
+          }}
+          onClose={() => setError(null)}
+        >
           {error}
         </Alert>
       )}
@@ -321,7 +333,16 @@ export const MonteCarloSimulationTab: React.FC<MonteCarloSimulationTabProps> = (
           <Typography variant="body2" paragraph>
             Configure the uncertainty parameters above and click "Run Simulation" to begin. The simulation will run in the background without freezing your browser.
           </Typography>
-          <Alert severity="info">
+          <Alert 
+            sx={{
+              backgroundColor: brandColors.neutral[50],
+              color: brandColors.neutral[800],
+              border: `1px solid ${brandColors.neutral[200]}`,
+              '& .MuiAlert-icon': {
+                color: brandColors.neutral[600]
+              }
+            }}
+          >
             <Typography variant="body2">
               <strong>Tip:</strong> Start with 10,000 simulations for a good balance between accuracy and speed. 
               Use higher counts (25,000+) for final analysis and decision-making.

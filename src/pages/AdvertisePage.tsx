@@ -1,294 +1,376 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Box,
   Container,
   Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Chip,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Paper
+  ListItem
 } from '@mui/material';
 import { 
-  Dashboard as DashboardIcon,
-  Event as CalendarIcon,
   Campaign as AdsIcon,
-  LocalOffer as PromotionsIcon,
-  Add as CreateIcon,
-  Analytics as AnalyticsIcon,
-  Settings as SettingsIcon
+  TrendingUp as GrowthIcon,
+  Visibility as ExposureIcon,
+  Speed as PerformanceIcon,
+  ArrowForward as ArrowForwardIcon,
+  CheckCircle as CheckIcon,
+  Home as PropertyIcon,
+  Business as BusinessIcon,
+  AutoAwesome as PremiumIcon
 } from '@mui/icons-material';
 import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme/theme';
 
 const AdvertisePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-
-  const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'calendar', label: 'Calendar', icon: <CalendarIcon /> },
-    { id: 'ads', label: 'Ads', icon: <AdsIcon /> },
-    { id: 'promotions', label: 'Promotions', icon: <PromotionsIcon /> },
-    { id: 'create', label: 'Create', icon: <CreateIcon /> },
-    { id: 'analytics', label: 'Analytics', icon: <AnalyticsIcon /> },
-    { id: 'settings', label: 'Settings', icon: <SettingsIcon /> }
+  const advertisingPackages = [
+    {
+      id: 'listings',
+      title: 'Property Listings',
+      icon: <PropertyIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
+      description: 'Showcase your properties to thousands of qualified buyers',
+      features: ['Featured placement on search results', 'High-quality photo galleries', 'Virtual tour integration', '24/7 visibility'],
+      price: 'Starting at $299/month'
+    },
+    {
+      id: 'business',
+      title: 'Business Profile',
+      icon: <BusinessIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
+      description: 'Promote your real estate business and grow your brand',
+      features: ['Branded business page', 'Client reviews & testimonials', 'Service area targeting', 'Lead generation tools'],
+      price: 'Starting at $499/month'
+    },
+    {
+      id: 'premium',
+      title: 'Premium Advertising',
+      icon: <PremiumIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
+      description: 'Maximum exposure with premium ad placements',
+      features: ['Homepage banner placement', 'Priority search ranking', 'Email newsletter features', 'Social media promotion'],
+      price: 'Custom pricing'
+    }
   ];
 
-  const getBanner = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return {
-          title: 'Marketing Dashboard',
-          subtitle: 'Overview of your advertising campaigns, performance metrics, and marketing activities'
-        };
-      case 'calendar':
-        return {
-          title: 'Marketing Calendar',
-          subtitle: 'Schedule and manage your advertising campaigns, promotions, and marketing events'
-        };
-      case 'ads':
-        return {
-          title: 'Ads Management',
-          subtitle: 'Create, edit, and manage your advertising campaigns across different platforms'
-        };
-      case 'promotions':
-        return {
-          title: 'Promotions',
-          subtitle: 'Design and launch promotional campaigns, special offers, and marketing incentives'
-        };
-      case 'create':
-        return {
-          title: 'Create Campaign',
-          subtitle: 'Build new advertising campaigns, design creatives, and set up targeting'
-        };
-      case 'analytics':
-        return {
-          title: 'Marketing Analytics',
-          subtitle: 'Track performance metrics, ROI analysis, and campaign effectiveness insights'
-        };
-      case 'settings':
-        return {
-          title: 'Marketing Settings',
-          subtitle: 'Configure your advertising preferences, billing, and account settings'
-        };
-      default:
-        return { title: 'Marketing Tools', subtitle: 'Promote your listings, services, and brand effectively' };
+  const benefits = [
+    {
+      icon: <ExposureIcon sx={{ fontSize: 50, color: brandColors.primary }} />,
+      title: 'Massive Exposure',
+      description: 'Reach thousands of active buyers, investors, and real estate professionals daily'
+    },
+    {
+      icon: <GrowthIcon sx={{ fontSize: 50, color: brandColors.primary }} />,
+      title: 'Proven Results',
+      description: 'Our advertisers see an average 3x increase in leads within the first 30 days'
+    },
+    {
+      icon: <PerformanceIcon sx={{ fontSize: 50, color: brandColors.primary }} />,
+      title: 'Real-Time Analytics',
+      description: 'Track views, clicks, and leads with detailed performance dashboards'
     }
-  };
+  ];
 
-  const getBannerIcon = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'calendar':
-        return <CalendarIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'ads':
-        return <AdsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'promotions':
-        return <PromotionsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'create':
-        return <CreateIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'analytics':
-        return <AnalyticsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      case 'settings':
-        return <SettingsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-      default:
-        return <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />;
-    }
-  };
+  const adFormats = [
+    { name: 'Featured Listings', description: 'Premium placement for your property listings' },
+    { name: 'Banner Ads', description: 'High-visibility banner placements across the platform' },
+    { name: 'Sponsored Content', description: 'Native advertising in relevant sections' },
+    { name: 'Email Campaigns', description: 'Featured placement in our email newsletters' }
+  ];
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'dashboard':
         return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Marketing Dashboard
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Monitor your advertising campaigns, track performance metrics, and view marketing ROI across all channels.
-            </Typography>
-          </Box>
-        );
-      case 'calendar':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Marketing Calendar
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Schedule and coordinate your marketing activities, plan campaign launches, and manage promotional events.
-            </Typography>
-          </Box>
-        );
-      case 'ads':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Ads Management
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Create, edit, and optimize your advertising campaigns. Manage budgets, targeting, and creative assets.
-            </Typography>
-          </Box>
-        );
-      case 'promotions':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Promotions
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Design and launch promotional campaigns, special offers, and marketing incentives to attract customers.
-            </Typography>
-          </Box>
-        );
-      case 'create':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Create Campaign
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Build new advertising campaigns from scratch. Design creatives, set targeting parameters, and configure budgets.
-            </Typography>
-          </Box>
-        );
-      case 'analytics':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Marketing Analytics
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Analyze campaign performance, track conversion rates, and measure ROI to optimize your marketing strategy.
-            </Typography>
-          </Box>
-        );
-      case 'settings':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Marketing Settings
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Configure your advertising preferences, manage billing and payment methods, and set account permissions.
-            </Typography>
-          </Box>
-        );
-      default:
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>
-              Select a marketing option from the sidebar
-            </Typography>
-          </Box>
-        );
-    }
-  };
-
-  const banner = getBanner();
-
-  return (
     <>
-      <PageAppBar title="Dreamery – Marketing Tools" />
-      <Box sx={{ display: 'flex', height: 'calc(100vh - 64px)', mt: '64px' }}>
-        {/* Left Sidebar */}
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            width: 280, 
-            backgroundColor: '#f8f9fa',
-            borderRight: '1px solid brandColors.neutral[300]',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
-          {/* Station Header */}
-          <Box sx={{ px: 3, py: 2, mb: 1, flexShrink: 0 }}>
-            <Box
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: brandColors.text.inverse,
-                borderRadius: 2,
-                py: 1.5,
-                px: 2,
-                textAlign: 'center',
-                fontWeight: 600,
-                fontSize: '1rem',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      <PageAppBar title="Dreamery – Advertise" />
+      <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f7fa', pt: 10 }}>
+        <Container maxWidth="lg">
+          {/* Hero Section */}
+          <Box sx={{ textAlign: 'center', mb: 8, mt: 6 }}>
+            <Typography 
+              variant="h2" 
+              component="h1" 
+              gutterBottom 
+              sx={{ 
+                fontWeight: 700,
+                color: brandColors.text.primary,
+                mb: 2
               }}
             >
-              Station
-            </Box>
+              Advertise on Dreamery
+            </Typography>
+            <Typography 
+              variant="h5" 
+              color="text.secondary" 
+              sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}
+            >
+              Connect with qualified buyers, investors, and real estate professionals. Grow your business with targeted advertising that delivers results.
+            </Typography>
+            <Button 
+              variant="contained" 
+              size="large"
+              endIcon={<ArrowForwardIcon />}
+              sx={{ 
+                backgroundColor: brandColors.primary,
+                px: 4,
+                py: 1.5,
+                fontSize: '1.1rem',
+                '&:hover': { backgroundColor: brandColors.interactive.hover }
+              }}
+            >
+              Get Started
+            </Button>
           </Box>
 
-          {/* Sidebar Navigation */}
-          <List sx={{ px: 2, pt: 0, flex: 1, overflow: 'auto' }}>
-            {sidebarItems.map((item) => (
-              <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
-                <ListItemButton
-                  onClick={() => setActiveTab(item.id)}
-                  sx={{ 
-                    borderRadius: 2, 
-                    backgroundColor: activeTab === item.id ? brandColors.primary : 'transparent',
-                    '& .MuiListItemIcon-root': {
-                      color: activeTab === item.id ? brandColors.text.inverse : brandColors.text.primary,
-                    },
-                    '& .MuiListItemText-primary': {
-                      color: activeTab === item.id ? brandColors.text.inverse : brandColors.text.primary,
-                      fontWeight: activeTab === item.id ? 600 : 500,
-                    },
-                    '&:hover': {
-                      backgroundColor: activeTab === item.id ? brandColors.primary : brandColors.interactive.hover,
-                    },
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary={item.label} 
-                    primaryTypographyProps={{
-                      fontSize: '0.9rem'
+          {/* Benefits Section */}
+          <Box sx={{ mb: 8 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 600, textAlign: 'center' }}>
+              Why Advertise with Us
+            </Typography>
+            <Grid container spacing={4}>
+              {benefits.map((benefit, idx) => (
+                <Grid item xs={12} md={4} key={idx}>
+                  <Card 
+                    elevation={2}
+                    sx={{ 
+                      height: '100%',
+                      textAlign: 'center',
+                      p: 3,
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: 4
+                      }
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
+                  >
+                    <CardContent>
+                      <Box sx={{ mb: 2 }}>
+                        {benefit.icon}
+          </Box>
+                      <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                        {benefit.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+                        {benefit.description}
+            </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
 
-        {/* Main Content Area */}
-        <Box sx={{ flex: 1, p: 3, backgroundColor: brandColors.neutral[50], overflow: 'auto' }}>
-          <Container maxWidth="lg">
-            {/* Top Banner (matches other pages) */}
-            <Paper
-              elevation={0}
-              sx={{ 
-                mb: 4, 
-                p: 3, 
-                backgroundColor: brandColors.primary,
-                borderRadius: '16px 16px 0 0',
-                color: brandColors.text.inverse
+          {/* Advertising Packages Section */}
+          <Box sx={{ mb: 8 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 600, textAlign: 'center' }}>
+              Advertising Packages
+            </Typography>
+            <Grid container spacing={4}>
+              {advertisingPackages.map((pkg) => (
+                <Grid item xs={12} md={4} key={pkg.id}>
+                  <Card 
+                    elevation={3}
+                    sx={{ 
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: 6
+                      }
+                    }}
+                  >
+                    <CardContent sx={{ flexGrow: 1, p: 4 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                        {pkg.icon}
+                        <Typography variant="h5" sx={{ ml: 2, fontWeight: 600 }}>
+                          {pkg.title}
+            </Typography>
+          </Box>
+                      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                        {pkg.description}
+            </Typography>
+                      <Chip 
+                        label={pkg.price} 
+                        color="primary"
+                        sx={{ mb: 3 }}
+                      />
+                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                        What's Included:
+            </Typography>
+                      <List dense disablePadding>
+                        {pkg.features.map((feature, idx) => (
+                          <ListItem key={idx} disablePadding sx={{ mb: 1 }}>
+                            <CheckIcon sx={{ fontSize: 20, color: brandColors.primary, mr: 1 }} />
+                            <Typography variant="body2" color="text.secondary">
+                              {feature}
+            </Typography>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </CardContent>
+                    <CardActions sx={{ p: 3, pt: 0 }}>
+                      <Button 
+                        size="large" 
+                        variant="contained"
+                        fullWidth
+                        endIcon={<ArrowForwardIcon />}
+                        sx={{ 
+                          backgroundColor: brandColors.primary,
+                          py: 1.5,
+                          '&:hover': { backgroundColor: brandColors.interactive.hover }
+                        }}
+                      >
+                        Choose Plan
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+
+          {/* Ad Formats Section */}
+          <Box sx={{ mb: 8 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 600, textAlign: 'center' }}>
+              Advertising Formats
+            </Typography>
+            <Grid container spacing={3}>
+              {adFormats.map((format, idx) => (
+                <Grid item xs={12} md={6} key={idx}>
+                  <Card elevation={2}>
+                    <CardContent sx={{ p: 3 }}>
+                      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                        {format.name}
+            </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {format.description}
+            </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+
+          {/* CTA Section */}
+          <Box sx={{ mb: 8 }}>
+            <Card 
+              elevation={4}
+          sx={{ 
+                background: `linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.interactive.hover} 100%)`,
+                color: 'white'
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                {getBannerIcon()}
-                <Typography variant="h4" component="h1" sx={{ color: brandColors.text.inverse, fontWeight: 600 }}>
-                  {banner.title}
+              <CardContent sx={{ textAlign: 'center', p: 6 }}>
+                <AdsIcon sx={{ fontSize: 80, mb: 2 }} />
+                <Typography variant="h3" gutterBottom sx={{ fontWeight: 700 }}>
+                  Ready to Grow Your Business?
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+                  Join hundreds of successful real estate professionals advertising on Dreamery
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 4, maxWidth: '700px', mx: 'auto', opacity: 0.9 }}>
+                  Get started today and see results in as little as 24 hours. Our team will help you create the perfect advertising campaign for your goals.
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                  <Button 
+                    variant="contained" 
+                    size="large"
+                  sx={{ 
+                      backgroundColor: 'white',
+                      color: brandColors.primary,
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        transform: 'scale(1.05)'
+                      },
+                      transition: 'all 0.3s ease'
+                    }}
+                    endIcon={<ArrowForwardIcon />}
+                  >
+                    Start Advertising
+                  </Button>
+                  <Button 
+                    variant="outlined" 
+                    size="large"
+              sx={{ 
+                      borderColor: 'white',
+                      color: 'white',
+                      px: 4,
+                      py: 1.5,
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      '&:hover': { 
+                        borderColor: 'white',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                      }
+                    }}
+                  >
+                    Contact Sales
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+
+          {/* Stats Section */}
+          <Box sx={{ mb: 8 }}>
+            <Card elevation={2}>
+              <CardContent sx={{ p: 5 }}>
+                <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 600, textAlign: 'center' }}>
+                  Platform Statistics
+                </Typography>
+                <Grid container spacing={4}>
+                  <Grid item xs={12} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                        50K+
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Active Users
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                        10K+
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Monthly Listings
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                        95%
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Satisfaction Rate
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                {banner.subtitle}
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                        3x
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Average ROI
               </Typography>
-            </Paper>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Box>
 
-            {renderContent()}
           </Container>
-        </Box>
       </Box>
     </>
   );

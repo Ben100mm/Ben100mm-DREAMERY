@@ -81,15 +81,14 @@ import { type DealState } from "../types/deal";
 import { underwriteCalculationService } from "../services/underwriteCalculationService";
 import { 
   Rating,
-  Chip,
   Stepper,
   Step,
   StepLabel,
   StepContent,
-  Alert,
-  LocationOn,
-  CheckCircle as CheckIcon
+  Paper,
+  TableContainer
 } from '@mui/material';
+import { LocationOn, CheckCircle as CheckIcon } from '@mui/icons-material';
 import { MLRiskPredictionDisplay } from "../components/MLRiskPredictionDisplay";
 import { ModeSelector } from "../components/calculator/ModeSelector";
 import { useCalculatorMode } from "../hooks/useCalculatorMode";

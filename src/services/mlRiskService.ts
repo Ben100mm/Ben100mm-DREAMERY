@@ -28,7 +28,7 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
  */
 export function extractMLFeaturesFromDealState(dealState: DealState): MLRiskFeatures {
   const purchasePrice = dealState.purchasePrice || 300000;
-  const downPayment = ((dealState.loan?.downPayment || 20) / 100) * purchasePrice;
+  const downPayment = purchasePrice - (dealState.loan?.loanAmount || purchasePrice * 0.8);
   const loanAmount = purchasePrice - downPayment;
   const monthlyRent = dealState.baseMonthlyRent || 0;
   const monthlyExpenses =
@@ -39,8 +39,8 @@ export function extractMLFeaturesFromDealState(dealState: DealState): MLRiskFeat
   const annualCashFlow = monthlyCashFlow * 12;
 
   // Calculate DSCR
-  const interestRate = dealState.loan?.rate || 6.5;
-  const loanTermYears = dealState.loan?.term || 30;
+  const interestRate = dealState.loan?.annualInterestRate || 6.5;
+  const loanTermYears = dealState.loan?.amortizationYears || 30;
   const monthlyRate = interestRate / 100 / 12;
   const loanTermMonths = loanTermYears * 12;
   let monthlyPayment = 0;
@@ -57,10 +57,10 @@ export function extractMLFeaturesFromDealState(dealState: DealState): MLRiskFeat
   const ltv = purchasePrice > 0 ? (loanAmount / purchasePrice) * 100 : 80;
 
   // Extract market conditions
-  const marketConditions = dealState.marketConditions || { type: 'stable', appreciation: 3.5 };
+  const marketConditions = dealState.marketConditions || { type: 'stable', appreciationRate: 3.5 };
   const marketVolatility = dealState.riskFactors?.marketVolatility || 5;
   const marketAppreciation =
-    typeof marketConditions.appreciation === 'number' ? marketConditions.appreciation : 3.5;
+    typeof marketConditions.appreciationRate === 'number' ? marketConditions.appreciationRate : 3.5;
 
   // Determine market demand strength based on market type
   let marketDemandStrength = 5;
@@ -91,10 +91,10 @@ export function extractMLFeaturesFromDealState(dealState: DealState): MLRiskFeat
   // Financing factors
   const financingRisk = dealState.riskFactors?.financingRisk || 5;
   const hasBalloonPayment =
-    (dealState.offerType === 'seller-finance' && dealState.hybrid?.balloonPayment) ||
-    (dealState.offerType === 'hybrid' && dealState.hybrid?.balloonPayment) ||
+    (dealState.offerType === 'Seller Finance' && dealState.hybrid?.balloonDue) ||
+    (dealState.offerType === 'Hybrid' && dealState.hybrid?.balloonDue) ||
     false;
-  const isInterestOnly = dealState.loan?.isInterestOnly || false;
+  const isInterestOnly = dealState.loan?.interestOnly || false;
 
   // Economic factors (defaults - could be enriched from external data)
   const unemploymentRate = 4.5;
@@ -257,7 +257,7 @@ export async function getMLRiskPrediction(
     } else {
       const riskScore = calculateRiskScore(
         dealState.riskFactors || defaultRiskFactors,
-        dealState.marketConditions || { type: 'stable', appreciation: 3.5 },
+        dealState.marketConditions || { type: 'stable', appreciationRate: 3.5 },
         dealState.propertyAge || { age: 20, maintenanceCostMultiplier: 1.0, utilityEfficiencyMultiplier: 1.0, insuranceCostMultiplier: 1.0, expectedLifespan: 50 }
       );
       ruleBasedScore = riskScore.overallRiskScore;
@@ -292,7 +292,7 @@ export async function getEnhancedRiskAnalysis(
 ): Promise<EnhancedRiskAnalysis> {
   // Calculate rule-based risk
   const riskFactors = dealState.riskFactors || defaultRiskFactors;
-  const marketConditions = dealState.marketConditions || { type: 'stable', appreciation: 3.5 };
+  const marketConditions = dealState.marketConditions || { type: 'stable', appreciationRate: 3.5 };
   const propertyAge = dealState.propertyAge || {
     age: 20,
     maintenanceCostMultiplier: 1.0,

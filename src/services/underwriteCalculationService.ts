@@ -395,8 +395,8 @@ class UnderwriteCalculationService {
     const initialMonthlyVariableOps = this.calculateMonthlyVariableOps(state);
     
     // Apply growth rates
-    const rentGrowthRate = state.appreciation?.rentGrowthRate || 0;
-    const expenseGrowthRate = state.appreciation?.expenseGrowthRate || 0;
+    const rentGrowthRate = state.marketConditions?.rentGrowthRate || 0;
+    const expenseGrowthRate = 3; // Default expense growth rate
     
     const projectedMonthlyIncome = initialMonthlyIncome * Math.pow(1 + rentGrowthRate / 100, year - 1);
     const projectedMonthlyFixedOps = initialMonthlyFixedOps * Math.pow(1 + expenseGrowthRate / 100, year - 1);
@@ -485,7 +485,7 @@ class UnderwriteCalculationService {
   public calculatePropertyValueAtYear(state: DealState, year: number): number {
     if (year <= 0) return state.purchasePrice;
     
-    const appreciationRate = state.appreciation?.annualAppreciation || 0;
+    const appreciationRate = state.appreciation?.appreciationPercentPerYear || 0;
     return state.purchasePrice * Math.pow(1 + appreciationRate / 100, year);
   }
 
@@ -674,8 +674,8 @@ class UnderwriteCalculationService {
     const totalCashInvested = this.calculateTotalCashInvested(state);
     
     // Get growth rates from state
-    const rentGrowthRate = (state.appreciation?.rentGrowthRate || 2) / 100;
-    const expenseGrowthRate = (state.appreciation?.expenseGrowthRate || 3) / 100;
+    const rentGrowthRate = (state.marketConditions?.rentGrowthRate || 2) / 100;
+    const expenseGrowthRate = 3 / 100; // Default expense growth rate
     const propertyAppreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
     
     // Calculate annual expenses (approximation from monthly)
@@ -690,10 +690,10 @@ class UnderwriteCalculationService {
       annualTaxes: (state.ops.taxes || 0) * 12,
       annualInsurance: (state.ops.insurance || 0) * 12,
       annualMaintenance: (state.ops.maintenance || 0) * 12,
-      annualManagement: (state.ops.managementFees || 0) * 12,
+      annualManagement: (state.ops.management || 0) * 12,
       annualCapEx: (state.ops.capEx || 0) * 12,
       otherAnnualExpenses: annualOps - ((state.ops.taxes || 0) + (state.ops.insurance || 0) + 
-                          (state.ops.maintenance || 0) + (state.ops.managementFees || 0) + 
+                          (state.ops.maintenance || 0) + (state.ops.management || 0) + 
                           (state.ops.capEx || 0)) * 12,
       loanAmount,
       annualInterestRate: (state.loan.annualInterestRate || 0) / 100,

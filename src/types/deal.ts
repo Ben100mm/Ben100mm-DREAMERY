@@ -1,6 +1,4 @@
 import { CalculatorMode } from './calculatorMode';
-import { EnhancedTaxImplications } from '../utils/advancedCalculations';
-import { Exchange1031Inputs } from '../components/underwrite/types';
 
 export interface HybridInputs {
   loanAmount: number;
@@ -32,15 +30,6 @@ export interface HybridInputs {
 }
 
 export interface BRRRRInputs {
-  arv: number;
-  refinanceLtv: number;
-  refinanceInterestRate: number;
-  loanTerm: number;
-  newMonthlyPayment: number;
-  originalCashInvested: number;
-  cashOutAmount: number;
-  remainingCashInDeal: number;
-  newCashOnCashReturn: number;
   refinanceClosingCosts: number;
   effectiveCashOut: number;
   ltvConstraint: boolean;
@@ -82,9 +71,6 @@ export interface LoanTerms {
   totalPayment: number;
   balloonDue?: number; // Years until balloon payment is due
   interestOnly?: boolean; // Whether this is an interest-only loan
-  downPayment?: number;
-  closingCosts?: number;
-  rehabCosts?: number;
   amortizationSchedule: Array<{
     month: number;
     payment: number;
@@ -111,10 +97,6 @@ export interface SeasonalFactors {
   springVacancyRate: number;
   fallVacancyRate: number;
   seasonalMaintenanceMultiplier: number;
-  q1: number;
-  q2: number;
-  q3: number;
-  q4: number;
 }
 
 export interface PropertyAgeFactors {
@@ -225,9 +207,6 @@ export interface DealState {
     }>;
     totalBalance: number;
     totalMonthlyPayment: number;
-    paymentToSeller?: number;
-    totalLoanBalance?: number;
-    totalAnnualPayment?: number;
   };
 
   // Hybrid Financing
@@ -252,69 +231,6 @@ export interface DealState {
     seasonalVariations: SeasonalFactors;
   };
 
-  // Income by property/operation type
-  sfr?: {
-    monthlyRent: number;
-    grossMonthlyIncome: number;
-    grossYearlyIncome: number;
-  };
-  multi?: {
-    unitRents: number[];
-    grossMonthlyIncome: number;
-    grossYearlyIncome: number;
-  };
-  str?: {
-    unitDailyRents: number[];
-    unitMonthlyRents: number[];
-    dailyCleaningFee: number;
-    laundry: number;
-    activities: number;
-    avgNightsPerMonth: number;
-    grossDailyIncome: number;
-    grossMonthlyIncome: number;
-    grossYearlyIncome: number;
-  };
-  enhancedSTR?: {
-    averageDailyRate: number;
-    occupancyRate: number;
-    channelFees: {
-      airbnb: number;
-      vrbo: number;
-      direct: number;
-    };
-    channelMix: {
-      airbnb: number;
-      vrbo: number;
-      direct: number;
-    };
-    averageLengthOfStay: number;
-    turnoverDays: number;
-    minimumStay: number;
-    blockedDays: number;
-    dynamicPricing: boolean;
-    weekendPremium: number;
-    useEnhancedModel: boolean;
-  };
-  officeRetail?: {
-    squareFootage: number;
-    rentPerSFMonthly: number;
-    occupancyRatePct: number;
-    extraMonthlyIncome: number;
-  };
-  land?: {
-    acreage: number;
-    zoning?: "Residential" | "Commercial" | "Agricultural" | "Mixed";
-    extraMonthlyIncome: number;
-  };
-  arbitrage?: {
-    deposit: number;
-    monthlyRentToLandlord: number;
-    estimateCostOfRepairs: number;
-    furnitureCost: number;
-    otherStartupCosts: number;
-    startupCostsTotal: number;
-  };
-
   // Pro Forma
   proForma: {
     taxes: number;
@@ -333,99 +249,6 @@ export interface DealState {
   // BRRRR
   brrrr: BRRRRInputs;
 
-  // Appreciation
-  appreciation: {
-    appreciationPercentPerYear: number;
-    yearsOfAppreciation: number;
-    futurePropertyValue: number;
-    refinanceLtv: number;
-    refinancePotential: number;
-    remainingBalanceAfterRefi: number;
-    manuallyOverridden?: boolean;
-  };
-
-  // Settings
-  showBothPaybackMethods: boolean;
-  paybackCalculationMethod: "initial" | "remaining";
-  reservesCalculationMethod: "months" | "fixed";
-  reservesMonths: number;
-  reservesFixedAmount: number;
-  includeVariableExpensesInBreakEven: boolean;
-  includeVariablePctInBreakeven?: boolean;
-  proFormaPreset: "conservative" | "moderate" | "aggressive" | "custom";
-  customProFormaPresets: Array<{
-    id: string;
-    name: string;
-    description?: string;
-    maintenance: number;
-    vacancy: number;
-    management: number;
-    capEx: number;
-    opEx: number;
-    propertyType: string;
-    operationType: string;
-    createdAt: Date;
-  }>;
-  selectedCustomPreset?: string;
-  sensitivityAnalysis: {
-    showSensitivity: boolean;
-    sensitivityRange: number;
-    sensitivitySteps: number;
-  };
-  benchmarkComparison: {
-    showBenchmarks: boolean;
-    selectedMarket?: string;
-    includeBenchmarks: boolean;
-  };
-  breakEvenAnalysis: {
-    showBreakEven: boolean;
-    breakEvenOccupancy: number;
-    breakEvenADR: number;
-    breakEvenRevenue: number;
-    marginOfSafety: number;
-  };
-  activeProFormaTab:
-    | "presets"
-    | "custom"
-    | "sensitivity"
-    | "benchmarks"
-    | "revenue"
-    | "breakEven";
-
-  // IRR Configuration
-  irrHoldPeriodYears: number;
-  irrIncomeGrowthRate: number;
-  irrExpenseGrowthRate: number;
-  irrSellingCostsPct: number;
-  showIrrCashFlowBreakdown: boolean;
-
-  // Capital Events
-  capitalEvents: {
-    events: Array<{
-      id: string;
-      year: number;
-      description: string;
-      estimatedCost: number;
-      category: 'roof' | 'hvac' | 'foundation' | 'electrical' | 'plumbing' | 'other';
-      likelihood: number;
-    }>;
-    totalExpectedCost: number;
-    averageAnnualCost: number;
-  };
-
-  // Confidence Intervals
-  showConfidenceIntervals: boolean;
-  uncertaintyParameters: {
-    incomeUncertainty: number;
-    expenseUncertainty: number;
-    occupancyUncertainty: number;
-    appreciationUncertainty: number;
-    confidenceLevel: number;
-  };
-
-  // 1031 Exchange
-  exchange1031?: Exchange1031Inputs;
-
   // Advanced Analysis Configuration
   marketConditions: MarketConditions;
   exitStrategies: ExitStrategy[];
@@ -434,8 +257,6 @@ export interface DealState {
   locationFactors: LocationFactors;
   riskFactors: RiskFactors;
   taxImplications: TaxImplications;
-  enhancedTaxConfig?: EnhancedTaxImplications;
-  useEnhancedTaxCalculation?: boolean;
 
   // Advanced Analysis Results
   exitStrategyResults?: Array<{
@@ -488,9 +309,4 @@ export interface DealState {
 
   // Deal Modification Tracking
   lastModified?: string;
-
-  // UX/logic helpers
-  validationMessages: string[];
-  showAmortizationOverride?: boolean;
-  snackbarOpen?: boolean;
 }

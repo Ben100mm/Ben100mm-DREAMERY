@@ -8961,7 +8961,40 @@ const UnderwritePage: React.FC = () => {
                     ⓘ
                   </Typography>
                 </Tooltip>
-                <Box sx={{ ml: 'auto' }} />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={(state.exchange1031?.enabled || state.acquiring1031?.enabled || 
+                              state.exchange721?.enabled || state.acquiring721?.enabled) || false}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        const enabled = e.target.checked;
+                        setState((prev) => ({
+                          ...prev,
+                          exchange1031: {
+                            ...(prev.exchange1031 || defaultState.exchange1031!),
+                            enabled: enabled,
+                          },
+                          acquiring1031: {
+                            ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                            enabled: false, // Keep acquisition tracking disabled by default
+                          },
+                          exchange721: {
+                            ...(prev.exchange721 || defaultState.exchange721!),
+                            enabled: false, // Keep 721 disabled by default when toggling main switch
+                          },
+                          acquiring721: {
+                            ...(prev.acquiring721 || defaultState.acquiring721!),
+                            enabled: false, // Keep 721 acquisition disabled by default
+                          },
+                        }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                  label="Enable"
+                  sx={{ ml: 'auto' }}
+                />
               </Box>
             </AccordionSummary>
             <AccordionDetails>

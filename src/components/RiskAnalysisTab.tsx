@@ -29,6 +29,8 @@ import {
 import { brandColors } from "../theme";
 import { formatCurrency } from "./UXComponents";
 import { MonteCarloResults } from "../utils/monteCarloSimulation";
+import { BarChart } from "@mui/x-charts/BarChart";
+import { PieChart } from "@mui/x-charts/PieChart";
 
 interface RiskAnalysisTabProps {
   dealState: DealState | null;
@@ -405,6 +407,109 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
             </CardContent>
           </Card>
 
+          {/* Risk Breakdown Pie Chart */}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                Risk Category Distribution
+              </Typography>
+              <Typography variant="body2" sx={{ color: brandColors.neutral[600], mb: 3 }}>
+                Proportional breakdown of risk factors contributing to overall investment risk
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <PieChart
+                      series={[
+                        {
+                          data: [
+                            { 
+                              id: 0, 
+                              value: weightedRiskAnalysis.riskBreakdown.marketRisk, 
+                              label: 'Market Risk',
+                              color: '#FF6B6B'
+                            },
+                            { 
+                              id: 1, 
+                              value: weightedRiskAnalysis.riskBreakdown.propertyRisk, 
+                              label: 'Property Risk',
+                              color: '#4ECDC4'
+                            },
+                            { 
+                              id: 2, 
+                              value: weightedRiskAnalysis.riskBreakdown.tenantRisk, 
+                              label: 'Tenant Risk',
+                              color: '#95E1D3'
+                            },
+                            { 
+                              id: 3, 
+                              value: weightedRiskAnalysis.riskBreakdown.financingRisk, 
+                              label: 'Financing Risk',
+                              color: '#F38181'
+                            },
+                          ],
+                          highlightScope: { faded: 'global', highlighted: 'item' },
+                          faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                        },
+                      ]}
+                      height={300}
+                      slotProps={{
+                        legend: {
+                          direction: 'column',
+                          position: { vertical: 'middle', horizontal: 'right' },
+                          padding: 0,
+                        },
+                      }}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center', height: '100%' }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      Risk Factor Analysis
+                    </Typography>
+                    {[
+                      { label: 'Market Risk', value: weightedRiskAnalysis.riskBreakdown.marketRisk, color: '#FF6B6B', description: 'Economic conditions, interest rates, market cycles' },
+                      { label: 'Property Risk', value: weightedRiskAnalysis.riskBreakdown.propertyRisk, color: '#4ECDC4', description: 'Physical condition, location quality, age' },
+                      { label: 'Tenant Risk', value: weightedRiskAnalysis.riskBreakdown.tenantRisk, color: '#95E1D3', description: 'Occupancy rates, tenant quality, turnover' },
+                      { label: 'Financing Risk', value: weightedRiskAnalysis.riskBreakdown.financingRisk, color: '#F38181', description: 'Leverage, interest rate risk, debt coverage' },
+                    ].map((item) => {
+                      const totalRisk = weightedRiskAnalysis.riskBreakdown.marketRisk + 
+                                       weightedRiskAnalysis.riskBreakdown.propertyRisk + 
+                                       weightedRiskAnalysis.riskBreakdown.tenantRisk + 
+                                       weightedRiskAnalysis.riskBreakdown.financingRisk;
+                      const percentage = (item.value / totalRisk * 100).toFixed(1);
+                      
+                      return (
+                        <Paper key={item.label} sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                            <Box sx={{ 
+                              width: 12, 
+                              height: 12, 
+                              backgroundColor: item.color, 
+                              borderRadius: '50%' 
+                            }} />
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {item.label}
+                            </Typography>
+                            <Chip 
+                              label={`${percentage}%`}
+                              size="small"
+                              sx={{ ml: 'auto', fontWeight: 600 }}
+                            />
+                          </Box>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600], display: 'block', ml: 2.5 }}>
+                            {item.description}
+                          </Typography>
+                        </Paper>
+                      );
+                    })}
+                  </Box>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+
           {/* Metric-Based Risk Adjustments */}
           {metricRiskAdjustments && (
             <Card sx={{ mb: 3 }}>
@@ -726,6 +831,66 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                 </CardContent>
               </Card>
 
+              {/* Percentile Distribution Chart */}
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    IRR Distribution Across Percentiles
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[600], mb: 3 }}>
+                    Visual representation of return distribution from worst to best case scenarios
+                  </Typography>
+                  <Box sx={{ width: '100%', height: 350 }}>
+                    <BarChart
+                      series={[
+                        {
+                          data: [
+                            monteCarloResults.irrStats.percentile10,
+                            monteCarloResults.irrStats.percentile25,
+                            monteCarloResults.irrStats.median,
+                            monteCarloResults.irrStats.percentile75,
+                            monteCarloResults.irrStats.percentile90,
+                          ],
+                          label: 'IRR (%)',
+                          color: brandColors.primary,
+                        },
+                      ]}
+                      xAxis={[
+                        {
+                          scaleType: 'band',
+                          data: ['P10\n(Worst)', 'P25', 'P50\n(Median)', 'P75', 'P90\n(Best)'],
+                        },
+                      ]}
+                      yAxis={[
+                        {
+                          label: 'IRR (%)',
+                        },
+                      ]}
+                      height={300}
+                      margin={{ top: 10, right: 30, bottom: 50, left: 60 }}
+                      colors={[brandColors.error, brandColors.warning, brandColors.primary, brandColors.success, brandColors.success]}
+                    />
+                  </Box>
+                  <Box sx={{ mt: 2, display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <Chip 
+                      label={`Mean: ${monteCarloResults.irrStats.mean.toFixed(2)}%`}
+                      size="small"
+                      sx={{ backgroundColor: brandColors.backgrounds.secondary }}
+                    />
+                    <Chip 
+                      label={`Std Dev: ${monteCarloResults.irrStats.stdDev.toFixed(2)}%`}
+                      size="small"
+                      sx={{ backgroundColor: brandColors.backgrounds.secondary }}
+                    />
+                    <Chip 
+                      label={`Range: ${(monteCarloResults.irrStats.max - monteCarloResults.irrStats.min).toFixed(2)}%`}
+                      size="small"
+                      sx={{ backgroundColor: brandColors.backgrounds.secondary }}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+
               {/* Risk Metrics */}
               <Card sx={{ mb: 3 }}>
                 <CardContent>
@@ -914,6 +1079,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                           <TableCell sx={{ fontWeight: 600 }}>Stress Scenario</TableCell>
                           <TableCell align="center" sx={{ fontWeight: 600 }}>Threshold</TableCell>
                           <TableCell align="center" sx={{ fontWeight: 600 }}>Simulated Value</TableCell>
+                          <TableCell align="center" sx={{ fontWeight: 600 }}>Severity</TableCell>
                           <TableCell align="center" sx={{ fontWeight: 600 }}>Status</TableCell>
                         </TableRow>
                       </TableHead>
@@ -932,6 +1098,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
                               {monteCarloResults.irrStats.percentile10.toFixed(2)}%
                             </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, Math.max(0, (monteCarloResults.irrStats.percentile10 / 5) * 100))}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.irrStats.percentile10 > 5 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round((monteCarloResults.irrStats.percentile10 / 5) * 100)}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
                           </TableCell>
                           <TableCell align="center">
                             <Chip 
@@ -957,6 +1154,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, (monteCarloResults.probabilityOfPositiveReturn / 0.7) * 100)}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.probabilityOfPositiveReturn > 0.7 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round((monteCarloResults.probabilityOfPositiveReturn / 0.7) * 100)}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell align="center">
                             <Chip 
                               label={monteCarloResults.probabilityOfPositiveReturn > 0.7 ? 'PASS' : 'FAIL'}
                               color={monteCarloResults.probabilityOfPositiveReturn > 0.7 ? 'success' : 'error'}
@@ -978,6 +1206,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
                               {(monteCarloResults.riskMetrics.probabilityOfLoss * 100).toFixed(1)}%
                             </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, 100 - (monteCarloResults.riskMetrics.probabilityOfLoss / 0.3) * 100)}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round(Math.max(0, 100 - (monteCarloResults.riskMetrics.probabilityOfLoss / 0.3) * 100))}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
                           </TableCell>
                           <TableCell align="center">
                             <Chip 
@@ -1003,6 +1262,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, 100 - (monteCarloResults.riskMetrics.downsideDeviation / (monteCarloResults.irrStats.stdDev * 1.5)) * 100)}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round(Math.max(0, 100 - (monteCarloResults.riskMetrics.downsideDeviation / (monteCarloResults.irrStats.stdDev * 1.5)) * 100))}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell align="center">
                             <Chip 
                               label={monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? 'PASS' : 'FAIL'}
                               color={monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? 'success' : 'error'}
@@ -1026,6 +1316,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, (monteCarloResults.riskMetrics.sharpeRatio / 0.5) * 100)}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round((monteCarloResults.riskMetrics.sharpeRatio / 0.5) * 100)}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell align="center">
                             <Chip 
                               label={monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? 'PASS' : 'FAIL'}
                               color={monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? 'success' : 'error'}
@@ -1047,6 +1368,37 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
                               {formatCurrency(monteCarloResults.riskMetrics.maxDrawdown)}
                             </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={Math.min(100, 100 - (monteCarloResults.riskMetrics.maxDrawdown / (monteCarloResults.totalReturnStats.mean * 0.5)) * 100)}
+                                  size={40}
+                                  thickness={5}
+                                  sx={{
+                                    color: monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5 ? brandColors.success : brandColors.error
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    position: 'absolute',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                    {Math.round(Math.max(0, 100 - (monteCarloResults.riskMetrics.maxDrawdown / (monteCarloResults.totalReturnStats.mean * 0.5)) * 100))}%
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
                           </TableCell>
                           <TableCell align="center">
                             <Chip 

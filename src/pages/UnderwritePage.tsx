@@ -2491,6 +2491,9 @@ const UnderwritePage: React.FC = () => {
   // Guided Tour State
   const [showGuidedTour, setShowGuidedTour] = useState(false);
   
+  // Amortization Schedule Display State
+  const [showFullAmortSchedule, setShowFullAmortSchedule] = useState(false);
+  
   function validateAndNormalizeState(input: DealState): {
     next: DealState;
     messages: string[];
@@ -6994,9 +6997,27 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Amortization Schedule
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      Amortization Schedule
+                    </Typography>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          size="small"
+                          checked={showFullAmortSchedule}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setShowFullAmortSchedule(e.target.checked);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      }
+                      label={<Typography variant="caption">Show All</Typography>}
+                      onClick={(e) => e.stopPropagation()}
+                      sx={{ ml: 'auto', mr: 1 }}
+                    />
+                  </Box>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
@@ -7059,7 +7080,17 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                       </Alert>
                     )}
-                    <Box sx={{ overflowX: "auto" }}>
+                    <Box 
+                      sx={{ 
+                        overflowX: "auto",
+                        ...(!showFullAmortSchedule && {
+                          maxHeight: "400px",
+                          overflowY: "auto",
+                          border: `1px solid ${brandColors.borders.secondary}`,
+                          borderRadius: 1
+                        })
+                      }}
+                    >
                       <Table>
                         <TableHead>
                           <TableRow>
@@ -7124,8 +7155,10 @@ const UnderwritePage: React.FC = () => {
                       align="center"
                       sx={{ color: brandColors.neutral[800] }}
                     >
-                      Showing {state.loan.amortizationYears * 12} payments over{" "}
-                      {state.loan.amortizationYears} years
+                      {showFullAmortSchedule 
+                        ? `Showing all ${state.loan.amortizationYears * 12} payments over ${state.loan.amortizationYears} years`
+                        : `Showing payments in scrollable view (${state.loan.amortizationYears * 12} payments over ${state.loan.amortizationYears} years)`
+                      }
                     </Typography>
                   </Box>
                 </AccordionDetails>

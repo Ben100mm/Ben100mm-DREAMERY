@@ -9530,25 +9530,21 @@ const UnderwritePage: React.FC = () => {
                     {/* Trading Up Scenario Analysis */}
                     <Box sx={{ 
                       p: 2, 
-                      backgroundColor: 
-                        (state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
-                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0)
-                          ? 'success.light' 
-                          : 'warning.light',
+                      backgroundColor: brandColors.neutral[100],
                       borderRadius: 1,
                       mb: 2,
                     }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.neutral[800] }}>
                         Exchange Status
                       </Typography>
                       {(state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0) ? (
-                        <Typography variant="body2" sx={{ color: 'success.dark' }}>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[700] }}>
                           ✓ Trading Up: Replacement property value and debt meet or exceed relinquished property. 
                           All gains can be deferred if all equity is reinvested.
                         </Typography>
                       ) : (
-                        <Typography variant="body2" sx={{ color: 'warning.dark' }}>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[700] }}>
                           ⚠ Trading Down: Replacement property value or debt is less than relinquished property. 
                           This will result in taxable boot of ${((state.exchange1031?.cashBoot || 0) + (state.exchange1031?.mortgageBoot || 0)).toLocaleString()}.
                         </Typography>
@@ -9556,24 +9552,24 @@ const UnderwritePage: React.FC = () => {
                     </Box>
 
                     {/* Timeline Requirements */}
-                    <Box sx={{ p: 2, backgroundColor: 'info.light', borderRadius: 1 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                    <Box sx={{ p: 2, backgroundColor: brandColors.neutral[200], borderRadius: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.neutral[800] }}>
                         Critical Timeline Requirements
                       </Typography>
                       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
                         <Box>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.neutral[700] }}>
                             Day 1-45: Identification Period
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Must identify replacement property in writing to qualified intermediary within 45 days of closing on relinquished property.
                           </Typography>
                         </Box>
                         <Box>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: brandColors.neutral[700] }}>
                             Day 1-180: Exchange Period
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Must close on replacement property within 180 days of closing on relinquished property (or tax return due date, whichever is earlier).
                           </Typography>
                         </Box>

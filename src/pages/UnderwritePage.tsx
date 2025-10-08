@@ -91,6 +91,8 @@ import { AnalysisProvider } from "../context/AnalysisContext";
 import { ProFormaPresetSelector } from "../components/calculator/ProFormaPresetSelector";
 import { LiveMarketDataWidget } from "../components/calculator/LiveMarketDataWidget";
 import { GuidedTour } from "../components/GuidedTour";
+import jsPDF from "jspdf";
+import { Download as DownloadIcon, Email as EmailIcon } from "@mui/icons-material";
 import { 
   type DealState,
   type PropertyType,
@@ -4657,30 +4659,193 @@ const UnderwritePage: React.FC = () => {
     return state.hybrid.subjectToLoans[index];
   }
 
-  function exportToPDF() {
-    // TODO: Implement PDF export with jsPDF
-    const proFormaData = {
-      currentPreset: state.proFormaPreset,
-      currentValues: {
-        maintenance: state.ops.maintenance,
-        vacancy: state.ops.vacancy,
-        management: state.ops.management,
-        capEx: state.ops.capEx,
-        opEx: state.ops.opEx,
-      },
-      customPresets: state.customProFormaPresets,
-      sensitivityAnalysis: state.sensitivityAnalysis.showSensitivity
-        ? calculateSensitivityAnalysis()
-        : null,
-      benchmarkComparison: state.benchmarkComparison.showBenchmarks
-        ? compareToBenchmarks()
-        : null,
+  function generatePDFDoc() {
+    const doc = new jsPDF();
+    let yPos = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - (2 * margin);
+    
+    // Helper function to add text with line breaks
+    const addText = (text: string, x: number, y: number, options?: any) => {
+      doc.text(text, x, y, options);
+      return y + (options?.lineHeight || 7);
     };
+    
+    // Header
+    doc.setFontSize(24);
+    doc.setFont("helvetica", "bold");
+    yPos = addText("Dreamery Property Analysis", margin, yPos);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    yPos = addText(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, margin, yPos + 5);
+    
+    // Property Information
+    yPos += 10;
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    yPos = addText("Property Information", margin, yPos);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    yPos += 5;
+    yPos = addText(`Address: ${state.propertyAddress || 'Not specified'}`, margin, yPos);
+    yPos = addText(`Property Type: ${state.propertyType}`, margin, yPos);
+    yPos = addText(`Operation Type: ${state.operationType}`, margin, yPos);
+    yPos = addText(`Finance Type: ${state.offerType}`, margin, yPos);
+    
+    // Purchase Details
+    yPos += 10;
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    yPos = addText("Purchase Details", margin, yPos);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    yPos += 5;
+    yPos = addText(`Listed Price: $${state.listedPrice.toLocaleString()}`, margin, yPos);
+    yPos = addText(`Purchase Price: $${state.purchasePrice.toLocaleString()}`, margin, yPos);
+    if (state.officeRetail?.squareFootage) {
+      yPos = addText(`Square Footage: ${state.officeRetail.squareFootage.toLocaleString()} sq ft`, margin, yPos);
+    }
+    if (state.multi?.unitRents && state.multi.unitRents.length > 1) {
+      yPos = addText(`Units: ${state.multi.unitRents.length}`, margin, yPos);
+    }
+    
+    // Financial Metrics
+    yPos += 10;
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    yPos = addText("Key Financial Metrics", margin, yPos);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    yPos += 5;
+    
+    const monthlyIncome = computeIncome(state);
+    const monthlyExpenses = computeFixedMonthlyOps(state.ops) + computeVariableExpenseFromPercentages(monthlyIncome, state.ops);
+    const monthlyCashFlow = monthlyIncome - monthlyExpenses - (state.loan?.monthlyPayment || 0);
+    const annualNOI = (monthlyIncome - computeFixedMonthlyOps(state.ops) - computeVariableExpenseFromPercentages(monthlyIncome, state.ops)) * 12;
+    const capRate = state.purchasePrice > 0 ? (annualNOI / state.purchasePrice) * 100 : 0;
+    
+    yPos = addText(`Monthly Income: $${monthlyIncome.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, margin, yPos);
+    yPos = addText(`Monthly Expenses: $${monthlyExpenses.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, margin, yPos);
+    yPos = addText(`Monthly Cash Flow: $${monthlyCashFlow.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, margin, yPos);
+    yPos = addText(`Annual NOI: $${annualNOI.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, margin, yPos);
+    yPos = addText(`Cap Rate: ${capRate.toFixed(2)}%`, margin, yPos);
+    
+    // Loan Details
+    if (state.loan && state.loan.loanAmount > 0) {
+      yPos += 10;
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      yPos = addText("Loan Details", margin, yPos);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      yPos += 5;
+      yPos = addText(`Loan Amount: $${state.loan.loanAmount.toLocaleString()}`, margin, yPos);
+      yPos = addText(`Down Payment: $${state.loan.downPayment.toLocaleString()}`, margin, yPos);
+      yPos = addText(`Interest Rate: ${state.loan.annualInterestRate}%`, margin, yPos);
+      yPos = addText(`Monthly Payment: $${(state.loan.monthlyPayment || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, margin, yPos);
+    }
+    
+    // Operating Expenses
+    yPos += 10;
+    if (yPos > 250) {
+      doc.addPage();
+      yPos = 20;
+    }
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    yPos = addText("Operating Expenses", margin, yPos);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    yPos += 5;
+    yPos = addText(`Maintenance: ${state.ops.maintenance}%`, margin, yPos);
+    yPos = addText(`Vacancy: ${state.ops.vacancy}%`, margin, yPos);
+    yPos = addText(`Management: ${state.ops.management}%`, margin, yPos);
+    yPos = addText(`CapEx: ${state.ops.capEx}%`, margin, yPos);
+    yPos = addText(`OpEx: ${state.ops.opEx}%`, margin, yPos);
+    
+    // Footer
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "italic");
+      doc.text(
+        `Generated by Dreamery - Page ${i} of ${totalPages}`,
+        pageWidth / 2,
+        doc.internal.pageSize.getHeight() - 10,
+        { align: 'center' }
+      );
+    }
+    
+    return doc;
+  }
 
-    console.log("Pro Forma data for PDF export:", proFormaData);
-    alert(
-      "PDF export coming soon! This will include your deal analysis with Pro Forma data and Dreamery branding.",
-    );
+  function exportToPDF() {
+    try {
+      const doc = generatePDFDoc();
+      const fileName = `Dreamery_Analysis_${state.propertyAddress?.replace(/[^a-zA-Z0-9]/g, '_') || 'Property'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(fileName);
+      
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['PDF exported successfully!'],
+        snackbarOpen: true,
+      }));
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['Error exporting PDF. Please try again.'],
+        snackbarOpen: true,
+      }));
+    }
+  }
+
+  function emailPDF() {
+    try {
+      const doc = generatePDFDoc();
+      const fileName = `Dreamery_Analysis_${state.propertyAddress?.replace(/[^a-zA-Z0-9]/g, '_') || 'Property'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Convert PDF to base64 for email attachment
+      const pdfBlob = doc.output('blob');
+      const pdfDataUri = doc.output('dataurlstring');
+      
+      // Create mailto link with subject and body
+      const subject = encodeURIComponent(`Dreamery Property Analysis - ${state.propertyAddress || 'Property'}`);
+      const body = encodeURIComponent(`Please find attached the property analysis for ${state.propertyAddress || 'the property'}.\n\nKey Highlights:\n- Purchase Price: $${state.purchasePrice.toLocaleString()}\n- Property Type: ${state.propertyType}\n- Operation Type: ${state.operationType}\n\nGenerated by Dreamery on ${new Date().toLocaleDateString()}`);
+      
+      // Open email client
+      // Note: Email attachments via mailto: are not supported in most browsers
+      // We'll provide instructions to download and attach manually
+      window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+      
+      // Also download the PDF so user can attach it
+      doc.save(fileName);
+      
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['Email client opened! PDF downloaded - please attach it to your email.'],
+        snackbarOpen: true,
+      }));
+    } catch (error) {
+      console.error('Error preparing email:', error);
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['Error preparing email. Please try again.'],
+        snackbarOpen: true,
+      }));
+    }
   }
 
 
@@ -4829,7 +4994,7 @@ const UnderwritePage: React.FC = () => {
 
         <Box sx={{ mt: 2 }}>
 
-        {/* Calculator Mode Selector with Help Button */}
+        {/* Calculator Mode Selector with Help and Export Buttons */}
         <Box sx={{ position: 'relative' }} data-tour="mode-selector">
           <ModeSelector 
             value={calculatorMode}
@@ -12718,7 +12883,16 @@ const UnderwritePage: React.FC = () => {
           </Button>
           <Button
             variant="outlined"
+            onClick={emailPDF}
+            startIcon={<EmailIcon />}
+            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+          >
+            Email PDF
+          </Button>
+          <Button
+            variant="outlined"
             onClick={exportToPDF}
+            startIcon={<DownloadIcon />}
             sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
             Export PDF

@@ -27,7 +27,6 @@ import {
 } from '@mui/material';
 import {
   ExpandMore,
-  Download,
   Refresh,
   TrendingUp,
   Settings,
@@ -42,7 +41,6 @@ import {
 import CashFlowProjectionChart from './CashFlowProjectionChart';
 import CapitalEventsConfiguration from './CapitalEventsConfiguration';
 import MonteCarloSimulationTab from './MonteCarloSimulationTab';
-import { downloadExcelFile } from '../utils/excelExport';
 
 // ============================================================================
 // Types
@@ -132,17 +130,6 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
     }
   }, [dealState, settings]);
 
-  // Handle export to Excel
-  const handleExportToExcel = () => {
-    if (projectionResults) {
-      const location = dealState.city || dealState.propertyAddress || 'Property';
-      downloadExcelFile(
-        projectionResults,
-        `CashFlow_${location.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`
-      );
-    }
-  };
-
   // Handle refresh
   const handleRefresh = () => {
     // Force recalculation by updating a dependency
@@ -210,14 +197,6 @@ export const CashFlowProjectionsTab: React.FC<CashFlowProjectionsTabProps> = ({
             size="small"
           >
             Refresh
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<Download />}
-            onClick={handleExportToExcel}
-            size="small"
-          >
-            Export to Excel
           </Button>
         </Box>
 

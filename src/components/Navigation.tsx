@@ -85,7 +85,6 @@ const Navigation: React.FC = () => {
     { name: 'Mortgage', path: '/mortgage' },
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Workspaces', path: '/workspaces' },
-    { name: 'Data Sources', path: '/data-sources' },
     { name: 'Partners', path: '/partner' },
     { name: 'Learn', path: '/learn' },
     { name: 'Advertise', path: '/advertise' }
@@ -100,7 +99,6 @@ const Navigation: React.FC = () => {
       case '/mortgage':
       case '/underwrite':
       case '/workspaces':
-      case '/data-sources':
       case '/learn':
       case '/advertise':
       case '/partner':

@@ -322,16 +322,18 @@ export const MarketDataIntegrationWidget: React.FC<MarketDataIntegrationWidgetPr
                 </Grid>
               </Box>
 
-              {/* View Full Data Button */}
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={handleViewDashboard}
-                sx={{ mt: 2 }}
-                endIcon={<OpenInNewIcon />}
-              >
-                View Full Analysis in Data Sources Dashboard
-              </Button>
+              {/* View Full Data Button - Dev Only */}
+              {process.env.NODE_ENV === 'development' && (
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleViewDashboard}
+                  sx={{ mt: 2 }}
+                  endIcon={<OpenInNewIcon />}
+                >
+                  View Full Analysis in Data Sources Dashboard
+                </Button>
+              )}
             </Box>
           </Collapse>
         )}

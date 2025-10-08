@@ -38,6 +38,8 @@ export interface AccordionVisibilityConfig {
   exchange1031: boolean;
   advancedModeling: boolean;
   uncertaintyAnalysis: boolean;
+  cashFlowProjections: boolean;
+  proFormaAnalysis: boolean;
   
   // Results detail level
   atAGlance: 'basic' | 'standard' | 'comprehensive';
@@ -73,6 +75,8 @@ export const CALCULATOR_MODES: Record<CalculatorMode, CalculatorModeConfig> = {
       exchange1031: false,
       advancedModeling: false,
       uncertaintyAnalysis: false,
+      cashFlowProjections: false,
+      proFormaAnalysis: false,
       atAGlance: 'basic',
       amortization: 'summary'
     }
@@ -109,6 +113,8 @@ export const CALCULATOR_MODES: Record<CalculatorMode, CalculatorModeConfig> = {
       exchange1031: false,
       advancedModeling: false,
       uncertaintyAnalysis: false,
+      cashFlowProjections: false,
+      proFormaAnalysis: false,
       atAGlance: 'standard',
       amortization: 'full'
     }
@@ -146,6 +152,8 @@ export const CALCULATOR_MODES: Record<CalculatorMode, CalculatorModeConfig> = {
       exchange1031: true,
       advancedModeling: true,
       uncertaintyAnalysis: true,
+      cashFlowProjections: true,
+      proFormaAnalysis: true,
       atAGlance: 'comprehensive',
       amortization: 'full'
     }

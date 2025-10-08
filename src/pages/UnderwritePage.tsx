@@ -4683,31 +4683,6 @@ const UnderwritePage: React.FC = () => {
     );
   }
 
-  function exportToExcel() {
-    // TODO: Implement Excel export with xlsx
-    const proFormaData = {
-      currentPreset: state.proFormaPreset,
-      currentValues: {
-        maintenance: state.ops.maintenance,
-        vacancy: state.ops.vacancy,
-        management: state.ops.management,
-        capEx: state.ops.capEx,
-        opEx: state.ops.opEx,
-      },
-      customPresets: state.customProFormaPresets,
-      sensitivityAnalysis: state.sensitivityAnalysis.showSensitivity
-        ? calculateSensitivityAnalysis()
-        : null,
-      benchmarkComparison: state.benchmarkComparison.showBenchmarks
-        ? compareToBenchmarks()
-        : null,
-    };
-
-    console.log("Pro Forma data for Excel export:", proFormaData);
-    alert(
-      "Excel export coming soon! This will include your deal analysis with Pro Forma data in an editable spreadsheet format.",
-    );
-  }
 
   useEffect(() => {
     // Load custom presets from localStorage
@@ -8392,6 +8367,7 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Cash Flow Projections */}
+        {isAccordionVisible(calculatorMode, 'cashFlowProjections') && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={
@@ -8440,6 +8416,7 @@ const UnderwritePage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         </Card>
+        )}
 
         {/* 1031 Exchange Calculator */}
         {isAccordionVisible(calculatorMode, 'exchange1031') && (
@@ -8901,7 +8878,7 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
         {/* Pro Forma Analysis - Moved to before Advanced Analysis */}
-        {true && (
+        {isAccordionVisible(calculatorMode, 'proFormaAnalysis') && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={
@@ -12745,13 +12722,6 @@ const UnderwritePage: React.FC = () => {
             sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
           >
             Export PDF
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={exportToExcel}
-            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
-          >
-            Email PDF
           </Button>
           <Button
             variant="contained"

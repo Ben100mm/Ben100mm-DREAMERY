@@ -10,15 +10,16 @@ import { Grid as MuiGrid, GridProps } from '@mui/material';
 interface GridCompatProps extends Omit<GridProps, 'container' | 'item'> {
   container?: boolean;
   item?: boolean;
+  children?: React.ReactNode;
 }
 
 /**
  * Grid component that wraps MUI Grid to support legacy `item` prop
  * Usage: Same as the old Grid component with `container` and `item` props
  */
-export const Grid: React.FC<GridCompatProps> = ({ container, item, ...props }) => {
+export const Grid: React.FC<GridCompatProps> = ({ container, item, children, ...props }) => {
   // Cast to any to bypass TypeScript checks
-  return <MuiGrid container={container} item={item as any} {...props} />;
+  return <MuiGrid container={container} item={item as any} {...props}>{children}</MuiGrid>;
 };
 
 export default Grid;

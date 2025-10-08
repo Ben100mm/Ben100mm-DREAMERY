@@ -444,6 +444,49 @@ export interface Exchange1031Inputs {
   netProceedsToReinvest: number;
 }
 
+// 1031 Exchange Acquisition (for tracking when buying via 1031)
+export interface Acquiring1031 {
+  enabled: boolean;
+  carryoverBasis: number;
+  deferredGainCarried: number;
+  priorPropertyAddress?: string;
+  exchangeDate?: string;
+}
+
+// 721 Exchange (UPREIT) Inputs
+export interface Exchange721Inputs {
+  enabled: boolean;
+  propertyValue: number;
+  adjustedBasis: number;
+  totalDepreciation: number;
+  outstandingMortgage: number;
+  reitName: string;
+  opUnitsReceived: number;
+  unitValuation: number;
+  annualDistributionRate: number; // Percentage
+  holdingPeriodRequirement: number; // Years
+  contributionDate: string;
+  // Calculated fields
+  deferredGain: number;
+  carryoverBasisInUnits: number;
+  annualDistributionIncome: number;
+  estimatedTaxOnFutureSale: number;
+  totalUnitsValue: number;
+}
+
+// 721 Exchange Acquisition (tracking OP units received)
+export interface Acquiring721 {
+  enabled: boolean;
+  reitName: string;
+  opUnitsReceived: number;
+  carryoverBasisInUnits: number;
+  deferredGainCarried: number;
+  contributionDate: string;
+  holdingPeriodEnds: string;
+  currentUnitValue: number;
+  annualDistributionRate: number;
+}
+
 // Enhanced Tax Implications
 export interface EnhancedTaxImplications extends TaxImplications {
   taxStrategy?: string;
@@ -618,6 +661,15 @@ export interface DealState {
 
   // 1031 Exchange Calculator
   exchange1031?: Exchange1031Inputs;
+  
+  // 1031 Exchange Acquisition Tracking (when buying via 1031)
+  acquiring1031?: Acquiring1031;
+  
+  // 721 Exchange (UPREIT) Calculator
+  exchange721?: Exchange721Inputs;
+  
+  // 721 Exchange Acquisition Tracking (when receiving OP units)
+  acquiring721?: Acquiring721;
 
   // UX/logic helpers
   validationMessages: string[];

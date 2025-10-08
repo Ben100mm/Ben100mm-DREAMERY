@@ -38,6 +38,8 @@ import Slider from "@mui/material/Slider";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import Tooltip from "@mui/material/Tooltip";
+import { Grid } from "../components/GridCompat";
+import Paper from "@mui/material/Paper";
 import {
   pmt,
   totalMonthlyDebtService,
@@ -123,6 +125,9 @@ import {
   type CapitalEvent,
   type CapitalEventInputs,
   type Exchange1031Inputs,
+  type Acquiring1031,
+  type Exchange721Inputs,
+  type Acquiring721,
   type SeasonalFactors,
   type EnhancedTaxImplications,
 } from "../types/deal";
@@ -1318,6 +1323,34 @@ function calculateExitProceeds(
 }
 
 /**
+ * Calculates exit proceeds after tax (accounts for 1031 exchange if enabled)
+ * @param state - Current deal state
+ * @param isLevered - True for levered (subtract remaining loan balance)
+ * @returns Net proceeds after taxes
+ */
+function calculateExitProceedsAfterTax(
+  state: DealState,
+  isLevered: boolean
+): number {
+  const beforeTaxProceeds = calculateExitProceeds(state, isLevered);
+  
+  // If 1031 exchange is enabled, deduct only the recognized gain tax (boot portion)
+  if (state.exchange1031?.enabled) {
+    return beforeTaxProceeds - (state.exchange1031.estimatedTaxLiability || 0);
+  }
+  
+  // If no 1031 exchange, calculate full capital gains tax
+  const holdYears = state.irrHoldPeriodYears || 5;
+  const appreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+  const futureValue = state.purchasePrice * Math.pow(1 + appreciationRate, holdYears);
+  const capitalGain = Math.max(0, futureValue - state.purchasePrice);
+  const taxRate = (state.enhancedTaxConfig?.taxBracket || 20) / 100;
+  const taxLiability = capitalGain * taxRate;
+  
+  return beforeTaxProceeds - taxLiability;
+}
+
+/**
  * Calculates comprehensive MOIC (Multiple on Invested Capital / Equity Multiple)
  * Includes both operating cash flows AND exit proceeds
  * @param state - Current deal state
@@ -1411,9 +1444,23 @@ function calculateComprehensiveMOIC(
     remainingBalance = loanAmount;
   }
 
-  const netSaleProceeds = futureValue - sellingCosts - remainingBalance;
+  const netSaleProceedsBeforeTax = futureValue - sellingCosts - remainingBalance;
+  
+  // Calculate tax on exit
+  let exitTaxLiability = 0;
+  if (state.exchange1031?.enabled) {
+    // Use 1031 exchange tax (only boot portion is taxed)
+    exitTaxLiability = state.exchange1031.estimatedTaxLiability || 0;
+  } else {
+    // Full capital gains tax
+    const capitalGain = Math.max(0, futureValue - state.purchasePrice);
+    const taxRate = (state.enhancedTaxConfig?.taxBracket || 20) / 100;
+    exitTaxLiability = capitalGain * taxRate;
+  }
+  
+  const netSaleProceeds = netSaleProceedsBeforeTax - exitTaxLiability;
 
-  // Total return = operating cash flows + exit proceeds
+  // Total return = operating cash flows + exit proceeds (after tax)
   const totalReturn = totalCashFlows + netSaleProceeds;
 
   // MOIC = Total Return / Cash Invested
@@ -1550,6 +1597,239 @@ function calculate1031Deadlines(closingDate: string): {
       closingDeadline: '',
     };
   }
+}
+
+/**
+ * Auto-populates 1031 Exchange fields from current deal data
+ * @param state - Current deal state
+ * @returns Pre-filled Exchange1031Inputs
+ */
+function prefill1031FromDeal(state: DealState): Exchange1031Inputs {
+  const holdYears = state.irrHoldPeriodYears || 5;
+  const appreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+  const currentValue = state.purchasePrice * Math.pow(1 + appreciationRate, holdYears);
+  
+  // Calculate depreciation (27.5 years for residential, 39 years commercial)
+  const isResidential = state.propertyType === 'Multi Family' || 
+                        state.propertyType === 'Single Family';
+  const depreciationYears = isResidential ? 27.5 : 39;
+  const buildingValue = state.purchasePrice * 0.8; // 80% building, 20% land
+  const annualDepreciation = buildingValue / depreciationYears;
+  const totalDepreciation = Math.min(annualDepreciation * holdYears, buildingValue);
+  
+  // Calculate remaining mortgage balance
+  const loanAmount = computeLoanAmount(state);
+  const monthlyRate = (state.loan.annualInterestRate || 0) / 100 / 12;
+  const totalMonths = (state.loan.amortizationYears || 30) * 12;
+  const monthsElapsed = holdYears * 12;
+  
+  let remainingBalance = loanAmount;
+  if (loanAmount > 0 && monthlyRate > 0 && !state.loan.interestOnly) {
+    const monthlyPayment = state.loan.monthlyPayment || 0;
+    if (monthsElapsed >= totalMonths) {
+      remainingBalance = 0;
+    } else {
+      const remainingMonths = totalMonths - monthsElapsed;
+      remainingBalance =
+        (monthlyPayment / monthlyRate) *
+        (1 - Math.pow(1 + monthlyRate, -remainingMonths));
+    }
+  } else if (state.loan.interestOnly) {
+    remainingBalance = loanAmount;
+  }
+  
+  const adjustedBasis = state.purchasePrice - totalDepreciation;
+  
+  return {
+    ...state.exchange1031!,
+    enabled: true,
+    relinquishedPropertyValue: currentValue,
+    relinquishedPropertyBasis: adjustedBasis,
+    relinquishedPropertyDepreciation: totalDepreciation,
+    relinquishedPropertyMortgage: remainingBalance,
+    // Keep user's replacement property values if already set, otherwise default to equal/greater
+    replacementPropertyValue: state.exchange1031?.replacementPropertyValue || currentValue,
+    replacementPropertyMortgage: state.exchange1031?.replacementPropertyMortgage || remainingBalance,
+  };
+}
+
+/**
+ * Validates 1031 Exchange configuration and returns warnings
+ * @param exchange1031 - 1031 Exchange configuration
+ * @returns Array of warning messages
+ */
+function validate1031Exchange(exchange1031: Exchange1031Inputs): string[] {
+  if (!exchange1031.enabled) return [];
+  
+  const warnings: string[] = [];
+  
+  // Check if replacement property value is less than relinquished
+  if (exchange1031.replacementPropertyValue < exchange1031.relinquishedPropertyValue) {
+    const shortfall = exchange1031.relinquishedPropertyValue - exchange1031.replacementPropertyValue;
+    warnings.push(`WARNING: Replacement property value is $${shortfall.toLocaleString()} less than relinquished property - will trigger taxable boot`);
+  }
+  
+  // Check if replacement mortgage is less than relinquished
+  if (exchange1031.replacementPropertyMortgage < exchange1031.relinquishedPropertyMortgage) {
+    const debtReduction = exchange1031.relinquishedPropertyMortgage - exchange1031.replacementPropertyMortgage;
+    warnings.push(`WARNING: New mortgage is $${debtReduction.toLocaleString()} less than old mortgage - will trigger mortgage boot`);
+  }
+  
+  // Check for insufficient equity
+  const relinquishedEquity = exchange1031.relinquishedPropertyValue - exchange1031.relinquishedPropertyMortgage;
+  const replacementEquity = exchange1031.replacementPropertyValue - exchange1031.replacementPropertyMortgage;
+  if (replacementEquity < relinquishedEquity) {
+    warnings.push(`WARNING: Reinvesting less equity than extracted - will trigger cash boot`);
+  }
+  
+  // Check for boot amounts
+  if (exchange1031.cashBoot > 0 || exchange1031.mortgageBoot > 0) {
+    const totalBoot = exchange1031.cashBoot + exchange1031.mortgageBoot;
+    warnings.push(`Total boot: $${totalBoot.toLocaleString()} (taxable)`);
+  }
+  
+  return warnings;
+}
+
+/**
+ * Calculates 721 Exchange (UPREIT) metrics
+ * @param inputs - 721 Exchange input parameters
+ * @param capitalGainsTaxRate - Federal + State capital gains tax rate
+ * @returns Comprehensive 721 exchange calculation results
+ */
+function calculate721Exchange(
+  inputs: Exchange721Inputs,
+  capitalGainsTaxRate: number = 20
+): Exchange721Inputs {
+  if (!inputs.enabled) {
+    return inputs;
+  }
+
+  // Calculate realized gain on property contribution
+  const realizedGain = inputs.propertyValue - inputs.adjustedBasis;
+
+  // Total OP units value
+  const totalUnitsValue = inputs.opUnitsReceived * inputs.unitValuation;
+
+  // In a 721 exchange, all gain is deferred (no boot unless cash received)
+  const deferredGain = realizedGain;
+
+  // Carryover basis in OP units = adjusted basis of contributed property
+  const carryoverBasisInUnits = inputs.adjustedBasis;
+
+  // Annual distribution income from OP units
+  const annualDistributionIncome = (totalUnitsValue * inputs.annualDistributionRate) / 100;
+
+  // Estimated tax on future sale (when units are eventually sold or converted)
+  const estimatedTaxOnFutureSale = (deferredGain * capitalGainsTaxRate) / 100;
+
+  return {
+    ...inputs,
+    deferredGain,
+    carryoverBasisInUnits,
+    annualDistributionIncome,
+    estimatedTaxOnFutureSale,
+    totalUnitsValue,
+  };
+}
+
+/**
+ * Validates 721 Exchange configuration and returns warnings
+ * @param exchange721 - 721 Exchange configuration
+ * @returns Array of warning messages
+ */
+function validate721Exchange(exchange721: Exchange721Inputs): string[] {
+  if (!exchange721.enabled) return [];
+  
+  const warnings: string[] = [];
+  
+  // Check if OP units received
+  if (exchange721.opUnitsReceived <= 0) {
+    warnings.push('WARNING: No OP units received - exchange may not be properly structured');
+  }
+  
+  // Check if unit valuation is set
+  if (exchange721.unitValuation <= 0) {
+    warnings.push('WARNING: OP unit valuation not set - cannot calculate total value');
+  }
+  
+  // Check if property value matches OP units value (should be approximately equal)
+  const totalUnitsValue = exchange721.opUnitsReceived * exchange721.unitValuation;
+  const propertyEquity = exchange721.propertyValue - exchange721.outstandingMortgage;
+  const valuationDifference = Math.abs(totalUnitsValue - propertyEquity);
+  const differencePercent = (valuationDifference / propertyEquity) * 100;
+  
+  if (differencePercent > 5) {
+    warnings.push(`WARNING: OP units value ($${totalUnitsValue.toLocaleString()}) differs significantly from property equity ($${propertyEquity.toLocaleString()})`);
+  }
+  
+  // Check holding period requirement
+  if (exchange721.holdingPeriodRequirement < 1) {
+    warnings.push('NOTE: Most UPREITs require a 1-year minimum holding period before units can be sold or converted');
+  }
+  
+  // Check distribution rate
+  if (exchange721.annualDistributionRate < 2 || exchange721.annualDistributionRate > 12) {
+    warnings.push(`NOTE: Distribution rate of ${exchange721.annualDistributionRate}% is ${exchange721.annualDistributionRate < 2 ? 'lower' : 'higher'} than typical REIT distributions (4-8%)`);
+  }
+  
+  return warnings;
+}
+
+/**
+ * Calculates tax impact comparison with and without 1031 exchange
+ * @param state - Current deal state
+ * @param exitProceeds - Net proceeds from sale
+ * @returns Tax comparison data
+ */
+function calculate1031TaxComparison(state: DealState, exitProceeds: number): {
+  without1031: {
+    capitalGain: number;
+    taxLiability: number;
+    netProceeds: number;
+  };
+  with1031: {
+    deferredGain: number;
+    recognizedGain: number;
+    taxLiability: number;
+    netProceeds: number;
+  };
+  taxSavings: number;
+} {
+  const holdYears = state.irrHoldPeriodYears || 5;
+  const appreciationRate = (state.appreciation?.appreciationPercentPerYear || 3) / 100;
+  const futureValue = state.purchasePrice * Math.pow(1 + appreciationRate, holdYears);
+  const taxRate = (state.enhancedTaxConfig?.taxBracket || 20) / 100;
+  
+  // WITHOUT 1031 Exchange
+  const capitalGain = futureValue - state.purchasePrice;
+  const taxLiabilityWithout = capitalGain * taxRate;
+  const netProceedsWithout = exitProceeds - taxLiabilityWithout;
+  
+  // WITH 1031 Exchange
+  const with1031 = state.exchange1031?.enabled ? {
+    deferredGain: state.exchange1031.deferredGain || 0,
+    recognizedGain: state.exchange1031.recognizedGain || 0,
+    taxLiability: state.exchange1031.estimatedTaxLiability || 0,
+    netProceeds: exitProceeds - (state.exchange1031.estimatedTaxLiability || 0),
+  } : {
+    deferredGain: 0,
+    recognizedGain: 0,
+    taxLiability: taxLiabilityWithout,
+    netProceeds: netProceedsWithout,
+  };
+  
+  const taxSavings = taxLiabilityWithout - with1031.taxLiability;
+  
+  return {
+    without1031: {
+      capitalGain,
+      taxLiability: taxLiabilityWithout,
+      netProceeds: netProceedsWithout,
+    },
+    with1031,
+    taxSavings,
+  };
 }
 
 // Helper function to check if cash-on-cash calculation is valid
@@ -2444,6 +2724,45 @@ const defaultState: DealState = {
     estimatedTaxLiability: 0,
     netProceedsToReinvest: 0,
   },
+  // 1031 Exchange Acquisition Tracking
+  acquiring1031: {
+    enabled: false,
+    carryoverBasis: 0,
+    deferredGainCarried: 0,
+    priorPropertyAddress: '',
+    exchangeDate: '',
+  },
+  // 721 Exchange (UPREIT) Defaults
+  exchange721: {
+    enabled: false,
+    propertyValue: 0,
+    adjustedBasis: 0,
+    totalDepreciation: 0,
+    outstandingMortgage: 0,
+    reitName: '',
+    opUnitsReceived: 0,
+    unitValuation: 0,
+    annualDistributionRate: 6, // Default 6%
+    holdingPeriodRequirement: 1, // Default 1 year
+    contributionDate: '',
+    deferredGain: 0,
+    carryoverBasisInUnits: 0,
+    annualDistributionIncome: 0,
+    estimatedTaxOnFutureSale: 0,
+    totalUnitsValue: 0,
+  },
+  // 721 Exchange Acquisition Tracking
+  acquiring721: {
+    enabled: false,
+    reitName: '',
+    opUnitsReceived: 0,
+    carryoverBasisInUnits: 0,
+    deferredGainCarried: 0,
+    contributionDate: '',
+    holdingPeriodEnds: '',
+    currentUnitValue: 0,
+    annualDistributionRate: 6,
+  },
   proFormaAuto: true,
   validationMessages: [],
   showAmortizationOverride: false,
@@ -2490,6 +2809,9 @@ const UnderwritePage: React.FC = () => {
   
   // Guided Tour State
   const [showGuidedTour, setShowGuidedTour] = useState(false);
+  
+  // Tax-Deferred Exchange Tab State
+  const [exchangeTabValue, setExchangeTabValue] = useState(0); // 0=1031 Exit, 1=1031 Acquisition, 2=721 Exit, 3=721 Acquisition
   
   function validateAndNormalizeState(input: DealState): {
     next: DealState;
@@ -8625,6 +8947,14 @@ const UnderwritePage: React.FC = () => {
                 <Typography sx={{ fontWeight: 700 }}>
                   1031 Exchange Calculator
                 </Typography>
+                {state.exchange1031?.enabled && (
+                  <Chip 
+                    label="Active"
+                    color="success"
+                    size="small"
+                    sx={{ fontWeight: 600 }}
+                  />
+                )}
                 <FormControlLabel
                   control={
                     <Switch
@@ -8651,7 +8981,7 @@ const UnderwritePage: React.FC = () => {
               <Box sx={{ p: 2 }}>
                 {state.exchange1031?.enabled && (
                   <>
-                    <Alert severity="info" sx={{ mb: 3 }}>
+                    <Alert severity="info" sx={{ mb: 2 }}>
                       <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                         1031 Exchange Requirements:
                       </Typography>
@@ -8663,6 +8993,51 @@ const UnderwritePage: React.FC = () => {
                         <li>Reinvest all equity to avoid taxable boot</li>
                       </Typography>
                     </Alert>
+
+                    <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Button
+                        variant="contained"
+                        size="medium"
+                        onClick={() => {
+                          const prefilled = prefill1031FromDeal(state);
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: prefilled,
+                            };
+                            // Recalculate with prefilled values
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        sx={{ 
+                          bgcolor: brandColors.primary,
+                          '&:hover': { bgcolor: brandColors.accent.info }
+                        }}
+                      >
+                        Auto-Fill from Deal
+                      </Button>
+                      <Typography variant="caption" color="text.secondary">
+                        Automatically populate fields based on your current deal parameters
+                      </Typography>
+                    </Box>
+
+                    {(() => {
+                      const warnings = validate1031Exchange(state.exchange1031!);
+                      return warnings.length > 0 ? (
+                        <Alert severity="warning" sx={{ mb: 3 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                            Validation Warnings:
+                          </Typography>
+                          {warnings.map((warning, idx) => (
+                            <Typography key={idx} variant="body2" sx={{ mb: 0.5 }}>
+                              {warning}
+                            </Typography>
+                          ))}
+                        </Alert>
+                      ) : null;
+                    })()}
 
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
                       Relinquished Property (Selling)
@@ -8889,8 +9264,120 @@ const UnderwritePage: React.FC = () => {
 
                     <Divider sx={{ my: 3 }} />
 
+                    {/* Tax Comparison: Before/After 1031 Exchange */}
+                    {(() => {
+                      const exitProceeds = calculateExitProceeds(state, true);
+                      const comparison = calculate1031TaxComparison(state, exitProceeds);
+                      
+                      return (
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                            Tax Impact Comparison
+                          </Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12} md={6}>
+                              <Paper 
+                                elevation={0}
+                                sx={{ 
+                                  p: 2, 
+                                  backgroundColor: brandColors.backgrounds.secondary,
+                                  border: '2px solid',
+                                  borderColor: 'error.light',
+                                  borderRadius: 2,
+                                }}
+                              >
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: 'error.main' }}>
+                                  Without 1031 Exchange
+                                </Typography>
+                                <Box sx={{ mb: 1 }}>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Capital Gain
+                                  </Typography>
+                                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                    ${comparison.without1031.capitalGain.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ mb: 1 }}>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Tax Liability
+                                  </Typography>
+                                  <Typography variant="h5" sx={{ fontWeight: 700, color: 'error.main' }}>
+                                    ${comparison.without1031.taxLiability.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                                <Divider sx={{ my: 1 }} />
+                                <Box>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Net Proceeds After Tax
+                                  </Typography>
+                                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                    ${comparison.without1031.netProceeds.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                              </Paper>
+                            </Grid>
+                            
+                            <Grid item xs={12} md={6}>
+                              <Paper 
+                                elevation={0}
+                                sx={{ 
+                                  p: 2, 
+                                  backgroundColor: brandColors.backgrounds.secondary,
+                                  border: '2px solid',
+                                  borderColor: 'success.light',
+                                  borderRadius: 2,
+                                }}
+                              >
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: 'success.main' }}>
+                                  With 1031 Exchange
+                                </Typography>
+                                <Box sx={{ mb: 1 }}>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Deferred Gain
+                                  </Typography>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.dark' }}>
+                                    ${comparison.with1031.deferredGain.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ mb: 1 }}>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Tax Liability (Boot Only)
+                                  </Typography>
+                                  <Typography variant="h5" sx={{ fontWeight: 700, color: comparison.with1031.taxLiability > 0 ? 'warning.main' : 'success.main' }}>
+                                    ${comparison.with1031.taxLiability.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                                <Divider sx={{ my: 1 }} />
+                                <Box>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Net Proceeds After Tax
+                                  </Typography>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.dark' }}>
+                                    ${comparison.with1031.netProceeds.toLocaleString()}
+                                  </Typography>
+                                </Box>
+                              </Paper>
+                            </Grid>
+                          </Grid>
+                          
+                          {comparison.taxSavings > 0 && (
+                            <Alert severity="success" sx={{ mt: 2 }}>
+                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                Tax Savings with 1031 Exchange: ${comparison.taxSavings.toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption">
+                                By using a 1031 exchange, you defer ${comparison.with1031.deferredGain.toLocaleString()} in capital gains and save ${comparison.taxSavings.toLocaleString()} in immediate taxes.
+                              </Typography>
+                            </Alert>
+                          )}
+                        </Box>
+                      );
+                    })()}
+
+                    <Divider sx={{ my: 3 }} />
+
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
-                      Exchange Analysis Results
+                      Detailed 1031 Exchange Results
                     </Typography>
 
                     <Box sx={{ 
@@ -9071,6 +9558,231 @@ const UnderwritePage: React.FC = () => {
           </Accordion>
         </Card>
         )}
+
+        {/* 1031 Exchange Acquisition Tracking (when buying via 1031) */}
+        {isAccordionVisible(calculatorMode, 'exchange1031') && (
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+          <Accordion>
+            <AccordionSummary expandIcon={
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyExpandMoreIcon />
+              </React.Suspense>
+            }>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Acquiring via 1031 Exchange
+                </Typography>
+                {state.acquiring1031?.enabled && (
+                  <Chip 
+                    label="Replacement Property"
+                    color="info"
+                    size="small"
+                    sx={{ fontWeight: 600 }}
+                  />
+                )}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={state.acquiring1031?.enabled || false}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setState((prev) => ({
+                          ...prev,
+                          acquiring1031: {
+                            ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                            enabled: e.target.checked,
+                          },
+                        }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                    label="Enable"
+                    sx={{ ml: 'auto' }}
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ p: 2 }}>
+                {state.acquiring1031?.enabled ? (
+                  <>
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Replacement Property - 1031 Exchange
+                      </Typography>
+                      <Typography variant="body2">
+                        Use this section if you're acquiring this property as the replacement property in a 1031 exchange.
+                        The carryover basis and deferred gain will affect future depreciation and tax calculations.
+                      </Typography>
+                    </Alert>
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Prior Property Information
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Prior Property Address"
+                        value={state.acquiring1031?.priorPropertyAddress || ''}
+                        onChange={(e) => {
+                          setState((prev) => ({
+                            ...prev,
+                            acquiring1031: {
+                              ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                              priorPropertyAddress: e.target.value,
+                            },
+                          }));
+                        }}
+                        helperText="Address of property being sold"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Exchange Date"
+                        type="date"
+                        value={state.acquiring1031?.exchangeDate || ''}
+                        onChange={(e) => {
+                          setState((prev) => ({
+                            ...prev,
+                            acquiring1031: {
+                              ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                              exchangeDate: e.target.value,
+                            },
+                          }));
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                        helperText="Date of prior property closing"
+                      />
+                    </Box>
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Carryover Basis & Deferred Gain
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Carryover Basis"
+                        type="number"
+                        value={state.acquiring1031?.carryoverBasis || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => ({
+                            ...prev,
+                            acquiring1031: {
+                              ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                              carryoverBasis: value,
+                            },
+                          }));
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Adjusted basis carried over from prior property"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Deferred Gain Carried"
+                        type="number"
+                        value={state.acquiring1031?.deferredGainCarried || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => ({
+                            ...prev,
+                            acquiring1031: {
+                              ...(prev.acquiring1031 || defaultState.acquiring1031!),
+                              deferredGainCarried: value,
+                            },
+                          }));
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Capital gains deferred from prior sale"
+                      />
+                    </Box>
+
+                    {state.exchange1031?.enabled && state.exchange1031.carryoverBasis > 0 && (
+                      <Button
+                        variant="outlined"
+                        size="medium"
+                        onClick={() => {
+                          setState((prev) => ({
+                            ...prev,
+                            acquiring1031: {
+                              ...prev.acquiring1031!,
+                              enabled: true,
+                              carryoverBasis: prev.exchange1031?.carryoverBasis || 0,
+                              deferredGainCarried: prev.exchange1031?.deferredGain || 0,
+                            },
+                          }));
+                        }}
+                        sx={{ mb: 3 }}
+                      >
+                        Import from 1031 Exchange Calculator Above
+                      </Button>
+                    )}
+
+                    <Box sx={{ 
+                      p: 2, 
+                      backgroundColor: brandColors.backgrounds.secondary,
+                      borderRadius: 1,
+                      mb: 2,
+                    }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
+                        Tax Impact Summary
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Purchase Price
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            ${state.purchasePrice.toLocaleString()}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Carryover Basis
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.info }}>
+                            ${(state.acquiring1031?.carryoverBasis || 0).toLocaleString()}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Deferred Gain
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.main' }}>
+                            ${(state.acquiring1031?.deferredGainCarried || 0).toLocaleString()}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Alert severity="info" sx={{ mt: 2 }}>
+                        <Typography variant="caption">
+                          Your depreciation schedule will be based on the carryover basis (${(state.acquiring1031?.carryoverBasis || 0).toLocaleString()}), 
+                          not the purchase price. The deferred gain of ${(state.acquiring1031?.deferredGainCarried || 0).toLocaleString()} 
+                          will be recognized when you eventually sell this property (unless you do another 1031 exchange).
+                        </Typography>
+                      </Alert>
+                    </Box>
+                  </>
+                ) : (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Enable this section if you're purchasing this property as a replacement property in a 1031 exchange.
+                      This will track your carryover basis and deferred gains for accurate tax planning.
+                    </Typography>
+                  </Alert>
+                )}
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+        )}
+
         {/* Pro Forma Analysis - Moved to before Advanced Analysis */}
         {isAccordionVisible(calculatorMode, 'proFormaAnalysis') && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
@@ -11522,7 +12234,7 @@ const UnderwritePage: React.FC = () => {
                           const cashFlows = buildCashFlowProjections(state, true);
                           
                           // Calculate exit proceeds (levered) - uses state.irrHoldPeriodYears
-                          const exitProceeds = calculateExitProceeds(state, true);
+                          const exitProceeds = calculateExitProceedsAfterTax(state, true);
                           
                           // Calculate true IRR using Newton-Raphson
                           const irr = calculateTrueIRR(
@@ -11560,7 +12272,7 @@ const UnderwritePage: React.FC = () => {
                           const cashFlows = buildCashFlowProjections(state, false);
                           
                           // Calculate exit proceeds (unlevered = no loan payoff) - uses state.irrHoldPeriodYears
-                          const exitProceeds = calculateExitProceeds(state, false);
+                          const exitProceeds = calculateExitProceedsAfterTax(state, false);
                           
                           // Calculate true IRR using Newton-Raphson
                           const irr = calculateTrueIRR(
@@ -11603,7 +12315,7 @@ const UnderwritePage: React.FC = () => {
                               try {
                                 const testState = { ...state, irrHoldPeriodYears: years };
                                 const cashFlows = buildCashFlowProjections(testState, true);
-                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const exitProceeds = calculateExitProceedsAfterTax(testState, true);
                                 const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
                                 const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
                                 return (
@@ -11644,7 +12356,7 @@ const UnderwritePage: React.FC = () => {
                                   appreciation: { ...state.appreciation, appreciationPercentPerYear: appRate },
                                 };
                                 const cashFlows = buildCashFlowProjections(testState, true);
-                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const exitProceeds = calculateExitProceedsAfterTax(testState, true);
                                 const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
                                 const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
                                 return (
@@ -11682,7 +12394,7 @@ const UnderwritePage: React.FC = () => {
                               try {
                                 const testState = { ...state, irrIncomeGrowthRate: growthRate };
                                 const cashFlows = buildCashFlowProjections(testState, true);
-                                const exitProceeds = calculateExitProceeds(testState, true);
+                                const exitProceeds = calculateExitProceedsAfterTax(testState, true);
                                 const totalInvestment = state.loan.downPayment + (state.loan.closingCosts || 0) + (state.loan.rehabCosts || 0);
                                 const irr = calculateTrueIRR(-totalInvestment, cashFlows, exitProceeds);
                                 return (
@@ -11732,8 +12444,8 @@ const UnderwritePage: React.FC = () => {
                         try {
                           const leveredCashFlows = buildCashFlowProjections(state, true);
                           const unleveredCashFlows = buildCashFlowProjections(state, false);
-                          const leveredExit = calculateExitProceeds(state, true);
-                          const unleveredExit = calculateExitProceeds(state, false);
+                          const leveredExit = calculateExitProceedsAfterTax(state, true);
+                          const unleveredExit = calculateExitProceedsAfterTax(state, false);
                           
                           return (
                             <Box

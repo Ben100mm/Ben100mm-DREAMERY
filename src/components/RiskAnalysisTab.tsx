@@ -12,6 +12,7 @@ import {
   Chip,
   Paper,
   Divider,
+  Alert,
 } from "@mui/material";
 import { DealState } from "../types/deal";
 import { 
@@ -21,6 +22,7 @@ import {
 } from "../utils/advancedCalculations";
 import { brandColors } from "../theme";
 import { formatCurrency } from "./UXComponents";
+import { MonteCarloResults } from "../utils/monteCarloSimulation";
 
 interface RiskAnalysisTabProps {
   dealState: DealState | null;
@@ -31,6 +33,9 @@ interface RiskAnalysisTabProps {
   ) => void;
   isCalculating: boolean;
   setIsCalculating: React.Dispatch<React.SetStateAction<boolean>>;
+  monteCarloResults?: MonteCarloResults | null;
+  monteCarloLoading?: boolean;
+  runRiskSimulation?: () => void;
 }
 
 export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
@@ -39,6 +44,9 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
   handleResultsChange,
   isCalculating,
   setIsCalculating,
+  monteCarloResults,
+  monteCarloLoading,
+  runRiskSimulation,
 }) => {
   // Calculate weighted risk score
   const weightedRiskAnalysis = useMemo(() => {
@@ -514,6 +522,293 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                 </Box>
               </CardContent>
             </Card>
+          )}
+        </Box>
+      )}
+
+      {/* Monte Carlo Simulation Section */}
+      {runRiskSimulation && (
+        <Box sx={{ mt: 4 }}>
+          <Divider sx={{ my: 3 }} />
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600, color: brandColors.primary, mb: 2 }}
+          >
+            Monte Carlo Risk Simulation
+          </Typography>
+          <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 3 }}>
+            Run a probabilistic simulation with 10,000 scenarios to analyze investment risk and potential returns
+          </Typography>
+
+          <Button
+            variant="contained"
+            disabled={monteCarloLoading}
+            onClick={runRiskSimulation}
+            aria-label="Run Monte Carlo risk simulation"
+            sx={{ 
+              mb: 3,
+              backgroundColor: brandColors.primary,
+              '&:hover': {
+                backgroundColor: brandColors.secondary,
+              }
+            }}
+          >
+            {monteCarloLoading ? (
+              <>
+                <CircularProgress size={20} sx={{ mr: 1 }} />
+                Running Simulation...
+              </>
+            ) : (
+              "Run Monte Carlo Simulation"
+            )}
+          </Button>
+
+          {monteCarloResults && (
+            <Box>
+              <Alert severity="success" sx={{ mb: 3 }}>
+                Simulation completed: {monteCarloResults.simulationCount.toLocaleString()} scenarios analyzed in {Math.round(monteCarloResults.executionTimeMs)}ms
+              </Alert>
+
+              {/* Key Statistics Grid */}
+              <Grid container spacing={3} sx={{ mb: 3 }}>
+                <Grid item xs={12} md={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                        IRR Distribution
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Mean
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {monteCarloResults.irrStats.mean.toFixed(2)}%
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Median
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {monteCarloResults.irrStats.median.toFixed(2)}%
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Std Deviation
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {monteCarloResults.irrStats.stdDev.toFixed(2)}%
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Range
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {monteCarloResults.irrStats.min.toFixed(1)}% - {monteCarloResults.irrStats.max.toFixed(1)}%
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                        Total Return Distribution
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Mean
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {formatCurrency(monteCarloResults.totalReturnStats.mean)}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Median
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {formatCurrency(monteCarloResults.totalReturnStats.median)}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Std Deviation
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {formatCurrency(monteCarloResults.totalReturnStats.stdDev)}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                            Range
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {formatCurrency(monteCarloResults.totalReturnStats.min)} - {formatCurrency(monteCarloResults.totalReturnStats.max)}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              {/* Percentile Analysis */}
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    Percentile Analysis - IRR
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          10th Percentile
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.error }}>
+                          {monteCarloResults.irrStats.percentile10.toFixed(2)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          25th Percentile
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.warning }}>
+                          {monteCarloResults.irrStats.percentile25.toFixed(2)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          50th (Median)
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {monteCarloResults.irrStats.median.toFixed(2)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          75th Percentile
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.success }}>
+                          {monteCarloResults.irrStats.percentile75.toFixed(2)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          90th Percentile
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.success }}>
+                          {monteCarloResults.irrStats.percentile90.toFixed(2)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              {/* Risk Metrics */}
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    Risk-Adjusted Metrics
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Sharpe Ratio
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {monteCarloResults.riskMetrics.sharpeRatio.toFixed(2)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Sortino Ratio
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {monteCarloResults.riskMetrics.sortinoRatio.toFixed(2)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          VaR (95%)
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {formatCurrency(monteCarloResults.riskMetrics.var95)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Probability of Loss
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {(monteCarloResults.riskMetrics.probabilityOfLoss * 100).toFixed(1)}%
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                  <Typography variant="caption" sx={{ display: 'block', mt: 2, color: brandColors.neutral[600] }}>
+                    Higher Sharpe/Sortino ratios indicate better risk-adjusted returns. VaR shows the worst-case loss at 95% confidence.
+                  </Typography>
+                </CardContent>
+              </Card>
+
+              {/* Confidence Intervals */}
+              <Card>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    95% Confidence Intervals
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Box sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                          IRR Range
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                          {monteCarloResults.irrStats.confidenceInterval95.lower.toFixed(2)}% - {monteCarloResults.irrStats.confidenceInterval95.upper.toFixed(2)}%
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Box sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                          Total Return Range
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                          {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.lower)} - {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.upper)}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  <Typography variant="caption" sx={{ display: 'block', mt: 2, color: brandColors.neutral[600] }}>
+                    95% confidence that the true value falls within this range based on {monteCarloResults.simulationCount.toLocaleString()} simulations.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
           )}
         </Box>
       )}

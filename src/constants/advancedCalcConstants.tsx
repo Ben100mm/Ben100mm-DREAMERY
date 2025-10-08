@@ -23,6 +23,7 @@ import { ExitStrategiesTab } from "../components/ExitStrategiesTab";
 import { RiskAnalysisTab } from "../components/RiskAnalysisTab";
 import { ScenarioComparisonTab } from "../components/ScenarioComparisonTab";
 import { StressTestingTab } from "../components/StressTestingTab";
+import { MonteCarloResults } from "../utils/monteCarloSimulation";
 import {
   SeasonalAdjustmentsCalculator,
   MarketConditionsCalculator,
@@ -83,6 +84,9 @@ export const createTabConfig = (
     message: string;
     severity: "success" | "error" | "warning" | "info";
   }) => void,
+  monteCarloResults: MonteCarloResults | null,
+  monteCarloLoading: boolean,
+  runRiskSimulation: () => void,
 ) => [
   {
     label: "Overview",
@@ -184,6 +188,9 @@ export const createTabConfig = (
         handleResultsChange={handleResultsChange}
         isCalculating={isCalculating}
         setIsCalculating={setIsCalculating}
+        monteCarloResults={monteCarloResults}
+        monteCarloLoading={monteCarloLoading}
+        runRiskSimulation={runRiskSimulation}
       />
     ),
   },

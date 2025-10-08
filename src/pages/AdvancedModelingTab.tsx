@@ -81,6 +81,7 @@ import {
 import { type DealState } from "../types/deal";
 import { useAnalysis } from "../context/AnalysisContext";
 import { formatCurrency } from "../components/UXComponents";
+import { MonteCarloResults } from "../utils/monteCarloSimulation";
 import {
   LineChart,
   LineSeriesType,
@@ -168,6 +169,8 @@ const AdvancedModelingTab: React.FC = () => {
   const { dealState, setDealState } = useAnalysis();
   const [showConfiguration, setShowConfiguration] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [monteCarloResults, setMonteCarloResults] = useState<MonteCarloResults | null>(null);
+  const [monteCarloLoading, setMonteCarloLoading] = useState(false);
   const [scenarios, setScenarios] = useState<
     {
       name: string;
@@ -779,6 +782,73 @@ const AdvancedModelingTab: React.FC = () => {
   };
 
   // ============================================================================
+  // MONTE CARLO SIMULATION
+  // ============================================================================
+
+  const runRiskSimulation = () => {
+    if (!dealState) {
+      setSnackbar({
+        open: true,
+        message: "No deal data available for simulation",
+        severity: "error",
+      });
+      return;
+    }
+
+    setMonteCarloLoading(true);
+    
+    try {
+      const worker = new Worker('/monteCarloWorker.js');
+      
+      worker.postMessage({
+        baseState: dealState,
+        uncertaintyParameters: dealState.uncertaintyParameters || {
+          incomeUncertainty: 0.1,
+          expenseUncertainty: 0.15,
+          occupancyUncertainty: 0.05,
+          appreciationUncertainty: 0.1,
+          confidenceLevel: 0.95,
+        },
+        simulations: 10000,
+        yearsToProject: dealState.irrHoldPeriodYears || 10,
+      });
+      
+      worker.onmessage = (e) => {
+        setMonteCarloResults(e.data);
+        setMonteCarloLoading(false);
+        worker.terminate();
+        
+        setSnackbar({
+          open: true,
+          message: "Monte Carlo simulation completed successfully",
+          severity: "success",
+        });
+      };
+      
+      worker.onerror = (error) => {
+        console.error('Monte Carlo worker error:', error);
+        setMonteCarloLoading(false);
+        worker.terminate();
+        
+        setSnackbar({
+          open: true,
+          message: "Monte Carlo simulation failed. Please try again.",
+          severity: "error",
+        });
+      };
+    } catch (error) {
+      console.error('Error starting Monte Carlo simulation:', error);
+      setMonteCarloLoading(false);
+      
+      setSnackbar({
+        open: true,
+        message: "Failed to start Monte Carlo simulation",
+        severity: "error",
+      });
+    }
+  };
+
+  // ============================================================================
   // UNDO/RESET FUNCTIONALITY
   // ============================================================================
 
@@ -966,6 +1036,9 @@ const AdvancedModelingTab: React.FC = () => {
     setAllResults,
     setTabValue,
     setSnackbar,
+    monteCarloResults,
+    monteCarloLoading,
+    runRiskSimulation,
   );
 
   console.log(

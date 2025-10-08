@@ -25,7 +25,9 @@ export type PropertyType =
   | "Hotel"
   | "Land"
   | "Office"
-  | "Retail";
+  | "Retail"
+  | "Condo"
+  | "Townhouse";
 
 export type OperationType =
   | "Buy & Hold"
@@ -54,16 +56,25 @@ export type OfferType =
 export interface LoanTerms {
   downPayment: number;
   loanAmount: number;
+  amortizationAmount: number;
   annualInterestRate: number;
   monthlyPayment: number;
   annualPayment: number;
   interestOnly: boolean;
-  balloonDue: number;
-  amortizationAmount: number;
-  amortizationYears: number;
+  balloonDue?: number;
   closingCosts?: number;
   rehabCosts?: number;
   ioPeriodMonths?: number; // IO period for hybrid IO loans
+  totalInterest: number;
+  totalPayment: number;
+  amortizationYears: number;
+  amortizationSchedule: Array<{
+    month: number;
+    payment: number;
+    principal: number;
+    interest: number;
+    balance: number;
+  }>;
 }
 
 export interface SubjectToLoan {
@@ -89,18 +100,26 @@ export interface SubjectToInputs {
 export interface HybridInputs {
   downPayment: number;
   loan3Amount: number;
+  loanAmount: number;
   annualInterestRate: number;
   monthlyPayment: number;
   annualPayment: number;
   loanTerm: number;
-  interestOnly: boolean;
-  balloonDue: number;
+  interestOnly?: boolean;
+  balloonDue?: number;
   paymentToSeller: number;
   subjectToLoans: SubjectToLoan[];
   totalLoanBalance: number;
   totalMonthlyPayment: number;
   totalAnnualPayment: number;
   loanBalance?: number;
+  amortizationSchedule: Array<{
+    month: number;
+    payment: number;
+    principal: number;
+    interest: number;
+    balance: number;
+  }>;
 }
 
 // ============================================================================
@@ -382,7 +401,7 @@ export interface DealState {
   // Basic property info
   propertyType: PropertyType;
   operationType: OperationType;
-  offerType: OfferType;
+  offerType?: OfferType;
   propertyAddress: string;
   agentOwner: string;
   call: string;
@@ -391,6 +410,8 @@ export interface DealState {
   listedPrice: number;
   purchasePrice: number;
   percentageDifference: number;
+  city: string;
+  state: string;
 
   // Financing
   loan: LoanTerms;
@@ -518,6 +539,17 @@ export interface DealState {
   validationMessages: string[];
   showAmortizationOverride?: boolean;
   snackbarOpen?: boolean;
+  
+  // Pro Forma
+  proForma: {
+    taxes: number;
+    insurance: number;
+    maintenance: number;
+    vacancy: number;
+    management: number;
+    capEx: number;
+    opEx: number;
+  };
 }
 
 // ============================================================================

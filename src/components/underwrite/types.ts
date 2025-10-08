@@ -554,6 +554,7 @@ export interface DealState {
   // Toggle states for advanced features
   proFormaEnabled?: boolean;
   advancedModelingEnabled?: boolean;
+  cashFlowProjectionsEnabled?: boolean;
 }
 
 // ============================================================================

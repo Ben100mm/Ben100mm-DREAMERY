@@ -2460,6 +2460,7 @@ const defaultState: DealState = {
   // Toggle states for advanced features
   proFormaEnabled: false,
   advancedModelingEnabled: false,
+  cashFlowProjectionsEnabled: false,
 };
 
 const UnderwritePage: React.FC = () => {
@@ -2526,7 +2527,6 @@ const UnderwritePage: React.FC = () => {
   }
 
   const [showMessages, setShowMessages] = useState(false);
-  const [mainTab, setMainTab] = useState<'analysis' | 'cashflow'>('analysis');
 
   const [state, setState] = useState<DealState>(() => {
     try {
@@ -4852,27 +4852,6 @@ const UnderwritePage: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Main Tabs */}
-        <Box sx={{ mt: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs 
-            value={mainTab} 
-            onChange={(_, newValue) => setMainTab(newValue)}
-            sx={{
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                fontWeight: 600,
-                fontSize: '1rem',
-                minWidth: 120
-              }
-            }}
-          >
-            <Tab label="Deal Analysis" value="analysis" />
-            <Tab label="Cash Flow Projections" value="cashflow" />
-          </Tabs>
-        </Box>
-
-        {/* Analysis Tab Content */}
-        {mainTab === 'analysis' && (
         <Box sx={{ mt: 2 }}>
 
         {/* Calculator Mode Selector with Help Button */}
@@ -8412,6 +8391,56 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
 
+        {/* Cash Flow Projections */}
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+          <Accordion>
+            <AccordionSummary expandIcon={
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyExpandMoreIcon />
+              </React.Suspense>
+            }>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Cash Flow Projections
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={state.cashFlowProjectionsEnabled || false}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setState((prev) => ({
+                          ...prev,
+                          cashFlowProjectionsEnabled: e.target.checked,
+                        }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                  label="Enable"
+                  sx={{ ml: 'auto' }}
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ p: 2 }}>
+                {state.cashFlowProjectionsEnabled && (
+                  <CashFlowProjectionsTab dealState={state} />
+                )}
+
+                {!state.cashFlowProjectionsEnabled && (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Enable Cash Flow Projections to access detailed year-by-year financial analysis, 
+                      Monte Carlo simulations, capital events planning, and advanced growth modeling.
+                    </Typography>
+                  </Alert>
+                )}
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+
         {/* 1031 Exchange Calculator */}
         {isAccordionVisible(calculatorMode, 'exchange1031') && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
@@ -8442,8 +8471,8 @@ const UnderwritePage: React.FC = () => {
                       onClick={(e) => e.stopPropagation()}
                     />
                   }
-                  label="Enable 1031 Exchange Analysis"
-                  sx={{ ml: 'auto' }}
+                    label="Enable"
+                    sx={{ ml: 'auto' }}
                 />
               </Box>
             </AccordionSummary>
@@ -8898,7 +8927,7 @@ const UnderwritePage: React.FC = () => {
                         onClick={(e) => e.stopPropagation()}
                       />
                     }
-                    label="Enable Pro Forma Analysis"
+                    label="Enable"
                     sx={{ ml: 'auto' }}
                   />
                 </Box>
@@ -10168,7 +10197,7 @@ const UnderwritePage: React.FC = () => {
                         onClick={(e) => e.stopPropagation()}
                       />
                     }
-                    label="Enable Advanced Modeling"
+                    label="Enable"
                     sx={{ ml: 'auto' }}
                   />
                 </Box>
@@ -10205,8 +10234,6 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
 
-        </Box>
-        )}
         {/* Advanced Analysis Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }} data-tour="results">
           <Accordion>
@@ -12735,10 +12762,7 @@ const UnderwritePage: React.FC = () => {
           </Button>
         </Box>
 
-        {/* Cash Flow Projections Tab Content */}
-        {mainTab === 'cashflow' && (
-          <CashFlowProjectionsTab dealState={state} />
-        )}
+        </Box>
 
       </Container>
       </Box>

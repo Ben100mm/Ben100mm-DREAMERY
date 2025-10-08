@@ -37,6 +37,7 @@ import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import Tooltip from "@mui/material/Tooltip";
 import {
   pmt,
   totalMonthlyDebtService,
@@ -89,6 +90,9 @@ import {
 } from "../utils/regionalMultipliers";
 import AdvancedModelingTab from "./AdvancedModelingTab";
 import { AnalysisProvider } from "../context/AnalysisContext";
+import { ProFormaPresetSelector } from "../components/calculator/ProFormaPresetSelector";
+import { LiveMarketDataWidget } from "../components/calculator/LiveMarketDataWidget";
+import { GuidedTour } from "../components/GuidedTour";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -2814,6 +2818,22 @@ const UnderwritePage: React.FC = () => {
   const [regionalAdjustmentEnabled, setRegionalAdjustmentEnabled] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<RegionKey>('national-average');
   
+  // Custom Presets State
+  const [customProFormaPresets, setCustomProFormaPresets] = useState<Array<{
+    id: string;
+    name: string;
+    description?: string;
+    maintenance: number;
+    vacancy: number;
+    management: number;
+    capEx: number;
+    opEx: number;
+    createdAt: Date;
+  }>>([]);
+  
+  // Guided Tour State
+  const [showGuidedTour, setShowGuidedTour] = useState(false);
+  
   function validateAndNormalizeState(input: DealState): {
     next: DealState;
     messages: string[];
@@ -3247,6 +3267,69 @@ const UnderwritePage: React.FC = () => {
       };
     });
   }
+  
+  // Custom Preset Handlers
+  const handleSaveCustomPreset = (name: string, description?: string) => {
+    const newPreset = {
+      id: Date.now().toString(),
+      name,
+      description,
+      maintenance: state.ops.maintenance,
+      vacancy: state.ops.vacancy,
+      management: state.ops.management,
+      capEx: state.ops.capEx,
+      opEx: state.ops.opEx,
+      createdAt: new Date(),
+    };
+    setCustomProFormaPresets(prev => [...prev, newPreset]);
+    
+    // Save to localStorage
+    try {
+      const existingPresets = JSON.parse(localStorage.getItem('dreamery-custom-presets') || '[]');
+      localStorage.setItem('dreamery-custom-presets', JSON.stringify([...existingPresets, newPreset]));
+    } catch (error) {
+      console.warn('Failed to save custom preset to localStorage:', error);
+    }
+  };
+  
+  const handleDeleteCustomPreset = (id: string) => {
+    setCustomProFormaPresets(prev => prev.filter(p => p.id !== id));
+    
+    // Remove from localStorage
+    try {
+      const existingPresets = JSON.parse(localStorage.getItem('dreamery-custom-presets') || '[]');
+      localStorage.setItem('dreamery-custom-presets', JSON.stringify(existingPresets.filter((p: any) => p.id !== id)));
+    } catch (error) {
+      console.warn('Failed to delete custom preset from localStorage:', error);
+    }
+  };
+  
+  const handleApplyPreset = (preset: { maintenance: number; vacancy: number; management: number; capEx: number; opEx: number }, presetName: string) => {
+    updateOps('maintenance', preset.maintenance);
+    updateOps('vacancy', preset.vacancy);
+    updateOps('management', preset.management);
+    updateOps('capEx', preset.capEx);
+    updateOps('opEx', preset.opEx);
+    
+    setState((prev) => ({
+      ...prev,
+      validationMessages: [`Applied ${presetName} preset to operating expenses`],
+      snackbarOpen: true,
+    }));
+  };
+  
+  // Load custom presets from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedPresets = localStorage.getItem('dreamery-custom-presets');
+      if (savedPresets) {
+        setCustomProFormaPresets(JSON.parse(savedPresets));
+      }
+    } catch (error) {
+      console.warn('Failed to load custom presets from localStorage:', error);
+    }
+  }, []);
+  
   // Dynamic Pro Forma calculations based on property type and operation type
   function getProFormaValues(
     propertyType: PropertyType,
@@ -5123,11 +5206,50 @@ const UnderwritePage: React.FC = () => {
         {mainTab === 'analysis' && (
         <Box sx={{ mt: 2 }}>
 
-        {/* Calculator Mode Selector */}
-        <ModeSelector 
-          value={calculatorMode}
-          onChange={setCalculatorMode}
-          showDescription={true}
+        {/* Calculator Mode Selector with Help Button */}
+        <Box sx={{ position: 'relative' }} data-tour="mode-selector">
+          <ModeSelector 
+            value={calculatorMode}
+            onChange={setCalculatorMode}
+            showDescription={true}
+          />
+          <Tooltip title="Take a guided tour" arrow>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => setShowGuidedTour(true)}
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                minWidth: 'auto',
+                px: 1.5,
+                py: 0.5,
+                borderColor: brandColors.neutral[300],
+                color: brandColors.neutral[600],
+                fontSize: '0.813rem',
+                '&:hover': {
+                  borderColor: brandColors.primary,
+                  color: brandColors.primary,
+                },
+              }}
+            >
+              ? Help
+            </Button>
+          </Tooltip>
+        </Box>
+
+        {/* Live Market Data Widget - Professional Mode Only */}
+        {isProfessional && (
+          <Box sx={{ mb: 2 }}>
+            <LiveMarketDataWidget autoRefreshInterval={5 * 60 * 1000} variant="full" />
+          </Box>
+        )}
+
+        {/* Guided Tour */}
+        <GuidedTour
+          isOpen={showGuidedTour}
+          onClose={() => setShowGuidedTour(false)}
         />
 
         {/* Validation messages */}
@@ -5172,7 +5294,7 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Basic Info Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }} data-tour="basic-info">
           <Accordion>
             <AccordionSummary expandIcon={
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
@@ -8019,7 +8141,7 @@ const UnderwritePage: React.FC = () => {
           </Card>
 
         {/* Operating Expenses Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }} data-tour="operating-expenses">
           <Accordion>
             <AccordionSummary expandIcon={
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
@@ -8236,6 +8358,26 @@ const UnderwritePage: React.FC = () => {
               >
                 Variable Expenses (% of Income)
               </Typography>
+              
+              {/* Pro Forma Preset Selector */}
+              <ProFormaPresetSelector
+                currentValues={{
+                  maintenance: state.ops.maintenance,
+                  vacancy: state.ops.vacancy,
+                  management: state.ops.management,
+                  capEx: state.ops.capEx,
+                  opEx: state.ops.opEx,
+                }}
+                onApplyPreset={handleApplyPreset}
+                regionalAdjustment={{
+                  enabled: regionalAdjustmentEnabled,
+                  region: selectedRegion,
+                }}
+                customPresets={customProFormaPresets}
+                onSaveCustomPreset={handleSaveCustomPreset}
+                onDeleteCustomPreset={handleDeleteCustomPreset}
+                variant="full"
+              />
               
               {/* Regional Adjustment Panel */}
               <Box sx={{ mb: 3 }}>
@@ -9846,7 +9988,7 @@ const UnderwritePage: React.FC = () => {
         </Card>
         )}
         {/* Advanced Analysis Section */}
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }} data-tour="results">
           <Accordion>
             <AccordionSummary expandIcon={
                 <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>

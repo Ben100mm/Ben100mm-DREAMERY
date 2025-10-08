@@ -181,10 +181,10 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
                     {config.description}
                   </Typography>
                   <Typography variant="caption" sx={{ fontWeight: 600, mb: 0.5 }}>
-                    Key Features:
+                    Features:
                   </Typography>
                   <Box component="ul" sx={{ m: 0, pl: 2 }}>
-                    {config.features.slice(0, 3).map((feature, idx) => (
+                    {config.features.map((feature, idx) => (
                       <Typography 
                         key={idx} 
                         component="li" 
@@ -278,44 +278,6 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
         })}
       </ToggleButtonGroup>
 
-      {showDescription && (
-        <Box
-          sx={{
-            mt: 2,
-            p: 2,
-            bgcolor: 'white',
-            borderRadius: 1,
-            border: `1px solid ${brandColors.neutral[200]}`,
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{
-              color: brandColors.neutral[700],
-              fontWeight: 500,
-              mb: 0.5,
-            }}
-          >
-            {currentConfig.label} Mode Features:
-          </Typography>
-          <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
-            {currentConfig.features.map((feature, idx) => (
-              <Typography
-                key={idx}
-                component="li"
-                variant="caption"
-                sx={{
-                  color: brandColors.neutral[600],
-                  mb: 0.5,
-                  lineHeight: 1.5,
-                }}
-              >
-                {feature}
-              </Typography>
-            ))}
-          </Box>
-        </Box>
-      )}
     </Paper>
   );
 };

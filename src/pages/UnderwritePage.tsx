@@ -5095,6 +5095,89 @@ const UnderwritePage: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Calculator Mode Selector */}
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+          <CardContent>
+            <Typography variant="body2" sx={{ mb: 2, color: brandColors.neutral[600], fontWeight: 500 }}>
+              Calculator Mode
+            </Typography>
+            <ToggleButtonGroup
+              value={calculatorMode}
+              exclusive
+              onChange={(_, mode) => mode && setCalculatorMode(mode)}
+              sx={{ 
+                width: '100%',
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+                gap: 1,
+                '& .MuiToggleButton-root': {
+                  border: `1px solid ${brandColors.neutral[300]}`,
+                  borderRadius: 1,
+                  py: 1.5,
+                  textTransform: 'none',
+                  '&.Mui-selected': {
+                    bgcolor: brandColors.neutral[100],
+                    borderColor: brandColors.neutral[600],
+                    '&:hover': {
+                      bgcolor: brandColors.neutral[200],
+                    }
+                  }
+                }
+              }}
+            >
+              <ToggleButton value="essential">
+                <Box sx={{ textAlign: 'center', width: '100%' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Essential
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: brandColors.neutral[500], display: 'block' }}>
+                    Quick analysis with smart defaults
+                  </Typography>
+                </Box>
+              </ToggleButton>
+              <ToggleButton value="standard">
+                <Box sx={{ textAlign: 'center', width: '100%' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Standard
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: brandColors.neutral[500], display: 'block' }}>
+                    Comprehensive underwriting
+                  </Typography>
+                </Box>
+              </ToggleButton>
+              <ToggleButton value="professional">
+                <Box sx={{ textAlign: 'center', width: '100%' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Professional
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: brandColors.neutral[500], display: 'block' }}>
+                    Advanced modeling & scenarios
+                  </Typography>
+                </Box>
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <Box sx={{ mt: 2, p: 1.5, bgcolor: brandColors.neutral[50], borderRadius: 1 }}>
+              <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                {calculatorMode === 'essential' && (
+                  <>
+                    <strong>Essential Mode:</strong> Simplified inputs with smart defaults. Perfect for quick deal analysis.
+                  </>
+                )}
+                {calculatorMode === 'standard' && (
+                  <>
+                    <strong>Standard Mode:</strong> Full underwriting capabilities with detailed inputs for comprehensive analysis.
+                  </>
+                )}
+                {calculatorMode === 'professional' && (
+                  <>
+                    <strong>Professional Mode:</strong> Advanced features including scenario planning, capital events, and Monte Carlo simulations.
+                  </>
+                )}
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
         {/* Main Tabs */}
         <Box sx={{ mt: 2, borderBottom: 1, borderColor: 'divider' }}>
           <Tabs 

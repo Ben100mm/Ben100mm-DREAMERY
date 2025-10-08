@@ -12859,29 +12859,6 @@ const UnderwritePage: React.FC = () => {
           }}
         >
           <Button
-            variant="contained"
-            onClick={() => {
-              // Save current deal state to sessionStorage
-              sessionStorage.setItem(
-                "advancedDeal",
-                JSON.stringify(state),
-              );
-              // Navigate to advanced analysis page
-              navigate("/advanced-calculations");
-            }}
-            sx={{
-              backgroundColor: brandColors.primary,
-              "&:hover": { backgroundColor: brandColors.primaryDark },
-            }}
-            startIcon={
-                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                  <LazyTrendingUpIcon />
-                </React.Suspense>
-              }
-          >
-            Analyze
-          </Button>
-          <Button
             variant="outlined"
             onClick={emailPDF}
             startIcon={<EmailIcon />}

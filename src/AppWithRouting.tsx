@@ -6,7 +6,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import { RoleProvider, RoleContext } from './context/RoleContext';
 import { WorkspaceProvider } from './context/WorkspaceContext';
 import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
-import { AnalysisProvider } from './context/AnalysisContext';
 import { theme } from "./theme";
 import Header from './components/HeaderWithRouting';
 import Hero from './components/Hero';
@@ -42,7 +41,6 @@ const WorkspacesBusinessesPage = lazy(() => import('./pages/WorkspacesBusinesses
 const PartnerPage = lazy(() => import('./pages/partner'));
 const PartnerProfileCompletionPage = lazy(() => import('./pages/PartnerProfileCompletionPage'));
 const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage'));
-const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PerformanceDashboardPage = lazy(() => import('./pages/PerformanceDashboardPage'));
 const DataSourcesDashboard = lazy(() => import('./pages/DataSourcesDashboard'));
@@ -124,7 +122,6 @@ const AppContent = () => {
       <Route path="/close/businesses" element={<Navigate to="/workspaces/businesses" replace />} />
       <Route path="/close/professional-support" element={<Navigate to="/workspaces/professional-support" replace />} />
       
-      <Route path="/analyze" element={<AnalysisProvider><AnalyzePage /></AnalysisProvider>} />
       <Route path="/manage" element={<Navigate to="/workspaces/buyer?workspace=manage" replace />} />
       <Route path="/invest" element={<Navigate to="/workspaces/buyer?workspace=invest" replace />} />
       <Route path="/fund" element={<Navigate to="/workspaces/buyer?workspace=fund" replace />} />
@@ -137,7 +134,6 @@ const AppContent = () => {
       <Route path="/ux-demo" element={<UXDemoPage />} />
       <Route path="/performance-dashboard" element={<PerformanceDashboardPage />} />
       <Route path="/data-sources" element={<DataSourcesDashboard />} />
-      <Route path="/advanced-calculations" element={<Navigate to="/analyze" replace />} />
     </Routes>
     </Suspense>
   );

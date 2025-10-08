@@ -87,8 +87,7 @@ const Navigation: React.FC = () => {
     { name: 'Workspaces', path: '/workspaces' },
     { name: 'Data Sources', path: '/data-sources' },
     { name: 'Partners', path: '/partner' },
-    { name: 'Learn', path: '/learn' },
-    { name: 'Advertise', path: '/advertise' }
+    { name: 'Learn', path: '/advertise' }
   ];
 
   const handleNavClick = (path: string) => {

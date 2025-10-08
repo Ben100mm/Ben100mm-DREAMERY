@@ -9709,7 +9709,7 @@ const UnderwritePage: React.FC = () => {
                         }}
                         sx={{ mb: 3 }}
                       >
-                        Import from 1031 Exchange Calculator Above
+                        Import from 1031 Exit Calculator
                       </Button>
                     )}
 
@@ -10240,7 +10240,7 @@ const UnderwritePage: React.FC = () => {
                             }}
                             sx={{ mb: 3 }}
                           >
-                            Import from 721 Exchange Calculator Above
+                            Import from 721 Exit Calculator
                           </Button>
                         )}
 

@@ -4573,6 +4573,7 @@ const UnderwritePage: React.FC = () => {
         prev.hybrid = {
           downPayment: 0,
           loan3Amount: 0,
+          loanAmount: 0,
           annualInterestRate: 0,
           monthlyPayment: 0,
           annualPayment: 0,
@@ -4584,6 +4585,7 @@ const UnderwritePage: React.FC = () => {
           totalLoanBalance: 0,
           totalMonthlyPayment: 0,
           totalAnnualPayment: 0,
+          amortizationSchedule: [],
         };
       }
 

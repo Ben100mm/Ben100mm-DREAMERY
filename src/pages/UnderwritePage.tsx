@@ -5352,7 +5352,8 @@ const UnderwritePage: React.FC = () => {
         </Card>
 
         {/* Subject-To Existing Mortgage Section - shown for Subject-To or as part of Hybrid when not arbitrage */}
-        {(state.offerType === "Subject To Existing Mortgage" ||
+        {isAccordionVisible(calculatorMode, 'subjectTo') && 
+          (state.offerType === "Subject To Existing Mortgage" ||
           state.offerType === "Hybrid") &&
           state.operationType !== "Rental Arbitrage" && (
             <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
@@ -5914,7 +5915,8 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Seller Finance Section - available even for arbitrage if selected */}
-        {state.offerType === "Seller Finance" && (
+        {isAccordionVisible(calculatorMode, 'sellerFinance') && 
+          state.offerType === "Seller Finance" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={
@@ -6254,7 +6256,8 @@ const UnderwritePage: React.FC = () => {
         )}
 
         {/* Hybrid Financing Section - Moved to appear after Seller Finance */}
-        {false && (
+        {isAccordionVisible(calculatorMode, 'hybridFinancing') && 
+          state.offerType === "Hybrid" && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
               <AccordionSummary expandIcon={
@@ -10633,6 +10636,7 @@ const UnderwritePage: React.FC = () => {
                     </Box>
 
                     {/* Capital Events Section */}
+                    {isAccordionVisible(calculatorMode, 'capitalEvents') && (
                     <Box
                       sx={{
                         gridColumn: "1 / -1",
@@ -10909,6 +10913,7 @@ const UnderwritePage: React.FC = () => {
                         />
                       </Box>
                     </Box>
+                    )}
                     
                     <TextField
                       fullWidth
@@ -12286,6 +12291,7 @@ const UnderwritePage: React.FC = () => {
         </Card>
 
         {/* 1031 Exchange Calculator */}
+        {isAccordionVisible(calculatorMode, 'exchange1031') && (
         <Card sx={{ mb: 2 }}>
           <Accordion defaultExpanded={state.exchange1031?.enabled || false}>
             <AccordionSummary expandIcon={
@@ -12742,6 +12748,7 @@ const UnderwritePage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         </Card>
+        )}
 
         {/* Action Buttons */}
         <Box

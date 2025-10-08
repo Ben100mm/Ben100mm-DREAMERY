@@ -550,6 +550,10 @@ export interface DealState {
     capEx: number;
     opEx: number;
   };
+
+  // Toggle states for advanced features
+  proFormaEnabled?: boolean;
+  advancedModelingEnabled?: boolean;
 }
 
 // ============================================================================

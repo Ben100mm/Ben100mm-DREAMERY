@@ -635,4 +635,8 @@ export interface DealState {
 
   // Deal Modification Tracking
   lastModified?: string;
+
+  // Toggle states for advanced features
+  proFormaEnabled?: boolean;
+  advancedModelingEnabled?: boolean;
 }

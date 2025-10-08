@@ -2457,6 +2457,9 @@ const defaultState: DealState = {
     capEx: 0,
     opEx: 0,
   },
+  // Toggle states for advanced features
+  proFormaEnabled: false,
+  advancedModelingEnabled: false,
 };
 
 const UnderwritePage: React.FC = () => {
@@ -8144,7 +8147,7 @@ const UnderwritePage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         </Card>
-        {/* Pro Forma Presets - Hidden for Fix & Flip operations */}
+        {/* Risk Assessment Section (disabled in favor of Analyze page) */}
         {false && (
           <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
             <Accordion>
@@ -8155,7 +8158,7 @@ const UnderwritePage: React.FC = () => {
               }>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Typography sx={{ fontWeight: 700 }}>
-                    Pro Forma Analysis
+                  Risk Assessment
                   </Typography>
                   <Chip
                     label="Premium Feature"
@@ -8166,6 +8169,743 @@ const UnderwritePage: React.FC = () => {
                 </Box>
               </AccordionSummary>
               <AccordionDetails>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                {/* Section Description */}
+                <Box
+                  sx={{
+                    p: 2,
+                    backgroundColor: brandColors.backgrounds.warning,
+                    borderRadius: 1,
+                    border: "1px solid brandColors.accent.warningLight",
+                    fontSize: "0.875rem",
+                    mb: 2,
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ color: brandColors.accent.warning, fontWeight: 500 }}
+                  >
+                    <strong>Risk Scoring & Mitigation:</strong> Comprehensive
+                    risk assessment across market, property, tenant, and
+                    financing factors with actionable recommendations for risk
+                    mitigation.
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Overall Risk Score:
+                  </Typography>
+                  {state.riskScoreResults ? (
+                    <>
+                      <Chip
+                        label={`${state.riskScoreResults!.overallRiskScore}/10`}
+                        color={
+                          state.riskScoreResults!.overallRiskScore <= 3
+                            ? "success"
+                            : state.riskScoreResults!.overallRiskScore <= 5
+                              ? "warning"
+                              : state.riskScoreResults!.overallRiskScore <= 7
+                                ? "error"
+                                : "error"
+                        }
+                        variant="filled"
+                        sx={{ fontSize: "1.1rem", fontWeight: 600 }}
+                      />
+                      <Typography
+                        variant="body1"
+                        sx={{ color: brandColors.neutral[800], fontWeight: 500 }}
+                      >
+                        {state.riskScoreResults!.riskCategory}
+                      </Typography>
+                    </>
+                  ) : (
+                    <Chip
+                      label="Not Calculated"
+                      color="default"
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
+
+                {state.riskScoreResults && (
+                  <>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns:
+                          "repeat(auto-fit, minmax(200px, 1fr))",
+                        gap: 2,
+                        mb: 3,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: brandColors.primary, mb: 1 }}
+                        >
+                          Market Risk
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                        >
+                          {state.riskScoreResults!.riskBreakdown.marketRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: brandColors.primary, mb: 1 }}
+                        >
+                          Property Risk
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                        >
+                          {state.riskScoreResults!.riskBreakdown.propertyRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: brandColors.primary, mb: 1 }}
+                        >
+                          Tenant Risk
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                        >
+                          {state.riskScoreResults!.riskBreakdown.tenantRisk}/10
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: brandColors.primary, mb: 1 }}
+                        >
+                          Financing Risk
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                        >
+                          {state.riskScoreResults!.riskBreakdown.financingRisk}
+                          /10
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          p: 2,
+                          backgroundColor: brandColors.backgrounds.secondary,
+                          borderRadius: 1,
+                          textAlign: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: brandColors.primary, mb: 1 }}
+                        >
+                          Location Risk
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
+                        >
+                          {state.riskScoreResults!.riskBreakdown.locationRisk}/10
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: brandColors.backgrounds.warning,
+                        borderRadius: 1,
+                        border: "1px solid brandColors.accent.warningLight",
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: 600, color: brandColors.accent.warning, mb: 1 }}
+                      >
+                        Key Recommendations:
+                      </Typography>
+                      {state.riskScoreResults!.recommendations
+                        .slice(0, 3)
+                        .map((rec, index) => (
+                          <Typography
+                            key={index}
+                            variant="body2"
+                            sx={{ mb: 0.5, color: brandColors.accent.warningDark }}
+                          >
+                            - {rec}
+                          </Typography>
+                        ))}
+                    </Box>
+
+                    {/* ML-Enhanced Risk Prediction */}
+                    <MLRiskPredictionDisplay dealState={state} />
+                  </>
+                )}
+
+                <Box sx={{ mt: 2, textAlign: "center" }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      const marketConditions = state.marketConditions;
+                      const results = calculateRiskScore(
+                        state.riskFactors,
+                        state.marketConditions,
+                        state.propertyAge,
+                      );
+                      setState((prev) => ({
+                        ...prev,
+                        riskScoreResults: results,
+                      }));
+                    }}
+                    sx={{
+                      backgroundColor: brandColors.primary,
+                      "&:hover": { backgroundColor: brandColors.primaryDark },
+                    }}
+                  >
+                    {state.riskScoreResults
+                      ? "Recalculate Risk Score"
+                      : "Calculate Risk Score"}
+                  </Button>
+                </Box>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+        )}
+
+        {/* 1031 Exchange Calculator */}
+        {isAccordionVisible(calculatorMode, 'exchange1031') && (
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+          <Accordion>
+            <AccordionSummary expandIcon={
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyExpandMoreIcon />
+              </React.Suspense>
+            }>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  1031 Exchange Calculator
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={state.exchange1031?.enabled || false}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setState((prev) => ({
+                          ...prev,
+                          exchange1031: {
+                            ...(prev.exchange1031 || defaultState.exchange1031!),
+                            enabled: e.target.checked,
+                          },
+                        }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                  label="Enable 1031 Exchange Analysis"
+                  sx={{ ml: 'auto' }}
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ p: 2 }}>
+                {state.exchange1031?.enabled && (
+                  <>
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        1031 Exchange Requirements:
+                      </Typography>
+                      <Typography variant="body2" component="ul" sx={{ pl: 2, mb: 0 }}>
+                        <li>Identify replacement property within 45 days of closing</li>
+                        <li>Close on replacement property within 180 days of closing</li>
+                        <li>Use a qualified intermediary (cannot touch proceeds)</li>
+                        <li>Purchase equal or greater value to defer all gains</li>
+                        <li>Reinvest all equity to avoid taxable boot</li>
+                      </Typography>
+                    </Alert>
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Relinquished Property (Selling)
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Property Sale Value"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyValue || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyValue: value,
+                              },
+                            };
+                            // Recalculate
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Sale price of property being sold"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Adjusted Basis"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyBasis || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyBasis: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Original cost + improvements - depreciation"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Total Depreciation Taken"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyDepreciation || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyDepreciation: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Total depreciation deducted over ownership"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Existing Mortgage Balance"
+                        type="number"
+                        value={state.exchange1031?.relinquishedPropertyMortgage || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                relinquishedPropertyMortgage: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Outstanding loan balance at closing"
+                      />
+                    </Box>
+
+                    <Divider sx={{ my: 3 }} />
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Replacement Property (Buying)
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Purchase Price"
+                        type="number"
+                        value={state.exchange1031?.replacementPropertyValue || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                replacementPropertyValue: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Purchase price of replacement property"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="New Mortgage Amount"
+                        type="number"
+                        value={state.exchange1031?.replacementPropertyMortgage || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                replacementPropertyMortgage: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="New loan amount on replacement property"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Qualified Intermediary Fee"
+                        type="number"
+                        value={state.exchange1031?.qualifiedIntermediaryFee || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                qualifiedIntermediaryFee: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Fee for 1031 exchange facilitator"
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Other Exchange Costs"
+                        type="number"
+                        value={state.exchange1031?.otherExchangeCosts || 0}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          setState((prev) => {
+                            const updated = {
+                              ...prev,
+                              exchange1031: {
+                                ...(prev.exchange1031 || defaultState.exchange1031!),
+                                otherExchangeCosts: value,
+                              },
+                            };
+                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
+                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
+                            return updated;
+                          });
+                        }}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="Legal fees, title, etc."
+                      />
+                    </Box>
+
+                    <Divider sx={{ my: 3 }} />
+
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Exchange Analysis Results
+                    </Typography>
+
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
+                      gap: 2,
+                      mb: 3,
+                      p: 2,
+                      backgroundColor: brandColors.backgrounds.secondary,
+                      borderRadius: 1,
+                    }}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Deferred Gain
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.successDark }}>
+                          ${(state.exchange1031?.deferredGain || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Tax deferred to future sale
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Recognized Gain (Boot)
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700, 
+                          color: (state.exchange1031?.recognizedGain || 0) > 0 
+                            ? brandColors.accent.warning 
+                            : brandColors.accent.successDark 
+                        }}>
+                          ${(state.exchange1031?.recognizedGain || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Taxable portion this year
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Estimated Tax Liability
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700, 
+                          color: (state.exchange1031?.estimatedTaxLiability || 0) > 0 
+                            ? 'error.main' 
+                            : brandColors.accent.successDark 
+                        }}>
+                          ${(state.exchange1031?.estimatedTaxLiability || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Capital gains + recapture tax
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Carryover Basis
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                          ${(state.exchange1031?.carryoverBasis || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          New property tax basis
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Cash Boot
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700,
+                          color: (state.exchange1031?.cashBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                        }}>
+                          ${(state.exchange1031?.cashBoot || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Equity not reinvested
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Mortgage Boot
+                        </Typography>
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 700,
+                          color: (state.exchange1031?.mortgageBoot || 0) > 0 ? 'warning.main' : 'text.primary'
+                        }}>
+                          ${(state.exchange1031?.mortgageBoot || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Debt relief (taxable)
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Net Proceeds to Reinvest
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
+                          ${(state.exchange1031?.netProceedsToReinvest || 0).toLocaleString()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Available for down payment
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Trading Up Scenario Analysis */}
+                    <Box sx={{ 
+                      p: 2, 
+                      backgroundColor: 
+                        (state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
+                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0)
+                          ? 'success.light' 
+                          : 'warning.light',
+                      borderRadius: 1,
+                      mb: 2,
+                    }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Exchange Status
+                      </Typography>
+                      {(state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
+                       (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0) ? (
+                        <Typography variant="body2" sx={{ color: 'success.dark' }}>
+                          ✓ Trading Up: Replacement property value and debt meet or exceed relinquished property. 
+                          All gains can be deferred if all equity is reinvested.
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" sx={{ color: 'warning.dark' }}>
+                          ⚠ Trading Down: Replacement property value or debt is less than relinquished property. 
+                          This will result in taxable boot of ${((state.exchange1031?.cashBoot || 0) + (state.exchange1031?.mortgageBoot || 0)).toLocaleString()}.
+                        </Typography>
+                      )}
+                    </Box>
+
+                    {/* Timeline Requirements */}
+                    <Box sx={{ p: 2, backgroundColor: 'info.light', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Critical Timeline Requirements
+                      </Typography>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Day 1-45: Identification Period
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Must identify replacement property in writing to qualified intermediary within 45 days of closing on relinquished property.
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Day 1-180: Exchange Period
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Must close on replacement property within 180 days of closing on relinquished property (or tax return due date, whichever is earlier).
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </>
+                )}
+
+                {!state.exchange1031?.enabled && (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Enable the 1031 Exchange Calculator to model like-kind exchange scenarios and calculate deferred capital gains.
+                      A 1031 exchange allows you to defer capital gains taxes when selling an investment property by reinvesting the proceeds into a similar property.
+                    </Typography>
+                  </Alert>
+                )}
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+        )}
+        {/* Pro Forma Analysis - Moved to before Advanced Analysis */}
+        {true && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Pro Forma Analysis
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={state.proFormaEnabled || false}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setState((prev) => ({
+                            ...prev,
+                            proFormaEnabled: e.target.checked,
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
+                    label="Enable Pro Forma Analysis"
+                    sx={{ ml: 'auto' }}
+                  />
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ p: 2 }}>
+                  {state.proFormaEnabled && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   {/* Section Description */}
                   <Box
@@ -9384,13 +10124,25 @@ const UnderwritePage: React.FC = () => {
                         </Box>
                       </Box>
                     )}
+                    </Box>
+                  )}
+
+                  {!state.proFormaEnabled && (
+                    <Alert severity="info">
+                      <Typography variant="body2">
+                        Enable the Pro Forma Analysis to access comprehensive financial projections, 
+                        sensitivity analysis, and industry benchmark comparisons for your property investment.
+                      </Typography>
+                    </Alert>
+                  )}
                 </Box>
               </AccordionDetails>
             </Accordion>
           </Card>
         )}
-        {/* Risk Assessment Section (disabled in favor of Analyze page) */}
-        {false && (
+
+        {/* Advanced Modeling - Professional Mode Only */}
+        {isAccordionVisible(calculatorMode, 'advancedModeling') && (
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
           <Accordion>
             <AccordionSummary expandIcon={
@@ -9398,260 +10150,62 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Risk Assessment
-                </Typography>
-                <Chip
-                  label="Premium Feature"
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Advanced Modeling & Analysis
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={state.advancedModelingEnabled || false}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setState((prev) => ({
+                            ...prev,
+                            advancedModelingEnabled: e.target.checked,
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
+                    label="Enable Advanced Modeling"
+                    sx={{ ml: 'auto' }}
+                  />
+                </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                {/* Section Description */}
-                <Box
-                  sx={{
-                    p: 2,
-                    backgroundColor: brandColors.backgrounds.warning,
-                    borderRadius: 1,
-                    border: "1px solid brandColors.accent.warningLight",
-                    fontSize: "0.875rem",
-                    mb: 2,
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ color: brandColors.accent.warning, fontWeight: 500 }}
-                  >
-                    <strong>Risk Scoring & Mitigation:</strong> Comprehensive
-                    risk assessment across market, property, tenant, and
-                    financing factors with actionable recommendations for risk
-                    mitigation.
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Overall Risk Score:
-                  </Typography>
-                  {state.riskScoreResults ? (
-                    <>
-                      <Chip
-                        label={`${state.riskScoreResults!.overallRiskScore}/10`}
-                        color={
-                          state.riskScoreResults!.overallRiskScore <= 3
-                            ? "success"
-                            : state.riskScoreResults!.overallRiskScore <= 5
-                              ? "warning"
-                              : state.riskScoreResults!.overallRiskScore <= 7
-                                ? "error"
-                                : "error"
-                        }
-                        variant="filled"
-                        sx={{ fontSize: "1.1rem", fontWeight: 600 }}
-                      />
-                      <Typography
-                        variant="body1"
-                        sx={{ color: brandColors.neutral[800], fontWeight: 500 }}
-                      >
-                        {state.riskScoreResults!.riskCategory}
-                      </Typography>
-                    </>
-                  ) : (
-                    <Chip
-                      label="Not Calculated"
-                      color="default"
-                      variant="outlined"
-                    />
-                  )}
-                </Box>
-
-                {state.riskScoreResults && (
+              <Box sx={{ p: 2 }}>
+                {state.advancedModelingEnabled && (
                   <>
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns:
-                          "repeat(auto-fit, minmax(200px, 1fr))",
-                        gap: 2,
-                        mb: 3,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          p: 2,
-                          backgroundColor: brandColors.backgrounds.secondary,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{ color: brandColors.primary, mb: 1 }}
-                        >
-                          Market Risk
+                    <Alert severity="info" sx={{ mb: 2 }}>
+                      <Typography variant="body2">
+                        Access comprehensive modeling tools including seasonal adjustments, exit strategies, 
+                        tax implications, refinance scenarios, risk analysis, and scenario comparison.
                         </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
-                        >
-                          {state.riskScoreResults!.riskBreakdown.marketRisk}/10
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          p: 2,
-                          backgroundColor: brandColors.backgrounds.secondary,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{ color: brandColors.primary, mb: 1 }}
-                        >
-                          Property Risk
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
-                        >
-                          {state.riskScoreResults!.riskBreakdown.propertyRisk}/10
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          p: 2,
-                          backgroundColor: brandColors.backgrounds.secondary,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{ color: brandColors.primary, mb: 1 }}
-                        >
-                          Tenant Risk
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
-                        >
-                          {state.riskScoreResults!.riskBreakdown.tenantRisk}/10
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          p: 2,
-                          backgroundColor: brandColors.backgrounds.secondary,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{ color: brandColors.primary, mb: 1 }}
-                        >
-                          Financing Risk
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
-                        >
-                          {state.riskScoreResults!.riskBreakdown.financingRisk}
-                          /10
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          p: 2,
-                          backgroundColor: brandColors.backgrounds.secondary,
-                          borderRadius: 1,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{ color: brandColors.primary, mb: 1 }}
-                        >
-                          Location Risk
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ fontWeight: 600, color: brandColors.accent.warning }}
-                        >
-                          {state.riskScoreResults!.riskBreakdown.locationRisk}/10
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        p: 2,
-                        backgroundColor: brandColors.backgrounds.warning,
-                        borderRadius: 1,
-                        border: "1px solid brandColors.accent.warningLight",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: 600, color: brandColors.accent.warning, mb: 1 }}
-                      >
-                        Key Recommendations:
-                      </Typography>
-                      {state.riskScoreResults!.recommendations
-                        .slice(0, 3)
-                        .map((rec, index) => (
-                          <Typography
-                            key={index}
-                            variant="body2"
-                            sx={{ mb: 0.5, color: brandColors.accent.warningDark }}
-                          >
-                            - {rec}
-                          </Typography>
-                        ))}
-                    </Box>
-
-                    {/* ML-Enhanced Risk Prediction */}
-                    <MLRiskPredictionDisplay dealState={state} />
+                    </Alert>
+              
+                    {/* Wrap AdvancedModelingTab in its own AnalysisProvider */}
+                    <AnalysisProvider>
+                      <AdvancedModelingTab />
+                    </AnalysisProvider>
                   </>
                 )}
 
-                <Box sx={{ mt: 2, textAlign: "center" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      const marketConditions = state.marketConditions;
-                      const results = calculateRiskScore(
-                        state.riskFactors,
-                        state.marketConditions,
-                        state.propertyAge,
-                      );
-                      setState((prev) => ({
-                        ...prev,
-                        riskScoreResults: results,
-                      }));
-                    }}
-                    sx={{
-                      backgroundColor: brandColors.primary,
-                      "&:hover": { backgroundColor: brandColors.primaryDark },
-                    }}
-                  >
-                    {state.riskScoreResults
-                      ? "Recalculate Risk Score"
-                      : "Calculate Risk Score"}
-                  </Button>
-                </Box>
+                {!state.advancedModelingEnabled && (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Enable Advanced Modeling to access comprehensive analysis tools including seasonal adjustments, 
+                      exit strategies, tax implications, refinance scenarios, and risk analysis.
+                    </Typography>
+                  </Alert>
+                )}
               </Box>
             </AccordionDetails>
           </Accordion>
         </Card>
+        )}
+
+        </Box>
         )}
         {/* Advanced Analysis Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }} data-tour="results">
@@ -12125,496 +12679,6 @@ const UnderwritePage: React.FC = () => {
           </Accordion>
         </Card>
 
-        {/* 1031 Exchange Calculator */}
-        {isAccordionVisible(calculatorMode, 'exchange1031') && (
-        <Card sx={{ mb: 2 }}>
-          <Accordion defaultExpanded={state.exchange1031?.enabled || false}>
-            <AccordionSummary expandIcon={
-              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                <LazyExpandMoreIcon />
-              </React.Suspense>
-            }>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  1031 Exchange Calculator
-                </Typography>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={state.exchange1031?.enabled || false}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        setState((prev) => ({
-                          ...prev,
-                          exchange1031: {
-                            ...(prev.exchange1031 || defaultState.exchange1031!),
-                            enabled: e.target.checked,
-                          },
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
-                  label="Enable 1031 Exchange Analysis"
-                  sx={{ ml: 'auto' }}
-                />
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ p: 2 }}>
-                {state.exchange1031?.enabled && (
-                  <>
-                    <Alert severity="info" sx={{ mb: 3 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                        1031 Exchange Requirements:
-                      </Typography>
-                      <Typography variant="body2" component="ul" sx={{ pl: 2, mb: 0 }}>
-                        <li>Identify replacement property within 45 days of closing</li>
-                        <li>Close on replacement property within 180 days of closing</li>
-                        <li>Use a qualified intermediary (cannot touch proceeds)</li>
-                        <li>Purchase equal or greater value to defer all gains</li>
-                        <li>Reinvest all equity to avoid taxable boot</li>
-                      </Typography>
-                    </Alert>
-
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
-                      Relinquished Property (Selling)
-                    </Typography>
-
-                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
-                      <TextField
-                        fullWidth
-                        label="Property Sale Value"
-                        type="number"
-                        value={state.exchange1031?.relinquishedPropertyValue || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                relinquishedPropertyValue: value,
-                              },
-                            };
-                            // Recalculate
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Sale price of property being sold"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Adjusted Basis"
-                        type="number"
-                        value={state.exchange1031?.relinquishedPropertyBasis || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                relinquishedPropertyBasis: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Original cost + improvements - depreciation"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Total Depreciation Taken"
-                        type="number"
-                        value={state.exchange1031?.relinquishedPropertyDepreciation || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                relinquishedPropertyDepreciation: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Total depreciation deducted over ownership"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Existing Mortgage Balance"
-                        type="number"
-                        value={state.exchange1031?.relinquishedPropertyMortgage || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                relinquishedPropertyMortgage: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Outstanding loan balance at closing"
-                      />
-                    </Box>
-
-                    <Divider sx={{ my: 3 }} />
-
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
-                      Replacement Property (Buying)
-                    </Typography>
-
-                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
-                      <TextField
-                        fullWidth
-                        label="Purchase Price"
-                        type="number"
-                        value={state.exchange1031?.replacementPropertyValue || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                replacementPropertyValue: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Purchase price of replacement property"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="New Mortgage Amount"
-                        type="number"
-                        value={state.exchange1031?.replacementPropertyMortgage || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                replacementPropertyMortgage: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="New loan amount on replacement property"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Qualified Intermediary Fee"
-                        type="number"
-                        value={state.exchange1031?.qualifiedIntermediaryFee || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                qualifiedIntermediaryFee: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Fee for 1031 exchange facilitator"
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Other Exchange Costs"
-                        type="number"
-                        value={state.exchange1031?.otherExchangeCosts || 0}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value) || 0;
-                          setState((prev) => {
-                            const updated = {
-                              ...prev,
-                              exchange1031: {
-                                ...(prev.exchange1031 || defaultState.exchange1031!),
-                                otherExchangeCosts: value,
-                              },
-                            };
-                            const taxRate = prev.enhancedTaxConfig?.taxBracket || 20;
-                            updated.exchange1031 = calculate1031Exchange(updated.exchange1031!, taxRate);
-                            return updated;
-                          });
-                        }}
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        helperText="Legal fees, title, etc."
-                      />
-                    </Box>
-
-                    <Divider sx={{ my: 3 }} />
-
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
-                      Exchange Analysis Results
-                    </Typography>
-
-                    <Box sx={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, 
-                      gap: 2,
-                      mb: 3,
-                      p: 2,
-                      backgroundColor: brandColors.backgrounds.secondary,
-                      borderRadius: 1,
-                    }}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Deferred Gain
-                        </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.accent.successDark }}>
-                          ${(state.exchange1031?.deferredGain || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Tax deferred to future sale
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Recognized Gain (Boot)
-                        </Typography>
-                        <Typography variant="h6" sx={{ 
-                          fontWeight: 700, 
-                          color: (state.exchange1031?.recognizedGain || 0) > 0 
-                            ? brandColors.accent.warning 
-                            : brandColors.accent.successDark 
-                        }}>
-                          ${(state.exchange1031?.recognizedGain || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Taxable portion this year
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Estimated Tax Liability
-                        </Typography>
-                        <Typography variant="h6" sx={{ 
-                          fontWeight: 700, 
-                          color: (state.exchange1031?.estimatedTaxLiability || 0) > 0 
-                            ? 'error.main' 
-                            : brandColors.accent.successDark 
-                        }}>
-                          ${(state.exchange1031?.estimatedTaxLiability || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Capital gains + recapture tax
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Carryover Basis
-                        </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                          ${(state.exchange1031?.carryoverBasis || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          New property tax basis
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Cash Boot
-                        </Typography>
-                        <Typography variant="h6" sx={{ 
-                          fontWeight: 700,
-                          color: (state.exchange1031?.cashBoot || 0) > 0 ? 'warning.main' : 'text.primary'
-                        }}>
-                          ${(state.exchange1031?.cashBoot || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Equity not reinvested
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Mortgage Boot
-                        </Typography>
-                        <Typography variant="h6" sx={{ 
-                          fontWeight: 700,
-                          color: (state.exchange1031?.mortgageBoot || 0) > 0 ? 'warning.main' : 'text.primary'
-                        }}>
-                          ${(state.exchange1031?.mortgageBoot || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Debt relief (taxable)
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Net Proceeds to Reinvest
-                        </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: brandColors.primary }}>
-                          ${(state.exchange1031?.netProceedsToReinvest || 0).toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Available for down payment
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {/* Trading Up Scenario Analysis */}
-                    <Box sx={{ 
-                      p: 2, 
-                      backgroundColor: 
-                        (state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
-                        (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0)
-                          ? 'success.light' 
-                          : 'warning.light',
-                      borderRadius: 1,
-                      mb: 2,
-                    }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                        Exchange Status
-                      </Typography>
-                      {(state.exchange1031?.replacementPropertyValue || 0) >= (state.exchange1031?.relinquishedPropertyValue || 0) &&
-                       (state.exchange1031?.replacementPropertyMortgage || 0) >= (state.exchange1031?.relinquishedPropertyMortgage || 0) ? (
-                        <Typography variant="body2" sx={{ color: 'success.dark' }}>
-                          ✓ Trading Up: Replacement property value and debt meet or exceed relinquished property. 
-                          All gains can be deferred if all equity is reinvested.
-                        </Typography>
-                      ) : (
-                        <Typography variant="body2" sx={{ color: 'warning.dark' }}>
-                          ⚠ Trading Down: Replacement property value or debt is less than relinquished property. 
-                          This will result in taxable boot of ${((state.exchange1031?.cashBoot || 0) + (state.exchange1031?.mortgageBoot || 0)).toLocaleString()}.
-                        </Typography>
-                      )}
-                    </Box>
-
-                    {/* Timeline Requirements */}
-                    <Box sx={{ p: 2, backgroundColor: 'info.light', borderRadius: 1 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                        Critical Timeline Requirements
-                      </Typography>
-                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-                        <Box>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                            Day 1-45: Identification Period
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Must identify replacement property in writing to qualified intermediary within 45 days of closing on relinquished property.
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                            Day 1-180: Exchange Period
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Must close on replacement property within 180 days of closing on relinquished property (or tax return due date, whichever is earlier).
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </>
-                )}
-
-                {!state.exchange1031?.enabled && (
-                  <Alert severity="info">
-                    <Typography variant="body2">
-                      Enable the 1031 Exchange Calculator to model like-kind exchange scenarios and calculate deferred capital gains.
-                      A 1031 exchange allows you to defer capital gains taxes when selling an investment property by reinvesting the proceeds into a similar property.
-                    </Typography>
-                  </Alert>
-                )}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-        )}
-
-        {/* Advanced Modeling - Professional Mode Only */}
-        {isAccordionVisible(calculatorMode, 'advancedModeling') && (
-        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
-          <Accordion>
-            <AccordionSummary expandIcon={
-              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
-                <LazyExpandMoreIcon />
-              </React.Suspense>
-            }>
-              <Typography sx={{ fontWeight: 700 }}>
-                Advanced Modeling & Analysis
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Alert severity="info" sx={{ mb: 2 }}>
-                <Typography variant="body2">
-                  Access comprehensive modeling tools including seasonal adjustments, exit strategies, 
-                  tax implications, refinance scenarios, risk analysis, and scenario comparison.
-                </Typography>
-              </Alert>
-              
-              {/* Wrap AdvancedModelingTab in its own AnalysisProvider */}
-              <AnalysisProvider>
-                <AdvancedModelingTab />
-              </AnalysisProvider>
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-        )}
-
         {/* Action Buttons */}
         <Box
           sx={{
@@ -12670,8 +12734,6 @@ const UnderwritePage: React.FC = () => {
             Reset
           </Button>
         </Box>
-        </Box>
-        )}
 
         {/* Cash Flow Projections Tab Content */}
         {mainTab === 'cashflow' && (

@@ -82,10 +82,13 @@ import { ModeSelector } from "../components/calculator/ModeSelector";
 import { useCalculatorMode } from "../hooks/useCalculatorMode";
 import { isAccordionVisible, getAccordionDetailLevel } from "../types/calculatorMode";
 import { RegionalAdjustmentPanel } from "../components/calculator/RegionalAdjustmentPanel";
+import { UpgradePrompt } from "../components/calculator/UpgradePrompt";
 import { 
   type RegionKey, 
   getLocationAdjustedPreset 
 } from "../utils/regionalMultipliers";
+import AdvancedModelingTab from "./AdvancedModelingTab";
+import { AnalysisProvider } from "../context/AnalysisContext";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -5143,6 +5146,30 @@ const UnderwritePage: React.FC = () => {
           onClose={() => setState((prev) => ({ ...prev, snackbarOpen: false }))}
           message={state.validationMessages?.[0]}
         />
+
+        {/* Upgrade Prompts */}
+        {isEssential && (state.offerType === "Subject To Existing Mortgage" || 
+                        state.offerType === "Seller Finance" || 
+                        state.offerType === "Hybrid") && (
+          <UpgradePrompt
+            currentMode={calculatorMode}
+            targetMode="standard"
+            feature="Complex Financing Options"
+            description="Subject-To, Seller Finance, and Hybrid financing are available in Standard mode"
+            onUpgrade={() => setCalculatorMode('standard')}
+          />
+        )}
+        
+        {isStandard && (
+          <UpgradePrompt
+            currentMode={calculatorMode}
+            targetMode="professional"
+            feature="Advanced Modeling & Analysis"
+            description="Access capital events planning, 1031 exchanges, scenario comparison, and cloud sync"
+            onUpgrade={() => setCalculatorMode('professional')}
+            variant="info"
+          />
+        )}
 
         {/* Basic Info Section */}
         <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
@@ -12745,6 +12772,36 @@ const UnderwritePage: React.FC = () => {
                   </Alert>
                 )}
               </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+        )}
+
+        {/* Advanced Modeling - Professional Mode Only */}
+        {isAccordionVisible(calculatorMode, 'advancedModeling') && (
+        <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+          <Accordion>
+            <AccordionSummary expandIcon={
+              <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                <LazyExpandMoreIcon />
+              </React.Suspense>
+            }>
+              <Typography sx={{ fontWeight: 700 }}>
+                Advanced Modeling & Analysis
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  Access comprehensive modeling tools including seasonal adjustments, exit strategies, 
+                  tax implications, refinance scenarios, risk analysis, and scenario comparison.
+                </Typography>
+              </Alert>
+              
+              {/* Wrap AdvancedModelingTab in its own AnalysisProvider */}
+              <AnalysisProvider>
+                <AdvancedModelingTab />
+              </AnalysisProvider>
             </AccordionDetails>
           </Accordion>
         </Card>

@@ -44,6 +44,7 @@ const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage')
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PerformanceDashboardPage = lazy(() => import('./pages/PerformanceDashboardPage'));
 const DataSourcesDashboard = lazy(() => import('./pages/DataSourcesDashboard'));
+const LearnPage = lazy(() => import('./pages/LearnPage'));
 
 const AppContainer = styled.div`
   width: 100%;
@@ -126,7 +127,7 @@ const AppContent = () => {
       <Route path="/invest" element={<Navigate to="/workspaces/buyer?workspace=invest" replace />} />
       <Route path="/fund" element={<Navigate to="/workspaces/buyer?workspace=fund" replace />} />
       <Route path="/operate" element={<Navigate to="/workspaces/buyer?workspace=operate" replace />} />
-      <Route path="/learn" element={<Navigate to="/workspaces/buyer?workspace=learn" replace />} />
+      <Route path="/learn" element={<LearnPage />} />
       <Route path="/advertise" element={<Navigate to="/workspaces/buyer?workspace=advertise" replace />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />

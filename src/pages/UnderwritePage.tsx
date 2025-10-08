@@ -67,12 +67,10 @@ import {
   calculateYearsUntilRefinance,
   calculateRefinancePotential,
   defaultLocationFactors,
-  type SeasonalFactors,
   type MarketConditions,
   type ExitStrategy,
   type RefinanceScenario,
   type TaxImplications,
-  type EnhancedTaxImplications,
   type RiskFactors,
   type PropertyAgeFactors,
   type LocationFactors,
@@ -93,486 +91,46 @@ import { AnalysisProvider } from "../context/AnalysisContext";
 import { ProFormaPresetSelector } from "../components/calculator/ProFormaPresetSelector";
 import { LiveMarketDataWidget } from "../components/calculator/LiveMarketDataWidget";
 import { GuidedTour } from "../components/GuidedTour";
-import { type DealState } from "../types/deal";
+import { 
+  type DealState,
+  type PropertyType,
+  type OperationType,
+  type OfferType,
+  type LoanTerms,
+  type SubjectToLoan,
+  type SubjectToInputs,
+  type HybridInputs,
+  type FixFlipInputs,
+  type BRRRRInputs,
+  type AppreciationInputs,
+  type IncomeInputsSfr,
+  type IncomeInputsMulti,
+  type IncomeInputsStr,
+  type MetricWithConfidence,
+  type UncertaintyParameters,
+  type EnhancedSTRInputs,
+  type OfficeRetailInputs,
+  type LandInputs,
+  type ArbitrageInputs,
+  type OperatingInputsCommon,
+  type CustomProFormaPreset,
+  type SensitivityAnalysis,
+  type BenchmarkComparison,
+  type RevenueInputs,
+  type BreakEvenAnalysis,
+  type CapitalEvent,
+  type CapitalEventInputs,
+  type Exchange1031Inputs,
+  type SeasonalFactors,
+  type EnhancedTaxImplications,
+} from "../types/deal";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
 const LazyDeleteIcon = React.lazy(() => import("@mui/icons-material/Delete"));
 const LazyTrendingUpIcon = React.lazy(() => import("@mui/icons-material/TrendingUp"));
 
-// Updated type definitions
-type PropertyType =
-  | "Single Family"
-  | "Multi Family"
-  | "Hotel"
-  | "Land"
-  | "Office"
-  | "Retail";
-type OperationType =
-  | "Buy & Hold"
-  | "Fix & Flip"
-  | "Short Term Rental"
-  | "Rental Arbitrage"
-  | "BRRRR";
-type OfferType =
-  | "Cash"
-  | "FHA"
-  | "Seller Finance"
-  | "Conventional"
-  | "SBA"
-  | "DSCR"
-  | "Hard Money"
-  | "Private"
-  | "Line of Credit"
-  | "Subject To Existing Mortgage"
-  | "Hybrid";
-
-interface LoanTerms {
-  downPayment: number;
-  loanAmount: number;
-  annualInterestRate: number;
-  monthlyPayment: number;
-  annualPayment: number;
-  interestOnly: boolean;
-  balloonDue: number;
-  amortizationAmount: number;
-  amortizationYears: number;
-  closingCosts?: number;
-  rehabCosts?: number;
-  ioPeriodMonths?: number; // NEW: IO period for hybrid IO loans
-}
-
-interface SubjectToLoan {
-  amount: number;
-  annualInterestRate: number;
-  monthlyPayment: number;
-  originalTermYears: number;
-  startDate: string;
-  currentBalance: number;
-  paymentNumber: number;
-  balloonDue: number;
-  interestOnly: boolean;
-}
-
-interface SubjectToInputs {
-  paymentToSeller: number;
-  loans: SubjectToLoan[];
-  totalLoanBalance: number;
-  totalMonthlyPayment: number;
-  totalAnnualPayment: number;
-}
-
-interface HybridInputs {
-  downPayment: number;
-  loan3Amount: number;
-  annualInterestRate: number;
-  monthlyPayment: number;
-  annualPayment: number;
-  loanTerm: number;
-  interestOnly: boolean;
-  balloonDue: number;
-  paymentToSeller: number;
-  subjectToLoans: SubjectToLoan[];
-  totalLoanBalance: number;
-  totalMonthlyPayment: number;
-  totalAnnualPayment: number;
-  loanBalance?: number;
-}
-
-interface FixFlipInputs {
-  arv: number;
-  holdingPeriodMonths: number;
-  holdingCosts: number;
-  sellingCostsPercent: number;
-  targetPercent: number;
-  rehabCost: number;
-  maximumAllowableOffer: number;
-  projectedProfit: number;
-  roiDuringHold: number;
-  annualizedRoi: number;
-  exitStrategies?: Array<{
-    timeframe: number;
-    projectedValue: number;
-    netProceeds: number;
-    roi: number;
-    annualizedRoi: number;
-  }>;
-}
-
-interface BRRRRInputs {
-  arv: number;
-  refinanceLtv: number;
-  refinanceInterestRate: number;
-  loanTerm: number;
-  newMonthlyPayment: number;
-  originalCashInvested: number;
-  cashOutAmount: number;
-  remainingCashInDeal: number;
-  newCashOnCashReturn: number;
-  refinanceClosingCosts: number;
-  effectiveCashOut: number;
-  ltvConstraint: boolean;
-  exitStrategies?: Array<{
-    timeframe: number;
-    projectedValue: number;
-    netProceeds: number;
-    roi: number;
-    annualizedRoi: number;
-  }>;
-}
-
-interface AppreciationInputs {
-  appreciationPercentPerYear: number;
-  yearsOfAppreciation: number;
-  futurePropertyValue: number;
-  refinanceLtv: number;
-  refinancePotential: number;
-  remainingBalanceAfterRefi: number;
-  manuallyOverridden?: boolean; // Track if user manually overrode balloon payment setting
-}
-
-interface IncomeInputsSfr {
-  monthlyRent: number;
-  grossMonthlyIncome: number;
-  grossYearlyIncome: number;
-}
-
-interface IncomeInputsMulti {
-  unitRents: number[];
-  grossMonthlyIncome: number;
-  grossYearlyIncome: number;
-}
-
-interface IncomeInputsStr {
-  unitDailyRents: number[];
-  unitMonthlyRents: number[];
-  dailyCleaningFee: number;
-  laundry: number;
-  activities: number;
-  avgNightsPerMonth: number;
-  grossDailyIncome: number;
-  grossMonthlyIncome: number;
-  grossYearlyIncome: number;
-}
-
-interface MetricWithConfidence {
-  low: number; // 10th percentile (pessimistic)
-  base: number; // Expected value (most likely)
-  high: number; // 90th percentile (optimistic)
-  standardDeviation: number;
-  confidenceLevel: number; // e.g., 80 for 80% confidence interval
-}
-
-interface UncertaintyParameters {
-  incomeUncertainty: number; // ±% uncertainty in income projections (e.g., 0.15 for ±15%)
-  expenseUncertainty: number; // ±% uncertainty in expense projections (e.g., 0.10 for ±10%)
-  occupancyUncertainty: number; // ±% uncertainty in occupancy rates (e.g., 0.10 for ±10%)
-  appreciationUncertainty: number; // ±% uncertainty in appreciation (e.g., 0.20 for ±20%)
-  confidenceLevel: number; // 80, 90, or 95 for confidence interval width
-}
-
-interface EnhancedSTRInputs {
-  // Existing basic inputs
-  averageDailyRate: number;
-  occupancyRate: number;
-  
-  // Channel management
-  channelFees: {
-    airbnb: number; // e.g., 14%
-    vrbo: number; // e.g., 8%
-    direct: number; // e.g., 0%
-  };
-  channelMix: {
-    airbnb: number; // % of bookings
-    vrbo: number;
-    direct: number;
-  };
-  
-  // Booking logistics
-  averageLengthOfStay: number; // Nights per booking
-  turnoverDays: number; // Days between guests for cleaning/prep
-  minimumStay: number; // Minimum nights required
-  blockedDays: number; // Owner usage + maintenance days per year
-  
-  // Dynamic pricing
-  dynamicPricing: boolean;
-  weekendPremium: number; // % increase for weekend nights
-  
-  // Use enhanced model flag
-  useEnhancedModel: boolean;
-}
-
-// New inputs for Office/Retail properties
-interface OfficeRetailInputs {
-  squareFootage: number;
-  rentPerSFMonthly: number; // monthly base rent per square foot
-  occupancyRatePct: number; // 0-100
-  extraMonthlyIncome: number; // other income (parking, signage, etc.)
-}
-
-// New inputs for Land properties
-interface LandInputs {
-  acreage: number;
-  zoning?: "Residential" | "Commercial" | "Agricultural" | "Mixed";
-  extraMonthlyIncome: number; // e.g., grazing, storage, temporary uses
-}
-
-interface ArbitrageInputs {
-  deposit: number;
-  monthlyRentToLandlord: number;
-  estimateCostOfRepairs: number;
-  furnitureCost: number;
-  otherStartupCosts: number;
-  startupCostsTotal: number;
-}
-
-interface OperatingInputsCommon {
-  principalAndInterest: number;
-  totalSubtoLoans: number;
-  taxes: number;
-  insurance: number;
-  gasElectric: number;
-  internet: number;
-  hoa: number;
-  cleaner: number;
-  monthlyRentToLandlord: number;
-  waterSewer: number;
-  heat: number;
-  lawnSnow: number;
-  phoneBill: number;
-  extra: number;
-  maintenance: number;
-  vacancy: number;
-  management: number;
-  capEx: number;
-  opEx: number;
-  utilitiesPct?: number;
-  expensesWithoutMortgage: number;
-  monthlyExpenses: number;
-  monthlyExpensesPercent: number;
-  yearlyExpenses: number;
-  expensesWithMortgage: number;
-  monthlyExpensesWithMortgage: number;
-  yearlyExpensesWithMortgage: number;
-}
-
-interface CustomProFormaPreset {
-  id: string;
-  name: string;
-  description?: string;
-  maintenance: number;
-  vacancy: number;
-  management: number;
-  capEx: number;
-  opEx: number;
-  propertyType: PropertyType;
-  operationType: OperationType;
-  createdAt: Date;
-}
-
-interface SensitivityAnalysis {
-  showSensitivity: boolean;
-  sensitivityRange: number; // e.g., ±20%
-  sensitivitySteps: number; // e.g., 5 steps
-}
-
-interface BenchmarkComparison {
-  showBenchmarks: boolean;
-  selectedMarket?: string;
-  includeBenchmarks: boolean;
-}
-
-interface RevenueInputs {
-  totalRooms: number;
-  averageDailyRate: number;
-  occupancyRate: number;
-  seasonalVariations: {
-    q1: number; // Q1 occupancy multiplier
-    q2: number; // Q2 occupancy multiplier
-    q3: number; // Q3 occupancy multiplier
-    q4: number; // Q4 occupancy multiplier
-  };
-  fixedAnnualCosts: number;
-  fixedMonthlyCosts: number;
-}
-
-interface BreakEvenAnalysis {
-  showBreakEven: boolean;
-  breakEvenOccupancy: number;
-  breakEvenADR: number;
-  breakEvenRevenue: number;
-  marginOfSafety: number;
-}
-
-interface CapitalEvent {
-  id: string;
-  year: number; // Year from purchase
-  description: string;
-  estimatedCost: number;
-  category: 'roof' | 'hvac' | 'foundation' | 'electrical' | 'plumbing' | 'other';
-  likelihood: number; // 0-100%
-}
-
-interface CapitalEventInputs {
-  events: CapitalEvent[];
-  totalExpectedCost: number; // Sum of all events
-  averageAnnualCost: number; // Amortized over hold period
-}
-
-interface Exchange1031Inputs {
-  enabled: boolean;
-  // Relinquished Property (property being sold)
-  relinquishedPropertyValue: number;
-  relinquishedPropertyBasis: number; // Original cost + improvements - depreciation
-  relinquishedPropertyDepreciation: number;
-  relinquishedPropertyMortgage: number;
-  // Replacement Property (property being purchased)
-  replacementPropertyValue: number;
-  replacementPropertyMortgage: number;
-  // Costs
-  qualifiedIntermediaryFee: number;
-  otherExchangeCosts: number;
-  // Timeline tracking
-  identificationDeadline: string; // 45 days from closing
-  closingDeadline: string; // 180 days from closing
-  // Results (calculated)
-  deferredGain: number;
-  recognizedGain: number; // Boot
-  carryoverBasis: number;
-  cashBoot: number;
-  mortgageBoot: number;
-  totalTaxableGain: number;
-  estimatedTaxLiability: number;
-  netProceedsToReinvest: number;
-}
-
-// DealState interface is now imported from types/deal.ts
-// interface DealState {
-  propertyType: PropertyType;
-  operationType: OperationType;
-  offerType: OfferType;
-  propertyAddress: string;
-  agentOwner: string;
-  call: string;
-  email: string;
-  analysisDate: string;
-  listedPrice: number;
-  purchasePrice: number;
-  percentageDifference: number;
-  loan: LoanTerms;
-  subjectTo: SubjectToInputs;
-  hybrid: HybridInputs;
-  fixFlip?: FixFlipInputs;
-  brrrr?: BRRRRInputs;
-  ops: OperatingInputsCommon;
-  sfr?: IncomeInputsSfr;
-  multi?: IncomeInputsMulti;
-  str?: IncomeInputsStr;
-  enhancedSTR?: EnhancedSTRInputs;
-  officeRetail?: OfficeRetailInputs;
-  land?: LandInputs;
-  arbitrage?: ArbitrageInputs;
-  appreciation: AppreciationInputs;
-  // Settings
-  showBothPaybackMethods: boolean;
-  paybackCalculationMethod: "initial" | "remaining";
-  reservesCalculationMethod: "months" | "fixed";
-  reservesMonths: number;
-  reservesFixedAmount: number;
-  includeVariableExpensesInBreakEven: boolean;
-  includeVariablePctInBreakeven?: boolean;
-  proFormaPreset: "conservative" | "moderate" | "aggressive" | "custom";
-  customProFormaPresets: CustomProFormaPreset[];
-  selectedCustomPreset?: string;
-  sensitivityAnalysis: SensitivityAnalysis;
-  benchmarkComparison: BenchmarkComparison;
-  revenueInputs: RevenueInputs;
-  breakEvenAnalysis: BreakEvenAnalysis;
-  activeProFormaTab:
-    | "presets"
-    | "custom"
-    | "sensitivity"
-    | "benchmarks"
-    | "revenue"
-    | "breakEven";
-  // Market conditions for enhanced sensitivity analysis
-  marketType: "hot" | "stable" | "slow";
-  // Advanced Analysis Configuration
-  marketConditions: MarketConditions;
-  exitStrategies: ExitStrategy[];
-  seasonalFactors: SeasonalFactors;
-  propertyAge: PropertyAgeFactors;
-  locationFactors: LocationFactors;
-  riskFactors: RiskFactors;
-  taxImplications: TaxImplications;
-  // Enhanced tax configuration with IRS compliance
-  enhancedTaxConfig?: EnhancedTaxImplications;
-  useEnhancedTaxCalculation?: boolean;
-  // Advanced Analysis Results
-  exitStrategyResults?: Array<{
-    timeframe: number;
-    projectedValue: number;
-    netProceeds: number;
-    roi: number;
-    annualizedRoi: number;
-  }>;
-  refinanceScenarioResults?: Array<{
-    timing: number;
-    newMonthlyPayment: number;
-    monthlySavings: number;
-    totalSavings: number;
-    breakEvenMonths: number;
-    cashOutAmount: number;
-  }>;
-  taxImplicationResults?: {
-    taxableIncome: number;
-    taxSavings: number;
-    effectiveTaxRate: number;
-    netIncome: number;
-  };
-  riskScoreResults?: {
-    overallRiskScore: number;
-    riskBreakdown: {
-      marketRisk: number;
-      propertyRisk: number;
-      tenantRisk: number;
-      financingRisk: number;
-      locationRisk: number;
-    };
-    riskCategory: "Low" | "Medium" | "High" | "Very High";
-    recommendations: string[];
-  };
-  confidenceIntervalResults?: {
-    lowerBound: number;
-    upperBound: number;
-    confidenceLevel: number;
-  };
-  inflationProjections?: {
-    [years: number]: {
-      adjustedRent: number;
-      adjustedExpenses: number;
-      adjustedPropertyValue: number;
-    };
-  };
-  // IRR Configuration Parameters
-  irrHoldPeriodYears: number; // Default 5 years
-  irrIncomeGrowthRate: number; // Annual income growth % (default 2%)
-  irrExpenseGrowthRate: number; // Annual expense growth % (default 3%)
-  irrSellingCostsPct: number; // Selling costs as % of sale price (default 7%)
-  showIrrCashFlowBreakdown: boolean; // Toggle for cash flow detail view
-  // Capital Events
-  capitalEvents: CapitalEventInputs;
-  // Confidence Intervals
-  showConfidenceIntervals: boolean;
-  uncertaintyParameters: UncertaintyParameters;
-  // 1031 Exchange Calculator
-  exchange1031?: Exchange1031Inputs;
-  // UX/logic helpers
-  proFormaAuto: boolean; // when true, auto-apply preset values on PT/OT change; turns off on manual edits
-  validationMessages: string[];
-  showAmortizationOverride?: boolean;
-  snackbarOpen?: boolean;
-}
+// All type definitions are now imported from types/deal.ts
 
 // Capital Event Template Generator
 function generateCapitalEventTemplates(propertyAge: number, purchasePrice: number): CapitalEvent[] {

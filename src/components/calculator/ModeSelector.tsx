@@ -106,16 +106,7 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
   }
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 2,
-        mb: 2,
-        bgcolor: brandColors.neutral[50],
-        border: `1px solid ${brandColors.neutral[200]}`,
-        borderRadius: 2,
-      }}
-    >
+    <Box sx={{ mb: 2 }}>
       <Typography 
         variant="h6" 
         sx={{ 
@@ -166,13 +157,44 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
         {(Object.keys(CALCULATOR_MODES) as CalculatorMode[]).map((mode) => {
           const config = CALCULATOR_MODES[mode];
           return (
-            <ToggleButton key={mode} value={mode} sx={{ flex: 1 }}>
-              {config.label}
-            </ToggleButton>
+            <Tooltip
+              key={mode}
+              title={
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    {config.label} Mode
+                  </Typography>
+                  <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                    {config.description}
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Features:
+                  </Typography>
+                  <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                    {config.features.map((feature, idx) => (
+                      <Typography 
+                        key={idx} 
+                        component="li" 
+                        variant="caption"
+                        sx={{ mb: 0.25 }}
+                      >
+                        {feature}
+                      </Typography>
+                    ))}
+                  </Box>
+                </Box>
+              }
+              placement="bottom"
+              arrow
+            >
+              <ToggleButton value={mode} sx={{ flex: 1 }}>
+                {config.label}
+              </ToggleButton>
+            </Tooltip>
           );
         })}
       </ToggleButtonGroup>
-    </Paper>
+    </Box>
   );
 };
 

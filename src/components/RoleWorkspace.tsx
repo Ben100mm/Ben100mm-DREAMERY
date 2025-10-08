@@ -35,6 +35,7 @@ import {
 } from '@mui/material';
 import AcquisitionSpecialistDashboard from './close/dashboard/AcquisitionSpecialistDashboard';
 import BuyerMessages from './buyer/BuyerMessages';
+import WorkflowDashboard from './workflows/WorkflowDashboard';
 import {
   Notifications as NotificationsIcon,
   ArrowBack as ArrowBackIcon,
@@ -60,6 +61,7 @@ import {
   AccountBalance as AccountBalanceIcon,
   TrendingUp as TrendingUpIcon,
   Build as BuildIcon,
+  AccountTree as AccountTreeIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 import { RoleContext } from '../context/RoleContext.js';
@@ -264,6 +266,7 @@ const roleConfigurations: Record<string, RoleConfig> = {
     defaultTab: 'dashboard',
     tabs: [
       { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'workflows', label: 'Workflows', icon: <AccountTreeIcon />, description: 'Process Management, Step Tracking, Progress Monitoring' },
       { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
       { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
       { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
@@ -321,6 +324,7 @@ const roleConfigurations: Record<string, RoleConfig> = {
     defaultTab: 'dashboard',
     tabs: [
       { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'workflows', label: 'Workflows', icon: <AccountTreeIcon />, description: 'Appraisal Process, Step Tracking, Quality Control' },
       { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
       { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
       { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
@@ -397,6 +401,7 @@ const roleConfigurations: Record<string, RoleConfig> = {
     defaultTab: 'dashboard',
     tabs: [
       { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'workflows', label: 'Workflows', icon: <AccountTreeIcon />, description: 'Policy Binding Process, Quote Generation, Claims Support' },
       { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
       { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
       { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
@@ -701,6 +706,7 @@ const roleConfigurations: Record<string, RoleConfig> = {
     defaultTab: 'dashboard',
     tabs: [
       { value: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, description: 'Tasks, Calendar, Files' },
+      { value: 'workflows', label: 'Workflows', icon: <AccountTreeIcon />, description: 'Construction Process, Permits, Punch List, Completion' },
       { value: 'communications', label: 'Communications', icon: <SupportIcon />, description: 'Chat, Email, Calls, Notes' },
       { value: 'contracts-esign', label: 'Contracts & eSign', icon: <DescriptionIcon />, description: 'Templates, Signatures, Version Control, Audit Trail' },
       { value: 'money-billing', label: 'Money & Billing', icon: <AnalyticsIcon />, description: 'Quotes, Invoices, Payments' },
@@ -1837,6 +1843,15 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
                     </TabPanel>
                   </>
                 )}
+              </Box>
+            )}
+
+            {state.activeTab === 'workflows' && (
+              <Box sx={{ width: '100%' }}>
+                <WorkflowDashboard 
+                  roleId={currentRoleKey} 
+                  roleName={currentRoleConfig.name} 
+                />
               </Box>
             )}
 

@@ -82,6 +82,7 @@ import {
 } from '../utils/regionalMultipliers';
 import AdvancedModelingTab from './AdvancedModelingTab';
 import { GuidedTour } from '../components/GuidedTour';
+import { MLRiskPredictionDisplay } from '../components/MLRiskPredictionDisplay';
 
 const drawerWidth = 280;
 
@@ -2661,6 +2662,9 @@ const AnalyzePage: React.FC = () => {
                       </Typography>
                     ))}
                 </Box>
+
+                {/* ML-Enhanced Risk Prediction */}
+                {dealState && <MLRiskPredictionDisplay dealState={dealState} />}
               </>
             )}
 

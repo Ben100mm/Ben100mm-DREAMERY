@@ -31,6 +31,7 @@ import { formatCurrency } from "./UXComponents";
 import { MonteCarloResults } from "../utils/monteCarloSimulation";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { MLRiskPredictionDisplay } from "./MLRiskPredictionDisplay";
 
 interface RiskAnalysisTabProps {
   dealState: DealState | null;
@@ -288,6 +289,9 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
               - Lower volatility = more precise projections
             </Typography>
           </Box>
+
+          {/* ML-Enhanced Risk Prediction */}
+          <MLRiskPredictionDisplay dealState={dealState} />
         </Box>
       )}
 

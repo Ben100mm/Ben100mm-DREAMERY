@@ -45,6 +45,7 @@ const OtherProfessionalPage = lazy(() => import('./pages/OtherProfessionalPage')
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PerformanceDashboardPage = lazy(() => import('./pages/PerformanceDashboardPage'));
+const DataSourcesDashboard = lazy(() => import('./pages/DataSourcesDashboard'));
 
 const AppContainer = styled.div`
   width: 100%;
@@ -135,6 +136,7 @@ const AppContent = () => {
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/ux-demo" element={<UXDemoPage />} />
       <Route path="/performance-dashboard" element={<PerformanceDashboardPage />} />
+      <Route path="/data-sources" element={<DataSourcesDashboard />} />
       <Route path="/advanced-calculations" element={<Navigate to="/analyze" replace />} />
     </Routes>
     </Suspense>

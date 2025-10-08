@@ -77,6 +77,7 @@ import {
   type LocationFactors,
 } from "../utils/advancedCalculations";
 import { underwriteCalculationService } from "../services/underwriteCalculationService";
+import { MLRiskPredictionDisplay } from "../components/MLRiskPredictionDisplay";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -9741,6 +9742,9 @@ const UnderwritePage: React.FC = () => {
                           </Typography>
                         ))}
                     </Box>
+
+                    {/* ML-Enhanced Risk Prediction */}
+                    <MLRiskPredictionDisplay dealState={state} />
                   </>
                 )}
 

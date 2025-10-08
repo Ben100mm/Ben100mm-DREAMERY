@@ -1138,7 +1138,7 @@ export const generateRiskRecommendations = (params: {
 };
 
 // Helper function to calculate metric risk adjustments with exact thresholds
-const calculateMetricRiskAdjustments = (metrics: {
+export const calculateMetricRiskAdjustments = (metrics: {
   dscr: number;
   ltv: number;
   coc: number;

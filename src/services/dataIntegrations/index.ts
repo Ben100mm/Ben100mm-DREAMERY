@@ -17,6 +17,10 @@
  * ```
  */
 
+// Imports for convenience functions
+import { DataAggregator } from './dataAggregator';
+import { AggregationStrategy, DataSource } from './types';
+
 // Export types
 export * from './types';
 
@@ -35,9 +39,6 @@ export { MockProviders } from './mockProviders';
 // ============================================================================
 // Convenience Functions
 // ============================================================================
-
-import { DataAggregator } from './dataAggregator';
-import { AggregationStrategy, DataSource } from './types';
 
 let defaultAggregator: DataAggregator | null = null;
 

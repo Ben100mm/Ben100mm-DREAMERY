@@ -111,6 +111,9 @@ type OfferType =
   | "Subject To Existing Mortgage"
   | "Hybrid";
 
+// Calculator complexity modes for progressive disclosure
+type CalculatorMode = "essential" | "standard" | "professional";
+
 interface LoanTerms {
   downPayment: number;
   loanAmount: number;
@@ -2833,6 +2836,17 @@ const UnderwritePage: React.FC = () => {
 
   const [showMessages, setShowMessages] = useState(false);
   const [mainTab, setMainTab] = useState<'analysis' | 'cashflow'>('analysis');
+
+  // Calculator mode state with localStorage persistence
+  const [calculatorMode, setCalculatorMode] = useState<CalculatorMode>(() => {
+    const saved = localStorage.getItem("dreamery-calculator-mode");
+    return (saved as CalculatorMode) || "standard";
+  });
+
+  // Persist calculator mode to localStorage
+  useEffect(() => {
+    localStorage.setItem("dreamery-calculator-mode", calculatorMode);
+  }, [calculatorMode]);
 
   const [state, setState] = useState<DealState>(() => {
     try {

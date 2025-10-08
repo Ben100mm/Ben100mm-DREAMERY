@@ -77,6 +77,7 @@ import {
   type PropertyAgeFactors,
   type LocationFactors,
 } from "../utils/advancedCalculations";
+import { type DealState } from "../types/deal";
 import { underwriteCalculationService } from "../services/underwriteCalculationService";
 import { MLRiskPredictionDisplay } from "../components/MLRiskPredictionDisplay";
 import { ModeSelector } from "../components/calculator/ModeSelector";
@@ -94,7 +95,6 @@ const AnalysisProvider = React.lazy(() => import("../context/AnalysisContext").t
 const ProFormaPresetSelector = React.lazy(() => import("../components/calculator/ProFormaPresetSelector").then(module => ({ default: module.ProFormaPresetSelector })));
 const LiveMarketDataWidget = React.lazy(() => import("../components/calculator/LiveMarketDataWidget").then(module => ({ default: module.LiveMarketDataWidget })));
 const GuidedTour = React.lazy(() => import("../components/GuidedTour").then(module => ({ default: module.GuidedTour })));
-import { type DealState } from "../types/deal";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -479,7 +479,6 @@ const defaultState: DealState = {
     amortizationYears: 30,
     closingCosts: 0,
     rehabCosts: 0,
-    ioPeriodMonths: 0,
     totalInterest: 0,
     totalPayment: 0,
     amortizationSchedule: [],
@@ -595,8 +594,6 @@ const defaultState: DealState = {
       q3: 100,
       q4: 100,
     },
-    fixedAnnualCosts: 0,
-    fixedMonthlyCosts: 0,
   },
   breakEvenAnalysis: {
     showBreakEven: false,
@@ -613,7 +610,6 @@ const defaultState: DealState = {
     type: "stable",
     vacancyRateAdjustment: 0,
     rentGrowthRate: 0,
-    interestRateSensitivity: 0,
     inflationRate: 3,
   },
   exitStrategies: [],
@@ -636,7 +632,7 @@ const defaultState: DealState = {
     expectedLifespan: 50,
   },
   locationFactors: {
-    walkabilityScore: 0,
+    walkScore: 0,
     transitScore: 0,
     crimeRate: 0,
     schoolRating: 0,
@@ -650,7 +646,7 @@ const defaultState: DealState = {
     marketVolatility: 5,
   },
   taxImplications: {
-    federalTaxRate: 0,
+    marginalTaxRate: 0,
     stateTaxRate: 0,
     depreciationRecapture: 0,
     capitalGainsTax: 0,
@@ -851,7 +847,7 @@ function calculateCoCWithConfidence(state: DealState): MetricWithConfidence {
       (state.arbitrage?.otherStartupCosts || 0) +
       (state.loan.rehabCosts || 0)
     : // Traditional purchase: down payment + closing + rehab + furniture (if STR)
-      state.loan.downPayment +
+      (state.loan.downPayment || 0) +
       (state.loan.closingCosts || 0) +
       (state.loan.rehabCosts || 0) +
       (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);
@@ -950,7 +946,7 @@ function calculateROIWithConfidence(state: DealState): MetricWithConfidence {
       (state.arbitrage?.otherStartupCosts || 0) +
       (state.loan.rehabCosts || 0)
     : // Traditional purchase: down payment + closing + rehab + furniture (if STR)
-      state.loan.downPayment +
+      (state.loan.downPayment || 0) +
       (state.loan.closingCosts || 0) +
       (state.loan.rehabCosts || 0) +
       (state.operationType === "Short Term Rental" ? state.arbitrage?.furnitureCost || 0 : 0);

@@ -34,7 +34,7 @@ import {
   Refresh as RefreshIcon,
   Info as InfoIcon,
   CloudQueue as CloudQueueIcon,
-  PublicIcon,
+  Public as PublicIcon,
   Business as BusinessIcon,
   Home as HomeIcon,
 } from '@mui/icons-material';

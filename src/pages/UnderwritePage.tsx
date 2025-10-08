@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
@@ -81,18 +81,20 @@ import { underwriteCalculationService } from "../services/underwriteCalculationS
 import { MLRiskPredictionDisplay } from "../components/MLRiskPredictionDisplay";
 import { ModeSelector } from "../components/calculator/ModeSelector";
 import { useCalculatorMode } from "../hooks/useCalculatorMode";
-import { isAccordionVisible, getAccordionDetailLevel } from "../types/calculatorMode";
+import { isAccordionVisible, getAccordionDetailLevel, CalculatorMode } from "../types/calculatorMode";
 import { RegionalAdjustmentPanel } from "../components/calculator/RegionalAdjustmentPanel";
 import { UpgradePrompt } from "../components/calculator/UpgradePrompt";
 import { 
   type RegionKey, 
   getLocationAdjustedPreset 
 } from "../utils/regionalMultipliers";
-import AdvancedModelingTab from "./AdvancedModelingTab";
-import { AnalysisProvider } from "../context/AnalysisContext";
-import { ProFormaPresetSelector } from "../components/calculator/ProFormaPresetSelector";
-import { LiveMarketDataWidget } from "../components/calculator/LiveMarketDataWidget";
-import { GuidedTour } from "../components/GuidedTour";
+// Lazy load heavy components to improve initial load time
+const AdvancedModelingTab = React.lazy(() => import("./AdvancedModelingTab"));
+const AnalysisProvider = React.lazy(() => import("../context/AnalysisContext").then(module => ({ default: module.AnalysisProvider })));
+const ProFormaPresetSelector = React.lazy(() => import("../components/calculator/ProFormaPresetSelector").then(module => ({ default: module.ProFormaPresetSelector })));
+const LiveMarketDataWidget = React.lazy(() => import("../components/calculator/LiveMarketDataWidget").then(module => ({ default: module.LiveMarketDataWidget })));
+const GuidedTour = React.lazy(() => import("../components/GuidedTour").then(module => ({ default: module.GuidedTour })));
+import { type DealState } from "../types/deal";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -445,7 +447,8 @@ interface Exchange1031Inputs {
   netProceedsToReinvest: number;
 }
 
-interface DealState {
+// DealState interface is now imported from types/deal.ts
+// interface DealState {
   propertyType: PropertyType;
   operationType: OperationType;
   offerType: OfferType;
@@ -2353,53 +2356,119 @@ function updateInflationProjections(
   }
 }
 
-function getOperationTypeOptions(propertyType: PropertyType): OperationType[] {
+function getOperationTypeOptions(propertyType: PropertyType, calculatorMode?: CalculatorMode): OperationType[] {
+  let baseOptions: OperationType[] = [];
+  
   if (propertyType === "Hotel") {
-    return ["Short Term Rental", "Rental Arbitrage"];
-  }
-  if (propertyType === "Land") {
+    baseOptions = ["Short Term Rental", "Rental Arbitrage"];
+  } else if (propertyType === "Land") {
     // Land logic is intentionally non-additive for operations: raw land is modeled as hold/improve/exit scenarios only
-    return ["Buy & Hold", "Fix & Flip", "BRRRR"];
-  }
-  if (propertyType === "Office" || propertyType === "Retail") {
+    baseOptions = ["Buy & Hold", "Fix & Flip", "BRRRR"];
+  } else if (propertyType === "Office" || propertyType === "Retail") {
     // Commercial: allow B&H, F&F, Arbitrage, BRRRR. Remove STR for Office/Retail.
-    return ["Buy & Hold", "Fix & Flip", "Rental Arbitrage", "BRRRR"];
+    baseOptions = ["Buy & Hold", "Fix & Flip", "Rental Arbitrage", "BRRRR"];
+  } else {
+    baseOptions = [
+      "Buy & Hold",
+      "Fix & Flip",
+      "Short Term Rental",
+      "Rental Arbitrage",
+      "BRRRR",
+    ];
   }
-  return [
-    "Buy & Hold",
-    "Fix & Flip",
-    "Short Term Rental",
-    "Rental Arbitrage",
-    "BRRRR",
+
+  // Apply calculator mode restrictions
+  if (calculatorMode === "essential") {
+    // Essential mode: Only "Buy & Hold"
+    return baseOptions.filter(op => 
+      op === "Buy & Hold"
+    );
+  } else if (calculatorMode === "standard") {
+    // Standard mode: Add "Short Term Rental"
+    return baseOptions.filter(op => 
+      op === "Buy & Hold" || 
+      op === "Short Term Rental"
+    );
+  }
+  
+  // Professional mode: All options available
+  return baseOptions;
+}
+
+// Helper function to filter property types based on calculator mode
+function getPropertyTypeOptions(calculatorMode?: CalculatorMode): PropertyType[] {
+  const allPropertyTypes: PropertyType[] = [
+    "Single Family",
+    "Multi Family", 
+    "Hotel",
+    "Land",
+    "Office",
+    "Retail"
   ];
+
+  if (calculatorMode === "essential") {
+    // Essential mode: Only "Single Family" and "Land"
+    return ["Single Family", "Land"];
+  } else if (calculatorMode === "standard") {
+    // Standard mode: Add "Multi Family"
+    return ["Single Family", "Land", "Multi Family"];
+  }
+  
+  // Professional mode: All property types available
+  return allPropertyTypes;
+}
+
+// Helper function to filter finance types based on calculator mode
+function filterFinanceTypesByMode(options: OfferType[], calculatorMode?: CalculatorMode): OfferType[] {
+  if (!calculatorMode) return options;
+  
+  if (calculatorMode === "essential") {
+    // Essential mode: Only "Conventional" and "FHA"
+    return options.filter(option => 
+      option === "Conventional" || 
+      option === "FHA"
+    );
+  } else if (calculatorMode === "standard") {
+    // Standard mode: Add "DSCR"
+    return options.filter(option => 
+      option === "Conventional" || 
+      option === "FHA" ||
+      option === "DSCR"
+    );
+  }
+  
+  // Professional mode: All options available
+  return options;
 }
 
 function getOfferTypeOptions(
   propertyType: PropertyType,
   operationType: OperationType,
+  calculatorMode?: CalculatorMode,
 ): OfferType[] {
+  let baseOptions: OfferType[] = [];
+  
   // First handle Land so that subsequent operation-based narrowing does not affect logic
   if (propertyType === "Land") {
     if (operationType === "Fix & Flip" || operationType === "BRRRR") {
       // Allow Hard Money for improvement/refi paths
-      return [
+      baseOptions = [
         "Cash",
         "Hard Money",
         "Private",
         "Seller Finance",
         "Line of Credit",
       ];
+    } else {
+      // Buy & Hold raw land: conventional/DSCR/FHA/SBA typically not applicable in this model
+      baseOptions = ["Cash", "Seller Finance", "Private", "Line of Credit"];
     }
-    // Buy & Hold raw land: conventional/DSCR/FHA/SBA typically not applicable in this model
-    return ["Cash", "Seller Finance", "Private", "Line of Credit"];
-  }
-  // Rental Arbitrage: only Cash / Private / Line of Credit (plus optional Seller Finance)
-  if (operationType === "Rental Arbitrage") {
-    return ["Cash", "Private", "Line of Credit", "Seller Finance"];
-  }
-  // Fix & Flip: include Subject-To, Hybrid, Line of Credit; remove SBA
-  if (operationType === "Fix & Flip") {
-    return [
+  } else if (operationType === "Rental Arbitrage") {
+    // Rental Arbitrage: only Cash / Private / Line of Credit (plus optional Seller Finance)
+    baseOptions = ["Cash", "Private", "Line of Credit", "Seller Finance"];
+  } else if (operationType === "Fix & Flip") {
+    // Fix & Flip: include Subject-To, Hybrid, Line of Credit; remove SBA
+    baseOptions = [
       "Seller Finance",
       "Hard Money",
       "Private",
@@ -2407,10 +2476,9 @@ function getOfferTypeOptions(
       "Hybrid",
       "Line of Credit",
     ];
-  }
-  // BRRRR: Only Cash/Hard Money/Private/Seller Finance/Subject-To/Hybrid/LOC
-  if (operationType === "BRRRR") {
-    return [
+  } else if (operationType === "BRRRR") {
+    // BRRRR: Only Cash/Hard Money/Private/Seller Finance/Subject-To/Hybrid/LOC
+    baseOptions = [
       "Cash",
       "Hard Money",
       "Private",
@@ -2419,13 +2487,12 @@ function getOfferTypeOptions(
       "Hybrid",
       "Line of Credit",
     ];
-  }
-  // Buy & Hold (SFR/Multi): keep broad retail + creative options
-  if (
+  } else if (
     operationType === "Buy & Hold" &&
     (propertyType === "Single Family" || propertyType === "Multi Family")
   ) {
-    return [
+    // Buy & Hold (SFR/Multi): keep broad retail + creative options
+    baseOptions = [
       "FHA",
       "Cash",
       "Seller Finance",
@@ -2435,13 +2502,12 @@ function getOfferTypeOptions(
       "Hybrid",
       "Line of Credit",
     ];
-  }
-  // Commercial (Office/Retail): allow conventional, DSCR, SBA in addition to existing options
-  if (
+  } else if (
     operationType === "Buy & Hold" &&
     (propertyType === "Office" || propertyType === "Retail")
   ) {
-    return [
+    // Commercial (Office/Retail): allow conventional, DSCR, SBA in addition to existing options
+    baseOptions = [
       "Cash",
       "Seller Finance",
       "Conventional",
@@ -2451,17 +2517,21 @@ function getOfferTypeOptions(
       "Hybrid",
       "Line of Credit",
     ];
+  } else {
+    // Default for Hotel STR etc.
+    baseOptions = [
+      "Cash",
+      "Seller Finance",
+      "Conventional",
+      "DSCR",
+      "Subject To Existing Mortgage",
+      "Hybrid",
+      "Line of Credit",
+    ];
   }
-  // Default for Hotel STR etc.
-  return [
-    "Cash",
-    "Seller Finance",
-    "Conventional",
-    "DSCR",
-    "Subject To Existing Mortgage",
-    "Hybrid",
-    "Line of Credit",
-  ];
+  
+  // Apply calculator mode filtering
+  return filterFinanceTypesByMode(baseOptions, calculatorMode);
 }
 
 // Note: Variable expense calculations now use computeVariableExpenseFromPercentages()
@@ -2483,6 +2553,7 @@ const defaultState: DealState = {
   propertyType: "Single Family",
   operationType: "Buy & Hold",
   offerType: "Conventional",
+  calculatorMode: "standard", // Default to standard mode
   propertyAddress: "",
   agentOwner: "",
   call: "",
@@ -2807,7 +2878,7 @@ const defaultState: DealState = {
   validationMessages: [],
   showAmortizationOverride: false,
   snackbarOpen: false,
-};
+// };
 const UnderwritePage: React.FC = () => {
   const navigate = useNavigate();
   
@@ -2840,18 +2911,19 @@ const UnderwritePage: React.FC = () => {
   } {
     const messages: string[] = [];
     // Ensure operation type valid for property type
-    const allowedOps = getOperationTypeOptions(input.propertyType);
+    const allowedOps = getOperationTypeOptions(input.propertyType, input.calculatorMode);
     let operationType = input.operationType;
     if (!allowedOps.includes(operationType)) {
       operationType = allowedOps[0];
       messages.push(
-        `Operation Type reset to operationType for input.propertyType.`,
+        `Operation Type reset to ${operationType} for ${input.propertyType}.`,
       );
     }
     // Ensure offer type valid for combination
     const allowedOffers = getOfferTypeOptions(
       input.propertyType,
       operationType,
+      input.calculatorMode,
     );
     let offerType = input.offerType;
     if (!allowedOffers.includes(offerType)) {
@@ -2906,6 +2978,13 @@ const UnderwritePage: React.FC = () => {
     return defaultState;
   });
 
+  // Sync calculator mode with state
+  useEffect(() => {
+    if (state.calculatorMode !== calculatorMode) {
+      setState(prev => ({ ...prev, calculatorMode }));
+    }
+  }, [calculatorMode, state.calculatorMode]);
+
   // Memoize amortization schedule used across sections to avoid recomputation
   const amortizationAll = useMemo(() => {
     const amount = state.loan?.loanAmount || 0;
@@ -2916,6 +2995,42 @@ const UnderwritePage: React.FC = () => {
     if (amount <= 0 || years <= 0) return [] as Array<{ index: number; payment: number; interest: number; principal: number; balance: number; isIOPhase?: boolean }>;
     return buildAmortization(amount, rate, years, io, undefined, ioPeriod);
   }, [state.loan?.loanAmount, state.loan?.annualInterestRate, state.loan?.amortizationYears, state.loan?.interestOnly, state.loan?.ioPeriodMonths]);
+
+  // Memoize expensive calculations to prevent unnecessary re-renders
+  const memoizedCalculations = useMemo(() => {
+    const grossPotentialIncome = computeGrossPotentialIncome(state);
+    const netOperatingIncome = computeNetOperatingIncome(state);
+    const cashFlow = computeCashFlow(state);
+    const capRate = computeCapRate(state);
+    const cashOnCashReturn = computeCashOnCashReturn(state);
+    const totalReturn = computeTotalReturn(state);
+    const irr = computeIRR(state);
+    const moic = computeMOIC(state);
+    
+    return {
+      grossPotentialIncome,
+      netOperatingIncome,
+      cashFlow,
+      capRate,
+      cashOnCashReturn,
+      totalReturn,
+      irr,
+      moic
+    };
+  }, [
+    state.propertyType,
+    state.operationType,
+    state.purchasePrice,
+    state.loan,
+    state.ops,
+    state.sfr,
+    state.multi,
+    state.str,
+    state.officeRetail,
+    state.land,
+    state.arbitrage,
+    state.revenueInputs
+  ]);
 
   const [currentDate, setCurrentDate] = useState(() => {
     // Get the current date directly from the user's system
@@ -3013,7 +3128,7 @@ const UnderwritePage: React.FC = () => {
     localStorage.setItem("underwrite:last", JSON.stringify(state));
   }
 
-  function update<K extends keyof DealState>(key: K, value: DealState[K]) {
+  const update = useCallback(<K extends keyof DealState>(key: K, value: DealState[K]) => {
     setState((prev) => {
       let candidate: DealState = { ...prev, [key]: value } as DealState;
 
@@ -3059,6 +3174,7 @@ const UnderwritePage: React.FC = () => {
         const offers = getOfferTypeOptions(
           currentProperty,
           candidate.operationType as OperationType,
+          calculatorMode,
         );
         if (!offers.includes(candidate.offerType)) {
           candidate.offerType = offers[0];
@@ -3119,7 +3235,7 @@ const UnderwritePage: React.FC = () => {
 
       return candidate;
     });
-  }
+  }, []);
 
   function updateLoan<K extends keyof LoanTerms>(key: K, value: LoanTerms[K]) {
     setState((prev) => {
@@ -5242,15 +5358,19 @@ const UnderwritePage: React.FC = () => {
         {/* Live Market Data Widget - Professional Mode Only */}
         {isProfessional && (
           <Box sx={{ mb: 2 }}>
-            <LiveMarketDataWidget autoRefreshInterval={5 * 60 * 1000} variant="full" />
+            <Suspense fallback={<Box sx={{ p: 2, textAlign: 'center' }}>Loading market data...</Box>}>
+              <LiveMarketDataWidget autoRefreshInterval={5 * 60 * 1000} variant="full" />
+            </Suspense>
           </Box>
         )}
 
         {/* Guided Tour */}
-        <GuidedTour
-          isOpen={showGuidedTour}
-          onClose={() => setShowGuidedTour(false)}
-        />
+        <Suspense fallback={null}>
+          <GuidedTour
+            isOpen={showGuidedTour}
+            onClose={() => setShowGuidedTour(false)}
+          />
+        </Suspense>
 
         {/* Validation messages */}
         {state.validationMessages && state.validationMessages.length > 0 && (
@@ -5450,12 +5570,11 @@ const UnderwritePage: React.FC = () => {
                     }
                     label="Property Type"
                   >
-                    <MenuItem value="Single Family">Single Family</MenuItem>
-                    <MenuItem value="Multi Family">Multi Family</MenuItem>
-                    <MenuItem value="Hotel">Hotel</MenuItem>
-                    <MenuItem value="Land">Land</MenuItem>
-                    <MenuItem value="Office">Office</MenuItem>
-                    <MenuItem value="Retail">Retail</MenuItem>
+                    {getPropertyTypeOptions(calculatorMode).map((type) => (
+                      <MenuItem key={type} value={type}>
+                        {type}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
 
@@ -5468,7 +5587,7 @@ const UnderwritePage: React.FC = () => {
                     }
                     label="Operation Type"
                   >
-                    {getOperationTypeOptions(state.propertyType).map((type) => (
+                    {getOperationTypeOptions(state.propertyType, calculatorMode).map((type) => (
                       <MenuItem key={type} value={type}>
                         {type}
                       </MenuItem>
@@ -5488,6 +5607,7 @@ const UnderwritePage: React.FC = () => {
                     {getOfferTypeOptions(
                       state.propertyType,
                       state.operationType,
+                      calculatorMode,
                     ).map((type) => (
                       <MenuItem key={type} value={type}>
                         {type}
@@ -8360,7 +8480,8 @@ const UnderwritePage: React.FC = () => {
               </Typography>
               
               {/* Pro Forma Preset Selector */}
-              <ProFormaPresetSelector
+              <Suspense fallback={<Box sx={{ p: 2, textAlign: 'center' }}>Loading presets...</Box>}>
+                <ProFormaPresetSelector
                 currentValues={{
                   maintenance: state.ops.maintenance,
                   vacancy: state.ops.vacancy,
@@ -8378,6 +8499,7 @@ const UnderwritePage: React.FC = () => {
                 onDeleteCustomPreset={handleDeleteCustomPreset}
                 variant="full"
               />
+              </Suspense>
               
               {/* Regional Adjustment Panel */}
               <Box sx={{ mb: 3 }}>
@@ -12941,9 +13063,11 @@ const UnderwritePage: React.FC = () => {
               </Alert>
               
               {/* Wrap AdvancedModelingTab in its own AnalysisProvider */}
-              <AnalysisProvider>
-                <AdvancedModelingTab />
-              </AnalysisProvider>
+              <Suspense fallback={<Box sx={{ p: 2, textAlign: 'center' }}>Loading advanced modeling...</Box>}>
+                <AnalysisProvider>
+                  <AdvancedModelingTab />
+                </AnalysisProvider>
+              </Suspense>
             </AccordionDetails>
           </Accordion>
         </Card>

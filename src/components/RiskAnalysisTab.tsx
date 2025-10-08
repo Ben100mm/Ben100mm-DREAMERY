@@ -24,7 +24,6 @@ import { DealState } from "../types/deal";
 import { 
   defaultRiskFactors,
   calculateRiskScore,
-  calculateMetricRiskAdjustments,
 } from "../utils/advancedCalculations";
 import { brandColors } from "../theme";
 import { formatCurrency } from "./UXComponents";
@@ -111,7 +110,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
         capRate: purchasePrice > 0 ? (noi / purchasePrice) * 100 : 0,
       };
       
-      return calculateMetricRiskAdjustments(metrics);
+      return metrics; // Return metrics without risk adjustments for now
     } catch (error) {
       console.error('Error calculating metric risk adjustments:', error);
       return null;

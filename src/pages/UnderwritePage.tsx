@@ -959,6 +959,10 @@ function computeIncome(state: DealState): number {
             springVacancyRate: seasonalVariations.q1 / 100,
             fallVacancyRate: seasonalVariations.q3 / 100,
             seasonalMaintenanceMultiplier: 1, // Default, adjust if needed
+            q1: seasonalVariations.q1,
+            q2: seasonalVariations.q2,
+            q3: seasonalVariations.q3,
+            q4: seasonalVariations.q4,
           };
           const month = new Date().getMonth() + 1;
           const { adjustedVacancyRate } = calculateSeasonalAdjustments(
@@ -1003,6 +1007,10 @@ function computeIncome(state: DealState): number {
         springVacancyRate: seasonalVariations.q1 / 100,
         fallVacancyRate: seasonalVariations.q3 / 100,
         seasonalMaintenanceMultiplier: 1, // Default, adjust if needed
+        q1: seasonalVariations.q1,
+        q2: seasonalVariations.q2,
+        q3: seasonalVariations.q3,
+        q4: seasonalVariations.q4,
       };
       const month = new Date().getMonth() + 1;
       const { adjustedVacancyRate } = calculateSeasonalAdjustments(
@@ -2138,6 +2146,9 @@ const defaultState: DealState = {
     amortizationYears: 50,
     closingCosts: 0,
     rehabCosts: 0,
+    totalInterest: 0,
+    totalPayment: 0,
+    amortizationSchedule: [],
   },
   subjectTo: {
     paymentToSeller: 0,
@@ -2149,6 +2160,7 @@ const defaultState: DealState = {
   hybrid: {
     downPayment: 0,
     loan3Amount: 0,
+    loanAmount: 0,
     annualInterestRate: 0,
     monthlyPayment: 0,
     annualPayment: 0,
@@ -2160,6 +2172,7 @@ const defaultState: DealState = {
     totalLoanBalance: 0,
     totalMonthlyPayment: 0,
     totalAnnualPayment: 0,
+    amortizationSchedule: [],
   },
   fixFlip: {
     arv: 0,
@@ -2372,13 +2385,11 @@ const defaultState: DealState = {
     depreciationDeduction: true,
     repairExpenseDeduction: true,
     taxBracket: 24,
-    investorAGI: 100000, // Default AGI
-    materialParticipation: false, // Default to passive investor
-    professionalStatus: false, // Default to non-professional
-    qbiEligible: true, // Default to QBI eligible
-    investmentType: "residential", // Default to residential
-    stateTaxRate: 0, // Default no state tax
-    marriedFilingJointly: true, // Default married filing jointly
+    taxStrategy: "standard",
+    capitalGainsTaxRate: 20,
+    depreciationRecaptureRate: 25,
+    stateIncomeTaxRate: 0,
+    qualifiedBusinessIncomeDeduction: true,
   },
   useEnhancedTaxCalculation: false, // Default to legacy calculation
   // Advanced Analysis Results - initialized as undefined
@@ -2435,7 +2446,19 @@ const defaultState: DealState = {
   validationMessages: [],
   showAmortizationOverride: false,
   snackbarOpen: false,
-// };
+  city: "",
+  state: "",
+  proForma: {
+    taxes: 0,
+    insurance: 0,
+    maintenance: 0,
+    vacancy: 0,
+    management: 0,
+    capEx: 0,
+    opEx: 0,
+  },
+};
+
 const UnderwritePage: React.FC = () => {
   const navigate = useNavigate();
   
@@ -3888,6 +3911,10 @@ const UnderwritePage: React.FC = () => {
           springVacancyRate: seasonalVariations.q1 / 100,
           fallVacancyRate: seasonalVariations.q3 / 100,
           seasonalMaintenanceMultiplier: 1, // Default, adjust if needed
+          q1: seasonalVariations.q1,
+          q2: seasonalVariations.q2,
+          q3: seasonalVariations.q3,
+          q4: seasonalVariations.q4,
         };
         const month = new Date().getMonth() + 1;
         const { adjustedVacancyRate } = calculateSeasonalAdjustments(
@@ -6973,13 +7000,13 @@ const UnderwritePage: React.FC = () => {
                     "Subject To Existing Mortgage",
                     "Hybrid",
                   ].includes(state.offerType) &&
-                  (state.loan?.balloonDue > 0 ||
+                  ((state.loan?.balloonDue ?? 0) > 0 ||
                     state.subjectTo?.loans?.some(
-                      (loan) => loan.balloonDue > 0,
+                      (loan) => (loan.balloonDue ?? 0) > 0,
                     ) ||
-                    state.hybrid?.balloonDue > 0 ||
+                    (state.hybrid?.balloonDue ?? 0) > 0 ||
                     state.hybrid?.subjectToLoans?.some(
-                      (loan) => loan.balloonDue > 0,
+                      (loan) => (loan.balloonDue ?? 0) > 0,
                     )) && (
                     <Box
                       sx={{
@@ -7066,13 +7093,13 @@ const UnderwritePage: React.FC = () => {
                               "Subject To Existing Mortgage",
                               "Hybrid",
                             ].includes(state.offerType) &&
-                            (state.loan?.balloonDue > 0 ||
+                            ((state.loan?.balloonDue ?? 0) > 0 ||
                               state.subjectTo?.loans?.some(
-                                (loan) => loan.balloonDue > 0,
+                                (loan) => (loan.balloonDue ?? 0) > 0,
                               ) ||
-                              state.hybrid?.balloonDue > 0 ||
+                              (state.hybrid?.balloonDue ?? 0) > 0 ||
                               state.hybrid?.subjectToLoans?.some(
-                                (loan) => loan.balloonDue > 0,
+                                (loan) => (loan.balloonDue ?? 0) > 0,
                               ))
                           ? `Auto-set based on balloon payment due date`
                           : "Number of years to hold the property for appreciation analysis"

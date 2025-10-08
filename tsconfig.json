@@ -1,7 +1,7 @@
 {
   "_comment": "Copyright (c) 2024 Dreamery Software LLC. All rights reserved. Proprietary and confidential.",
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",

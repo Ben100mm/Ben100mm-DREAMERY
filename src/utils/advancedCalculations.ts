@@ -1532,6 +1532,10 @@ export const defaultSeasonalFactors: SeasonalFactors = {
   springVacancyRate: 0.05, // 5% higher in spring
   fallVacancyRate: 0, // No adjustment in fall
   seasonalMaintenanceMultiplier: 1.2, // 20% higher maintenance in summer
+  q1: 0.8, // Q1 (Jan-Mar): 80% occupancy multiplier
+  q2: 1.0, // Q2 (Apr-Jun): 100% occupancy multiplier
+  q3: 1.2, // Q3 (Jul-Sep): 120% occupancy multiplier
+  q4: 0.9, // Q4 (Oct-Dec): 90% occupancy multiplier
 };
 
 // Default location factors

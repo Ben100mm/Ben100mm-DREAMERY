@@ -6,7 +6,6 @@
 import {
   StandardMarketData,
   DataSource,
-  DataSourceAdapter,
   AggregationStrategy,
   AggregationConfig,
   ConflictResolution,
@@ -81,7 +80,7 @@ export class DataAggregator {
     }
 
     // Check if we have minimum required sources
-    if (sourceData.size < (this.config?.minimumSources || 1)) {
+    if (sourceData.size < this.config.minimumSources) {
       throw new AggregationError(
         `Failed to fetch from minimum required sources (${this.config.minimumSources})`,
         errors.map(e => e.source),

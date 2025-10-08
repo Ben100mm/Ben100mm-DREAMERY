@@ -13,6 +13,12 @@ import {
   Paper,
   Divider,
   Alert,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import { DealState } from "../types/deal";
 import { 
@@ -341,59 +347,58 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
                     Risk Category Breakdown
                   </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2">Market Risk:</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {weightedRiskAnalysis.riskBreakdown.marketRisk.toFixed(1)}
-                        </Typography>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={(weightedRiskAnalysis.riskBreakdown.marketRisk / 10) * 100}
-                          sx={{ width: 100, height: 6, borderRadius: 3 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2">Property Risk:</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {weightedRiskAnalysis.riskBreakdown.propertyRisk.toFixed(1)}
-                        </Typography>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={(weightedRiskAnalysis.riskBreakdown.propertyRisk / 10) * 100}
-                          sx={{ width: 100, height: 6, borderRadius: 3 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2">Tenant Risk:</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {weightedRiskAnalysis.riskBreakdown.tenantRisk.toFixed(1)}
-                        </Typography>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={(weightedRiskAnalysis.riskBreakdown.tenantRisk / 10) * 100}
-                          sx={{ width: 100, height: 6, borderRadius: 3 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2">Financing Risk:</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {weightedRiskAnalysis.riskBreakdown.financingRisk.toFixed(1)}
-                        </Typography>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={(weightedRiskAnalysis.riskBreakdown.financingRisk / 10) * 100}
-                          sx={{ width: 100, height: 6, borderRadius: 3 }}
-                        />
-                      </Box>
-                    </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    {(() => {
+                      const risks = [
+                        { label: 'Market Risk', value: weightedRiskAnalysis.riskBreakdown.marketRisk, description: 'Economic & market conditions' },
+                        { label: 'Property Risk', value: weightedRiskAnalysis.riskBreakdown.propertyRisk, description: 'Physical condition & location' },
+                        { label: 'Tenant Risk', value: weightedRiskAnalysis.riskBreakdown.tenantRisk, description: 'Occupancy & tenant quality' },
+                        { label: 'Financing Risk', value: weightedRiskAnalysis.riskBreakdown.financingRisk, description: 'Loan terms & leverage' }
+                      ];
+                      const totalRisk = risks.reduce((sum, r) => sum + r.value, 0);
+                      
+                      return risks.map((risk) => {
+                        const percentage = (risk.value / totalRisk) * 100;
+                        const color = risk.value < 3 ? brandColors.success : 
+                                     risk.value < 6 ? brandColors.warning : 
+                                     brandColors.error;
+                        
+                        return (
+                          <Box key={risk.label}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                              <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                  {risk.label}
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                                  {risk.description}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ textAlign: 'right' }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color }}>
+                                  {risk.value.toFixed(1)} / 10
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                                  {percentage.toFixed(1)}% of total
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <LinearProgress 
+                              variant="determinate" 
+                              value={(risk.value / 10) * 100}
+                              sx={{ 
+                                height: 8, 
+                                borderRadius: 4,
+                                backgroundColor: brandColors.neutral[200],
+                                '& .MuiLinearProgress-bar': {
+                                  backgroundColor: color
+                                }
+                              }}
+                            />
+                          </Box>
+                        );
+                      });
+                    })()}
                   </Box>
                 </Grid>
               </Grid>
@@ -728,7 +733,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     Risk-Adjusted Metrics
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2.4}>
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Sharpe Ratio
@@ -736,9 +741,15 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                           {monteCarloResults.riskMetrics.sharpeRatio.toFixed(2)}
                         </Typography>
+                        <Chip 
+                          label={monteCarloResults.riskMetrics.sharpeRatio > 1 ? 'Good' : monteCarloResults.riskMetrics.sharpeRatio > 0 ? 'Fair' : 'Poor'}
+                          size="small"
+                          color={monteCarloResults.riskMetrics.sharpeRatio > 1 ? 'success' : monteCarloResults.riskMetrics.sharpeRatio > 0 ? 'warning' : 'error'}
+                          sx={{ mt: 1 }}
+                        />
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2.4}>
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Sortino Ratio
@@ -746,9 +757,15 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                           {monteCarloResults.riskMetrics.sortinoRatio.toFixed(2)}
                         </Typography>
+                        <Chip 
+                          label={monteCarloResults.riskMetrics.sortinoRatio > 1.5 ? 'Excellent' : monteCarloResults.riskMetrics.sortinoRatio > 0.5 ? 'Good' : 'Poor'}
+                          size="small"
+                          color={monteCarloResults.riskMetrics.sortinoRatio > 1.5 ? 'success' : monteCarloResults.riskMetrics.sortinoRatio > 0.5 ? 'warning' : 'error'}
+                          sx={{ mt: 1 }}
+                        />
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2.4}>
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           VaR (95%)
@@ -756,9 +773,25 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                           {formatCurrency(monteCarloResults.riskMetrics.var95)}
                         </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
+                          5% worst case
+                        </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2.4}>
+                      <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          CVaR (95%)
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.error }}>
+                          {formatCurrency(monteCarloResults.riskMetrics.cvar95)}
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
+                          Expected shortfall
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2.4}>
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Probability of Loss
@@ -766,12 +799,316 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                           {(monteCarloResults.riskMetrics.probabilityOfLoss * 100).toFixed(1)}%
                         </Typography>
+                        <Chip 
+                          label={monteCarloResults.riskMetrics.probabilityOfLoss < 0.1 ? 'Low Risk' : monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? 'Moderate' : 'High Risk'}
+                          size="small"
+                          color={monteCarloResults.riskMetrics.probabilityOfLoss < 0.1 ? 'success' : monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? 'warning' : 'error'}
+                          sx={{ mt: 1 }}
+                        />
                       </Paper>
                     </Grid>
                   </Grid>
-                  <Typography variant="caption" sx={{ display: 'block', mt: 2, color: brandColors.neutral[600] }}>
-                    Higher Sharpe/Sortino ratios indicate better risk-adjusted returns. VaR shows the worst-case loss at 95% confidence.
+                  <Alert severity="info" sx={{ mt: 2 }}>
+                    <Typography variant="caption" sx={{ display: 'block' }}>
+                      <strong>Sharpe/Sortino Ratios:</strong> Higher values indicate better risk-adjusted returns (Sharpe &gt;1 is good, Sortino &gt;1.5 is excellent)
+                    </Typography>
+                    <Typography variant="caption" sx={{ display: 'block' }}>
+                      <strong>VaR:</strong> Maximum expected loss at 95% confidence (5% chance of worse outcome)
+                    </Typography>
+                    <Typography variant="caption" sx={{ display: 'block' }}>
+                      <strong>CVaR:</strong> Average loss in the worst 5% of scenarios (expected shortfall if VaR is breached)
+                    </Typography>
+                  </Alert>
+                </CardContent>
+              </Card>
+
+              {/* Scenario Analysis */}
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    Scenario Analysis (IRR)
                   </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={4}>
+                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#ffebee', border: '2px solid ' + brandColors.error }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
+                          WORST CASE (P10)
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.error, my: 2 }}>
+                          {monteCarloResults.irrStats.percentile10.toFixed(2)}%
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                          10% chance of this or worse
+                        </Typography>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Total Return: {formatCurrency(monteCarloResults.totalReturnStats.percentile10)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e3f2fd', border: '2px solid ' + brandColors.primary }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
+                          BASE CASE (MEDIAN)
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary, my: 2 }}>
+                          {monteCarloResults.irrStats.median.toFixed(2)}%
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                          50/50 probability
+                        </Typography>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Total Return: {formatCurrency(monteCarloResults.totalReturnStats.median)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9', border: '2px solid ' + brandColors.success }}>
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
+                          BEST CASE (P90)
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.success, my: 2 }}>
+                          {monteCarloResults.irrStats.percentile90.toFixed(2)}%
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                          10% chance of this or better
+                        </Typography>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                          Total Return: {formatCurrency(monteCarloResults.totalReturnStats.percentile90)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                  <Box sx={{ mt: 2, p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                      Range Analysis:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                      • Spread between P10 and P90: {Math.abs(monteCarloResults.irrStats.percentile90 - monteCarloResults.irrStats.percentile10).toFixed(2)}% IRR
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                      • Downside risk (Median to P10): {Math.abs(monteCarloResults.irrStats.median - monteCarloResults.irrStats.percentile10).toFixed(2)}%
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
+                      • Upside potential (P90 to Median): {Math.abs(monteCarloResults.irrStats.percentile90 - monteCarloResults.irrStats.median).toFixed(2)}%
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+
+              {/* Stress Test Results */}
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                    Stress Test Analysis
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: brandColors.neutral[800], mb: 2 }}>
+                    Investment resilience under adverse market conditions based on Monte Carlo simulation
+                  </Typography>
+                  <TableContainer component={Paper} sx={{ backgroundColor: brandColors.backgrounds.secondary }}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 600 }}>Stress Scenario</TableCell>
+                          <TableCell align="center" sx={{ fontWeight: 600 }}>Threshold</TableCell>
+                          <TableCell align="center" sx={{ fontWeight: 600 }}>Simulated Value</TableCell>
+                          <TableCell align="center" sx={{ fontWeight: 600 }}>Status</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>IRR Minimum</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              P10 scenario (worst 10%)
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&gt; 5%</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {monteCarloResults.irrStats.percentile10.toFixed(2)}%
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.irrStats.percentile10 > 5 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.irrStats.percentile10 > 5 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>Positive Return Probability</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              Likelihood of making money
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&gt; 70%</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {(monteCarloResults.probabilityOfPositiveReturn * 100).toFixed(1)}%
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.probabilityOfPositiveReturn > 0.7 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.probabilityOfPositiveReturn > 0.7 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>Loss Risk</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              Probability of negative return
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&lt; 30%</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {(monteCarloResults.riskMetrics.probabilityOfLoss * 100).toFixed(1)}%
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>Downside Deviation</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              Volatility of negative returns
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&lt; {(monteCarloResults.irrStats.stdDev * 1.5).toFixed(1)}%</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {monteCarloResults.riskMetrics.downsideDeviation.toFixed(2)}%
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>Risk-Adjusted Return</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              Sharpe ratio benchmark
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&gt; 0.5</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {monteCarloResults.riskMetrics.sharpeRatio.toFixed(2)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>Maximum Drawdown</Typography>
+                            <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                              Peak-to-trough decline
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">&lt; {formatCurrency(monteCarloResults.totalReturnStats.mean * 0.5)}</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {formatCurrency(monteCarloResults.riskMetrics.maxDrawdown)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip 
+                              label={monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5 ? 'PASS' : 'FAIL'}
+                              color={monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5 ? 'success' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <Box sx={{ mt: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Chip 
+                      label={`${[
+                        monteCarloResults.irrStats.percentile10 > 5,
+                        monteCarloResults.probabilityOfPositiveReturn > 0.7,
+                        monteCarloResults.riskMetrics.probabilityOfLoss < 0.3,
+                        monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5,
+                        monteCarloResults.riskMetrics.sharpeRatio > 0.5,
+                        monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5
+                      ].filter(Boolean).length}/6 Tests Passed`}
+                      color={[
+                        monteCarloResults.irrStats.percentile10 > 5,
+                        monteCarloResults.probabilityOfPositiveReturn > 0.7,
+                        monteCarloResults.riskMetrics.probabilityOfLoss < 0.3,
+                        monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5,
+                        monteCarloResults.riskMetrics.sharpeRatio > 0.5,
+                        monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5
+                      ].filter(Boolean).length >= 5 ? 'success' : [
+                        monteCarloResults.irrStats.percentile10 > 5,
+                        monteCarloResults.probabilityOfPositiveReturn > 0.7,
+                        monteCarloResults.riskMetrics.probabilityOfLoss < 0.3,
+                        monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5,
+                        monteCarloResults.riskMetrics.sharpeRatio > 0.5,
+                        monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5
+                      ].filter(Boolean).length >= 3 ? 'warning' : 'error'}
+                      sx={{ fontWeight: 600 }}
+                    />
+                    <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
+                      {[
+                        monteCarloResults.irrStats.percentile10 > 5,
+                        monteCarloResults.probabilityOfPositiveReturn > 0.7,
+                        monteCarloResults.riskMetrics.probabilityOfLoss < 0.3,
+                        monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5,
+                        monteCarloResults.riskMetrics.sharpeRatio > 0.5,
+                        monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5
+                      ].filter(Boolean).length >= 5 
+                        ? 'Investment shows strong resilience under stress conditions' 
+                        : [
+                          monteCarloResults.irrStats.percentile10 > 5,
+                          monteCarloResults.probabilityOfPositiveReturn > 0.7,
+                          monteCarloResults.riskMetrics.probabilityOfLoss < 0.3,
+                          monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5,
+                          monteCarloResults.riskMetrics.sharpeRatio > 0.5,
+                          monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5
+                        ].filter(Boolean).length >= 3
+                          ? 'Investment shows moderate stress resilience - review failed tests'
+                          : 'Investment may be vulnerable under adverse conditions - consider risk mitigation'
+                      }
+                    </Typography>
+                  </Box>
                 </CardContent>
               </Card>
 

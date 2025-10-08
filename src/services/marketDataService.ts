@@ -667,200 +667,310 @@ export class MarketDataService {
 
   /**
    * Calculate market volatility score (1-10)
+   * Calibrated against national averages
    * Higher score = more volatile/risky market
    */
   private calculateMarketVolatility(data: MarketDataPoint): number {
+    return this.calculateVolatilityScore(data);
+  }
+
+  /**
+   * Calculate volatility score using calibrated thresholds
+   * Calibrated against national averages for more accurate risk assessment
+   */
+  private calculateVolatilityScore(data: MarketDataPoint): number {
     let volatilityPoints = 0;
 
-    // Price appreciation volatility (0-3 points)
+    // RENT GROWTH VOLATILITY (calibrated against national avg ~3-4%)
+    // Higher absolute change = more volatility
+    const absRentGrowth = Math.abs(data.rentGrowth12mo);
+    if (absRentGrowth > 8) {
+      volatilityPoints += 3; // Extreme volatility
+    } else if (absRentGrowth > 5) {
+      volatilityPoints += 2; // High volatility
+    } else if (absRentGrowth < 2) {
+      volatilityPoints -= 1; // Very stable (bonus)
+    }
+    // 2-5% is normal range (0 points)
+
+    // PRICE APPRECIATION VOLATILITY (calibrated against national avg ~4-6%)
+    // Extreme swings indicate unstable market
     const absAppreciation = Math.abs(data.appreciationRate12mo);
     if (absAppreciation > 15) {
-      volatilityPoints += 3; // Very volatile
-    } else if (absAppreciation > 10) {
-      volatilityPoints += 2; // Moderately volatile
-    } else if (absAppreciation > 6) {
-      volatilityPoints += 1; // Slightly volatile
+      volatilityPoints += 2; // Very volatile
+    } else if (absAppreciation < 3) {
+      volatilityPoints -= 1; // Very stable (bonus)
     }
-    // else 0 points for stable appreciation
+    // 3-15% is normal range (0 points)
 
-    // Rent growth volatility (0-2 points)
-    const absRentGrowth = Math.abs(data.rentGrowth12mo);
-    if (absRentGrowth > 10) {
-      volatilityPoints += 2;
-    } else if (absRentGrowth > 5) {
-      volatilityPoints += 1;
+    // VACANCY RATE (calibrated against national avg ~6-7%)
+    // High vacancy = market instability
+    if (data.vacancyRate > 10) {
+      volatilityPoints += 2; // High vacancy = unstable
+    } else if (data.vacancyRate > 7) {
+      volatilityPoints += 1; // Above average
+    } else if (data.vacancyRate < 4) {
+      volatilityPoints -= 1; // Very tight market (bonus)
     }
+    // 4-7% is normal range (0 points)
 
-    // Vacancy rate (0-2 points)
-    if (data.vacancyRate > 12) {
-      volatilityPoints += 2; // High vacancy = unstable market
-    } else if (data.vacancyRate > 8) {
-      volatilityPoints += 1;
-    }
-
-    // Days on market (0-1 point)
+    // DAYS ON MARKET (calibrated against national avg ~40-50 days)
+    // Longer DOM = less liquidity/volatility
     if (data.daysOnMarket > 75) {
-      volatilityPoints += 1; // Slow market = less liquidity
+      volatilityPoints += 1; // Slow market
+    } else if (data.daysOnMarket < 30) {
+      volatilityPoints -= 1; // Fast market (bonus)
     }
 
-    // Foreclosure rate (0-2 points)
+    // FORECLOSURE RATE (calibrated against national avg ~1%)
+    // High foreclosures = economic stress
     if (data.foreclosureRate > 2.5) {
-      volatilityPoints += 2; // High foreclosures = market stress
+      volatilityPoints += 2; // High stress
     } else if (data.foreclosureRate > 1.5) {
-      volatilityPoints += 1;
+      volatilityPoints += 1; // Moderate stress
+    } else if (data.foreclosureRate < 0.5) {
+      volatilityPoints -= 1; // Very healthy (bonus)
     }
 
-    // Convert to 1-10 scale (max 10 points possible)
-    const score = Math.min(10, Math.max(1, volatilityPoints + 1));
+    // Convert to 1-10 scale
+    // Base is 5.5, adjust by points (can go below 1 or above 10, but we'll clamp)
+    const rawScore = 5.5 + volatilityPoints;
+    const score = Math.min(10, Math.max(1, rawScore));
     
     return Math.round(score * 10) / 10; // Round to 1 decimal
   }
 
   /**
    * Calculate location stability score (1-10)
+   * Calibrated against national averages
    * Higher score = more stable/desirable location
    */
   private calculateLocationStability(data: MarketDataPoint): number {
+    return this.calculateLocationStabilityScore(data);
+  }
+
+  /**
+   * Calculate location stability score using calibrated thresholds
+   * Based on economic diversity, foreclosure rate, days on market, safety score, and school rating
+   */
+  private calculateLocationStabilityScore(data: MarketDataPoint): number {
     let stabilityPoints = 0;
 
-    // Economic diversity (0-3 points)
+    // ECONOMIC DIVERSITY INDEX (calibrated against national avg ~65)
+    // Higher diversity = more resilient to economic shocks
     if (data.economicDiversityIndex > 80) {
-      stabilityPoints += 3; // Highly diverse economy
-    } else if (data.economicDiversityIndex > 65) {
-      stabilityPoints += 2;
-    } else if (data.economicDiversityIndex > 50) {
-      stabilityPoints += 1;
+      stabilityPoints += 3; // Highly diverse, very stable
+    } else if (data.economicDiversityIndex > 70) {
+      stabilityPoints += 2; // Above average diversity
+    } else if (data.economicDiversityIndex > 60) {
+      stabilityPoints += 1; // Average diversity
+    } else if (data.economicDiversityIndex < 45) {
+      stabilityPoints -= 2; // Single-industry risk
+    } else if (data.economicDiversityIndex < 55) {
+      stabilityPoints -= 1; // Below average diversity
     }
 
-    // Crime and safety (0-3 points)
+    // FORECLOSURE RATE (calibrated against national avg ~1%)
+    // Lower foreclosures = stable community
+    if (data.foreclosureRate < 0.5) {
+      stabilityPoints += 2; // Very healthy market
+    } else if (data.foreclosureRate < 1.0) {
+      stabilityPoints += 1; // Below average foreclosures
+    } else if (data.foreclosureRate > 2.5) {
+      stabilityPoints -= 2; // High distress
+    } else if (data.foreclosureRate > 1.5) {
+      stabilityPoints -= 1; // Above average foreclosures
+    }
+
+    // DAYS ON MARKET (calibrated against national avg ~40-50 days)
+    // Faster sales = more desirable location
+    if (data.daysOnMarket < 30) {
+      stabilityPoints += 2; // Hot market, very desirable
+    } else if (data.daysOnMarket < 45) {
+      stabilityPoints += 1; // Above average desirability
+    } else if (data.daysOnMarket > 75) {
+      stabilityPoints -= 1; // Slow market
+    } else if (data.daysOnMarket > 90) {
+      stabilityPoints -= 2; // Very slow market
+    }
+
+    // CRIME/SAFETY SCORE (calibrated against national avg ~70)
+    // Higher safety = more stable, desirable location
     if (data.crimeSafetyScore > 85) {
-      stabilityPoints += 3; // Very safe
-    } else if (data.crimeSafetyScore > 70) {
-      stabilityPoints += 2;
-    } else if (data.crimeSafetyScore > 55) {
-      stabilityPoints += 1;
+      stabilityPoints += 2; // Very safe
+    } else if (data.crimeSafetyScore > 75) {
+      stabilityPoints += 1; // Above average safety
+    } else if (data.crimeSafetyScore < 55) {
+      stabilityPoints -= 2; // Safety concerns
+    } else if (data.crimeSafetyScore < 65) {
+      stabilityPoints -= 1; // Below average safety
     }
 
-    // School ratings (0-2 points)
-    if (data.schoolRating > 8) {
+    // SCHOOL RATING (calibrated against national avg ~6-7)
+    // Better schools = family appeal, stability
+    if (data.schoolRating > 8.5) {
       stabilityPoints += 2; // Excellent schools
-    } else if (data.schoolRating > 6) {
-      stabilityPoints += 1;
+    } else if (data.schoolRating > 7.5) {
+      stabilityPoints += 1; // Above average schools
+    } else if (data.schoolRating < 5) {
+      stabilityPoints -= 1; // Below average schools
     }
 
-    // Foreclosure rate (inverse - 0-1 point)
-    if (data.foreclosureRate < 1.0) {
-      stabilityPoints += 1; // Low foreclosures = stable community
-    }
-
-    // Market liquidity (0-1 point)
-    if (data.daysOnMarket < 45) {
-      stabilityPoints += 1; // Quick sales = desirable area
-    }
-
-    // Convert to 1-10 scale (max 10 points possible)
-    const score = Math.min(10, Math.max(1, stabilityPoints + 1));
+    // Convert to 1-10 scale
+    // Base is 5.5, adjust by points
+    const rawScore = 5.5 + stabilityPoints;
+    const score = Math.min(10, Math.max(1, rawScore));
     
     return Math.round(score * 10) / 10; // Round to 1 decimal
   }
 
   /**
-   * Generate risk-specific recommendations
+   * Generate data-driven recommendations based on market data
+   * Uses calibrated thresholds and actual metrics
    */
   private generateRiskRecommendations(
     data: MarketDataPoint,
     volatilityScore: number,
     stabilityScore: number,
   ): string[] {
+    return this.generateDataDrivenRecommendations(data, volatilityScore, stabilityScore);
+  }
+
+  /**
+   * Generate data-driven recommendations based on actual market metrics
+   * Calibrated against national averages for actionable insights
+   */
+  private generateDataDrivenRecommendations(
+    data: MarketDataPoint,
+    volatilityScore: number,
+    stabilityScore: number,
+  ): string[] {
     const recommendations: string[] = [];
 
-    // Market volatility recommendations
-    if (volatilityScore >= 8) {
+    // RENT GROWTH VOLATILITY ASSESSMENT (calibrated vs national avg 3-4%)
+    const absRentGrowth = Math.abs(data.rentGrowth12mo);
+    if (absRentGrowth > 8) {
       recommendations.push(
-        `High market volatility (${volatilityScore}/10): Consider larger cash reserves and conservative projections`,
+        `⚠️ Extreme rent volatility (${data.rentGrowth12mo.toFixed(1)}% vs 3-4% national avg): High income uncertainty - use conservative projections`,
       );
+    } else if (absRentGrowth > 5) {
       recommendations.push(
-        'Factor in wider margin of safety due to market instability',
+        `Elevated rent volatility (${data.rentGrowth12mo.toFixed(1)}%): Factor in potential rent fluctuations`,
       );
-    } else if (volatilityScore >= 6) {
+    } else if (absRentGrowth < 2) {
       recommendations.push(
-        `Moderate market volatility (${volatilityScore}/10): Use stress testing for downside scenarios`,
-      );
-    } else {
-      recommendations.push(
-        `Low market volatility (${volatilityScore}/10): Market shows stable characteristics`,
+        `✓ Stable rent growth (${data.rentGrowth12mo.toFixed(1)}%): Predictable income stream`,
       );
     }
 
-    // Location stability recommendations
-    if (stabilityScore <= 4) {
+    // PRICE APPRECIATION ASSESSMENT (calibrated vs national avg 4-6%)
+    const absAppreciation = Math.abs(data.appreciationRate12mo);
+    if (absAppreciation > 15) {
       recommendations.push(
-        `Low location stability (${stabilityScore}/10): Higher tenant turnover and management challenges likely`,
+        `⚠️ High price volatility (${data.appreciationRate12mo.toFixed(1)}% vs 4-6% avg): Potential bubble risk or rapid correction`,
       );
+    } else if (data.appreciationRate12mo < 0) {
       recommendations.push(
-        'Consider exit strategy carefully - lower liquidity expected',
+        `Market correction phase (${data.appreciationRate12mo.toFixed(1)}%): Consider timing and entry price carefully`,
       );
-    } else if (stabilityScore <= 6) {
+    } else if (absAppreciation < 3) {
       recommendations.push(
-        `Moderate location stability (${stabilityScore}/10): Standard property management practices recommended`,
-      );
-    } else {
-      recommendations.push(
-        `High location stability (${stabilityScore}/10): Desirable area with strong fundamentals`,
+        `✓ Stable appreciation (${data.appreciationRate12mo.toFixed(1)}%): Lower speculation risk`,
       );
     }
 
-    // Specific metric-based recommendations
-    if (data.appreciationRate12mo < 0) {
-      recommendations.push(
-        `Negative price appreciation (${data.appreciationRate12mo.toFixed(1)}%): Market may be in correction phase`,
-      );
-    }
-
+    // VACANCY RATE ASSESSMENT (calibrated vs national avg 6-7%)
     if (data.vacancyRate > 10) {
       recommendations.push(
-        `High vacancy rate (${data.vacancyRate.toFixed(1)}%): Plan for extended lease-up periods`,
+        `⚠️ High vacancy (${data.vacancyRate.toFixed(1)}% vs 6-7% avg): Factor in 2-3 month lease-up time and possible concessions`,
       );
-    }
-
-    if (data.foreclosureRate > 2) {
+    } else if (data.vacancyRate > 7) {
       recommendations.push(
-        `Elevated foreclosure rate (${data.foreclosureRate.toFixed(1)}%): Economic stress in market`,
+        `Above-average vacancy (${data.vacancyRate.toFixed(1)}%): Plan for standard 1-2 month lease-up`,
       );
-    }
-
-    if (data.economicDiversityIndex < 50) {
+    } else if (data.vacancyRate < 4) {
       recommendations.push(
-        'Low economic diversity: Single-industry risk - research primary employers',
+        `✓ Tight rental market (${data.vacancyRate.toFixed(1)}%): Strong rental demand, potential for rent growth`,
       );
     }
 
-    if (data.crimeSafetyScore < 60) {
+    // DAYS ON MARKET ASSESSMENT (calibrated vs national avg 40-50 days)
+    if (data.daysOnMarket > 75) {
       recommendations.push(
-        'Safety concerns: May impact insurance costs and tenant quality',
+        `Slow market (${Math.round(data.daysOnMarket)} days vs 40-50 avg): Lower exit liquidity - plan longer holding period`,
+      );
+    } else if (data.daysOnMarket < 30) {
+      recommendations.push(
+        `✓ Hot market (${Math.round(data.daysOnMarket)} days): High demand area, good exit liquidity`,
       );
     }
 
+    // FORECLOSURE RATE ASSESSMENT (calibrated vs national avg 1%)
+    if (data.foreclosureRate > 2.5) {
+      recommendations.push(
+        `⚠️ High foreclosure rate (${data.foreclosureRate.toFixed(1)}% vs 1% avg): Economic distress - verify employment stability`,
+      );
+    } else if (data.foreclosureRate < 0.5) {
+      recommendations.push(
+        `✓ Healthy market (${data.foreclosureRate.toFixed(1)}% foreclosures): Strong economic fundamentals`,
+      );
+    }
+
+    // ECONOMIC DIVERSITY ASSESSMENT (calibrated vs national avg 65)
+    if (data.economicDiversityIndex < 45) {
+      recommendations.push(
+        `⚠️ Low economic diversity (${data.economicDiversityIndex.toFixed(0)}/100 vs 65 avg): Single-industry risk - research top 3 employers`,
+      );
+    } else if (data.economicDiversityIndex > 80) {
+      recommendations.push(
+        `✓ Diverse economy (${data.economicDiversityIndex.toFixed(0)}/100): Resilient to industry-specific downturns`,
+      );
+    }
+
+    // SAFETY ASSESSMENT (calibrated vs national avg 70)
+    if (data.crimeSafetyScore < 55) {
+      recommendations.push(
+        `⚠️ Safety concerns (${data.crimeSafetyScore.toFixed(0)}/100 vs 70 avg): May impact insurance (+15-25%) and tenant quality`,
+      );
+    } else if (data.crimeSafetyScore > 85) {
+      recommendations.push(
+        `✓ Safe area (${data.crimeSafetyScore.toFixed(0)}/100): Appeals to quality tenants, supports rent premiums`,
+      );
+    }
+
+    // SCHOOL RATING ASSESSMENT (calibrated vs national avg 6-7)
     if (data.schoolRating < 5) {
       recommendations.push(
-        'Below-average schools: May limit appeal to family tenants',
+        `Below-average schools (${data.schoolRating.toFixed(1)}/10 vs 6-7 avg): Limited family appeal - target working professionals`,
+      );
+    } else if (data.schoolRating > 8.5) {
+      recommendations.push(
+        `✓ Excellent schools (${data.schoolRating.toFixed(1)}/10): Strong family demand, long-term tenant stability`,
       );
     }
 
-    // Combined risk assessment
+    // COMBINED RISK ASSESSMENT
     if (volatilityScore > 7 && stabilityScore < 5) {
       recommendations.push(
-        '⚠️ HIGH RISK COMBINATION: Volatile market + unstable location = significant investment risk',
+        `🚨 HIGH RISK: Volatility ${volatilityScore}/10 + Stability ${stabilityScore}/10 = Significant investment risk`,
+      );
+      recommendations.push(
+        'Consider: 50% higher down payment, 12-month reserves, conservative cap rate (+1-2%)',
       );
     } else if (volatilityScore < 4 && stabilityScore > 7) {
       recommendations.push(
-        '✓ FAVORABLE PROFILE: Stable market + strong location = lower-risk investment',
+        `✅ FAVORABLE: Volatility ${volatilityScore}/10 + Stability ${stabilityScore}/10 = Lower-risk investment opportunity`,
+      );
+    } else if (volatilityScore >= 6 || stabilityScore <= 6) {
+      recommendations.push(
+        `Moderate risk profile: Run stress tests for 20% income drop and 15% expense increase scenarios`,
       );
     }
 
-    // Minimum buffer recommendation
+    // CASH RESERVE RECOMMENDATION (data-driven)
+    const buffer = this.calculateRecommendedBuffer(volatilityScore, stabilityScore);
     recommendations.push(
-      `Recommended cash reserve buffer: ${this.calculateRecommendedBuffer(volatilityScore, stabilityScore)} months`,
+      `💰 Recommended reserves: ${buffer} months (covers ${(buffer * data.medianRent).toLocaleString('en-US', { style: 'currency', currency: 'USD' })})`,
     );
 
     return recommendations;

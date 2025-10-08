@@ -131,6 +131,7 @@ import {
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
 const LazyDeleteIcon = React.lazy(() => import("@mui/icons-material/Delete"));
 const LazyTrendingUpIcon = React.lazy(() => import("@mui/icons-material/TrendingUp"));
+const LazyRestartAltIcon = React.lazy(() => import("@mui/icons-material/RestartAlt"));
 
 // All type definitions are now imported from types/deal.ts
 
@@ -4637,6 +4638,159 @@ const UnderwritePage: React.FC = () => {
     });
   }
 
+  // Reset handler functions for individual accordions
+  function resetBasicInfo() {
+    setState((prev) => ({
+      ...prev,
+      agentOwner: defaultState.agentOwner,
+      propertyAddress: defaultState.propertyAddress,
+      email: defaultState.email,
+      call: defaultState.call,
+      listedPrice: defaultState.listedPrice,
+      purchasePrice: defaultState.purchasePrice,
+      propertyType: defaultState.propertyType,
+      operationType: defaultState.operationType,
+      offerType: defaultState.offerType,
+      city: defaultState.city,
+      state: defaultState.state,
+    }));
+  }
+
+  function resetSubjectTo() {
+    setState((prev) => ({
+      ...prev,
+      subjectTo: { ...defaultState.subjectTo },
+    }));
+  }
+
+  function resetSellerFinance() {
+    // Seller finance fields are stored in state.loan when offerType is "Seller Finance"
+    setState((prev) => ({
+      ...prev,
+      loan: { ...defaultState.loan },
+    }));
+  }
+
+  function resetHybridFinancing() {
+    setState((prev) => ({
+      ...prev,
+      hybrid: { ...defaultState.hybrid },
+    }));
+  }
+
+  function resetCosts() {
+    setState((prev) => ({
+      ...prev,
+      loan: {
+        ...prev.loan,
+        closingCosts: defaultState.loan.closingCosts,
+        rehabCosts: defaultState.loan.rehabCosts,
+      },
+    }));
+  }
+
+  function resetLoanCosts() {
+    setState((prev) => ({
+      ...prev,
+      loan: JSON.parse(JSON.stringify(defaultState.loan)),
+      arbitrage: JSON.parse(JSON.stringify(defaultState.arbitrage)),
+    }));
+  }
+
+  function resetIncome() {
+    setState((prev) => ({
+      ...prev,
+      sfr: JSON.parse(JSON.stringify(defaultState.sfr)),
+      multi: JSON.parse(JSON.stringify(defaultState.multi)),
+      str: JSON.parse(JSON.stringify(defaultState.str)),
+      enhancedSTR: JSON.parse(JSON.stringify(defaultState.enhancedSTR)),
+      officeRetail: JSON.parse(JSON.stringify(defaultState.officeRetail)),
+      land: JSON.parse(JSON.stringify(defaultState.land)),
+    }));
+  }
+
+  function resetOperatingExpenses() {
+    setState((prev) => ({
+      ...prev,
+      ops: { ...defaultState.ops },
+    }));
+  }
+
+  function resetProForma() {
+    setState((prev) => ({
+      ...prev,
+      ops: {
+        ...prev.ops,
+        maintenance: defaultState.ops.maintenance,
+        vacancy: defaultState.ops.vacancy,
+        management: defaultState.ops.management,
+        capEx: defaultState.ops.capEx,
+        opEx: defaultState.ops.opEx,
+      },
+    }));
+  }
+
+  function resetAppreciation() {
+    setState((prev) => ({
+      ...prev,
+      appreciation: { ...defaultState.appreciation },
+    }));
+  }
+
+  function resetFixFlip() {
+    setState((prev) => ({
+      ...prev,
+      fixFlip: JSON.parse(JSON.stringify(defaultState.fixFlip)),
+    }));
+  }
+
+  function resetBRRRR() {
+    setState((prev) => ({
+      ...prev,
+      brrrr: JSON.parse(JSON.stringify(defaultState.brrrr)),
+    }));
+  }
+
+  function resetAdvancedAnalysis() {
+    setState((prev) => ({
+      ...prev,
+      marketConditions: defaultState.marketConditions,
+      seasonalFactors: defaultState.seasonalFactors,
+      propertyAge: defaultState.propertyAge,
+      locationFactors: defaultState.locationFactors,
+      riskFactors: defaultState.riskFactors,
+    }));
+  }
+
+  function resetTaxImplications() {
+    setState((prev) => ({
+      ...prev,
+      taxImplications: defaultState.taxImplications,
+      enhancedTaxConfig: defaultState.enhancedTaxConfig,
+    }));
+  }
+
+  function resetCapitalEvents() {
+    setState((prev) => ({
+      ...prev,
+      capitalEvents: { ...defaultState.capitalEvents },
+    }));
+  }
+
+  function resetExitStrategies() {
+    setState((prev) => ({
+      ...prev,
+      exitStrategies: [...defaultState.exitStrategies],
+    }));
+  }
+
+  function reset1031Exchange() {
+    setState((prev) => ({
+      ...prev,
+      exchange1031: JSON.parse(JSON.stringify(defaultState.exchange1031)),
+    }));
+  }
+
   // Helper function to safely access loan data with validation
   function getSubjectToLoan(
     state: DealState,
@@ -5118,7 +5272,24 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-              <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 700 }}>Basic Info</Typography>
+                <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                  <LazyRestartAltIcon 
+                    sx={{ 
+                      fontSize: 18, 
+                      color: 'text.secondary', 
+                      cursor: 'pointer',
+                      '&:hover': { color: 'primary.main' },
+                      mr: 1
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetBasicInfo();
+                    }}
+                  />
+                </React.Suspense>
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -5329,9 +5500,26 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    Subject-To Existing Mortgage
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      Subject-To Existing Mortgage
+                    </Typography>
+                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                      <LazyRestartAltIcon 
+                        sx={{ 
+                          fontSize: 18, 
+                          color: 'text.secondary', 
+                          cursor: 'pointer',
+                          '&:hover': { color: 'primary.main' },
+                          mr: 1
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          resetSubjectTo();
+                        }}
+                      />
+                    </React.Suspense>
+                  </Box>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Box
@@ -5890,7 +6078,24 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 700 }}>Seller Finance</Typography>
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: 'primary.main' },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        resetSellerFinance();
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -6231,9 +6436,26 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Hybrid Financing
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Hybrid Financing
+                  </Typography>
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: 'primary.main' },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        resetHybridFinancing();
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box
@@ -6451,7 +6673,24 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 700 }}>Costs</Typography>
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: 'primary.main' },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        resetCosts();
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -6775,11 +7014,28 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                  <Typography sx={{ fontWeight: 700 }}>
-                    {state.operationType === "Rental Arbitrage"
-                      ? "Startup Costs"
-                      : "Loan & Costs"}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {state.operationType === "Rental Arbitrage"
+                        ? "Startup Costs"
+                        : "Loan & Costs"}
+                    </Typography>
+                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                      <LazyRestartAltIcon 
+                        sx={{ 
+                          fontSize: 18, 
+                          color: 'text.secondary', 
+                          cursor: 'pointer',
+                          '&:hover': { color: 'primary.main' },
+                          mr: 1
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          resetLoanCosts();
+                        }}
+                      />
+                    </React.Suspense>
+                  </Box>
                 </AccordionSummary>
                 <AccordionDetails>
                   {state.operationType === "Rental Arbitrage" ? (
@@ -7141,9 +7397,26 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Typography sx={{ fontWeight: 700 }}>
-                  Appreciation Calculator
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 700 }}>
+                    Appreciation Calculator
+                  </Typography>
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: 'primary.main' },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        resetAppreciation();
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 {/* Balloon Payment Integration Indicator */}
@@ -7470,7 +7743,24 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Typography sx={{ fontWeight: 700 }}>Income</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 700 }}>Income</Typography>
+                  <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                    <LazyRestartAltIcon 
+                      sx={{ 
+                        fontSize: 18, 
+                        color: 'text.secondary', 
+                        cursor: 'pointer',
+                        '&:hover': { color: 'primary.main' },
+                        mr: 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        resetIncome();
+                      }}
+                    />
+                  </React.Suspense>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -7965,9 +8255,26 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-              <Typography sx={{ fontWeight: 700 }}>
-                Operating Expenses
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Operating Expenses
+                </Typography>
+                <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                  <LazyRestartAltIcon 
+                    sx={{ 
+                      fontSize: 18, 
+                      color: 'text.secondary', 
+                      cursor: 'pointer',
+                      '&:hover': { color: 'primary.main' },
+                      mr: 1
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetOperatingExpenses();
+                    }}
+                  />
+                </React.Suspense>
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant="subtitle2" sx={{ mb: 2, color: brandColors.neutral[800] }}>
@@ -9080,27 +9387,43 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', justifyContent: 'space-between' }}>
                   <Typography sx={{ fontWeight: 700 }}>
                     Pro Forma Analysis
                   </Typography>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={state.proFormaEnabled || false}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          setState((prev) => ({
-                            ...prev,
-                            proFormaEnabled: e.target.checked,
-                          }));
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                      <LazyRestartAltIcon 
+                        sx={{ 
+                          fontSize: 18, 
+                          color: 'text.secondary', 
+                          cursor: 'pointer',
+                          '&:hover': { color: 'primary.main' },
+                          mr: 1
                         }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          resetProForma();
+                        }}
                       />
-                    }
-                    label="Enable"
-                    sx={{ ml: 'auto' }}
-                  />
+                    </React.Suspense>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.proFormaEnabled || false}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setState((prev) => ({
+                              ...prev,
+                              proFormaEnabled: e.target.checked,
+                            }));
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      }
+                      label="Enable"
+                    />
+                  </Box>
                 </Box>
               </AccordionSummary>
               <AccordionDetails>
@@ -10413,7 +10736,24 @@ const UnderwritePage: React.FC = () => {
                   <LazyExpandMoreIcon />
                 </React.Suspense>
               }>
-              <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 700 }}>At a Glance</Typography>
+                <React.Suspense fallback={<Box sx={{ width: 18, height: 18 }} />}>
+                  <LazyRestartAltIcon 
+                    sx={{ 
+                      fontSize: 18, 
+                      color: 'text.secondary', 
+                      cursor: 'pointer',
+                      '&:hover': { color: 'primary.main' },
+                      mr: 1
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetAdvancedAnalysis();
+                    }}
+                  />
+                </React.Suspense>
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

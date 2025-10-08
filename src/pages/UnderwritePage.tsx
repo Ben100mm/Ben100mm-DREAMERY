@@ -8977,15 +8977,15 @@ const UnderwritePage: React.FC = () => {
                           },
                           acquiring1031: {
                             ...(prev.acquiring1031 || defaultState.acquiring1031!),
-                            enabled: false, // Keep acquisition tracking disabled by default
+                            enabled: enabled, // Enable all when main toggle is on
                           },
                           exchange721: {
                             ...(prev.exchange721 || defaultState.exchange721!),
-                            enabled: false, // Keep 721 disabled by default when toggling main switch
+                            enabled: enabled, // Enable all when main toggle is on
                           },
                           acquiring721: {
                             ...(prev.acquiring721 || defaultState.acquiring721!),
-                            enabled: false, // Keep 721 acquisition disabled by default
+                            enabled: enabled, // Enable all when main toggle is on
                           },
                         }));
                       }}
@@ -9584,7 +9584,7 @@ const UnderwritePage: React.FC = () => {
                 {!state.exchange1031?.enabled && (
                   <Alert severity="info">
                     <Typography variant="body2">
-                      Enable the 1031 Exchange Calculator to model like-kind exchange scenarios and calculate deferred capital gains.
+                      Use the main toggle above to enable Tax-Deferred Exchange functionality.
                       A 1031 exchange allows you to defer capital gains taxes when selling an investment property by reinvesting the proceeds into a similar property.
                     </Typography>
                   </Alert>
@@ -9763,29 +9763,11 @@ const UnderwritePage: React.FC = () => {
                 ) : (
                   <Alert severity="info">
                     <Typography variant="body2">
-                      Enable this section if you're purchasing this property as a replacement property in a 1031 exchange.
+                      Use the main toggle above to enable this section if you're purchasing this property as a replacement property in a 1031 exchange.
                       This will track your carryover basis and deferred gains for accurate tax planning.
                     </Typography>
                   </Alert>
                 )}
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state.acquiring1031?.enabled || false}
-                          onChange={(e) => {
-                            setState((prev) => ({
-                              ...prev,
-                              acquiring1031: {
-                                ...(prev.acquiring1031 || defaultState.acquiring1031!),
-                                enabled: e.target.checked,
-                              },
-                            }));
-                          }}
-                        />
-                      }
-                      label="Enable 1031 Acquisition Tracking"
-                      sx={{ mt: 2 }}
-                    />
                   </Box>
                 )}
 
@@ -9801,24 +9783,6 @@ const UnderwritePage: React.FC = () => {
                       </Typography>
                     </Alert>
 
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state.exchange721?.enabled || false}
-                          onChange={(e) => {
-                            setState((prev) => ({
-                              ...prev,
-                              exchange721: {
-                                ...(prev.exchange721 || defaultState.exchange721!),
-                                enabled: e.target.checked,
-                              },
-                            }));
-                          }}
-                        />
-                      }
-                      label="Enable 721 Exchange Calculator"
-                      sx={{ mb: 3 }}
-                    />
 
                     {state.exchange721?.enabled ? (
                       <>
@@ -10111,7 +10075,7 @@ const UnderwritePage: React.FC = () => {
                     ) : (
                       <Alert severity="info">
                         <Typography variant="body2">
-                          Enable the 721 Exchange Calculator to model UPREIT contributions. This strategy provides passive income through REIT distributions
+                          Use the main toggle above to enable the 721 Exchange Calculator to model UPREIT contributions. This strategy provides passive income through REIT distributions
                           while deferring capital gains, with more flexibility than traditional 1031 exchanges.
                         </Typography>
                       </Alert>
@@ -10131,24 +10095,6 @@ const UnderwritePage: React.FC = () => {
                       </Typography>
                     </Alert>
 
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state.acquiring721?.enabled || false}
-                          onChange={(e) => {
-                            setState((prev) => ({
-                              ...prev,
-                              acquiring721: {
-                                ...(prev.acquiring721 || defaultState.acquiring721!),
-                                enabled: e.target.checked,
-                              },
-                            }));
-                          }}
-                        />
-                      }
-                      label="Enable 721 OP Units Tracking"
-                      sx={{ mb: 3 }}
-                    />
 
                     {state.acquiring721?.enabled ? (
                       <>
@@ -10347,7 +10293,7 @@ const UnderwritePage: React.FC = () => {
                     ) : (
                       <Alert severity="info">
                         <Typography variant="body2">
-                          Enable this section if you're holding OP units from a 721 UPREIT exchange.
+                          Use the main toggle above to enable this section if you're holding OP units from a 721 UPREIT exchange.
                           This will track your passive income, unit value, and deferred tax obligations.
                         </Typography>
                       </Alert>

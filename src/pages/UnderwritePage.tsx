@@ -81,6 +81,11 @@ import { MLRiskPredictionDisplay } from "../components/MLRiskPredictionDisplay";
 import { ModeSelector } from "../components/calculator/ModeSelector";
 import { useCalculatorMode } from "../hooks/useCalculatorMode";
 import { isAccordionVisible, getAccordionDetailLevel } from "../types/calculatorMode";
+import { RegionalAdjustmentPanel } from "../components/calculator/RegionalAdjustmentPanel";
+import { 
+  type RegionKey, 
+  getLocationAdjustedPreset 
+} from "../utils/regionalMultipliers";
 
 // Lazy load icons to reduce initial bundle size
 const LazyExpandMoreIcon = React.lazy(() => import("@mui/icons-material/ExpandMore"));
@@ -2801,6 +2806,10 @@ const UnderwritePage: React.FC = () => {
   
   // Calculator Mode Management
   const { mode: calculatorMode, setMode: setCalculatorMode, isEssential, isStandard, isProfessional } = useCalculatorMode();
+  
+  // Regional Adjustment State
+  const [regionalAdjustmentEnabled, setRegionalAdjustmentEnabled] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState<RegionKey>('national-average');
   
   function validateAndNormalizeState(input: DealState): {
     next: DealState;
@@ -8197,6 +8206,20 @@ const UnderwritePage: React.FC = () => {
               >
                 Variable Expenses (% of Income)
               </Typography>
+              
+              {/* Regional Adjustment Panel */}
+              <Box sx={{ mb: 3 }}>
+                <RegionalAdjustmentPanel
+                  enabled={regionalAdjustmentEnabled}
+                  onEnabledChange={setRegionalAdjustmentEnabled}
+                  selectedRegion={selectedRegion}
+                  onRegionChange={setSelectedRegion}
+                  propertyAddress={state.propertyAddress}
+                  autoDetect={isEssential}
+                  variant="full"
+                />
+              </Box>
+              
               <Box
                 sx={{
                   display: "grid",

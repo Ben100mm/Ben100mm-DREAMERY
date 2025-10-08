@@ -8503,18 +8503,20 @@ const UnderwritePage: React.FC = () => {
                 variant="full"
               />
               
-              {/* Regional Adjustment Panel */}
-              <Box sx={{ mb: 3 }}>
-                <RegionalAdjustmentPanel
-                  enabled={regionalAdjustmentEnabled}
-                  onEnabledChange={setRegionalAdjustmentEnabled}
-                  selectedRegion={selectedRegion}
-                  onRegionChange={setSelectedRegion}
-                  propertyAddress={state.propertyAddress}
-                  autoDetect={isEssential}
-                  variant="full"
-                />
-              </Box>
+              {/* Regional Adjustment Panel - Professional Mode Only */}
+              {isProfessional && (
+                <Box sx={{ mb: 3 }}>
+                  <RegionalAdjustmentPanel
+                    enabled={regionalAdjustmentEnabled}
+                    onEnabledChange={setRegionalAdjustmentEnabled}
+                    selectedRegion={selectedRegion}
+                    onRegionChange={setSelectedRegion}
+                    propertyAddress={state.propertyAddress}
+                    autoDetect={isEssential}
+                    variant="full"
+                  />
+                </Box>
+              )}
               
               <Box
                 sx={{

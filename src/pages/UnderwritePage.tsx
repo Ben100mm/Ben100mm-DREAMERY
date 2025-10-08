@@ -92,7 +92,7 @@ import { ProFormaPresetSelector } from "../components/calculator/ProFormaPresetS
 import { LiveMarketDataWidget } from "../components/calculator/LiveMarketDataWidget";
 import { GuidedTour } from "../components/GuidedTour";
 import jsPDF from "jspdf";
-import { Download as DownloadIcon, Email as EmailIcon } from "@mui/icons-material";
+import { Download as DownloadIcon, Email as EmailIcon, Message as MessageIcon } from "@mui/icons-material";
 import { 
   type DealState,
   type PropertyType,
@@ -4843,6 +4843,35 @@ const UnderwritePage: React.FC = () => {
       setState((prev) => ({
         ...prev,
         validationMessages: ['Error preparing email. Please try again.'],
+        snackbarOpen: true,
+      }));
+    }
+  }
+
+  function messagePDF() {
+    try {
+      const doc = generatePDFDoc();
+      const fileName = `Dreamery_Analysis_${state.propertyAddress?.replace(/[^a-zA-Z0-9]/g, '_') || 'Property'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Generate PDF blob for messaging
+      const pdfBlob = doc.output('blob');
+      
+      // Download the PDF
+      doc.save(fileName);
+      
+      // Open messaging interface (Professional Support)
+      setShowMessages(true);
+      
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['PDF downloaded! Opening messaging to share with your team or professionals.'],
+        snackbarOpen: true,
+      }));
+    } catch (error) {
+      console.error('Error preparing message:', error);
+      setState((prev) => ({
+        ...prev,
+        validationMessages: ['Error preparing message. Please try again.'],
         snackbarOpen: true,
       }));
     }
@@ -12858,6 +12887,14 @@ const UnderwritePage: React.FC = () => {
             flexWrap: "wrap",
           }}
         >
+          <Button
+            variant="outlined"
+            onClick={messagePDF}
+            startIcon={<MessageIcon />}
+            sx={{ borderColor: brandColors.primary, color: brandColors.primary }}
+          >
+            Message PDF
+          </Button>
           <Button
             variant="outlined"
             onClick={emailPDF}

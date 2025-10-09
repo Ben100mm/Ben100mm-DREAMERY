@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
 import { addressAutocompleteService, AddressSuggestion } from "../services/addressAutocompleteService";
 import { AddressValidator, AddressGeocoder, SearchRouter, AddressFormatter } from "../utils/addressUtils";
+import AutocompleteTest from "./AutocompleteTest";
 
 const HeroContainer = styled.div`
   height: 100vh;
@@ -449,6 +450,7 @@ const Hero: React.FC = () => {
       <Overlay />
       <Content>
         <Title>It Starts with a Home.</Title>
+        <AutocompleteTest />
         <SearchContainer ref={searchContainerRef} data-testid="search-container">
           <StyledTextField
             ref={inputRef}

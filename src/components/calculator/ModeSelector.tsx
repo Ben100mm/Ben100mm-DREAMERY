@@ -161,9 +161,6 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
               key={mode}
               title={
                 <Box>
-                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                    {config.label} Mode
-                  </Typography>
                   <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
                     {config.description}
                   </Typography>

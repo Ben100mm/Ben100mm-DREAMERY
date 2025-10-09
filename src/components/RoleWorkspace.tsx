@@ -6147,72 +6147,74 @@ const RoleWorkspace: React.FC<RoleWorkspaceProps> = ({
         }}
       >
         <Box sx={{ py: 2 }}>
-          {/* Mode Selector */}
-          <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
-            <FormControl fullWidth size="small">
-              <Select
-                value={selectedMode}
-                onChange={(e) => setSelectedMode(e.target.value)}
-                displayEmpty
-                IconComponent={KeyboardArrowDownIcon}
-                sx={{
-                  backgroundColor: brandColors.surfaces.primary,
-                  borderRadius: 2,
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'transparent',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: brandColors.borders.secondary,
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: brandColors.primary,
-                  },
-                }}
-                renderValue={(value) => {
-                  const modeOptions = [
+          {/* Mode Selector - Only show for Buyer roles */}
+          {['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'].includes(currentUserRole) && (
+            <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={selectedMode}
+                  onChange={(e) => setSelectedMode(e.target.value)}
+                  displayEmpty
+                  IconComponent={KeyboardArrowDownIcon}
+                  sx={{
+                    backgroundColor: brandColors.surfaces.primary,
+                    borderRadius: 2,
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'transparent',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: brandColors.borders.secondary,
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: brandColors.primary,
+                    },
+                  }}
+                  renderValue={(value) => {
+                    const modeOptions = [
+                      { id: 'close', name: 'Close', icon: <HomeIcon /> },
+                      { id: 'manage', name: 'Manage', icon: <ManageAccountsIcon /> },
+                      { id: 'fund', name: 'Fund', icon: <AccountBalanceIcon /> },
+                      { id: 'invest', name: 'Invest', icon: <TrendingUpIcon /> },
+                      { id: 'operate', name: 'Operate', icon: <BuildIcon /> },
+                    ];
+                    const selectedModeConfig = modeOptions.find(m => m.id === value);
+                    if (!selectedModeConfig) return 'Select Mode';
+                    return (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ color: brandColors.primary }}>
+                          {selectedModeConfig.icon}
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          {selectedModeConfig.name}
+                        </Typography>
+                      </Box>
+                    );
+                  }}
+                >
+                  {[
                     { id: 'close', name: 'Close', icon: <HomeIcon /> },
                     { id: 'manage', name: 'Manage', icon: <ManageAccountsIcon /> },
                     { id: 'fund', name: 'Fund', icon: <AccountBalanceIcon /> },
                     { id: 'invest', name: 'Invest', icon: <TrendingUpIcon /> },
                     { id: 'operate', name: 'Operate', icon: <BuildIcon /> },
-                  ];
-                  const selectedModeConfig = modeOptions.find(m => m.id === value);
-                  if (!selectedModeConfig) return 'Select Mode';
-                  return (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ color: brandColors.primary }}>
-                        {selectedModeConfig.icon}
+                  ].map((mode) => (
+                    <MenuItem key={mode.id} value={mode.id}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                        <Box sx={{ color: brandColors.primary }}>
+                          {mode.icon}
+                        </Box>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {mode.name}
+                          </Typography>
+                        </Box>
                       </Box>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {selectedModeConfig.name}
-                      </Typography>
-                    </Box>
-                  );
-                }}
-              >
-                {[
-                  { id: 'close', name: 'Close', icon: <HomeIcon /> },
-                  { id: 'manage', name: 'Manage', icon: <ManageAccountsIcon /> },
-                  { id: 'fund', name: 'Fund', icon: <AccountBalanceIcon /> },
-                  { id: 'invest', name: 'Invest', icon: <TrendingUpIcon /> },
-                  { id: 'operate', name: 'Operate', icon: <BuildIcon /> },
-                ].map((mode) => (
-                  <MenuItem key={mode.id} value={mode.id}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-                      <Box sx={{ color: brandColors.primary }}>
-                        {mode.icon}
-                      </Box>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {mode.name}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          )}
 
           {/* Role Selector */}
           {!state.sidebarCollapsed && (

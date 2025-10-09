@@ -306,15 +306,18 @@ const Hero: React.FC = () => {
     }
 
     const timeoutId = setTimeout(async () => {
+      console.log('🔍 Hero: Starting debounced search for:', searchQuery);
       setIsLoading(true);
       setError(null);
       
       try {
         const results = await addressAutocompleteService.getSuggestions(searchQuery);
+        console.log('✅ Hero: Received suggestions:', results);
         setSuggestions(results);
         setShowSuggestions(results.length > 0);
         setSelectedIndex(-1);
       } catch (err) {
+        console.error('❌ Hero: Error fetching suggestions:', err);
         setError('Failed to fetch suggestions');
         setSuggestions([]);
         setShowSuggestions(false);

@@ -40,24 +40,33 @@ class AddressAutocompleteService {
    * Get address suggestions from multiple sources
    */
   async getSuggestions(query: string): Promise<AddressSuggestion[]> {
+    console.log('🚀 AddressAutocompleteService.getSuggestions called with:', query);
+    
     if (!query || query.length < this.MIN_QUERY_LENGTH) {
+      console.log('❌ Query too short, returning empty array');
       return [];
     }
 
     const normalizedQuery = this.normalizeQuery(query);
+    console.log('📝 Normalized query:', normalizedQuery);
     
     // Check cache first
     const cached = this.getCachedResult(normalizedQuery);
     if (cached) {
+      console.log('💾 Returning cached results:', cached.suggestions.length, 'suggestions');
       return cached.suggestions;
     }
 
     try {
+      console.log('🌐 Fetching from multiple sources...');
       // Fetch from multiple sources in parallel
       const [realtorSuggestions, googleSuggestions] = await Promise.allSettled([
         this.getRealtorSuggestions(normalizedQuery),
         this.getGooglePlacesSuggestions(normalizedQuery)
       ]);
+
+      console.log('📊 Realtor suggestions status:', realtorSuggestions.status);
+      console.log('📊 Google suggestions status:', googleSuggestions.status);
 
       // Combine and rank results
       const allSuggestions = this.combineSuggestions([
@@ -65,8 +74,12 @@ class AddressAutocompleteService {
         googleSuggestions.status === 'fulfilled' ? googleSuggestions.value : []
       ]);
 
+      console.log('🔄 Combined suggestions:', allSuggestions.length);
+
       const rankedSuggestions = this.rankSuggestions(allSuggestions, normalizedQuery);
       const topSuggestions = rankedSuggestions.slice(0, this.MAX_SUGGESTIONS);
+
+      console.log('🏆 Final suggestions:', topSuggestions);
 
       // Cache the results
       this.cacheResult(normalizedQuery, {
@@ -77,7 +90,7 @@ class AddressAutocompleteService {
 
       return topSuggestions;
     } catch (error) {
-      console.error('Error fetching address suggestions:', error);
+      console.error('❌ Error fetching address suggestions:', error);
       return [];
     }
   }
@@ -87,7 +100,9 @@ class AddressAutocompleteService {
    */
   private async getRealtorSuggestions(query: string): Promise<AddressSuggestion[]> {
     try {
+      console.log('🔍 Fetching Realtor suggestions for:', query);
       const suggestions = await realtorService.getPropertySuggestions(query, 10);
+      console.log('✅ Realtor suggestions received:', suggestions);
       
       return suggestions.map((suggestion, index) => ({
         id: `realtor-${index}`,
@@ -98,7 +113,7 @@ class AddressAutocompleteService {
         metadata: this.extractMetadata(suggestion)
       }));
     } catch (error) {
-      console.error('Error fetching Realtor suggestions:', error);
+      console.error('❌ Error fetching Realtor suggestions:', error);
       return [];
     }
   }

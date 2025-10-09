@@ -5494,7 +5494,7 @@ const UnderwritePage: React.FC = () => {
                     gridTemplateColumns: {
                       xs: "1fr",
                       sm: "1fr 1fr",
-                      md: "4fr 4fr 4fr 1.5fr",
+                      md: "3fr 4fr 4fr 2fr",
                     },
                   }}
                 >

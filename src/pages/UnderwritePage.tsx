@@ -12018,6 +12018,13 @@ const UnderwritePage: React.FC = () => {
                       gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
                     }}
                   >
+                    {/* Essential Mode: Core Metrics */}
+                    <TextField
+                      fullWidth
+                      label="Purchase Price"
+                      value={formatCurrency(state.purchasePrice)}
+                      InputProps={{ readOnly: true }}
+                    />
                     <TextField
                       fullWidth
                       label="Total Acquisition Cost"
@@ -12029,70 +12036,75 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Purchase + Closing + Immediate CapEx"
                     />
-                    <TextField
-                      fullWidth
-                      label="Total Project Cost"
-                      value={formatCurrency(
-                        state.purchasePrice +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0) +
-                          (state.loan.rehabCosts || 0),
-                      )}
-                      InputProps={{ readOnly: true }}
-                      helperText="Acquisition + Rehab"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Price per Unit"
-                      value={
-                        state.propertyType === "Multi Family" &&
-                        state.multi?.unitRents
-                          ? formatCurrency(
-                              state.purchasePrice /
-                                state.multi.unitRents.length,
-                            )
-                          : "N/A"
-                      }
-                      InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Price per SF"
-                      value={(() => {
-                        const sf = state.officeRetail?.squareFootage || 0;
-                        return sf > 0
-                          ? formatCurrency(state.purchasePrice / sf)
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="ARV (if value-add/flip)"
-                      value={
-                        state.fixFlip?.arv
-                          ? formatCurrency(state.fixFlip.arv)
-                          : "N/A"
-                      }
-                      InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Equity at Purchase"
-                      value={
-                        state.fixFlip?.arv
-                          ? formatCurrency(
-                              state.fixFlip.arv -
-                                (state.purchasePrice +
-                                  (state.loan.closingCosts || 0) +
-                                  (state.loan.rehabCosts || 0) +
-                                  (state.loan.rehabCosts || 0)),
-                            )
-                          : "N/A"
-                      }
-                      InputProps={{ readOnly: true }}
-                      helperText="ARV - Total Project Cost"
-                    />
+                    
+                    {/* Standard Mode and above: Additional Cost Metrics */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') !== 'basic' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="Total Project Cost"
+                          value={formatCurrency(
+                            state.purchasePrice +
+                              (state.loan.closingCosts || 0) +
+                              (state.loan.rehabCosts || 0),
+                          )}
+                          InputProps={{ readOnly: true }}
+                          helperText="Acquisition + Rehab"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Price per Unit"
+                          value={
+                            state.propertyType === "Multi Family" &&
+                            state.multi?.unitRents
+                              ? formatCurrency(
+                                  state.purchasePrice /
+                                    state.multi.unitRents.length,
+                                )
+                              : "N/A"
+                          }
+                          InputProps={{ readOnly: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Price per SF"
+                          value={(() => {
+                            const sf = state.officeRetail?.squareFootage || 0;
+                            return sf > 0
+                              ? formatCurrency(state.purchasePrice / sf)
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="ARV (if value-add/flip)"
+                          value={
+                            state.fixFlip?.arv
+                              ? formatCurrency(state.fixFlip.arv)
+                              : "N/A"
+                          }
+                          InputProps={{ readOnly: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Equity at Purchase"
+                          value={
+                            state.fixFlip?.arv
+                              ? formatCurrency(
+                                  state.fixFlip.arv -
+                                    (state.purchasePrice +
+                                      (state.loan.closingCosts || 0) +
+                                      (state.loan.rehabCosts || 0)),
+                                )
+                              : "N/A"
+                          }
+                          InputProps={{ readOnly: true }}
+                          helperText="ARV - Total Project Cost"
+                        />
+                      </>
+                    )}
+                    {/* Essential Mode: Basic Financing Metrics */}
                     <TextField
                       fullWidth
                       label="LTV"
@@ -12107,44 +12119,50 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Loan Amount ÷ Purchase Price"
                     />
-                    <TextField
-                      fullWidth
-                      label="LTC"
-                      value={(() => {
-                        const loanAmount = computeLoanAmount(state);
-                        const totalProjectCost =
-                          state.purchasePrice +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0) +
-                          (state.loan.rehabCosts || 0);
-                        return totalProjectCost > 0
-                          ? ((loanAmount / totalProjectCost) * 100).toFixed(1) +
-                              "%"
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Loan Amount ÷ Total Project Cost"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Debt Yield"
-                      value={(() => {
-                        const annualNOI =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            computeVariableExpenseFromPercentages(
-                              computeIncome(state),
-                              state.ops,
-                            )) *
-                          12;
-                        const loanAmount = computeLoanAmount(state);
-                        return loanAmount > 0
-                          ? ((annualNOI / loanAmount) * 100).toFixed(2) + "%"
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="NOI ÷ Loan Amount"
-                    />
+                    
+                    {/* Standard Mode and above: Advanced Financing Metrics */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') !== 'basic' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="LTC"
+                          value={(() => {
+                            const loanAmount = computeLoanAmount(state);
+                            const totalProjectCost =
+                              state.purchasePrice +
+                              (state.loan.closingCosts || 0) +
+                              (state.loan.rehabCosts || 0);
+                            return totalProjectCost > 0
+                              ? ((loanAmount / totalProjectCost) * 100).toFixed(1) +
+                                  "%"
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Loan Amount ÷ Total Project Cost"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Debt Yield"
+                          value={(() => {
+                            const annualNOI =
+                              (computeIncome(state) -
+                                computeFixedMonthlyOps(state.ops) -
+                                computeVariableExpenseFromPercentages(
+                                  computeIncome(state),
+                                  state.ops,
+                                )) *
+                              12;
+                            const loanAmount = computeLoanAmount(state);
+                            return loanAmount > 0
+                              ? ((annualNOI / loanAmount) * 100).toFixed(2) + "%"
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="NOI ÷ Loan Amount"
+                        />
+                      </>
+                    )}
+                    {/* Essential Mode: Core Return Metrics */}
                     <TextField
                       fullWidth
                       label="Cap Rate"
@@ -12190,33 +12208,38 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="NOI ÷ Annual Debt Service"
                     />
-                    <TextField
-                      fullWidth
-                      label="DSCR (Stabilized)"
-                      value={(() => {
-                        // Assume 5% rent growth and 3% expense growth for stabilized
-                        const stabilizedAnnualNOI =
-                          (computeIncome(state) * 1.05 -
-                            computeFixedMonthlyOps(state.ops) * 1.03 -
-                            computeVariableExpenseFromPercentages(
-                              computeIncome(state) * 1.05,
-                              state.ops,
-                            )) *
-                          12;
-                        const annualDebtService =
-                          totalMonthlyDebtService({
-                            newLoanMonthly: state.loan.monthlyPayment || 0,
-                            subjectToMonthlyTotal:
-                              state.subjectTo?.totalMonthlyPayment,
-                            hybridMonthly: state.hybrid?.monthlyPayment,
-                          }) * 12;
-                        return annualDebtService > 0
-                          ? (stabilizedAnnualNOI / annualDebtService).toFixed(2)
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Stabilized NOI ÷ Annual Debt Service"
-                    />
+                    
+                    {/* Standard Mode and above: Additional Coverage Metrics */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') !== 'basic' && (
+                      <TextField
+                        fullWidth
+                        label="DSCR (Stabilized)"
+                        value={(() => {
+                          // Assume 5% rent growth and 3% expense growth for stabilized
+                          const stabilizedAnnualNOI =
+                            (computeIncome(state) * 1.05 -
+                              computeFixedMonthlyOps(state.ops) * 1.03 -
+                              computeVariableExpenseFromPercentages(
+                                computeIncome(state) * 1.05,
+                                state.ops,
+                              )) *
+                            12;
+                          const annualDebtService =
+                            totalMonthlyDebtService({
+                              newLoanMonthly: state.loan.monthlyPayment || 0,
+                              subjectToMonthlyTotal:
+                                state.subjectTo?.totalMonthlyPayment,
+                              hybridMonthly: state.hybrid?.monthlyPayment,
+                            }) * 12;
+                          return annualDebtService > 0
+                            ? (stabilizedAnnualNOI / annualDebtService).toFixed(2)
+                            : "N/A";
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Stabilized NOI ÷ Annual Debt Service"
+                      />
+                    )}
+                    {/* Essential Mode: Basic Operating Metrics */}
                     <TextField
                       fullWidth
                       label="Expense Ratio"
@@ -12238,38 +12261,45 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Operating Expenses ÷ EGI"
                     />
-                    <TextField
-                      fullWidth
-                      label="NOI Margin"
-                      value={(() => {
-                        const grossIncome = computeIncome(state) * 12;
-                        const annualNOI =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            computeVariableExpenseFromPercentages(
-                              computeIncome(state),
-                              state.ops,
-                            )) *
-                          12;
-                        return grossIncome > 0
-                          ? ((annualNOI / grossIncome) * 100).toFixed(1) + "%"
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="NOI ÷ EGI"
-                    />
-                    <TextField
-                      fullWidth
-                      label="GRM"
-                      value={(() => {
-                        const grossAnnualIncome = computeIncome(state) * 12;
-                        return grossAnnualIncome > 0
-                          ? (state.purchasePrice / grossAnnualIncome).toFixed(2)
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Purchase Price ÷ Gross Annual Income"
-                    />
+                    
+                    {/* Standard Mode and above: Additional Operating Metrics */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') !== 'basic' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="NOI Margin"
+                          value={(() => {
+                            const grossIncome = computeIncome(state) * 12;
+                            const annualNOI =
+                              (computeIncome(state) -
+                                computeFixedMonthlyOps(state.ops) -
+                                computeVariableExpenseFromPercentages(
+                                  computeIncome(state),
+                                  state.ops,
+                                )) *
+                              12;
+                            return grossIncome > 0
+                              ? ((annualNOI / grossIncome) * 100).toFixed(1) + "%"
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="NOI ÷ EGI"
+                        />
+                        <TextField
+                          fullWidth
+                          label="GRM"
+                          value={(() => {
+                            const grossAnnualIncome = computeIncome(state) * 12;
+                            return grossAnnualIncome > 0
+                              ? (state.purchasePrice / grossAnnualIncome).toFixed(2)
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Purchase Price ÷ Gross Annual Income"
+                        />
+                      </>
+                    )}
+                    {/* Essential Mode: Basic Break-even */}
                     <TextField
                       fullWidth
                       label="Break-even Occupancy (No Debt)"
@@ -12304,87 +12334,99 @@ const UnderwritePage: React.FC = () => {
                       InputProps={{ readOnly: true }}
                       helperText="Expenses ÷ GPR"
                     />
-                    <TextField
-                      fullWidth
-                      label="Break-even Occupancy (With Debt)"
-                      value={(() => {
-                        try {
-                          const monthlyRevenue =
-                            state.propertyType === "Office" ||
-                            state.propertyType === "Retail"
-                              ? (state.officeRetail?.squareFootage || 0) *
-                                  (state.officeRetail?.rentPerSFMonthly || 0) +
-                                (state.officeRetail?.extraMonthlyIncome || 0)
-                              : computeIncome(state);
-
-                          if (monthlyRevenue > 0) {
-                            const expenses =
-                              computeFixedMonthlyOps(state.ops) +
-                              computeVariableExpenseFromPercentages(
-                                monthlyRevenue,
-                                state.ops,
-                              );
-                            const debtService = totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            });
-                            return (
-                              (
-                                ((expenses + debtService) / monthlyRevenue) *
-                                100
-                              ).toFixed(1) + "%"
-                            );
-                          } else {
-                            return "0.0%";
-                          }
-                        } catch (error) {
-                          return "0.0%";
-                        }
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="(Expenses + Debt Service) ÷ GPR"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Payback Period (Years)"
-                      value={(() => {
-                        const totalCashInvested =
-                          state.loan.downPayment +
-                          (state.loan.closingCosts || 0) +
-                          (state.loan.rehabCosts || 0);
-                        const annualCashFlow =
-                          (computeIncome(state) -
-                            computeFixedMonthlyOps(state.ops) -
-                            totalMonthlyDebtService({
-                              newLoanMonthly: state.loan.monthlyPayment || 0,
-                              subjectToMonthlyTotal:
-                                state.subjectTo?.totalMonthlyPayment,
-                              hybridMonthly: state.hybrid?.monthlyPayment,
-                            })) *
-                          12;
-                        return annualCashFlow > 0
-                          ? (totalCashInvested / annualCashFlow).toFixed(1)
-                          : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Total Cash Invested ÷ Annual Cash Flow"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Equity Multiple (MOIC)"
-                      value={(() => {
-                        const holdingPeriod = state.irrHoldPeriodYears || 5;
-                        const result = calculateComprehensiveMOIC(state, holdingPeriod);
-                        return result.moic > 0 ? result.moic.toFixed(2) + "x" : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Total Return (Cash Flows + Exit) ÷ Cash Invested"
-                    />
                     
-                    {/* MOIC Breakdown */}
-                    <Box
+                    {/* Standard Mode and above: Advanced Break-even and Payback */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') !== 'basic' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="Break-even Occupancy (With Debt)"
+                          value={(() => {
+                            try {
+                              const monthlyRevenue =
+                                state.propertyType === "Office" ||
+                                state.propertyType === "Retail"
+                                  ? (state.officeRetail?.squareFootage || 0) *
+                                      (state.officeRetail?.rentPerSFMonthly || 0) +
+                                    (state.officeRetail?.extraMonthlyIncome || 0)
+                                  : computeIncome(state);
+
+                              if (monthlyRevenue > 0) {
+                                const expenses =
+                                  computeFixedMonthlyOps(state.ops) +
+                                  computeVariableExpenseFromPercentages(
+                                    monthlyRevenue,
+                                    state.ops,
+                                  );
+                                const debtService = totalMonthlyDebtService({
+                                  newLoanMonthly: state.loan.monthlyPayment || 0,
+                                  subjectToMonthlyTotal:
+                                    state.subjectTo?.totalMonthlyPayment,
+                                  hybridMonthly: state.hybrid?.monthlyPayment,
+                                });
+                                return (
+                                  (
+                                    ((expenses + debtService) / monthlyRevenue) *
+                                    100
+                                  ).toFixed(1) + "%"
+                                );
+                              } else {
+                                return "0.0%";
+                              }
+                            } catch (error) {
+                              return "0.0%";
+                            }
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="(Expenses + Debt Service) ÷ GPR"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Payback Period (Years)"
+                          value={(() => {
+                            const totalCashInvested =
+                              state.loan.downPayment +
+                              (state.loan.closingCosts || 0) +
+                              (state.loan.rehabCosts || 0);
+                            const annualCashFlow =
+                              (computeIncome(state) -
+                                computeFixedMonthlyOps(state.ops) -
+                                totalMonthlyDebtService({
+                                  newLoanMonthly: state.loan.monthlyPayment || 0,
+                                  subjectToMonthlyTotal:
+                                    state.subjectTo?.totalMonthlyPayment,
+                                  hybridMonthly: state.hybrid?.monthlyPayment,
+                                })) *
+                              12;
+                            return annualCashFlow > 0
+                              ? (totalCashInvested / annualCashFlow).toFixed(1)
+                              : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Total Cash Invested ÷ Annual Cash Flow"
+                        />
+                      </>
+                    )}
+                    {/* Professional Mode: Advanced Return Metrics */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="Equity Multiple (MOIC)"
+                          value={(() => {
+                            const holdingPeriod = state.irrHoldPeriodYears || 5;
+                            const result = calculateComprehensiveMOIC(state, holdingPeriod);
+                            return result.moic > 0 ? result.moic.toFixed(2) + "x" : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Total Return (Cash Flows + Exit) ÷ Cash Invested"
+                        />
+                      </>
+                    )}
+                    
+                    {/* Professional Mode: MOIC Breakdown */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
+                      <Box
                       sx={{
                         gridColumn: "1 / -1",
                         p: 2,
@@ -12478,8 +12520,10 @@ const UnderwritePage: React.FC = () => {
                         );
                       })()}
                     </Box>
+                    )}
                     
-                    {/* IRR Configuration Parameters */}
+                    {/* Professional Mode: IRR Configuration Parameters */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
                     <Box
                       sx={{
                         gridColumn: "1 / -1",
@@ -12561,6 +12605,7 @@ const UnderwritePage: React.FC = () => {
                         />
                       </Box>
                     </Box>
+                    )}
 
                     {/* Capital Events Section */}
                     {isAccordionVisible(calculatorMode, 'capitalEvents') && (
@@ -12842,84 +12887,90 @@ const UnderwritePage: React.FC = () => {
                     </Box>
                     )}
                     
-                    <TextField
-                      fullWidth
-                      label="IRR (Levered)"
-                      value={(() => {
-                        try {
-                          // Calculate initial investment (negative cash flow)
-                          const totalCashInvested =
-                            state.loan.downPayment +
-                            (state.loan.closingCosts || 0) +
-                            (state.loan.rehabCosts || 0) +
-                            (state.operationType === "Short Term Rental"
-                              ? state.arbitrage?.furnitureCost || 0
-                              : 0);
-                          
-                          if (totalCashInvested <= 0) return "N/A";
-                          
-                          // Build year-by-year cash flows (levered) - uses state.irrHoldPeriodYears
-                          const cashFlows = buildCashFlowProjections(state, true);
-                          
-                          // Calculate exit proceeds (levered) - uses state.irrHoldPeriodYears
-                          const exitProceeds = calculateExitProceedsAfterTax(state, true);
-                          
-                          // Calculate true IRR using Newton-Raphson
-                          const irr = calculateTrueIRR(
-                            -totalCashInvested, // Negative = cash outflow
-                            cashFlows,
-                            exitProceeds
-                          );
-                          
-                          return (irr * 100).toFixed(1) + "%";
-                        } catch (error) {
-                          console.error("Error calculating levered IRR:", error);
-                          return "N/A";
-                        }
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Internal Rate of Return (Levered) - True IRR with Newton-Raphson"
-                    />
-                    <TextField
-                      fullWidth
-                      label="IRR (Unlevered)"
-                      value={(() => {
-                        try {
-                          // Calculate initial investment for all-cash purchase (negative cash flow)
-                          const totalCashInvested =
-                            state.purchasePrice +
-                            (state.loan.closingCosts || 0) +
-                            (state.loan.rehabCosts || 0) +
-                            (state.operationType === "Short Term Rental"
-                              ? state.arbitrage?.furnitureCost || 0
-                              : 0);
-                          
-                          if (totalCashInvested <= 0) return "N/A";
-                          
-                          // Build year-by-year cash flows (unlevered = no debt) - uses state.irrHoldPeriodYears
-                          const cashFlows = buildCashFlowProjections(state, false);
-                          
-                          // Calculate exit proceeds (unlevered = no loan payoff) - uses state.irrHoldPeriodYears
-                          const exitProceeds = calculateExitProceedsAfterTax(state, false);
-                          
-                          // Calculate true IRR using Newton-Raphson
-                          const irr = calculateTrueIRR(
-                            -totalCashInvested, // Negative = cash outflow
-                            cashFlows,
-                            exitProceeds
-                          );
-                          
-                          return (irr * 100).toFixed(1) + "%";
-                        } catch (error) {
-                          console.error("Error calculating unlevered IRR:", error);
-                          return "N/A";
-                        }
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Internal Rate of Return (Unlevered) - True IRR with Newton-Raphson"
-                    />
+                    {/* Professional Mode: IRR Calculations */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="IRR (Levered)"
+                          value={(() => {
+                            try {
+                              // Calculate initial investment (negative cash flow)
+                              const totalCashInvested =
+                                state.loan.downPayment +
+                                (state.loan.closingCosts || 0) +
+                                (state.loan.rehabCosts || 0) +
+                                (state.operationType === "Short Term Rental"
+                                  ? state.arbitrage?.furnitureCost || 0
+                                  : 0);
+                              
+                              if (totalCashInvested <= 0) return "N/A";
+                              
+                              // Build year-by-year cash flows (levered) - uses state.irrHoldPeriodYears
+                              const cashFlows = buildCashFlowProjections(state, true);
+                              
+                              // Calculate exit proceeds (levered) - uses state.irrHoldPeriodYears
+                              const exitProceeds = calculateExitProceedsAfterTax(state, true);
+                              
+                              // Calculate true IRR using Newton-Raphson
+                              const irr = calculateTrueIRR(
+                                -totalCashInvested, // Negative = cash outflow
+                                cashFlows,
+                                exitProceeds
+                              );
+                              
+                              return (irr * 100).toFixed(1) + "%";
+                            } catch (error) {
+                              console.error("Error calculating levered IRR:", error);
+                              return "N/A";
+                            }
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Internal Rate of Return (Levered) - True IRR with Newton-Raphson"
+                        />
+                        <TextField
+                          fullWidth
+                          label="IRR (Unlevered)"
+                          value={(() => {
+                            try {
+                              // Calculate initial investment for all-cash purchase (negative cash flow)
+                              const totalCashInvested =
+                                state.purchasePrice +
+                                (state.loan.closingCosts || 0) +
+                                (state.loan.rehabCosts || 0) +
+                                (state.operationType === "Short Term Rental"
+                                  ? state.arbitrage?.furnitureCost || 0
+                                  : 0);
+                              
+                              if (totalCashInvested <= 0) return "N/A";
+                              
+                              // Build year-by-year cash flows (unlevered = no debt) - uses state.irrHoldPeriodYears
+                              const cashFlows = buildCashFlowProjections(state, false);
+                              
+                              // Calculate exit proceeds (unlevered = no loan payoff) - uses state.irrHoldPeriodYears
+                              const exitProceeds = calculateExitProceedsAfterTax(state, false);
+                              
+                              // Calculate true IRR using Newton-Raphson
+                              const irr = calculateTrueIRR(
+                                -totalCashInvested, // Negative = cash outflow
+                                cashFlows,
+                                exitProceeds
+                              );
+                              
+                              return (irr * 100).toFixed(1) + "%";
+                            } catch (error) {
+                              console.error("Error calculating unlevered IRR:", error);
+                              return "N/A";
+                            }
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Internal Rate of Return (Unlevered) - True IRR with Newton-Raphson"
+                        />
+                      </>
+                    )}
                     
-                    {/* IRR Sensitivity Analysis */}
+                    {/* Professional Mode: IRR Sensitivity Analysis */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
                     <Box
                       sx={{
                         gridColumn: "1 / -1",
@@ -13051,8 +13102,10 @@ const UnderwritePage: React.FC = () => {
                         </Box>
                       </Box>
                     </Box>
+                    )}
                     
-                    {/* Year-by-Year Cash Flow Breakdown */}
+                    {/* Professional Mode: Year-by-Year Cash Flow Breakdown */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
                     <Box sx={{ gridColumn: "1 / -1" }}>
                       <Button
                         fullWidth
@@ -13164,38 +13217,42 @@ const UnderwritePage: React.FC = () => {
                         }
                       })()}
                     </Box>
+                    )}
                     
-                    <TextField
-                      fullWidth
-                      label="Return on Equity (Year 1)"
-                      value={(() => {
-                        const roe = underwriteCalculationService.calculateROE(state);
-                        return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Year 1 Cash Flow ÷ Initial Equity"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Return on Equity (Year 5)"
-                      value={(() => {
-                        const roe = underwriteCalculationService.calculateROEAtYear(state, 5);
-                        return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Year 5 Cash Flow ÷ Year 5 Equity (accounts for paydown & appreciation)"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Cash Reserve Months on Hand"
-                      value={(() => {
-                        const monthlyCashFlow =
-                          computeIncome(state) -
-                          computeFixedMonthlyOps(state.ops) -
-                          totalMonthlyDebtService({
-                            newLoanMonthly: state.loan.monthlyPayment || 0,
-                            subjectToMonthlyTotal:
-                              state.subjectTo?.totalMonthlyPayment,
+                    {/* Professional Mode: ROE and Cash Reserve */}
+                    {getAccordionDetailLevel(calculatorMode, 'atAGlance') === 'comprehensive' && (
+                      <>
+                        <TextField
+                          fullWidth
+                          label="Return on Equity (Year 1)"
+                          value={(() => {
+                            const roe = underwriteCalculationService.calculateROE(state);
+                            return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Year 1 Cash Flow ÷ Initial Equity"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Return on Equity (Year 5)"
+                          value={(() => {
+                            const roe = underwriteCalculationService.calculateROEAtYear(state, 5);
+                            return roe > 0 ? roe.toFixed(1) + "%" : "N/A";
+                          })()}
+                          InputProps={{ readOnly: true }}
+                          helperText="Year 5 Cash Flow ÷ Year 5 Equity (accounts for paydown & appreciation)"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Cash Reserve Months on Hand"
+                          value={(() => {
+                            const monthlyCashFlow =
+                              computeIncome(state) -
+                              computeFixedMonthlyOps(state.ops) -
+                              totalMonthlyDebtService({
+                                newLoanMonthly: state.loan.monthlyPayment || 0,
+                                subjectToMonthlyTotal:
+                                  state.subjectTo?.totalMonthlyPayment,
                             hybridMonthly: state.hybrid?.monthlyPayment,
                           });
                         // Assume 6 months of cash flow as cash reserve
@@ -13203,10 +13260,12 @@ const UnderwritePage: React.FC = () => {
                         return monthlyCashFlow > 0
                           ? (cashReserve / monthlyCashFlow).toFixed(1)
                           : "N/A";
-                      })()}
-                      InputProps={{ readOnly: true }}
-                      helperText="Cash Reserve ÷ Monthly Cash Flow"
-                    />
+                        })()}
+                        InputProps={{ readOnly: true }}
+                        helperText="Cash Reserve ÷ Monthly Cash Flow"
+                      />
+                      </>
+                    )}
                   </Box>
                 </Box>
 

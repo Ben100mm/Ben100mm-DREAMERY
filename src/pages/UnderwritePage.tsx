@@ -647,7 +647,7 @@ function getTodayFormatted(): string {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const year = String(now.getFullYear()).slice(-2);
-  return `${month} / day / ${year}`;
+  return `${month} / ${day} / ${year}`;
 }
 
 function monthlyPayment(
@@ -5494,7 +5494,7 @@ const UnderwritePage: React.FC = () => {
                     gridTemplateColumns: {
                       xs: "1fr",
                       sm: "1fr 1fr",
-                      md: "3fr 4fr 4fr 2fr",
+                      md: "4fr 4fr 4fr 1.5fr",
                     },
                   }}
                 >

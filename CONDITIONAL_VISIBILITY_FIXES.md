@@ -179,6 +179,24 @@ Test these key combinations:
 
 ## Recent Updates (October 2025)
 
+### Dead Code Removal - Risk Assessment Section
+**Date**: October 9, 2025
+
+Removed 266 lines of permanently disabled Risk Assessment code from UnderwritePage.tsx (previously lines 8992-9255).
+
+**Reason**: Code was disabled with `{false &&}` and marked as "disabled in favor of Analyze page". The functionality fully exists and is actively used in:
+- `src/components/RiskAnalysisTab.tsx` (1,511 lines)
+- Accessible via Advanced Modeling > Risk Analysis tab
+- More comprehensive with Monte Carlo integration and better UX
+
+**Impact**:
+- ✅ Reduced UnderwritePage.tsx from 14,537 to 14,271 lines
+- ✅ Removed redundant code without any user-facing changes
+- ✅ Improved maintainability and reduced developer confusion
+- ✅ Feature still fully available in its proper location
+
+---
+
 ### Fix & Flip and BRRRR Accordion Implementation
 Added dedicated accordion sections for Fix & Flip and BRRRR strategies to address gaps identified in the conditional visibility analysis.
 

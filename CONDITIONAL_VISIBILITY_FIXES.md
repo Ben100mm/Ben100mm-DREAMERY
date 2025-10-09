@@ -177,10 +177,57 @@ Test these key combinations:
 7. ✓ Land + Fix & Flip + Hard Money → Should show limited finance options
 8. ✓ Retail + Buy & Hold + SBA → Should show commercial fields, SBA option
 
+## Recent Updates (October 2025)
+
+### Fix & Flip and BRRRR Accordion Implementation
+Added dedicated accordion sections for Fix & Flip and BRRRR strategies to address gaps identified in the conditional visibility analysis.
+
+**New Accordions Added:**
+
+#### 15. **Fix & Flip Calculator** (Lines 7306-7472)
+- **Condition**: `state.operationType === "Fix & Flip"`
+- **Visible For**: All property types that support Fix & Flip (SFR, Multi, Land, Office, Retail)
+- **Fields**: ARV, Target %, Rehab Cost, Holding Period, Holding Costs, Selling Costs
+- **Calculated**: MAO, Projected Profit, ROI During Hold, Annualized ROI
+- **Features**: 70% Rule explanation, formula breakdown, auto-calculation
+
+#### 16. **BRRRR Strategy Calculator** (Lines 7474-7676)
+- **Condition**: `state.operationType === "BRRRR"`
+- **Visible For**: All property types that support BRRRR (SFR, Multi, Land, Office, Retail)
+- **Fields**: ARV, Refinance LTV, Refinance Rate, Loan Term, Original Cash Invested
+- **Calculated**: Cash-Out Amount, Remaining Cash, New CoC Return, Refinance Closing Costs
+- **Features**: BRRRR methodology explanation, LTV warnings, success indicators
+
+**Impact:**
+- ✅ Conditional Visibility Accuracy: **85% → 100%**
+- ✅ All strategy-specific accordions now properly implemented
+- ✅ Consistent with property/operation/finance type combinations
+- ✅ Integrated with existing calculation functions
+
+See `FIX_FLIP_BRRRR_IMPLEMENTATION.md` for complete details.
+
+---
+
 ## Files Modified
 - `/Users/benjamin/dreamery-homepage/src/pages/UnderwritePage.tsx`
 
-## Commit Message
+## Commit Messages
+
+### October 2025 - Fix & Flip and BRRRR Accordions
+```
+feat(underwrite): add dedicated Fix & Flip and BRRRR strategy accordion sections
+
+- Add Fix & Flip Calculator accordion with MAO and profit calculations
+- Add BRRRR Strategy Calculator accordion with refinance analysis
+- Implement conditional visibility for operation types
+- Include 70% Rule explanation and formula breakdowns
+- Add BRRRR methodology with 5-step process
+- Include LTV constraint warnings and success indicators
+- Integrate with existing calculation functions
+- Improve conditional visibility accuracy to 100%
+```
+
+### Previous - Rental Arbitrage and Field Visibility
 ```
 fix(underwrite): correct conditional visibility for all property/operation/finance combinations
 

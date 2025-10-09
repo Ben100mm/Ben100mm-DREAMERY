@@ -7303,6 +7303,378 @@ const UnderwritePage: React.FC = () => {
             </Card>
           )}
 
+        {/* Fix & Flip Calculator Section - Only visible for Fix & Flip operations */}
+        {state.operationType === "Fix & Flip" && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
+                <Typography sx={{ fontWeight: 700 }}>
+                  Fix & Flip Calculator
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  {/* Section Description */}
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      Calculate your Maximum Allowable Offer (MAO) and projected profits for fix & flip investments.
+                      The 70% Rule helps ensure profitability after repairs, holding costs, and selling expenses.
+                    </Typography>
+                  </Alert>
+
+                  {/* Input Fields */}
+                  <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
+                    <TextField
+                      fullWidth
+                      label="After Repair Value (ARV)"
+                      value={state.fixFlip?.arv || 0}
+                      onChange={(e) =>
+                        updateFixFlip("arv", parseCurrency(e.target.value))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                      helperText="Expected market value after all repairs"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Target Percent"
+                      type="number"
+                      value={state.fixFlip?.targetPercent || 70}
+                      onChange={(e) =>
+                        updateFixFlip("targetPercent", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        ),
+                      }}
+                      helperText="Typically 70% for Fix & Flip (70% Rule)"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Rehab Cost"
+                      value={state.fixFlip?.rehabCost || 0}
+                      onChange={(e) =>
+                        updateFixFlip("rehabCost", parseCurrency(e.target.value))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                      helperText="Total renovation/repair costs"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Holding Period"
+                      type="number"
+                      value={state.fixFlip?.holdingPeriodMonths || 0}
+                      onChange={(e) =>
+                        updateFixFlip("holdingPeriodMonths", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">months</InputAdornment>
+                        ),
+                      }}
+                      helperText="Expected time to complete repairs and sell"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Holding Costs (Monthly)"
+                      value={state.fixFlip?.holdingCosts || 0}
+                      onChange={(e) =>
+                        updateFixFlip("holdingCosts", parseCurrency(e.target.value))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                      helperText="Insurance, utilities, taxes per month"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Selling Costs"
+                      type="number"
+                      value={state.fixFlip?.sellingCostsPercent || 0}
+                      onChange={(e) =>
+                        updateFixFlip("sellingCostsPercent", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        ),
+                      }}
+                      helperText="Realtor commission + closing costs"
+                    />
+                  </Box>
+
+                  <Divider />
+
+                  {/* Calculated Results */}
+                  <Box sx={{ p: 2, bgcolor: brandColors.backgrounds.secondary, borderRadius: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      Fix & Flip Analysis Results
+                    </Typography>
+                    <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
+                      <TextField
+                        fullWidth
+                        label="Maximum Allowable Offer (MAO)"
+                        value={formatCurrency(state.fixFlip?.maximumAllowableOffer || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="Highest price you should pay"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Projected Profit"
+                        value={formatCurrency(state.fixFlip?.projectedProfit || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="Expected profit after all costs"
+                      />
+                      <TextField
+                        fullWidth
+                        label="ROI During Hold"
+                        value={(state.fixFlip?.roiDuringHold || 0).toFixed(2) + "%"}
+                        InputProps={{ readOnly: true }}
+                        helperText="Return on total investment"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Annualized ROI"
+                        value={(state.fixFlip?.annualizedRoi || 0).toFixed(2) + "%"}
+                        InputProps={{ readOnly: true }}
+                        helperText="ROI normalized to yearly rate"
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* Formula Breakdown */}
+                  <Box sx={{ p: 2, bgcolor: brandColors.backgrounds.tertiary, borderRadius: 1 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      MAO Formula:
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontFamily: "monospace", color: brandColors.neutral[700] }}>
+                      MAO = (ARV × {state.fixFlip?.targetPercent || 70}%) - Rehab - Holding Costs - Selling Costs
+                    </Typography>
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
+        {/* BRRRR Strategy Section - Only visible for BRRRR operations */}
+        {state.operationType === "BRRRR" && (
+          <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
+            <Accordion>
+              <AccordionSummary expandIcon={
+                <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+                  <LazyExpandMoreIcon />
+                </React.Suspense>
+              }>
+                <Typography sx={{ fontWeight: 700 }}>
+                  BRRRR Strategy Calculator
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  {/* Section Description */}
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      <strong>BRRRR: Buy, Rehab, Rent, Refinance, Repeat</strong><br />
+                      Calculate your refinance proceeds and recycled capital. The goal is to pull out most or all of your
+                      initial investment while retaining a cash-flowing property.
+                    </Typography>
+                  </Alert>
+
+                  {/* Input Fields */}
+                  <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
+                    <TextField
+                      fullWidth
+                      label="After Repair Value (ARV)"
+                      value={state.brrrr?.arv || 0}
+                      onChange={(e) =>
+                        updateBRRRR("arv", parseCurrency(e.target.value))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                      helperText="Appraised value after renovations"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Refinance LTV"
+                      type="number"
+                      value={state.brrrr?.refinanceLtv || 0}
+                      onChange={(e) =>
+                        updateBRRRR("refinanceLtv", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        ),
+                      }}
+                      helperText="Typical: 70-80% for investment properties"
+                      inputProps={{ min: 0, max: 100, step: 1 }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Refinance Interest Rate"
+                      type="number"
+                      value={state.brrrr?.refinanceInterestRate || 0}
+                      onChange={(e) =>
+                        updateBRRRR("refinanceInterestRate", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        ),
+                      }}
+                      helperText="Expected rate for refinance loan"
+                      inputProps={{ min: 0, max: 20, step: 0.125 }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Refinance Loan Term"
+                      type="number"
+                      value={state.brrrr?.loanTerm || 30}
+                      onChange={(e) =>
+                        updateBRRRR("loanTerm", Number(e.target.value))
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">years</InputAdornment>
+                        ),
+                      }}
+                      helperText="Typical: 30 years"
+                      inputProps={{ min: 1, max: 50, step: 1 }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Original Cash Invested"
+                      value={state.brrrr?.originalCashInvested || 0}
+                      onChange={(e) =>
+                        updateBRRRR("originalCashInvested", parseCurrency(e.target.value))
+                      }
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                      helperText="Down payment + closing + rehab"
+                    />
+                  </Box>
+
+                  <Divider />
+
+                  {/* Calculated Results */}
+                  <Box sx={{ p: 2, bgcolor: brandColors.backgrounds.secondary, borderRadius: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: brandColors.primary }}>
+                      BRRRR Analysis Results
+                    </Typography>
+                    <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
+                      <TextField
+                        fullWidth
+                        label="Refinance Loan Amount"
+                        value={formatCurrency((state.brrrr?.arv || 0) * ((state.brrrr?.refinanceLtv || 0) / 100))}
+                        InputProps={{ readOnly: true }}
+                        helperText="ARV × Refinance LTV"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Refinance Closing Costs"
+                        value={formatCurrency(state.brrrr?.refinanceClosingCosts || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="Estimated at 2% of loan amount"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Cash-Out Amount"
+                        value={formatCurrency(state.brrrr?.effectiveCashOut || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="Cash returned to you"
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            bgcolor: (state.brrrr?.effectiveCashOut || 0) > 0 
+                              ? "rgba(76, 175, 80, 0.1)" 
+                              : "transparent"
+                          }
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Remaining Cash in Deal"
+                        value={formatCurrency(state.brrrr?.remainingCashInDeal || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="Your remaining equity"
+                      />
+                      <TextField
+                        fullWidth
+                        label="New Monthly Payment"
+                        value={formatCurrency(state.brrrr?.newMonthlyPayment || 0)}
+                        InputProps={{ readOnly: true }}
+                        helperText="P&I on refinance loan"
+                      />
+                      <TextField
+                        fullWidth
+                        label="New Cash-on-Cash Return"
+                        value={(state.brrrr?.newCashOnCashReturn || 0).toFixed(2) + "%"}
+                        InputProps={{ readOnly: true }}
+                        helperText="Annual cash flow / remaining cash"
+                      />
+                    </Box>
+
+                    {/* LTV Constraint Warning */}
+                    {state.brrrr?.ltvConstraint === false && (
+                      <Alert severity="warning" sx={{ mt: 2 }}>
+                        <Typography variant="body2">
+                          <strong>Note:</strong> Your refinance LTV exceeds typical lending limits (75%) for investment properties.
+                          You may need to adjust your strategy or seek alternative financing.
+                        </Typography>
+                      </Alert>
+                    )}
+
+                    {/* Success Indicator */}
+                    {(state.brrrr?.effectiveCashOut || 0) >= (state.brrrr?.originalCashInvested || 0) && (
+                      <Alert severity="success" sx={{ mt: 2 }}>
+                        <Typography variant="body2">
+                          <strong>Excellent!</strong> You can recover 100% of your initial investment and repeat the strategy.
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Box>
+
+                  {/* Strategy Explanation */}
+                  <Box sx={{ p: 2, bgcolor: brandColors.backgrounds.tertiary, borderRadius: 1 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      The BRRRR Method:
+                    </Typography>
+                    <Typography variant="body2" component="div" sx={{ color: brandColors.neutral[700] }}>
+                      <ol style={{ margin: 0, paddingLeft: 20 }}>
+                        <li><strong>Buy:</strong> Purchase below market value</li>
+                        <li><strong>Rehab:</strong> Renovate to increase value</li>
+                        <li><strong>Rent:</strong> Find quality tenants</li>
+                        <li><strong>Refinance:</strong> Pull out your capital</li>
+                        <li><strong>Repeat:</strong> Use funds for next deal</li>
+                      </ol>
+                    </Typography>
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        )}
+
         {/* Amortization Schedule Section - Hidden by finance types unless override enabled */}
         {state.operationType !== "Rental Arbitrage" &&
           (state.showAmortizationOverride ||

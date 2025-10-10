@@ -2765,7 +2765,6 @@ const defaultState: DealState = {
   },
   proFormaAuto: true,
   validationMessages: [],
-  showAmortizationOverride: false,
   snackbarOpen: false,
   city: "",
   state: "",
@@ -2793,6 +2792,9 @@ const UnderwritePage: React.FC = () => {
   // Regional Adjustment State
   const [regionalAdjustmentEnabled, setRegionalAdjustmentEnabled] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<RegionKey>('national-average');
+
+  // Amortization View State
+  const [amortizationView, setAmortizationView] = useState<'summary' | 'compressed' | 'full'>('summary');
   
   // Custom Presets State
   const [customProFormaPresets, setCustomProFormaPresets] = useState<Array<{
@@ -7675,12 +7677,11 @@ const UnderwritePage: React.FC = () => {
           </Card>
         )}
 
-        {/* Amortization Schedule Section - Hidden by finance types unless override enabled */}
+        {/* Amortization Schedule Section - Hidden by finance types */}
         {state.operationType !== "Rental Arbitrage" &&
-          (state.showAmortizationOverride ||
-            (state.offerType !== "Subject To Existing Mortgage" &&
-              state.offerType !== "Hybrid" &&
-              state.offerType !== "Cash")) && (
+          (state.offerType !== "Subject To Existing Mortgage" &&
+            state.offerType !== "Hybrid" &&
+            state.offerType !== "Cash") && (
             <Card sx={{ mt: 2, borderRadius: 2, border: "1px solid brandColors.borders.secondary" }}>
               <Accordion>
                 <AccordionSummary expandIcon={
@@ -7693,25 +7694,39 @@ const UnderwritePage: React.FC = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={!!state.showAmortizationOverride}
-                          onChange={(e) =>
-                            setState((prev) => ({
-                              ...prev,
-                              showAmortizationOverride: e.target.checked,
-                            }))
-                          }
-                        />
-                      }
-                      label="Show regardless of Finance Type"
-                    />
-                  </Box>
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: 3 }}
                   >
+                    {/* View Options */}
+                    <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                      <ToggleButtonGroup
+                        value={amortizationView}
+                        exclusive
+                        onChange={(_, newView) => {
+                          if (newView !== null) {
+                            setAmortizationView(newView);
+                          }
+                        }}
+                        sx={{
+                          '& .MuiToggleButton-root': {
+                            border: `1px solid ${brandColors.borders.secondary}`,
+                            color: brandColors.neutral[600],
+                            '&.Mui-selected': {
+                              backgroundColor: brandColors.primary,
+                              color: 'white',
+                              '&:hover': {
+                                backgroundColor: brandColors.primary,
+                              }
+                            }
+                          }
+                        }}
+                      >
+                        <ToggleButton value="summary">Summary</ToggleButton>
+                        <ToggleButton value="compressed">Compressed</ToggleButton>
+                        <ToggleButton value="full">Full View</ToggleButton>
+                      </ToggleButtonGroup>
+                    </Box>
+
                     <Box sx={{ width: "100%" }}>
                       <LinearProgress
                         variant="determinate"
@@ -7753,65 +7768,211 @@ const UnderwritePage: React.FC = () => {
                         </Typography>
                       </Alert>
                     )}
-                    <Box sx={{ overflowX: "auto" }}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>#</TableCell>
-                            <TableCell>Payment</TableCell>
-                            <TableCell>Interest</TableCell>
-                            <TableCell>Principal</TableCell>
-                            <TableCell>Balance</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {buildAmortization(
+
+                    {/* Amortization Content based on selected view */}
+                    {amortizationView === 'summary' && (
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        {(() => {
+                          const amortizationData = buildAmortization(
                             state.loan.loanAmount,
                             state.loan.annualInterestRate,
                             state.loan.amortizationYears,
                             state.loan.interestOnly,
                             undefined,
                             state.loan.ioPeriodMonths,
-                          ).map((row) => (
-                            <TableRow 
-                              key={row.index}
-                              sx={{
-                                bgcolor: row.isIOPhase 
-                                  ? brandColors.backgrounds.tertiary 
-                                  : 'inherit',
-                                borderLeft: row.isIOPhase 
-                                  ? `3px solid ${brandColors.accent.warning}` 
-                                  : row.index === (state.loan.ioPeriodMonths || 0) + 1
-                                    ? `3px solid ${brandColors.accent.success}`
-                                    : 'none',
-                              }}
-                            >
-                              <TableCell>{row.index}</TableCell>
-                              <TableCell>
-                                {formatCurrency(row.payment)}
-                                {row.index === (state.loan.ioPeriodMonths || 0) + 1 && state.loan.ioPeriodMonths && (
-                                  <Chip 
-                                    label="Amort Starts" 
-                                    size="small" 
-                                    color="success" 
-                                    sx={{ ml: 1 }}
-                                  />
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {formatCurrency(row.interest)}
-                              </TableCell>
-                              <TableCell>
-                                {formatCurrency(row.principal)}
-                              </TableCell>
-                              <TableCell>
-                                {formatCurrency(row.balance)}
-                              </TableCell>
+                          );
+                          
+                          const totalPayments = amortizationData.length;
+                          const totalInterest = amortizationData.reduce((sum, row) => sum + row.interest, 0);
+                          const totalPrincipal = amortizationData.reduce((sum, row) => sum + row.principal, 0);
+                          const avgPayment = amortizationData.reduce((sum, row) => sum + row.payment, 0) / totalPayments;
+                          
+                          return (
+                            <>
+                              <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 2 }}>
+                                <Paper sx={{ p: 2, textAlign: "center" }}>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.primary }}>
+                                    {totalPayments}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Total Payments
+                                  </Typography>
+                                </Paper>
+                                <Paper sx={{ p: 2, textAlign: "center" }}>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.error }}>
+                                    {formatCurrency(totalInterest)}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Total Interest
+                                  </Typography>
+                                </Paper>
+                                <Paper sx={{ p: 2, textAlign: "center" }}>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
+                                    {formatCurrency(totalPrincipal)}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Total Principal
+                                  </Typography>
+                                </Paper>
+                                <Paper sx={{ p: 2, textAlign: "center" }}>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.neutral[700] }}>
+                                    {formatCurrency(avgPayment)}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Avg Payment
+                                  </Typography>
+                                </Paper>
+                              </Box>
+                              
+                              {state.loan.interestOnly && state.loan.ioPeriodMonths && (
+                                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 2 }}>
+                                  <Paper sx={{ p: 2, textAlign: "center", border: `2px solid ${brandColors.accent.warning}` }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.warning }}>
+                                      {state.loan.ioPeriodMonths}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                      IO Period (months)
+                                    </Typography>
+                                  </Paper>
+                                  <Paper sx={{ p: 2, textAlign: "center", border: `2px solid ${brandColors.accent.success}` }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
+                                      {totalPayments - state.loan.ioPeriodMonths}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                      Amortizing Period (months)
+                                    </Typography>
+                                  </Paper>
+                                </Box>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </Box>
+                    )}
+
+                    {amortizationView === 'compressed' && (
+                      <Box sx={{ overflowX: "auto", maxHeight: "400px", overflowY: "auto" }}>
+                        <Table>
+                          <TableHead sx={{ position: "sticky", top: 0, backgroundColor: brandColors.backgrounds.primary, zIndex: 1 }}>
+                            <TableRow>
+                              <TableCell>#</TableCell>
+                              <TableCell>Payment</TableCell>
+                              <TableCell>Interest</TableCell>
+                              <TableCell>Principal</TableCell>
+                              <TableCell>Balance</TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </Box>
+                          </TableHead>
+                          <TableBody>
+                            {buildAmortization(
+                              state.loan.loanAmount,
+                              state.loan.annualInterestRate,
+                              state.loan.amortizationYears,
+                              state.loan.interestOnly,
+                              undefined,
+                              state.loan.ioPeriodMonths,
+                            ).map((row) => (
+                              <TableRow 
+                                key={row.index}
+                                sx={{
+                                  bgcolor: row.isIOPhase 
+                                    ? brandColors.backgrounds.tertiary 
+                                    : 'inherit',
+                                  borderLeft: row.isIOPhase 
+                                    ? `3px solid ${brandColors.accent.warning}` 
+                                    : row.index === (state.loan.ioPeriodMonths || 0) + 1
+                                      ? `3px solid ${brandColors.accent.success}`
+                                      : 'none',
+                                }}
+                              >
+                                <TableCell>{row.index}</TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.payment)}
+                                  {row.index === (state.loan.ioPeriodMonths || 0) + 1 && state.loan.ioPeriodMonths && (
+                                    <Chip 
+                                      label="Amort Starts" 
+                                      size="small" 
+                                      color="success" 
+                                      sx={{ ml: 1 }}
+                                    />
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.interest)}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.principal)}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.balance)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    )}
+
+                    {amortizationView === 'full' && (
+                      <Box sx={{ overflowX: "auto" }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>#</TableCell>
+                              <TableCell>Payment</TableCell>
+                              <TableCell>Interest</TableCell>
+                              <TableCell>Principal</TableCell>
+                              <TableCell>Balance</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {buildAmortization(
+                              state.loan.loanAmount,
+                              state.loan.annualInterestRate,
+                              state.loan.amortizationYears,
+                              state.loan.interestOnly,
+                              undefined,
+                              state.loan.ioPeriodMonths,
+                            ).map((row) => (
+                              <TableRow 
+                                key={row.index}
+                                sx={{
+                                  bgcolor: row.isIOPhase 
+                                    ? brandColors.backgrounds.tertiary 
+                                    : 'inherit',
+                                  borderLeft: row.isIOPhase 
+                                    ? `3px solid ${brandColors.accent.warning}` 
+                                    : row.index === (state.loan.ioPeriodMonths || 0) + 1
+                                      ? `3px solid ${brandColors.accent.success}`
+                                      : 'none',
+                                }}
+                              >
+                                <TableCell>{row.index}</TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.payment)}
+                                  {row.index === (state.loan.ioPeriodMonths || 0) + 1 && state.loan.ioPeriodMonths && (
+                                    <Chip 
+                                      label="Amort Starts" 
+                                      size="small" 
+                                      color="success" 
+                                      sx={{ ml: 1 }}
+                                    />
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.interest)}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.principal)}
+                                </TableCell>
+                                <TableCell>
+                                  {formatCurrency(row.balance)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    )}
 
                     <Typography
                       variant="caption"

@@ -17,7 +17,7 @@ import { theme } from '../theme/theme';
 import { SceneManager } from '../components/3d/SceneManager';
 
 // Visual effects
-import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
+import { EnhancedStarField } from '../components/3d/effects/EnhancedStarField';
 
 // Section components - 12 focused sections
 import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
@@ -40,10 +40,11 @@ import { AnalyticsReportingSection3D } from '../components/3d/sections/Analytics
 const SceneContent: React.FC<{ 
   currentSection: number; 
   onSectionChange: (section: number) => void;
-  onScrollUpdate: (progress: number, velocity: number) => void;
+  onScrollUpdate: (progress: number, velocity: number, mousePosition?: { x: number; y: number }) => void;
   scrollVelocity: number;
   scrollProgress: number;
-}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress }) => {
+  mousePosition: { x: number; y: number };
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
@@ -56,8 +57,8 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects - Keep whizzing stars, removed galaxy */}
-      <WhizzingStars scrollVelocity={scrollVelocity} />
+      {/* Enhanced Star Field - Multiple layers for 3D depth */}
+      <EnhancedStarField scrollVelocity={scrollVelocity} mousePosition={mousePosition} />
 
       {/* Scene Manager - handles camera transitions */}
       <SceneManager 
@@ -139,6 +140,7 @@ const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
   const currentSectionRef = useRef(0);
@@ -219,6 +221,7 @@ const Advertise3DPage: React.FC = () => {
             requestAnimationFrame(animateScroll);
           } else {
             // Animation complete - update state and unlock scrolling
+            console.log(`✓ Scroll animation complete. Now at section ${nextSection}`);
             setCurrentSection(nextSection);
             isScrollingRef.current = false;
             setIsScrolling(false);
@@ -226,6 +229,8 @@ const Advertise3DPage: React.FC = () => {
         };
         
         requestAnimationFrame(animateScroll);
+      } else {
+        console.log(`Already at section ${current}, not scrolling`);
       }
     };
 
@@ -247,13 +252,21 @@ const Advertise3DPage: React.FC = () => {
 
   // Section change handler (called by SceneManager)
   const handleSectionChange = (section: number) => {
-    setCurrentSection(section);
+    // Only update if we're not in manual scroll mode
+    if (!isScrollingRef.current) {
+      console.log(`SceneManager wants to change to section ${section}`);
+      setCurrentSection(section);
+      currentSectionRef.current = section;
+    }
   };
 
   // Scroll update handler (called by SceneManager)
-  const handleScrollUpdate = (progress: number, velocity: number) => {
+  const handleScrollUpdate = (progress: number, velocity: number, mousePos?: { x: number; y: number }) => {
     setScrollVelocity(velocity);
     setScrollProgress(progress);
+    if (mousePos) {
+      setMousePosition(mousePos);
+    }
   };
 
   return (
@@ -327,6 +340,7 @@ const Advertise3DPage: React.FC = () => {
                 onScrollUpdate={handleScrollUpdate}
                 scrollVelocity={scrollVelocity}
                 scrollProgress={scrollProgress}
+                mousePosition={mousePosition}
               />
             </Suspense>
           </Canvas>

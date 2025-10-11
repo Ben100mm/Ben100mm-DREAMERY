@@ -164,15 +164,36 @@ export class ScrollController {
   private previousScrollY = 0;
   private scrollVelocity = 0;
   private boundHandleScroll: () => void;
+  private boundHandleMouseMove: (e: MouseEvent) => void;
   private velocityResetTimeout: number | null = null;
+  private mousePosition = { x: 0, y: 0 };
+  private targetMouseOffset = { x: 0, y: 0, z: 0 };
+  private currentMouseOffset = { x: 0, y: 0, z: 0 };
 
   constructor() {
     this.boundHandleScroll = this.handleScroll.bind(this);
+    this.boundHandleMouseMove = this.handleMouseMove.bind(this);
     this.setupScrollListener();
+    this.setupMouseListener();
   }
 
   private setupScrollListener() {
     window.addEventListener('scroll', this.boundHandleScroll);
+  }
+
+  private setupMouseListener() {
+    window.addEventListener('mousemove', this.boundHandleMouseMove);
+  }
+
+  private handleMouseMove(e: MouseEvent) {
+    // Normalize mouse position to -1 to 1 range
+    this.mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+    this.mousePosition.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    
+    // Calculate mouse offset for camera movement
+    this.targetMouseOffset.x = this.mousePosition.x * 2; // Horizontal movement
+    this.targetMouseOffset.y = this.mousePosition.y * 1.5; // Vertical movement
+    this.targetMouseOffset.z = this.mousePosition.x * 0.5; // Depth movement
   }
 
   private handleScroll() {
@@ -209,13 +230,30 @@ export class ScrollController {
     delta: number,
     lerpFactor = 0.1
   ) {
+    // Smooth mouse offset interpolation
+    this.currentMouseOffset.x += (this.targetMouseOffset.x - this.currentMouseOffset.x) * 0.05;
+    this.currentMouseOffset.y += (this.targetMouseOffset.y - this.currentMouseOffset.y) * 0.05;
+    this.currentMouseOffset.z += (this.targetMouseOffset.z - this.currentMouseOffset.z) * 0.05;
+    
     // Get position along the winding curve
     const t = Math.max(0, Math.min(1, this.scrollProgress));
-    const targetPosition = windingPath.getPointAt(t);
+    const basePosition = windingPath.getPointAt(t);
     
-    // Get tangent for look direction
+    // Apply mouse offset to camera position
+    const targetPosition = basePosition.clone().add(new THREE.Vector3(
+      this.currentMouseOffset.x,
+      this.currentMouseOffset.y,
+      this.currentMouseOffset.z
+    ));
+    
+    // Get tangent for look direction with mouse influence
     const lookAheadT = Math.min(t + 0.03, 1);
-    const lookAtPoint = windingPath.getPointAt(lookAheadT);
+    const baseLookAt = windingPath.getPointAt(lookAheadT);
+    const lookAtPoint = baseLookAt.clone().add(new THREE.Vector3(
+      this.currentMouseOffset.x * 0.5,
+      this.currentMouseOffset.y * 0.5,
+      0
+    ));
     
     // Smooth camera movement
     camera.position.lerp(targetPosition, lerpFactor);
@@ -240,8 +278,13 @@ export class ScrollController {
     return this.scrollVelocity;
   }
 
+  public getMousePosition(): { x: number; y: number } {
+    return { ...this.mousePosition };
+  }
+
   public dispose() {
     window.removeEventListener('scroll', this.boundHandleScroll);
+    window.removeEventListener('mousemove', this.boundHandleMouseMove);
     if (this.velocityResetTimeout !== null) {
       clearTimeout(this.velocityResetTimeout);
     }

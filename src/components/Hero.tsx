@@ -137,7 +137,7 @@ const SearchButton = styled.button`
   }
 `;
 
-const SuggestionDropdown = styled.div<{ isOpen: boolean }>`
+const SuggestionDropdown = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -149,7 +149,7 @@ const SuggestionDropdown = styled.div<{ isOpen: boolean }>`
   z-index: 1000;
   max-height: 400px;
   overflow-y: auto;
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   margin-top: 4px;
 `;
 
@@ -479,7 +479,7 @@ const Hero: React.FC = () => {
           </SearchButton>
           
           {/* Suggestions Dropdown */}
-          <SuggestionDropdown isOpen={showSuggestions && !error}>
+          <SuggestionDropdown $isOpen={showSuggestions && !error}>
             {isLoading ? (
               <LoadingContainer>
                 <CircularProgress size={20} />

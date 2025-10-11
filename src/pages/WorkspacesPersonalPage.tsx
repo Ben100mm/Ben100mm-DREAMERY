@@ -12,8 +12,9 @@ import {
 
 import { RoleContext } from '../context/RoleContext';
 import UnifiedRoleSelector from '../components/UnifiedRoleSelector';
-import BuyerWorkspaceSelector from '../components/BuyerWorkspaceSelector';
+import PersonalWorkspaceSelector from '../components/PersonalWorkspaceSelector';
 import CloseWorkspace from '../components/workspaces/CloseWorkspace';
+import RentWorkspace from '../components/workspaces/RentWorkspace';
 import ManageWorkspace from '../components/workspaces/ManageWorkspace';
 import InvestWorkspace from '../components/workspaces/InvestWorkspace';
 import FundWorkspace from '../components/workspaces/FundWorkspace';
@@ -38,7 +39,7 @@ interface CloseState {
 }
 
 
-const WorkspacesBuyerPage: React.FC = () => {
+const WorkspacesPersonalPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -46,11 +47,11 @@ const WorkspacesBuyerPage: React.FC = () => {
   const allowedRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
   const isBuyerAuthorized = allowedRoles.includes(userRole);
   
-  console.log('WorkspacesBuyerPage - userRole:', userRole, 'isBuyerAuthorized:', isBuyerAuthorized, 'allowedRoles:', allowedRoles);
+  console.log('WorkspacesPersonalPage - userRole:', userRole, 'isBuyerAuthorized:', isBuyerAuthorized, 'allowedRoles:', allowedRoles);
 
   // Debug effect to log role changes
   useEffect(() => {
-    console.log('WorkspacesBuyerPage - userRole changed to:', userRole);
+    console.log('WorkspacesPersonalPage - userRole changed to:', userRole);
   }, [userRole]);
 
   const [state, setState] = useState<CloseState>({
@@ -74,13 +75,15 @@ const WorkspacesBuyerPage: React.FC = () => {
     const searchParams = new URLSearchParams(location.search);
     const workspaceParam = searchParams.get('workspace');
     
-    // Check query parameter first (for /workspaces/buyer?workspace=invest)
+    // Check query parameter first (for /workspaces/personal?workspace=invest)
     if (workspaceParam) {
       return workspaceParam;
     }
     
     // Check pathname for direct routes
-    if (path === '/close/buyer') return 'close';
+    if (path === '/close/personal') return 'close';
+    if (path === '/workspaces/personal') return 'rent';
+    if (path === '/rent') return 'rent';
     if (path === '/manage') return 'manage';
     if (path === '/invest') return 'invest';
     if (path === '/fund') return 'fund';
@@ -88,7 +91,7 @@ const WorkspacesBuyerPage: React.FC = () => {
     if (path === '/learn') return 'learn';
     if (path === '/advertise') return 'advertise';
     
-    return 'close'; // default
+    return 'rent'; // default
   }, [location.pathname, location.search]);
 
   const [selectedWorkspace, setSelectedWorkspace] = useState<string>(getCurrentWorkspace());
@@ -106,6 +109,8 @@ const WorkspacesBuyerPage: React.FC = () => {
   // Render workspace content based on selected workspace
   const renderWorkspaceContent = () => {
     switch (selectedWorkspace) {
+      case 'rent':
+        return <RentWorkspace activeTab={state.activeTab} />;
       case 'close':
         return <CloseWorkspace activeTab={state.activeTab} />;
       case 'manage':
@@ -141,7 +146,7 @@ const WorkspacesBuyerPage: React.FC = () => {
           </Box>
         );
       default:
-        return <CloseWorkspace activeTab={state.activeTab} />;
+        return <RentWorkspace activeTab={state.activeTab} />;
     }
   };
 
@@ -171,6 +176,19 @@ const WorkspacesBuyerPage: React.FC = () => {
   // Get sidebar items based on selected workspace
   const getSidebarItems = () => {
     switch (selectedWorkspace) {
+      case 'rent':
+        return [
+          { value: 'dashboard', label: 'Dashboard' },
+          { value: 'search', label: 'Property Search' },
+          { value: 'favorites', label: 'Saved Properties' },
+          { value: 'applications', label: 'Applications' },
+          { value: 'payments', label: 'Payments' },
+          { value: 'messages', label: 'Messages' },
+          { value: 'documents', label: 'Documents' },
+          { value: 'calendar', label: 'Calendar' },
+          { value: 'assistant', label: 'Rental Assistant' },
+          { value: 'analytics', label: 'Analytics' },
+        ];
       case 'close':
         return [
           { value: 'dashboard', label: 'Dashboard' },
@@ -197,7 +215,7 @@ const WorkspacesBuyerPage: React.FC = () => {
           { value: 'listing', label: 'Creating a Listing' },
           { value: 'leases', label: 'Online Leases' },
           { value: 'applications', label: 'Rental Applications' },
-          { value: 'payments', label: 'Online Rent Payments' },
+          { value: 'payments', label: 'Payment Collections' },
           { value: 'integrations', label: 'Integrations' },
           { value: 'insurance', label: 'Insurance' },
           { value: 'account', label: 'Manage Your Account' },
@@ -355,9 +373,9 @@ const WorkspacesBuyerPage: React.FC = () => {
             />
           </Box>
 
-          {/* Buyer Workspace Selector */}
+          {/* Personal Workspace Selector */}
           <Box sx={{ px: 2, mb: 2, flexShrink: 0 }}>
-            <BuyerWorkspaceSelector 
+            <PersonalWorkspaceSelector 
               variant="outlined"
               size="small"
               sx={{ 
@@ -518,4 +536,4 @@ const WorkspacesBuyerPage: React.FC = () => {
   );
 };
 
-export default WorkspacesBuyerPage;
+export default WorkspacesPersonalPage;

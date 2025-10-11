@@ -73,7 +73,7 @@ export const manageWorkspace: WorkspaceConfig = {
     },
     { 
       id: 'payments', 
-      label: 'Online Rent Payments', 
+      label: 'Payment Collections', 
       icon: <PaymentIcon />,
     },
     { 

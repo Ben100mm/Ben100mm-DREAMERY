@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
+  Home as RentIcon,
   Close as CloseIcon,
   Dashboard as ManageIcon,
   TrendingUp as InvestIcon,
@@ -19,17 +20,18 @@ import {
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 
-interface BuyerWorkspaceSelectorProps {
+interface PersonalWorkspaceSelectorProps {
   variant?: 'outlined' | 'standard' | 'filled';
   size?: 'small' | 'medium';
   sx?: any;
 }
 
 /**
- * BuyerWorkspaceSelector - Dropdown for buyer workspace navigation
+ * PersonalWorkspaceSelector - Dropdown for personal workspace navigation
  * 
  * Workspaces:
- * - Close → /close/buyer (default)
+ * - Rent → /workspaces/personal?workspace=rent
+ * - Close → /workspaces/personal?workspace=close
  * - Manage → /manage
  * - Invest → /invest
  * - Fund → /fund
@@ -37,7 +39,7 @@ interface BuyerWorkspaceSelectorProps {
  * - Learn → /learn
  * - Advertise → /advertise
  */
-const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
+const PersonalWorkspaceSelector: React.FC<PersonalWorkspaceSelectorProps> = ({
   variant = 'outlined',
   size = 'small',
   sx = {},
@@ -51,13 +53,15 @@ const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
     const searchParams = new URLSearchParams(location.search);
     const workspaceParam = searchParams.get('workspace');
     
-    // Check query parameter first (for /workspaces/buyer?workspace=invest)
+    // Check query parameter first (for /workspaces/personal?workspace=invest)
     if (workspaceParam) {
       return workspaceParam;
     }
     
     // Check pathname for direct routes
-    if (path === '/close/buyer') return 'close';
+    if (path === '/close/personal') return 'close';
+    if (path === '/workspaces/personal') return 'rent';
+    if (path === '/rent') return 'rent';
     if (path === '/manage') return 'manage';
     if (path === '/invest') return 'invest';
     if (path === '/fund') return 'fund';
@@ -65,7 +69,7 @@ const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
     if (path === '/learn') return 'learn';
     if (path === '/advertise') return 'advertise';
     
-    return 'close'; // default
+    return 'rent'; // default
   };
   
   const [selectedWorkspace, setSelectedWorkspace] = useState(getCurrentWorkspace());
@@ -76,7 +80,8 @@ const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
   }, [location.pathname, location.search]);
 
   const workspaceOptions = [
-    { value: 'close', label: 'Close', icon: <CloseIcon fontSize="small" />, route: '/close/buyer' },
+    { value: 'rent', label: 'Rent', icon: <RentIcon fontSize="small" />, route: '/workspaces/personal?workspace=rent' },
+    { value: 'close', label: 'Close', icon: <CloseIcon fontSize="small" />, route: '/workspaces/personal?workspace=close' },
     { value: 'manage', label: 'Manage', icon: <ManageIcon fontSize="small" />, route: '/manage' },
     { value: 'invest', label: 'Invest', icon: <InvestIcon fontSize="small" />, route: '/invest' },
     { value: 'fund', label: 'Fund', icon: <FundIcon fontSize="small" />, route: '/fund' },
@@ -92,7 +97,7 @@ const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
     const workspace = workspaceOptions.find(opt => opt.value === value);
     
     if (workspace) {
-      console.log('BuyerWorkspaceSelector: Workspace selected:', workspace.label);
+      console.log('PersonalWorkspaceSelector: Workspace selected:', workspace.label);
       navigate(workspace.route);
     }
   };
@@ -142,5 +147,5 @@ const BuyerWorkspaceSelector: React.FC<BuyerWorkspaceSelectorProps> = ({
   );
 };
 
-export default BuyerWorkspaceSelector;
+export default PersonalWorkspaceSelector;
 

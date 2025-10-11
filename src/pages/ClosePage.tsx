@@ -40,11 +40,11 @@ const ClosePage: React.FC = () => {
 
   const closeOptions: CloseOption[] = [
     {
-      value: 'buyer',
-    label: 'Buyer',
+      value: 'personal',
+    label: 'Personal',
       description: 'Complete your real estate purchase with our closing tools',
       icon: <PersonIcon sx={{ fontSize: 40, color: brandColors.actions.primary }} />,
-      route: '/workspaces/buyer'
+      route: '/workspaces/personal'
     },
     {
       value: 'agent',
@@ -86,7 +86,7 @@ const ClosePage: React.FC = () => {
       if (option) {
         // Map selection to a role that passes the RBAC guard
         const optionToRole: Record<string, string> = {
-          buyer: 'Retail Buyer',
+          personal: 'Retail Buyer',
           agent: 'Real Estate Agent',
           brokerages: 'Real Estate Broker',
           'professional-support': 'Title Agent',
@@ -112,10 +112,10 @@ const ClosePage: React.FC = () => {
   React.useEffect(() => {
     if (!allowRoleSelector && userRole) {
       const roleToRoute: Record<string, string> = {
-        'Retail Buyer': '/workspaces/buyer',
-        'Investor Buyer': '/workspaces/buyer',
-        'iBuyer': '/workspaces/buyer',
-        'Property Flipper': '/workspaces/buyer',
+        'Retail Buyer': '/workspaces/personal',
+        'Investor Buyer': '/workspaces/personal',
+        'iBuyer': '/workspaces/personal',
+        'Property Flipper': '/workspaces/personal',
         'Real Estate Agent': '/workspaces/agent',
         'Buyer\'s Agent': '/workspaces/agent',
         'Listing Agent': '/workspaces/agent',

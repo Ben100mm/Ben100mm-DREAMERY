@@ -87,7 +87,7 @@ const manageWorkspaceConfig: WorkspaceConfig = {
     { id: 'listing', label: 'Creating a Listing' },
     { id: 'leases', label: 'Online Leases' },
     { id: 'applications', label: 'Rental Applications' },
-    { id: 'payments', label: 'Online Rent Payments' },
+    { id: 'payments', label: 'Payment Collections' },
     { id: 'integrations', label: 'Integrations' },
     { id: 'insurance', label: 'Insurance' },
     { id: 'account', label: 'Manage Your Account' },

@@ -29,7 +29,7 @@ interface UnifiedRoleSelectorProps {
  * UnifiedRoleSelector - Unified dropdown for all workspace categories and professional roles
  * 
  * Categories:
- * - Buyer → /workspaces/buyer
+ * - Personal → /workspaces/personal
  * - Agent → /workspaces/agent
  * - Brokerages → /workspaces/brokerages
  * - Businesses → /workspaces/businesses
@@ -46,24 +46,24 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
   const { userRole, setUserRole } = useContext(RoleContext as any) as any || {};
   const [selectedValue, setSelectedValue] = useState(currentRole || userRole || '');
 
-  // Category-level options (Buyer first, then A-Z)
+  // Category-level options (Personal first, then A-Z)
   const categoryOptions = [
-    { value: 'buyer', label: 'Buyer', icon: <PersonIcon />, route: '/workspaces/buyer', roleMapping: 'Retail Buyer' },
+    { value: 'personal', label: 'Personal', icon: <PersonIcon />, route: '/workspaces/personal', roleMapping: 'Retail Buyer' },
     { value: 'agent', label: 'Agent', icon: <PersonIcon />, route: '/workspaces/agent', roleMapping: 'Real Estate Agent' },
     { value: 'brokerages', label: 'Brokerages', icon: <AccountBalanceIcon />, route: '/workspaces/brokerages', roleMapping: 'Real Estate Broker' },
     { value: 'businesses', label: 'Businesses', icon: <BusinessIcon />, route: '/workspaces/businesses', roleMapping: 'Business' },
   ];
 
-  // Map buyer roles to "buyer" category
+  // Map buyer roles to "personal" category
   const buyerRoles = ['Retail Buyer', 'Investor Buyer', 'iBuyer', 'Property Flipper'];
 
   // Sync local state with context when userRole changes
   useEffect(() => {
     const roleToDisplay = currentRole || userRole;
     if (roleToDisplay) {
-      // If it's a buyer role, display as "buyer" category
+      // If it's a buyer role, display as "personal" category
       if (buyerRoles.includes(roleToDisplay)) {
-        setSelectedValue('buyer');
+        setSelectedValue('personal');
       } else {
         setSelectedValue(roleToDisplay);
       }
@@ -210,7 +210,7 @@ const UnifiedRoleSelector: React.FC<UnifiedRoleSelectorProps> = ({
           <em>Select Workspace</em>
         </MenuItem>
 
-        {/* Unified list: Buyer first, then all roles A-Z */}
+        {/* Unified list: Personal first, then all roles A-Z */}
         {categoryOptions.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>

@@ -7,7 +7,7 @@ import { brandColors } from '../theme';
 /**
  * WorkspacesPage - Auto-redirects based on user account type
  * 
- * Individual account → /workspaces/buyer
+ * Individual account → /workspaces/personal
  * Professional account → /workspaces/professional-support (with specific role)
  * Business account → /workspaces/businesses or /workspaces/brokerages
  */
@@ -17,9 +17,9 @@ const WorkspacesPage: React.FC = () => {
 
   useEffect(() => {
     if (!userRole) {
-      // If no role is set, default to buyer workspace
-      console.log('WorkspacesPage: No role detected, defaulting to buyer workspace');
-      navigate('/workspaces/buyer', { replace: true });
+      // If no role is set, default to personal workspace
+      console.log('WorkspacesPage: No role detected, defaulting to personal workspace');
+      navigate('/workspaces/personal', { replace: true });
       return;
     }
 
@@ -129,8 +129,8 @@ const WorkspacesPage: React.FC = () => {
 
     // Determine workspace based on role
     if (individualRoles.includes(userRole)) {
-      console.log('WorkspacesPage: Redirecting to buyer workspace');
-      navigate('/workspaces/buyer', { replace: true });
+      console.log('WorkspacesPage: Redirecting to personal workspace');
+      navigate('/workspaces/personal', { replace: true });
     } else if (agentRoles.includes(userRole)) {
       console.log('WorkspacesPage: Redirecting to agent workspace');
       navigate('/workspaces/agent', { replace: true });

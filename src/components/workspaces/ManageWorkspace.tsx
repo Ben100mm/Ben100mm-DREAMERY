@@ -385,7 +385,7 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
         };
       case 'payments':
         return {
-          title: 'Online Rent Payments',
+          title: 'Payment Collections',
           subtitle: 'Secure payment processing and rent collection management',
           icon: <PaymentIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };

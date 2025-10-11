@@ -75,6 +75,7 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
       loader.load(
         textureUrl,
         (loadedTexture) => {
+          console.log('✅ Milky Way texture loaded successfully:', textureUrl);
           loadedTexture.wrapS = THREE.RepeatWrapping;
           loadedTexture.wrapT = THREE.ClampToEdgeWrapping;
           loadedTexture.flipY = false;
@@ -83,11 +84,12 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
         },
         undefined,
         (error) => {
-          console.warn('Could not load Milky Way texture, using fallback:', error);
+          console.warn('⚠️ Could not load Milky Way texture, using fallback:', error);
           setHasError(true);
           setIsLoading(false);
           // Create a fallback texture
           const fallbackTexture = createFallbackMilkyWayTexture();
+          console.log('🔄 Created fallback texture');
           resolve(fallbackTexture);
         }
       );
@@ -240,7 +242,15 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
   if (!visible) return null;
 
   // Debug logging
-  console.log('MilkyWayPanorama3D rendering:', { visible, isLoading, hasError, currentSection: 'check console' });
+  console.log('🌌 MilkyWayPanorama3D rendering:', { 
+    visible, 
+    isLoading, 
+    hasError, 
+    textureUrl,
+    zoom,
+    rotationX,
+    rotationY
+  });
 
   return (
     <group>

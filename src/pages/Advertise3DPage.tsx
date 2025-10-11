@@ -147,7 +147,10 @@ const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
   
   // Debug logging
-  console.log('Current section:', currentSection);
+  console.log('Current section:', currentSection, 'Total sections: 13 (0-12)');
+  if (currentSection === 12) {
+    console.log('🎯 MILKY WAY SECTION ACTIVE - Section 12');
+  }
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

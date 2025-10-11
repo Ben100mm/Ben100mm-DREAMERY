@@ -15,10 +15,9 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
   const starsRef = useRef<THREE.Points>(null);
   const previousScrollRef = useRef(0);
   
-  const [positions, velocities] = useMemo(() => {
+  const positions = useMemo(() => {
     const count = 1000;
     const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count);
     
     for (let i = 0; i < count; i++) {
       // Random positions in a cylinder around the path
@@ -27,12 +26,9 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
       pos[i * 3] = Math.cos(angle) * radius;
       pos[i * 3 + 1] = (Math.random() - 0.5) * 100;
       pos[i * 3 + 2] = Math.random() * -500;
-      
-      // Random velocities for whizzing effect
-      vel[i] = 2 + Math.random() * 3;
     }
     
-    return [pos, vel];
+    return pos;
   }, []);
   
   useFrame((state, delta) => {
@@ -40,17 +36,20 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
       const positions = starsRef.current.geometry.attributes.position;
       const scrollSpeed = Math.abs(scrollVelocity) * 5;
       
-      for (let i = 0; i < positions.count; i++) {
-        // Move stars forward based on scroll speed
-        positions.array[i * 3 + 2] += (velocities[i] + scrollSpeed) * delta * 10;
-        
-        // Reset stars that go past camera
-        if (positions.array[i * 3 + 2] > 10) {
-          positions.array[i * 3 + 2] = -500;
+      // Only animate stars if there's actual scroll movement
+      if (scrollSpeed > 0.1) {
+        for (let i = 0; i < positions.count; i++) {
+          // Move stars forward based on scroll speed only
+          positions.array[i * 3 + 2] += scrollSpeed * delta * 10;
+          
+          // Reset stars that go past camera
+          if (positions.array[i * 3 + 2] > 10) {
+            positions.array[i * 3 + 2] = -500;
+          }
         }
+        
+        positions.needsUpdate = true;
       }
-      
-      positions.needsUpdate = true;
     }
     
     previousScrollRef.current = scrollVelocity;

@@ -21,10 +21,9 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({
   const starsRef = useRef<THREE.Points>(null);
   const previousScrollRef = useRef(0);
   
-  const { positions, velocities } = useMemo(() => {
+  const positions = useMemo(() => {
     const count = 1000;
     const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count);
     
     for (let i = 0; i < count; i++) {
       // Random positions in a cylinder around the path
@@ -33,12 +32,9 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({
       pos[i * 3] = Math.cos(angle) * radius;
       pos[i * 3 + 1] = (Math.random() - 0.5) * 100;
       pos[i * 3 + 2] = Math.random() * -500;
-      
-      // Random velocities for each star
-      vel[i] = 0.5 + Math.random() * 2;
     }
     
-    return { positions: pos, velocities: vel };
+    return pos;
   }, []);
   
   useFrame((state, delta) => {
@@ -51,8 +47,8 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({
         const intensity = Math.min(scrollSpeed * 10, 5); // Cap the intensity
         
         for (let i = 0; i < positions.count; i++) {
-          // Move stars forward based on scroll speed only
-          positions.array[i * 3 + 2] += (velocities[i] * intensity) * delta;
+          // Move stars forward based on scroll speed only (no individual velocities)
+          positions.array[i * 3 + 2] += intensity * delta;
           
           // Reset stars that go past camera
           if (positions.array[i * 3 + 2] > 10) {

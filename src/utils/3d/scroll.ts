@@ -239,7 +239,8 @@ export class ScrollController {
     this.scrollProgress = Math.max(0, Math.min(1, scrollY / scrollHeight));
     
     // Calculate scroll velocity for whizzing stars effect
-    this.scrollVelocity = (scrollY - this.previousScrollY) / 16; // Normalize to ~60fps
+    const currentVelocity = (scrollY - this.previousScrollY) / 16; // Normalize to ~60fps
+    this.scrollVelocity = Math.abs(currentVelocity) > 0.001 ? currentVelocity : 0;
     this.previousScrollY = scrollY;
     
     // Calculate which section we're in
@@ -249,17 +250,17 @@ export class ScrollController {
       sections.length - 1
     );
     
-    // Reset velocity to 0 when scrolling stops
+    // Reset velocity to 0 when scrolling stops (reduced timeout for more responsive stopping)
     if (this.velocityResetTimeout !== null) {
       clearTimeout(this.velocityResetTimeout);
     }
     this.velocityResetTimeout = window.setTimeout(() => {
       this.scrollVelocity = 0;
       this.velocityResetTimeout = null;
-    }, 50); // Reset after 50ms of no scrolling
+    }, 16); // Reset after 16ms (~1 frame) of no scrolling
     
     // Debug logging
-    console.log(`Scroll: ${scrollY}/${scrollHeight}, Progress: ${this.scrollProgress}, Section: ${this.currentSection}`);
+    console.log(`Scroll: ${scrollY}/${scrollHeight}, Progress: ${this.scrollProgress}, Section: ${this.currentSection}, Velocity: ${this.scrollVelocity}`);
   }
 
   public updateCamera(

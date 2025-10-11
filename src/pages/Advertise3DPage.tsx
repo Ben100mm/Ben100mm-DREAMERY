@@ -57,13 +57,14 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects - Concave Milky Way and whizzing stars */}
+      {/* Background Effects - Concave Milky Way for debugging */}
       <ConcaveMilkyWay 
         scrollProgress={scrollProgress} 
         scrollVelocity={scrollVelocity}
         parallaxFactor={0.4}
       />
-      <WhizzingStars scrollVelocity={scrollVelocity} />
+      {/* Temporarily disabled for debugging */}
+      {/* <WhizzingStars scrollVelocity={scrollVelocity} /> */}
 
       {/* Scene Manager - handles camera transitions */}
       <SceneManager 

@@ -164,6 +164,7 @@ export class ScrollController {
   private previousScrollY = 0;
   private scrollVelocity = 0;
   private boundHandleScroll: () => void;
+  private velocityResetTimeout: number | null = null;
 
   constructor() {
     this.boundHandleScroll = this.handleScroll.bind(this);
@@ -189,6 +190,15 @@ export class ScrollController {
       Math.floor(sectionProgress),
       sections.length - 1
     );
+    
+    // Reset velocity to 0 when scrolling stops
+    if (this.velocityResetTimeout !== null) {
+      clearTimeout(this.velocityResetTimeout);
+    }
+    this.velocityResetTimeout = window.setTimeout(() => {
+      this.scrollVelocity = 0;
+      this.velocityResetTimeout = null;
+    }, 50); // Reset after 50ms of no scrolling
     
     // Debug logging
     console.log(`Scroll: ${scrollY}/${scrollHeight}, Progress: ${this.scrollProgress}, Section: ${this.currentSection}`);
@@ -232,6 +242,9 @@ export class ScrollController {
 
   public dispose() {
     window.removeEventListener('scroll', this.boundHandleScroll);
+    if (this.velocityResetTimeout !== null) {
+      clearTimeout(this.velocityResetTimeout);
+    }
   }
 }
 

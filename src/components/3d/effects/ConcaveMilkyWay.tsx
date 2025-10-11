@@ -24,28 +24,35 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  // Load the Milky Way texture
+  // Load the Milky Way texture with error handling
   const milkyWayTexture = useTexture('/milky-way-background.jpg');
   
-  // Create inverted sphere geometry (inside faces visible)
+  // Debug texture loading
+  React.useEffect(() => {
+    if (milkyWayTexture) {
+      console.log('Milky Way texture loaded successfully');
+    } else {
+      console.error('Milky Way texture failed to load');
+    }
+  }, [milkyWayTexture]);
+  
+  // Create normal sphere geometry for debugging
   const sphereGeometry = useMemo(() => {
     const geometry = new THREE.SphereGeometry(50, 32, 32);
-    // Flip faces to make inside visible
-    geometry.scale(-1, 1, 1);
+    // Remove scaling for debugging
     return geometry;
   }, []);
   
-  // Create a simple mesh material for debugging
+  // Create a simple mesh material for debugging - bright red to test visibility
   const meshMaterial = useMemo(() => {
     const material = new THREE.MeshBasicMaterial({
-      map: milkyWayTexture,
-      color: '#ffffff', // Fallback color
-      side: THREE.BackSide, // Render back faces for inside view
-      transparent: true,
-      opacity: 0.8, // Increase opacity for debugging
+      color: '#ff0000', // Bright red for testing
+      side: THREE.DoubleSide, // Render both sides
+      transparent: false,
+      opacity: 1.0,
     });
     return material;
-  }, [milkyWayTexture]);
+  }, []);
   
   useFrame((state, delta) => {
     if (meshRef.current) {
@@ -68,7 +75,6 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       ref={meshRef}
       geometry={sphereGeometry}
       material={meshMaterial}
-      renderOrder={-1} // Render first as background
     />
   );
 };

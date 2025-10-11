@@ -28,13 +28,13 @@ export const FAQSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
         </mesh>
       ))}
 
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Frequently Asked Questions
         </Typography>
       </Html>
 
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px', backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '24px', p: 4 }}>
           {faqs.map((faq, index) => (
             <Accordion

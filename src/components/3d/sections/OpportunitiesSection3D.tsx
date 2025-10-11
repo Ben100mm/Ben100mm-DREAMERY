@@ -128,7 +128,7 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
       ))}
 
       {/* Title */}
-      <Html position={[0, 4, 0]} center distanceFactor={10}>
+      <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
           sx={{
@@ -147,6 +147,7 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
           position={opportunities.find((o) => o.id === hoveredOpportunity)!.position}
           center
           distanceFactor={5}
+          style={{ pointerEvents: 'auto' }}
         >
           <Box
             sx={{
@@ -170,7 +171,7 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
 
       {/* Selected Opportunity Details */}
       {selectedOpportunity && (
-        <Html position={[0, -3, 0]} center distanceFactor={8}>
+        <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
           <Box
             sx={{
               width: '700px',

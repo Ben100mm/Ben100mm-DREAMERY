@@ -45,13 +45,13 @@ export const PerformanceMetricsSection3D: React.FC<{ visible: boolean }> = ({ vi
         </DreiBox>
       ))}
 
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Performance Metrics
         </Typography>
       </Html>
 
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
             {metrics.map((metric, index) => (

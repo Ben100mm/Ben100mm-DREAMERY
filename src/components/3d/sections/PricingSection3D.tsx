@@ -158,7 +158,7 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
       </group>
 
       {/* HTML Overlay */}
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
           sx={{
@@ -172,7 +172,7 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
         </Typography>
       </Html>
 
-      <Html position={[0, -3, 0]} center distanceFactor={8}>
+      <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '1000px' }}>
           {/* Annual/Monthly Toggle */}
           <Box

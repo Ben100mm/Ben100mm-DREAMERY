@@ -105,7 +105,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
       })}
 
       {/* Title */}
-      <Html position={[0, 4, 0]} center distanceFactor={10}>
+      <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
           sx={{
@@ -119,7 +119,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
       </Html>
 
       {/* Statistics */}
-      <Html position={[0, -4, 0]} center distanceFactor={8}>
+      <Html position={[0, -4, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '1000px' }}>
           <Grid container spacing={3}>
             {stats.map((stat, index) => (

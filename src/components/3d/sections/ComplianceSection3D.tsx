@@ -28,13 +28,13 @@ export const ComplianceSection3D: React.FC<{ visible: boolean }> = ({ visible })
         <meshStandardMaterial color={brandColors.primary} metalness={0.9} roughness={0.1} />
       </mesh>
 
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Trust & Compliance
         </Typography>
       </Html>
 
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Grid container spacing={3}>
             {[

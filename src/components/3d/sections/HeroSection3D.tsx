@@ -118,7 +118,7 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
       </mesh>
 
       {/* HTML Overlay Content */}
-      <Html position={[0, -1, 0]} center distanceFactor={8}>
+      <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box
           sx={{
             width: '800px',

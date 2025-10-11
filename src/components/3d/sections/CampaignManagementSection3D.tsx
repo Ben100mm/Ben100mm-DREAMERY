@@ -24,13 +24,13 @@ export const CampaignManagementSection3D: React.FC<{ visible: boolean }> = ({ vi
         <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} transparent opacity={0.6} />
       </mesh>
 
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Campaign Management
         </Typography>
       </Html>
 
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
             <CardContent sx={{ p: 4 }}>

@@ -15,7 +15,6 @@ import { theme } from '../theme/theme';
 
 // Core components
 import { SceneManager } from '../components/3d/SceneManager';
-import { Navbar3D } from '../components/3d/Navbar3D';
 
 // Section components
 import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
@@ -106,7 +105,7 @@ const SceneContent: React.FC<{
 const LoadingFallback: React.FC = () => (
   <Box
     sx={{
-      position: 'absolute',
+      position: 'fixed',
       top: 0,
       left: 0,
       right: 0,
@@ -136,12 +135,6 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
-    // Create scrollable content (20 sections)
-    const container = document.getElementById('scroll-container');
-    if (container) {
-      container.style.height = `${20 * 100}vh`; // 20 sections x 100vh each
-    }
-
     // Set loading complete after initial render
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -160,11 +153,21 @@ const Advertise3DPage: React.FC = () => {
       <Box
         sx={{
           width: '100vw',
-          height: '2000vh', // Full scrollable height for 20 sections
+          minHeight: '100vh',
           position: 'relative',
           backgroundColor: '#000',
         }}
       >
+        {/* Scrollable spacer to create scroll area */}
+        <Box
+          sx={{
+            height: '2000vh', // 20 sections x 100vh
+            width: '100%',
+            position: 'relative',
+            pointerEvents: 'none',
+          }}
+        />
+
         {/* Loading Screen */}
         {isLoading && <LoadingFallback />}
 
@@ -198,57 +201,7 @@ const Advertise3DPage: React.FC = () => {
           </Canvas>
         </Box>
 
-        {/* 3D Navbar Overlay */}
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1000,
-            pointerEvents: 'auto', // Navbar can be clicked
-          }}
-        >
-          <Navbar3D />
-        </Box>
 
-        {/* Section Progress Indicator */}
-        <Box
-          sx={{
-            position: 'fixed',
-            right: 32,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 100,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1,
-            pointerEvents: 'auto', // Indicator can be clicked
-          }}
-        >
-          {Array.from({ length: 20 }).map((_, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                backgroundColor:
-                  currentSection === index
-                    ? '#1976d2'
-                    : 'rgba(255, 255, 255, 0.3)',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-              }}
-              onClick={() => {
-                window.scrollTo({
-                  top: index * window.innerHeight,
-                  behavior: 'smooth',
-                });
-              }}
-            />
-          ))}
-        </Box>
       </Box>
     </ThemeProvider>
   );

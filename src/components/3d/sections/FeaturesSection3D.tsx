@@ -152,7 +152,7 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
       ))}
 
       {/* Title */}
-      <Html position={[0, 4, 0]} center distanceFactor={10}>
+      <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
           sx={{
@@ -166,7 +166,7 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
       </Html>
 
       {/* Feature Details */}
-      <Html position={[0, -5, 0]} center distanceFactor={8}>
+      <Html position={[0, -5, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
             {features.map((feature) => (

@@ -150,7 +150,7 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
       })}
 
       {/* Title */}
-      <Html position={[0, 4, 0]} center distanceFactor={10}>
+      <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
           sx={{
@@ -164,7 +164,7 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
       </Html>
 
       {/* Testimonial Content */}
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Card
             sx={{

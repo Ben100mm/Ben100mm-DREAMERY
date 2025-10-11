@@ -27,16 +27,17 @@ export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({
         );
       })}
 
-      <Html position={[0, 3, 0]} center distanceFactor={10}>
+      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Competitive Advantages
         </Typography>
       </Html>
 
-      <Html position={[0, -2, 0]} center distanceFactor={8}>
+      <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Grid container spacing={3}>
             {advantages.map((adv, index) => (
+              // @ts-ignore - Grid item props work correctly in MUI v7
               <Grid item xs={6} key={index}>
                 <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
                   <CardContent>

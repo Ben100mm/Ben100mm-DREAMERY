@@ -138,13 +138,15 @@ export class ScrollController {
   private currentSection = 0;
   private targetSection = 0;
   private scrollProgress = 0;
+  private boundHandleScroll: () => void;
 
   constructor() {
+    this.boundHandleScroll = this.handleScroll.bind(this);
     this.setupScrollListener();
   }
 
   private setupScrollListener() {
-    window.addEventListener('scroll', this.handleScroll.bind(this));
+    window.addEventListener('scroll', this.boundHandleScroll);
   }
 
   private handleScroll() {
@@ -158,6 +160,16 @@ export class ScrollController {
       Math.floor(sectionProgress),
       sections.length - 1
     );
+    
+    // Debug logging (remove after testing)
+    if (scrollY % 100 < 10) { // Log occasionally to avoid spam
+      console.log('[ScrollController]', {
+        scrollY,
+        scrollHeight,
+        progress: this.scrollProgress,
+        targetSection: this.targetSection
+      });
+    }
   }
 
   public updateCamera(
@@ -202,7 +214,7 @@ export class ScrollController {
   }
 
   public dispose() {
-    window.removeEventListener('scroll', this.handleScroll.bind(this));
+    window.removeEventListener('scroll', this.boundHandleScroll);
   }
 }
 

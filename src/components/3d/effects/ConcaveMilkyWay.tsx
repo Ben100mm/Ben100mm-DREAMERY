@@ -25,16 +25,13 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   // Load the milky way texture
   const texture = useLoader(TextureLoader, '/milky-way-background.jpg');
   
-  // Create sphere geometry with inverted normals (to see inside)
+  // Create sphere geometry (to see inside)
   const geometry = useMemo(() => {
     const geo = new THREE.SphereGeometry(
       100,  // Large radius to encompass the scene
       64,   // Width segments for smooth surface
       64    // Height segments for smooth surface
     );
-    
-    // Invert normals so we see the inside of the sphere
-    geo.scale(-1, 1, 1);
     
     return geo;
   }, []);
@@ -43,9 +40,10 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   const material = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       map: texture,
-      side: THREE.BackSide, // Render the inside
+      side: THREE.BackSide, // Render the inside surface
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.8, // Increased opacity for better visibility
+      depthWrite: false, // Prevent z-fighting with other elements
     });
   }, [texture]);
   
@@ -76,6 +74,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       material={material}
       position={[0, 0, 0]}
       rotation={[0, 0, 0]}
+      renderOrder={-1} // Render in background
     />
   );
 };

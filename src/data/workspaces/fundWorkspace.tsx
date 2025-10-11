@@ -7,7 +7,6 @@ import {
   Security as ComplianceIcon,
   Calculate as CalculatorIcon,
   AccountBox as PortalIcon,
-  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
 import FundAssistantIcon from '../../components/fund/ai-fund-assistant/FundAssistantIcon';
 
@@ -67,11 +66,6 @@ export const fundWorkspace: WorkspaceConfig = {
       id: 'assistant', 
       label: 'Lumina Fund Assistant', 
       icon: <FundAssistantIcon size={20} variant="icon" />,
-    },
-    { 
-      id: 'advertise', 
-      label: 'Advertise', 
-      icon: <AdvertiseIcon />,
     },
   ],
 };

@@ -5,7 +5,6 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
-import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import OperateDashboard from '../operate/OperateDashboard';
 import OperateProjects from '../operate/OperateProjects';
 import OperateMessages from '../operate/OperateMessages';
@@ -146,8 +145,6 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return <OperateMessages />;
       case 'assistant':
         return <OperateAssistant />;
-      case 'advertise':
-        return <AdvertiseDashboard workspaceType="operate" />;
       default:
         return (
           <Box>

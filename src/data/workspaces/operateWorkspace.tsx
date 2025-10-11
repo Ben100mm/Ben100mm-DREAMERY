@@ -6,7 +6,6 @@ import {
   Receipt as ExpenseIcon,
   Schedule as ContractorIcon,
   TrendingUp as OptimizationIcon,
-  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
 import OperateAssistantIcon from '../../components/operate/ai-operate-assistant/OperateAssistantIcon';
 
@@ -61,11 +60,6 @@ export const operateWorkspace: WorkspaceConfig = {
       id: 'assistant', 
       label: 'Lumina Operations Assistant', 
       icon: <OperateAssistantIcon size={20} variant="icon" />,
-    },
-    { 
-      id: 'advertise', 
-      label: 'Advertise', 
-      icon: <AdvertiseIcon />,
     },
   ],
 };

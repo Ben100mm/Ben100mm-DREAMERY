@@ -12,7 +12,6 @@ import {
   IntegrationInstructions as IntegrationIcon,
   Security as InsuranceIcon,
   AccountCircle as AccountIcon,
-  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
 import ManageAssistantIcon from '../../components/manage/ai-manage-assistant/ManageAssistantIcon';
 
@@ -97,11 +96,6 @@ export const manageWorkspace: WorkspaceConfig = {
       id: 'assistant', 
       label: 'Lumina Management Assistant', 
       icon: <ManageAssistantIcon size={20} variant="icon" />,
-    },
-    { 
-      id: 'advertise', 
-      label: 'Advertise', 
-      icon: <AdvertiseIcon />,
     },
   ],
 };

@@ -33,7 +33,6 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { brandColors } from '../../theme';
-import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import ManageDashboard from '../manage/ManageDashboard';
 import ManageCalendar from '../manage/ManageCalendar';
 import ManageListings from '../manage/ManageListings';
@@ -4659,8 +4658,6 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
         );
       case 'assistant':
         return <ManageAssistant />;
-      case 'advertise':
-        return <AdvertiseDashboard workspaceType="manage" />;
       case 'account':
         return (
           <Box>

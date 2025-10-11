@@ -85,7 +85,6 @@ import {
   StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../../theme';
-import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 
 interface RentWorkspaceProps {
   activeTab: string;
@@ -225,8 +224,6 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
         return <RentalAssistant />;
       case 'analytics':
         return <RentalAnalytics />;
-      case 'advertise':
-        return <AdvertiseDashboard workspaceType="rent" />;
       default:
         return <RentDashboard />;
     }

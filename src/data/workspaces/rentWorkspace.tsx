@@ -8,7 +8,6 @@ import {
   Description as DocumentIcon,
   CalendarToday as CalendarIcon,
   Analytics as AnalyticsIcon,
-  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
 import RentAssistantIcon from '../../components/rent/ai-rent-assistant/RentAssistantIcon';
 
@@ -73,11 +72,6 @@ export const rentWorkspace: WorkspaceConfig = {
       id: 'analytics', 
       label: 'Analytics', 
       icon: <AnalyticsIcon />,
-    },
-    { 
-      id: 'advertise', 
-      label: 'Advertise', 
-      icon: <AdvertiseIcon />,
     },
   ],
 };

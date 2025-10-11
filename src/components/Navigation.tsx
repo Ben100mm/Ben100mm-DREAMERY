@@ -86,8 +86,7 @@ const Navigation: React.FC = () => {
     { name: 'Underwrite', path: '/underwrite' },
     { name: 'Workspaces', path: '/workspaces' },
     { name: 'Partners', path: '/partner' },
-    { name: 'Learn', path: '/learn' },
-    { name: 'Advertise', path: '/advertise' }
+    { name: 'Learn', path: '/learn' }
   ];
 
   const handleNavClick = (path: string) => {
@@ -100,7 +99,6 @@ const Navigation: React.FC = () => {
       case '/underwrite':
       case '/workspaces':
       case '/learn':
-      case '/advertise':
       case '/partner':
         console.log('Navigating to:', path); // Debug log
         navigate(path);

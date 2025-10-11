@@ -5,7 +5,6 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
-import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import FundDashboard from '../fund/FundDashboard';
 import FundProjects from '../fund/FundProjects';
 import FundCreateProject from '../fund/FundCreateProject';
@@ -156,8 +155,6 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
         return <FundMessages />;
       case 'assistant':
         return <FundAssistant />;
-      case 'advertise':
-        return <AdvertiseDashboard workspaceType="fund" />;
       default:
         return (
           <Box>

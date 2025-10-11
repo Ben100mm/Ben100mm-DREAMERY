@@ -16,7 +16,6 @@ import {
   AccountBalance as FundIcon,
   Build as OperateIcon,
   School as LearnIcon,
-  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../theme';
 
@@ -37,7 +36,6 @@ interface PersonalWorkspaceSelectorProps {
  * - Fund → /fund
  * - Operate → /operate
  * - Learn → /learn
- * - Advertise → /advertise
  */
 const PersonalWorkspaceSelector: React.FC<PersonalWorkspaceSelectorProps> = ({
   variant = 'outlined',
@@ -67,7 +65,6 @@ const PersonalWorkspaceSelector: React.FC<PersonalWorkspaceSelectorProps> = ({
     if (path === '/fund') return 'fund';
     if (path === '/operate') return 'operate';
     if (path === '/learn') return 'learn';
-    if (path === '/advertise') return 'advertise';
     
     return 'rent'; // default
   };
@@ -87,7 +84,6 @@ const PersonalWorkspaceSelector: React.FC<PersonalWorkspaceSelectorProps> = ({
     { value: 'fund', label: 'Fund', icon: <FundIcon fontSize="small" />, route: '/workspaces/personal?workspace=fund' },
     { value: 'operate', label: 'Operate', icon: <OperateIcon fontSize="small" />, route: '/workspaces/personal?workspace=operate' },
     { value: 'learn', label: 'Learn', icon: <LearnIcon fontSize="small" />, route: '/workspaces/personal?workspace=learn' },
-    { value: 'advertise', label: 'Advertise', icon: <AdvertiseIcon fontSize="small" />, route: '/workspaces/personal?workspace=advertise' },
   ];
 
   const handleWorkspaceChange = (event: any) => {

@@ -120,33 +120,33 @@ const AdvertisePage: React.FC = () => {
           zIndex: -1,
           background: `
             radial-gradient(ellipse at center, 
-              rgba(139, 69, 19, 0.3) 0%,
-              rgba(75, 0, 130, 0.4) 25%,
-              rgba(25, 25, 112, 0.5) 50%,
-              rgba(0, 0, 0, 0.8) 75%,
+              rgba(139, 69, 19, 0.6) 0%,
+              rgba(75, 0, 130, 0.7) 25%,
+              rgba(25, 25, 112, 0.8) 50%,
+              rgba(0, 0, 0, 0.9) 75%,
               rgba(0, 0, 0, 0.95) 100%
             ),
             linear-gradient(45deg,
-              rgba(255, 20, 147, 0.1) 0%,
-              rgba(138, 43, 226, 0.2) 20%,
-              rgba(0, 100, 200, 0.3) 40%,
-              rgba(0, 0, 139, 0.4) 60%,
+              rgba(255, 20, 147, 0.3) 0%,
+              rgba(138, 43, 226, 0.4) 20%,
+              rgba(0, 100, 200, 0.5) 40%,
+              rgba(0, 0, 139, 0.6) 60%,
               rgba(0, 0, 0, 0.8) 80%,
               rgba(0, 0, 0, 0.9) 100%
             ),
             radial-gradient(circle at 30% 20%,
-              rgba(255, 105, 180, 0.2) 0%,
-              rgba(255, 20, 147, 0.1) 30%,
+              rgba(255, 105, 180, 0.4) 0%,
+              rgba(255, 20, 147, 0.3) 30%,
               transparent 70%
             ),
             radial-gradient(circle at 70% 80%,
-              rgba(138, 43, 226, 0.15) 0%,
-              rgba(75, 0, 130, 0.1) 40%,
+              rgba(138, 43, 226, 0.35) 0%,
+              rgba(75, 0, 130, 0.3) 40%,
               transparent 70%
             ),
             radial-gradient(circle at 50% 50%,
-              rgba(0, 100, 200, 0.1) 0%,
-              rgba(25, 25, 112, 0.05) 50%,
+              rgba(0, 100, 200, 0.3) 0%,
+              rgba(25, 25, 112, 0.2) 50%,
               transparent 100%
             ),
             #000011
@@ -159,15 +159,16 @@ const AdvertisePage: React.FC = () => {
             width: '100%',
             height: '100%',
             backgroundImage: `
-              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-              radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-              radial-gradient(2px 2px at 160px 30px, #fff, transparent)
+              radial-gradient(3px 3px at 20px 30px, #fff, transparent),
+              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,1), transparent),
+              radial-gradient(2px 2px at 90px 40px, #fff, transparent),
+              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.8), transparent),
+              radial-gradient(3px 3px at 160px 30px, #fff, transparent)
             `,
             backgroundRepeat: 'repeat',
             backgroundSize: '200px 100px',
-            animation: 'twinkle 4s ease-in-out infinite alternate',
+            opacity: 0.9,
+            animation: 'twinkle1 4s ease-in-out infinite alternate',
           },
           '&::after': {
             content: '""',
@@ -177,15 +178,23 @@ const AdvertisePage: React.FC = () => {
             width: '100%',
             height: '100%',
             backgroundImage: `
-              radial-gradient(3px 3px at 50px 50px, rgba(255,255,255,0.4), transparent),
-              radial-gradient(2px 2px at 100px 100px, rgba(255,255,255,0.3), transparent),
-              radial-gradient(1px 1px at 150px 150px, rgba(255,255,255,0.5), transparent),
-              radial-gradient(2px 2px at 200px 200px, rgba(255,255,255,0.2), transparent)
+              radial-gradient(4px 4px at 50px 50px, rgba(255,255,255,0.8), transparent),
+              radial-gradient(3px 3px at 100px 100px, rgba(255,255,255,0.6), transparent),
+              radial-gradient(2px 2px at 150px 150px, rgba(255,255,255,0.7), transparent),
+              radial-gradient(3px 3px at 200px 200px, rgba(255,255,255,0.5), transparent)
             `,
             backgroundRepeat: 'repeat',
             backgroundSize: '250px 250px',
-            animation: 'twinkle 6s ease-in-out infinite alternate',
-            animationDelay: '2s',
+            opacity: 0.8,
+            animation: 'twinkle2 6s ease-in-out infinite alternate',
+          },
+          '@keyframes twinkle1': {
+            '0%': { opacity: 0.3 },
+            '100%': { opacity: 1 },
+          },
+          '@keyframes twinkle2': {
+            '0%': { opacity: 0.2 },
+            '100%': { opacity: 0.8 },
           }
         }}
       />
@@ -195,9 +204,9 @@ const AdvertisePage: React.FC = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          backgroundColor: 'rgba(0, 0, 17, 0.85)',
+          backgroundColor: 'rgba(0, 0, 17, 0.3)',
           minHeight: '100vh',
-          backdropFilter: 'blur(1px)',
+          backdropFilter: 'blur(0.5px)',
         }}
       >
         {/* 3D Experience Banner */}
@@ -555,14 +564,6 @@ const AdvertisePage: React.FC = () => {
           </Button>
         </Container>
       </Box>
-
-      {/* Add CSS animations */}
-      <style>{`
-        @keyframes twinkle {
-          0% { opacity: 0.3; }
-          100% { opacity: 1; }
-        }
-      `}</style>
     </Box>
   );
 };

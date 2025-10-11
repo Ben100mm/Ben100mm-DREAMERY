@@ -136,21 +136,17 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
     return texture;
   }, []);
 
-  // Shader material uniforms
+  // Shader material uniforms for stereographic projection
   const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uMouse: { value: new THREE.Vector2(0, 0) },
-    uZoom: { value: zoom },
-    uRotationX: { value: rotationX },
-    uRotationY: { value: rotationY },
-    uMilkyWayTexture: { value: null as THREE.Texture | null },
-    uBrightness: { value: brightness },
-    uContrast: { value: contrast },
-    uSaturation: { value: saturation },
-    uStarColor: { value: new THREE.Color(starColor) },
-    uStarIntensity: { value: starIntensity },
+    u_image: { value: null as THREE.Texture | null },
+    u_translate: { value: new THREE.Vector2(size.width / 2, size.height / 2) },
+    u_scale: { value: 500 },
+    u_rotate: { value: new THREE.Vector2(rotationY, rotationX) },
+    u_brightness: { value: brightness },
+    u_contrast: { value: contrast },
+    u_saturation: { value: saturation },
     ...customUniforms,
-  }), [zoom, rotationX, rotationY, brightness, contrast, saturation, starColor, starIntensity, customUniforms]);
+  }), [size, rotationX, rotationY, brightness, contrast, saturation, customUniforms]);
 
   // Mouse event handlers
   const handleMouseMove = useCallback((event: MouseEvent) => {
@@ -214,7 +210,7 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
   useEffect(() => {
     texture.then((loadedTexture) => {
       if (materialRef.current) {
-        materialRef.current.uniforms.uMilkyWayTexture.value = loadedTexture;
+        materialRef.current.uniforms.u_image.value = loadedTexture;
         materialRef.current.needsUpdate = true;
       }
     });
@@ -223,27 +219,20 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
   // Update uniforms on state changes
   useEffect(() => {
     if (materialRef.current) {
-      materialRef.current.uniforms.uMouse.value.set(mousePosition.x, mousePosition.y);
-      materialRef.current.uniforms.uZoom.value = zoom;
-      materialRef.current.uniforms.uRotationX.value = rotationX;
-      materialRef.current.uniforms.uRotationY.value = rotationY;
-      materialRef.current.uniforms.uBrightness.value = brightness;
-      materialRef.current.uniforms.uContrast.value = contrast;
-      materialRef.current.uniforms.uSaturation.value = saturation;
-      materialRef.current.uniforms.uStarColor.value.setHex(starColor.replace('#', '0x'));
-      materialRef.current.uniforms.uStarIntensity.value = starIntensity;
+      materialRef.current.uniforms.u_translate.value.set(size.width / 2, size.height / 2);
+      materialRef.current.uniforms.u_scale.value = 500 * zoom;
+      materialRef.current.uniforms.u_rotate.value.set(rotationY, rotationX);
+      materialRef.current.uniforms.u_brightness.value = brightness;
+      materialRef.current.uniforms.u_contrast.value = contrast;
+      materialRef.current.uniforms.u_saturation.value = saturation;
     }
-  }, [mousePosition, zoom, rotationX, rotationY, brightness, contrast, saturation, starColor, starIntensity]);
+  }, [size, zoom, rotationX, rotationY, brightness, contrast, saturation]);
 
   // Animation loop
   useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      
-      // Auto-rotation
-      if (autoRotate > 0) {
-        setRotationY(prev => prev + autoRotate);
-      }
+    // Auto-rotation
+    if (autoRotate > 0) {
+      setRotationY(prev => prev + autoRotate);
     }
   });
 
@@ -255,31 +244,30 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
 
   return (
     <group>
-      {/* Main panorama sphere */}
+      {/* Fullscreen quad for stereographic projection */}
       <mesh ref={meshRef} position={[0, 0, 0]}>
-        <sphereGeometry args={[100, 64, 32]} />
+        <planeGeometry args={[2, 2]} />
         <shaderMaterial
           ref={materialRef}
           uniforms={uniforms}
           vertexShader={milkyWayVertexShader}
           fragmentShader={milkyWayFragmentShader}
-          side={THREE.BackSide}
           transparent={false}
         />
       </mesh>
       
       {/* Loading indicator */}
       {isLoading && (
-        <mesh position={[0, 0, 5]}>
-          <planeGeometry args={[4, 4]} />
+        <mesh position={[0, 0, 0.1]}>
+          <planeGeometry args={[0.5, 0.5]} />
           <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
         </mesh>
       )}
       
       {/* Error indicator */}
       {hasError && (
-        <mesh position={[0, 0, 5]}>
-          <planeGeometry args={[4, 2]} />
+        <mesh position={[0, 0, 0.1]}>
+          <planeGeometry args={[0.5, 0.3]} />
           <meshBasicMaterial color="#ff0000" transparent opacity={0.5} />
         </mesh>
       )}

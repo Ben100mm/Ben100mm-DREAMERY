@@ -7,7 +7,7 @@
 import React, { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { milkyWayVertexShader, milkyWayFragmentShader, projectionUtils } from '../../../shaders/milkyWayPanorama.glsl';
+import { milkyWayVertexShader, milkyWayFragmentShader, projectionUtils } from '../../../shaders/milkyWayPanorama';
 
 interface MilkyWayPanorama3DProps {
   /** Panorama texture URL - defaults to a placeholder */

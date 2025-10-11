@@ -1,5 +1,7 @@
-// Milky Way Panorama Shaders with Stereographic Projection
-// Based on ESO's 360-degree Milky Way panorama
+/**
+ * Milky Way Panorama Shaders with Stereographic Projection
+ * Based on ESO's 360-degree Milky Way panorama
+ */
 
 // Vertex Shader
 export const milkyWayVertexShader = `
@@ -158,3 +160,4 @@ export const projectionUtils = {
     return projectionUtils.sphereToStereographic(x, y, z);
   }
 };
+

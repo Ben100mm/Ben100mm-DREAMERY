@@ -7,6 +7,7 @@ import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import { InteractiveMesh } from '../shared/InteractiveMesh';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 import PropertyIcon from '@mui/icons-material/Home';
 import ServiceIcon from '@mui/icons-material/Build';
 import InvestorIcon from '@mui/icons-material/TrendingUp';
@@ -109,11 +110,14 @@ const opportunities: Opportunity[] = [
   },
 ];
 
-export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const OpportunitiesSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
   const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(opportunities[0]);
 
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -40]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {/* 3D Title */}
       {visible && (
         <Text

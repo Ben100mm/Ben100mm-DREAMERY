@@ -19,6 +19,7 @@ import {
   Chip,
 } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface PricingTier {
@@ -79,9 +80,12 @@ const pricingTiers: PricingTier[] = [
   },
 ];
 
-export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const PricingSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
 
   const calculateSavings = (tier: PricingTier) => {
     const annualTotal = tier.price * 12;
@@ -91,7 +95,7 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
   };
 
   return (
-    <group visible={visible} position={[0, 0, -80]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {/* 3D Title */}
       {visible && (
         <Text

@@ -116,6 +116,47 @@ export function getSectionZPosition(index: number): number {
   return index * -SECTION_SPACING;
 }
 
+// Helper to get section position along the winding path
+export function getSectionPathPosition(index: number): THREE.Vector3 {
+  const t = index / (sections.length - 1);
+  return windingPath.getPointAt(t);
+}
+
+// Helper to get dynamic content position that moves toward camera
+export function getContentPositionAlongPath(index: number, scrollProgress: number): THREE.Vector3 {
+  // Calculate the section's base position on the path
+  const sectionT = index / (sections.length - 1);
+  const sectionPosition = windingPath.getPointAt(sectionT);
+  
+  // Calculate current camera position
+  const currentT = Math.max(0, Math.min(1, scrollProgress));
+  const cameraPosition = windingPath.getPointAt(currentT);
+  
+  // Calculate how far the camera has progressed past this section
+  const progressPastSection = Math.max(0, currentT - sectionT);
+  
+  // Only move content toward camera if we're past the section
+  if (progressPastSection > 0) {
+    // Create a vector from section to camera
+    const direction = cameraPosition.clone().sub(sectionPosition).normalize();
+    
+    // Move content toward camera with controlled movement
+    const movementDistance = progressPastSection * 15; // Reduced movement speed
+    const contentPosition = sectionPosition.clone().add(direction.multiplyScalar(movementDistance));
+    
+    return contentPosition;
+  }
+  
+  // If camera hasn't reached this section yet, keep content at its base position
+  return sectionPosition;
+}
+
+// Helper to get section look direction along the winding path
+export function getSectionLookDirection(index: number): THREE.Vector3 {
+  const t = Math.min(index / (sections.length - 1) + 0.03, 1);
+  return windingPath.getPointAt(t);
+}
+
 export class ScrollController {
   private currentSection = 0;
   private targetSection = 0;
@@ -136,7 +177,7 @@ export class ScrollController {
   private handleScroll() {
     const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollY = window.scrollY;
-    this.scrollProgress = scrollY / scrollHeight;
+    this.scrollProgress = Math.max(0, Math.min(1, scrollY / scrollHeight));
     
     // Calculate scroll velocity for whizzing stars effect
     this.scrollVelocity = (scrollY - this.previousScrollY) / 16; // Normalize to ~60fps
@@ -144,10 +185,13 @@ export class ScrollController {
     
     // Calculate which section we're in
     const sectionProgress = this.scrollProgress * (sections.length - 1);
-    this.targetSection = Math.min(
+    this.currentSection = Math.min(
       Math.floor(sectionProgress),
       sections.length - 1
     );
+    
+    // Debug logging
+    console.log(`Scroll: ${scrollY}/${scrollHeight}, Progress: ${this.scrollProgress}, Section: ${this.currentSection}`);
   }
 
   public updateCamera(

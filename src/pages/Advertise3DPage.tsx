@@ -18,7 +18,6 @@ import { SceneManager } from '../components/3d/SceneManager';
 
 // Visual effects
 import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
-import { MilkyWayBackground } from '../components/3d/effects/MilkyWayBackground';
 
 // Section components - 12 focused sections
 import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
@@ -43,7 +42,8 @@ const SceneContent: React.FC<{
   onSectionChange: (section: number) => void;
   onScrollUpdate: (progress: number, velocity: number) => void;
   scrollVelocity: number;
-}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity }) => {
+  scrollProgress: number;
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
@@ -56,8 +56,7 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects - Milky Way and nebula background with whizzing stars */}
-      <MilkyWayBackground scrollVelocity={scrollVelocity} scrollProgress={currentSection / 11} />
+      {/* Background Effects - Keep whizzing stars, removed galaxy */}
       <WhizzingStars scrollVelocity={scrollVelocity} />
 
       {/* Scene Manager - handles camera transitions */}
@@ -68,13 +67,13 @@ const SceneContent: React.FC<{
 
       {/* 12 Focused Sections - Only render nearby sections for performance */}
       {/* Section 0: Hero - Introduction */}
-      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} />}
+      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} sectionIndex={0} scrollProgress={scrollProgress} />}
       
       {/* Section 1: Opportunities - Advertising opportunities for different users */}
-      {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} />}
+      {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} sectionIndex={1} scrollProgress={scrollProgress} />}
       
       {/* Section 2: Pricing - Pricing plans */}
-      {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} />}
+      {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} sectionIndex={2} scrollProgress={scrollProgress} />}
       
       {/* Section 3: Sample Ads - Ad examples */}
       {Math.abs(currentSection - 3) <= 1 && <SampleAdsSection3D visible={currentSection === 3} />}
@@ -139,16 +138,26 @@ const LoadingFallback: React.FC = () => (
 const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollVelocity, setScrollVelocity] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // Create scroll container with sections
   useEffect(() => {
+    // Ensure body can scroll
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+    
     // Set loading complete after initial render - reduced timeout for faster load
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 300);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      // Cleanup: restore original overflow settings
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
   }, []);
 
   // Section change handler (called by SceneManager)
@@ -159,6 +168,7 @@ const Advertise3DPage: React.FC = () => {
   // Scroll update handler (called by SceneManager)
   const handleScrollUpdate = (progress: number, velocity: number) => {
     setScrollVelocity(velocity);
+    setScrollProgress(progress);
   };
 
   return (
@@ -171,6 +181,24 @@ const Advertise3DPage: React.FC = () => {
           backgroundColor: '#000',
         }}
       >
+        {/* Moving Milky Way Background */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundImage: 'url(/milky-way-background.jpg)',
+            backgroundSize: '120% 120%', // Slightly larger for smooth movement
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.4,
+            transform: `translateY(${currentSection * -30}px) scale(${1 + scrollVelocity * 0.001})`,
+            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            zIndex: 0,
+          }}
+        />
         {/* Scrollable spacer to create scroll area */}
         <Box
           sx={{
@@ -178,6 +206,7 @@ const Advertise3DPage: React.FC = () => {
             width: '100%',
             position: 'relative',
             pointerEvents: 'none',
+            zIndex: -1, // Ensure it's behind the canvas
           }}
         />
 
@@ -192,7 +221,7 @@ const Advertise3DPage: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 1,
+            zIndex: 2,
             pointerEvents: 'none', // Canvas doesn't block scroll
           }}
         >
@@ -211,6 +240,7 @@ const Advertise3DPage: React.FC = () => {
                 onSectionChange={handleSectionChange}
                 onScrollUpdate={handleScrollUpdate}
                 scrollVelocity={scrollVelocity}
+                scrollProgress={scrollProgress}
               />
             </Suspense>
           </Canvas>

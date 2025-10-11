@@ -8,11 +8,12 @@ import { Box, Typography, Button, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 import { animationPresets } from '../../../utils/3d/animations';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const HeroSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
   const navigate = useNavigate();
   const [statsAnimated, setStatsAnimated] = useState(false);
 
@@ -28,8 +29,11 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
     }
   }, [visible, statsAnimated]);
 
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {/* 3D Title */}
       {visible && (
         <Text

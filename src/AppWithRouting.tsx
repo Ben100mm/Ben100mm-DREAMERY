@@ -47,7 +47,6 @@ const DataSourcesDashboard = lazy(() => import('./pages/DataSourcesDashboard'));
 const LearnPage = lazy(() => import('./pages/LearnPage'));
 const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
 const Advertise3DPage = lazy(() => import('./pages/Advertise3DPage'));
-const TestPage = lazy(() => import('./pages/TestPage'));
 
 const AppContainer = styled.div`
   width: 100%;
@@ -134,9 +133,9 @@ const AppContent = () => {
       <Route path="/fund" element={<Navigate to="/workspaces/personal?workspace=fund" replace />} />
       <Route path="/operate" element={<Navigate to="/workspaces/personal?workspace=operate" replace />} />
       <Route path="/learn" element={<LearnPage />} />
-      <Route path="/advertise" element={<AdvertisePage />} />
-      <Route path="/advertise-3d" element={<Advertise3DPage />} />
-      <Route path="/test" element={<TestPage />} />
+      <Route path="/advertise" element={<Advertise3DPage />} />
+      {/* Legacy route - redirects to main advertise page */}
+      <Route path="/advertise-3d" element={<Navigate to="/advertise" replace />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />

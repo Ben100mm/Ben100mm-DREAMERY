@@ -211,8 +211,7 @@ const Advertise3DPage: React.FC = () => {
               height: '70vh', // Reduced from 100vh for closer sections
               width: '100%',
               position: 'relative',
-              pointerEvents: 'none',
-              zIndex: -1,
+              zIndex: 1,
               scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
             }}
@@ -230,7 +229,7 @@ const Advertise3DPage: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 2,
+            zIndex: 10,
             pointerEvents: 'none', // Canvas doesn't block scroll
           }}
         >

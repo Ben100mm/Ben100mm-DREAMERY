@@ -14,18 +14,21 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -440]}>
       <mesh position={[0, 1, -2]}>
         <boxGeometry args={[3, 2, 0.2]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} transparent opacity={0.5} />
       </mesh>
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Get In Touch
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
@@ -66,6 +69,7 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

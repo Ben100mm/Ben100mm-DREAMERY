@@ -20,7 +20,7 @@ export const FAQSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -400]}>
       {faqs.map((_, index) => (
         <mesh key={index} position={[-4 + index * 2, 1 - index * 0.3, -2]}>
           <boxGeometry args={[1.5, 0.3, 0.1]} />
@@ -28,12 +28,15 @@ export const FAQSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
         </mesh>
       ))}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Frequently Asked Questions
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px', backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '24px', p: 4 }}>
           {faqs.map((faq, index) => (
@@ -53,6 +56,7 @@ export const FAQSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
           ))}
         </Box>
       </Html>
+      )}
     </group>
   );
 };

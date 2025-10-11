@@ -29,7 +29,7 @@ export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible
   });
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -520]}>
       {focusAreas.map((area, index) => (
         <mesh key={index} ref={(ref) => ref && (houseRefs.current[index] = ref)} position={[-3 + index * 2, 1, -2]}>
           <boxGeometry args={[1, 1, 1]} />
@@ -37,12 +37,15 @@ export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible
         </mesh>
       ))}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Industry Focus
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
@@ -60,6 +63,7 @@ export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

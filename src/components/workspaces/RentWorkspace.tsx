@@ -42,7 +42,7 @@ import {
   Share as ShareIcon,
   LocationOn as LocationIcon,
   Bed as BedIcon,
-  Bath as BathIcon,
+  Bathtub as BathIcon,
   SquareFoot as SquareFootIcon,
   Pets as PetsIcon,
   Wifi as WifiIcon,
@@ -725,7 +725,7 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
             </Typography>
             <List>
               <ListItem>
-                <CreditCard sx={{ mr: 2 }} />
+                <PaymentIcon sx={{ mr: 2 }} />
                 <ListItemText
                   primary="**** **** **** 1234"
                   secondary="Primary payment method"
@@ -733,7 +733,7 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
                 <Button size="small">Edit</Button>
               </ListItem>
             </List>
-            <Button variant="outlined" startIcon={<CreditCard />} sx={{ mt: 2 }}>
+            <Button variant="outlined" startIcon={<PaymentIcon />} sx={{ mt: 2 }}>
               Add Payment Method
             </Button>
           </Card>
@@ -841,7 +841,7 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
             </Typography>
             <List>
               <ListItem>
-                <Assignment sx={{ mr: 2 }} />
+                <ApplicationIcon sx={{ mr: 2 }} />
                 <ListItemText
                   primary="Standard Lease Agreement"
                   secondary="Last updated: January 15, 2024"

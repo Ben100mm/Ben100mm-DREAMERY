@@ -15,7 +15,7 @@ const requirements = [
 
 export const ContentRequirementsSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -680]}>
       {requirements.map((_, index) => (
         <mesh key={index} position={[-2.5 + index * 2.5, 1, -2]}>
           <boxGeometry args={[1.5, 1.5, 0.1]} />
@@ -23,12 +23,15 @@ export const ContentRequirementsSection3D: React.FC<{ visible: boolean }> = ({ v
         </mesh>
       ))}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Content Requirements
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
@@ -49,6 +52,7 @@ export const ContentRequirementsSection3D: React.FC<{ visible: boolean }> = ({ v
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

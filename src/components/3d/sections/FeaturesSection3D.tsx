@@ -105,7 +105,7 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
   });
 
   return (
-    <group ref={groupRef} visible={visible} position={[0, 0, 0]}>
+    <group ref={groupRef} visible={visible} position={[0, 0, -120]}>
       {/* Central hub sphere */}
       <mesh position={[0, 0, -1]}>
         <sphereGeometry args={[0.8, 32, 32]} />
@@ -152,6 +152,7 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
       ))}
 
       {/* Title */}
+      {visible && (
       <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
@@ -164,8 +165,10 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
           Platform Features
         </Typography>
       </Html>
+      )}
 
       {/* Feature Details */}
+      {visible && (
       <Html position={[0, -5, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
@@ -209,6 +212,7 @@ export const FeaturesSection3D: React.FC<{ visible: boolean }> = ({ visible }) =
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

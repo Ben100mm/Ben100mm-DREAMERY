@@ -17,7 +17,7 @@ const advantages = [
 
 export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -280]}>
       {advantages.map((adv, index) => {
         const height = 1 + (index * 0.5);
         return (
@@ -27,12 +27,15 @@ export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({
         );
       })}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Competitive Advantages
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Grid container spacing={3}>
@@ -53,6 +56,7 @@ export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

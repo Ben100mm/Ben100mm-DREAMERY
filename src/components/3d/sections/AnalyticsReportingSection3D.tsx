@@ -20,7 +20,7 @@ const analyticsFeatures = [
 
 export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -760]}>
       {[0.5, 1, 1.5, 1.2, 0.8].map((height, index) => (
         <DreiBox
           key={index}
@@ -31,12 +31,15 @@ export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ vi
         </DreiBox>
       ))}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Analytics & Reporting
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
@@ -57,6 +60,7 @@ export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ vi
           </Card>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

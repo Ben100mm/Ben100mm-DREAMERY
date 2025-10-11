@@ -22,18 +22,21 @@ export const ComplianceSection3D: React.FC<{ visible: boolean }> = ({ visible })
   });
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -360]}>
       <mesh ref={shieldRef} position={[0, 1, -2]}>
         <coneGeometry args={[1, 2, 6]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.9} roughness={0.1} />
       </mesh>
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Trust & Compliance
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Grid container spacing={3}>
@@ -59,6 +62,7 @@ export const ComplianceSection3D: React.FC<{ visible: boolean }> = ({ visible })
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

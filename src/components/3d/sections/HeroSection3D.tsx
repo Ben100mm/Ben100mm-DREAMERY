@@ -118,18 +118,19 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
       </mesh>
 
       {/* HTML Overlay Content */}
-      <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
-        <Box
-          sx={{
-            width: '800px',
-            textAlign: 'center',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '24px',
-            padding: '48px',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-          }}
-        >
+      {visible && (
+        <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
+          <Box
+            sx={{
+              width: '800px',
+              textAlign: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '48px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+          >
           <Typography
             variant="h2"
             sx={{
@@ -281,6 +282,7 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
           </Box>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

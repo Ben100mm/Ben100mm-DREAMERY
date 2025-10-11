@@ -108,7 +108,7 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <group ref={groupRef} visible={visible} position={[0, 0, 0]}>
+    <group ref={groupRef} visible={visible} position={[0, 0, -200]}>
       {/* Floating avatar spheres */}
       {testimonials.map((testimonial, index) => {
         const angle = (index / testimonials.length) * Math.PI * 2;
@@ -150,6 +150,7 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
       })}
 
       {/* Title */}
+      {visible && (
       <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
@@ -162,8 +163,10 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
           Success Stories
         </Typography>
       </Html>
+      )}
 
       {/* Testimonial Content */}
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Card
@@ -299,6 +302,7 @@ export const TestimonialsSection3D: React.FC<{ visible: boolean }> = ({ visible 
           </Card>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

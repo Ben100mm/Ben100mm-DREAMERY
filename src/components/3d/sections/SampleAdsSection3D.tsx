@@ -14,12 +14,12 @@ const adSamples = [
   { id: 'native', type: 'Native Ad', format: 'Responsive', position: [3, 1, -2] as [number, number, number], ctr: '4.1%' },
 ];
 
-export const SampleAdsSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const SampleAdsSection3D: React.FC<{ visible: boolean }> = React.memo(({ visible }) => {
   const [selectedFormat, setSelectedFormat] = useState('all');
   const [selectedAd, setSelectedAd] = useState<typeof adSamples[0] | null>(null);
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -240]}>
       {adSamples.map((ad) => (
         <InteractiveMesh
           key={ad.id}
@@ -30,12 +30,15 @@ export const SampleAdsSection3D: React.FC<{ visible: boolean }> = ({ visible }) 
         />
       ))}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Sample Advertisements
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '24px', p: 4 }}>
@@ -60,7 +63,8 @@ export const SampleAdsSection3D: React.FC<{ visible: boolean }> = ({ visible }) 
           </Card>
         </Box>
       </Html>
+      )}
     </group>
   );
-};
+});
 

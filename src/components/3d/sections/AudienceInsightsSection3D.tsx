@@ -18,7 +18,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PublicIcon from '@mui/icons-material/Public';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = React.memo(({ visible }) => {
   const shaderRef = useRef<THREE.ShaderMaterial>(null);
   const sphereRef = useRef<THREE.Mesh>(null);
 
@@ -77,16 +77,16 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
   ];
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -160]}>
       {/* Custom shader sphere */}
       <mesh ref={sphereRef} position={[0, 0, -2]}>
         <sphereGeometry args={[2, 64, 64]} />
         <primitive object={shaderMaterial} ref={shaderRef} attach="material" />
       </mesh>
 
-      {/* Particle trails */}
-      {Array.from({ length: 50 }).map((_, i) => {
-        const angle = (i / 50) * Math.PI * 2;
+      {/* Particle trails - Reduced count for performance */}
+      {visible && Array.from({ length: 20 }).map((_, i) => {
+        const angle = (i / 20) * Math.PI * 2;
         const radius = 2.5;
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle + i * 0.1) * radius * 0.5;
@@ -94,7 +94,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
 
         return (
           <mesh key={i} position={[x, y, z]}>
-            <sphereGeometry args={[0.05, 8, 8]} />
+            <sphereGeometry args={[0.05, 6, 6]} />
             <meshBasicMaterial
               color={brandColors.primary}
               transparent
@@ -105,6 +105,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
       })}
 
       {/* Title */}
+      {visible && (
       <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography
           variant="h2"
@@ -117,8 +118,10 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
           Audience Insights
         </Typography>
       </Html>
+      )}
 
       {/* Statistics */}
+      {visible && (
       <Html position={[0, -4, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '1000px' }}>
           <Grid container spacing={3}>
@@ -217,7 +220,8 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = ({ visi
           </Card>
         </Box>
       </Html>
+      )}
     </group>
   );
-};
+});
 

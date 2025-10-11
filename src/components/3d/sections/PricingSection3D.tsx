@@ -100,7 +100,7 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
   };
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -80]}>
       {/* 3D Pricing Console */}
       <group ref={consoleRef} position={[0, 0, -2]}>
         <mesh>
@@ -158,21 +158,24 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
       </group>
 
       {/* HTML Overlay */}
-      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-        <Typography
-          variant="h2"
-          sx={{
-            color: 'white',
-            fontWeight: 700,
-            textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-            mb: 2,
-          }}
-        >
-          Flexible Pricing Plans
-        </Typography>
-      </Html>
+      {visible && (
+        <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
+          <Typography
+            variant="h2"
+            sx={{
+              color: 'white',
+              fontWeight: 700,
+              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
+              mb: 2,
+            }}
+          >
+            Flexible Pricing Plans
+          </Typography>
+        </Html>
+      )}
 
-      <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
+      {visible && (
+        <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '1000px' }}>
           {/* Annual/Monthly Toggle */}
           <Box
@@ -363,6 +366,7 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
           </Box>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

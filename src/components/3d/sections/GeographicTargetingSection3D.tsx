@@ -28,7 +28,7 @@ export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ v
   });
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -720]}>
       <mesh ref={globeRef} position={[0, 1, -2]}>
         <sphereGeometry args={[1.5, 32, 32]} />
         <meshStandardMaterial
@@ -51,12 +51,15 @@ export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ v
         );
       })}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Geographic Targeting
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={2}>
@@ -74,6 +77,7 @@ export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ v
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

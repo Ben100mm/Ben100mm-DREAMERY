@@ -114,7 +114,7 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
   const [hoveredOpportunity, setHoveredOpportunity] = useState<string | null>(null);
 
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -40]}>
       {/* 3D Meshes for each opportunity */}
       {opportunities.map((opportunity) => (
         <InteractiveMesh
@@ -128,21 +128,23 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
       ))}
 
       {/* Title */}
-      <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-        <Typography
-          variant="h2"
-          sx={{
-            color: 'white',
-            fontWeight: 700,
-            textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-          }}
-        >
-          Advertising Opportunities
-        </Typography>
-      </Html>
+      {visible && (
+        <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
+          <Typography
+            variant="h2"
+            sx={{
+              color: 'white',
+              fontWeight: 700,
+              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
+            }}
+          >
+            Advertising Opportunities
+          </Typography>
+        </Html>
+      )}
 
       {/* Hover Tooltip */}
-      {hoveredOpportunity && (
+      {visible && hoveredOpportunity && (
         <Html
           position={opportunities.find((o) => o.id === hoveredOpportunity)!.position}
           center
@@ -170,7 +172,7 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
       )}
 
       {/* Selected Opportunity Details */}
-      {selectedOpportunity && (
+      {visible && selectedOpportunity && (
         <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
           <Box
             sx={{

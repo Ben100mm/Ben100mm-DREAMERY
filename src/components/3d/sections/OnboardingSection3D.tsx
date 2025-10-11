@@ -16,7 +16,7 @@ const steps = [
 
 export const OnboardingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -320]}>
       {steps.map((_, index) => (
         <mesh key={index} position={[-4 + index * 2.5, 1, -2]}>
           <sphereGeometry args={[0.3, 32, 32]} />
@@ -30,12 +30,15 @@ export const OnboardingSection3D: React.FC<{ visible: boolean }> = ({ visible })
         lineWidth={2}
       />
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Getting Started
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '800px' }}>
           <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '24px', p: 4 }}>
@@ -57,6 +60,7 @@ export const OnboardingSection3D: React.FC<{ visible: boolean }> = ({ visible })
           </Card>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

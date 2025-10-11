@@ -18,7 +18,7 @@ const integrations = [
 
 export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, 0]}>
+    <group visible={visible} position={[0, 0, -600]}>
       <mesh position={[0, 1, -2]}>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.9} roughness={0.1} />
@@ -39,12 +39,15 @@ export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }
         );
       })}
 
+      {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
         <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           Seamless Integrations
         </Typography>
       </Html>
+      )}
 
+      {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
@@ -61,6 +64,7 @@ export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }
           </Grid>
         </Box>
       </Html>
+      )}
     </group>
   );
 };

@@ -72,27 +72,27 @@ const SceneContent: React.FC<{
       {/* Scene Manager - handles camera transitions */}
       <SceneManager onSectionChange={onSectionChange} />
 
-      {/* All 20 Sections */}
-      <HeroSection3D visible={currentSection === 0} />
-      <OpportunitiesSection3D visible={currentSection === 1} />
-      <PricingSection3D visible={currentSection === 2} />
-      <FeaturesSection3D visible={currentSection === 3} />
-      <AudienceInsightsSection3D visible={currentSection === 4} />
-      <TestimonialsSection3D visible={currentSection === 5} />
-      <SampleAdsSection3D visible={currentSection === 6} />
-      <CompetitiveAdvantagesSection3D visible={currentSection === 7} />
-      <OnboardingSection3D visible={currentSection === 8} />
-      <ComplianceSection3D visible={currentSection === 9} />
-      <FAQSection3D visible={currentSection === 10} />
-      <ContactSection3D visible={currentSection === 11} />
-      <TechSpecsSection3D visible={currentSection === 12} />
-      <IndustryFocusSection3D visible={currentSection === 13} />
-      <PerformanceMetricsSection3D visible={currentSection === 14} />
-      <IntegrationSection3D visible={currentSection === 15} />
-      <CampaignManagementSection3D visible={currentSection === 16} />
-      <ContentRequirementsSection3D visible={currentSection === 17} />
-      <GeographicTargetingSection3D visible={currentSection === 18} />
-      <AnalyticsReportingSection3D visible={currentSection === 19} />
+      {/* All 20 Sections - Only render nearby sections for performance */}
+      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} />}
+      {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} />}
+      {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} />}
+      {Math.abs(currentSection - 3) <= 1 && <FeaturesSection3D visible={currentSection === 3} />}
+      {Math.abs(currentSection - 4) <= 1 && <AudienceInsightsSection3D visible={currentSection === 4} />}
+      {Math.abs(currentSection - 5) <= 1 && <TestimonialsSection3D visible={currentSection === 5} />}
+      {Math.abs(currentSection - 6) <= 1 && <SampleAdsSection3D visible={currentSection === 6} />}
+      {Math.abs(currentSection - 7) <= 1 && <CompetitiveAdvantagesSection3D visible={currentSection === 7} />}
+      {Math.abs(currentSection - 8) <= 1 && <OnboardingSection3D visible={currentSection === 8} />}
+      {Math.abs(currentSection - 9) <= 1 && <ComplianceSection3D visible={currentSection === 9} />}
+      {Math.abs(currentSection - 10) <= 1 && <FAQSection3D visible={currentSection === 10} />}
+      {Math.abs(currentSection - 11) <= 1 && <ContactSection3D visible={currentSection === 11} />}
+      {Math.abs(currentSection - 12) <= 1 && <TechSpecsSection3D visible={currentSection === 12} />}
+      {Math.abs(currentSection - 13) <= 1 && <IndustryFocusSection3D visible={currentSection === 13} />}
+      {Math.abs(currentSection - 14) <= 1 && <PerformanceMetricsSection3D visible={currentSection === 14} />}
+      {Math.abs(currentSection - 15) <= 1 && <IntegrationSection3D visible={currentSection === 15} />}
+      {Math.abs(currentSection - 16) <= 1 && <CampaignManagementSection3D visible={currentSection === 16} />}
+      {Math.abs(currentSection - 17) <= 1 && <ContentRequirementsSection3D visible={currentSection === 17} />}
+      {Math.abs(currentSection - 18) <= 1 && <GeographicTargetingSection3D visible={currentSection === 18} />}
+      {Math.abs(currentSection - 19) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 19} />}
 
       {/* Camera movement controlled by scroll */}
     </>
@@ -135,10 +135,10 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
-    // Set loading complete after initial render
+    // Set loading complete after initial render - reduced timeout for faster load
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, []);

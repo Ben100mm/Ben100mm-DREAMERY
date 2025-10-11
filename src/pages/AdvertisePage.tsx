@@ -22,7 +22,8 @@ import {
   AccountBalance as LenderIcon,
   Build as ServiceIcon,
   Psychology as AIIcon,
-  ArrowForward as ArrowForwardIcon
+  ArrowForward as ArrowForwardIcon,
+  ArrowBack as ArrowBackIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { brandColors } from '../theme/theme';
@@ -96,65 +97,44 @@ const AdvertisePage: React.FC = () => {
     console.log('View sample advertisements');
   };
 
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: brandColors.backgrounds.primary }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: brandColors.backgrounds.primary, position: 'relative' }}>
       
-      {/* Hero Section */}
+      {/* Back to Homepage Button */}
       <Box
         sx={{
-          background: `linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.actions.primary} 100%)`,
-          color: 'white',
-          py: 8,
-          textAlign: 'center'
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 1000,
         }}
       >
-        <Container maxWidth="lg">
-          <Typography variant="h2" component="h1" sx={{ fontWeight: 700, mb: 3 }}>
-            Advertise on Dreamery
-          </Typography>
-          <Typography variant="h5" sx={{ mb: 4, opacity: 0.9, maxWidth: 800, mx: 'auto' }}>
-            Reach thousands of qualified real estate professionals, investors, and buyers with our targeted advertising platform
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleGetStarted}
-              sx={{
-                backgroundColor: 'white',
-                color: brandColors.primary,
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                }
-              }}
-            >
-              Get Started
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              onClick={handleViewSamples}
-              sx={{
-                borderColor: 'white',
-                color: 'white',
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                '&:hover': {
-                  borderColor: 'white',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                }
-              }}
-            >
-              View Sample Ads
-            </Button>
-          </Box>
-        </Container>
+        <Button
+          onClick={handleBackToHome}
+          sx={{
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            backgroundColor: brandColors.primary,
+            color: 'white',
+            minWidth: 'auto',
+            padding: 0,
+            border: '3px solid white',
+            boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.3)',
+            '&:hover': {
+              backgroundColor: brandColors.actions.primary,
+              transform: 'scale(1.05)',
+              boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.5)',
+            },
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <ArrowBackIcon sx={{ fontSize: 24 }} />
+        </Button>
       </Box>
 
       {/* Advertising Opportunities Section */}

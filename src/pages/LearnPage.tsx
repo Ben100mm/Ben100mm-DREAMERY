@@ -70,7 +70,7 @@ const LearnPage: React.FC = () => {
       <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f7fa' }}>
         <Container maxWidth="lg">
           {/* Hero Section */}
-          <Box sx={{ textAlign: 'center', mb: 8, mt: 6 }}>
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
             <Typography 
               variant="h2" 
               component="h1" 

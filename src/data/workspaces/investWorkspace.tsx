@@ -6,6 +6,7 @@ import {
   PieChart as FractionalIcon,
   Business as PrivateMarketIcon,
 } from '@mui/icons-material';
+import InvestAssistantIcon from '../../components/invest/ai-invest-assistant/InvestAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
 import { brandColors } from "../../theme";
@@ -48,6 +49,11 @@ export const investWorkspace: WorkspaceConfig = {
       id: 'privatemarket', 
       label: 'Private Market Investment Listings', 
       icon: <PrivateMarketIcon />,
+    },
+    { 
+      id: 'assistant', 
+      label: 'Lumina Investment Assistant', 
+      icon: <InvestAssistantIcon size={20} variant="icon" />,
     },
   ],
 };

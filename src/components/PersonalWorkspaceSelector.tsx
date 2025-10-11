@@ -82,12 +82,12 @@ const PersonalWorkspaceSelector: React.FC<PersonalWorkspaceSelectorProps> = ({
   const workspaceOptions = [
     { value: 'rent', label: 'Rent', icon: <RentIcon fontSize="small" />, route: '/workspaces/personal?workspace=rent' },
     { value: 'close', label: 'Close', icon: <CloseIcon fontSize="small" />, route: '/workspaces/personal?workspace=close' },
-    { value: 'manage', label: 'Manage', icon: <ManageIcon fontSize="small" />, route: '/manage' },
-    { value: 'invest', label: 'Invest', icon: <InvestIcon fontSize="small" />, route: '/invest' },
-    { value: 'fund', label: 'Fund', icon: <FundIcon fontSize="small" />, route: '/fund' },
-    { value: 'operate', label: 'Operate', icon: <OperateIcon fontSize="small" />, route: '/operate' },
-    { value: 'learn', label: 'Learn', icon: <LearnIcon fontSize="small" />, route: '/learn' },
-    { value: 'advertise', label: 'Advertise', icon: <AdvertiseIcon fontSize="small" />, route: '/advertise' },
+    { value: 'manage', label: 'Manage', icon: <ManageIcon fontSize="small" />, route: '/workspaces/personal?workspace=manage' },
+    { value: 'invest', label: 'Invest', icon: <InvestIcon fontSize="small" />, route: '/workspaces/personal?workspace=invest' },
+    { value: 'fund', label: 'Fund', icon: <FundIcon fontSize="small" />, route: '/workspaces/personal?workspace=fund' },
+    { value: 'operate', label: 'Operate', icon: <OperateIcon fontSize="small" />, route: '/workspaces/personal?workspace=operate' },
+    { value: 'learn', label: 'Learn', icon: <LearnIcon fontSize="small" />, route: '/workspaces/personal?workspace=learn' },
+    { value: 'advertise', label: 'Advertise', icon: <AdvertiseIcon fontSize="small" />, route: '/workspaces/personal?workspace=advertise' },
   ];
 
   const handleWorkspaceChange = (event: any) => {

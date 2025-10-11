@@ -33,6 +33,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { brandColors } from '../../theme';
+import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import ManageDashboard from '../manage/ManageDashboard';
 import ManageCalendar from '../manage/ManageCalendar';
 import ManageListings from '../manage/ManageListings';
@@ -51,6 +52,7 @@ import {
   Assignment as LeaseIcon,
   PersonAdd as ApplicationIcon,
   Payment as PaymentIcon,
+  Campaign as CampaignIcon,
   IntegrationInstructions as IntegrationIcon,
   Security as InsuranceIcon,
   AccountCircle as AccountIcon,
@@ -414,6 +416,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
           title: 'Manage Assistant',
           subtitle: 'AI-powered assistance for property management operations',
           icon: <ManageAssistantIcon size={28} variant="icon" />,
+        };
+      case 'advertise':
+        return {
+          title: 'Advertise Your Services',
+          subtitle: 'Promote your property management expertise to potential clients',
+          icon: <CampaignIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
@@ -4651,6 +4659,8 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
         );
       case 'assistant':
         return <ManageAssistant />;
+      case 'advertise':
+        return <AdvertiseDashboard workspaceType="manage" />;
       case 'account':
         return (
           <Box>

@@ -7,9 +7,10 @@ import {
   Chat as ChatIcon,
   Description as DocumentIcon,
   CalendarToday as CalendarIcon,
-  SmartToy as AssistantIcon,
   Analytics as AnalyticsIcon,
+  Campaign as AdvertiseIcon,
 } from '@mui/icons-material';
+import RentAssistantIcon from '../../components/rent/ai-rent-assistant/RentAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
 import { brandColors } from "../../theme";
@@ -65,13 +66,18 @@ export const rentWorkspace: WorkspaceConfig = {
     },
     { 
       id: 'assistant', 
-      label: 'Rental Assistant', 
-      icon: <AssistantIcon />,
+      label: 'Lumina Rental Assistant', 
+      icon: <RentAssistantIcon size={20} variant="icon" />,
     },
     { 
       id: 'analytics', 
       label: 'Analytics', 
       icon: <AnalyticsIcon />,
+    },
+    { 
+      id: 'advertise', 
+      label: 'Advertise', 
+      icon: <AdvertiseIcon />,
     },
   ],
 };

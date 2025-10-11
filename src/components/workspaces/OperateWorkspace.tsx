@@ -5,9 +5,12 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import OperateDashboard from '../operate/OperateDashboard';
 import OperateProjects from '../operate/OperateProjects';
 import OperateMessages from '../operate/OperateMessages';
+import OperateAssistant from '../operate/ai-operate-assistant/OperateAssistant';
+import OperateAssistantIcon from '../operate/ai-operate-assistant/OperateAssistantIcon';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -16,6 +19,7 @@ import {
   Schedule as ContractorIcon,
   TrendingUp as OptimizationIcon,
   Chat as ChatIcon,
+  Campaign as CampaignIcon,
 } from '@mui/icons-material';
 
 interface OperateWorkspaceProps {
@@ -66,6 +70,18 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
           title: 'Property Operations Communications',
           subtitle: 'Manage communications with project teams, contractors, and operations partners',
           icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
+        };
+      case 'assistant':
+        return {
+          title: 'Lumina Operations Assistant',
+          subtitle: 'AI-powered assistance for property operations and project management',
+          icon: <OperateAssistantIcon size={28} sx={{ color: brandColors.text.inverse }} />,
+        };
+      case 'advertise':
+        return {
+          title: 'Advertise Your Services',
+          subtitle: 'Connect with property owners needing operational services',
+          icon: <CampaignIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
@@ -128,6 +144,10 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         );
       case 'messages':
         return <OperateMessages />;
+      case 'assistant':
+        return <OperateAssistant />;
+      case 'advertise':
+        return <AdvertiseDashboard workspaceType="operate" />;
       default:
         return (
           <Box>

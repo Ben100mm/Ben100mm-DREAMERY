@@ -6,6 +6,8 @@ import {
   Container,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import AdvertiseAssistant from '../advertise/ai-advertise-assistant/AdvertiseAssistant';
+import AdvertiseAssistantIcon from '../advertise/ai-advertise-assistant/AdvertiseAssistantIcon';
 import {
   Dashboard as DashboardIcon,
   CalendarToday as CalendarIcon,
@@ -64,6 +66,12 @@ const AdvertiseWorkspace: React.FC<AdvertiseWorkspaceProps> = ({ activeTab }) =>
           title: 'Marketing Settings',
           subtitle: 'Configure your marketing tools and preferences',
           icon: <SettingsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
+        };
+      case 'assistant':
+        return {
+          title: 'Lumina Advertising Assistant',
+          subtitle: 'AI-powered assistance for marketing and advertising campaigns',
+          icon: <AdvertiseAssistantIcon size={28} sx={{ color: brandColors.text.inverse }} />,
         };
       default:
         return {
@@ -312,6 +320,8 @@ const AdvertiseWorkspace: React.FC<AdvertiseWorkspaceProps> = ({ activeTab }) =>
             </Box>
           </Box>
         );
+      case 'assistant':
+        return <AdvertiseAssistant />;
       default:
         return (
           <Box>

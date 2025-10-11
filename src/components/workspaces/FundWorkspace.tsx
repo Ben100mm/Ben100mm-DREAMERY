@@ -5,10 +5,13 @@ import {
   Typography,
 } from '@mui/material';
 import { brandColors } from '../../theme';
+import AdvertiseDashboard from '../advertise/AdvertiseDashboard';
 import FundDashboard from '../fund/FundDashboard';
 import FundProjects from '../fund/FundProjects';
 import FundCreateProject from '../fund/FundCreateProject';
 import FundMessages from '../fund/FundMessages';
+import FundAssistant from '../fund/ai-fund-assistant/FundAssistant';
+import FundAssistantIcon from '../fund/ai-fund-assistant/FundAssistantIcon';
 import {
   Dashboard as DashboardIcon,
   Assignment as ProjectsIcon,
@@ -18,6 +21,7 @@ import {
   Calculate as CalculatorIcon,
   AccountBox as PortalIcon,
   Chat as ChatIcon,
+  Campaign as CampaignIcon,
 } from '@mui/icons-material';
 
 interface FundWorkspaceProps {
@@ -74,6 +78,18 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
           title: 'Fundraising Communications',
           subtitle: 'Manage communications with investors, advisors, and fundraising partners',
           icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
+        };
+      case 'assistant':
+        return {
+          title: 'Lumina Fund Assistant',
+          subtitle: 'AI-powered assistance for capital raising and investor relations',
+          icon: <FundAssistantIcon size={28} sx={{ color: brandColors.text.inverse }} />,
+        };
+      case 'advertise':
+        return {
+          title: 'Advertise Your Opportunities',
+          subtitle: 'Attract investors to your real estate fundraising opportunities',
+          icon: <CampaignIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
@@ -138,6 +154,10 @@ const FundWorkspace: React.FC<FundWorkspaceProps> = ({ activeTab }) => {
         );
       case 'messages':
         return <FundMessages />;
+      case 'assistant':
+        return <FundAssistant />;
+      case 'advertise':
+        return <AdvertiseDashboard workspaceType="fund" />;
       default:
         return (
           <Box>

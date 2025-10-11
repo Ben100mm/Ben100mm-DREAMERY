@@ -131,8 +131,8 @@ const AppContent = () => {
       <Route path="/invest" element={<Navigate to="/workspaces/personal?workspace=invest" replace />} />
       <Route path="/fund" element={<Navigate to="/workspaces/personal?workspace=fund" replace />} />
       <Route path="/operate" element={<Navigate to="/workspaces/personal?workspace=operate" replace />} />
-      <Route path="/learn" element={<LearnPage />} />
-      <Route path="/advertise" element={<AdvertisePage />} />
+      <Route path="/learn" element={<Navigate to="/workspaces/personal?workspace=learn" replace />} />
+      <Route path="/advertise" element={<Navigate to="/workspaces/personal?workspace=advertise" replace />} />
       <Route path="/partner" element={<PartnerPage />} />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />

@@ -8,6 +8,8 @@ import { brandColors } from '../../theme';
 import InvestCrowdfunding from '../invest/InvestCrowdfunding';
 import InvestJointVenture from '../invest/InvestJointVenture';
 import InvestMessages from '../invest/InvestMessages';
+import InvestAssistant from '../invest/ai-invest-assistant/InvestAssistant';
+import InvestAssistantIcon from '../invest/ai-invest-assistant/InvestAssistantIcon';
 import {
   Group as CrowdfundingIcon,
   Handshake as JointVentureIcon,
@@ -53,6 +55,12 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
           subtitle: 'Manage communications with investment opportunities and portfolio partners',
           icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
+      case 'assistant':
+        return {
+          title: 'Lumina Investment Assistant',
+          subtitle: 'AI-powered insights for investment decisions and portfolio management',
+          icon: <InvestAssistantIcon size={28} sx={{ color: brandColors.text.inverse }} />,
+        };
       default:
         return {
           title: 'Investment Opportunities',
@@ -92,6 +100,8 @@ const InvestWorkspace: React.FC<InvestWorkspaceProps> = ({ activeTab }) => {
         );
       case 'messages':
         return <InvestMessages />;
+      case 'assistant':
+        return <InvestAssistant />;
       default:
         return (
           <Box>

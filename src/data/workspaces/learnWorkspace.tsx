@@ -5,8 +5,8 @@ import {
   Assignment as CaseStudiesIcon,
   QuestionAnswer as QAIcon,
   VideoCall as LiveSessionsIcon,
-  Psychology as AITutorIcon,
 } from '@mui/icons-material';
+import LearnAssistantIcon from '../../components/learn/ai-learn-assistant/LearnAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
 import { brandColors } from "../../theme";
@@ -47,8 +47,8 @@ export const learnWorkspace: WorkspaceConfig = {
     },
     { 
       id: 'aitutor', 
-      label: 'Lumina', 
-      icon: <AITutorIcon />,
+      label: 'Lumina Learning Assistant', 
+      icon: <LearnAssistantIcon size={20} variant="icon" />,
     },
   ],
 };

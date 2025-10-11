@@ -27,7 +27,6 @@ import { investWorkspace } from '../data/workspaces/investWorkspace';
 import { fundWorkspace } from '../data/workspaces/fundWorkspace';
 import { operateWorkspace } from '../data/workspaces/operateWorkspace';
 import { learnWorkspace } from '../data/workspaces/learnWorkspace';
-import { advertiseWorkspace } from '../data/workspaces/advertiseWorkspace';
 
 
 
@@ -97,7 +96,6 @@ const WorkspacesPersonalPage: React.FC = () => {
     if (path === '/fund') return 'fund';
     if (path === '/operate') return 'operate';
     if (path === '/learn') return 'learn';
-    if (path === '/advertise') return 'advertise';
     
     return 'rent'; // default
   }, [location.pathname, location.search]);
@@ -138,18 +136,6 @@ const WorkspacesPersonalPage: React.FC = () => {
             </Typography>
             <Typography variant="body1" sx={{ color: brandColors.text.secondary }}>
               Learning resources and educational content coming soon.
-            </Typography>
-          </Box>
-        );
-      case 'advertise':
-        // For now, show a placeholder for advertise workspace
-        return (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h5" sx={{ color: brandColors.primary, mb: 2 }}>
-              Advertise Workspace
-            </Typography>
-            <Typography variant="body1" sx={{ color: brandColors.text.secondary }}>
-              Advertising tools and campaign management coming soon.
             </Typography>
           </Box>
         );
@@ -209,10 +195,6 @@ const WorkspacesPersonalPage: React.FC = () => {
         label: item.label
       })),
       learn: learnWorkspace.sidebarItems.map(item => ({
-        value: item.id,
-        label: item.label
-      })),
-      advertise: advertiseWorkspace.sidebarItems.map(item => ({
         value: item.id,
         label: item.label
       })),

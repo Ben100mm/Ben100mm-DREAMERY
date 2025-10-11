@@ -77,7 +77,7 @@ export const closeWorkspace: WorkspaceConfig = {
     },
     { 
       id: 'assistant', 
-      label: 'Closing Assistant', 
+      label: 'Lumina Closing Assistant', 
       icon: <ClosingAssistantIcon size={20} variant="icon" />,
     },
     { 

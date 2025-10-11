@@ -8,6 +8,7 @@ import {
   Analytics as AnalyticsIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
+import AdvertiseAssistantIcon from '../../components/advertise/ai-advertise-assistant/AdvertiseAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
 import { brandColors } from "../../theme";
@@ -55,6 +56,11 @@ export const advertiseWorkspace: WorkspaceConfig = {
       id: 'settings', 
       label: 'Settings', 
       icon: <SettingsIcon />,
+    },
+    { 
+      id: 'assistant', 
+      label: 'Lumina Advertising Assistant', 
+      icon: <AdvertiseAssistantIcon size={20} variant="icon" />,
     },
   ],
 };

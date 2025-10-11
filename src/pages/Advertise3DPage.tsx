@@ -146,7 +146,7 @@ const Advertise3DPage: React.FC = () => {
     // Enable body scrolling with snap points
     document.body.style.overflow = 'auto';
     document.body.style.height = 'auto';
-    document.body.style.scrollSnapType = 'y mandatory';
+    document.body.style.scrollSnapType = 'y proximity'; // Changed from 'mandatory' to allow easier navigation
     
     // Hide scrollbar while keeping scroll functionality
     const style = document.createElement('style');
@@ -226,7 +226,7 @@ const Advertise3DPage: React.FC = () => {
               width: '100%',
               position: 'relative',
               scrollSnapAlign: 'start',
-              scrollSnapStop: 'always',
+              scrollSnapStop: 'normal', // Changed from 'always' to allow reverse scrolling
               pointerEvents: 'none',
             }}
           />

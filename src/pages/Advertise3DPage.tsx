@@ -32,6 +32,7 @@ import { IntegrationSection3D } from '../components/3d/sections/IntegrationSecti
 import { CampaignManagementSection3D } from '../components/3d/sections/CampaignManagementSection3D';
 import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
 import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
+import { MilkyWaySection3D } from '../components/3d/sections/MilkyWaySection3D';
 
 /**
  * Scene Content Component
@@ -57,8 +58,11 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Enhanced Star Field - Multiple layers for 3D depth */}
-      <EnhancedStarField scrollVelocity={scrollVelocity} mousePosition={mousePosition} />
+      {/* Simple test sphere */}
+      <mesh position={[0, 0, -5]}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshBasicMaterial color="#64b5f6" />
+      </mesh>
 
       {/* Scene Manager - handles camera transitions */}
       <SceneManager 
@@ -102,6 +106,9 @@ const SceneContent: React.FC<{
       
       {/* Section 11: Analytics & Reporting - Analytics features */}
       {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} sectionIndex={11} scrollProgress={scrollProgress} />}
+      
+      {/* Section 12: Milky Way Panorama - Interactive cosmic experience */}
+      {Math.abs(currentSection - 12) <= 1 && <MilkyWaySection3D visible={currentSection === 12} sectionIndex={12} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
     </>
   );
 };
@@ -188,7 +195,7 @@ const Advertise3DPage: React.FC = () => {
       const scrollingDown = e.deltaY > 0;
       const direction = scrollingDown ? 1 : -1;
       const current = currentSectionRef.current;
-      const nextSection = Math.max(0, Math.min(11, current + direction));
+      const nextSection = Math.max(0, Math.min(12, current + direction));
       
       // Only proceed if we're moving to a different section
       if (nextSection !== current) {
@@ -279,7 +286,7 @@ const Advertise3DPage: React.FC = () => {
           backgroundColor: '#000',
         }}
       >
-        {/* Moving Milky Way Background */}
+        {/* Dark Space Background */}
         <Box
           sx={{
             position: 'fixed',
@@ -287,18 +294,15 @@ const Advertise3DPage: React.FC = () => {
             left: 0,
             width: '100vw',
             height: '100vh',
-            backgroundImage: 'url(/milky-way-background.jpg)',
-            backgroundSize: '120% 120%', // Slightly larger for smooth movement
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.4,
+            background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
+            opacity: 0.9,
             transform: `translateY(${currentSection * -30}px) scale(${1 + scrollVelocity * 0.001})`,
             transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             zIndex: 0,
           }}
         />
-        {/* Scrollable sections - 12 sections with programmatic scroll control */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
+        {/* Scrollable sections - 13 sections with programmatic scroll control */}
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((sectionIndex) => (
           <Box
             key={sectionIndex}
             id={`section-${sectionIndex}`}
@@ -321,28 +325,19 @@ const Advertise3DPage: React.FC = () => {
             right: 0,
             bottom: 0,
             zIndex: 10,
-            pointerEvents: 'none', // Canvas doesn't block scroll
+            backgroundColor: 'rgba(255, 0, 0, 0.1)', // Debug background
           }}
         >
           <Canvas
-            shadows
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: 'high-performance',
-            }}
-            dpr={[1, 2]}
+            camera={{ position: [0, 0, 10], fov: 75 }}
+            gl={{ antialias: true, alpha: true }}
           >
-            <Suspense fallback={null}>
-              <SceneContent 
-                currentSection={currentSection} 
-                onSectionChange={handleSectionChange}
-                onScrollUpdate={handleScrollUpdate}
-                scrollVelocity={scrollVelocity}
-                scrollProgress={scrollProgress}
-                mousePosition={mousePosition}
-              />
-            </Suspense>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} />
+            <mesh position={[0, 0, -5]}>
+              <sphereGeometry args={[1, 32, 32]} />
+              <meshBasicMaterial color="#64b5f6" />
+            </mesh>
           </Canvas>
         </Box>
 
@@ -412,7 +407,7 @@ const Advertise3DPage: React.FC = () => {
               gap: 1,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((section) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((section) => (
               <Box
                 key={section}
                 sx={{

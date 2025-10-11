@@ -52,7 +52,6 @@ export const HeroSection3D: React.FC<{
             outlineWidth={0.02}
             outlineColor="#64b5f6"
             letterSpacing={0.1}
-            font="/fonts/PlayfairDisplay-Regular.ttf"
           >
             Continuous
           </Text>
@@ -65,7 +64,6 @@ export const HeroSection3D: React.FC<{
             outlineWidth={0.02}
             outlineColor="#ffa726"
             letterSpacing={0.1}
-            font="/fonts/PlayfairDisplay-Regular.ttf"
           >
             Feedback
           </Text>

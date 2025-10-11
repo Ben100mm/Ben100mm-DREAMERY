@@ -62,6 +62,13 @@ export const materials = {
       metalness: 0.5,
       roughness: 0.2,
     }),
+
+  // Milky Way panorama material
+  milkyWayPanorama: () =>
+    new THREE.MeshBasicMaterial({
+      side: THREE.BackSide,
+      transparent: false,
+    }),
 };
 
 // Color utilities

@@ -1,0 +1,23 @@
+# Milky Way Panorama Placeholder
+
+This is a placeholder for the Milky Way panorama texture.
+
+To use the full interactive Milky Way panorama:
+
+1. Download the ESO Milky Way panorama from:
+   http://www.eso.org/public/images/eso0932a/
+
+2. Save it as `milky-way-panorama.jpg` in the public directory
+
+3. The component will automatically use the real panorama texture
+
+The component includes a fallback procedural texture that creates a basic 
+Milky Way-like appearance if the real texture is not available.
+
+## Technical Details
+
+- Expected format: Equirectangular projection (360° panorama)
+- Recommended resolution: 2048x1024 or higher
+- File format: JPG or PNG
+- The component uses stereographic projection to map the equirectangular 
+  texture onto a sphere for interactive viewing

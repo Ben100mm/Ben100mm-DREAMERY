@@ -110,38 +110,43 @@ const AdvertisePage: React.FC = () => {
       }}
     >
       {/* Simple Space Background */}
-      <Box
-        sx={{
+      <div
+        style={{
           position: 'fixed',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%',
           zIndex: -1,
+          backgroundColor: '#1a1a2e',
           background: `
-            #1a1a2e,
             radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.4) 0%, transparent 50%),
             radial-gradient(circle at 80% 70%, rgba(0, 150, 255, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.3) 0%, transparent 70%)
+            radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.3) 0%, transparent 70%),
+            #1a1a2e
           `,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `
-              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-              radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-              radial-gradient(2px 2px at 160px 30px, #fff, transparent)
-            `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '200px 100px',
-            opacity: 0.8,
-          }
+        }}
+      />
+      
+      {/* Stars */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          backgroundImage: `
+            radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+            radial-gradient(2px 2px at 160px 30px, #fff, transparent)
+          `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '200px 100px',
+          opacity: 0.8,
         }}
       />
 
@@ -151,7 +156,7 @@ const AdvertisePage: React.FC = () => {
           position: 'relative',
           zIndex: 10,
           minHeight: '100vh',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
       >
         {/* 3D Experience Banner */}

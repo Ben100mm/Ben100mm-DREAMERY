@@ -141,9 +141,20 @@ const Advertise3DPage: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
+  const currentSectionRef = useRef(0);
+  const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
   const targetSectionRef = useRef(0);
+  
+  // Keep refs in sync with state
+  useEffect(() => {
+    currentSectionRef.current = currentSection;
+  }, [currentSection]);
+  
+  useEffect(() => {
+    isScrollingRef.current = isScrolling;
+  }, [isScrolling]);
 
   // Custom scroll control with 2-second transitions
   useEffect(() => {
@@ -165,17 +176,25 @@ const Advertise3DPage: React.FC = () => {
     document.head.appendChild(style);
     
     const handleWheel = (e: WheelEvent) => {
-      if (isScrolling) {
-        e.preventDefault();
+      e.preventDefault();
+      
+      if (isScrollingRef.current) {
         return;
       }
 
-      const direction = e.deltaY > 0 ? 1 : -1;
-      const nextSection = Math.max(0, Math.min(11, currentSection + direction));
+      // Determine scroll direction: positive deltaY = scrolling down, negative = scrolling up
+      const scrollingDown = e.deltaY > 0;
+      const direction = scrollingDown ? 1 : -1;
+      const current = currentSectionRef.current;
+      const nextSection = Math.max(0, Math.min(11, current + direction));
       
-      if (nextSection !== currentSection) {
-        e.preventDefault();
+      // Only proceed if we're moving to a different section
+      if (nextSection !== current) {
+        console.log(`Scrolling ${scrollingDown ? 'down' : 'up'} from section ${current} to ${nextSection}`);
+        
+        isScrollingRef.current = true; // Update ref immediately
         setIsScrolling(true);
+        currentSectionRef.current = nextSection; // Update ref immediately
         targetSectionRef.current = nextSection;
         
         // Smooth scroll to next section over 2 seconds
@@ -199,8 +218,10 @@ const Advertise3DPage: React.FC = () => {
           if (progress < 1) {
             requestAnimationFrame(animateScroll);
           } else {
-            setIsScrolling(false);
+            // Animation complete - update state and unlock scrolling
             setCurrentSection(nextSection);
+            isScrollingRef.current = false;
+            setIsScrolling(false);
           }
         };
         
@@ -221,7 +242,8 @@ const Advertise3DPage: React.FC = () => {
       const styleEl = document.getElementById('scroll-styles');
       if (styleEl) styleEl.remove();
     };
-  }, [currentSection, isScrolling]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - we use refs to avoid stale closures
 
   // Section change handler (called by SceneManager)
   const handleSectionChange = (section: number) => {

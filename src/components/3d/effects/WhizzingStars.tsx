@@ -40,17 +40,20 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
       const positions = starsRef.current.geometry.attributes.position;
       const scrollSpeed = Math.abs(scrollVelocity) * 5;
       
-      for (let i = 0; i < positions.count; i++) {
-        // Move stars forward based on scroll speed
-        positions.array[i * 3 + 2] += (velocities[i] + scrollSpeed) * delta * 10;
-        
-        // Reset stars that go past camera
-        if (positions.array[i * 3 + 2] > 10) {
-          positions.array[i * 3 + 2] = -500;
+      // Only move stars when scrolling
+      if (scrollSpeed > 0) {
+        for (let i = 0; i < positions.count; i++) {
+          // Move stars forward based on scroll speed only
+          positions.array[i * 3 + 2] += (velocities[i] * scrollSpeed) * delta * 10;
+          
+          // Reset stars that go past camera
+          if (positions.array[i * 3 + 2] > 10) {
+            positions.array[i * 3 + 2] = -500;
+          }
         }
+        
+        positions.needsUpdate = true;
       }
-      
-      positions.needsUpdate = true;
     }
     
     previousScrollRef.current = scrollVelocity;

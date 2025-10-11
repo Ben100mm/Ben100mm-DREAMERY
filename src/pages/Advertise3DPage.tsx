@@ -146,7 +146,7 @@ const Advertise3DPage: React.FC = () => {
     // Enable body scrolling with snap points
     document.body.style.overflow = 'auto';
     document.body.style.height = 'auto';
-    document.body.style.scrollSnapType = 'y proximity'; // Changed from 'mandatory' to allow easier navigation
+    document.body.style.scrollSnapType = 'y mandatory'; // Mandatory to force stopping at each card
     
     // Hide scrollbar while keeping scroll functionality
     const style = document.createElement('style');

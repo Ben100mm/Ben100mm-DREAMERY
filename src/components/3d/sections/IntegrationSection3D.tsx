@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { Html, Line } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
-import { brandColors } from '../../../theme/theme';
 
 const integrations = [
   { name: 'Salesforce', category: 'CRM' },
@@ -19,25 +18,6 @@ const integrations = [
 export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <group visible={visible} position={[0, 0, -320]}>
-      <mesh position={[0, 1, -2]}>
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshStandardMaterial color={brandColors.primary} metalness={0.9} roughness={0.1} />
-      </mesh>
-
-      {integrations.map((_, index) => {
-        const angle = (index / integrations.length) * Math.PI * 2;
-        const x = Math.cos(angle) * 2.5;
-        const z = Math.sin(angle) * 2.5 - 2;
-        return (
-          <React.Fragment key={index}>
-            <mesh position={[x, 1, z]}>
-              <sphereGeometry args={[0.2, 16, 16]} />
-              <meshStandardMaterial color="#64b5f6" metalness={0.7} roughness={0.3} />
-            </mesh>
-            <Line points={[[0, 1, -2], [x, 1, z]]} color={brandColors.primary} lineWidth={1} />
-          </React.Fragment>
-        );
-      })}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

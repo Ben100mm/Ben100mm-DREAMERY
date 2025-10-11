@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { Html, Box as DreiBox } from '@react-three/drei';
-import { Box, Typography, Grid, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
-import { brandColors } from '../../../theme/theme';
+import { Html } from '@react-three/drei';
+import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 
 const analyticsFeatures = [
   'Real-Time Performance Dashboard',
@@ -21,15 +20,6 @@ const analyticsFeatures = [
 export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <group visible={visible} position={[0, 0, -440]}>
-      {[0.5, 1, 1.5, 1.2, 0.8].map((height, index) => (
-        <DreiBox
-          key={index}
-          args={[0.4, height, 0.4]}
-          position={[-2.5 + index, height / 2, -2]}
-        >
-          <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} />
-        </DreiBox>
-      ))}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

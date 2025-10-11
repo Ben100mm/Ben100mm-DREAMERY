@@ -2,10 +2,8 @@
  * Pricing Section 3D Component
  */
 
-import React, { useState, useRef } from 'react';
-import { Html, Text } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import React, { useState } from 'react';
+import { Html } from '@react-three/drei';
 import {
   Box,
   Typography,
@@ -84,13 +82,6 @@ const pricingTiers: PricingTier[] = [
 export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
-  const consoleRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (consoleRef.current && visible) {
-      consoleRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-    }
-  });
 
   const calculateSavings = (tier: PricingTier) => {
     const annualTotal = tier.price * 12;
@@ -101,62 +92,6 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
 
   return (
     <group visible={visible} position={[0, 0, -80]}>
-      {/* 3D Pricing Console */}
-      <group ref={consoleRef} position={[0, 0, -2]}>
-        <mesh>
-          <boxGeometry args={[6, 3, 0.5]} />
-          <meshStandardMaterial
-            color={brandColors.primary}
-            metalness={0.7}
-            roughness={0.3}
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
-
-        {/* Price display meshes */}
-        {pricingTiers.map((tier, index) => (
-          <mesh
-            key={tier.name}
-            position={[-3 + index * 3, 0, 0.3]}
-          >
-            <planeGeometry args={[2, 2.5]} />
-            <meshStandardMaterial
-              color={tier.color}
-              metalness={0.5}
-              roughness={0.4}
-              transparent
-              opacity={0.8}
-            />
-            <Text
-              position={[0, 0.8, 0.1]}
-              fontSize={0.2}
-              color="white"
-              anchorX="center"
-            >
-              {tier.name}
-            </Text>
-            <Text
-              position={[0, 0.3, 0.1]}
-              fontSize={0.4}
-              color="white"
-              anchorX="center"
-              fontWeight={700}
-            >
-              ${isAnnual ? tier.annualPrice : tier.price}
-            </Text>
-            <Text
-              position={[0, 0, 0.1]}
-              fontSize={0.15}
-              color="white"
-              anchorX="center"
-            >
-              {isAnnual ? '/year' : '/month'}
-            </Text>
-          </mesh>
-        ))}
-      </group>
-
       {/* HTML Overlay */}
       {visible && (
         <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

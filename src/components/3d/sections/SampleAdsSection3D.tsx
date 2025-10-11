@@ -3,32 +3,22 @@
  */
 
 import React, { useState } from 'react';
-import { Html, Image as DreiImage } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import { Box, Typography, Card, CardContent, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
-import { InteractiveMesh } from '../shared/InteractiveMesh';
 
 const adSamples = [
-  { id: 'banner', type: 'Banner Ad', format: '728x90', position: [-3, 1, -2] as [number, number, number], ctr: '2.5%' },
-  { id: 'sidebar', type: 'Sidebar Ad', format: '300x600', position: [0, 1, -2] as [number, number, number], ctr: '3.2%' },
-  { id: 'native', type: 'Native Ad', format: 'Responsive', position: [3, 1, -2] as [number, number, number], ctr: '4.1%' },
+  { id: 'banner', type: 'Banner Ad', format: '728x90', ctr: '2.5%' },
+  { id: 'sidebar', type: 'Sidebar Ad', format: '300x600', ctr: '3.2%' },
+  { id: 'native', type: 'Native Ad', format: 'Responsive', ctr: '4.1%' },
 ];
 
 export const SampleAdsSection3D: React.FC<{ visible: boolean }> = React.memo(({ visible }) => {
   const [selectedFormat, setSelectedFormat] = useState('all');
-  const [selectedAd, setSelectedAd] = useState<typeof adSamples[0] | null>(null);
+  const [selectedAd, setSelectedAd] = useState<typeof adSamples[0] | null>(adSamples[0]);
 
   return (
     <group visible={visible} position={[0, 0, -120]}>
-      {adSamples.map((ad) => (
-        <InteractiveMesh
-          key={ad.id}
-          position={ad.position}
-          geometry="box"
-          color={brandColors.primary}
-          onClick={() => setSelectedAd(ad)}
-        />
-      ))}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

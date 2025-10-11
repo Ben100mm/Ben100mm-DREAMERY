@@ -2,12 +2,9 @@
  * Geographic Targeting Section 3D Component
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { Html } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
-import { brandColors } from '../../../theme/theme';
 
 const markets = [
   { name: 'San Francisco', state: 'CA', reach: '2.5M' },
@@ -19,37 +16,8 @@ const markets = [
 ];
 
 export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
-  const globeRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (globeRef.current && visible) {
-      globeRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    }
-  });
-
   return (
     <group visible={visible} position={[0, 0, -400]}>
-      <mesh ref={globeRef} position={[0, 1, -2]}>
-        <sphereGeometry args={[1.5, 32, 32]} />
-        <meshStandardMaterial
-          color={brandColors.primary}
-          metalness={0.7}
-          roughness={0.3}
-          wireframe
-        />
-      </mesh>
-
-      {markets.map((_, index) => {
-        const angle = (index / markets.length) * Math.PI * 2;
-        const x = Math.cos(angle) * 2;
-        const y = Math.sin(angle) * 2 + 1;
-        return (
-          <mesh key={index} position={[x, y, -2]}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshBasicMaterial color="#ffd700" />
-          </mesh>
-        );
-      })}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

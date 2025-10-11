@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { Html, Box as DreiBox } from '@react-three/drei';
-import { Box, Typography, Grid, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
+import { Html } from '@react-three/drei';
+import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -18,14 +18,6 @@ const advantages = [
 export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <group visible={visible} position={[0, 0, -160]}>
-      {advantages.map((adv, index) => {
-        const height = 1 + (index * 0.5);
-        return (
-          <DreiBox key={index} args={[0.5, height, 0.5]} position={[-3 + index * 2, height / 2, -2]}>
-            <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} />
-          </DreiBox>
-        );
-      })}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

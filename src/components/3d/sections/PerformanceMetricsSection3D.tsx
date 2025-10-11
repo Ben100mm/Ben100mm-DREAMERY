@@ -2,48 +2,21 @@
  * Performance Metrics Section 3D Component
  */
 
-import React, { useRef } from 'react';
-import { Html, Box as DreiBox } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import React from 'react';
+import { Html } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 
 const metrics = [
-  { label: 'Avg CTR', value: '3.2%', target: 0.8 },
-  { label: 'Conversion Rate', value: '5.8%', target: 1.2 },
-  { label: 'Cost Per Lead', value: '$12', target: 0.6 },
-  { label: 'ROI', value: '285%', target: 1.5 },
+  { label: 'Avg CTR', value: '3.2%' },
+  { label: 'Conversion Rate', value: '5.8%' },
+  { label: 'Cost Per Lead', value: '$12' },
+  { label: 'ROI', value: '285%' },
 ];
 
 export const PerformanceMetricsSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
-  const barRefs = useRef<THREE.Mesh[]>([]);
-
-  useFrame((state) => {
-    barRefs.current.forEach((bar) => {
-      if (bar && visible) {
-        bar.scale.y += (bar.userData.target - bar.scale.y) * 0.05;
-      }
-    });
-  });
-
   return (
     <group visible={visible} position={[0, 0, -280]}>
-      {metrics.map((metric, index) => (
-        <DreiBox
-          key={index}
-          ref={(ref) => {
-            if (ref) {
-              barRefs.current[index] = ref;
-              ref.userData.target = metric.target;
-            }
-          }}
-          args={[0.5, metric.target, 0.5]}
-          position={[-3 + index * 2, metric.target / 2, -2]}
-        >
-          <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} />
-        </DreiBox>
-      ))}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

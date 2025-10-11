@@ -2,10 +2,7 @@
  * Hero Section 3D Component
  */
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Text, Sphere } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import React, { useEffect, useState } from 'react';
 import { Html } from '@react-three/drei';
 import { Box, Typography, Button, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
@@ -17,27 +14,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   const navigate = useNavigate();
-  const groupRef = useRef<THREE.Group>(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
-
-  // Floating geometric shapes
-  const shapes = useRef<THREE.Mesh[]>([]);
-
-  useFrame((state) => {
-    if (groupRef.current && visible) {
-      // Rotate group slowly
-      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2;
-
-      // Animate shapes
-      shapes.current.forEach((shape, i) => {
-        if (shape) {
-          shape.position.y += Math.sin(state.clock.elapsedTime + i) * 0.001;
-          shape.rotation.x += 0.01;
-          shape.rotation.y += 0.01;
-        }
-      });
-    }
-  });
 
   useEffect(() => {
     if (visible && !statsAnimated) {
@@ -52,71 +29,7 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   }, [visible, statsAnimated]);
 
   return (
-    <group ref={groupRef} visible={visible} position={[0, 0, 0]}>
-      {/* 3D Logo Text */}
-      <Text
-        position={[0, 2, 0]}
-        fontSize={0.8}
-        color={brandColors.primary}
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.02}
-        outlineColor="#ffffff"
-      >
-        ADVERTISE WITH DREAMERY
-      </Text>
-
-      {/* Floating geometric shapes */}
-      <Sphere
-        ref={(ref) => ref && (shapes.current[0] = ref)}
-        args={[0.3, 16, 16]}
-        position={[-3, 1, -2]}
-      >
-        <meshStandardMaterial
-          color={brandColors.primary}
-          metalness={0.8}
-          roughness={0.2}
-          emissive={brandColors.primary}
-          emissiveIntensity={0.3}
-        />
-      </Sphere>
-
-      <mesh
-        ref={(ref) => ref && (shapes.current[1] = ref)}
-        position={[3, 0.5, -2]}
-      >
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial
-          color="#64b5f6"
-          metalness={0.6}
-          roughness={0.3}
-        />
-      </mesh>
-
-      <mesh
-        ref={(ref) => ref && (shapes.current[2] = ref)}
-        position={[-2, -1, -1]}
-      >
-        <torusGeometry args={[0.3, 0.1, 16, 100]} />
-        <meshStandardMaterial
-          color="#ffd700"
-          metalness={0.7}
-          roughness={0.2}
-        />
-      </mesh>
-
-      <mesh
-        ref={(ref) => ref && (shapes.current[3] = ref)}
-        position={[2, -0.5, -1.5]}
-      >
-        <coneGeometry args={[0.3, 0.6, 32]} />
-        <meshStandardMaterial
-          color="#90caf9"
-          metalness={0.5}
-          roughness={0.4}
-        />
-      </mesh>
-
+    <group visible={visible} position={[0, 0, 0]}>
       {/* HTML Overlay Content */}
       {visible && (
         <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>

@@ -110,23 +110,10 @@ const opportunities: Opportunity[] = [
 ];
 
 export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
-  const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
-  const [hoveredOpportunity, setHoveredOpportunity] = useState<string | null>(null);
+  const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(opportunities[0]);
 
   return (
     <group visible={visible} position={[0, 0, -40]}>
-      {/* 3D Meshes for each opportunity */}
-      {opportunities.map((opportunity) => (
-        <InteractiveMesh
-          key={opportunity.id}
-          position={opportunity.position}
-          geometry={opportunity.geometry}
-          color={opportunity.color}
-          onClick={() => setSelectedOpportunity(opportunity)}
-          onHover={(hovered) => setHoveredOpportunity(hovered ? opportunity.id : null)}
-        />
-      ))}
-
       {/* Title */}
       {visible && (
         <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
@@ -143,109 +130,67 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
         </Html>
       )}
 
-      {/* Hover Tooltip */}
-      {visible && hoveredOpportunity && (
-        <Html
-          position={opportunities.find((o) => o.id === hoveredOpportunity)!.position}
-          center
-          distanceFactor={5}
-          style={{ pointerEvents: 'auto' }}
-        >
-          <Box
-            sx={{
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-              minWidth: '250px',
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-              {opportunities.find((o) => o.id === hoveredOpportunity)!.title}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Click to view details
-            </Typography>
-          </Box>
-        </Html>
-      )}
-
       {/* Selected Opportunity Details */}
-      {visible && selectedOpportunity && (
+      {visible && (
         <Html position={[0, -3, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
-          <Box
-            sx={{
-              width: '700px',
-              backgroundColor: 'rgba(255, 255, 255, 0.98)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '24px',
-              padding: '32px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
-            }}
-          >
+          <Box sx={{ width: '1000px' }}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              {opportunities.map((opportunity) => (
+                <Grid item xs={12} sm={6} md={4} key={opportunity.id}>
                   <Box
                     sx={{
-                      mr: 2,
-                      fontSize: 40,
-                      color: selectedOpportunity.color,
+                      backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '16px',
+                      padding: '24px',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                      height: '100%',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
+                      },
                     }}
                   >
-                    {selectedOpportunity.icon}
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{ mr: 2, fontSize: 36, color: opportunity.color }}>
+                        {opportunity.icon}
+                      </Box>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {opportunity.title}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6 }}>
+                      {opportunity.description}
+                    </Typography>
+                    <Box sx={{ mb: 2 }}>
+                      <Chip
+                        label={opportunity.roi}
+                        size="small"
+                        sx={{
+                          backgroundColor: brandColors.primary,
+                          color: 'white',
+                          mr: 1,
+                          mb: 1,
+                        }}
+                      />
+                      <Chip
+                        label={opportunity.pricing}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          borderColor: brandColors.primary,
+                          color: brandColors.primary,
+                          mb: 1,
+                        }}
+                      />
+                    </Box>
+                    <Typography variant="caption" color="textSecondary">
+                      {opportunity.targetAudience}
+                    </Typography>
                   </Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {selectedOpportunity.title}
-                  </Typography>
-                </Box>
-                <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
-                  {selectedOpportunity.description}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                  Features:
-                </Typography>
-                <List dense>
-                  {selectedOpportunity.features.map((feature, index) => (
-                    <ListItem key={index} sx={{ py: 0.5 }}>
-                      <ListItemText primary={`• ${feature}`} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                  Details:
-                </Typography>
-                <Box sx={{ mb: 2 }}>
-                  <Chip
-                    label={selectedOpportunity.roi}
-                    sx={{
-                      backgroundColor: brandColors.primary,
-                      color: 'white',
-                      mb: 1,
-                      mr: 1,
-                    }}
-                  />
-                  <Chip
-                    label={selectedOpportunity.pricing}
-                    variant="outlined"
-                    sx={{
-                      borderColor: brandColors.primary,
-                      color: brandColors.primary,
-                      mb: 1,
-                    }}
-                  />
-                </Box>
-                <Typography variant="body2" color="textSecondary">
-                  <strong>Target Audience:</strong> {selectedOpportunity.targetAudience}
-                </Typography>
-              </Grid>
+                </Grid>
+              ))}
             </Grid>
           </Box>
         </Html>

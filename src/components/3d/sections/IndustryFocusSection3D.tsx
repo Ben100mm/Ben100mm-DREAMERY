@@ -2,10 +2,8 @@
  * Industry Focus Section 3D Component
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { Html } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 
@@ -17,25 +15,8 @@ const focusAreas = [
 ];
 
 export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
-  const houseRefs = useRef<THREE.Mesh[]>([]);
-
-  useFrame((state) => {
-    houseRefs.current.forEach((house, i) => {
-      if (house && visible) {
-        house.position.y += Math.sin(state.clock.elapsedTime + i) * 0.002;
-        house.rotation.y += 0.005;
-      }
-    });
-  });
-
   return (
     <group visible={visible} position={[0, 0, -240]}>
-      {focusAreas.map((area, index) => (
-        <mesh key={index} ref={(ref) => ref && (houseRefs.current[index] = ref)} position={[-3 + index * 2, 1, -2]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color={area.color} metalness={0.7} roughness={0.3} />
-        </mesh>
-      ))}
 
       {visible && (
       <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>

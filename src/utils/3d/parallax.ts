@@ -4,10 +4,9 @@
  */
 
 import * as THREE from 'three';
-import { createWindingPath } from './scroll';
 
-// Create the same winding path as in scroll.ts for consistency
-function createWindingPath(): THREE.CatmullRomCurve3 {
+// Create the winding path for parallax calculations (same as in scroll.ts)
+function createParallaxWindingPath(): THREE.CatmullRomCurve3 {
   const waypoints = [
     new THREE.Vector3(0, 0, 10),        // Section 0: Hero (start)
     new THREE.Vector3(3, 1, -30),       // Section 1: Curve right, slight up
@@ -26,7 +25,7 @@ function createWindingPath(): THREE.CatmullRomCurve3 {
   return new THREE.CatmullRomCurve3(waypoints, false, 'catmullrom', 0.5);
 }
 
-const windingPath = createWindingPath();
+const parallaxWindingPath = createParallaxWindingPath();
 
 /**
  * Calculate parallax offset for the Milky Way background sphere
@@ -42,10 +41,10 @@ export function calculateMilkyWayParallaxOffset(
 ): THREE.Vector3 {
   // Get current camera position on the winding path
   const t = Math.max(0, Math.min(1, scrollProgress));
-  const currentPosition = windingPath.getPointAt(t);
+  const currentPosition = parallaxWindingPath.getPointAt(t);
   
   // Get the tangent (direction) at current position
-  const tangent = windingPath.getTangentAt(t);
+  const tangent = parallaxWindingPath.getTangentAt(t);
   
   // Calculate the offset by taking the opposite direction
   // Camera movement in X/Y should cause sphere to shift in opposite direction
@@ -64,7 +63,7 @@ export function calculateMilkyWayParallaxOffset(
  */
 export function getCurrentCameraPosition(scrollProgress: number): THREE.Vector3 {
   const t = Math.max(0, Math.min(1, scrollProgress));
-  return windingPath.getPointAt(t);
+  return parallaxWindingPath.getPointAt(t);
 }
 
 /**
@@ -76,7 +75,7 @@ export function getCurrentCameraPosition(scrollProgress: number): THREE.Vector3 
 export function getCameraLookDirection(scrollProgress: number): THREE.Vector3 {
   const t = Math.max(0, Math.min(1, scrollProgress));
   const lookAheadT = Math.min(t + 0.03, 1);
-  return windingPath.getPointAt(lookAheadT);
+  return parallaxWindingPath.getPointAt(lookAheadT);
 }
 
 /**

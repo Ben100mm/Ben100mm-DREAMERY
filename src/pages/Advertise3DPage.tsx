@@ -143,12 +143,6 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
-    // Ensure body can scroll with snap behavior
-    document.body.style.overflow = 'auto';
-    document.documentElement.style.overflow = 'auto';
-    document.documentElement.style.scrollSnapType = 'y mandatory';
-    document.documentElement.style.scrollBehavior = 'smooth';
-    
     // Set loading complete after initial render - reduced timeout for faster load
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -156,11 +150,6 @@ const Advertise3DPage: React.FC = () => {
 
     return () => {
       clearTimeout(timer);
-      // Cleanup: restore original overflow settings
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.scrollSnapType = '';
-      document.documentElement.style.scrollBehavior = '';
     };
   }, []);
 
@@ -180,8 +169,13 @@ const Advertise3DPage: React.FC = () => {
       <Box
         sx={{
           width: '100vw',
-          minHeight: '100vh',
-          position: 'relative',
+          height: '100vh',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          overflow: 'auto',
+          scrollSnapType: 'y mandatory',
+          scrollBehavior: 'smooth',
           backgroundColor: '#000',
         }}
       >
@@ -208,12 +202,15 @@ const Advertise3DPage: React.FC = () => {
           <Box
             key={sectionIndex}
             sx={{
-              height: '70vh', // Reduced from 100vh for closer sections
+              height: '100vh',
               width: '100%',
               position: 'relative',
               zIndex: 1,
-              scrollSnapAlign: 'start',
+              scrollSnapAlign: 'center',
               scrollSnapStop: 'always',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           />
         ))}

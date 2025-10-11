@@ -68,7 +68,7 @@ const SceneContent: React.FC<{
 
       {/* 12 Focused Sections - Only render nearby sections for performance */}
       {/* Section 0: Hero - Introduction */}
-      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} sectionIndex={0} scrollProgress={scrollProgress} />}
+      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} sectionIndex={0} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
       
       {/* Section 1: Opportunities - Advertising opportunities for different users */}
       {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} sectionIndex={1} scrollProgress={scrollProgress} />}
@@ -346,6 +346,162 @@ const Advertise3DPage: React.FC = () => {
           </Canvas>
         </Box>
 
+        {/* Elegant UI Elements - Scroll Indicators and Controls */}
+        <Box
+          sx={{
+            position: 'fixed',
+            left: '24px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          {/* Scroll Indicator */}
+          <Box
+            sx={{
+              width: '40px',
+              height: '60px',
+              border: '2px solid #64b5f6',
+              borderRadius: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(100, 181, 246, 0.1)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderBottom: '8px solid #64b5f6',
+                mb: 1,
+              }}
+            />
+            <Box
+              sx={{
+                width: '2px',
+                height: '8px',
+                backgroundColor: '#64b5f6',
+              }}
+            />
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '8px solid #64b5f6',
+                mt: 1,
+              }}
+            />
+          </Box>
+          
+          {/* Section Progress Indicator */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}
+          >
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((section) => (
+              <Box
+                key={section}
+                sx={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: section === currentSection ? '#ffd700' : 'rgba(255, 255, 255, 0.3)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: '#64b5f6',
+                    transform: 'scale(1.2)',
+                  },
+                }}
+                onClick={() => {
+                  const targetY = section * window.innerHeight;
+                  window.scrollTo({
+                    top: targetY,
+                    behavior: 'smooth',
+                  });
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        {/* Volume Control - Bottom Left */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: '24px',
+            left: '24px',
+            zIndex: 20,
+          }}
+        >
+          <Box
+            sx={{
+              width: '48px',
+              height: '48px',
+              border: '2px solid #ffd700',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 215, 0, 0.1)',
+              backdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            <Box
+              sx={{
+                width: '20px',
+                height: '20px',
+                position: 'relative',
+              }}
+            >
+              {/* Speaker Icon */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: '4px',
+                  top: '6px',
+                  width: 0,
+                  height: 0,
+                  borderTop: '4px solid transparent',
+                  borderBottom: '4px solid transparent',
+                  borderRight: '8px solid #ffd700',
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: '2px',
+                  top: '4px',
+                  width: '6px',
+                  height: '12px',
+                  border: '2px solid #ffd700',
+                  borderLeft: 'none',
+                  borderRadius: '0 3px 3px 0',
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
 
       </Box>
     </ThemeProvider>

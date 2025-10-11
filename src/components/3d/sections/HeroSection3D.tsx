@@ -9,11 +9,17 @@ import { brandColors } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 import { animationPresets } from '../../../utils/3d/animations';
 import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
+import { OuroborosConstellation } from '../../3d/constellations/OuroborosConstellation';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-export const HeroSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
+export const HeroSection3D: React.FC<{ 
+  visible: boolean; 
+  sectionIndex: number; 
+  scrollProgress: number;
+  mousePosition?: { x: number; y: number };
+}> = ({ visible, sectionIndex, scrollProgress, mousePosition = { x: 0, y: 0 } }) => {
   const navigate = useNavigate();
   const [statsAnimated, setStatsAnimated] = useState(false);
 
@@ -34,21 +40,44 @@ export const HeroSection3D: React.FC<{ visible: boolean; sectionIndex: number; s
 
   return (
     <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
-      {/* 3D Title */}
+      {/* 3D Title - Elegant typography matching reference */}
       {visible && (
-        <Text
-          position={[0, 3, 0]}
-          fontSize={0.8}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.05}
-          outlineColor="#1976d2"
-          letterSpacing={0.05}
-        >
-          ADVERTISE WITH DREAMERY
-        </Text>
+        <group position={[0, 3, 0]}>
+          <Text
+            position={[0, 0.5, 0]}
+            fontSize={1.2}
+            color="#ffffff"
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={0.02}
+            outlineColor="#64b5f6"
+            letterSpacing={0.1}
+            font="/fonts/PlayfairDisplay-Regular.ttf"
+          >
+            Continuous
+          </Text>
+          <Text
+            position={[0, -0.5, 0]}
+            fontSize={1.2}
+            color="#ffd700"
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={0.02}
+            outlineColor="#ffa726"
+            letterSpacing={0.1}
+            font="/fonts/PlayfairDisplay-Regular.ttf"
+          >
+            Feedback
+          </Text>
+        </group>
       )}
+
+      {/* Ouroboros Constellation */}
+      <OuroborosConstellation 
+        visible={visible} 
+        scrollProgress={scrollProgress} 
+        mousePosition={mousePosition} 
+      />
 
       {/* HTML Overlay Content */}
       {visible && (
@@ -67,30 +96,56 @@ export const HeroSection3D: React.FC<{ visible: boolean; sectionIndex: number; s
             }}
           >
           <Typography
-            variant="h2"
+            variant="h6"
             sx={{
-              fontWeight: 700,
-              mb: 2,
-              color: brandColors.text.primary,
-              background: `linear-gradient(135deg, ${brandColors.primary} 0%, #64b5f6 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              fontWeight: 400,
+              mb: 3,
+              color: '#ffffff',
+              lineHeight: 1.6,
+              fontSize: '1.1rem',
+              fontFamily: '"Inter", sans-serif',
             }}
           >
-            Reach Your Perfect Audience
+            Timely, and clear feedback based on facts and examples is an act of kindness.
           </Typography>
 
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 4,
-              color: brandColors.text.secondary,
-              lineHeight: 1.6,
-            }}
-          >
-            Connect with qualified real estate professionals, investors, and
-            homebuyers through targeted advertising on the Dreamery platform
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+            <Box
+              sx={{
+                width: 16,
+                height: 16,
+                border: '1px solid #ffd700',
+                borderRadius: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '4px solid transparent',
+                  borderRight: '4px solid transparent',
+                  borderBottom: '6px solid #ffd700',
+                }}
+              />
+            </Box>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#ffffff',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontFamily: '"Inter", sans-serif',
+              }}
+            >
+              BEING STUCK IS BORING
+            </Typography>
+          </Box>
 
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 4 }}>
             <Button

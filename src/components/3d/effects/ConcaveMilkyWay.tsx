@@ -24,6 +24,12 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
+  // Debug component mounting
+  React.useEffect(() => {
+    console.log('ConcaveMilkyWay component mounted');
+    return () => console.log('ConcaveMilkyWay component unmounted');
+  }, []);
+  
   // Load the Milky Way texture with error handling
   const milkyWayTexture = useTexture('/milky-way-background.jpg');
   
@@ -55,6 +61,11 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   }, []);
   
   useFrame((state, delta) => {
+    // Debug logging every 60 frames
+    if (Math.floor(state.clock.elapsedTime) % 1 === 0) {
+      console.log('useFrame called - sphere should be rendering');
+    }
+    
     if (meshRef.current) {
       // For debugging: position sphere at origin first
       meshRef.current.position.set(0, 0, 0);
@@ -67,14 +78,26 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       if (scrollProgress > 0.1 && scrollProgress < 0.2) {
         console.log('Sphere at origin for debugging');
       }
+    } else {
+      console.log('meshRef.current is null - sphere not created');
     }
   });
   
   return (
-    <mesh
-      ref={meshRef}
-      geometry={sphereGeometry}
-      material={meshMaterial}
-    />
+    <>
+      {/* Test with a simple box first */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[10, 10, 10]} />
+        <meshBasicMaterial color="#00ff00" />
+      </mesh>
+      
+      {/* Original sphere */}
+      <mesh
+        ref={meshRef}
+        geometry={sphereGeometry}
+        material={meshMaterial}
+        position={[0, 0, -20]}
+      />
+    </>
   );
 };

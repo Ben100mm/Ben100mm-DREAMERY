@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Html } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 
 const analyticsFeatures = [
@@ -20,19 +20,25 @@ const analyticsFeatures = [
 export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <group visible={visible} position={[0, 0, -440]}>
-
       {visible && (
-      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-        <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-          Analytics & Reporting
-        </Typography>
-      </Html>
+        <Text
+          position={[0, 3, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          ANALYTICS & REPORTING
+        </Text>
       )}
 
       {visible && (
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
-          <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
+          <Card sx={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
                 Comprehensive Analytics Suite

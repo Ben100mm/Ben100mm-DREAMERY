@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { Html } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import { Box, Typography, TextField, Button, Grid, Card, CardContent } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import EmailIcon from '@mui/icons-material/Email';
@@ -16,11 +16,18 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
   return (
     <group visible={visible} position={[0, 0, -200]}>
       {visible && (
-      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-        <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-          Get In Touch
-        </Typography>
-      </Html>
+        <Text
+          position={[0, 3, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          GET IN TOUCH
+        </Text>
       )}
 
       {visible && (
@@ -28,7 +35,7 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px', height: '100%' }}>
+              <Card sx={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)', height: '100%' }}>
                 <CardContent sx={{ p: 4 }}>
                   <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Send Us A Message</Typography>
                   <TextField fullWidth label="Name" variant="outlined" sx={{ mb: 2 }} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
@@ -48,7 +55,7 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
                   { icon: <ChatIcon sx={{ fontSize: 40, color: brandColors.primary }} />, title: 'Live Chat', value: 'Available 24/7' },
                 ].map((item, index) => (
                   <Grid item xs={12} key={index}>
-                    <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
+                    <Card sx={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
                       <CardContent sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
                         <Box sx={{ mr: 2 }}>{item.icon}</Box>
                         <Box>

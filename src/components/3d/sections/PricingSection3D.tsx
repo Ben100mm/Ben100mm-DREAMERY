@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { Html } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import {
   Box,
   Typography,
@@ -92,21 +92,20 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
 
   return (
     <group visible={visible} position={[0, 0, -80]}>
-      {/* HTML Overlay */}
+      {/* 3D Title */}
       {visible && (
-        <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-          <Typography
-            variant="h2"
-            sx={{
-              color: 'white',
-              fontWeight: 700,
-              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-              mb: 2,
-            }}
-          >
-            Flexible Pricing Plans
-          </Typography>
-        </Html>
+        <Text
+          position={[0, 3, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          FLEXIBLE PRICING PLANS
+        </Text>
       )}
 
       {visible && (
@@ -119,12 +118,15 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
               justifyContent: 'center',
               alignItems: 'center',
               mb: 4,
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '12px',
               padding: '16px',
               width: 'fit-content',
               margin: '0 auto',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
             }}
           >
             <Typography sx={{ mr: 2, fontWeight: 600 }}>Monthly</Typography>
@@ -161,21 +163,22 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
                   <Card
                     sx={{
                       height: '100%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      backdropFilter: 'blur(20px)',
-                      borderRadius: '16px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(20px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                       border: tier.recommended
                         ? `3px solid ${brandColors.primary}`
-                        : '1px solid rgba(0,0,0,0.1)',
+                        : '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '16px',
                       boxShadow: tier.recommended
-                        ? '0 12px 40px rgba(25, 118, 210, 0.3)'
-                        : '0 4px 12px rgba(0,0,0,0.1)',
+                        ? '0 12px 48px rgba(25, 118, 210, 0.5)'
+                        : '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
                       position: 'relative',
                       transform: tier.recommended ? 'scale(1.05)' : 'scale(1)',
                       transition: 'all 0.3s ease',
                       '&:hover': {
                         transform: 'scale(1.05)',
-                        boxShadow: '0 16px 48px rgba(0,0,0,0.2)',
+                        boxShadow: '0 16px 56px rgba(31, 38, 135, 0.6)',
                       },
                     }}
                   >
@@ -286,10 +289,13 @@ export const PricingSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
             sx={{
               mt: 4,
               textAlign: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '12px',
               padding: '16px',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
             }}
           >
             <Typography variant="body2" color="textSecondary">

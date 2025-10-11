@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Html } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
 
 const markets = [
@@ -18,13 +18,19 @@ const markets = [
 export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <group visible={visible} position={[0, 0, -400]}>
-
       {visible && (
-      <Html position={[0, 3, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-        <Typography variant="h2" sx={{ color: 'white', fontWeight: 700, textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-          Geographic Targeting
-        </Typography>
-      </Html>
+        <Text
+          position={[0, 3, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          GEOGRAPHIC TARGETING
+        </Text>
       )}
 
       {visible && (
@@ -33,7 +39,7 @@ export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ v
           <Grid container spacing={2}>
             {markets.map((market, index) => (
               <Grid item xs={6} sm={4} key={index}>
-                <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
+                <Card sx={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
                   <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>{market.name}</Typography>
                     <Chip label={market.state} size="small" sx={{ mb: 1 }} />

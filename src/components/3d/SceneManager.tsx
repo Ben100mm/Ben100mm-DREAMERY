@@ -9,9 +9,10 @@ import { ScrollController } from '../../utils/3d/scroll';
 
 interface SceneManagerProps {
   onSectionChange?: (sectionIndex: number) => void;
+  onScrollUpdate?: (progress: number, velocity: number) => void;
 }
 
-export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange }) => {
+export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange, onScrollUpdate }) => {
   const { camera } = useThree();
   const scrollControllerRef = useRef<ScrollController>();
   const previousSectionRef = useRef<number>(0);
@@ -28,6 +29,11 @@ export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange }) =
     if (scrollControllerRef.current) {
       // Update camera based on scroll
       scrollControllerRef.current.updateCamera(camera, delta);
+
+      // Get scroll data for effects
+      const scrollProgress = scrollControllerRef.current.getScrollProgress();
+      const scrollVelocity = scrollControllerRef.current.getScrollVelocity();
+      onScrollUpdate?.(scrollProgress, scrollVelocity);
 
       // Check if section changed
       const currentSection = scrollControllerRef.current.getCurrentSection();

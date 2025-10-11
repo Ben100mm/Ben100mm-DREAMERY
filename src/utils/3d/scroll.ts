@@ -1,5 +1,5 @@
 /**
- * Scroll-based Camera Control System
+ * Scroll-based Camera Control System with Winding Path
  */
 
 import * as THREE from 'three';
@@ -13,6 +13,28 @@ export interface Section {
 
 // Each section is 40 units apart in Z-space, creating depth
 const SECTION_SPACING = 40;
+
+// Create a winding path through space for cinematic effect
+function createWindingPath(): THREE.CatmullRomCurve3 {
+  const waypoints = [
+    new THREE.Vector3(0, 0, 10),        // Section 0: Hero (start)
+    new THREE.Vector3(3, 1, -30),       // Section 1: Curve right, slight up
+    new THREE.Vector3(-2, 2, -70),      // Section 2: Curve left, up
+    new THREE.Vector3(4, 0, -110),      // Section 3: Curve right, level
+    new THREE.Vector3(-3, -1, -150),    // Section 4: Curve left, slight down
+    new THREE.Vector3(0, 1, -190),      // Section 5: Center, up
+    new THREE.Vector3(5, 2, -230),      // Section 6: Curve right, up
+    new THREE.Vector3(-4, 0, -270),     // Section 7: Curve left, level
+    new THREE.Vector3(2, -2, -310),     // Section 8: Curve right, down
+    new THREE.Vector3(-1, 1, -350),     // Section 9: Curve left, up
+    new THREE.Vector3(3, -1, -390),     // Section 10: Curve right, down
+    new THREE.Vector3(0, 0, -430),      // Section 11: Center, level (end)
+  ];
+  
+  return new THREE.CatmullRomCurve3(waypoints, false, 'catmullrom', 0.5);
+}
+
+const windingPath = createWindingPath();
 
 export const sections: Section[] = [
   {
@@ -98,6 +120,8 @@ export class ScrollController {
   private currentSection = 0;
   private targetSection = 0;
   private scrollProgress = 0;
+  private previousScrollY = 0;
+  private scrollVelocity = 0;
   private boundHandleScroll: () => void;
 
   constructor() {
@@ -114,6 +138,10 @@ export class ScrollController {
     const scrollY = window.scrollY;
     this.scrollProgress = scrollY / scrollHeight;
     
+    // Calculate scroll velocity for effects
+    this.scrollVelocity = (scrollY - this.previousScrollY) / 16; // Normalize to ~60fps
+    this.previousScrollY = scrollY;
+    
     // Calculate which section we're in
     const sectionProgress = this.scrollProgress * (sections.length - 1);
     this.targetSection = Math.min(
@@ -125,34 +153,25 @@ export class ScrollController {
   public updateCamera(
     camera: THREE.Camera,
     delta: number,
-    lerpFactor = 0.05
+    lerpFactor = 0.1
   ) {
-    if (this.targetSection !== this.currentSection) {
-      this.currentSection += (this.targetSection - this.currentSection) * lerpFactor;
-    }
-
-    const sectionIndex = Math.floor(this.currentSection);
-    const nextSectionIndex = Math.min(sectionIndex + 1, sections.length - 1);
-    const progress = this.currentSection - sectionIndex;
-
-    const currentSectionData = sections[sectionIndex];
-    const nextSectionData = sections[nextSectionIndex];
-
-    // Lerp camera position
-    camera.position.lerpVectors(
-      currentSectionData.cameraPosition,
-      nextSectionData.cameraPosition,
-      progress
-    );
-
-    // Lerp camera target (lookAt)
-    const targetPosition = new THREE.Vector3();
-    targetPosition.lerpVectors(
-      currentSectionData.cameraTarget,
-      nextSectionData.cameraTarget,
-      progress
-    );
-    camera.lookAt(targetPosition);
+    // Get position along the winding curve
+    const t = Math.max(0, Math.min(1, this.scrollProgress));
+    const targetPosition = windingPath.getPointAt(t);
+    
+    // Get tangent for look direction
+    const lookAheadT = Math.min(t + 0.03, 1);
+    const lookAtPoint = windingPath.getPointAt(lookAheadT);
+    
+    // Smooth camera movement
+    camera.position.lerp(targetPosition, lerpFactor);
+    
+    // Smooth look-at
+    const currentLookAt = new THREE.Vector3(0, 0, -1)
+      .applyQuaternion(camera.quaternion)
+      .add(camera.position);
+    currentLookAt.lerp(lookAtPoint, lerpFactor);
+    camera.lookAt(currentLookAt);
   }
 
   public getCurrentSection(): number {
@@ -161,6 +180,10 @@ export class ScrollController {
 
   public getScrollProgress(): number {
     return this.scrollProgress;
+  }
+
+  public getScrollVelocity(): number {
+    return this.scrollVelocity;
   }
 
   public dispose() {

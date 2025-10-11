@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Html } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Button, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,22 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
 
   return (
     <group visible={visible} position={[0, 0, 0]}>
+      {/* 3D Title */}
+      {visible && (
+        <Text
+          position={[0, 3, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          ADVERTISE WITH DREAMERY
+        </Text>
+      )}
+
       {/* HTML Overlay Content */}
       {visible && (
         <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
@@ -37,11 +53,13 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
             sx={{
               width: '800px',
               textAlign: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '24px',
               padding: '48px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
             }}
           >
           <Typography

@@ -8,13 +8,17 @@
 
 import React, { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, Stars } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import { Box, CircularProgress } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../theme/theme';
 
 // Core components
 import { SceneManager } from '../components/3d/SceneManager';
+
+// Visual effects
+import { MilkyWayGalaxy } from '../components/3d/effects/MilkyWayGalaxy';
+import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
 
 // Section components - 12 focused sections
 import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
@@ -36,8 +40,10 @@ import { AnalyticsReportingSection3D } from '../components/3d/sections/Analytics
  */
 const SceneContent: React.FC<{ 
   currentSection: number; 
-  onSectionChange: (section: number) => void; 
-}> = ({ currentSection, onSectionChange }) => {
+  onSectionChange: (section: number) => void;
+  onScrollUpdate: (progress: number, velocity: number) => void;
+  scrollVelocity: number;
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
@@ -50,19 +56,15 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Stars */}
-      <Stars
-        radius={100}
-        depth={50}
-        count={5000}
-        factor={4}
-        saturation={0}
-        fade
-        speed={1}
-      />
+      {/* Background Effects */}
+      <MilkyWayGalaxy />
+      <WhizzingStars scrollVelocity={scrollVelocity} />
 
       {/* Scene Manager - handles camera transitions */}
-      <SceneManager onSectionChange={onSectionChange} />
+      <SceneManager 
+        onSectionChange={onSectionChange}
+        onScrollUpdate={onScrollUpdate}
+      />
 
       {/* 12 Focused Sections - Only render nearby sections for performance */}
       {/* Section 0: Hero - Introduction */}
@@ -136,6 +138,7 @@ const LoadingFallback: React.FC = () => (
  */
 const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
+  const [scrollVelocity, setScrollVelocity] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // Create scroll container with sections
@@ -151,6 +154,11 @@ const Advertise3DPage: React.FC = () => {
   // Section change handler (called by SceneManager)
   const handleSectionChange = (section: number) => {
     setCurrentSection(section);
+  };
+
+  // Scroll update handler (called by SceneManager)
+  const handleScrollUpdate = (progress: number, velocity: number) => {
+    setScrollVelocity(velocity);
   };
 
   return (
@@ -201,6 +209,8 @@ const Advertise3DPage: React.FC = () => {
               <SceneContent 
                 currentSection={currentSection} 
                 onSectionChange={handleSectionChange}
+                onScrollUpdate={handleScrollUpdate}
+                scrollVelocity={scrollVelocity}
               />
             </Suspense>
           </Canvas>

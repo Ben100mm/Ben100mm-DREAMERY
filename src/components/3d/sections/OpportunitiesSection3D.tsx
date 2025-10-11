@@ -3,8 +3,8 @@
  */
 
 import React, { useState } from 'react';
-import { Html } from '@react-three/drei';
-import { Box, Typography, Grid, List, ListItem, ListItemText, Chip } from '@mui/material';
+import { Html, Text } from '@react-three/drei';
+import { Box, Typography, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import { InteractiveMesh } from '../shared/InteractiveMesh';
 import PropertyIcon from '@mui/icons-material/Home';
@@ -114,20 +114,20 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
 
   return (
     <group visible={visible} position={[0, 0, -40]}>
-      {/* Title */}
+      {/* 3D Title */}
       {visible && (
-        <Html position={[0, 4, 0]} center distanceFactor={10} style={{ pointerEvents: 'auto' }}>
-          <Typography
-            variant="h2"
-            sx={{
-              color: 'white',
-              fontWeight: 700,
-              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-            }}
-          >
-            Advertising Opportunities
-          </Typography>
-        </Html>
+        <Text
+          position={[0, 4, 0]}
+          fontSize={0.8}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05}
+          outlineColor="#1976d2"
+          letterSpacing={0.05}
+        >
+          ADVERTISING OPPORTUNITIES
+        </Text>
       )}
 
       {/* Selected Opportunity Details */}
@@ -139,16 +139,18 @@ export const OpportunitiesSection3D: React.FC<{ visible: boolean }> = ({ visible
                 <Grid item xs={12} sm={6} md={4} key={opportunity.id}>
                   <Box
                     sx={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                      backdropFilter: 'blur(20px)',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(20px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
                       borderRadius: '16px',
                       padding: '24px',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
                       height: '100%',
                       transition: 'all 0.3s ease',
                       '&:hover': {
                         transform: 'translateY(-4px)',
-                        boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
+                        boxShadow: '0 12px 48px rgba(31, 38, 135, 0.5)',
                       },
                     }}
                   >

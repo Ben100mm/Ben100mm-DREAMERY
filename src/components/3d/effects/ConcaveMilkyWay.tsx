@@ -27,32 +27,30 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   // Load the Milky Way texture
   const milkyWayTexture = useTexture('/milky-way-background.jpg');
   
-  // Create normal sphere geometry for testing
+  // Create small sphere geometry for testing
   const sphereGeometry = useMemo(() => {
-    const geometry = new THREE.SphereGeometry(100, 32, 32);
-    // Remove inversion for testing
+    const geometry = new THREE.SphereGeometry(5, 16, 16);
+    // Small sphere for testing
     return geometry;
   }, []);
   
-  // Create mesh material with Milky Way texture
+  // Create mesh material with solid color for testing
   const meshMaterial = useMemo(() => {
     const material = new THREE.MeshBasicMaterial({
-      map: milkyWayTexture,
-      side: THREE.FrontSide, // Test with front faces first
-      transparent: true,
-      opacity: 0.8,
+      color: '#ff0000', // Bright red for testing
+      side: THREE.FrontSide,
+      transparent: false,
     });
     return material;
-  }, [milkyWayTexture]);
+  }, []);
   
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // For testing: position sphere behind camera
-      meshRef.current.position.set(0, 0, -50);
+      // For testing: position small sphere in front of camera
+      meshRef.current.position.set(0, 0, 5);
       
-      // Add subtle rotation based on scroll for dynamic effect
-      meshRef.current.rotation.y = scrollProgress * Math.PI * 0.1;
-      meshRef.current.rotation.x = scrollVelocity * 0.01;
+      // Add rotation for visibility
+      meshRef.current.rotation.y += delta;
       
       // Debug logging every 60 frames
       if (Math.floor(state.clock.elapsedTime) % 1 === 0) {

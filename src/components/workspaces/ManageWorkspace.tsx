@@ -38,6 +38,8 @@ import ManageCalendar from '../manage/ManageCalendar';
 import ManageListings from '../manage/ManageListings';
 import ManageMessagesEnhanced from '../manage/ManageMessagesEnhanced';
 import ManageEarnings from '../manage/ManageEarnings';
+import ManageAssistant from '../manage/ai-manage-assistant/ManageAssistant';
+import ManageAssistantIcon from '../manage/ai-manage-assistant/ManageAssistantIcon';
 import {
   Dashboard as DashboardIcon,
   CalendarToday as CalendarIcon,
@@ -406,6 +408,12 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
           title: 'Manage Your Account',
           subtitle: 'Account settings, preferences, and profile management',
           icon: <AccountIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
+        };
+      case 'assistant':
+        return {
+          title: 'Manage Assistant',
+          subtitle: 'AI-powered assistance for property management operations',
+          icon: <ManageAssistantIcon size={28} variant="icon" />,
         };
       default:
         return {
@@ -4641,6 +4649,8 @@ const ManageWorkspace: React.FC<ManageWorkspaceProps> = ({ activeTab }) => {
             )}
           </Box>
         );
+      case 'assistant':
+        return <ManageAssistant />;
       case 'account':
         return (
           <Box>

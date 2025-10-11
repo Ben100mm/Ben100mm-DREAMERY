@@ -219,6 +219,7 @@ const WorkspacesPersonalPage: React.FC = () => {
           { value: 'integrations', label: 'Integrations' },
           { value: 'insurance', label: 'Insurance' },
           { value: 'account', label: 'Manage Your Account' },
+          { value: 'assistant', label: 'Manage Assistant' },
         ];
       case 'invest':
         return [

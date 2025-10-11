@@ -13,6 +13,7 @@ import {
   Security as InsuranceIcon,
   AccountCircle as AccountIcon,
 } from '@mui/icons-material';
+import ManageAssistantIcon from '../../components/manage/ai-manage-assistant/ManageAssistantIcon';
 
 import { WorkspaceItem, WorkspaceConfig } from './types';
 import { brandColors } from "../../theme";
@@ -90,6 +91,11 @@ export const manageWorkspace: WorkspaceConfig = {
       id: 'account', 
       label: 'Manage Your Account', 
       icon: <AccountIcon />,
+    },
+    { 
+      id: 'assistant', 
+      label: 'Manage Assistant', 
+      icon: <ManageAssistantIcon size={20} variant="icon" />,
     },
   ],
 };

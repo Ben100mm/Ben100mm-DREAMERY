@@ -91,6 +91,7 @@ const manageWorkspaceConfig: WorkspaceConfig = {
     { id: 'integrations', label: 'Integrations' },
     { id: 'insurance', label: 'Insurance' },
     { id: 'account', label: 'Manage Your Account' },
+    { id: 'assistant', label: 'Manage Assistant' },
   ],
 };
 

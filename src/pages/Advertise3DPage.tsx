@@ -3,7 +3,7 @@
  * Proprietary and confidential.
  * 
  * Immersive 3D Advertising Page
- * Full-page 3D canvas with 12 comprehensive advertising sections
+ * Full-page 3D canvas with 12 comprehensive advertising sections and constant Milky Way backdrop
  */
 
 import React, { Suspense, useState, useEffect, useRef } from 'react';
@@ -32,7 +32,7 @@ import { IntegrationSection3D } from '../components/3d/sections/IntegrationSecti
 import { CampaignManagementSection3D } from '../components/3d/sections/CampaignManagementSection3D';
 import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
 import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
-import { MilkyWaySection3D } from '../components/3d/sections/MilkyWaySection3D';
+// MilkyWaySection3D removed - using constant backdrop instead
 import { MilkyWayPanorama3D, useMilkyWayControls } from '../components/3d/effects/MilkyWayPanorama3D';
 import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
 import { MilkyWayControls } from '../components/3d/controls/MilkyWayControls';
@@ -130,8 +130,8 @@ const SceneContent: React.FC<{
       {/* Section 11: Analytics & Reporting - Analytics features */}
       {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} sectionIndex={11} scrollProgress={scrollProgress} />}
       
-      {/* Section 12: Final section - Clean content without background */}
-      {Math.abs(currentSection - 12) <= 1 && <MilkyWaySection3D visible={currentSection === 12} sectionIndex={12} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
+      {/* Section 12: Final section - Clean content (Milky Way is already constant background) */}
+      {/* No additional content needed - Milky Way panorama is the constant backdrop */}
     </>
   );
 };
@@ -174,11 +174,9 @@ const Advertise3DPage: React.FC = () => {
   const { controls, updateControl, resetControls } = useMilkyWayControls();
   
   // Debug logging
-  console.log('Current section:', currentSection, 'Total sections: 13 (0-12)');
+  console.log('Current section:', currentSection, 'Total sections: 12 (0-11)');
   console.log('Scroll velocity:', scrollVelocity, 'Stars should whizz when > 0');
-  if (currentSection === 12) {
-    console.log('🎯 MILKY WAY SECTION ACTIVE - Section 12');
-  }
+  console.log('🌌 Milky Way panorama is constant backdrop across all sections');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
@@ -228,7 +226,7 @@ const Advertise3DPage: React.FC = () => {
       const scrollingDown = e.deltaY > 0;
       const direction = scrollingDown ? 1 : -1;
       const current = currentSectionRef.current;
-      const nextSection = Math.max(0, Math.min(12, current + direction));
+      const nextSection = Math.max(0, Math.min(11, current + direction));
       
       // Only proceed if we're moving to a different section
       if (nextSection !== current) {
@@ -342,8 +340,8 @@ const Advertise3DPage: React.FC = () => {
             zIndex: 0,
           }}
         />
-        {/* Scrollable sections - 13 sections with programmatic scroll control */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((sectionIndex) => (
+        {/* Scrollable sections - 12 sections with programmatic scroll control */}
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
           <Box
             key={sectionIndex}
             id={`section-${sectionIndex}`}
@@ -453,7 +451,7 @@ const Advertise3DPage: React.FC = () => {
               gap: 1,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((section) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((section) => (
               <Box
                 key={section}
                 sx={{

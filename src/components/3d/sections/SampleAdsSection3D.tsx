@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Card, CardContent, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
 const adSamples = [
   { id: 'banner', type: 'Banner Ad', format: '728x90', ctr: '2.5%' },
@@ -13,12 +14,15 @@ const adSamples = [
   { id: 'native', type: 'Native Ad', format: 'Responsive', ctr: '4.1%' },
 ];
 
-export const SampleAdsSection3D: React.FC<{ visible: boolean }> = React.memo(({ visible }) => {
+export const SampleAdsSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = React.memo(({ visible, sectionIndex, scrollProgress }) => {
   const [selectedFormat, setSelectedFormat] = useState('all');
   const [selectedAd, setSelectedAd] = useState<typeof adSamples[0] | null>(adSamples[0]);
 
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -120]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

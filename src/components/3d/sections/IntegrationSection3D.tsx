@@ -5,6 +5,7 @@
 import React from 'react';
 import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
 const integrations = [
   { name: 'Salesforce', category: 'CRM' },
@@ -15,9 +16,12 @@ const integrations = [
   { name: 'Mailchimp', category: 'Email' },
 ];
 
-export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const IntegrationSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -320]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

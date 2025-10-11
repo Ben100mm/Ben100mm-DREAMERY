@@ -76,31 +76,31 @@ const SceneContent: React.FC<{
       {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} sectionIndex={2} scrollProgress={scrollProgress} />}
       
       {/* Section 3: Sample Ads - Ad examples */}
-      {Math.abs(currentSection - 3) <= 1 && <SampleAdsSection3D visible={currentSection === 3} />}
+      {Math.abs(currentSection - 3) <= 1 && <SampleAdsSection3D visible={currentSection === 3} sectionIndex={3} scrollProgress={scrollProgress} />}
       
       {/* Section 4: Competitive Advantages - Why choose this platform */}
-      {Math.abs(currentSection - 4) <= 1 && <CompetitiveAdvantagesSection3D visible={currentSection === 4} />}
+      {Math.abs(currentSection - 4) <= 1 && <CompetitiveAdvantagesSection3D visible={currentSection === 4} sectionIndex={4} scrollProgress={scrollProgress} />}
       
       {/* Section 5: Contact - Contact information */}
-      {Math.abs(currentSection - 5) <= 1 && <ContactSection3D visible={currentSection === 5} />}
+      {Math.abs(currentSection - 5) <= 1 && <ContactSection3D visible={currentSection === 5} sectionIndex={5} scrollProgress={scrollProgress} />}
       
       {/* Section 6: Industry Focus - Industry-specific information */}
-      {Math.abs(currentSection - 6) <= 1 && <IndustryFocusSection3D visible={currentSection === 6} />}
+      {Math.abs(currentSection - 6) <= 1 && <IndustryFocusSection3D visible={currentSection === 6} sectionIndex={6} scrollProgress={scrollProgress} />}
       
       {/* Section 7: Performance Metrics - Performance data */}
-      {Math.abs(currentSection - 7) <= 1 && <PerformanceMetricsSection3D visible={currentSection === 7} />}
+      {Math.abs(currentSection - 7) <= 1 && <PerformanceMetricsSection3D visible={currentSection === 7} sectionIndex={7} scrollProgress={scrollProgress} />}
       
       {/* Section 8: Integration - Integration capabilities */}
-      {Math.abs(currentSection - 8) <= 1 && <IntegrationSection3D visible={currentSection === 8} />}
+      {Math.abs(currentSection - 8) <= 1 && <IntegrationSection3D visible={currentSection === 8} sectionIndex={8} scrollProgress={scrollProgress} />}
       
       {/* Section 9: Campaign Management - Campaign tools */}
-      {Math.abs(currentSection - 9) <= 1 && <CampaignManagementSection3D visible={currentSection === 9} />}
+      {Math.abs(currentSection - 9) <= 1 && <CampaignManagementSection3D visible={currentSection === 9} sectionIndex={9} scrollProgress={scrollProgress} />}
       
       {/* Section 10: Geographic Targeting - Location targeting */}
-      {Math.abs(currentSection - 10) <= 1 && <GeographicTargetingSection3D visible={currentSection === 10} />}
+      {Math.abs(currentSection - 10) <= 1 && <GeographicTargetingSection3D visible={currentSection === 10} sectionIndex={10} scrollProgress={scrollProgress} />}
       
       {/* Section 11: Analytics & Reporting - Analytics features */}
-      {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} />}
+      {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} sectionIndex={11} scrollProgress={scrollProgress} />}
     </>
   );
 };

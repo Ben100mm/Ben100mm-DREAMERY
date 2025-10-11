@@ -6,6 +6,7 @@ import React from 'react';
 import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
 const focusAreas = [
   { title: 'Residential Real Estate', description: 'Primary home buyers and sellers', color: '#1976d2' },
@@ -14,9 +15,12 @@ const focusAreas = [
   { title: 'Luxury Market', description: 'High-end properties $1M+', color: '#42a5f5' },
 ];
 
-export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const IndustryFocusSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -240]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

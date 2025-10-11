@@ -109,7 +109,7 @@ const AdvertisePage: React.FC = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Simple Space Background */}
+      {/* Space Background */}
       <div
         style={{
           position: 'fixed',
@@ -118,17 +118,58 @@ const AdvertisePage: React.FC = () => {
           width: '100%',
           height: '100%',
           zIndex: -1,
-          backgroundColor: '#1a1a2e',
           background: `
-            radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(0, 150, 255, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.3) 0%, transparent 70%),
-            #1a1a2e
+            linear-gradient(45deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7209b7 100%)
           `,
         }}
       />
       
-      {/* Stars */}
+      {/* Nebula 1 - Pink */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          background: `
+            radial-gradient(ellipse 800px 600px at 20% 30%, rgba(255, 20, 147, 0.6) 0%, transparent 70%)
+          `,
+        }}
+      />
+      
+      {/* Nebula 2 - Blue */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          background: `
+            radial-gradient(ellipse 600px 400px at 80% 70%, rgba(0, 150, 255, 0.6) 0%, transparent 70%)
+          `,
+        }}
+      />
+      
+      {/* Nebula 3 - Purple */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          background: `
+            radial-gradient(ellipse 1000px 800px at 50% 50%, rgba(138, 43, 226, 0.4) 0%, transparent 80%)
+          `,
+        }}
+      />
+      
+      {/* Whizzing Stars */}
       <div
         style={{
           position: 'fixed',
@@ -138,15 +179,19 @@ const AdvertisePage: React.FC = () => {
           height: '100%',
           zIndex: -1,
           backgroundImage: `
-            radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-            radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-            radial-gradient(2px 2px at 160px 30px, #fff, transparent)
+            radial-gradient(1px 1px at 25% 25%, #fff, transparent),
+            radial-gradient(1px 1px at 75% 25%, #fff, transparent),
+            radial-gradient(1px 1px at 25% 75%, #fff, transparent),
+            radial-gradient(1px 1px at 75% 75%, #fff, transparent),
+            radial-gradient(2px 2px at 50% 50%, #fff, transparent),
+            radial-gradient(1px 1px at 10% 50%, #fff, transparent),
+            radial-gradient(1px 1px at 90% 50%, #fff, transparent),
+            radial-gradient(1px 1px at 50% 10%, #fff, transparent),
+            radial-gradient(1px 1px at 50% 90%, #fff, transparent)
           `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '200px 100px',
-          opacity: 0.8,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% 100%',
+          opacity: 0.9,
         }}
       />
 
@@ -156,7 +201,7 @@ const AdvertisePage: React.FC = () => {
           position: 'relative',
           zIndex: 10,
           minHeight: '100vh',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
         }}
       >
         {/* 3D Experience Banner */}

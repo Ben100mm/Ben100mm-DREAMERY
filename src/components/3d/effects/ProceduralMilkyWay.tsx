@@ -82,45 +82,57 @@ export const ProceduralMilkyWay: React.FC<ProceduralMilkyWayProps> = ({
       vec2 spherical = vec2(atan(pos.z, pos.x), acos(pos.y));
       vec2 st = spherical / 6.28318 + 0.5;
       
-      // Base deep space colors
-      vec3 deepSpace = vec3(0.02, 0.01, 0.08); // Very dark blue
-      vec3 nebulaBlue = vec3(0.15, 0.08, 0.25); // Deep purple-blue
-      vec3 nebulaPurple = vec3(0.25, 0.12, 0.35); // Rich purple
-      vec3 starWhite = vec3(0.95, 0.95, 1.0); // Bright white
+      // Base deep space colors - brighter for visibility
+      vec3 deepSpace = vec3(0.05, 0.03, 0.15); // Darker blue but visible
+      vec3 nebulaBlue = vec3(0.3, 0.15, 0.4); // Brighter purple-blue
+      vec3 nebulaPurple = vec3(0.4, 0.2, 0.5); // Brighter purple
+      vec3 starWhite = vec3(1.0, 1.0, 1.0); // Pure white
       
-      // Generate nebula clouds using fractal noise
-      float cloudNoise = fbm(st * 2.0 + uTime * 0.1);
-      float cloudMask = smoothstep(0.3, 0.8, cloudNoise);
+      // Generate nebula clouds using fractal noise - more visible
+      float cloudNoise = fbm(st * 1.5 + uTime * 0.1);
+      float cloudMask = smoothstep(0.2, 0.6, cloudNoise);
       
-      // Create nebula streaks
-      float streakNoise = noise(st * 8.0 + vec2(uTime * 0.05, 0.0));
-      float streaks = smoothstep(0.4, 0.7, streakNoise) * 0.3;
+      // Create nebula streaks - more prominent
+      float streakNoise = noise(st * 6.0 + vec2(uTime * 0.05, 0.0));
+      float streaks = smoothstep(0.3, 0.6, streakNoise) * 0.5;
       
-      // Generate star field
-      float starNoise = noise(st * 200.0);
-      float stars = step(0.998, starNoise);
+      // Generate star field - lower threshold for more stars
+      float starNoise = noise(st * 150.0);
+      float stars = step(0.995, starNoise);
       
-      // Add smaller, dimmer stars
-      float starNoise2 = noise(st * 150.0 + 100.0);
-      float smallStars = step(0.995, starNoise2) * 0.6;
+      // Add smaller, dimmer stars - more visible
+      float starNoise2 = noise(st * 100.0 + 50.0);
+      float smallStars = step(0.99, starNoise2) * 0.8;
       
       // Mix nebula colors
       vec3 nebulaColor = mix(nebulaBlue, nebulaPurple, cloudMask + streaks);
       
-      // Combine all elements
-      vec3 finalColor = mix(deepSpace, nebulaColor, cloudMask + streaks);
+      // Add more nebula layers for richness
+      float nebulaLayer2 = fbm(st * 3.0 + uTime * 0.05);
+      float nebulaLayer2Mask = smoothstep(0.1, 0.4, nebulaLayer2) * 0.3;
+      
+      // Combine all elements - more intense
+      vec3 finalColor = mix(deepSpace, nebulaColor, cloudMask + streaks + nebulaLayer2Mask);
       finalColor += stars * starWhite;
-      finalColor += smallStars * starWhite * 0.7;
+      finalColor += smallStars * starWhite * 0.8;
+      
+      // Add bright nebula core
+      float coreDistance = distance(st, vec2(0.3, 0.4));
+      float coreIntensity = 1.0 - smoothstep(0.1, 0.3, coreDistance);
+      finalColor += coreIntensity * vec3(0.2, 0.1, 0.3) * 0.5;
       
       // Add subtle parallax effect based on position
-      float parallaxEffect = sin(vPosition.x * 0.5 + uScrollProgress * 2.0) * 0.1;
-      finalColor += parallaxEffect * vec3(0.1, 0.05, 0.15);
+      float parallaxEffect = sin(vPosition.x * 0.5 + uScrollProgress * 2.0) * 0.15;
+      finalColor += parallaxEffect * vec3(0.15, 0.08, 0.2);
       
-      // Fade edges slightly for depth
-      float edgeFade = 1.0 - smoothstep(0.8, 1.0, length(vPosition));
+      // Less aggressive edge fading
+      float edgeFade = 1.0 - smoothstep(0.9, 1.0, length(vPosition));
       finalColor *= edgeFade;
       
-      gl_FragColor = vec4(finalColor, 0.9);
+      // Boost overall brightness
+      finalColor *= 1.5;
+      
+      gl_FragColor = vec4(finalColor, 1.0);
     }
   `;
   

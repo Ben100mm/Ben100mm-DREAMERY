@@ -95,14 +95,14 @@ class ErrorBoundary extends Component<Props, State> {
               p: 4,
               textAlign: 'center',
               backgroundColor: brandColors.backgrounds.primary,
-              borderLeft: `4px solid ${brandColors.error}`,
+              borderLeft: `4px solid ${brandColors.accent.error}`,
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
               <ErrorIcon
                 sx={{
                   fontSize: 80,
-                  color: brandColors.error,
+                  color: brandColors.accent.error,
                 }}
               />
             </Box>
@@ -139,7 +139,7 @@ class ErrorBoundary extends Component<Props, State> {
               >
                 <Typography
                   variant="subtitle2"
-                  sx={{ color: brandColors.error, fontWeight: 600, mb: 1 }}
+                  sx={{ color: brandColors.accent.error, fontWeight: 600, mb: 1 }}
                 >
                   Error Details (Development Only):
                 </Typography>

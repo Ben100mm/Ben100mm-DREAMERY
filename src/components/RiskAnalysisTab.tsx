@@ -341,8 +341,8 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         backgroundColor: brandColors.neutral[200],
                         '& .MuiLinearProgress-bar': {
                           backgroundColor: 
-                            weightedRiskAnalysis.overallRiskScore < 4 ? brandColors.success :
-                            weightedRiskAnalysis.overallRiskScore < 7 ? brandColors.warning : brandColors.error
+                            weightedRiskAnalysis.overallRiskScore < 4 ? brandColors.accent.success :
+                            weightedRiskAnalysis.overallRiskScore < 7 ? brandColors.accent.warning : brandColors.accent.error
                         }
                       }}
                     />
@@ -365,9 +365,9 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       
                       return risks.map((risk) => {
                         const percentage = (risk.value / totalRisk) * 100;
-                        const color = risk.value < 3 ? brandColors.success : 
-                                     risk.value < 6 ? brandColors.warning : 
-                                     brandColors.error;
+                        const color = risk.value < 3 ? brandColors.accent.success : 
+                                     risk.value < 6 ? brandColors.accent.warning : 
+                                     brandColors.accent.error;
                         
                         return (
                           <Box key={risk.label}>
@@ -786,7 +786,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           10th Percentile
                         </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.error }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.error }}>
                           {monteCarloResults.irrStats.percentile10.toFixed(2)}%
                         </Typography>
                       </Paper>
@@ -796,7 +796,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           25th Percentile
                         </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.warning }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.warning }}>
                           {monteCarloResults.irrStats.percentile25.toFixed(2)}%
                         </Typography>
                       </Paper>
@@ -816,7 +816,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           75th Percentile
                         </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.success }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
                           {monteCarloResults.irrStats.percentile75.toFixed(2)}%
                         </Typography>
                       </Paper>
@@ -826,7 +826,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           90th Percentile
                         </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.success }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.success }}>
                           {monteCarloResults.irrStats.percentile90.toFixed(2)}%
                         </Typography>
                       </Paper>
@@ -872,7 +872,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       ]}
                       height={300}
                       margin={{ top: 10, right: 30, bottom: 50, left: 60 }}
-                      colors={[brandColors.error, brandColors.warning, brandColors.primary, brandColors.success, brandColors.success]}
+                      colors={[brandColors.accent.error, brandColors.accent.warning, brandColors.primary, brandColors.accent.success, brandColors.accent.success]}
                     />
                   </Box>
                   <Box sx={{ mt: 2, display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -952,7 +952,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           CVaR (95%)
                         </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.error }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.error }}>
                           {formatCurrency(monteCarloResults.riskMetrics.cvar95)}
                         </Typography>
                         <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
@@ -999,11 +999,11 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
-                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#ffebee', border: '2px solid ' + brandColors.error }}>
+                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#ffebee', border: '2px solid ' + brandColors.accent.error }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
                           WORST CASE (P10)
                         </Typography>
-                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.error, my: 2 }}>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.accent.error, my: 2 }}>
                           {monteCarloResults.irrStats.percentile10.toFixed(2)}%
                         </Typography>
                         <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
@@ -1033,11 +1033,11 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       </Paper>
                     </Grid>
                     <Grid item xs={12} md={4}>
-                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9', border: '2px solid ' + brandColors.success }}>
+                      <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9', border: '2px solid ' + brandColors.accent.success }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
                           BEST CASE (P90)
                         </Typography>
-                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.success, my: 2 }}>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.accent.success, my: 2 }}>
                           {monteCarloResults.irrStats.percentile90.toFixed(2)}%
                         </Typography>
                         <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
@@ -1112,7 +1112,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.irrStats.percentile10 > 5 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.irrStats.percentile10 > 5 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box
@@ -1166,7 +1166,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.probabilityOfPositiveReturn > 0.7 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.probabilityOfPositiveReturn > 0.7 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box
@@ -1220,7 +1220,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.riskMetrics.probabilityOfLoss < 0.3 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box
@@ -1274,7 +1274,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.riskMetrics.downsideDeviation < monteCarloResults.irrStats.stdDev * 1.5 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box
@@ -1328,7 +1328,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.riskMetrics.sharpeRatio > 0.5 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box
@@ -1382,7 +1382,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                                   size={40}
                                   thickness={5}
                                   sx={{
-                                    color: monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5 ? brandColors.success : brandColors.error
+                                    color: monteCarloResults.riskMetrics.maxDrawdown < monteCarloResults.totalReturnStats.mean * 0.5 ? brandColors.accent.success : brandColors.accent.error
                                   }}
                                 />
                                 <Box

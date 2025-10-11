@@ -70,11 +70,11 @@ interface StressTestingTabProps {
 const getSeverityColor = (severity: string): string => {
   switch (severity) {
     case 'Mild':
-      return brandColors.success;
+      return brandColors.accent.success;
     case 'Moderate':
-      return brandColors.warning;
+      return brandColors.accent.warning;
     case 'Severe':
-      return brandColors.error;
+      return brandColors.accent.error;
     case 'Critical':
       return '#d32f2f';
     default:
@@ -85,11 +85,11 @@ const getSeverityColor = (severity: string): string => {
 const getSeverityIcon = (severity: string) => {
   switch (severity) {
     case 'Mild':
-      return <CheckCircle sx={{ color: brandColors.success }} />;
+      return <CheckCircle sx={{ color: brandColors.accent.success }} />;
     case 'Moderate':
-      return <Info sx={{ color: brandColors.warning }} />;
+      return <Info sx={{ color: brandColors.accent.warning }} />;
     case 'Severe':
-      return <Warning sx={{ color: brandColors.error }} />;
+      return <Warning sx={{ color: brandColors.accent.error }} />;
     case 'Critical':
       return <Error sx={{ color: '#d32f2f' }} />;
     default:
@@ -249,7 +249,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.success }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.accent.success }}>
                     {summary.passRate.toFixed(0)}%
                   </Typography>
                   <Typography variant="body2" sx={{ color: brandColors.neutral[600] }}>
@@ -263,7 +263,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                     variant="h3" 
                     sx={{ 
                       fontWeight: 700, 
-                      color: summary.criticalCount > 0 ? '#d32f2f' : brandColors.warning 
+                      color: summary.criticalCount > 0 ? '#d32f2f' : brandColors.accent.warning 
                     }}
                   >
                     {summary.criticalCount + summary.severeCount}
@@ -295,21 +295,21 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                   <Chip 
                     label={`${summary.mildCount} Mild`} 
                     size="small"
-                    sx={{ backgroundColor: brandColors.success, color: '#fff' }}
+                    sx={{ backgroundColor: brandColors.accent.success, color: '#fff' }}
                   />
                 )}
                 {summary.moderateCount > 0 && (
                   <Chip 
                     label={`${summary.moderateCount} Moderate`} 
                     size="small"
-                    sx={{ backgroundColor: brandColors.warning, color: '#fff' }}
+                    sx={{ backgroundColor: brandColors.accent.warning, color: '#fff' }}
                   />
                 )}
                 {summary.severeCount > 0 && (
                   <Chip 
                     label={`${summary.severeCount} Severe`} 
                     size="small"
-                    sx={{ backgroundColor: brandColors.error, color: '#fff' }}
+                    sx={{ backgroundColor: brandColors.accent.error, color: '#fff' }}
                   />
                 )}
                 {summary.criticalCount > 0 && (
@@ -364,7 +364,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                       <Typography 
                         variant="body2" 
                         sx={{ 
-                          color: result.cashFlow < 0 ? brandColors.error : brandColors.neutral[800],
+                          color: result.cashFlow < 0 ? brandColors.accent.error : brandColors.neutral[800],
                           fontWeight: result.cashFlow < 0 ? 600 : 400
                         }}
                       >
@@ -375,7 +375,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                       <Typography 
                         variant="body2"
                         sx={{ 
-                          color: result.cocReturn < 0 ? brandColors.error : brandColors.neutral[800],
+                          color: result.cocReturn < 0 ? brandColors.accent.error : brandColors.neutral[800],
                           fontWeight: result.cocReturn < 0 ? 600 : 400
                         }}
                       >
@@ -386,8 +386,8 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                       <Typography 
                         variant="body2"
                         sx={{ 
-                          color: result.dscr < 1.0 ? brandColors.error : 
-                                 result.dscr < 1.2 ? brandColors.warning : brandColors.neutral[800],
+                          color: result.dscr < 1.0 ? brandColors.accent.error : 
+                                 result.dscr < 1.2 ? brandColors.accent.warning : brandColors.neutral[800],
                           fontWeight: result.dscr < 1.2 ? 600 : 400
                         }}
                       >
@@ -517,7 +517,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                           variant="body2" 
                           sx={{ 
                             fontWeight: 600,
-                            color: result.impactPercentage < 0 ? brandColors.error : brandColors.success
+                            color: result.impactPercentage < 0 ? brandColors.accent.error : brandColors.accent.success
                           }}
                         >
                           {result.impactPercentage > 0 ? '+' : ''}{result.impactPercentage.toFixed(1)}%
@@ -554,11 +554,11 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
 
       {/* Recommendations */}
       {summary && (summary.criticalCount > 0 || summary.severeCount > 0) && (
-        <Card sx={{ mt: 3, backgroundColor: 'rgba(244, 67, 54, 0.05)', border: `1px solid ${brandColors.error}` }}>
+        <Card sx={{ mt: 3, backgroundColor: 'rgba(244, 67, 54, 0.05)', border: `1px solid ${brandColors.accent.error}` }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <Warning sx={{ color: brandColors.error }} />
-              <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.error }}>
+              <Warning sx={{ color: brandColors.accent.error }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.accent.error }}>
                 Risk Warnings
               </Typography>
             </Box>

@@ -82,10 +82,10 @@ export const MLRiskPredictionDisplay: React.FC<MLRiskPredictionDisplayProps> = (
   }, [dealState]);
 
   const getRiskColor = (score: number) => {
-    if (score <= 3) return brandColors.success;
-    if (score <= 5) return brandColors.warning;
+    if (score <= 3) return brandColors.accent.success;
+    if (score <= 5) return brandColors.accent.warning;
     if (score <= 7) return '#ff9800'; // Orange
-    return brandColors.error;
+    return brandColors.accent.error;
   };
 
   const getCategoryColor = (category: string) => {
@@ -244,9 +244,9 @@ export const MLRiskPredictionDisplay: React.FC<MLRiskPredictionDisplayProps> = (
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       {mlPrediction.comparison.ml_vs_rule_difference > 0 ? (
-                        <TrendingUpIcon sx={{ color: brandColors.error, fontSize: 20 }} />
+                        <TrendingUpIcon sx={{ color: brandColors.accent.error, fontSize: 20 }} />
                       ) : (
-                        <TrendingDownIcon sx={{ color: brandColors.success, fontSize: 20 }} />
+                        <TrendingDownIcon sx={{ color: brandColors.accent.success, fontSize: 20 }} />
                       )}
                       <Typography variant="body1" sx={{ fontWeight: 600 }}>
                         {mlPrediction.comparison.ml_vs_rule_difference > 0 ? '+' : ''}

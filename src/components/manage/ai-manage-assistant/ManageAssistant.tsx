@@ -379,7 +379,7 @@ const ManageAssistant: React.FC = () => {
         <Card>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <TrendingUpIcon sx={{ color: brandColors.success, mr: 1 }} />
+              <TrendingUpIcon sx={{ color: brandColors.accent.success, mr: 1 }} />
               <Typography variant="h6">95%</Typography>
             </Box>
             <Typography variant="body2" color="text.secondary">Occupancy Rate</Typography>
@@ -397,7 +397,7 @@ const ManageAssistant: React.FC = () => {
         <Card>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <NotificationIcon sx={{ color: brandColors.warning, mr: 1 }} />
+              <NotificationIcon sx={{ color: brandColors.accent.warning, mr: 1 }} />
               <Typography variant="h6">2</Typography>
             </Box>
             <Typography variant="body2" color="text.secondary">Pending Renewals</Typography>

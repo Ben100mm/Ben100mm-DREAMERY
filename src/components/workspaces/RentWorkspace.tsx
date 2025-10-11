@@ -251,10 +251,10 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
         <Grid item xs={12} md={3}>
           <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.card }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <ApplicationIcon sx={{ color: brandColors.success, mr: 1 }} />
+              <ApplicationIcon sx={{ color: brandColors.accent.success, mr: 1 }} />
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Active Applications</Typography>
             </Box>
-            <Typography variant="h4" sx={{ color: brandColors.success, fontWeight: 'bold' }}>3</Typography>
+            <Typography variant="h4" sx={{ color: brandColors.accent.success, fontWeight: 'bold' }}>3</Typography>
             <Typography variant="body2" color="text.secondary">2 pending review</Typography>
           </Card>
         </Grid>
@@ -262,10 +262,10 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
         <Grid item xs={12} md={3}>
           <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.card }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <MoneyIcon sx={{ color: brandColors.warning, mr: 1 }} />
+              <MoneyIcon sx={{ color: brandColors.accent.warning, mr: 1 }} />
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Monthly Budget</Typography>
             </Box>
-            <Typography variant="h4" sx={{ color: brandColors.warning, fontWeight: 'bold' }}>$2,500</Typography>
+            <Typography variant="h4" sx={{ color: brandColors.accent.warning, fontWeight: 'bold' }}>$2,500</Typography>
             <Typography variant="body2" color="text.secondary">Max rent limit</Typography>
           </Card>
         </Grid>
@@ -273,10 +273,10 @@ const RentWorkspace: React.FC<RentWorkspaceProps> = ({ activeTab }) => {
         <Grid item xs={12} md={3}>
           <Card sx={{ p: 2, backgroundColor: brandColors.backgrounds.card }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <CalendarIcon sx={{ color: brandColors.info, mr: 1 }} />
+              <CalendarIcon sx={{ color: brandColors.accent.info, mr: 1 }} />
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Viewings</Typography>
             </Box>
-            <Typography variant="h4" sx={{ color: brandColors.info, fontWeight: 'bold' }}>5</Typography>
+            <Typography variant="h4" sx={{ color: brandColors.accent.info, fontWeight: 'bold' }}>5</Typography>
             <Typography variant="body2" color="text.secondary">This week</Typography>
           </Card>
         </Grid>

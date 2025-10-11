@@ -59,104 +59,179 @@ const OperateProjects: React.FC = () => {
   const projects = [
     {
       id: 1,
-      name: 'Kitchen Renovation',
-      description: 'Complete kitchen remodel with modern appliances and custom cabinets',
-      budget: 50000,
-      spent: 45000,
-      progress: 90,
+      name: '3-Bed Fix & Flip - Oak Ave',
+      description: 'Complete renovation of 3-bedroom single-family home for resale',
+      budget: 45000,
+      spent: 38000,
+      progress: 85,
       status: 'in_progress',
       priority: 'high',
-      contractor: 'ABC Construction',
+      contractor: 'ABC Renovations',
       startDate: '2023-12-01',
-      endDate: '2024-01-15',
-      location: '123 Main St',
-      category: 'renovation',
-      image: '/placeholder-project-1.jpg',
+      endDate: '2024-02-28',
+      location: '123 Oak Ave',
+      category: 'fix-flip',
+      strategy: 'fix-flip',
+      arv: 285000,
+      purchasePrice: 185000,
+      projectedProfit: 42000,
+      holdingPeriod: 4,
+      image: '/P4.jpg',
       tasks: [
-        { id: 1, name: 'Demolition', completed: true, dueDate: '2023-12-05' },
-        { id: 2, name: 'Electrical Work', completed: true, dueDate: '2023-12-10' },
-        { id: 3, name: 'Plumbing', completed: true, dueDate: '2023-12-15' },
-        { id: 4, name: 'Cabinetry Installation', completed: false, dueDate: '2024-01-10' },
-        { id: 5, name: 'Final Inspection', completed: false, dueDate: '2024-01-15' },
+        { id: 1, name: 'Kitchen Renovation', completed: true, dueDate: '2024-01-10' },
+        { id: 2, name: 'Bathroom Remodel', completed: true, dueDate: '2024-01-20' },
+        { id: 3, name: 'Flooring Installation', completed: true, dueDate: '2024-02-05' },
+        { id: 4, name: 'Paint & Finishes', completed: false, dueDate: '2024-02-20' },
+        { id: 5, name: 'Final Inspection & Listing', completed: false, dueDate: '2024-02-28' },
       ],
     },
     {
       id: 2,
-      name: 'Bathroom Remodel',
-      description: 'Master bathroom renovation with luxury fixtures and tiling',
-      budget: 25000,
-      spent: 15000,
-      progress: 60,
+      name: '4-Unit BRRR - Maple St',
+      description: 'Four-unit multi-family renovation with refinance strategy',
+      budget: 65000,
+      spent: 52000,
+      progress: 80,
       status: 'in_progress',
-      priority: 'medium',
-      contractor: 'XYZ Plumbing',
-      startDate: '2023-12-15',
-      endDate: '2024-01-20',
-      location: '456 Oak Ave',
-      category: 'renovation',
-      image: '/placeholder-project-2.jpg',
+      priority: 'high',
+      contractor: 'Elite Construction',
+      startDate: '2023-11-15',
+      endDate: '2024-03-15',
+      location: '456 Maple St',
+      category: 'brrr',
+      strategy: 'brrr',
+      arv: 520000,
+      purchasePrice: 380000,
+      refinanceLTV: 75,
+      cashOut: 110000,
+      monthlyRent: 6800,
+      image: '/P7.jpg',
       tasks: [
-        { id: 1, name: 'Design Planning', completed: true, dueDate: '2023-12-15' },
-        { id: 2, name: 'Material Ordering', completed: true, dueDate: '2023-12-20' },
-        { id: 3, name: 'Tile Installation', completed: false, dueDate: '2024-01-10' },
-        { id: 4, name: 'Fixture Installation', completed: false, dueDate: '2024-01-15' },
-        { id: 5, name: 'Final Cleanup', completed: false, dueDate: '2024-01-20' },
+        { id: 1, name: 'Unit Renovations', completed: true, dueDate: '2024-02-10' },
+        { id: 2, name: 'Tenant Placement', completed: false, dueDate: '2024-02-28' },
+        { id: 3, name: 'Seasoning Period', completed: false, dueDate: '2024-03-10' },
+        { id: 4, name: 'Appraisal', completed: false, dueDate: '2024-03-12' },
+        { id: 5, name: 'Refinance Closing', completed: false, dueDate: '2024-03-15' },
       ],
     },
     {
       id: 3,
-      name: 'Roof Replacement',
-      description: 'Complete roof replacement with new shingles and gutters',
-      budget: 75000,
-      spent: 0,
-      progress: 0,
-      status: 'planning',
-      priority: 'high',
-      contractor: 'Roof Masters',
-      startDate: '2024-01-20',
-      endDate: '2024-02-15',
-      location: '789 Pine St',
-      category: 'maintenance',
-      image: '/placeholder-project-3.jpg',
+      name: 'New Construction - Pine Ridge',
+      description: 'Ground-up construction of 4-bedroom modern home on 0.5-acre lot',
+      budget: 380000,
+      spent: 145000,
+      progress: 38,
+      status: 'in_progress',
+      priority: 'medium',
+      contractor: 'Premier Builders',
+      startDate: '2023-11-01',
+      endDate: '2024-08-30',
+      location: 'Lot 14, Pine Ridge Estates',
+      category: 'construction',
+      strategy: 'construction',
+      landCost: 95000,
+      projectedValue: 625000,
+      projectedProfit: 150000,
+      image: '/P12.jpg',
       tasks: [
-        { id: 1, name: 'Roof Inspection', completed: false, dueDate: '2024-01-20' },
-        { id: 2, name: 'Material Delivery', completed: false, dueDate: '2024-01-25' },
-        { id: 3, name: 'Old Roof Removal', completed: false, dueDate: '2024-01-30' },
-        { id: 4, name: 'New Roof Installation', completed: false, dueDate: '2024-02-10' },
-        { id: 5, name: 'Gutter Installation', completed: false, dueDate: '2024-02-15' },
+        { id: 1, name: 'Permits & Site Prep', completed: true, dueDate: '2023-12-01' },
+        { id: 2, name: 'Foundation', completed: true, dueDate: '2024-01-15' },
+        { id: 3, name: 'Framing', completed: false, dueDate: '2024-04-15' },
+        { id: 4, name: 'MEP & Drywall', completed: false, dueDate: '2024-06-30' },
+        { id: 5, name: 'Finishes & Landscaping', completed: false, dueDate: '2024-08-30' },
       ],
     },
     {
       id: 4,
-      name: 'Landscaping Project',
-      description: 'Complete yard landscaping with new plants and irrigation system',
-      budget: 15000,
-      spent: 5000,
-      progress: 33,
+      name: 'Duplex BRRR - Cedar Ln',
+      description: 'Duplex rehab with rental and refinance strategy',
+      budget: 48000,
+      spent: 15000,
+      progress: 31,
       status: 'in_progress',
-      priority: 'low',
-      contractor: 'Green Thumb Landscaping',
-      startDate: '2024-01-01',
-      endDate: '2024-02-01',
-      location: '321 Elm St',
-      category: 'landscaping',
-      image: '/placeholder-project-4.jpg',
+      priority: 'medium',
+      contractor: 'Quality Rehab Co',
+      startDate: '2024-01-05',
+      endDate: '2024-04-20',
+      location: '789 Cedar Ln',
+      category: 'brrr',
+      strategy: 'brrr',
+      arv: 385000,
+      purchasePrice: 285000,
+      refinanceLTV: 80,
+      cashOut: 85000,
+      monthlyRent: 3400,
+      image: '/P8.jpg',
       tasks: [
-        { id: 1, name: 'Site Preparation', completed: true, dueDate: '2024-01-05' },
-        { id: 2, name: 'Plant Selection', completed: false, dueDate: '2024-01-15' },
-        { id: 3, name: 'Planting', completed: false, dueDate: '2024-01-25' },
-        { id: 4, name: 'Irrigation Setup', completed: false, dueDate: '2024-01-30' },
-        { id: 5, name: 'Final Inspection', completed: false, dueDate: '2024-02-01' },
+        { id: 1, name: 'Unit A Renovation', completed: false, dueDate: '2024-02-28' },
+        { id: 2, name: 'Unit B Renovation', completed: false, dueDate: '2024-03-30' },
+        { id: 3, name: 'Tenant Placement', completed: false, dueDate: '2024-04-10' },
+        { id: 4, name: 'Appraisal', completed: false, dueDate: '2024-04-15' },
+        { id: 5, name: 'Refinance', completed: false, dueDate: '2024-04-20' },
+      ],
+    },
+    {
+      id: 5,
+      name: 'Ranch Fix & Flip - Willow Dr',
+      description: 'Complete modernization of dated ranch-style home',
+      budget: 55000,
+      spent: 12000,
+      progress: 22,
+      status: 'in_progress',
+      priority: 'medium',
+      contractor: 'Modern Renovations LLC',
+      startDate: '2024-01-10',
+      endDate: '2024-05-15',
+      location: '234 Willow Dr',
+      category: 'fix-flip',
+      strategy: 'fix-flip',
+      arv: 365000,
+      purchasePrice: 245000,
+      projectedProfit: 48000,
+      holdingPeriod: 5,
+      image: '/P5.jpg',
+      tasks: [
+        { id: 1, name: 'Demolition & Clean-out', completed: true, dueDate: '2024-01-20' },
+        { id: 2, name: 'Kitchen & Bath Gut', completed: false, dueDate: '2024-02-28' },
+        { id: 3, name: 'Systems Update', completed: false, dueDate: '2024-03-30' },
+        { id: 4, name: 'Finishes & Staging', completed: false, dueDate: '2024-05-01' },
+        { id: 5, name: 'List & Sell', completed: false, dueDate: '2024-05-15' },
+      ],
+    },
+    {
+      id: 6,
+      name: 'Land Development - Sunset Hills',
+      description: '5-lot subdivision development with infrastructure',
+      budget: 425000,
+      spent: 85000,
+      progress: 20,
+      status: 'planning',
+      priority: 'low',
+      contractor: 'Infrastructure Group',
+      startDate: '2024-02-01',
+      endDate: '2025-01-30',
+      location: 'Sunset Hills Rd',
+      category: 'construction',
+      strategy: 'construction',
+      landCost: 180000,
+      projectedValue: 850000,
+      projectedProfit: 245000,
+      image: '/P14.jpg',
+      tasks: [
+        { id: 1, name: 'Zoning & Permits', completed: false, dueDate: '2024-04-01' },
+        { id: 2, name: 'Site Development', completed: false, dueDate: '2024-08-30' },
+        { id: 3, name: 'Utilities Installation', completed: false, dueDate: '2024-11-15' },
+        { id: 4, name: 'Roads & Drainage', completed: false, dueDate: '2024-12-30' },
+        { id: 5, name: 'Lot Sales', completed: false, dueDate: '2025-01-30' },
       ],
     },
   ];
 
   const categories = [
-    { value: 'all', label: 'All Projects' },
-    { value: 'renovation', label: 'Renovation' },
-    { value: 'maintenance', label: 'Maintenance' },
-    { value: 'landscaping', label: 'Landscaping' },
-    { value: 'construction', label: 'Construction' },
+    { value: 'all', label: 'All Deals' },
+    { value: 'fix-flip', label: 'Fix & Flip' },
+    { value: 'brrr', label: 'BRRR' },
+    { value: 'construction', label: 'Construction/Development' },
   ];
 
   const getStatusColor = (status: string) => {
@@ -181,11 +256,28 @@ const OperateProjects: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'renovation': return <BuildIcon />;
-      case 'maintenance': return <ScheduleIcon />;
-      case 'landscaping': return <ProjectIcon />;
+      case 'fix-flip': return <BuildIcon />;
+      case 'brrr': return <TrendingUpIcon />;
       case 'construction': return <BuildIcon />;
       default: return <ProjectIcon />;
+    }
+  };
+
+  const getStrategyColor = (strategy: string) => {
+    switch (strategy) {
+      case 'fix-flip': return brandColors.actions.error;
+      case 'brrr': return brandColors.actions.info;
+      case 'construction': return brandColors.actions.warning;
+      default: return brandColors.text.secondary;
+    }
+  };
+
+  const getStrategyLabel = (strategy: string) => {
+    switch (strategy) {
+      case 'fix-flip': return 'Fix & Flip';
+      case 'brrr': return 'BRRR';
+      case 'construction': return 'Construction';
+      default: return strategy;
     }
   };
 
@@ -230,19 +322,25 @@ const OperateProjects: React.FC = () => {
     handleMenuClose();
   };
 
-  const filteredProjects = selectedTab === 0 ? projects : projects.filter(project => project.status === 'in_progress');
+  const filteredProjects = selectedTab === 0 
+    ? projects 
+    : selectedTab === 1 
+      ? projects.filter(project => project.status === 'in_progress')
+      : selectedTab === 2
+        ? projects.filter(project => project.status === 'completed')
+        : projects.filter(project => project.status === 'planning');
 
   return (
     <Box>
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          Project Management
+          Deal & Project Management
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel>Category</InputLabel>
-            <Select label="Category">
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel>Strategy Filter</InputLabel>
+            <Select label="Strategy Filter" defaultValue="all">
               {categories.map((category) => (
                 <MenuItem key={category.value} value={category.value}>
                   {category.label}
@@ -256,7 +354,7 @@ const OperateProjects: React.FC = () => {
             onClick={handleCreateProject}
             sx={{ bgcolor: brandColors.primary }}
           >
-            Create Project
+            Start New Deal
           </Button>
         </Box>
       </Box>
@@ -264,9 +362,9 @@ const OperateProjects: React.FC = () => {
       {/* Tabs */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={selectedTab} onChange={(e, newValue) => setSelectedTab(newValue)}>
-          <Tab label="All Projects" />
-          <Tab label="Active Projects" />
-          <Tab label="Completed Projects" />
+          <Tab label="All Deals" />
+          <Tab label="Active" />
+          <Tab label="Completed" />
           <Tab label="Planning" />
         </Tabs>
       </Box>
@@ -280,29 +378,40 @@ const OperateProjects: React.FC = () => {
               <Box
                 sx={{
                   height: 200,
-                  backgroundImage: `url(project.image)`,
+                  backgroundImage: `url(${project.image})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
                 }}
               >
-                <Box sx={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 1 }}>
+                <Box sx={{ position: 'absolute', top: 8, left: 8, right: 8, display: 'flex', gap: 1, justifyContent: 'space-between' }}>
                   <Chip
-                    label={project.status.replace('_', ' ').toUpperCase()}
-                    color={getStatusColor(project.status) as any}
+                    label={getStrategyLabel(project.strategy)}
                     size="small"
+                    sx={{
+                      backgroundColor: getStrategyColor(project.strategy),
+                      color: 'white',
+                      fontWeight: 'bold',
+                    }}
                   />
-                  <Chip
-                    label={project.priority.toUpperCase()}
-                    color={getPriorityColor(project.priority) as any}
-                    size="small"
-                  />
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Chip
+                      label={project.status.replace('_', ' ').toUpperCase()}
+                      color={getStatusColor(project.status) as any}
+                      size="small"
+                    />
+                    <Chip
+                      label={project.priority.toUpperCase()}
+                      color={getPriorityColor(project.priority) as any}
+                      size="small"
+                    />
+                  </Box>
                 </Box>
                 <IconButton
-                  sx={{ position: 'absolute', bottom: 8, right: 8 }}
+                  sx={{ position: 'absolute', bottom: 8, right: 8, backgroundColor: 'rgba(255,255,255,0.9)', '&:hover': { backgroundColor: 'rgba(255,255,255,1)' } }}
                   onClick={(e) => handleMenuClick(e, project.id)}
                 >
-                  <MoreVertIcon sx={{ color: brandColors.text.inverse }} />
+                  <MoreVertIcon />
                 </IconButton>
               </Box>
 
@@ -341,16 +450,96 @@ const OperateProjects: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Project Stats */}
+                {/* Strategy-Specific Metrics */}
                 <Grid container spacing={1} sx={{ mb: 2 }}>
-                  <Grid size={{ xs: 6 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <PersonIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                      <Typography variant="caption">
-                        {project.contractor}
-                      </Typography>
-                    </Box>
-                  </Grid>
+                  {project.strategy === 'fix-flip' && (
+                    <>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">ARV</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.arv?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Purchase</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.purchasePrice?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Projected Profit</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
+                          ${project.projectedProfit?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Hold Period</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          {project.holdingPeriod} months
+                        </Typography>
+                      </Grid>
+                    </>
+                  )}
+                  {project.strategy === 'brrr' && (
+                    <>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">ARV</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.arv?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Refi LTV</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          {project.refinanceLTV}%
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Cash-Out</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
+                          ${project.cashOut?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Monthly Rent</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.monthlyRent?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                    </>
+                  )}
+                  {project.strategy === 'construction' && (
+                    <>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Land Cost</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.landCost?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Build Budget</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.budget?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Proj. Value</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          ${project.projectedValue?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                      <Grid size={{ xs: 6 }}>
+                        <Typography variant="caption" color="text.secondary">Proj. Profit</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.accent.success }}>
+                          ${project.projectedProfit?.toLocaleString()}
+                        </Typography>
+                      </Grid>
+                    </>
+                  )}
+                </Grid>
+
+                {/* Timeline & Contractor */}
+                <Grid container spacing={1} sx={{ mb: 2 }}>
                   <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <ScheduleIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
@@ -361,17 +550,9 @@ const OperateProjects: React.FC = () => {
                   </Grid>
                   <Grid size={{ xs: 6 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <MoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                      <PersonIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption">
-                        project.budget.toLocaleString()
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      {getCategoryIcon(project.category)}
-                      <Typography variant="caption">
-                        {project.category}
+                        {project.contractor}
                       </Typography>
                     </Box>
                   </Grid>
@@ -420,54 +601,59 @@ const OperateProjects: React.FC = () => {
 
       {/* Create Project Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>Create New Project</DialogTitle>
+        <DialogTitle>Start a New Deal</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel>Investment Strategy</InputLabel>
+              <Select label="Investment Strategy" defaultValue="fix-flip">
+                <MenuItem value="fix-flip">Fix & Flip</MenuItem>
+                <MenuItem value="brrr">BRRR (Buy, Rehab, Rent, Refinance)</MenuItem>
+                <MenuItem value="construction">Land Development / Construction</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
-              label="Project Name"
+              label="Deal/Project Name"
               fullWidth
-              placeholder="e.g., Kitchen Renovation"
+              placeholder="e.g., 3-Bed Fix & Flip - Main St"
             />
             <TextField
               label="Description"
               multiline
               rows={3}
               fullWidth
-              placeholder="Describe the project scope and objectives..."
+              placeholder="Describe the deal scope, property type, and strategy..."
             />
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <TextField
-                  label="Budget ($)"
+                  label="Purchase Price ($)"
+                  type="number"
+                  fullWidth
+                  placeholder="250000"
+                />
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  label="Rehab Budget ($)"
                   type="number"
                   fullWidth
                   placeholder="50000"
                 />
               </Grid>
-              <Grid size={{ xs: 6 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select label="Category">
-                    <MenuItem value="renovation">Renovation</MenuItem>
-                    <MenuItem value="maintenance">Maintenance</MenuItem>
-                    <MenuItem value="landscaping">Landscaping</MenuItem>
-                    <MenuItem value="construction">Construction</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
             </Grid>
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <TextField
-                  label="Start Date"
-                  type="date"
+                  label="ARV / Projected Value ($)"
+                  type="number"
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
+                  placeholder="350000"
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
                 <TextField
-                  label="End Date"
+                  label="Target Completion Date"
                   type="date"
                   fullWidth
                   InputLabelProps={{ shrink: true }}
@@ -475,20 +661,20 @@ const OperateProjects: React.FC = () => {
               </Grid>
             </Grid>
             <TextField
-              label="Location"
+              label="Property Address"
               fullWidth
-              placeholder="Property address"
+              placeholder="123 Main St, City, State"
             />
             <TextField
-              label="Contractor"
+              label="General Contractor"
               fullWidth
-              placeholder="Contractor name"
+              placeholder="Contractor or construction company name"
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button variant="contained">Create Project</Button>
+          <Button variant="contained" sx={{ bgcolor: brandColors.primary }}>Start Deal</Button>
         </DialogActions>
       </Dialog>
     </Box>

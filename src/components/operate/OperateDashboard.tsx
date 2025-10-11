@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Box,
@@ -22,6 +22,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
@@ -32,81 +34,104 @@ import {
   Warning as WarningIcon,
   CheckCircle as CheckCircleIcon,
   Person as PersonIcon,
+  HomeWork as HomeWorkIcon,
+  Autorenew as AutorenewIcon,
+  Construction as ConstructionIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../../theme';
 
 const OperateDashboard: React.FC = () => {
+  const [selectedStrategy, setSelectedStrategy] = useState(0); // 0: All, 1: Fix & Flip, 2: BRRR, 3: Construction
+
   // Mock data - in real app this would come from API
   const stats = {
-    activeProjects: 8,
-    completedProjects: 24,
-    totalBudget: 2500000,
-    spentBudget: 1800000,
-    contractors: 15,
-    upcomingDeadlines: 5,
-    overdueTasks: 2,
-    monthlySavings: 45000,
+    activeFlips: 5,
+    activeBRRR: 3,
+    activeConstruction: 2,
+    totalARV: 3250000,
+    projectedProfit: 485000,
+    contractors: 12,
+    upcomingMilestones: 8,
+    completedDeals: 18,
   };
 
   const recentActivity = [
-    { id: 1, type: 'project_completed', project: 'Kitchen Renovation', contractor: 'ABC Construction', amount: 25000, time: '2 hours ago' },
-    { id: 2, type: 'expense_approved', project: 'Bathroom Remodel', contractor: 'XYZ Plumbing', amount: 8500, time: '4 hours ago' },
-    { id: 3, type: 'deadline_approaching', project: 'Roof Replacement', contractor: 'Roof Masters', amount: 15000, time: '1 day ago' },
-    { id: 4, type: 'contractor_added', project: 'Landscaping', contractor: 'Green Thumb Landscaping', amount: 0, time: '2 days ago' },
+    { id: 1, type: 'refinance_approved', project: '4-Unit BRRR - Maple St', contractor: 'Regional Bank', amount: 320000, time: '1 hour ago', strategy: 'brrr' },
+    { id: 2, type: 'deal_closed', project: '3-Bed Fix & Flip - Oak Ave', contractor: 'Valley Title', amount: 185000, time: '3 hours ago', strategy: 'fix-flip' },
+    { id: 3, type: 'construction_milestone', project: 'New Construction - Pine Ridge', contractor: 'Premier Builders', amount: 0, time: '5 hours ago', strategy: 'construction' },
+    { id: 4, type: 'appraisal_completed', project: 'Duplex BRRR - Cedar Ln', contractor: 'AAA Appraisers', amount: 285000, time: '1 day ago', strategy: 'brrr' },
   ];
 
   const activeProjects = [
     {
       id: 1,
-      name: 'Kitchen Renovation',
-      budget: 50000,
-      spent: 45000,
-      progress: 90,
+      name: '3-Bed Fix & Flip - Oak Ave',
+      strategy: 'fix-flip',
+      budget: 45000,
+      spent: 38000,
+      progress: 85,
       status: 'in_progress',
-      contractor: 'ABC Construction',
-      deadline: '2024-01-15',
-      daysLeft: 3,
+      contractor: 'ABC Renovations',
+      deadline: '2024-02-28',
+      daysLeft: 15,
+      arv: 285000,
+      purchasePrice: 185000,
+      projectedProfit: 42000,
     },
     {
       id: 2,
-      name: 'Bathroom Remodel',
-      budget: 25000,
-      spent: 15000,
-      progress: 60,
+      name: '4-Unit BRRR - Maple St',
+      strategy: 'brrr',
+      budget: 65000,
+      spent: 52000,
+      progress: 80,
       status: 'in_progress',
-      contractor: 'XYZ Plumbing',
-      deadline: '2024-01-20',
-      daysLeft: 8,
+      contractor: 'Elite Construction',
+      deadline: '2024-03-15',
+      daysLeft: 30,
+      arv: 520000,
+      purchasePrice: 380000,
+      refinanceLTV: 75,
+      cashOut: 110000,
     },
     {
       id: 3,
-      name: 'Roof Replacement',
-      budget: 75000,
-      spent: 0,
-      progress: 0,
-      status: 'planning',
-      contractor: 'Roof Masters',
-      deadline: '2024-01-25',
-      daysLeft: 13,
+      name: 'New Construction - Pine Ridge',
+      strategy: 'construction',
+      budget: 380000,
+      spent: 145000,
+      progress: 38,
+      status: 'in_progress',
+      contractor: 'Premier Builders',
+      deadline: '2024-08-30',
+      daysLeft: 180,
+      landCost: 95000,
+      projectedValue: 625000,
+      projectedProfit: 150000,
     },
     {
       id: 4,
-      name: 'Landscaping',
-      budget: 15000,
-      spent: 5000,
-      progress: 33,
+      name: 'Duplex BRRR - Cedar Ln',
+      strategy: 'brrr',
+      budget: 48000,
+      spent: 15000,
+      progress: 31,
       status: 'in_progress',
-      contractor: 'Green Thumb Landscaping',
-      deadline: '2024-02-01',
-      daysLeft: 20,
+      contractor: 'Quality Rehab Co',
+      deadline: '2024-04-20',
+      daysLeft: 60,
+      arv: 385000,
+      purchasePrice: 285000,
+      refinanceLTV: 80,
+      cashOut: 85000,
     },
   ];
 
-  const upcomingDeadlines = [
-    { id: 1, project: 'Kitchen Renovation', task: 'Final inspection', deadline: '2024-01-15', priority: 'high' },
-    { id: 2, project: 'Bathroom Remodel', task: 'Tile installation', deadline: '2024-01-18', priority: 'medium' },
-    { id: 3, project: 'Roof Replacement', task: 'Material delivery', deadline: '2024-01-20', priority: 'high' },
-    { id: 4, project: 'Landscaping', task: 'Plant selection', deadline: '2024-01-22', priority: 'low' },
+  const upcomingMilestones = [
+    { id: 1, project: '3-Bed Fix & Flip - Oak Ave', task: 'Final inspection & listing', deadline: '2024-02-28', priority: 'high', strategy: 'fix-flip' },
+    { id: 2, project: '4-Unit BRRR - Maple St', task: 'Refinance closing', deadline: '2024-03-10', priority: 'high', strategy: 'brrr' },
+    { id: 3, project: 'New Construction - Pine Ridge', task: 'Framing completion', deadline: '2024-04-15', priority: 'medium', strategy: 'construction' },
+    { id: 4, project: 'Duplex BRRR - Cedar Ln', task: 'Appraisal appointment', deadline: '2024-03-25', priority: 'medium', strategy: 'brrr' },
   ];
 
   const getStatusColor = (status: string) => {
@@ -131,13 +156,41 @@ const OperateDashboard: React.FC = () => {
 
   const getActivityIcon = (type: string) => {
     switch (type) {
+      case 'refinance_approved': return <AutorenewIcon sx={{ color: brandColors.accent.success }} />;
+      case 'deal_closed': return <CheckCircleIcon sx={{ color: brandColors.accent.success }} />;
+      case 'construction_milestone': return <ConstructionIcon sx={{ color: brandColors.accent.info }} />;
+      case 'appraisal_completed': return <HomeWorkIcon sx={{ color: brandColors.accent.info }} />;
       case 'project_completed': return <CheckCircleIcon sx={{ color: brandColors.accent.success }} />;
       case 'expense_approved': return <MoneyIcon sx={{ color: brandColors.accent.info }} />;
-      case 'deadline_approaching': return <WarningIcon sx={{ color: brandColors.accent.warning }} />;
-      case 'contractor_added': return <PersonIcon sx={{ color: brandColors.accent.info }} />;
       default: return <ProjectIcon />;
     }
   };
+
+  const getStrategyColor = (strategy: string) => {
+    switch (strategy) {
+      case 'fix-flip': return brandColors.actions.error;
+      case 'brrr': return brandColors.actions.info;
+      case 'construction': return brandColors.actions.warning;
+      default: return brandColors.text.secondary;
+    }
+  };
+
+  const getStrategyLabel = (strategy: string) => {
+    switch (strategy) {
+      case 'fix-flip': return 'Fix & Flip';
+      case 'brrr': return 'BRRR';
+      case 'construction': return 'Construction';
+      default: return strategy;
+    }
+  };
+
+  const filteredProjects = selectedStrategy === 0 
+    ? activeProjects 
+    : selectedStrategy === 1
+      ? activeProjects.filter(p => p.strategy === 'fix-flip')
+      : selectedStrategy === 2
+        ? activeProjects.filter(p => p.strategy === 'brrr')
+        : activeProjects.filter(p => p.strategy === 'construction');
 
   const calculateBudgetProgress = (spent: number, budget: number) => {
     return Math.min((spent / budget) * 100, 100);
@@ -151,20 +204,66 @@ const OperateDashboard: React.FC = () => {
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: brandColors.primary, mr: 2 }}>
-                  <ProjectIcon />
+                <Avatar sx={{ bgcolor: brandColors.actions.error, mr: 2 }}>
+                  <HomeWorkIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    {stats.activeProjects}
+                    {stats.activeFlips}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Active Projects
+                    Active Fix & Flips
                   </Typography>
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                {stats.completedProjects} completed this year
+                {stats.completedDeals} deals completed
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.actions.info, mr: 2 }}>
+                  <AutorenewIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
+                    {stats.activeBRRR}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    BRRR Properties
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                In refinance pipeline
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Avatar sx={{ bgcolor: brandColors.actions.warning, mr: 2 }}>
+                  <ConstructionIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
+                    {stats.activeConstruction}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Construction Projects
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                {stats.contractors} active contractors
               </Typography>
             </CardContent>
           </Card>
@@ -175,72 +274,34 @@ const OperateDashboard: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Avatar sx={{ bgcolor: brandColors.accent.success, mr: 2 }}>
-                  <MoneyIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${(stats.totalBudget / 1000000).toFixed(1)}M
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Budget
-                  </Typography>
-                </Box>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="caption" color="text.secondary">
-                  ${stats.spentBudget.toLocaleString()} spent
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: brandColors.accent.warning, mr: 2 }}>
-                  <BuildIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    {stats.contractors}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Active Contractors
-                  </Typography>
-                </Box>
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                {stats.upcomingDeadlines} upcoming deadlines
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ sm: 6, md: 3, xs: 12 }}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: brandColors.accent.info, mr: 2 }}>
                   <TrendingUpIcon />
                 </Avatar>
                 <Box>
                   <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-                    ${stats.monthlySavings.toLocaleString()}
+                    ${(stats.projectedProfit / 1000).toFixed(0)}K
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Monthly Savings
+                    Projected Profit
                   </Typography>
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                {stats.overdueTasks} overdue tasks
+                ${(stats.totalARV / 1000000).toFixed(2)}M total ARV
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+
+      {/* Strategy Filter Tabs */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs value={selectedStrategy} onChange={(e, newValue) => setSelectedStrategy(newValue)}>
+          <Tab label="All Deals" />
+          <Tab label="Fix & Flip" />
+          <Tab label="BRRR" />
+          <Tab label="Construction" />
+        </Tabs>
+      </Box>
 
       <Grid container spacing={3}>
         {/* Active Projects */}
@@ -248,38 +309,72 @@ const OperateDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Active Projects
+                Active Deals & Projects
               </Typography>
               <TableContainer>
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Project</TableCell>
-                      <TableCell>Contractor</TableCell>
-                      <TableCell align="right">Budget</TableCell>
+                      <TableCell>Deal/Project</TableCell>
+                      <TableCell>Strategy</TableCell>
+                      <TableCell align="right">Key Metrics</TableCell>
                       <TableCell>Progress</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Deadline</TableCell>
+                      <TableCell>Timeline</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {activeProjects.map((project) => (
+                    {filteredProjects.map((project) => (
                       <TableRow key={project.id}>
                         <TableCell>
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             {project.name}
                           </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {project.contractor}
+                          </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2">{project.contractor}</Typography>
+                          <Chip
+                            label={getStrategyLabel(project.strategy)}
+                            size="small"
+                            sx={{
+                              backgroundColor: getStrategyColor(project.strategy),
+                              color: 'white',
+                            }}
+                          />
                         </TableCell>
                         <TableCell align="right">
-                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            project.budget.toLocaleString()
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            project.spent.toLocaleString() spent
-                          </Typography>
+                          {project.strategy === 'fix-flip' && (
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                ARV: ${project.arv?.toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                Profit: ${project.projectedProfit?.toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {project.strategy === 'brrr' && (
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                ARV: ${project.arv?.toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                Cash-Out: ${project.cashOut?.toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {project.strategy === 'construction' && (
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                Value: ${project.projectedValue?.toLocaleString()}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                Profit: ${project.projectedProfit?.toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
                         </TableCell>
                         <TableCell>
                           <Box sx={{ width: 100 }}>
@@ -292,6 +387,9 @@ const OperateDashboard: React.FC = () => {
                               {project.progress}%
                             </Typography>
                           </Box>
+                          <Typography variant="caption" color="text.secondary">
+                            ${project.spent.toLocaleString()} / ${project.budget.toLocaleString()}
+                          </Typography>
                         </TableCell>
                         <TableCell>
                           <Chip
@@ -317,7 +415,7 @@ const OperateDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Recent Activity & Deadlines */}
+        {/* Recent Activity & Milestones */}
         <Grid size={{ md: 4, xs: 12 }}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
@@ -335,21 +433,31 @@ const OperateDashboard: React.FC = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               {activity.project}
                             </Typography>
-                            {activity.amount > 0 && (
-                              <Typography variant="body2" sx={{ fontWeight: 'bold', color: brandColors.primary }}>
-                                activity.amount.toLocaleString()
-                              </Typography>
-                            )}
+                            <Chip
+                              label={getStrategyLabel(activity.strategy)}
+                              size="small"
+                              sx={{
+                                backgroundColor: getStrategyColor(activity.strategy),
+                                color: 'white',
+                                height: 18,
+                                fontSize: '0.7rem',
+                              }}
+                            />
                           </Box>
                         }
                         secondary={
                           <Box>
                             <Typography variant="body2" color="text.secondary">
                               {activity.contractor}
+                              {activity.amount > 0 && (
+                                <span style={{ fontWeight: 'bold', color: brandColors.primary }}>
+                                  {' '}• ${activity.amount.toLocaleString()}
+                                </span>
+                              )}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                               {activity.time}
@@ -368,38 +476,50 @@ const OperateDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Upcoming Deadlines
+                Upcoming Milestones
               </Typography>
               <List>
-                {upcomingDeadlines.map((deadline, index) => (
-                  <React.Fragment key={deadline.id}>
+                {upcomingMilestones.map((milestone, index) => (
+                  <React.Fragment key={milestone.id}>
                     <ListItem sx={{ px: 0 }}>
                       <ListItemText
                         primary={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                              {deadline.task}
+                              {milestone.task}
                             </Typography>
                             <Chip
-                              label={deadline.priority}
+                              label={milestone.priority}
                               size="small"
-                              color={getPriorityColor(deadline.priority) as any}
+                              color={getPriorityColor(milestone.priority) as any}
                             />
                           </Box>
                         }
                         secondary={
                           <Box>
-                            <Typography variant="body2" color="text.secondary">
-                              {deadline.project}
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                              <Typography variant="body2" color="text.secondary">
+                                {milestone.project}
+                              </Typography>
+                              <Chip
+                                label={getStrategyLabel(milestone.strategy)}
+                                size="small"
+                                sx={{
+                                  backgroundColor: getStrategyColor(milestone.strategy),
+                                  color: 'white',
+                                  height: 16,
+                                  fontSize: '0.65rem',
+                                }}
+                              />
+                            </Box>
                             <Typography variant="caption" color="text.secondary">
-                              Due: {new Date(deadline.deadline).toLocaleDateString()}
+                              Due: {new Date(milestone.deadline).toLocaleDateString()}
                             </Typography>
                           </Box>
                         }
                       />
                     </ListItem>
-                    {index < upcomingDeadlines.length - 1 && <Divider />}
+                    {index < upcomingMilestones.length - 1 && <Divider />}
                   </React.Fragment>
                 ))}
               </List>

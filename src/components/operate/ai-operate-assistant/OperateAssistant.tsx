@@ -12,12 +12,12 @@ const OperateAssistant: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <OperateAssistantIcon size={40} sx={{ color: brandColors.primary }} />
             <Typography variant="h6">
-              Intelligent assistance for property operations and project management
+              Specialized assistance for Fix & Flip, BRRR, and Construction projects
             </Typography>
           </Box>
           
           <Alert severity="info">
-            This component will include AI-powered operations insights, maintenance scheduling, and cost optimization.
+            This component will include AI-powered deal analysis, renovation cost optimization, BRRR refinance strategies, construction project management, and profit maximization insights.
           </Alert>
         </CardContent>
       </Card>

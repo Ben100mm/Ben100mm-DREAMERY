@@ -31,62 +31,62 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
     switch (activeTab) {
       case 'dashboard':
         return {
-          title: 'Projects Dashboard',
-          subtitle: 'Centralized overview of your property projects, performance metrics, and ongoing activities',
+          title: 'Fix & Flip, BRRR, and Construction Dashboard',
+          subtitle: 'Overview of active deals, renovation progress, and project metrics across all your investment strategies',
           icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'projects':
         return {
-          title: 'Projects',
-          subtitle: 'Manage and track all your active operational projects and property improvements',
+          title: 'Active Deals & Projects',
+          subtitle: 'Track Fix & Flip properties, BRRR refinance progress, and Construction/Development projects',
           icon: <ProjectsIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'createproject':
         return {
-          title: 'Create a New Project',
-          subtitle: 'Start a new operational project, renovation, or property improvement initiative',
+          title: 'Start a New Deal',
+          subtitle: 'Initiate a Fix & Flip, BRRR property, or Land Development project',
           icon: <CreateProjectIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'expenses':
         return {
-          title: 'Expense Tracking',
-          subtitle: 'Monitor and categorize all operational expenses, maintenance costs, and property expenditures',
+          title: 'Deal Expense Tracking',
+          subtitle: 'Monitor renovation costs, construction expenses, and holding costs across all your deals',
           icon: <ExpenseIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'contractors':
         return {
-          title: 'Contractor & Vendor Scheduling',
-          subtitle: 'Schedule and manage contractors, vendors, and service providers for property projects',
+          title: 'Contractor & Vendor Management',
+          subtitle: 'Schedule contractors for renovations, flips, and construction projects',
           icon: <ContractorIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'optimization':
         return {
-          title: 'Portfolio Optimization Suggestions',
-          subtitle: 'AI-powered recommendations for improving property performance and portfolio returns',
+          title: 'Deal Optimization Insights',
+          subtitle: 'AI recommendations for maximizing profits on flips, refinancing strategies, and construction efficiency',
           icon: <OptimizationIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'messages':
         return {
-          title: 'Property Operations Communications',
-          subtitle: 'Manage communications with project teams, contractors, and operations partners',
+          title: 'Project Communications',
+          subtitle: 'Coordinate with contractors, inspectors, and construction teams across all your deals',
           icon: <ChatIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       case 'assistant':
         return {
           title: 'Lumina Operations Assistant',
-          subtitle: 'AI-powered assistance for property operations and project management',
+          subtitle: 'Specialized assistance for Fix & Flip, BRRR, and Construction projects',
           icon: <OperateAssistantIcon size={28} sx={{ color: brandColors.text.inverse }} />,
         };
       case 'advertise':
         return {
           title: 'Advertise Your Services',
-          subtitle: 'Connect with property owners needing operational services',
+          subtitle: 'Connect with investors needing Fix & Flip, BRRR, or Construction expertise',
           icon: <CampaignIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
       default:
         return {
-          title: 'Property Projects',
-          subtitle: 'Ongoing projects and tools for investment properties',
+          title: 'Fix & Flip, BRRR & Construction Projects',
+          subtitle: 'Manage your active deals and investment projects',
           icon: <DashboardIcon sx={{ fontSize: 28, color: brandColors.text.inverse }} />,
         };
     }
@@ -102,10 +102,10 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Create a New Project
+              Start a New Deal
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Start a new operational project with step-by-step setup for renovations, improvements, or maintenance.
+              Initiate a Fix & Flip property, BRRR investment, or Land Development/Construction project with complete deal analysis and tracking.
             </Typography>
           </Box>
         );
@@ -113,10 +113,10 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Expense Tracking
+              Deal Expense Tracking
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Track and categorize all operational expenses, maintenance costs, and property-related expenditures.
+              Track and categorize renovation costs, construction expenses, holding costs, and all deal-related expenditures across Fix & Flip, BRRR, and Construction projects.
             </Typography>
           </Box>
         );
@@ -124,10 +124,10 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Contractor & Vendor Scheduling
+              Contractor & Vendor Management
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Schedule and manage contractors, vendors, and service providers for property projects and maintenance.
+              Schedule and manage contractors, vendors, and construction teams for your Fix & Flip renovations, BRRR rehabs, and development projects.
             </Typography>
           </Box>
         );
@@ -135,10 +135,10 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Portfolio Optimization Suggestions
+              Deal Optimization Insights
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              AI-powered recommendations for improving property performance, reducing costs, and maximizing portfolio returns.
+              AI-powered recommendations for maximizing profits on flips, optimizing refinancing strategies, reducing construction costs, and improving deal efficiency.
             </Typography>
           </Box>
         );
@@ -152,7 +152,7 @@ const OperateWorkspace: React.FC<OperateWorkspaceProps> = ({ activeTab }) => {
         return (
           <Box>
             <Typography variant="h5" gutterBottom>
-              Select a projects option from the sidebar
+              Select a deal management option from the sidebar
             </Typography>
           </Box>
         );

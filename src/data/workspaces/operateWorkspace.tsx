@@ -17,7 +17,7 @@ import { brandColors } from "../../theme";
 export const operateWorkspace: WorkspaceConfig = {
   id: 'operate',
   name: 'Operate',
-  description: 'Property operations and project management',
+  description: 'Fix & Flip, BRRR, and Land Development/Construction project management',
   icon: <DashboardIcon />,
   color: brandColors.primary,
   defaultTab: 'dashboard',

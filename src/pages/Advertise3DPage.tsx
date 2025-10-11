@@ -57,14 +57,9 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects - Concave Milky Way for debugging */}
-      <ConcaveMilkyWay 
-        scrollProgress={scrollProgress} 
-        scrollVelocity={scrollVelocity}
-        parallaxFactor={0.4}
-      />
-      {/* Temporarily disabled for debugging */}
-      {/* <WhizzingStars scrollVelocity={scrollVelocity} /> */}
+      {/* Background Effects - Concave Milky Way and Whizzing Stars */}
+      <ConcaveMilkyWay scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} />
+      <WhizzingStars scrollVelocity={scrollVelocity} />
 
       {/* Scene Manager - handles camera transitions */}
       <SceneManager 
@@ -222,7 +217,6 @@ const Advertise3DPage: React.FC = () => {
               powerPreference: 'high-performance',
             }}
             dpr={[1, 2]}
-            style={{ background: 'transparent' }}
           >
             <Suspense fallback={null}>
               <SceneContent 

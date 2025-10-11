@@ -1,71 +1,82 @@
 /**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential.
+ * 
  * Concave Milky Way Background
- * 3D inverted sphere with Milky Way texture and dynamic parallax movement
+ * A 3D sphere viewed from inside with parallax effect
  */
 
 import React, { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { useTexture } from '@react-three/drei';
+import { useFrame, useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three';
 import * as THREE from 'three';
-import { calculateMilkyWayParallaxOffset, getCurrentCameraPosition, calculateTextureUVOffset } from '../../../utils/3d/parallax';
-
-// Simple material for debugging - will replace with shader once working
 
 interface ConcaveMilkyWayProps {
-  scrollProgress?: number;
-  scrollVelocity?: number;
-  parallaxFactor?: number;
+  scrollProgress: number;
+  scrollVelocity: number;
 }
 
 export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({ 
-  scrollProgress = 0, 
-  scrollVelocity = 0,
-  parallaxFactor = 0.4 
+  scrollProgress, 
+  scrollVelocity 
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  // Load the Milky Way texture
-  const milkyWayTexture = useTexture('/milky-way-background.jpg');
+  // Load the milky way texture
+  const texture = useLoader(TextureLoader, '/milky-way-background.jpg');
   
-  // Create small sphere geometry for testing
-  const sphereGeometry = useMemo(() => {
-    const geometry = new THREE.SphereGeometry(5, 16, 16);
-    // Small sphere for testing
-    return geometry;
+  // Create sphere geometry with inverted normals (to see inside)
+  const geometry = useMemo(() => {
+    const geo = new THREE.SphereGeometry(
+      100,  // Large radius to encompass the scene
+      64,   // Width segments for smooth surface
+      64    // Height segments for smooth surface
+    );
+    
+    // Invert normals so we see the inside of the sphere
+    geo.scale(-1, 1, 1);
+    
+    return geo;
   }, []);
   
-  // Create mesh material with solid color for testing
-  const meshMaterial = useMemo(() => {
-    const material = new THREE.MeshBasicMaterial({
-      color: '#ff0000', // Bright red for testing
-      side: THREE.FrontSide,
-      transparent: false,
+  // Create material with the texture
+  const material = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.BackSide, // Render the inside
+      transparent: true,
+      opacity: 0.6,
     });
-    return material;
-  }, []);
+  }, [texture]);
   
-  useFrame((state, delta) => {
+  // Animate parallax rotation based on scroll
+  useFrame(() => {
     if (meshRef.current) {
-      // For testing: position small sphere in front of camera
-      meshRef.current.position.set(0, 0, 5);
+      // Subtle rotation opposite to scroll direction (parallax effect)
+      // Looking right makes background shift left
+      const targetRotationY = -scrollProgress * 0.15; // Negative for opposite direction
+      const targetRotationX = Math.sin(scrollProgress * 0.5) * 0.08; // Gentle vertical tilt
       
-      // Add rotation for visibility
-      meshRef.current.rotation.y += delta;
+      // Smooth interpolation for natural movement
+      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.05;
+      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.05;
       
-      // Debug logging every 60 frames
-      if (Math.floor(state.clock.elapsedTime) % 1 === 0) {
-        console.log('Camera position:', state.camera.position);
-        console.log('Sphere position:', meshRef.current.position);
-        console.log('Scroll progress:', scrollProgress);
-      }
+      // Add subtle scale breathing based on velocity
+      const targetScale = 1 + Math.abs(scrollVelocity) * 0.00005;
+      const currentScale = meshRef.current.scale.x;
+      const newScale = currentScale + (targetScale - currentScale) * 0.1;
+      meshRef.current.scale.setScalar(newScale);
     }
   });
   
   return (
     <mesh
       ref={meshRef}
-      geometry={sphereGeometry}
-      material={meshMaterial}
+      geometry={geometry}
+      material={material}
+      position={[0, 0, 0]}
+      rotation={[0, 0, 0]}
     />
   );
 };
+

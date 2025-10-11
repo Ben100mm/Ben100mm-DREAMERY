@@ -109,6 +109,20 @@ const AdvertisePage: React.FC = () => {
       padding: '20px',
       color: 'white'
     }}>
+      {/* Ultra Simple Test */}
+      <div style={{ 
+        fontSize: '48px', 
+        fontWeight: 'bold',
+        marginBottom: '20px',
+        textAlign: 'center',
+        backgroundColor: 'red',
+        padding: '20px',
+        border: '5px solid yellow',
+        color: 'white'
+      }}>
+        🚨 URGENT TEST - RED BOX WITH YELLOW BORDER 🚨
+      </div>
+      
       {/* Debug Text */}
       <div style={{ 
         fontSize: '24px', 

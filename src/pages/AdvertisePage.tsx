@@ -102,145 +102,84 @@ const AdvertisePage: React.FC = () => {
   };
 
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh', 
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Test Background - High Z-Index */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
-          backgroundColor: '#1a1a2e',
-        }}
-      >
-        <div style={{ color: 'white', fontSize: '24px', padding: '20px' }}>
-          BACKGROUND TEST - Can you see this?
-        </div>
+    <div style={{ 
+      minHeight: '100vh', 
+      position: 'relative',
+      backgroundColor: '#1a1a2e',
+      padding: '20px',
+      color: 'white'
+    }}>
+      {/* Debug Text */}
+      <div style={{ 
+        fontSize: '24px', 
+        fontWeight: 'bold',
+        marginBottom: '20px',
+        textAlign: 'center',
+        backgroundColor: 'rgba(255, 20, 147, 0.8)',
+        padding: '10px',
+        borderRadius: '5px'
+      }}>
+        🌌 SPACE BACKGROUND TEST - Can you see this pink box?
       </div>
       
-      {/* Pink Circle Test */}
+      {/* Pink Circle */}
       <div
         style={{
           position: 'absolute',
-          top: '10%',
-          left: '10%',
+          top: '100px',
+          left: '100px',
           width: '300px',
           height: '300px',
           borderRadius: '50%',
           backgroundColor: 'rgba(255, 20, 147, 0.8)',
-          zIndex: 2,
+          border: '2px solid white'
         }}
       />
       
-      {/* Blue Circle Test */}
+      {/* Blue Circle */}
       <div
         style={{
           position: 'absolute',
-          top: '50%',
-          right: '10%',
+          top: '300px',
+          right: '100px',
           width: '250px',
           height: '250px',
           borderRadius: '50%',
           backgroundColor: 'rgba(0, 150, 255, 0.8)',
-          zIndex: 2,
+          border: '2px solid white'
         }}
       />
       
-      {/* Purple Circle Test */}
+      {/* Purple Circle */}
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          top: '400px',
           left: '50%',
-          transform: 'translate(-50%, -50%)',
+          transform: 'translateX(-50%)',
           width: '400px',
           height: '400px',
           borderRadius: '50%',
           backgroundColor: 'rgba(138, 43, 226, 0.6)',
-          zIndex: 2,
+          border: '2px solid white'
         }}
       />
       
-      {/* Simple Stars */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '20%',
-          left: '20%',
-          width: '4px',
-          height: '4px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          zIndex: 3,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: '30%',
-          right: '30%',
-          width: '3px',
-          height: '3px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          zIndex: 3,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '30%',
-          left: '30%',
-          width: '2px',
-          height: '2px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          zIndex: 3,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '20%',
-          right: '20%',
-          width: '3px',
-          height: '3px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          zIndex: 3,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '5px',
-          height: '5px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          zIndex: 3,
-        }}
-      />
+      {/* Stars */}
+      <div style={{ position: 'absolute', top: '50px', left: '50px', width: '10px', height: '10px', backgroundColor: '#fff', borderRadius: '50%' }} />
+      <div style={{ position: 'absolute', top: '100px', right: '100px', width: '8px', height: '8px', backgroundColor: '#fff', borderRadius: '50%' }} />
+      <div style={{ position: 'absolute', bottom: '100px', left: '200px', width: '6px', height: '6px', backgroundColor: '#fff', borderRadius: '50%' }} />
+      <div style={{ position: 'absolute', bottom: '200px', right: '200px', width: '12px', height: '12px', backgroundColor: '#fff', borderRadius: '50%' }} />
 
       {/* Content */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 100,
-          minHeight: '100vh',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        }}
-      >
+      <div style={{
+        position: 'relative',
+        zIndex: 100,
+        minHeight: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        padding: '20px',
+        borderRadius: '10px'
+      }}>
         {/* 3D Experience Banner */}
       <Box
         sx={{
@@ -595,8 +534,8 @@ const AdvertisePage: React.FC = () => {
             Start Advertising Today
           </Button>
         </Container>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

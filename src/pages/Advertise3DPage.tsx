@@ -226,7 +226,6 @@ const Advertise3DPage: React.FC = () => {
               width: '100%',
               position: 'relative',
               scrollSnapAlign: 'start',
-              scrollSnapStop: 'normal', // Changed from 'always' to allow reverse scrolling
               pointerEvents: 'none',
             }}
           />

@@ -25,12 +25,13 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   // Load the milky way texture with better quality settings
   const texture = useLoader(TextureLoader, '/milky-way-background.jpg');
   
-  // Configure texture for better quality
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.minFilter = THREE.LinearFilter;
+  // Configure texture for better quality and reduced grain
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = THREE.LinearMipmapLinearFilter; // Better mipmap filtering
   texture.magFilter = THREE.LinearFilter;
   texture.generateMipmaps = true;
+  texture.anisotropy = 16; // Higher anisotropy for better quality at angles
   
   // Create sphere geometry (to see inside)
   const geometry = useMemo(() => {
@@ -49,7 +50,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       map: texture,
       side: THREE.BackSide, // Render the inside surface
       transparent: true,
-      opacity: 0.9, // Higher opacity for richer appearance
+      opacity: 0.7, // Reduced opacity to soften grain appearance
       depthWrite: false, // Prevent z-fighting with other elements
       fog: false, // Disable fog for consistent appearance
     });
@@ -58,20 +59,17 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   // Animate parallax rotation based on scroll
   useFrame(() => {
     if (meshRef.current) {
-      // More pronounced rotation opposite to scroll direction (parallax effect)
-      // Looking right makes background shift left
-      const targetRotationY = -scrollProgress * 0.3; // Increased for more visible parallax
-      const targetRotationX = Math.sin(scrollProgress * 0.5) * 0.15; // More pronounced vertical tilt
+      // Very subtle rotation opposite to scroll direction (parallax effect)
+      // Looking right makes background shift left - but much gentler
+      const targetRotationY = -scrollProgress * 0.08; // Much more subtle
+      const targetRotationX = Math.sin(scrollProgress * 0.3) * 0.04; // Very gentle vertical tilt
       
-      // Smoother interpolation for natural movement
-      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.08;
-      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.08;
+      // Slower interpolation for smoother movement
+      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.03;
+      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.03;
       
-      // Add subtle scale breathing based on velocity
-      const targetScale = 1 + Math.abs(scrollVelocity) * 0.0001;
-      const currentScale = meshRef.current.scale.x;
-      const newScale = currentScale + (targetScale - currentScale) * 0.15;
-      meshRef.current.scale.setScalar(newScale);
+      // Remove scale breathing effect as it worsens the grain
+      // Keep static scale for better visual quality
     }
   });
   

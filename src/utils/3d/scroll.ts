@@ -28,7 +28,8 @@ function createWindingPath(): THREE.CatmullRomCurve3 {
     new THREE.Vector3(2, -2, -310),     // Section 8: Curve right, down
     new THREE.Vector3(-1, 1, -350),     // Section 9: Curve left, up
     new THREE.Vector3(3, -1, -390),     // Section 10: Curve right, down
-    new THREE.Vector3(0, 0, -430),      // Section 11: Center, level (end)
+    new THREE.Vector3(0, 0, -430),      // Section 11: Center, level
+    new THREE.Vector3(1, 0, -470),      // Section 12: Final section (Milky Way)
   ];
   
   return new THREE.CatmullRomCurve3(waypoints, false, 'catmullrom', 0.5);
@@ -109,6 +110,12 @@ export const sections: Section[] = [
     cameraTarget: new THREE.Vector3(0, 0, -440),
     index: 11,
   },
+  {
+    id: 'milkyway',
+    cameraPosition: new THREE.Vector3(0, 0, -470),
+    cameraTarget: new THREE.Vector3(0, 0, -480),
+    index: 12,
+  },
 ];
 
 // Helper to get section Z position (where content is located)
@@ -118,19 +125,36 @@ export function getSectionZPosition(index: number): number {
 
 // Helper to get section position along the winding path
 export function getSectionPathPosition(index: number): THREE.Vector3 {
-  const t = index / (sections.length - 1);
-  return windingPath.getPointAt(t);
+  const safeIndex = Math.max(0, Math.min(index, sections.length - 1));
+  const t = safeIndex / Math.max(1, sections.length - 1);
+  const position = windingPath.getPointAt(t);
+  
+  // Fallback to safe position if curve returns invalid result
+  if (!position) {
+    return new THREE.Vector3(0, 0, safeIndex * -SECTION_SPACING);
+  }
+  
+  return position;
 }
 
 // Helper to get dynamic content position that moves toward camera
 export function getContentPositionAlongPath(index: number, scrollProgress: number): THREE.Vector3 {
+  // Ensure index is within bounds
+  const safeIndex = Math.max(0, Math.min(index, sections.length - 1));
+  
   // Calculate the section's base position on the path
-  const sectionT = index / (sections.length - 1);
+  const sectionT = safeIndex / Math.max(1, sections.length - 1);
   const sectionPosition = windingPath.getPointAt(sectionT);
   
-  // Calculate current camera position
+  // Calculate current camera position with bounds checking
   const currentT = Math.max(0, Math.min(1, scrollProgress));
   const cameraPosition = windingPath.getPointAt(currentT);
+  
+  // Validate that we got valid positions
+  if (!sectionPosition || !cameraPosition) {
+    // Fallback to a safe position
+    return new THREE.Vector3(0, 0, safeIndex * -SECTION_SPACING);
+  }
   
   // Calculate how far the camera has progressed past this section
   const progressPastSection = Math.max(0, currentT - sectionT);
@@ -138,13 +162,18 @@ export function getContentPositionAlongPath(index: number, scrollProgress: numbe
   // Only move content toward camera if we're past the section
   if (progressPastSection > 0) {
     // Create a vector from section to camera
-    const direction = cameraPosition.clone().sub(sectionPosition).normalize();
+    const direction = cameraPosition.clone().sub(sectionPosition);
     
-    // Move content toward camera with controlled movement
-    const movementDistance = progressPastSection * 15; // Reduced movement speed
-    const contentPosition = sectionPosition.clone().add(direction.multiplyScalar(movementDistance));
-    
-    return contentPosition;
+    // Check if direction vector is valid before normalizing
+    if (direction.length() > 0.001) {
+      direction.normalize();
+      
+      // Move content toward camera with controlled movement
+      const movementDistance = progressPastSection * 15; // Reduced movement speed
+      const contentPosition = sectionPosition.clone().add(direction.multiplyScalar(movementDistance));
+      
+      return contentPosition;
+    }
   }
   
   // If camera hasn't reached this section yet, keep content at its base position
@@ -153,8 +182,16 @@ export function getContentPositionAlongPath(index: number, scrollProgress: numbe
 
 // Helper to get section look direction along the winding path
 export function getSectionLookDirection(index: number): THREE.Vector3 {
-  const t = Math.min(index / (sections.length - 1) + 0.03, 1);
-  return windingPath.getPointAt(t);
+  const safeIndex = Math.max(0, Math.min(index, sections.length - 1));
+  const t = Math.min(safeIndex / Math.max(1, sections.length - 1) + 0.03, 1);
+  const position = windingPath.getPointAt(t);
+  
+  // Fallback to safe position if curve returns invalid result
+  if (!position) {
+    return new THREE.Vector3(0, 0, safeIndex * -SECTION_SPACING);
+  }
+  
+  return position;
 }
 
 export class ScrollController {
@@ -239,6 +276,13 @@ export class ScrollController {
     const t = Math.max(0, Math.min(1, this.scrollProgress));
     const basePosition = windingPath.getPointAt(t);
     
+    // Validate base position
+    if (!basePosition) {
+      // Fallback to safe camera position
+      camera.position.set(0, 0, 10);
+      return;
+    }
+    
     // Apply mouse offset to camera position
     const targetPosition = basePosition.clone().add(new THREE.Vector3(
       this.currentMouseOffset.x,
@@ -249,6 +293,16 @@ export class ScrollController {
     // Get tangent for look direction with mouse influence
     const lookAheadT = Math.min(t + 0.03, 1);
     const baseLookAt = windingPath.getPointAt(lookAheadT);
+    
+    // Validate look-at position
+    if (!baseLookAt) {
+      // Fallback to simple look-ahead
+      const fallbackLookAt = basePosition.clone().add(new THREE.Vector3(0, 0, -10));
+      camera.position.lerp(targetPosition, lerpFactor);
+      camera.lookAt(fallbackLookAt);
+      return;
+    }
+    
     const lookAtPoint = baseLookAt.clone().add(new THREE.Vector3(
       this.currentMouseOffset.x * 0.5,
       this.currentMouseOffset.y * 0.5,

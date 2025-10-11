@@ -109,7 +109,7 @@ const AdvertisePage: React.FC = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Space Background */}
+      {/* Test Background - Simple Colors */}
       <div
         style={{
           position: 'fixed',
@@ -118,80 +118,113 @@ const AdvertisePage: React.FC = () => {
           width: '100%',
           height: '100%',
           zIndex: -1,
-          background: `
-            linear-gradient(45deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7209b7 100%)
-          `,
+          backgroundColor: '#1a1a2e',
         }}
       />
       
-      {/* Nebula 1 - Pink */}
+      {/* Pink Circle Test */}
       <div
         style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
+          top: '10%',
+          left: '10%',
+          width: '300px',
+          height: '300px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255, 20, 147, 0.8)',
           zIndex: -1,
-          background: `
-            radial-gradient(ellipse 800px 600px at 20% 30%, rgba(255, 20, 147, 0.6) 0%, transparent 70%)
-          `,
         }}
       />
       
-      {/* Nebula 2 - Blue */}
+      {/* Blue Circle Test */}
       <div
         style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
+          top: '50%',
+          right: '10%',
+          width: '250px',
+          height: '250px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(0, 150, 255, 0.8)',
           zIndex: -1,
-          background: `
-            radial-gradient(ellipse 600px 400px at 80% 70%, rgba(0, 150, 255, 0.6) 0%, transparent 70%)
-          `,
         }}
       />
       
-      {/* Nebula 3 - Purple */}
+      {/* Purple Circle Test */}
       <div
         style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(138, 43, 226, 0.6)',
           zIndex: -1,
-          background: `
-            radial-gradient(ellipse 1000px 800px at 50% 50%, rgba(138, 43, 226, 0.4) 0%, transparent 80%)
-          `,
         }}
       />
       
-      {/* Whizzing Stars */}
+      {/* Simple Stars */}
       <div
         style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
+          top: '20%',
+          left: '20%',
+          width: '4px',
+          height: '4px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
           zIndex: -1,
-          backgroundImage: `
-            radial-gradient(1px 1px at 25% 25%, #fff, transparent),
-            radial-gradient(1px 1px at 75% 25%, #fff, transparent),
-            radial-gradient(1px 1px at 25% 75%, #fff, transparent),
-            radial-gradient(1px 1px at 75% 75%, #fff, transparent),
-            radial-gradient(2px 2px at 50% 50%, #fff, transparent),
-            radial-gradient(1px 1px at 10% 50%, #fff, transparent),
-            radial-gradient(1px 1px at 90% 50%, #fff, transparent),
-            radial-gradient(1px 1px at 50% 10%, #fff, transparent),
-            radial-gradient(1px 1px at 50% 90%, #fff, transparent)
-          `,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '100% 100%',
-          opacity: 0.9,
+        }}
+      />
+      <div
+        style={{
+          position: 'fixed',
+          top: '30%',
+          right: '30%',
+          width: '3px',
+          height: '3px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+          zIndex: -1,
+        }}
+      />
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '30%',
+          left: '30%',
+          width: '2px',
+          height: '2px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+          zIndex: -1,
+        }}
+      />
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '20%',
+          right: '20%',
+          width: '3px',
+          height: '3px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+          zIndex: -1,
+        }}
+      />
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '5px',
+          height: '5px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+          zIndex: -1,
         }}
       />
 

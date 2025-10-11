@@ -1,18 +1,13 @@
 /**
- * Hero Section 3D Component
+ * Hero Section 3D Component - Clean "Continuous Feedback" Design
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Html, Text } from '@react-three/drei';
-import { Box, Typography, Button, Grid, Chip } from '@mui/material';
-import { brandColors } from '../../../theme/theme';
+import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { animationPresets } from '../../../utils/3d/animations';
 import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 import { OuroborosConstellation } from '../../3d/constellations/OuroborosConstellation';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import PeopleIcon from '@mui/icons-material/People';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 export const HeroSection3D: React.FC<{ 
   visible: boolean; 
@@ -21,19 +16,6 @@ export const HeroSection3D: React.FC<{
   mousePosition?: { x: number; y: number };
 }> = ({ visible, sectionIndex, scrollProgress, mousePosition = { x: 0, y: 0 } }) => {
   const navigate = useNavigate();
-  const [statsAnimated, setStatsAnimated] = useState(false);
-
-  useEffect(() => {
-    if (visible && !statsAnimated) {
-      setStatsAnimated(true);
-      // Trigger counter animations
-      const counters = document.querySelectorAll('.stat-counter');
-      counters.forEach((counter) => {
-        const target = parseInt(counter.getAttribute('data-target') || '0');
-        animationPresets.animateCounter(counter as HTMLElement, 0, target, 2, '+');
-      });
-    }
-  }, [visible, statsAnimated]);
 
   // Get dynamic position that moves toward camera along the winding path
   const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
@@ -73,9 +55,9 @@ export const HeroSection3D: React.FC<{
       )}
 
       {/* Ouroboros Constellation - Positioned on the right */}
-      <OuroborosConstellation 
-        visible={visible} 
-        scrollProgress={scrollProgress} 
+      <OuroborosConstellation
+        visible={visible}
+        scrollProgress={scrollProgress}
         mousePosition={mousePosition}
         position={[4, 0, 0]}
         scale={[1.5, 1.5, 1.5]}

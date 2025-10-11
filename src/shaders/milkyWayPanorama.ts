@@ -3,10 +3,12 @@
  * Based on ESO's 360-degree Milky Way panorama
  */
 
-// Vertex Shader - Simple pass-through for fullscreen quad
+// Vertex Shader - Fullscreen quad
 export const milkyWayVertexShader = `
   void main(void) {
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    // Create a fullscreen quad that covers the entire viewport
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
   }
 `;
 
@@ -78,6 +80,7 @@ export const milkyWayFragmentShader = `
       gl_FragColor = vec4(finalColor, color.a);
     } else {
       // Procedural Milky Way with dreamery blue tinge
+      // Use normalized device coordinates for fullscreen coverage
       vec2 uv = gl_FragCoord.xy / u_translate.xy;
       uv = (uv - 0.5) * 2.0;
       

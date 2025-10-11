@@ -265,15 +265,16 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
 
   return (
     <group>
-      {/* Fullscreen quad for stereographic projection */}
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        <planeGeometry args={[2, 2]} />
+      {/* Fullscreen background - positioned far back to cover entire viewport */}
+      <mesh ref={meshRef} position={[0, 0, -50]} scale={[100, 100, 1]}>
+        <planeGeometry args={[1, 1]} />
         <shaderMaterial
           ref={materialRef}
           uniforms={uniforms}
           vertexShader={milkyWayVertexShader}
           fragmentShader={milkyWayFragmentShader}
           transparent={false}
+          side={THREE.DoubleSide}
         />
       </mesh>
       

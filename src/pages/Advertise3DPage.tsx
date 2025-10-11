@@ -317,29 +317,7 @@ const Advertise3DPage: React.FC = () => {
           backgroundColor: '#000',
         }}
       >
-        {/* Cosmic Starfield Background */}
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: `
-              radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.18) 50%, transparent 50%),
-              radial-gradient(1.5px 1.5px at 70% 60%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
-              radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-              radial-gradient(1.5px 1.5px at 85% 25%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
-              radial-gradient(1px 1px at 60% 70%, rgba(100, 181, 246, 0.15) 50%, transparent 50%),
-              radial-gradient(2px 2px at 90% 80%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-              linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f1419 100%)
-            `,
-            backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%',
-            transform: `translateY(${currentSection * -30}px) scale(${1 + scrollVelocity * 0.001})`,
-            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            zIndex: 0,
-          }}
-        />
+        {/* Background removed - using 3D Milky Way panorama instead */}
         {/* Scrollable sections - 12 sections with programmatic scroll control */}
         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
           <Box

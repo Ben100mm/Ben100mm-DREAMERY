@@ -109,51 +109,55 @@ const AdvertisePage: React.FC = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Test Background - Simple Colors */}
+      {/* Test Background - High Z-Index */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%',
-          zIndex: -1,
+          zIndex: 1,
           backgroundColor: '#1a1a2e',
         }}
-      />
+      >
+        <div style={{ color: 'white', fontSize: '24px', padding: '20px' }}>
+          BACKGROUND TEST - Can you see this?
+        </div>
+      </div>
       
       {/* Pink Circle Test */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '10%',
           left: '10%',
           width: '300px',
           height: '300px',
           borderRadius: '50%',
           backgroundColor: 'rgba(255, 20, 147, 0.8)',
-          zIndex: -1,
+          zIndex: 2,
         }}
       />
       
       {/* Blue Circle Test */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '50%',
           right: '10%',
           width: '250px',
           height: '250px',
           borderRadius: '50%',
           backgroundColor: 'rgba(0, 150, 255, 0.8)',
-          zIndex: -1,
+          zIndex: 2,
         }}
       />
       
       {/* Purple Circle Test */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
@@ -161,62 +165,62 @@ const AdvertisePage: React.FC = () => {
           height: '400px',
           borderRadius: '50%',
           backgroundColor: 'rgba(138, 43, 226, 0.6)',
-          zIndex: -1,
+          zIndex: 2,
         }}
       />
       
       {/* Simple Stars */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '20%',
           left: '20%',
           width: '4px',
           height: '4px',
           backgroundColor: '#fff',
           borderRadius: '50%',
-          zIndex: -1,
+          zIndex: 3,
         }}
       />
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '30%',
           right: '30%',
           width: '3px',
           height: '3px',
           backgroundColor: '#fff',
           borderRadius: '50%',
-          zIndex: -1,
+          zIndex: 3,
         }}
       />
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: '30%',
           left: '30%',
           width: '2px',
           height: '2px',
           backgroundColor: '#fff',
           borderRadius: '50%',
-          zIndex: -1,
+          zIndex: 3,
         }}
       />
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: '20%',
           right: '20%',
           width: '3px',
           height: '3px',
           backgroundColor: '#fff',
           borderRadius: '50%',
-          zIndex: -1,
+          zIndex: 3,
         }}
       />
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
@@ -224,7 +228,7 @@ const AdvertisePage: React.FC = () => {
           height: '5px',
           backgroundColor: '#fff',
           borderRadius: '50%',
-          zIndex: -1,
+          zIndex: 3,
         }}
       />
 
@@ -232,7 +236,7 @@ const AdvertisePage: React.FC = () => {
       <Box
         sx={{
           position: 'relative',
-          zIndex: 10,
+          zIndex: 100,
           minHeight: '100vh',
           backgroundColor: 'rgba(0, 0, 0, 0.2)',
         }}

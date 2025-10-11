@@ -6,7 +6,7 @@
  * Full-page 3D canvas with 12 comprehensive advertising sections
  */
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { Box, CircularProgress } from '@mui/material';
@@ -140,17 +140,17 @@ const Advertise3DPage: React.FC = () => {
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
+  const targetSectionRef = useRef(0);
 
-  // Create scroll container with sections
+  // Custom scroll control with 2-second transitions
   useEffect(() => {
-    // Simple scroll snap setup
+    // Hide scrollbar
     const style = document.createElement('style');
-    style.id = 'scroll-snap-styles';
+    style.id = 'scroll-styles';
     style.textContent = `
-      html {
-        scroll-snap-type: y mandatory;
-        overflow-y: scroll;
-      }
       html::-webkit-scrollbar,
       body::-webkit-scrollbar {
         display: none;
@@ -159,22 +159,69 @@ const Advertise3DPage: React.FC = () => {
       body {
         -ms-overflow-style: none;
         scrollbar-width: none;
+        scroll-behavior: auto;
       }
     `;
     document.head.appendChild(style);
     
-    // Set loading complete after initial render - reduced timeout for faster load
+    const handleWheel = (e: WheelEvent) => {
+      if (isScrolling) {
+        e.preventDefault();
+        return;
+      }
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const nextSection = Math.max(0, Math.min(11, currentSection + direction));
+      
+      if (nextSection !== currentSection) {
+        e.preventDefault();
+        setIsScrolling(true);
+        targetSectionRef.current = nextSection;
+        
+        // Smooth scroll to next section over 2 seconds
+        const targetY = nextSection * window.innerHeight;
+        const startY = window.scrollY;
+        const distance = targetY - startY;
+        const duration = 2000; // 2 seconds
+        const startTime = performance.now();
+        
+        const animateScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Ease-in-out function for smooth animation
+          const easeProgress = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          
+          window.scrollTo(0, startY + distance * easeProgress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          } else {
+            setIsScrolling(false);
+            setCurrentSection(nextSection);
+          }
+        };
+        
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // Set loading complete after initial render
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 300);
 
     return () => {
       clearTimeout(timer);
-      // Cleanup
-      const styleEl = document.getElementById('scroll-snap-styles');
+      window.removeEventListener('wheel', handleWheel);
+      const styleEl = document.getElementById('scroll-styles');
       if (styleEl) styleEl.remove();
     };
-  }, []);
+  }, [currentSection, isScrolling]);
 
   // Section change handler (called by SceneManager)
   const handleSectionChange = (section: number) => {
@@ -215,7 +262,7 @@ const Advertise3DPage: React.FC = () => {
             zIndex: 0,
           }}
         />
-        {/* Scrollable sections with snap points - 12 sections */}
+        {/* Scrollable sections - 12 sections with programmatic scroll control */}
         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
           <Box
             key={sectionIndex}
@@ -223,7 +270,6 @@ const Advertise3DPage: React.FC = () => {
             sx={{
               height: '100vh',
               width: '100%',
-              scrollSnapAlign: 'start',
             }}
           />
         ))}

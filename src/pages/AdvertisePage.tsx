@@ -119,34 +119,26 @@ const AdvertisePage: React.FC = () => {
           height: '100%',
           zIndex: -1,
           background: `
-            radial-gradient(ellipse at center, 
-              rgba(139, 69, 19, 0.6) 0%,
-              rgba(75, 0, 130, 0.7) 25%,
-              rgba(25, 25, 112, 0.8) 50%,
-              rgba(0, 0, 0, 0.9) 75%,
-              rgba(0, 0, 0, 0.95) 100%
+            radial-gradient(ellipse 1200px 800px at center, 
+              rgba(138, 43, 226, 0.4) 0%,
+              rgba(75, 0, 130, 0.3) 20%,
+              rgba(25, 25, 112, 0.2) 40%,
+              rgba(0, 0, 0, 0.8) 70%,
+              rgba(0, 0, 0, 1) 100%
             ),
-            linear-gradient(45deg,
+            radial-gradient(ellipse 800px 600px at 30% 20%, 
               rgba(255, 20, 147, 0.3) 0%,
-              rgba(138, 43, 226, 0.4) 20%,
-              rgba(0, 100, 200, 0.5) 40%,
-              rgba(0, 0, 139, 0.6) 60%,
-              rgba(0, 0, 0, 0.8) 80%,
-              rgba(0, 0, 0, 0.9) 100%
-            ),
-            radial-gradient(circle at 30% 20%,
-              rgba(255, 105, 180, 0.4) 0%,
-              rgba(255, 20, 147, 0.3) 30%,
+              rgba(255, 105, 180, 0.2) 30%,
               transparent 70%
             ),
-            radial-gradient(circle at 70% 80%,
-              rgba(138, 43, 226, 0.35) 0%,
-              rgba(75, 0, 130, 0.3) 40%,
-              transparent 70%
-            ),
-            radial-gradient(circle at 50% 50%,
+            radial-gradient(ellipse 600px 400px at 70% 80%, 
               rgba(0, 100, 200, 0.3) 0%,
-              rgba(25, 25, 112, 0.2) 50%,
+              rgba(25, 25, 112, 0.2) 40%,
+              transparent 80%
+            ),
+            radial-gradient(ellipse 1000px 500px at 50% 100%, 
+              rgba(138, 43, 226, 0.2) 0%,
+              rgba(75, 0, 130, 0.1) 50%,
               transparent 100%
             ),
             #000011
@@ -199,14 +191,13 @@ const AdvertisePage: React.FC = () => {
         }}
       />
 
-      {/* Content with semi-transparent overlay for readability */}
+      {/* Content with minimal overlay for readability */}
       <Box
         sx={{
           position: 'relative',
           zIndex: 1,
-          backgroundColor: 'rgba(0, 0, 17, 0.3)',
+          backgroundColor: 'rgba(0, 0, 17, 0.1)',
           minHeight: '100vh',
-          backdropFilter: 'blur(0.5px)',
         }}
       >
         {/* 3D Experience Banner */}
@@ -274,7 +265,7 @@ const AdvertisePage: React.FC = () => {
       </Box>
 
         {/* Advertising Opportunities Section */}
-        <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Container maxWidth="lg" sx={{ py: 8, position: 'relative' }}>
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography 
               variant="h3" 
@@ -283,7 +274,7 @@ const AdvertisePage: React.FC = () => {
                 fontWeight: 600, 
                 mb: 2, 
                 color: '#ffffff',
-                textShadow: '0 0 20px rgba(255, 255, 255, 0.3)'
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8)'
               }}
             >
               Advertising Opportunities
@@ -291,10 +282,10 @@ const AdvertisePage: React.FC = () => {
             <Typography 
               variant="h6" 
               sx={{ 
-                color: '#e0e0e0', 
+                color: '#ffffff', 
                 maxWidth: 600, 
                 mx: 'auto',
-                textShadow: '0 0 10px rgba(255, 255, 255, 0.2)'
+                textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3), 1px 1px 2px rgba(0, 0, 0, 0.8)'
               }}
             >
               Choose the perfect advertising solution for your business

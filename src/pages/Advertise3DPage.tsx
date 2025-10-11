@@ -143,9 +143,11 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
-    // Ensure body can scroll
+    // Ensure body can scroll with snap behavior
     document.body.style.overflow = 'auto';
     document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.scrollSnapType = 'y mandatory';
+    document.documentElement.style.scrollBehavior = 'smooth';
     
     // Set loading complete after initial render - reduced timeout for faster load
     const timer = setTimeout(() => {
@@ -157,6 +159,8 @@ const Advertise3DPage: React.FC = () => {
       // Cleanup: restore original overflow settings
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
+      document.documentElement.style.scrollSnapType = '';
+      document.documentElement.style.scrollBehavior = '';
     };
   }, []);
 
@@ -199,16 +203,21 @@ const Advertise3DPage: React.FC = () => {
             zIndex: 0,
           }}
         />
-        {/* Scrollable spacer to create scroll area */}
-        <Box
-          sx={{
-            height: '1200vh', // 12 sections x 100vh
-            width: '100%',
-            position: 'relative',
-            pointerEvents: 'none',
-            zIndex: -1, // Ensure it's behind the canvas
-          }}
-        />
+        {/* Scrollable sections with snap points - 12 sections */}
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
+          <Box
+            key={sectionIndex}
+            sx={{
+              height: '100vh',
+              width: '100%',
+              position: 'relative',
+              pointerEvents: 'none',
+              zIndex: -1,
+              scrollSnapAlign: 'start',
+              scrollSnapStop: 'always',
+            }}
+          />
+        ))}
 
         {/* Loading Screen */}
         {isLoading && <LoadingFallback />}

@@ -8,10 +8,16 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface WhizzingStarsProps {
+  visible?: boolean;
   scrollVelocity?: number;
+  scrollProgress?: number;
 }
 
-export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0 }) => {
+export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ 
+  visible = true, 
+  scrollVelocity = 0, 
+  scrollProgress = 0 
+}) => {
   const starsRef = useRef<THREE.Points>(null);
   const previousScrollRef = useRef(0);
   
@@ -36,15 +42,17 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
   }, []);
   
   useFrame((state, delta) => {
-    if (starsRef.current) {
+    if (starsRef.current && visible) {
       const positions = starsRef.current.geometry.attributes.position;
-      const scrollSpeed = Math.abs(scrollVelocity) * 5;
+      const scrollSpeed = Math.abs(scrollVelocity);
       
-      // Only move stars when scrolling
-      if (scrollSpeed > 0) {
+      // Only move stars when scrolling (no constant movement)
+      if (scrollSpeed > 0.01) {
+        const intensity = Math.min(scrollSpeed * 10, 5); // Cap the intensity
+        
         for (let i = 0; i < positions.count; i++) {
           // Move stars forward based on scroll speed only
-          positions.array[i * 3 + 2] += (velocities[i] * scrollSpeed) * delta * 10;
+          positions.array[i * 3 + 2] += (velocities[i] * intensity) * delta;
           
           // Reset stars that go past camera
           if (positions.array[i * 3 + 2] > 10) {
@@ -59,6 +67,9 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
     previousScrollRef.current = scrollVelocity;
   });
   
+  // Don't render if not visible
+  if (!visible) return null;
+
   return (
     <points ref={starsRef}>
       <bufferGeometry>
@@ -73,8 +84,10 @@ export const WhizzingStars: React.FC<WhizzingStarsProps> = ({ scrollVelocity = 0
         size={0.1}
         color="#ffffff"
         transparent
-        opacity={0.8}
+        opacity={0.9}
         sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );

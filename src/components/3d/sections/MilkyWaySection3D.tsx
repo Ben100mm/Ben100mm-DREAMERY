@@ -45,24 +45,7 @@ export const MilkyWaySection3D: React.FC<{
 
   return (
     <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
-      {/* Milky Way Panorama Background */}
-      {visible && (
-        <MilkyWayPanorama3D
-          visible={panoramaVisible}
-          interactive={true}
-          initialZoom={controls.zoom}
-          mouseSensitivity={0.002}
-          starColor="#ffffff"
-          starIntensity={controls.starIntensity}
-          brightness={controls.brightness}
-          contrast={controls.contrast}
-          saturation={controls.saturation}
-          autoRotate={controls.autoRotate}
-          customUniforms={{
-            // Add any custom uniforms here
-          }}
-        />
-      )}
+      {/* Note: Milky Way panorama is now a constant background in the main scene */}
 
       {/* 3D Title - Space-themed typography */}
       {visible && (
@@ -283,17 +266,7 @@ export const MilkyWaySection3D: React.FC<{
         </Html>
       )}
 
-      {/* Control Panel */}
-      <MilkyWayControls
-        controls={controls}
-        onUpdateControl={updateControl}
-        onResetControls={resetControls}
-        visible={panoramaVisible}
-        onToggleVisibility={handleToggleVisibility}
-        showControls={showControls}
-        onToggleControls={handleToggleControls}
-        onResetRotation={handleResetRotation}
-      />
+      {/* Note: Control panel moved to global scene level */}
     </group>
   );
 };

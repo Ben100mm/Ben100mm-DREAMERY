@@ -33,6 +33,9 @@ import { CampaignManagementSection3D } from '../components/3d/sections/CampaignM
 import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
 import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
 import { MilkyWaySection3D } from '../components/3d/sections/MilkyWaySection3D';
+import { MilkyWayPanorama3D, useMilkyWayControls } from '../components/3d/effects/MilkyWayPanorama3D';
+import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
+import { MilkyWayControls } from '../components/3d/controls/MilkyWayControls';
 
 /**
  * Scene Content Component
@@ -45,11 +48,31 @@ const SceneContent: React.FC<{
   scrollVelocity: number;
   scrollProgress: number;
   mousePosition: { x: number; y: number };
-}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition }) => {
+  controls: any;
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition, controls }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={75} />
+
+      {/* Constant Milky Way Panorama Background */}
+      <MilkyWayPanorama3D
+        visible={true}
+        interactive={true}
+        initialZoom={controls.zoom}
+        mouseSensitivity={0.001}
+        brightness={controls.brightness}
+        contrast={controls.contrast}
+        saturation={controls.saturation}
+        autoRotate={controls.autoRotate}
+      />
+
+      {/* Whizzing Stars - Only active during scroll */}
+      <WhizzingStars 
+        visible={true}
+        scrollVelocity={scrollVelocity}
+        scrollProgress={scrollProgress}
+      />
 
       {/* Lighting Setup */}
       <ambientLight intensity={0.5} />
@@ -107,7 +130,7 @@ const SceneContent: React.FC<{
       {/* Section 11: Analytics & Reporting - Analytics features */}
       {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} sectionIndex={11} scrollProgress={scrollProgress} />}
       
-      {/* Section 12: Milky Way Panorama - Interactive cosmic experience */}
+      {/* Section 12: Final section - Clean content without background */}
       {Math.abs(currentSection - 12) <= 1 && <MilkyWaySection3D visible={currentSection === 12} sectionIndex={12} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
     </>
   );
@@ -145,13 +168,17 @@ const LoadingFallback: React.FC = () => (
  */
 const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
+  const [scrollVelocity, setScrollVelocity] = useState(0);
+  
+  // Milky Way controls
+  const { controls, updateControl, resetControls } = useMilkyWayControls();
   
   // Debug logging
   console.log('Current section:', currentSection, 'Total sections: 13 (0-12)');
+  console.log('Scroll velocity:', scrollVelocity, 'Stars should whizz when > 0');
   if (currentSection === 12) {
     console.log('🎯 MILKY WAY SECTION ACTIVE - Section 12');
   }
-  const [scrollVelocity, setScrollVelocity] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
@@ -354,6 +381,7 @@ const Advertise3DPage: React.FC = () => {
                 scrollVelocity={scrollVelocity}
                 scrollProgress={scrollProgress}
                 mousePosition={mousePosition}
+                controls={controls}
               />
             </Suspense>
           </Canvas>
@@ -515,6 +543,18 @@ const Advertise3DPage: React.FC = () => {
             </Box>
           </Box>
         </Box>
+
+        {/* Milky Way Controls - Top Right */}
+        <MilkyWayControls
+          controls={controls}
+          onUpdateControl={updateControl}
+          onResetControls={resetControls}
+          visible={true}
+          onToggleVisibility={() => {}}
+          showControls={false}
+          onToggleControls={() => {}}
+          onResetRotation={() => updateControl('autoRotate', 0.005)}
+        />
 
       </Box>
     </ThemeProvider>

@@ -20,7 +20,7 @@ const analyticsFeatures = [
 
 export const AnalyticsReportingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, -760]}>
+    <group visible={visible} position={[0, 0, -440]}>
       {[0.5, 1, 1.5, 1.2, 0.8].map((height, index) => (
         <DreiBox
           key={index}

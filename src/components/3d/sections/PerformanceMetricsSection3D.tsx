@@ -28,7 +28,7 @@ export const PerformanceMetricsSection3D: React.FC<{ visible: boolean }> = ({ vi
   });
 
   return (
-    <group visible={visible} position={[0, 0, -560]}>
+    <group visible={visible} position={[0, 0, -280]}>
       {metrics.map((metric, index) => (
         <DreiBox
           key={index}

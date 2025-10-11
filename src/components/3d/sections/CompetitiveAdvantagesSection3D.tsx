@@ -17,7 +17,7 @@ const advantages = [
 
 export const CompetitiveAdvantagesSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, -280]}>
+    <group visible={visible} position={[0, 0, -160]}>
       {advantages.map((adv, index) => {
         const height = 1 + (index * 0.5);
         return (

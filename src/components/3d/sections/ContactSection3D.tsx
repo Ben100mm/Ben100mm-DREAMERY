@@ -14,7 +14,7 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   return (
-    <group visible={visible} position={[0, 0, -440]}>
+    <group visible={visible} position={[0, 0, -200]}>
       <mesh position={[0, 1, -2]}>
         <boxGeometry args={[3, 2, 0.2]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} transparent opacity={0.5} />

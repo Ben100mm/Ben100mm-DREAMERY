@@ -18,7 +18,7 @@ const features = [
 
 export const CampaignManagementSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, -640]}>
+    <group visible={visible} position={[0, 0, -360]}>
       <mesh position={[0, 1, -2]}>
         <boxGeometry args={[4, 2.5, 0.3]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.7} roughness={0.3} transparent opacity={0.6} />

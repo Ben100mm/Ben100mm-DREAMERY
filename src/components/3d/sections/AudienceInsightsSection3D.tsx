@@ -12,7 +12,7 @@ import { brandColors } from '../../../theme/theme';
 import {
   dataSphereVertexShader,
   dataSphereFragmentShader,
-} from '../../../shaders/dataSphere.glsl.ts';
+} from '../../../shaders/dataSphere.glsl';
 import PeopleIcon from '@mui/icons-material/People';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PublicIcon from '@mui/icons-material/Public';
@@ -126,7 +126,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = React.m
         <Box sx={{ width: '1000px' }}>
           <Grid container spacing={3}>
             {stats.map((stat, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index} component="div">
+              <Grid item xs={12} sm={6} md={3} key={index}>
                 <Card
                   sx={{
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -182,7 +182,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = React.m
               Demographic Breakdown
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} component="div">
+              <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                   User Types:
                 </Typography>
@@ -199,7 +199,7 @@ export const AudienceInsightsSection3D: React.FC<{ visible: boolean }> = React.m
                   • Industry Professionals: 10%
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} component="div">
+              <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                   Top Markets:
                 </Typography>

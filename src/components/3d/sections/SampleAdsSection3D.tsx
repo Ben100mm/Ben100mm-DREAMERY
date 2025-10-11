@@ -19,7 +19,7 @@ export const SampleAdsSection3D: React.FC<{ visible: boolean }> = React.memo(({ 
   const [selectedAd, setSelectedAd] = useState<typeof adSamples[0] | null>(null);
 
   return (
-    <group visible={visible} position={[0, 0, -240]}>
+    <group visible={visible} position={[0, 0, -120]}>
       {adSamples.map((ad) => (
         <InteractiveMesh
           key={ad.id}

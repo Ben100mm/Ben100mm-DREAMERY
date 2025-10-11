@@ -18,7 +18,7 @@ const integrations = [
 
 export const IntegrationSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
-    <group visible={visible} position={[0, 0, -600]}>
+    <group visible={visible} position={[0, 0, -320]}>
       <mesh position={[0, 1, -2]}>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial color={brandColors.primary} metalness={0.9} roughness={0.1} />

@@ -29,7 +29,7 @@ export const IndustryFocusSection3D: React.FC<{ visible: boolean }> = ({ visible
   });
 
   return (
-    <group visible={visible} position={[0, 0, -520]}>
+    <group visible={visible} position={[0, 0, -240]}>
       {focusAreas.map((area, index) => (
         <mesh key={index} ref={(ref) => ref && (houseRefs.current[index] = ref)} position={[-3 + index * 2, 1, -2]}>
           <boxGeometry args={[1, 1, 1]} />

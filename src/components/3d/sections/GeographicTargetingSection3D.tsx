@@ -28,7 +28,7 @@ export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ v
   });
 
   return (
-    <group visible={visible} position={[0, 0, -720]}>
+    <group visible={visible} position={[0, 0, -400]}>
       <mesh ref={globeRef} position={[0, 1, -2]}>
         <sphereGeometry args={[1.5, 32, 32]} />
         <meshStandardMaterial

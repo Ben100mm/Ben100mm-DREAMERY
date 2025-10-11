@@ -27,11 +27,10 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   // Load the Milky Way texture
   const milkyWayTexture = useTexture('/milky-way-background.jpg');
   
-  // Create inverted sphere geometry (inside faces visible)
+  // Create normal sphere geometry for testing
   const sphereGeometry = useMemo(() => {
     const geometry = new THREE.SphereGeometry(100, 32, 32);
-    // Flip faces to make inside visible
-    geometry.scale(-1, 1, 1);
+    // Remove inversion for testing
     return geometry;
   }, []);
   
@@ -39,17 +38,17 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   const meshMaterial = useMemo(() => {
     const material = new THREE.MeshBasicMaterial({
       map: milkyWayTexture,
-      side: THREE.BackSide, // Render back faces for inside view
+      side: THREE.FrontSide, // Test with front faces first
       transparent: true,
-      opacity: 0.8, // Increase opacity for debugging
+      opacity: 0.8,
     });
     return material;
   }, [milkyWayTexture]);
   
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // For testing: position sphere at origin first
-      meshRef.current.position.set(0, 0, 0);
+      // For testing: position sphere behind camera
+      meshRef.current.position.set(0, 0, -50);
       
       // Add subtle rotation based on scroll for dynamic effect
       meshRef.current.rotation.y = scrollProgress * Math.PI * 0.1;

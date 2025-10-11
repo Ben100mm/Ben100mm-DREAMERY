@@ -11,12 +11,16 @@ interface OuroborosConstellationProps {
   visible?: boolean;
   scrollProgress?: number;
   mousePosition?: { x: number; y: number };
+  position?: [number, number, number];
+  scale?: [number, number, number];
 }
 
 export const OuroborosConstellation: React.FC<OuroborosConstellationProps> = ({
   visible = true,
   scrollProgress = 0,
-  mousePosition = { x: 0, y: 0 }
+  mousePosition = { x: 0, y: 0 },
+  position = [0, 0, 0],
+  scale = [1, 1, 1]
 }) => {
   const constellationRef = useRef<THREE.Group>(null);
   
@@ -75,7 +79,7 @@ export const OuroborosConstellation: React.FC<OuroborosConstellationProps> = ({
   });
   
   return (
-    <group ref={constellationRef} visible={visible} position={[4, 0, 0]}>
+    <group ref={constellationRef} visible={visible} position={position} scale={scale}>
       {/* Main ouroboros curve */}
       <line>
         <bufferGeometry>

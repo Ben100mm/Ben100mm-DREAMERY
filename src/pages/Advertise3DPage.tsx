@@ -289,7 +289,7 @@ const Advertise3DPage: React.FC = () => {
           backgroundColor: '#000',
         }}
       >
-        {/* Dark Space Background */}
+        {/* Cosmic Starfield Background */}
         <Box
           sx={{
             position: 'fixed',
@@ -297,8 +297,16 @@ const Advertise3DPage: React.FC = () => {
             left: 0,
             width: '100vw',
             height: '100vh',
-            background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
-            opacity: 0.9,
+            background: `
+              radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.18) 50%, transparent 50%),
+              radial-gradient(1.5px 1.5px at 70% 60%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
+              radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
+              radial-gradient(1.5px 1.5px at 85% 25%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
+              radial-gradient(1px 1px at 60% 70%, rgba(100, 181, 246, 0.15) 50%, transparent 50%),
+              radial-gradient(2px 2px at 90% 80%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
+              linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f1419 100%)
+            `,
+            backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%',
             transform: `translateY(${currentSection * -30}px) scale(${1 + scrollVelocity * 0.001})`,
             transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             zIndex: 0,

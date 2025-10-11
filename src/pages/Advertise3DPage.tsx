@@ -17,7 +17,6 @@ import { theme } from '../theme/theme';
 import { SceneManager } from '../components/3d/SceneManager';
 
 // Visual effects
-import { MilkyWayGalaxy } from '../components/3d/effects/MilkyWayGalaxy';
 import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
 
 // Section components - 12 focused sections
@@ -56,8 +55,7 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects */}
-      <MilkyWayGalaxy />
+      {/* Background Effects - Keep whizzing stars, removed galaxy */}
       <WhizzingStars scrollVelocity={scrollVelocity} />
 
       {/* Scene Manager - handles camera transitions */}

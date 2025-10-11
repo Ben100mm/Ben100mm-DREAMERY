@@ -138,7 +138,7 @@ export class ScrollController {
     const scrollY = window.scrollY;
     this.scrollProgress = scrollY / scrollHeight;
     
-    // Calculate scroll velocity for effects
+    // Calculate scroll velocity for whizzing stars effect
     this.scrollVelocity = (scrollY - this.previousScrollY) / 16; // Normalize to ~60fps
     this.previousScrollY = scrollY;
     

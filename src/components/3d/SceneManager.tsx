@@ -30,7 +30,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange, onS
       // Update camera based on scroll
       scrollControllerRef.current.updateCamera(camera, delta);
 
-      // Get scroll data for effects
+      // Get scroll data for whizzing stars effect
       const scrollProgress = scrollControllerRef.current.getScrollProgress();
       const scrollVelocity = scrollControllerRef.current.getScrollVelocity();
       onScrollUpdate?.(scrollProgress, scrollVelocity);

@@ -109,9 +109,7 @@ const AdvertisePage: React.FC = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Space Background Layers */}
-      
-      {/* Base dark space */}
+      {/* Simple Space Background */}
       <Box
         sx={{
           position: 'fixed',
@@ -119,100 +117,31 @@ const AdvertisePage: React.FC = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          zIndex: -10,
-          backgroundColor: '#000011',
-        }}
-      />
-
-      {/* Main Milky Way nebula */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: -9,
-          background: 'radial-gradient(ellipse 1200px 800px at center, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.4) 30%, rgba(25, 25, 112, 0.3) 60%, transparent 100%)',
-        }}
-      />
-
-      {/* Pink nebula */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: -8,
-          background: 'radial-gradient(ellipse 800px 600px at 30% 20%, rgba(255, 20, 147, 0.4) 0%, rgba(255, 105, 180, 0.3) 40%, transparent 80%)',
-        }}
-      />
-
-      {/* Blue nebula */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: -7,
-          background: 'radial-gradient(ellipse 600px 400px at 70% 80%, rgba(0, 100, 200, 0.4) 0%, rgba(25, 25, 112, 0.3) 50%, transparent 80%)',
-        }}
-      />
-
-      {/* Stars layer 1 */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: -6,
-          backgroundImage: `
-            radial-gradient(3px 3px at 20px 30px, #fff, transparent),
-            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,1), transparent),
-            radial-gradient(2px 2px at 90px 40px, #fff, transparent),
-            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.8), transparent),
-            radial-gradient(3px 3px at 160px 30px, #fff, transparent)
+          zIndex: -1,
+          background: `
+            #1a1a2e,
+            radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(0, 150, 255, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.3) 0%, transparent 70%)
           `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '200px 100px',
-          opacity: 0.9,
-          animation: 'twinkle1 4s ease-in-out infinite alternate',
-          '@keyframes twinkle1': {
-            '0%': { opacity: 0.3 },
-            '100%': { opacity: 1 },
-          },
-        }}
-      />
-
-      {/* Stars layer 2 */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: -5,
-          backgroundImage: `
-            radial-gradient(4px 4px at 50px 50px, rgba(255,255,255,0.8), transparent),
-            radial-gradient(3px 3px at 100px 100px, rgba(255,255,255,0.6), transparent),
-            radial-gradient(2px 2px at 150px 150px, rgba(255,255,255,0.7), transparent),
-            radial-gradient(3px 3px at 200px 200px, rgba(255,255,255,0.5), transparent)
-          `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '250px 250px',
-          opacity: 0.8,
-          animation: 'twinkle2 6s ease-in-out infinite alternate',
-          '@keyframes twinkle2': {
-            '0%': { opacity: 0.2 },
-            '100%': { opacity: 0.8 },
-          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `
+              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+              radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+              radial-gradient(2px 2px at 160px 30px, #fff, transparent)
+            `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px 100px',
+            opacity: 0.8,
+          }
         }}
       />
 
@@ -222,6 +151,7 @@ const AdvertisePage: React.FC = () => {
           position: 'relative',
           zIndex: 10,
           minHeight: '100vh',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
         }}
       >
         {/* 3D Experience Banner */}

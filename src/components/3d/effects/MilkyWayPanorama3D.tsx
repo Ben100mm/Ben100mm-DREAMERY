@@ -250,6 +250,9 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
   // Don't render if not visible
   if (!visible) return null;
 
+  // Debug logging
+  console.log('MilkyWayPanorama3D rendering:', { visible, isLoading, hasError, currentSection: 'check console' });
+
   return (
     <group>
       {/* Main panorama sphere */}

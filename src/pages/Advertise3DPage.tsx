@@ -145,6 +145,9 @@ const LoadingFallback: React.FC = () => (
  */
 const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
+  
+  // Debug logging
+  console.log('Current section:', currentSection);
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -325,19 +328,23 @@ const Advertise3DPage: React.FC = () => {
             right: 0,
             bottom: 0,
             zIndex: 10,
-            backgroundColor: 'rgba(255, 0, 0, 0.1)', // Debug background
+            backgroundColor: 'transparent',
           }}
         >
           <Canvas
             camera={{ position: [0, 0, 10], fov: 75 }}
             gl={{ antialias: true, alpha: true }}
           >
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} />
-            <mesh position={[0, 0, -5]}>
-              <sphereGeometry args={[1, 32, 32]} />
-              <meshBasicMaterial color="#64b5f6" />
-            </mesh>
+            <Suspense fallback={null}>
+              <SceneContent
+                currentSection={currentSection}
+                onSectionChange={handleSectionChange}
+                onScrollUpdate={handleScrollUpdate}
+                scrollVelocity={scrollVelocity}
+                scrollProgress={scrollProgress}
+                mousePosition={mousePosition}
+              />
+            </Suspense>
           </Canvas>
         </Box>
 

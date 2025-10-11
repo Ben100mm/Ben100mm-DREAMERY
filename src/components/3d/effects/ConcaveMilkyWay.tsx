@@ -29,7 +29,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   
   // Create inverted sphere geometry (inside faces visible)
   const sphereGeometry = useMemo(() => {
-    const geometry = new THREE.SphereGeometry(200, 64, 64);
+    const geometry = new THREE.SphereGeometry(100, 32, 32);
     // Flip faces to make inside visible
     geometry.scale(-1, 1, 1);
     return geometry;
@@ -41,29 +41,26 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       map: milkyWayTexture,
       side: THREE.BackSide, // Render back faces for inside view
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.8, // Increase opacity for debugging
     });
     return material;
   }, [milkyWayTexture]);
   
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // Get current camera position on the winding path
-      const currentCameraPosition = getCurrentCameraPosition(scrollProgress);
-      
-      // Calculate parallax offset based on camera movement
-      const parallaxOffset = calculateMilkyWayParallaxOffset(scrollProgress, parallaxFactor);
-      
-      // Position sphere at camera position with parallax offset
-      meshRef.current.position.set(
-        currentCameraPosition.x + parallaxOffset.x,
-        currentCameraPosition.y + parallaxOffset.y,
-        currentCameraPosition.z + parallaxOffset.z
-      );
+      // For testing: position sphere at origin first
+      meshRef.current.position.set(0, 0, 0);
       
       // Add subtle rotation based on scroll for dynamic effect
       meshRef.current.rotation.y = scrollProgress * Math.PI * 0.1;
       meshRef.current.rotation.x = scrollVelocity * 0.01;
+      
+      // Debug logging every 60 frames
+      if (Math.floor(state.clock.elapsedTime) % 1 === 0) {
+        console.log('Camera position:', state.camera.position);
+        console.log('Sphere position:', meshRef.current.position);
+        console.log('Scroll progress:', scrollProgress);
+      }
     }
   });
   

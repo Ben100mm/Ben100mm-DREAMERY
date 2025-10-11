@@ -208,7 +208,7 @@ const Advertise3DPage: React.FC = () => {
           <Box
             key={sectionIndex}
             sx={{
-              height: '100vh',
+              height: '70vh', // Reduced from 100vh for closer sections
               width: '100%',
               position: 'relative',
               pointerEvents: 'none',

@@ -29,7 +29,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   
   // Create inverted sphere geometry (inside faces visible)
   const sphereGeometry = useMemo(() => {
-    const geometry = new THREE.SphereGeometry(200, 32, 32);
+    const geometry = new THREE.SphereGeometry(50, 32, 32);
     // Flip faces to make inside visible
     geometry.scale(-1, 1, 1);
     return geometry;
@@ -49,11 +49,8 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // Calculate parallax offset based on camera movement
-      const parallaxOffset = calculateMilkyWayParallaxOffset(scrollProgress, parallaxFactor);
-      
-      // Position sphere at camera origin with parallax offset
-      meshRef.current.position.set(parallaxOffset.x, parallaxOffset.y, parallaxOffset.z);
+      // For debugging: position sphere at origin first
+      meshRef.current.position.set(0, 0, 0);
       
       // Add subtle rotation based on scroll for dynamic effect
       meshRef.current.rotation.y = scrollProgress * Math.PI * 0.1;
@@ -61,7 +58,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
       
       // Debug logging
       if (scrollProgress > 0.1 && scrollProgress < 0.2) {
-        console.log('Milky Way position:', meshRef.current.position);
+        console.log('Sphere at origin for debugging');
       }
     }
   });

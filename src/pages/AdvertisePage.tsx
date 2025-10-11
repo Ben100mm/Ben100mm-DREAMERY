@@ -102,9 +102,105 @@ const AdvertisePage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: brandColors.backgrounds.primary, position: 'relative' }}>
-      
-      {/* 3D Experience Banner */}
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Space Background */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          background: `
+            radial-gradient(ellipse at center, 
+              rgba(139, 69, 19, 0.3) 0%,
+              rgba(75, 0, 130, 0.4) 25%,
+              rgba(25, 25, 112, 0.5) 50%,
+              rgba(0, 0, 0, 0.8) 75%,
+              rgba(0, 0, 0, 0.95) 100%
+            ),
+            linear-gradient(45deg,
+              rgba(255, 20, 147, 0.1) 0%,
+              rgba(138, 43, 226, 0.2) 20%,
+              rgba(0, 100, 200, 0.3) 40%,
+              rgba(0, 0, 139, 0.4) 60%,
+              rgba(0, 0, 0, 0.8) 80%,
+              rgba(0, 0, 0, 0.9) 100%
+            ),
+            radial-gradient(circle at 30% 20%,
+              rgba(255, 105, 180, 0.2) 0%,
+              rgba(255, 20, 147, 0.1) 30%,
+              transparent 70%
+            ),
+            radial-gradient(circle at 70% 80%,
+              rgba(138, 43, 226, 0.15) 0%,
+              rgba(75, 0, 130, 0.1) 40%,
+              transparent 70%
+            ),
+            radial-gradient(circle at 50% 50%,
+              rgba(0, 100, 200, 0.1) 0%,
+              rgba(25, 25, 112, 0.05) 50%,
+              transparent 100%
+            ),
+            #000011
+          `,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `
+              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+              radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+              radial-gradient(2px 2px at 160px 30px, #fff, transparent)
+            `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px 100px',
+            animation: 'twinkle 4s ease-in-out infinite alternate',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `
+              radial-gradient(3px 3px at 50px 50px, rgba(255,255,255,0.4), transparent),
+              radial-gradient(2px 2px at 100px 100px, rgba(255,255,255,0.3), transparent),
+              radial-gradient(1px 1px at 150px 150px, rgba(255,255,255,0.5), transparent),
+              radial-gradient(2px 2px at 200px 200px, rgba(255,255,255,0.2), transparent)
+            `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '250px 250px',
+            animation: 'twinkle 6s ease-in-out infinite alternate',
+            animationDelay: '2s',
+          }
+        }}
+      />
+
+      {/* Content with semi-transparent overlay for readability */}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          backgroundColor: 'rgba(0, 0, 17, 0.85)',
+          minHeight: '100vh',
+          backdropFilter: 'blur(1px)',
+        }}
+      >
+        {/* 3D Experience Banner */}
       <Box
         sx={{
           position: 'fixed',
@@ -168,16 +264,33 @@ const AdvertisePage: React.FC = () => {
         </Button>
       </Box>
 
-      {/* Advertising Opportunities Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 2, color: brandColors.text.primary }}>
-            Advertising Opportunities
-          </Typography>
-          <Typography variant="h6" sx={{ color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-            Choose the perfect advertising solution for your business
-          </Typography>
-        </Box>
+        {/* Advertising Opportunities Section */}
+        <Container maxWidth="lg" sx={{ py: 8 }}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography 
+              variant="h3" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 600, 
+                mb: 2, 
+                color: '#ffffff',
+                textShadow: '0 0 20px rgba(255, 255, 255, 0.3)'
+              }}
+            >
+              Advertising Opportunities
+            </Typography>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: '#e0e0e0', 
+                maxWidth: 600, 
+                mx: 'auto',
+                textShadow: '0 0 10px rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              Choose the perfect advertising solution for your business
+            </Typography>
+          </Box>
 
         <Grid container spacing={4}>
           {advertisingOpportunities.map((opportunity) => (
@@ -187,10 +300,14 @@ const AdvertisePage: React.FC = () => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: `0 12px 24px ${brandColors.shadows.hover}`,
+                    boxShadow: '0 12px 24px rgba(255, 255, 255, 0.3)',
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
                   }
                 }}
               >
@@ -272,53 +389,112 @@ const AdvertisePage: React.FC = () => {
         </Grid>
       </Container>
 
-      {/* Sample Advertisements Section */}
-      <Box sx={{ backgroundColor: brandColors.backgrounds.secondary, py: 8 }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 2, color: brandColors.text.primary }}>
-              Sample Advertisements
-            </Typography>
-            <Typography variant="h6" sx={{ color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-              See how your ads will look on our platform
-            </Typography>
-          </Box>
+        {/* Sample Advertisements Section */}
+        <Box sx={{ backgroundColor: 'rgba(0, 0, 17, 0.9)', py: 8, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Container maxWidth="lg">
+            <Box sx={{ textAlign: 'center', mb: 6 }}>
+              <Typography 
+                variant="h3" 
+                component="h2" 
+                sx={{ 
+                  fontWeight: 600, 
+                  mb: 2, 
+                  color: '#ffffff',
+                  textShadow: '0 0 20px rgba(255, 255, 255, 0.3)'
+                }}
+              >
+                Sample Advertisements
+              </Typography>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  color: '#e0e0e0', 
+                  maxWidth: 600, 
+                  mx: 'auto',
+                  textShadow: '0 0 10px rgba(255, 255, 255, 0.2)'
+                }}
+              >
+                See how your ads will look on our platform
+              </Typography>
+            </Box>
 
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+              <Card sx={{ 
+                height: 300, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 8px 16px rgba(255, 255, 255, 0.2)',
+                  backgroundColor: 'rgba(255, 255, 255, 1)',
+                }
+              }}>
                 <Box sx={{ textAlign: 'center', p: 3 }}>
                   <PropertyIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>
                     Property Listing Ad
                   </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
+                  <Typography variant="body2" sx={{ color: '#666' }}>
                     Beautiful 3BR/2BA home in prime location
                   </Typography>
                 </Box>
               </Card>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+              <Card sx={{ 
+                height: 300, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 8px 16px rgba(255, 255, 255, 0.2)',
+                  backgroundColor: 'rgba(255, 255, 255, 1)',
+                }
+              }}>
                 <Box sx={{ textAlign: 'center', p: 3 }}>
                   <ServiceIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>
                     Service Provider Ad
                   </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
+                  <Typography variant="body2" sx={{ color: '#666' }}>
                     Professional real estate photography services
                   </Typography>
                 </Box>
               </Card>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+              <Card sx={{ 
+                height: 300, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 8px 16px rgba(255, 255, 255, 0.2)',
+                  backgroundColor: 'rgba(255, 255, 255, 1)',
+                }
+              }}>
                 <Box sx={{ textAlign: 'center', p: 3 }}>
                   <BusinessIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>
                     Business Services Ad
                   </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
+                  <Typography variant="body2" sx={{ color: '#666' }}>
                     Title insurance and closing services
                   </Typography>
                 </Box>
@@ -328,33 +504,65 @@ const AdvertisePage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* CTA Section */}
-      <Container maxWidth="lg" sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 3, color: brandColors.text.primary }}>
-          Ready to Get Started?
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 4, color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-          Join thousands of real estate professionals who trust Dreamery for their advertising needs
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleGetStarted}
-          sx={{
-            backgroundColor: brandColors.primary,
-            color: 'white',
-            px: 6,
-            py: 2,
-            fontSize: '1.2rem',
-            fontWeight: 600,
-            '&:hover': {
-              backgroundColor: brandColors.actions.primary,
-            }
-          }}
-        >
-          Start Advertising Today
-        </Button>
-      </Container>
+        {/* CTA Section */}
+        <Container maxWidth="lg" sx={{ py: 8, textAlign: 'center' }}>
+          <Typography 
+            variant="h3" 
+            component="h2" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 3, 
+              color: '#ffffff',
+              textShadow: '0 0 20px rgba(255, 255, 255, 0.3)'
+            }}
+          >
+            Ready to Get Started?
+          </Typography>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              mb: 4, 
+              color: '#e0e0e0', 
+              maxWidth: 600, 
+              mx: 'auto',
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            Join thousands of real estate professionals who trust Dreamery for their advertising needs
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleGetStarted}
+            sx={{
+              backgroundColor: brandColors.primary,
+              color: 'white',
+              px: 6,
+              py: 2,
+              fontSize: '1.2rem',
+              fontWeight: 600,
+              boxShadow: '0 4px 20px rgba(25, 118, 210, 0.4)',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              '&:hover': {
+                backgroundColor: brandColors.actions.primary,
+                boxShadow: '0 6px 30px rgba(25, 118, 210, 0.6)',
+                transform: 'translateY(-2px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Start Advertising Today
+          </Button>
+        </Container>
+      </Box>
+
+      {/* Add CSS animations */}
+      <style>{`
+        @keyframes twinkle {
+          0% { opacity: 0.3; }
+          100% { opacity: 1; }
+        }
+      `}</style>
     </Box>
   );
 };

@@ -1,0 +1,258 @@
+/**
+ * Copyright (c) 2024 Dreamery Software LLC. All rights reserved.
+ * Proprietary and confidential.
+ * 
+ * Immersive 3D Advertising Page
+ * Full-page 3D canvas with 20 comprehensive advertising sections
+ */
+
+import React, { Suspense, useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { PerspectiveCamera, Stars } from '@react-three/drei';
+import { Box, CircularProgress } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from '../theme/theme';
+
+// Core components
+import { SceneManager } from '../components/3d/SceneManager';
+import { Navbar3D } from '../components/3d/Navbar3D';
+
+// Section components
+import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
+import { OpportunitiesSection3D } from '../components/3d/sections/OpportunitiesSection3D';
+import { PricingSection3D } from '../components/3d/sections/PricingSection3D';
+import { FeaturesSection3D } from '../components/3d/sections/FeaturesSection3D';
+import { AudienceInsightsSection3D } from '../components/3d/sections/AudienceInsightsSection3D';
+import { TestimonialsSection3D } from '../components/3d/sections/TestimonialsSection3D';
+import { SampleAdsSection3D } from '../components/3d/sections/SampleAdsSection3D';
+import { CompetitiveAdvantagesSection3D } from '../components/3d/sections/CompetitiveAdvantagesSection3D';
+import { OnboardingSection3D } from '../components/3d/sections/OnboardingSection3D';
+import { ComplianceSection3D } from '../components/3d/sections/ComplianceSection3D';
+import { FAQSection3D } from '../components/3d/sections/FAQSection3D';
+import { ContactSection3D } from '../components/3d/sections/ContactSection3D';
+import { TechSpecsSection3D } from '../components/3d/sections/TechSpecsSection3D';
+import { IndustryFocusSection3D } from '../components/3d/sections/IndustryFocusSection3D';
+import { PerformanceMetricsSection3D } from '../components/3d/sections/PerformanceMetricsSection3D';
+import { IntegrationSection3D } from '../components/3d/sections/IntegrationSection3D';
+import { CampaignManagementSection3D } from '../components/3d/sections/CampaignManagementSection3D';
+import { ContentRequirementsSection3D } from '../components/3d/sections/ContentRequirementsSection3D';
+import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
+import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
+
+/**
+ * Scene Content Component
+ * Contains all 3D elements, lighting, and sections
+ */
+const SceneContent: React.FC<{ 
+  currentSection: number; 
+  onSectionChange: (section: number) => void; 
+}> = ({ currentSection, onSectionChange }) => {
+  return (
+    <>
+      {/* Camera - controlled by SceneManager based on scroll */}
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={75} />
+
+      {/* Lighting Setup */}
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
+      <directionalLight position={[-10, -10, -5]} intensity={0.5} />
+      <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
+      <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
+
+      {/* Background Stars */}
+      <Stars
+        radius={100}
+        depth={50}
+        count={5000}
+        factor={4}
+        saturation={0}
+        fade
+        speed={1}
+      />
+
+      {/* Scene Manager - handles camera transitions */}
+      <SceneManager onSectionChange={onSectionChange} />
+
+      {/* All 20 Sections */}
+      <HeroSection3D visible={currentSection === 0} />
+      <OpportunitiesSection3D visible={currentSection === 1} />
+      <PricingSection3D visible={currentSection === 2} />
+      <FeaturesSection3D visible={currentSection === 3} />
+      <AudienceInsightsSection3D visible={currentSection === 4} />
+      <TestimonialsSection3D visible={currentSection === 5} />
+      <SampleAdsSection3D visible={currentSection === 6} />
+      <CompetitiveAdvantagesSection3D visible={currentSection === 7} />
+      <OnboardingSection3D visible={currentSection === 8} />
+      <ComplianceSection3D visible={currentSection === 9} />
+      <FAQSection3D visible={currentSection === 10} />
+      <ContactSection3D visible={currentSection === 11} />
+      <TechSpecsSection3D visible={currentSection === 12} />
+      <IndustryFocusSection3D visible={currentSection === 13} />
+      <PerformanceMetricsSection3D visible={currentSection === 14} />
+      <IntegrationSection3D visible={currentSection === 15} />
+      <CampaignManagementSection3D visible={currentSection === 16} />
+      <ContentRequirementsSection3D visible={currentSection === 17} />
+      <GeographicTargetingSection3D visible={currentSection === 18} />
+      <AnalyticsReportingSection3D visible={currentSection === 19} />
+
+      {/* Camera movement controlled by scroll */}
+    </>
+  );
+};
+
+/**
+ * Loading Fallback Component
+ */
+const LoadingFallback: React.FC = () => (
+  <Box
+    sx={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#000',
+      zIndex: 9999,
+    }}
+  >
+    <Box sx={{ textAlign: 'center', color: 'white' }}>
+      <CircularProgress size={60} sx={{ mb: 2 }} />
+      <Box sx={{ fontSize: '1.5rem', fontWeight: 600 }}>
+        Loading 3D Experience...
+      </Box>
+    </Box>
+  </Box>
+);
+
+/**
+ * Main Advertise3D Page Component
+ */
+const Advertise3DPage: React.FC = () => {
+  const [currentSection, setCurrentSection] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Create scroll container with sections
+  useEffect(() => {
+    // Create scrollable content (20 sections)
+    const container = document.getElementById('scroll-container');
+    if (container) {
+      container.style.height = `${20 * 100}vh`; // 20 sections x 100vh each
+    }
+
+    // Set loading complete after initial render
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Section change handler (called by SceneManager)
+  const handleSectionChange = (section: number) => {
+    setCurrentSection(section);
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          width: '100vw',
+          height: '2000vh', // Full scrollable height for 20 sections
+          position: 'relative',
+          backgroundColor: '#000',
+        }}
+      >
+        {/* Loading Screen */}
+        {isLoading && <LoadingFallback />}
+
+        {/* Fixed Full-Page Canvas */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+            pointerEvents: 'none', // Canvas doesn't block scroll
+          }}
+        >
+          <Canvas
+            shadows
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance',
+            }}
+            dpr={[1, 2]}
+          >
+            <Suspense fallback={null}>
+              <SceneContent 
+                currentSection={currentSection} 
+                onSectionChange={handleSectionChange}
+              />
+            </Suspense>
+          </Canvas>
+        </Box>
+
+        {/* 3D Navbar Overlay */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            pointerEvents: 'auto', // Navbar can be clicked
+          }}
+        >
+          <Navbar3D />
+        </Box>
+
+        {/* Section Progress Indicator */}
+        <Box
+          sx={{
+            position: 'fixed',
+            right: 32,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 100,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            pointerEvents: 'auto', // Indicator can be clicked
+          }}
+        >
+          {Array.from({ length: 20 }).map((_, index) => (
+            <Box
+              key={index}
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                backgroundColor:
+                  currentSection === index
+                    ? '#1976d2'
+                    : 'rgba(255, 255, 255, 0.3)',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                window.scrollTo({
+                  top: index * window.innerHeight,
+                  behavior: 'smooth',
+                });
+              }}
+            />
+          ))}
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
+};
+
+export default Advertise3DPage;
+

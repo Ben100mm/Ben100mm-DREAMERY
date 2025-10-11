@@ -104,6 +104,37 @@ const AdvertisePage: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: brandColors.backgrounds.primary, position: 'relative' }}>
       
+      {/* 3D Experience Banner */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 80,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1001,
+          backgroundColor: 'rgba(25, 118, 210, 0.95)',
+          backdropFilter: 'blur(10px)',
+          color: 'white',
+          padding: '16px 32px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(25, 118, 210, 0.4)',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateX(-50%) scale(1.05)',
+            boxShadow: '0 12px 48px rgba(25, 118, 210, 0.6)',
+          },
+        }}
+        onClick={() => navigate('/advertise-3d')}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 700, textAlign: 'center', mb: 0.5 }}>
+          🚀 Experience Our New 3D Interactive Page
+        </Typography>
+        <Typography variant="body2" sx={{ textAlign: 'center' }}>
+          Click here to explore our immersive 3D advertising showcase
+        </Typography>
+      </Box>
+      
       {/* Back to Homepage Button */}
       <Box
         sx={{

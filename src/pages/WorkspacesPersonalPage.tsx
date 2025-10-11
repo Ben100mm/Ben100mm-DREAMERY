@@ -20,6 +20,14 @@ import InvestWorkspace from '../components/workspaces/InvestWorkspace';
 import FundWorkspace from '../components/workspaces/FundWorkspace';
 import OperateWorkspace from '../components/workspaces/OperateWorkspace';
 import { brandColors } from "../theme";
+import { rentWorkspace } from '../data/workspaces/rentWorkspace';
+import { closeWorkspace } from '../data/workspaces/closeWorkspace';
+import { manageWorkspace } from '../data/workspaces/manageWorkspace';
+import { investWorkspace } from '../data/workspaces/investWorkspace';
+import { fundWorkspace } from '../data/workspaces/fundWorkspace';
+import { operateWorkspace } from '../data/workspaces/operateWorkspace';
+import { learnWorkspace } from '../data/workspaces/learnWorkspace';
+import { advertiseWorkspace } from '../data/workspaces/advertiseWorkspace';
 
 
 
@@ -175,114 +183,42 @@ const WorkspacesPersonalPage: React.FC = () => {
 
   // Get sidebar items based on selected workspace
   const getSidebarItems = () => {
-    switch (selectedWorkspace) {
-      case 'rent':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'search', label: 'Property Search' },
-          { value: 'favorites', label: 'Saved Properties' },
-          { value: 'applications', label: 'Applications' },
-          { value: 'payments', label: 'Payments' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'documents', label: 'Documents' },
-          { value: 'calendar', label: 'Calendar' },
-          { value: 'assistant', label: 'Rental Assistant' },
-          { value: 'analytics', label: 'Analytics' },
-        ];
-      case 'close':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'escrow-title', label: 'Escrow & Title' },
-          { value: 'due-diligence', label: 'Due Diligence' },
-          { value: 'financing', label: 'Financing' },
-          { value: 'legal', label: 'Legal & Compliance' },
-          { value: 'settlement', label: 'Settlement' },
-          { value: 'insurance', label: 'Insurance & Utilities' },
-          { value: 'walkthrough', label: 'Walkthrough' },
-          { value: 'post-closing', label: 'Post-Closing' },
-          { value: 'assistant', label: 'Closing Assistant' },
-          { value: 'integrations', label: 'Integrations' },
-        ];
-      case 'manage':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'calendar', label: 'Calendar' },
-          { value: 'listings', label: 'Listings' },
-          { value: 'earnings', label: 'Earnings' },
-          { value: 'insights', label: 'Insights' },
-          { value: 'listing', label: 'Creating a Listing' },
-          { value: 'leases', label: 'Online Leases' },
-          { value: 'applications', label: 'Rental Applications' },
-          { value: 'payments', label: 'Payment Collections' },
-          { value: 'integrations', label: 'Integrations' },
-          { value: 'insurance', label: 'Insurance' },
-          { value: 'account', label: 'Manage Your Account' },
-          { value: 'assistant', label: 'Manage Assistant' },
-        ];
-      case 'invest':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'crowdfunding', label: 'Crowdfunded Deals' },
-          { value: 'jointventure', label: 'Joint Venture' },
-          { value: 'fractional', label: 'Fractional Ownership' },
-          { value: 'privatemarket', label: 'Private Market Investment Listings' },
-        ];
-      case 'fund':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'lending', label: 'Lending' },
-          { value: 'borrowing', label: 'Borrowing' },
-          { value: 'investments', label: 'Investments' },
-          { value: 'portfolio', label: 'Portfolio' },
-        ];
-      case 'operate':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'messages', label: 'Messages' },
-          { value: 'projects', label: 'Projects' },
-          { value: 'createproject', label: 'Create a New Project' },
-          { value: 'expenses', label: 'Expense Tracking' },
-          { value: 'contractors', label: 'Contractor & Vendor Scheduling' },
-          { value: 'optimization', label: 'Portfolio Optimization Suggestions' },
-        ];
-      case 'learn':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'courses', label: 'Courses' },
-          { value: 'casestudies', label: 'Case Studies' },
-          { value: 'qa', label: 'Q&A' },
-          { value: 'livesessions', label: 'Live Sessions' },
-          { value: 'aitutor', label: 'Lumina' },
-        ];
-      case 'advertise':
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'calendar', label: 'Calendar' },
-          { value: 'ads', label: 'Ads' },
-          { value: 'promotions', label: 'Promotions' },
-          { value: 'create', label: 'Create' },
-          { value: 'analytics', label: 'Analytics' },
-          { value: 'settings', label: 'Settings' },
-        ];
-      default:
-        return [
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'escrow-title', label: 'Escrow & Title' },
-          { value: 'due-diligence', label: 'Due Diligence' },
-          { value: 'financing', label: 'Financing' },
-          { value: 'legal', label: 'Legal & Compliance' },
-          { value: 'settlement', label: 'Settlement' },
-          { value: 'insurance', label: 'Insurance & Utilities' },
-          { value: 'walkthrough', label: 'Walkthrough' },
-          { value: 'post-closing', label: 'Post-Closing' },
-          { value: 'assistant', label: 'Closing Assistant' },
-          { value: 'integrations', label: 'Integrations' },
-        ];
-    }
+    const workspaceConfigs = {
+      rent: rentWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      close: closeWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      manage: manageWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      invest: investWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      fund: fundWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      operate: operateWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      learn: learnWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+      advertise: advertiseWorkspace.sidebarItems.map(item => ({
+        value: item.id,
+        label: item.label
+      })),
+    };
+
+    return workspaceConfigs[selectedWorkspace as keyof typeof workspaceConfigs] || workspaceConfigs.rent;
   };
 
   const tabs = getSidebarItems();

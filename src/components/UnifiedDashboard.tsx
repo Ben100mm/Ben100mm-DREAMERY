@@ -35,11 +35,17 @@ import ManageWorkspace from './workspaces/ManageWorkspace';
 import FundWorkspace from './workspaces/FundWorkspace';
 import InvestWorkspace from './workspaces/InvestWorkspace';
 import OperateWorkspace from './workspaces/OperateWorkspace';
+import RentWorkspace from './workspaces/RentWorkspace';
+import LearnWorkspace from './workspaces/LearnWorkspace';
+import AdvertiseWorkspace from './workspaces/AdvertiseWorkspace';
 import { closeWorkspace } from '../data/workspaces/closeWorkspace';
 import { manageWorkspace } from '../data/workspaces/manageWorkspace';
 import { fundWorkspace } from '../data/workspaces/fundWorkspace';
 import { investWorkspace } from '../data/workspaces/investWorkspace';
 import { operateWorkspace } from '../data/workspaces/operateWorkspace';
+import { rentWorkspace } from '../data/workspaces/rentWorkspace';
+import { learnWorkspace } from '../data/workspaces/learnWorkspace';
+import { advertiseWorkspace } from '../data/workspaces/advertiseWorkspace';
 import { WorkspaceConfig } from '../data/workspaces/types';
 
 const UnifiedDashboard: React.FC = () => {
@@ -56,11 +62,14 @@ const UnifiedDashboard: React.FC = () => {
   
   // Available workspaces for buyers
   const availableWorkspaces: WorkspaceConfig[] = [
+    rentWorkspace,
     closeWorkspace,
     manageWorkspace,
     fundWorkspace,
     investWorkspace,
     operateWorkspace,
+    learnWorkspace,
+    advertiseWorkspace,
   ];
 
   // Wrapper to update both global and preference contexts
@@ -119,6 +128,8 @@ const UnifiedDashboard: React.FC = () => {
 
   const renderWorkspaceContent = () => {
     switch (selectedWorkspace) {
+      case 'rent':
+        return <RentWorkspace activeTab={activeTab} />;
       case 'close':
         return <CloseWorkspace activeTab={activeTab} />;
       case 'manage':
@@ -129,6 +140,10 @@ const UnifiedDashboard: React.FC = () => {
         return <InvestWorkspace activeTab={activeTab} />;
       case 'operate':
         return <OperateWorkspace activeTab={activeTab} />;
+      case 'learn':
+        return <LearnWorkspace activeTab={activeTab} />;
+      case 'advertise':
+        return <AdvertiseWorkspace activeTab={activeTab} />;
       default:
         return <CloseWorkspace activeTab={activeTab} />;
     }

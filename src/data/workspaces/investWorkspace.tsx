@@ -1,4 +1,6 @@
 import {
+  Dashboard as DashboardIcon,
+  Chat as MessageIcon,
   Group as CrowdfundingIcon,
   Handshake as JointVentureIcon,
   PieChart as FractionalIcon,
@@ -15,8 +17,18 @@ export const investWorkspace: WorkspaceConfig = {
   description: 'Investment opportunities and portfolio management',
   icon: <CrowdfundingIcon />,
   color: brandColors.primary,
-  defaultTab: 'crowdfunding',
+  defaultTab: 'dashboard',
   sidebarItems: [
+    { 
+      id: 'dashboard', 
+      label: 'Dashboard', 
+      icon: <DashboardIcon />,
+    },
+    { 
+      id: 'messages', 
+      label: 'Messages', 
+      icon: <MessageIcon />,
+    },
     { 
       id: 'crowdfunding', 
       label: 'Crowdfunded Deals', 

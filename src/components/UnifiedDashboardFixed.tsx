@@ -45,143 +45,13 @@ import OperateWorkspace from './workspaces/OperateWorkspace';
 import LearnWorkspace from './workspaces/LearnWorkspace';
 import AdvertiseWorkspace from './workspaces/AdvertiseWorkspace';
 import { WorkspaceConfig } from '../data/workspaces/types';
-
-// Inline workspace configurations to avoid import issues
-const closeWorkspaceConfig: WorkspaceConfig = {
-  id: 'close',
-  name: 'Close',
-  description: 'Closing and transaction management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'messages', label: 'Messages' },
-    { id: 'escrow-title', label: 'Escrow & Title' },
-    { id: 'due-diligence', label: 'Due Diligence' },
-    { id: 'financing', label: 'Financing' },
-    { id: 'legal', label: 'Legal & Compliance' },
-    { id: 'settlement', label: 'Settlement' },
-    { id: 'insurance', label: 'Insurance & Utilities' },
-    { id: 'walkthrough', label: 'Walkthrough' },
-    { id: 'post-closing', label: 'Post-Closing' },
-    { id: 'assistant', label: 'Closing Assistant' },
-    { id: 'integrations', label: 'Integrations' },
-  ],
-};
-
-const manageWorkspaceConfig: WorkspaceConfig = {
-  id: 'manage',
-  name: 'Manage',
-  description: 'Property management and rental operations',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'messages', label: 'Messages' },
-    { id: 'calendar', label: 'Calendar' },
-    { id: 'listings', label: 'Listings' },
-    { id: 'earnings', label: 'Earnings' },
-    { id: 'insights', label: 'Insights' },
-    { id: 'listing', label: 'Creating a Listing' },
-    { id: 'leases', label: 'Online Leases' },
-    { id: 'applications', label: 'Rental Applications' },
-    { id: 'payments', label: 'Payment Collections' },
-    { id: 'integrations', label: 'Integrations' },
-    { id: 'insurance', label: 'Insurance' },
-    { id: 'account', label: 'Manage Your Account' },
-    { id: 'assistant', label: 'Manage Assistant' },
-  ],
-};
-
-const fundWorkspaceConfig: WorkspaceConfig = {
-  id: 'fund',
-  name: 'Fund',
-  description: 'Capital raising and fundraising platform',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'messages', label: 'Messages' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'createproject', label: 'Create New Project' },
-    { id: 'investor', label: 'Investor Onboarding' },
-    { id: 'compliance', label: 'Capital Raise Compliance Tools' },
-    { id: 'calculator', label: 'Waterfall & ROI Calculators' },
-    { id: 'portal', label: 'Secure Investor Portal' },
-  ],
-};
-
-const investWorkspaceConfig: WorkspaceConfig = {
-  id: 'invest',
-  name: 'Invest',
-  description: 'Investment opportunities and portfolio management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'crowdfunding',
-  sidebarItems: [
-    { id: 'crowdfunding', label: 'Crowdfunded Deals' },
-    { id: 'messages', label: 'Messages' },
-    { id: 'jointventure', label: 'Joint Venture' },
-    { id: 'fractional', label: 'Fractional Ownership' },
-    { id: 'privatemarket', label: 'Private Market Investment Listings' },
-  ],
-};
-
-const operateWorkspaceConfig: WorkspaceConfig = {
-  id: 'operate',
-  name: 'Operate',
-  description: 'Property operations and project management',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'messages', label: 'Messages' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'createproject', label: 'Create a New Project' },
-    { id: 'expenses', label: 'Expense Tracking' },
-    { id: 'contractors', label: 'Contractor & Vendor Scheduling' },
-    { id: 'optimization', label: 'Portfolio Optimization Suggestions' },
-  ],
-};
-
-const learnWorkspaceConfig: WorkspaceConfig = {
-  id: 'learn',
-  name: 'Learn',
-  description: 'Real estate education and learning platform',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'courses', label: 'Courses' },
-    { id: 'casestudies', label: 'Case Studies' },
-    { id: 'qa', label: 'Q&A' },
-    { id: 'livesessions', label: 'Live Sessions' },
-    { id: 'aitutor', label: 'Lumina' },
-  ],
-};
-
-const advertiseWorkspaceConfig: WorkspaceConfig = {
-  id: 'advertise',
-  name: 'Advertise',
-  description: 'Marketing tools and advertising platform',
-  icon: <Box sx={{ width: 24, height: 24, bgcolor: brandColors.primary, borderRadius: 1 }} />,
-  color: brandColors.primary,
-  defaultTab: 'dashboard',
-  sidebarItems: [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'calendar', label: 'Calendar' },
-    { id: 'ads', label: 'Ads' },
-    { id: 'promotions', label: 'Promotions' },
-    { id: 'create', label: 'Create' },
-    { id: 'analytics', label: 'Analytics' },
-    { id: 'settings', label: 'Settings' },
-  ],
-};
+import { closeWorkspace } from '../data/workspaces/closeWorkspace';
+import { manageWorkspace } from '../data/workspaces/manageWorkspace';
+import { fundWorkspace } from '../data/workspaces/fundWorkspace';
+import { investWorkspace } from '../data/workspaces/investWorkspace';
+import { operateWorkspace } from '../data/workspaces/operateWorkspace';
+import { learnWorkspace } from '../data/workspaces/learnWorkspace';
+import { advertiseWorkspace } from '../data/workspaces/advertiseWorkspace';
 
 const UnifiedDashboardFixed: React.FC = () => {
   const navigate = useNavigate();
@@ -197,13 +67,13 @@ const UnifiedDashboardFixed: React.FC = () => {
   
   // Available workspaces for buyers
   const availableWorkspaces: WorkspaceConfig[] = [
-    closeWorkspaceConfig,
-    manageWorkspaceConfig,
-    fundWorkspaceConfig,
-    investWorkspaceConfig,
-    operateWorkspaceConfig,
-    learnWorkspaceConfig,
-    advertiseWorkspaceConfig,
+    closeWorkspace,
+    manageWorkspace,
+    fundWorkspace,
+    investWorkspace,
+    operateWorkspace,
+    learnWorkspace,
+    advertiseWorkspace,
   ];
 
   // Wrapper to update both global and preference contexts

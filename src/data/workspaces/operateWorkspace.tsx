@@ -1,5 +1,6 @@
 import {
   Dashboard as DashboardIcon,
+  Chat as MessageIcon,
   Assignment as ProjectsIcon,
   Add as CreateProjectIcon,
   Receipt as ExpenseIcon,
@@ -23,6 +24,11 @@ export const operateWorkspace: WorkspaceConfig = {
       id: 'dashboard', 
       label: 'Dashboard', 
       icon: <DashboardIcon />,
+    },
+    { 
+      id: 'messages', 
+      label: 'Messages', 
+      icon: <MessageIcon />,
     },
     { 
       id: 'projects', 

@@ -143,6 +143,25 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
+    // Enable body scrolling with snap points
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+    document.body.style.scrollSnapType = 'y mandatory';
+    
+    // Hide scrollbar while keeping scroll functionality
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar';
+    style.textContent = `
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    `;
+    document.head.appendChild(style);
+    
     // Set loading complete after initial render - reduced timeout for faster load
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -150,6 +169,12 @@ const Advertise3DPage: React.FC = () => {
 
     return () => {
       clearTimeout(timer);
+      // Cleanup
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+      document.body.style.scrollSnapType = '';
+      const styleEl = document.getElementById('hide-scrollbar');
+      if (styleEl) styleEl.remove();
     };
   }, []);
 
@@ -169,13 +194,8 @@ const Advertise3DPage: React.FC = () => {
       <Box
         sx={{
           width: '100vw',
-          height: '100vh',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          overflow: 'auto',
-          scrollSnapType: 'y mandatory',
-          scrollBehavior: 'smooth',
+          minHeight: '100vh',
+          position: 'relative',
           backgroundColor: '#000',
         }}
       >
@@ -205,12 +225,9 @@ const Advertise3DPage: React.FC = () => {
               height: '100vh',
               width: '100%',
               position: 'relative',
-              zIndex: 1,
-              scrollSnapAlign: 'center',
+              scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              pointerEvents: 'none',
             }}
           />
         ))}

@@ -23,7 +23,7 @@ export const ConcaveMilkyWay: React.FC<ConcaveMilkyWayProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   
   // Load the milky way texture with better quality settings
-  const texture = useLoader(TextureLoader, '/milky-way-background.jpg');
+  const texture = useLoader(TextureLoader, '/milky-way-background.png');
   
   // Configure texture for better quality and reduced grain
   texture.wrapS = THREE.ClampToEdgeWrapping;

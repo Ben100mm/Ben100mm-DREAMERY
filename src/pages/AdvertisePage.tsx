@@ -109,7 +109,9 @@ const AdvertisePage: React.FC = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Space Background */}
+      {/* Space Background Layers */}
+      
+      {/* Base dark space */}
       <Box
         sx={{
           position: 'fixed',
@@ -117,86 +119,108 @@ const AdvertisePage: React.FC = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          zIndex: -1,
-          background: `
-            radial-gradient(ellipse 1200px 800px at center, 
-              rgba(138, 43, 226, 0.4) 0%,
-              rgba(75, 0, 130, 0.3) 20%,
-              rgba(25, 25, 112, 0.2) 40%,
-              rgba(0, 0, 0, 0.8) 70%,
-              rgba(0, 0, 0, 1) 100%
-            ),
-            radial-gradient(ellipse 800px 600px at 30% 20%, 
-              rgba(255, 20, 147, 0.3) 0%,
-              rgba(255, 105, 180, 0.2) 30%,
-              transparent 70%
-            ),
-            radial-gradient(ellipse 600px 400px at 70% 80%, 
-              rgba(0, 100, 200, 0.3) 0%,
-              rgba(25, 25, 112, 0.2) 40%,
-              transparent 80%
-            ),
-            radial-gradient(ellipse 1000px 500px at 50% 100%, 
-              rgba(138, 43, 226, 0.2) 0%,
-              rgba(75, 0, 130, 0.1) 50%,
-              transparent 100%
-            ),
-            #000011
+          zIndex: -10,
+          backgroundColor: '#000011',
+        }}
+      />
+
+      {/* Main Milky Way nebula */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -9,
+          background: 'radial-gradient(ellipse 1200px 800px at center, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.4) 30%, rgba(25, 25, 112, 0.3) 60%, transparent 100%)',
+        }}
+      />
+
+      {/* Pink nebula */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -8,
+          background: 'radial-gradient(ellipse 800px 600px at 30% 20%, rgba(255, 20, 147, 0.4) 0%, rgba(255, 105, 180, 0.3) 40%, transparent 80%)',
+        }}
+      />
+
+      {/* Blue nebula */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -7,
+          background: 'radial-gradient(ellipse 600px 400px at 70% 80%, rgba(0, 100, 200, 0.4) 0%, rgba(25, 25, 112, 0.3) 50%, transparent 80%)',
+        }}
+      />
+
+      {/* Stars layer 1 */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -6,
+          backgroundImage: `
+            radial-gradient(3px 3px at 20px 30px, #fff, transparent),
+            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,1), transparent),
+            radial-gradient(2px 2px at 90px 40px, #fff, transparent),
+            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(3px 3px at 160px 30px, #fff, transparent)
           `,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundImage: `
-              radial-gradient(3px 3px at 20px 30px, #fff, transparent),
-              radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,1), transparent),
-              radial-gradient(2px 2px at 90px 40px, #fff, transparent),
-              radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.8), transparent),
-              radial-gradient(3px 3px at 160px 30px, #fff, transparent)
-            `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '200px 100px',
-            opacity: 0.9,
-            animation: 'twinkle1 4s ease-in-out infinite alternate',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundImage: `
-              radial-gradient(4px 4px at 50px 50px, rgba(255,255,255,0.8), transparent),
-              radial-gradient(3px 3px at 100px 100px, rgba(255,255,255,0.6), transparent),
-              radial-gradient(2px 2px at 150px 150px, rgba(255,255,255,0.7), transparent),
-              radial-gradient(3px 3px at 200px 200px, rgba(255,255,255,0.5), transparent)
-            `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '250px 250px',
-            opacity: 0.8,
-            animation: 'twinkle2 6s ease-in-out infinite alternate',
-          },
+          backgroundRepeat: 'repeat',
+          backgroundSize: '200px 100px',
+          opacity: 0.9,
+          animation: 'twinkle1 4s ease-in-out infinite alternate',
           '@keyframes twinkle1': {
             '0%': { opacity: 0.3 },
             '100%': { opacity: 1 },
           },
-          '@keyframes twinkle2': {
-            '0%': { opacity: 0.2 },
-            '100%': { opacity: 0.8 },
-          }
         }}
       />
 
-      {/* Content with minimal overlay for readability */}
+      {/* Stars layer 2 */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -5,
+          backgroundImage: `
+            radial-gradient(4px 4px at 50px 50px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(3px 3px at 100px 100px, rgba(255,255,255,0.6), transparent),
+            radial-gradient(2px 2px at 150px 150px, rgba(255,255,255,0.7), transparent),
+            radial-gradient(3px 3px at 200px 200px, rgba(255,255,255,0.5), transparent)
+          `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '250px 250px',
+          opacity: 0.8,
+          animation: 'twinkle2 6s ease-in-out infinite alternate',
+          '@keyframes twinkle2': {
+            '0%': { opacity: 0.2 },
+            '100%': { opacity: 0.8 },
+          },
+        }}
+      />
+
+      {/* Content */}
       <Box
         sx={{
           position: 'relative',
-          zIndex: 1,
-          backgroundColor: 'rgba(0, 0, 17, 0.1)',
+          zIndex: 10,
           minHeight: '100vh',
         }}
       >

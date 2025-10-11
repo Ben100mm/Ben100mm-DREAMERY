@@ -143,21 +143,24 @@ const Advertise3DPage: React.FC = () => {
 
   // Create scroll container with sections
   useEffect(() => {
-    // Enable body scrolling with snap points
-    document.body.style.overflow = 'auto';
-    document.body.style.height = 'auto';
-    document.body.style.scrollSnapType = 'y mandatory'; // Mandatory to force stopping at each card
+    // Enable smooth scrolling with snap points on html element
+    document.documentElement.style.scrollSnapType = 'y mandatory';
+    document.documentElement.style.scrollBehavior = 'smooth';
+    document.documentElement.style.overflow = 'auto';
     
     // Hide scrollbar while keeping scroll functionality
     const style = document.createElement('style');
     style.id = 'hide-scrollbar';
     style.textContent = `
+      html::-webkit-scrollbar,
       body::-webkit-scrollbar {
         display: none;
       }
+      html,
       body {
         -ms-overflow-style: none;
         scrollbar-width: none;
+        scroll-snap-type: y mandatory;
       }
     `;
     document.head.appendChild(style);
@@ -170,9 +173,9 @@ const Advertise3DPage: React.FC = () => {
     return () => {
       clearTimeout(timer);
       // Cleanup
-      document.body.style.overflow = '';
-      document.body.style.height = '';
-      document.body.style.scrollSnapType = '';
+      document.documentElement.style.scrollSnapType = '';
+      document.documentElement.style.scrollBehavior = '';
+      document.documentElement.style.overflow = '';
       const styleEl = document.getElementById('hide-scrollbar');
       if (styleEl) styleEl.remove();
     };
@@ -218,18 +221,25 @@ const Advertise3DPage: React.FC = () => {
           }}
         />
         {/* Scrollable sections with snap points - 12 sections */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
-          <Box
-            key={sectionIndex}
-            sx={{
-              height: '100vh',
-              width: '100%',
-              position: 'relative',
-              scrollSnapAlign: 'start',
-              pointerEvents: 'none',
-            }}
-          />
-        ))}
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
+            <Box
+              key={sectionIndex}
+              id={`section-${sectionIndex}`}
+              sx={{
+                height: '100vh',
+                minHeight: '100vh',
+                width: '100%',
+                position: 'relative',
+                scrollSnapAlign: 'start',
+                scrollSnapStop: 'always',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          ))}
+        </Box>
 
         {/* Loading Screen */}
         {isLoading && <LoadingFallback />}

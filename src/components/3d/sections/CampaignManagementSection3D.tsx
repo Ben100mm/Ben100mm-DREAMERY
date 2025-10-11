@@ -6,6 +6,7 @@ import React from 'react';
 import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
 const features = [
   'Real-time Campaign Dashboard',
@@ -16,9 +17,12 @@ const features = [
   'Optimization Recommendations',
 ];
 
-export const CampaignManagementSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const CampaignManagementSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -360]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

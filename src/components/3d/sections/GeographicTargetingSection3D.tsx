@@ -5,6 +5,7 @@
 import React from 'react';
 import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
 const markets = [
   { name: 'San Francisco', state: 'CA', reach: '2.5M' },
@@ -15,9 +16,12 @@ const markets = [
   { name: 'Austin', state: 'TX', reach: '1.2M' },
 ];
 
-export const GeographicTargetingSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const GeographicTargetingSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -400]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

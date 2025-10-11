@@ -9,12 +9,16 @@ import { brandColors } from '../../../theme/theme';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ChatIcon from '@mui/icons-material/Chat';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
 
-export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const ContactSection3D: React.FC<{ visible: boolean; sectionIndex: number; scrollProgress: number }> = ({ visible, sectionIndex, scrollProgress }) => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, -200]}>
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
       {visible && (
         <Text
           position={[0, 3, 0]}

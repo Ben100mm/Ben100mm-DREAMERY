@@ -6,7 +6,7 @@
  * Full-page 3D canvas with 12 comprehensive advertising sections
  */
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { Box, CircularProgress } from '@mui/material';
@@ -17,7 +17,7 @@ import { theme } from '../theme/theme';
 import { SceneManager } from '../components/3d/SceneManager';
 
 // Visual effects
-import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
+import { EnhancedStarField } from '../components/3d/effects/EnhancedStarField';
 
 // Section components - 12 focused sections
 import { HeroSection3D } from '../components/3d/sections/HeroSection3D';
@@ -32,6 +32,10 @@ import { IntegrationSection3D } from '../components/3d/sections/IntegrationSecti
 import { CampaignManagementSection3D } from '../components/3d/sections/CampaignManagementSection3D';
 import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
 import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
+import { MilkyWaySection3D } from '../components/3d/sections/MilkyWaySection3D';
+import { MilkyWayPanorama3D, useMilkyWayControls } from '../components/3d/effects/MilkyWayPanorama3D';
+import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
+import { MilkyWayControls } from '../components/3d/controls/MilkyWayControls';
 
 /**
  * Scene Content Component
@@ -40,13 +44,35 @@ import { AnalyticsReportingSection3D } from '../components/3d/sections/Analytics
 const SceneContent: React.FC<{ 
   currentSection: number; 
   onSectionChange: (section: number) => void;
-  onScrollUpdate: (progress: number, velocity: number) => void;
+  onScrollUpdate: (progress: number, velocity: number, mousePosition?: { x: number; y: number }) => void;
   scrollVelocity: number;
-}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity }) => {
+  scrollProgress: number;
+  mousePosition: { x: number; y: number };
+  controls: any;
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition, controls }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={75} />
+
+      {/* Constant Milky Way Panorama Background */}
+      <MilkyWayPanorama3D
+        visible={true}
+        interactive={true}
+        initialZoom={controls.zoom}
+        mouseSensitivity={0.001}
+        brightness={controls.brightness}
+        contrast={controls.contrast}
+        saturation={controls.saturation}
+        autoRotate={controls.autoRotate}
+      />
+
+      {/* Whizzing Stars - Only active during scroll */}
+      <WhizzingStars 
+        visible={true}
+        scrollVelocity={scrollVelocity}
+        scrollProgress={scrollProgress}
+      />
 
       {/* Lighting Setup */}
       <ambientLight intensity={0.5} />
@@ -55,8 +81,11 @@ const SceneContent: React.FC<{
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#64b5f6" />
       <pointLight position={[5, 0, 5]} intensity={0.3} color="#90caf9" />
 
-      {/* Background Effects - Keep whizzing stars, removed galaxy */}
-      <WhizzingStars scrollVelocity={scrollVelocity} />
+      {/* Simple test sphere */}
+      <mesh position={[0, 0, -5]}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshBasicMaterial color="#64b5f6" />
+      </mesh>
 
       {/* Scene Manager - handles camera transitions */}
       <SceneManager 
@@ -66,40 +95,43 @@ const SceneContent: React.FC<{
 
       {/* 12 Focused Sections - Only render nearby sections for performance */}
       {/* Section 0: Hero - Introduction */}
-      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} />}
+      {Math.abs(currentSection - 0) <= 1 && <HeroSection3D visible={currentSection === 0} sectionIndex={0} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
       
       {/* Section 1: Opportunities - Advertising opportunities for different users */}
-      {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} />}
+      {Math.abs(currentSection - 1) <= 1 && <OpportunitiesSection3D visible={currentSection === 1} sectionIndex={1} scrollProgress={scrollProgress} />}
       
       {/* Section 2: Pricing - Pricing plans */}
-      {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} />}
+      {Math.abs(currentSection - 2) <= 1 && <PricingSection3D visible={currentSection === 2} sectionIndex={2} scrollProgress={scrollProgress} />}
       
       {/* Section 3: Sample Ads - Ad examples */}
-      {Math.abs(currentSection - 3) <= 1 && <SampleAdsSection3D visible={currentSection === 3} />}
+      {Math.abs(currentSection - 3) <= 1 && <SampleAdsSection3D visible={currentSection === 3} sectionIndex={3} scrollProgress={scrollProgress} />}
       
       {/* Section 4: Competitive Advantages - Why choose this platform */}
-      {Math.abs(currentSection - 4) <= 1 && <CompetitiveAdvantagesSection3D visible={currentSection === 4} />}
+      {Math.abs(currentSection - 4) <= 1 && <CompetitiveAdvantagesSection3D visible={currentSection === 4} sectionIndex={4} scrollProgress={scrollProgress} />}
       
       {/* Section 5: Contact - Contact information */}
-      {Math.abs(currentSection - 5) <= 1 && <ContactSection3D visible={currentSection === 5} />}
+      {Math.abs(currentSection - 5) <= 1 && <ContactSection3D visible={currentSection === 5} sectionIndex={5} scrollProgress={scrollProgress} />}
       
       {/* Section 6: Industry Focus - Industry-specific information */}
-      {Math.abs(currentSection - 6) <= 1 && <IndustryFocusSection3D visible={currentSection === 6} />}
+      {Math.abs(currentSection - 6) <= 1 && <IndustryFocusSection3D visible={currentSection === 6} sectionIndex={6} scrollProgress={scrollProgress} />}
       
       {/* Section 7: Performance Metrics - Performance data */}
-      {Math.abs(currentSection - 7) <= 1 && <PerformanceMetricsSection3D visible={currentSection === 7} />}
+      {Math.abs(currentSection - 7) <= 1 && <PerformanceMetricsSection3D visible={currentSection === 7} sectionIndex={7} scrollProgress={scrollProgress} />}
       
       {/* Section 8: Integration - Integration capabilities */}
-      {Math.abs(currentSection - 8) <= 1 && <IntegrationSection3D visible={currentSection === 8} />}
+      {Math.abs(currentSection - 8) <= 1 && <IntegrationSection3D visible={currentSection === 8} sectionIndex={8} scrollProgress={scrollProgress} />}
       
       {/* Section 9: Campaign Management - Campaign tools */}
-      {Math.abs(currentSection - 9) <= 1 && <CampaignManagementSection3D visible={currentSection === 9} />}
+      {Math.abs(currentSection - 9) <= 1 && <CampaignManagementSection3D visible={currentSection === 9} sectionIndex={9} scrollProgress={scrollProgress} />}
       
       {/* Section 10: Geographic Targeting - Location targeting */}
-      {Math.abs(currentSection - 10) <= 1 && <GeographicTargetingSection3D visible={currentSection === 10} />}
+      {Math.abs(currentSection - 10) <= 1 && <GeographicTargetingSection3D visible={currentSection === 10} sectionIndex={10} scrollProgress={scrollProgress} />}
       
       {/* Section 11: Analytics & Reporting - Analytics features */}
-      {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} />}
+      {Math.abs(currentSection - 11) <= 1 && <AnalyticsReportingSection3D visible={currentSection === 11} sectionIndex={11} scrollProgress={scrollProgress} />}
+      
+      {/* Section 12: Final section - Clean content without background */}
+      {Math.abs(currentSection - 12) <= 1 && <MilkyWaySection3D visible={currentSection === 12} sectionIndex={12} scrollProgress={scrollProgress} mousePosition={mousePosition} />}
     </>
   );
 };
@@ -137,26 +169,144 @@ const LoadingFallback: React.FC = () => (
 const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollVelocity, setScrollVelocity] = useState(0);
+  
+  // Milky Way controls
+  const { controls, updateControl, resetControls } = useMilkyWayControls();
+  
+  // Debug logging
+  console.log('Current section:', currentSection, 'Total sections: 13 (0-12)');
+  console.log('Scroll velocity:', scrollVelocity, 'Stars should whizz when > 0');
+  if (currentSection === 12) {
+    console.log('🎯 MILKY WAY SECTION ACTIVE - Section 12');
+  }
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
-
-  // Create scroll container with sections
+  const [isScrolling, setIsScrolling] = useState(false);
+  const currentSectionRef = useRef(0);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
+  const targetSectionRef = useRef(0);
+  
+  // Keep refs in sync with state
   useEffect(() => {
-    // Set loading complete after initial render - reduced timeout for faster load
+    currentSectionRef.current = currentSection;
+  }, [currentSection]);
+  
+  useEffect(() => {
+    isScrollingRef.current = isScrolling;
+  }, [isScrolling]);
+
+  // Custom scroll control with 2-second transitions
+  useEffect(() => {
+    // Hide scrollbar
+    const style = document.createElement('style');
+    style.id = 'scroll-styles';
+    style.textContent = `
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      html,
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        scroll-behavior: auto;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      if (isScrollingRef.current) {
+        return;
+      }
+
+      // Determine scroll direction: positive deltaY = scrolling down, negative = scrolling up
+      const scrollingDown = e.deltaY > 0;
+      const direction = scrollingDown ? 1 : -1;
+      const current = currentSectionRef.current;
+      const nextSection = Math.max(0, Math.min(12, current + direction));
+      
+      // Only proceed if we're moving to a different section
+      if (nextSection !== current) {
+        console.log(`Scrolling ${scrollingDown ? 'down' : 'up'} from section ${current} to ${nextSection}`);
+        
+        isScrollingRef.current = true; // Update ref immediately
+        setIsScrolling(true);
+        currentSectionRef.current = nextSection; // Update ref immediately
+        targetSectionRef.current = nextSection;
+        
+        // Smooth scroll to next section over 2 seconds
+        const targetY = nextSection * window.innerHeight;
+        const startY = window.scrollY;
+        const distance = targetY - startY;
+        const duration = 2000; // 2 seconds
+        const startTime = performance.now();
+        
+        const animateScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Ease-in-out function for smooth animation
+          const easeProgress = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          
+          window.scrollTo(0, startY + distance * easeProgress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          } else {
+            // Animation complete - update state and unlock scrolling
+            console.log(`✓ Scroll animation complete. Now at section ${nextSection}`);
+            setCurrentSection(nextSection);
+            isScrollingRef.current = false;
+            setIsScrolling(false);
+          }
+        };
+        
+        requestAnimationFrame(animateScroll);
+      } else {
+        console.log(`Already at section ${current}, not scrolling`);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // Set loading complete after initial render
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('wheel', handleWheel);
+      const styleEl = document.getElementById('scroll-styles');
+      if (styleEl) styleEl.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - we use refs to avoid stale closures
 
   // Section change handler (called by SceneManager)
   const handleSectionChange = (section: number) => {
-    setCurrentSection(section);
+    // Only update if we're not in manual scroll mode
+    if (!isScrollingRef.current) {
+      console.log(`SceneManager wants to change to section ${section}`);
+      setCurrentSection(section);
+      currentSectionRef.current = section;
+    }
   };
 
   // Scroll update handler (called by SceneManager)
-  const handleScrollUpdate = (progress: number, velocity: number) => {
+  const handleScrollUpdate = (progress: number, velocity: number, mousePos?: { x: number; y: number }) => {
     setScrollVelocity(velocity);
+    setScrollProgress(progress);
+    if (mousePos) {
+      setMousePosition(mousePos);
+    }
   };
 
   return (
@@ -169,15 +319,40 @@ const Advertise3DPage: React.FC = () => {
           backgroundColor: '#000',
         }}
       >
-        {/* Scrollable spacer to create scroll area */}
+        {/* Cosmic Starfield Background */}
         <Box
           sx={{
-            height: '1200vh', // 12 sections x 100vh
-            width: '100%',
-            position: 'relative',
-            pointerEvents: 'none',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: `
+              radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.18) 50%, transparent 50%),
+              radial-gradient(1.5px 1.5px at 70% 60%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
+              radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
+              radial-gradient(1.5px 1.5px at 85% 25%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
+              radial-gradient(1px 1px at 60% 70%, rgba(100, 181, 246, 0.15) 50%, transparent 50%),
+              radial-gradient(2px 2px at 90% 80%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
+              linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f1419 100%)
+            `,
+            backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%',
+            transform: `translateY(${currentSection * -30}px) scale(${1 + scrollVelocity * 0.001})`,
+            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            zIndex: 0,
           }}
         />
+        {/* Scrollable sections - 13 sections with programmatic scroll control */}
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((sectionIndex) => (
+          <Box
+            key={sectionIndex}
+            id={`section-${sectionIndex}`}
+            sx={{
+              height: '100vh',
+              width: '100%',
+            }}
+          />
+        ))}
 
         {/* Loading Screen */}
         {isLoading && <LoadingFallback />}
@@ -190,30 +365,196 @@ const Advertise3DPage: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 1,
-            pointerEvents: 'none', // Canvas doesn't block scroll
+            zIndex: 10,
+            backgroundColor: 'transparent',
           }}
         >
           <Canvas
-            shadows
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: 'high-performance',
-            }}
-            dpr={[1, 2]}
+            camera={{ position: [0, 0, 10], fov: 75 }}
+            gl={{ antialias: true, alpha: true }}
           >
             <Suspense fallback={null}>
-              <SceneContent 
-                currentSection={currentSection} 
+              <SceneContent
+                currentSection={currentSection}
                 onSectionChange={handleSectionChange}
                 onScrollUpdate={handleScrollUpdate}
                 scrollVelocity={scrollVelocity}
+                scrollProgress={scrollProgress}
+                mousePosition={mousePosition}
+                controls={controls}
               />
             </Suspense>
           </Canvas>
         </Box>
 
+        {/* Elegant UI Elements - Scroll Indicators and Controls */}
+        <Box
+          sx={{
+            position: 'fixed',
+            left: '24px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          {/* Scroll Indicator */}
+          <Box
+            sx={{
+              width: '40px',
+              height: '60px',
+              border: '2px solid #64b5f6',
+              borderRadius: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(100, 181, 246, 0.1)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderBottom: '8px solid #64b5f6',
+                mb: 1,
+              }}
+            />
+            <Box
+              sx={{
+                width: '2px',
+                height: '8px',
+                backgroundColor: '#64b5f6',
+              }}
+            />
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '8px solid #64b5f6',
+                mt: 1,
+              }}
+            />
+          </Box>
+          
+          {/* Section Progress Indicator */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}
+          >
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((section) => (
+              <Box
+                key={section}
+                sx={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: section === currentSection ? '#ffd700' : 'rgba(255, 255, 255, 0.3)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: '#64b5f6',
+                    transform: 'scale(1.2)',
+                  },
+                }}
+                onClick={() => {
+                  const targetY = section * window.innerHeight;
+                  window.scrollTo({
+                    top: targetY,
+                    behavior: 'smooth',
+                  });
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        {/* Volume Control - Bottom Left */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: '24px',
+            left: '24px',
+            zIndex: 20,
+          }}
+        >
+          <Box
+            sx={{
+              width: '48px',
+              height: '48px',
+              border: '2px solid #ffd700',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 215, 0, 0.1)',
+              backdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            <Box
+              sx={{
+                width: '20px',
+                height: '20px',
+                position: 'relative',
+              }}
+            >
+              {/* Speaker Icon */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: '4px',
+                  top: '6px',
+                  width: 0,
+                  height: 0,
+                  borderTop: '4px solid transparent',
+                  borderBottom: '4px solid transparent',
+                  borderRight: '8px solid #ffd700',
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: '2px',
+                  top: '4px',
+                  width: '6px',
+                  height: '12px',
+                  border: '2px solid #ffd700',
+                  borderLeft: 'none',
+                  borderRadius: '0 3px 3px 0',
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Milky Way Controls - Top Right */}
+        <MilkyWayControls
+          controls={controls}
+          onUpdateControl={updateControl}
+          onResetControls={resetControls}
+          visible={true}
+          onToggleVisibility={() => {}}
+          showControls={false}
+          onToggleControls={() => {}}
+          onResetRotation={() => updateControl('autoRotate', 0.005)}
+        />
 
       </Box>
     </ThemeProvider>

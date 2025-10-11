@@ -9,7 +9,7 @@ import { ScrollController } from '../../utils/3d/scroll';
 
 interface SceneManagerProps {
   onSectionChange?: (sectionIndex: number) => void;
-  onScrollUpdate?: (progress: number, velocity: number) => void;
+  onScrollUpdate?: (progress: number, velocity: number, mousePosition?: { x: number; y: number }) => void;
 }
 
 export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange, onScrollUpdate }) => {
@@ -33,7 +33,8 @@ export const SceneManager: React.FC<SceneManagerProps> = ({ onSectionChange, onS
       // Get scroll data for whizzing stars effect
       const scrollProgress = scrollControllerRef.current.getScrollProgress();
       const scrollVelocity = scrollControllerRef.current.getScrollVelocity();
-      onScrollUpdate?.(scrollProgress, scrollVelocity);
+      const mousePosition = scrollControllerRef.current.getMousePosition();
+      onScrollUpdate?.(scrollProgress, scrollVelocity, mousePosition);
 
       // Check if section changed
       const currentSection = scrollControllerRef.current.getCurrentSection();

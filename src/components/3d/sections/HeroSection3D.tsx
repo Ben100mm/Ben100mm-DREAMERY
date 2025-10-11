@@ -8,11 +8,18 @@ import { Box, Typography, Button, Grid, Chip } from '@mui/material';
 import { brandColors } from '../../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 import { animationPresets } from '../../../utils/3d/animations';
+import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
+import { OuroborosConstellation } from '../../3d/constellations/OuroborosConstellation';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
+export const HeroSection3D: React.FC<{ 
+  visible: boolean; 
+  sectionIndex: number; 
+  scrollProgress: number;
+  mousePosition?: { x: number; y: number };
+}> = ({ visible, sectionIndex, scrollProgress, mousePosition = { x: 0, y: 0 } }) => {
   const navigate = useNavigate();
   const [statsAnimated, setStatsAnimated] = useState(false);
 
@@ -28,191 +35,160 @@ export const HeroSection3D: React.FC<{ visible: boolean }> = ({ visible }) => {
     }
   }, [visible, statsAnimated]);
 
+  // Get dynamic position that moves toward camera along the winding path
+  const contentPosition = getContentPositionAlongPath(sectionIndex, scrollProgress);
+
   return (
-    <group visible={visible} position={[0, 0, 0]}>
-      {/* 3D Title */}
+    <group visible={visible} position={[contentPosition.x, contentPosition.y, contentPosition.z]}>
+      {/* 3D Title - Large elegant typography matching the reference */}
       {visible && (
-        <Text
-          position={[0, 3, 0]}
-          fontSize={0.8}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.05}
-          outlineColor="#1976d2"
-          letterSpacing={0.05}
-        >
-          ADVERTISE WITH DREAMERY
-        </Text>
+        <group position={[-3, 2, 2]}>
+          <Text
+            position={[0, 1.5, 0]}
+            fontSize={2.5}
+            color="#ffffff"
+            anchorX="left"
+            anchorY="middle"
+            outlineWidth={0.02}
+            outlineColor="#64b5f6"
+            letterSpacing={0.05}
+            font="/fonts/PlayfairDisplay-Regular.ttf"
+          >
+            Continuous
+          </Text>
+          <Text
+            position={[0, 0.3, 0]}
+            fontSize={2.2}
+            color="#ffd700"
+            anchorX="left"
+            anchorY="middle"
+            outlineWidth={0.02}
+            outlineColor="#ffa726"
+            letterSpacing={0.03}
+            font="/fonts/Inter-Regular.ttf"
+          >
+            Feedback
+          </Text>
+        </group>
       )}
 
-      {/* HTML Overlay Content */}
+      {/* Ouroboros Constellation - Positioned on the right */}
+      <OuroborosConstellation 
+        visible={visible} 
+        scrollProgress={scrollProgress} 
+        mousePosition={mousePosition}
+        position={[4, 0, 0]}
+        scale={[1.5, 1.5, 1.5]}
+      />
+
+      {/* Clean Text Overlay - No glass cards, just text over background */}
       {visible && (
-        <Html position={[0, -1, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
+        <Html position={[-3, -1, 3]} distanceFactor={12} style={{ pointerEvents: 'auto' }}>
           <Box
             sx={{
-              width: '800px',
-              textAlign: 'center',
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '24px',
-              padding: '48px',
-              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+              maxWidth: '500px',
+              color: '#ffffff',
+              fontFamily: '"Inter", sans-serif',
             }}
           >
-          <Typography
-            variant="h2"
-            sx={{
-              fontWeight: 700,
-              mb: 2,
-              color: brandColors.text.primary,
-              background: `linear-gradient(135deg, ${brandColors.primary} 0%, #64b5f6 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            Reach Your Perfect Audience
-          </Typography>
-
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 4,
-              color: brandColors.text.secondary,
-              lineHeight: 1.6,
-            }}
-          >
-            Connect with qualified real estate professionals, investors, and
-            homebuyers through targeted advertising on the Dreamery platform
-          </Typography>
-
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 4 }}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => navigate('/auth')}
+            {/* Subtitle */}
+            <Typography
+              variant="body1"
               sx={{
-                backgroundColor: brandColors.primary,
-                px: 5,
-                py: 2,
-                fontSize: '1.2rem',
-                fontWeight: 600,
-                boxShadow: '0 8px 24px rgba(25, 118, 210, 0.4)',
-                '&:hover': {
-                  backgroundColor: brandColors.actions.primary,
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 32px rgba(25, 118, 210, 0.5)',
-                },
-                transition: 'all 0.3s ease',
+                fontSize: '1.1rem',
+                lineHeight: 1.6,
+                color: '#ffffff',
+                mb: 3,
+                fontWeight: 400,
               }}
             >
-              Start Advertising
-            </Button>
+              Timely, and clear feedback based on facts and examples is an act of kindness.
+            </Typography>
 
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{
-                borderColor: brandColors.primary,
-                color: brandColors.primary,
-                px: 5,
-                py: 2,
-                fontSize: '1.2rem',
-                fontWeight: 600,
-                '&:hover': {
-                  borderColor: brandColors.actions.primary,
-                  backgroundColor: 'rgba(25, 118, 210, 0.05)',
-                },
-              }}
-            >
-              View Pricing
-            </Button>
+            {/* Tagline with icon */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  border: '1px solid #ffd700',
+                  borderRadius: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: '4px solid transparent',
+                    borderRight: '4px solid transparent',
+                    borderBottom: '6px solid #ffd700',
+                  }}
+                />
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#ffffff',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                BEING STUCK IS BORING
+              </Typography>
+            </Box>
+
+            {/* Simple action buttons */}
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate('/auth')}
+                sx={{
+                  backgroundColor: '#64b5f6',
+                  color: '#000',
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    backgroundColor: '#90caf9',
+                    transform: 'translateY(-1px)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                Get Started
+              </Button>
+
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  borderColor: '#ffd700',
+                  color: '#ffd700',
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    borderColor: '#ff8f00',
+                    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                  },
+                }}
+              >
+                Learn More
+              </Button>
+            </Box>
           </Box>
-
-          {/* Trust Indicators */}
-          <Grid container spacing={3} sx={{ mt: 2 }}>
-            <Grid item xs={4}>
-              <Box sx={{ textAlign: 'center' }}>
-                <PeopleIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
-                <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
-                  <span className="stat-counter" data-target="50000">0</span>+
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Active Users
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box sx={{ textAlign: 'center' }}>
-                <TrendingUpIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
-                <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
-                  <span className="stat-counter" data-target="92">0</span>%
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Customer Satisfaction
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box sx={{ textAlign: 'center' }}>
-                <AttachMoneyIcon sx={{ fontSize: 40, color: brandColors.primary, mb: 1 }} />
-                <Typography variant="h4" sx={{ fontWeight: 700, color: brandColors.primary }}>
-                  <span className="stat-counter" data-target="300">0</span>%
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Average ROI
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-
-          {/* Value Propositions */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 4, flexWrap: 'wrap' }}>
-            <Chip
-              label="Targeted Reach"
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: 'white',
-                fontSize: '1rem',
-                py: 3,
-                px: 2,
-              }}
-            />
-            <Chip
-              label="Proven Results"
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: 'white',
-                fontSize: '1rem',
-                py: 3,
-                px: 2,
-              }}
-            />
-            <Chip
-              label="Easy Integration"
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: 'white',
-                fontSize: '1rem',
-                py: 3,
-                px: 2,
-              }}
-            />
-            <Chip
-              label="24/7 Support"
-              sx={{
-                backgroundColor: brandColors.primary,
-                color: 'white',
-                fontSize: '1rem',
-                py: 3,
-                px: 2,
-              }}
-            />
-          </Box>
-        </Box>
-      </Html>
+        </Html>
       )}
     </group>
   );

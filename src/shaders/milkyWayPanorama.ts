@@ -10,7 +10,7 @@ export const milkyWayVertexShader = `
   }
 `;
 
-// Fragment Shader - Accurate stereographic projection from D3.js example
+// Fragment Shader - Procedural Milky Way with dreamery blue tinge
 export const milkyWayFragmentShader = `
   precision mediump float;
   
@@ -21,52 +21,112 @@ export const milkyWayFragmentShader = `
   uniform float u_brightness;
   uniform float u_contrast;
   uniform float u_saturation;
+  uniform float u_time;
+  uniform bool u_hasTexture;
   
   const float c_pi = 3.14159265358979323846264;
   const float c_halfPi = c_pi * 0.5;
   const float c_twoPi = c_pi * 2.0;
   
+  // Noise function for procedural generation
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+  }
+  
+  float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+  }
+  
   void main(void) {
-    // Get screen coordinates
-    float x = (gl_FragCoord.x - u_translate.x) / u_scale;
-    float y = (u_translate.y - gl_FragCoord.y) / u_scale;
-    
-    // Inverse stereographic projection
-    float rho = sqrt(x * x + y * y);
-    float c = 2.0 * atan(rho);
-    float sinc = sin(c);
-    float cosc = cos(c);
-    float lambda = atan(x * sinc, rho * cosc);
-    float phi = asin(y * sinc / rho);
-    
-    // Apply rotation
-    float cosphi0 = cos(u_rotate.y);
-    float sinphi0 = sin(u_rotate.y);
-    float cosphi = cos(phi);
-    float x1 = cos(lambda) * cosphi;
-    float y1 = sin(lambda) * cosphi;
-    float z1 = sin(phi);
-    lambda = atan(y1, x1 * cosphi0 + z1 * sinphi0) + u_rotate.x;
-    phi = asin(z1 * cosphi0 - x1 * sinphi0);
-    
-    // Sample the texture with proper UV mapping
-    vec2 uv = vec2((lambda + c_pi) / c_twoPi, (phi + c_halfPi) / c_pi);
-    vec4 color = texture2D(u_image, uv);
-    
-    // Apply brightness, contrast, and saturation
-    vec3 finalColor = color.rgb;
-    
-    // Apply contrast
-    finalColor = (finalColor - 0.5) * u_contrast + 0.5;
-    
-    // Apply brightness
-    finalColor += u_brightness;
-    
-    // Apply saturation
-    float luminance = dot(finalColor, vec3(0.299, 0.587, 0.114));
-    finalColor = mix(vec3(luminance), finalColor, u_saturation);
-    
-    gl_FragColor = vec4(finalColor, color.a);
+    if (u_hasTexture) {
+      // Use texture-based rendering when available
+      float x = (gl_FragCoord.x - u_translate.x) / u_scale;
+      float y = (u_translate.y - gl_FragCoord.y) / u_scale;
+      
+      float rho = sqrt(x * x + y * y);
+      float c = 2.0 * atan(rho);
+      float sinc = sin(c);
+      float cosc = cos(c);
+      float lambda = atan(x * sinc, rho * cosc);
+      float phi = asin(y * sinc / rho);
+      
+      float cosphi0 = cos(u_rotate.y);
+      float sinphi0 = sin(u_rotate.y);
+      float cosphi = cos(phi);
+      float x1 = cos(lambda) * cosphi;
+      float y1 = sin(lambda) * cosphi;
+      float z1 = sin(phi);
+      lambda = atan(y1, x1 * cosphi0 + z1 * sinphi0) + u_rotate.x;
+      phi = asin(z1 * cosphi0 - x1 * sinphi0);
+      
+      vec2 uv = vec2((lambda + c_pi) / c_twoPi, (phi + c_halfPi) / c_pi);
+      vec4 color = texture2D(u_image, uv);
+      
+      vec3 finalColor = color.rgb;
+      finalColor = (finalColor - 0.5) * u_contrast + 0.5;
+      finalColor += u_brightness;
+      float luminance = dot(finalColor, vec3(0.299, 0.587, 0.114));
+      finalColor = mix(vec3(luminance), finalColor, u_saturation);
+      
+      gl_FragColor = vec4(finalColor, color.a);
+    } else {
+      // Procedural Milky Way with dreamery blue tinge
+      vec2 uv = gl_FragCoord.xy / u_translate.xy;
+      uv = (uv - 0.5) * 2.0;
+      
+      // Create spiral galaxy structure
+      float angle = atan(uv.y, uv.x) + u_time * 0.1;
+      float radius = length(uv);
+      
+      // Spiral arms with dreamery blue colors
+      float spiral1 = sin(angle * 2.0 + radius * 8.0) * 0.5 + 0.5;
+      float spiral2 = sin(angle * 2.0 + radius * 8.0 + c_pi) * 0.5 + 0.5;
+      
+      // Galaxy core
+      float core = 1.0 - smoothstep(0.0, 0.3, radius);
+      core *= (1.0 - smoothstep(0.0, 0.1, radius));
+      
+      // Star field
+      float stars = 0.0;
+      for (int i = 0; i < 8; i++) {
+        vec2 starUV = uv * (float(i + 1) * 3.0);
+        float starNoise = noise(starUV + u_time * 0.05);
+        if (starNoise > 0.98) {
+          stars += pow(starNoise, 20.0);
+        }
+      }
+      
+      // Dreamery blue color palette
+      vec3 coreColor = vec3(0.4, 0.6, 1.0); // Bright dreamery blue
+      vec3 spiralColor = vec3(0.2, 0.4, 0.8); // Medium dreamery blue
+      vec3 outerColor = vec3(0.1, 0.2, 0.5); // Dark dreamery blue
+      vec3 starColor = vec3(0.6, 0.8, 1.0); // Light blue stars
+      
+      // Combine all elements
+      vec3 galaxy = mix(outerColor, spiralColor, spiral1 * spiral2);
+      galaxy = mix(galaxy, coreColor, core);
+      galaxy += stars * starColor * 2.0;
+      
+      // Apply contrast and brightness
+      galaxy = (galaxy - 0.5) * u_contrast + 0.5;
+      galaxy += u_brightness;
+      
+      // Apply saturation with dreamery blue enhancement
+      float luminance = dot(galaxy, vec3(0.299, 0.587, 0.114));
+      galaxy = mix(vec3(luminance), galaxy, u_saturation);
+      
+      // Add subtle blue tint
+      galaxy = mix(galaxy, galaxy * vec3(0.8, 0.9, 1.2), 0.3);
+      
+      gl_FragColor = vec4(galaxy, 1.0);
+    }
   }
 `;
 

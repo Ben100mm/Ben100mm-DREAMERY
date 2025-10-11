@@ -37,16 +37,16 @@ interface MilkyWayPanorama3DProps {
 }
 
 export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
-  textureUrl = '/milky-way-panorama.jpg', // You'll need to add this texture
+  textureUrl = '/milky-way-panorama.jpg', // Fallback to procedural when missing
   initialZoom = 1.0,
   mouseSensitivity = 0.002,
   interactive = true,
-  starColor = '#ffffff',
-  starIntensity = 0.3,
-  brightness = 0.0,
-  contrast = 1.0,
-  saturation = 1.0,
-  autoRotate = 0.01,
+  starColor = '#64b5f6', // Dreamery blue for stars
+  starIntensity = 0.8,
+  brightness = 0.1, // Slightly brighter
+  contrast = 1.2, // More contrast
+  saturation = 1.3, // More saturated
+  autoRotate = 0.005, // Slower auto-rotation
   visible = true,
   customUniforms = {},
 }) => {
@@ -147,6 +147,8 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
     u_brightness: { value: brightness },
     u_contrast: { value: contrast },
     u_saturation: { value: saturation },
+    u_time: { value: 0 },
+    u_hasTexture: { value: false },
     ...customUniforms,
   }), [size, rotationX, rotationY, brightness, contrast, saturation, customUniforms]);
 
@@ -232,9 +234,18 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
 
   // Animation loop
   useFrame((state) => {
-    // Auto-rotation
-    if (autoRotate > 0) {
-      setRotationY(prev => prev + autoRotate);
+    if (materialRef.current) {
+      // Update time uniform for procedural animation
+      materialRef.current.uniforms.u_time.value = state.clock.elapsedTime;
+      
+      // Check if we have a valid texture
+      const hasTexture = materialRef.current.uniforms.u_image.value !== null;
+      materialRef.current.uniforms.u_hasTexture.value = hasTexture;
+      
+      // Auto-rotation
+      if (autoRotate > 0) {
+        setRotationY(prev => prev + autoRotate);
+      }
     }
   });
 

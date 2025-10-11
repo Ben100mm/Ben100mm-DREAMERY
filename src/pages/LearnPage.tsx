@@ -26,7 +26,6 @@ import {
   ArrowForward as ArrowForwardIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { PageAppBar } from '../components/Header';
 import { brandColors } from '../theme/theme';
 
 const LearnPage: React.FC = () => {
@@ -68,9 +67,7 @@ const LearnPage: React.FC = () => {
   ];
 
         return (
-    <>
-      <PageAppBar title="Dreamery – Learn" />
-      <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f7fa', pt: 10 }}>
+      <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f7fa' }}>
         <Container maxWidth="lg">
           {/* Hero Section */}
           <Box sx={{ textAlign: 'center', mb: 8, mt: 6 }}>
@@ -383,7 +380,6 @@ const LearnPage: React.FC = () => {
 
           </Container>
       </Box>
-    </>
   );
 };
 

@@ -222,6 +222,7 @@ const Advertise3DPage: React.FC = () => {
               powerPreference: 'high-performance',
             }}
             dpr={[1, 2]}
+            style={{ background: 'transparent' }}
           >
             <Suspense fallback={null}>
               <SceneContent 

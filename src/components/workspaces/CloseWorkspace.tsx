@@ -10,7 +10,7 @@ import SettlementClosingCosts from '../close/settlement/SettlementClosingCosts';
 import InsuranceUtilities from '../close/insurance-utilities/InsuranceUtilities';
 import FinalWalkthroughHandover from '../close/walkthrough/FinalWalkthroughHandover';
 import PostClosingServices from '../close/post-closing/PostClosingServices';
-import AIClosingAssistant from '../close/ai-closing-assistant/AIClosingAssistant';
+import ClosingAssistant from '../close/assistant/ClosingAssistant';
 import PartnerIntegrations from '../close/partner-integrations/PartnerIntegrations';
 
 interface CloseWorkspaceProps {
@@ -41,7 +41,7 @@ const CloseWorkspace: React.FC<CloseWorkspaceProps> = ({ activeTab }) => {
       case 'post-closing':
         return <PostClosingServices />;
       case 'assistant':
-        return <AIClosingAssistant />;
+        return <ClosingAssistant />;
       case 'integrations':
         return <PartnerIntegrations />;
       default:

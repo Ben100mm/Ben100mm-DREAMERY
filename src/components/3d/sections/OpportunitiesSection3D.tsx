@@ -46,7 +46,7 @@ const opportunities: Opportunity[] = [
   {
     id: 'services',
     title: 'Professional Services',
-    geometry: 'sphere',
+    geometry: 'box',
     position: [-2, 1, -2],
     color: '#64b5f6',
     icon: <ServiceIcon />,

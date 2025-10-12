@@ -7,7 +7,6 @@ import { Html, Text } from '@react-three/drei';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getContentPositionAlongPath } from '../../../utils/3d/scroll';
-import { OuroborosConstellation } from '../../3d/constellations/OuroborosConstellation';
 
 export const HeroSection3D: React.FC<{ 
   visible: boolean; 
@@ -144,14 +143,7 @@ export const HeroSection3D: React.FC<{
         </Html>
       )}
 
-      {/* Ouroboros Constellation - positioned like in reference */}
-      <OuroborosConstellation
-        visible={visible}
-        scrollProgress={scrollProgress}
-        mousePosition={mousePosition}
-        position={[6, -1, 0]}
-        scale={[2, 2, 2]}
-      />
+      {/* Ouroboros Constellation removed */}
 
       {/* Bottom UI elements - matching reference */}
       {visible && (

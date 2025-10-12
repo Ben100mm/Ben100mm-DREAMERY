@@ -79,24 +79,12 @@ export const milkyWayFragmentShader = `
       
       gl_FragColor = vec4(finalColor, color.a);
     } else {
-      // Procedural Milky Way with dreamery blue tinge
+      // Stars only - no blue background
       // Use normalized device coordinates for fullscreen coverage
       vec2 uv = gl_FragCoord.xy / u_translate.xy;
       uv = (uv - 0.5) * 2.0;
       
-      // Create spiral galaxy structure
-      float angle = atan(uv.y, uv.x) + u_time * 0.1;
-      float radius = length(uv);
-      
-      // Spiral arms with dreamery blue colors
-      float spiral1 = sin(angle * 2.0 + radius * 8.0) * 0.5 + 0.5;
-      float spiral2 = sin(angle * 2.0 + radius * 8.0 + c_pi) * 0.5 + 0.5;
-      
-      // Galaxy core
-      float core = 1.0 - smoothstep(0.0, 0.3, radius);
-      core *= (1.0 - smoothstep(0.0, 0.1, radius));
-      
-      // Star field
+      // Star field only
       float stars = 0.0;
       for (int i = 0; i < 8; i++) {
         vec2 starUV = uv * (float(i + 1) * 3.0);
@@ -106,29 +94,21 @@ export const milkyWayFragmentShader = `
         }
       }
       
-      // Dreamery blue color palette
-      vec3 coreColor = vec3(0.4, 0.6, 1.0); // Bright dreamery blue
-      vec3 spiralColor = vec3(0.2, 0.4, 0.8); // Medium dreamery blue
-      vec3 outerColor = vec3(0.1, 0.2, 0.5); // Dark dreamery blue
-      vec3 starColor = vec3(0.6, 0.8, 1.0); // Light blue stars
+      // Star color - white/light blue stars
+      vec3 starColor = vec3(0.9, 0.95, 1.0); // White stars
       
-      // Combine all elements
-      vec3 galaxy = mix(outerColor, spiralColor, spiral1 * spiral2);
-      galaxy = mix(galaxy, coreColor, core);
-      galaxy += stars * starColor * 2.0;
+      // Only show stars, no background
+      vec3 result = stars * starColor * 2.0;
       
-      // Apply contrast and brightness
-      galaxy = (galaxy - 0.5) * u_contrast + 0.5;
-      galaxy += u_brightness;
+      // Apply contrast and brightness to stars only
+      result = (result - 0.5) * u_contrast + 0.5;
+      result += u_brightness;
       
-      // Apply saturation with dreamery blue enhancement
-      float luminance = dot(galaxy, vec3(0.299, 0.587, 0.114));
-      galaxy = mix(vec3(luminance), galaxy, u_saturation);
+      // Apply saturation to stars only
+      float luminance = dot(result, vec3(0.299, 0.587, 0.114));
+      result = mix(vec3(luminance), result, u_saturation);
       
-      // Add subtle blue tint
-      galaxy = mix(galaxy, galaxy * vec3(0.8, 0.9, 1.2), 0.3);
-      
-      gl_FragColor = vec4(galaxy, 1.0);
+      gl_FragColor = vec4(result, 1.0);
     }
   }
 `;

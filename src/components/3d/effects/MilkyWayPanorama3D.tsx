@@ -96,23 +96,15 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
     });
   }, [textureUrl]);
 
-  // Create a fallback Milky Way texture if the main one fails to load
+  // Create a fallback texture with stars only (no blue background)
   const createFallbackMilkyWayTexture = useCallback(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
     const ctx = canvas.getContext('2d')!;
     
-    // Create a gradient background representing the Milky Way
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, '#0a0a1a');
-    gradient.addColorStop(0.3, '#1a1a3a');
-    gradient.addColorStop(0.5, '#2a2a5a');
-    gradient.addColorStop(0.7, '#1a1a3a');
-    gradient.addColorStop(1, '#0a0a1a');
-    
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Start with transparent background (no blue gradient)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Add some star-like noise
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

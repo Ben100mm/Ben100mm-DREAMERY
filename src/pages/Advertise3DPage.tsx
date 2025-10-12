@@ -33,7 +33,6 @@ import { CampaignManagementSection3D } from '../components/3d/sections/CampaignM
 import { GeographicTargetingSection3D } from '../components/3d/sections/GeographicTargetingSection3D';
 import { AnalyticsReportingSection3D } from '../components/3d/sections/AnalyticsReportingSection3D';
 // MilkyWaySection3D removed - using constant backdrop instead
-import { MilkyWayPanorama3D, useMilkyWayControls } from '../components/3d/effects/MilkyWayPanorama3D';
 import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
 
 /**
@@ -47,24 +46,13 @@ const SceneContent: React.FC<{
   scrollVelocity: number;
   scrollProgress: number;
   mousePosition: { x: number; y: number };
-  controls: any;
-}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition, controls }) => {
+}> = ({ currentSection, onSectionChange, onScrollUpdate, scrollVelocity, scrollProgress, mousePosition }) => {
   return (
     <>
       {/* Camera - controlled by SceneManager based on scroll */}
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={75} />
 
-      {/* Constant Milky Way Panorama Background */}
-      <MilkyWayPanorama3D
-        visible={true}
-        interactive={true}
-        initialZoom={controls.zoom}
-        mouseSensitivity={0.001}
-        brightness={controls.brightness}
-        contrast={controls.contrast}
-        saturation={controls.saturation}
-        autoRotate={controls.autoRotate}
-      />
+      {/* Milky Way Panorama removed */}
 
       {/* Whizzing Stars - Only active during scroll */}
       <WhizzingStars 
@@ -165,8 +153,7 @@ const Advertise3DPage: React.FC = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollVelocity, setScrollVelocity] = useState(0);
   
-  // Milky Way controls
-  const { controls, updateControl, resetControls } = useMilkyWayControls();
+  // Milky Way controls removed
   
   // Debug logging
   console.log('Current section:', currentSection, 'Total sections: 12 (0-11)');
@@ -352,7 +339,6 @@ const Advertise3DPage: React.FC = () => {
                 scrollVelocity={scrollVelocity}
                 scrollProgress={scrollProgress}
                 mousePosition={mousePosition}
-                controls={controls}
               />
             </Suspense>
           </Canvas>

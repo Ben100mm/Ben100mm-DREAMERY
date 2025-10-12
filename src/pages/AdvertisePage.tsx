@@ -1,32 +1,9 @@
 import React from 'react';
 import { 
   Box,
-  Container,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-  Button,
-  Chip,
-  List,
-  ListItem,
-  ListItemText
+  Typography
 } from '@mui/material';
-import { 
-  Campaign as CampaignIcon,
-  Business as BusinessIcon,
-  Home as PropertyIcon,
-  TrendingUp as InvestorIcon,
-  Handshake as AgentIcon,
-  AccountBalance as LenderIcon,
-  Build as ServiceIcon,
-  Psychology as AIIcon,
-  ArrowForward as ArrowForwardIcon,
-  ArrowBack as ArrowBackIcon
-} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { brandColors } from '../theme/theme';
 
 const AdvertisePage: React.FC = () => {
   const navigate = useNavigate();
@@ -35,107 +12,56 @@ const AdvertisePage: React.FC = () => {
     {
       id: 'property',
       title: 'Property Listings',
-      icon: <PropertyIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
-      description: 'Showcase your properties to qualified buyers and investors',
-      features: ['Professional Photography', 'Virtual Tours', 'Market Analysis', 'Lead Generation'],
-      pricing: 'Starting at $299/month',
-      level: 'All Levels'
+      description: 'Showcase properties to qualified buyers and investors',
+      features: ['Professional Photography', 'Virtual Tours', 'Market Analysis', 'Lead Generation']
     },
     {
       id: 'services',
       title: 'Professional Services',
-      icon: <ServiceIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
-      description: 'Promote your real estate services to the right audience',
-      features: ['Agent Profiles', 'Service Listings', 'Client Testimonials', 'Local SEO'],
-      pricing: 'Starting at $199/month',
-      level: 'All Levels'
+      description: 'Promote real estate services to the right audience',
+      features: ['Agent Profiles', 'Service Listings', 'Client Testimonials', 'Local SEO']
     },
     {
       id: 'investment',
       title: 'Investment Opportunities',
-      icon: <InvestorIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
-      description: 'Connect with investors for your real estate deals',
-      features: ['Deal Presentations', 'Investor Matching', 'Financial Modeling', 'Due Diligence Tools'],
-      pricing: 'Starting at $499/month',
-      level: 'Advanced'
+      description: 'Connect with investors for real estate deals',
+      features: ['Deal Presentations', 'Investor Matching', 'Financial Modeling', 'Due Diligence Tools']
     },
     {
       id: 'lending',
       title: 'Mortgage & Lending',
-      icon: <LenderIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
       description: 'Reach borrowers looking for financing solutions',
-      features: ['Rate Showcases', 'Pre-approval Tools', 'Application Forms', 'Rate Alerts'],
-      pricing: 'Starting at $399/month',
-      level: 'Professional'
+      features: ['Rate Showcases', 'Pre-approval Tools', 'Application Forms', 'Rate Alerts']
     },
     {
       id: 'technology',
       title: 'PropTech Solutions',
-      icon: <AIIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
-      description: 'Market your technology solutions to the real estate industry',
-      features: ['Product Demos', 'Case Studies', 'Integration Guides', 'Developer Resources'],
-      pricing: 'Starting at $799/month',
-      level: 'Enterprise'
+      description: 'Market technology solutions to the real estate industry',
+      features: ['Product Demos', 'Case Studies', 'Integration Guides', 'Developer Resources']
     },
     {
       id: 'business',
       title: 'Business Services',
-      icon: <BusinessIcon sx={{ fontSize: 40, color: brandColors.primary }} />,
-      description: 'Promote your business services to real estate professionals',
-      features: ['Service Directory', 'Portfolio Showcases', 'Client Reviews', 'Industry Insights'],
-      pricing: 'Starting at $249/month',
-      level: 'All Levels'
+      description: 'Promote business services to real estate professionals',
+      features: ['Service Directory', 'Portfolio Showcases', 'Client Reviews', 'Industry Insights']
     }
   ];
-
-  const handleGetStarted = () => {
-    navigate('/auth');
-  };
-
-  const handleViewSamples = () => {
-    // This could open a modal or navigate to a samples page
-    console.log('View sample advertisements');
-  };
 
   const handleBackToHome = () => {
     navigate('/');
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: brandColors.backgrounds.primary, position: 'relative' }}>
-      
-      {/* 3D Experience Banner */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 80,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 1001,
-          backgroundColor: 'rgba(25, 118, 210, 0.95)',
-          backdropFilter: 'blur(10px)',
-          color: 'white',
-          padding: '16px 32px',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(25, 118, 210, 0.4)',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'translateX(-50%) scale(1.05)',
-            boxShadow: '0 12px 48px rgba(25, 118, 210, 0.6)',
-          },
-        }}
-        onClick={() => navigate('/advertise-3d')}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 700, textAlign: 'center', mb: 0.5 }}>
-          🚀 Experience Our New 3D Interactive Page
-        </Typography>
-        <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          Click here to explore our immersive 3D advertising showcase
-        </Typography>
-      </Box>
-      
-      {/* Back to Homepage Button */}
+    <Box 
+      sx={{ 
+        height: '100vh',
+        overflowY: 'scroll',
+        scrollSnapType: 'y mandatory',
+        scrollBehavior: 'smooth',
+        position: 'relative'
+      }}
+    >
+      {/* Simple Back to Homepage Link */}
       <Box
         sx={{
           position: 'fixed',
@@ -144,217 +70,85 @@ const AdvertisePage: React.FC = () => {
           zIndex: 1000,
         }}
       >
-        <Button
+        <Typography
           onClick={handleBackToHome}
           sx={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            backgroundColor: brandColors.primary,
-            color: 'white',
-            minWidth: 'auto',
-            padding: 0,
-            border: '3px solid white',
-            boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.3)',
-            '&:hover': {
-              backgroundColor: brandColors.actions.primary,
-              transform: 'scale(1.05)',
-              boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.5)',
-            },
-            transition: 'all 0.3s ease',
+            color: 'black',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            fontSize: '16px',
           }}
         >
-          <ArrowBackIcon sx={{ fontSize: 24 }} />
-        </Button>
+          ← Back to Home
+        </Typography>
       </Box>
 
-      {/* Advertising Opportunities Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 2, color: brandColors.text.primary }}>
-            Advertising Opportunities
-          </Typography>
-          <Typography variant="h6" sx={{ color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-            Choose the perfect advertising solution for your business
-          </Typography>
-        </Box>
-
-        <Grid container spacing={4}>
-          {advertisingOpportunities.map((opportunity) => (
-            <Grid item xs={12} md={6} lg={4} key={opportunity.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: `0 12px 24px ${brandColors.shadows.hover}`,
-                  }
-                }}
-              >
-                <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    {opportunity.icon}
-                    <Typography variant="h5" component="h3" sx={{ fontWeight: 600, ml: 2, color: brandColors.text.primary }}>
-                      {opportunity.title}
-                    </Typography>
-                  </Box>
-                  
-                  <Typography variant="body1" sx={{ mb: 3, color: brandColors.text.secondary, lineHeight: 1.6 }}>
-                    {opportunity.description}
-                  </Typography>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: brandColors.text.primary }}>
-                      Features:
-                    </Typography>
-                    <List dense>
-                      {opportunity.features.map((feature, index) => (
-                        <ListItem key={index} sx={{ py: 0.5, px: 0 }}>
-                          <ListItemText
-                            primary={feature}
-                            sx={{
-                              '& .MuiListItemText-primary': {
-                                fontSize: '0.9rem',
-                                color: brandColors.text.secondary,
-                              }
-                            }}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                    <Chip
-                      label={opportunity.pricing}
-                      sx={{
-                        backgroundColor: brandColors.primary,
-                        color: 'white',
-                        fontWeight: 600,
-                      }}
-                    />
-                    <Chip
-                      label={opportunity.level}
-                      variant="outlined"
-                      sx={{
-                        borderColor: brandColors.primary,
-                        color: brandColors.primary,
-                        fontWeight: 500,
-                      }}
-                    />
-                  </Box>
-                </CardContent>
-
-                <CardActions sx={{ p: 3, pt: 0 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{
-                      backgroundColor: brandColors.primary,
-                      color: 'white',
-                      py: 1.5,
-                      fontWeight: 600,
-                      '&:hover': {
-                        backgroundColor: brandColors.actions.primary,
-                      }
-                    }}
-                  >
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-
-      {/* Sample Advertisements Section */}
-      <Box sx={{ backgroundColor: brandColors.backgrounds.secondary, py: 8 }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 2, color: brandColors.text.primary }}>
-              Sample Advertisements
+      {/* Plain Text Sections with Scroll-Snap */}
+      {advertisingOpportunities.map((opportunity, index) => (
+        <Box
+          key={opportunity.id}
+          sx={{
+            height: '100vh',
+            width: '100%',
+            scrollSnapAlign: 'start',
+            scrollSnapStop: 'always',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            position: 'relative',
+            padding: '40px',
+          }}
+        >
+          <Box sx={{ textAlign: 'center', maxWidth: 800 }}>
+            <Typography 
+              sx={{ 
+                fontSize: '32px',
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                color: 'black'
+              }}
+            >
+              {opportunity.title}
             </Typography>
-            <Typography variant="h6" sx={{ color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-              See how your ads will look on our platform
+            
+            <Typography 
+              sx={{ 
+                fontSize: '20px',
+                marginBottom: '30px',
+                color: 'black',
+                lineHeight: 1.5
+              }}
+            >
+              {opportunity.description}
+            </Typography>
+
+            <Typography 
+              sx={{ 
+                fontSize: '18px',
+                color: 'black',
+                lineHeight: 1.6
+              }}
+            >
+              Features: {opportunity.features.join(', ')}
             </Typography>
           </Box>
-
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Box sx={{ textAlign: 'center', p: 3 }}>
-                  <PropertyIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Property Listing Ad
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
-                    Beautiful 3BR/2BA home in prime location
-                  </Typography>
-                </Box>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Box sx={{ textAlign: 'center', p: 3 }}>
-                  <ServiceIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Service Provider Ad
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
-                    Professional real estate photography services
-                  </Typography>
-                </Box>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Box sx={{ textAlign: 'center', p: 3 }}>
-                  <BusinessIcon sx={{ fontSize: 60, color: brandColors.primary, mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Business Services Ad
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
-                    Title insurance and closing services
-                  </Typography>
-                </Box>
-              </Card>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* CTA Section */}
-      <Container maxWidth="lg" sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h3" component="h2" sx={{ fontWeight: 600, mb: 3, color: brandColors.text.primary }}>
-          Ready to Get Started?
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 4, color: brandColors.text.secondary, maxWidth: 600, mx: 'auto' }}>
-          Join thousands of real estate professionals who trust Dreamery for their advertising needs
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleGetStarted}
-          sx={{
-            backgroundColor: brandColors.primary,
-            color: 'white',
-            px: 6,
-            py: 2,
-            fontSize: '1.2rem',
-            fontWeight: 600,
-            '&:hover': {
-              backgroundColor: brandColors.actions.primary,
-            }
-          }}
-        >
-          Start Advertising Today
-        </Button>
-      </Container>
+          
+          {/* Section indicator */}
+          <Typography
+            sx={{
+              position: 'absolute',
+              bottom: 20,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'black',
+              fontSize: '14px',
+            }}
+          >
+            {index + 1} / {advertisingOpportunities.length}
+          </Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

@@ -156,18 +156,21 @@ const Advertise3DPage: React.FC = () => {
   // Milky Way controls removed
   
   // Debug logging
-  console.log('Current section:', currentSection, 'Total sections: 12 (0-11)');
+  console.log('Current section:', currentSection, 'Total sections: 6 (0-5)');
   console.log('Scroll velocity:', scrollVelocity, 'Stars should whizz when > 0');
   console.log('🌌 Milky Way panorama is constant backdrop across all sections');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const [scrollAttempts, setScrollAttempts] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const currentSectionRef = useRef(0);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
   const targetSectionRef = useRef(0);
+  const scrollAttemptsRef = useRef(0);
+  const lastScrollDirectionRef = useRef<'up' | 'down' | null>(null);
   
   // Keep refs in sync with state
   useEffect(() => {
@@ -208,11 +211,35 @@ const Advertise3DPage: React.FC = () => {
       const scrollingDown = e.deltaY > 0;
       const direction = scrollingDown ? 1 : -1;
       const current = currentSectionRef.current;
-      const nextSection = Math.max(0, Math.min(11, current + direction));
+      const nextSection = Math.max(0, Math.min(5, current + direction));
+      
+      // Check if direction changed - reset attempts if so
+      const currentDirection = scrollingDown ? 'down' : 'up';
+      if (lastScrollDirectionRef.current !== currentDirection) {
+        scrollAttemptsRef.current = 0;
+        setScrollAttempts(0);
+        lastScrollDirectionRef.current = currentDirection;
+      }
       
       // Only proceed if we're moving to a different section
       if (nextSection !== current) {
-        console.log(`Scrolling ${scrollingDown ? 'down' : 'up'} from section ${current} to ${nextSection}`);
+        scrollAttemptsRef.current += 1;
+        setScrollAttempts(scrollAttemptsRef.current);
+        
+        console.log(`Scroll attempt ${scrollAttemptsRef.current}/2: ${scrollingDown ? 'down' : 'up'} from section ${current} to ${nextSection}`);
+        
+        // Require 2 attempts to move to next section
+        if (scrollAttemptsRef.current < 2) {
+          console.log(`Need ${2 - scrollAttemptsRef.current} more scroll attempt(s) to move to section ${nextSection}`);
+          return;
+        }
+        
+        // Reset attempts after successful section change
+        scrollAttemptsRef.current = 0;
+        setScrollAttempts(0);
+        lastScrollDirectionRef.current = null;
+        
+        console.log(`✓ Two scroll attempts completed. Moving from section ${current} to ${nextSection}`);
         
         isScrollingRef.current = true; // Update ref immediately
         setIsScrolling(true);
@@ -300,8 +327,8 @@ const Advertise3DPage: React.FC = () => {
         }}
       >
         {/* Background removed - using 3D Milky Way panorama instead */}
-        {/* Scrollable sections - 12 sections with programmatic scroll control */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((sectionIndex) => (
+        {/* Scrollable sections - 6 main sections with programmatic scroll control */}
+        {[0, 1, 2, 3, 4, 5].map((sectionIndex) => (
           <Box
             key={sectionIndex}
             id={`section-${sectionIndex}`}
@@ -402,6 +429,47 @@ const Advertise3DPage: React.FC = () => {
             />
           </Box>
           
+          {/* Scroll Attempt Indicator */}
+          {scrollAttempts > 0 && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mb: 2,
+                p: 1,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <Box
+                sx={{
+                  fontSize: '12px',
+                  color: '#64b5f6',
+                  fontWeight: 600,
+                  mb: 0.5,
+                }}
+              >
+                Scroll {scrollAttempts}/2
+              </Box>
+              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                {[1, 2].map((attempt) => (
+                  <Box
+                    key={attempt}
+                    sx={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: attempt <= scrollAttempts ? '#64b5f6' : 'rgba(255, 255, 255, 0.3)',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
           {/* Section Progress Indicator */}
           <Box
             sx={{
@@ -410,7 +478,7 @@ const Advertise3DPage: React.FC = () => {
               gap: 1,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((section) => (
+            {[0, 1, 2, 3, 4, 5].map((section) => (
               <Box
                 key={section}
                 sx={{

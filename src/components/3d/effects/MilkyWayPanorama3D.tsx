@@ -270,13 +270,7 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
         />
       </mesh>
       
-      {/* Loading indicator */}
-      {isLoading && (
-        <mesh position={[0, 0, 0.1]}>
-          <planeGeometry args={[0.5, 0.5]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
-        </mesh>
-      )}
+      {/* Loading indicator removed */}
       
       {/* Error indicator removed */}
     </group>

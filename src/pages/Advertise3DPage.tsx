@@ -35,7 +35,6 @@ import { AnalyticsReportingSection3D } from '../components/3d/sections/Analytics
 // MilkyWaySection3D removed - using constant backdrop instead
 import { MilkyWayPanorama3D, useMilkyWayControls } from '../components/3d/effects/MilkyWayPanorama3D';
 import { WhizzingStars } from '../components/3d/effects/WhizzingStars';
-import { MilkyWayControls } from '../components/3d/controls/MilkyWayControls';
 
 /**
  * Scene Content Component
@@ -516,17 +515,7 @@ const Advertise3DPage: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Milky Way Controls - Top Right */}
-        <MilkyWayControls
-          controls={controls}
-          onUpdateControl={updateControl}
-          onResetControls={resetControls}
-          visible={true}
-          onToggleVisibility={() => {}}
-          showControls={false}
-          onToggleControls={() => {}}
-          onResetRotation={() => updateControl('autoRotate', 0.005)}
-        />
+        {/* Milky Way Controls removed - Milky Way is always visible */}
 
       </Box>
     </ThemeProvider>

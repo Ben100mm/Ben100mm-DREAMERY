@@ -76,37 +76,7 @@ export const MilkyWayControls: React.FC<MilkyWayControlsProps> = ({
         gap: 1,
       }}
     >
-      {/* Main control button */}
-      <Tooltip title={showControls ? 'Hide Controls' : 'Show Controls'}>
-        <IconButton
-          onClick={onToggleControls}
-          sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: brandColors.primary,
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            },
-          }}
-        >
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-
-      {/* Visibility toggle */}
-      <Tooltip title={visible ? 'Hide Milky Way' : 'Show Milky Way'}>
-        <IconButton
-          onClick={onToggleVisibility}
-          sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: visible ? brandColors.primary : '#666',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            },
-          }}
-        >
-          {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-        </IconButton>
-      </Tooltip>
+      {/* No control buttons - Milky Way is always visible */}
 
       {/* Control Panel */}
       {showControls && (

@@ -278,13 +278,7 @@ export const MilkyWayPanorama3D: React.FC<MilkyWayPanorama3DProps> = ({
         </mesh>
       )}
       
-      {/* Error indicator */}
-      {hasError && (
-        <mesh position={[0, 0, 0.1]}>
-          <planeGeometry args={[0.5, 0.3]} />
-          <meshBasicMaterial color="#ff0000" transparent opacity={0.5} />
-        </mesh>
-      )}
+      {/* Error indicator removed */}
     </group>
   );
 };

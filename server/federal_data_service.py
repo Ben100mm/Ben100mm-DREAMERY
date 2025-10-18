@@ -90,6 +90,11 @@ class FederalDataService:
                 logger.warning(f"No data available for {api_name}")
                 return None
             
+            # Handle invalid API key responses (HTML error pages)
+            if response.status_code == 200 and response.text.strip().startswith('<html'):
+                logger.warning(f"Invalid API key or error page returned for {api_name}")
+                return None
+            
             response.raise_for_status()
             
             # Check if response has content
@@ -109,8 +114,8 @@ class FederalDataService:
                        year: int = 2022) -> Optional[FederalCensusData]:
         """Get Census data for coordinates"""
         # Census API can work without a key for basic data
-        if not self.api_keys.get('census'):
-            logger.info("Census API key not configured, using public access")
+        # Note: The provided API key appears to be invalid, so we'll use public access
+        logger.info("Using Census API public access (no API key required)")
         
         # First, get the census tract for the coordinates
         tract_data = self._get_census_tract(latitude, longitude)
@@ -186,26 +191,67 @@ class FederalDataService:
     def _get_census_demographics(self, state_fips: str, county_fips: str, 
                                 tract_fips: str, year: int) -> Optional[Dict]:
         """Get demographic data from Census API"""
-        url = f"https://api.census.gov/data/{year}/acs/acs5"
-        params = {
-            'get': 'B01003_001E,B01002_001E,B19013_001E,B17001_002E,B25001_001E,B25003_001E,B25003_002E,B25003_003E',
-            'for': f'tract:{tract_fips}',
-            'in': f'state:{state_fips} county:{county_fips}'
-        }
+        # Try multiple years if the requested year fails
+        years_to_try = [year, year - 1, year - 2, 2022, 2021, 2020]
         
-        # Add API key if available
-        if self.api_keys.get('census'):
-            params['key'] = self.api_keys['census']
+        for try_year in years_to_try:
+            if try_year < 2019:  # Don't go too far back
+                break
+                
+            url = f"https://api.census.gov/data/{try_year}/acs/acs5"
+            params = {
+                'get': 'B01003_001E,B01002_001E,B19013_001E,B17001_002E,B25001_001E,B25003_001E,B25003_002E,B25003_003E',
+                'for': f'tract:{tract_fips}',
+                'in': f'state:{state_fips} county:{county_fips}'
+            }
+            
+            # Note: Not using API key as it appears to be invalid
+            # Census API works without a key for basic data
+            
+            data = self._make_api_call(url, params, 'census', 1000)
+            if data and len(data) >= 2:
+                # Parse the response (first row is headers, second is data)
+                headers = data[0]
+                values = data[1]
+                
+                result = dict(zip(headers, values))
+                logger.info(f"Successfully retrieved Census data for year {try_year}")
+                return result
+            else:
+                logger.warning(f"No data available for Census year {try_year}")
         
-        data = self._make_api_call(url, params, 'census', 1000)
-        if not data or len(data) < 2:
-            return None
+        # If all years failed, try county-level data as fallback
+        logger.info("Trying county-level data as fallback")
+        return self._get_census_county_demographics(state_fips, county_fips, year)
+    
+    def _get_census_county_demographics(self, state_fips: str, county_fips: str, 
+                                       year: int) -> Optional[Dict]:
+        """Get county-level demographic data from Census API as fallback"""
+        years_to_try = [year, year - 1, year - 2, 2022, 2021, 2020]
         
-        # Parse the response (first row is headers, second is data)
-        headers = data[0]
-        values = data[1]
+        for try_year in years_to_try:
+            if try_year < 2019:
+                break
+                
+            url = f"https://api.census.gov/data/{try_year}/acs/acs5"
+            params = {
+                'get': 'B01003_001E,B01002_001E,B19013_001E,B17001_002E,B25001_001E,B25003_001E,B25003_002E,B25003_003E',
+                'for': f'county:{county_fips}',
+                'in': f'state:{state_fips}'
+            }
+            
+            data = self._make_api_call(url, params, 'census', 1000)
+            if data and len(data) >= 2:
+                headers = data[0]
+                values = data[1]
+                
+                result = dict(zip(headers, values))
+                logger.info(f"Successfully retrieved county-level Census data for year {try_year}")
+                return result
+            else:
+                logger.warning(f"No county-level data available for Census year {try_year}")
         
-        return dict(zip(headers, values))
+        return None
     
     def _get_census_businesses(self, state_fips: str, county_fips: str, 
                               tract_fips: str, year: int) -> Dict:

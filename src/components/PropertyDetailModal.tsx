@@ -313,11 +313,19 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
     console.log('🔴 Force close called');
     console.log('🔴 onClose function:', onClose);
     console.log('🔴 Modal open state:', open);
-    onClose();
+    console.log('🔴 Calling onClose()...');
+    try {
+      onClose();
+      console.log('🔴 onClose() called successfully');
+    } catch (error) {
+      console.error('🔴 Error calling onClose():', error);
+    }
   };
 
   // Debug: Log when component renders
   console.log('🔴 PropertyDetailModal rendering with open:', open, 'property:', !!property);
+  console.log('🔴 forceClose function available:', typeof forceClose);
+  console.log('🔴 onClose function available:', typeof onClose);
 
   return (
     <>
@@ -371,38 +379,33 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
           <Typography variant="caption" sx={{ color: 'red', display: 'block' }}>
             DEBUG: Modal open = {open.toString()}
           </Typography>
+          
+          {/* Simple test button in header */}
+          <Button
+            onClick={() => {
+              console.log('🔴 HEADER TEST BUTTON CLICKED!');
+              alert('HEADER TEST BUTTON CLICKED!');
+              onClose();
+            }}
+            size="small"
+            variant="outlined"
+            color="primary"
+            sx={{ mt: 1, mr: 2 }}
+          >
+            HEADER TEST
+          </Button>
           <Button 
-            onClick={(e) => {
-              console.log('🔴 DEBUG BUTTON CLICKED!', e);
-              console.log('🔴 Event target:', e.target);
-              console.log('🔴 Event currentTarget:', e.currentTarget);
-              e.preventDefault();
-              e.stopPropagation();
-              alert('DEBUG BUTTON CLICKED!'); // Visual confirmation
-              forceClose();
+            onClick={() => {
+              console.log('🔴 SIMPLE DEBUG BUTTON CLICKED!');
+              alert('SIMPLE DEBUG BUTTON CLICKED!');
+              onClose();
             }}
-            onMouseDown={(e) => {
-              console.log('🔴 DEBUG BUTTON MOUSE DOWN!', e);
-            }}
-            onMouseUp={(e) => {
-              console.log('🔴 DEBUG BUTTON MOUSE UP!', e);
-            }}
-            size="large"
+            size="small"
             variant="contained"
             color="error"
-            sx={{ 
-              mt: 2, 
-              mb: 2,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              minHeight: '50px',
-              zIndex: 9999,
-              position: 'relative',
-              pointerEvents: 'auto',
-              cursor: 'pointer'
-            }}
+            sx={{ mt: 1 }}
           >
-            🔴 FORCE CLOSE MODAL 🔴
+            SIMPLE CLOSE
           </Button>
           <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 1 }}>
             {property.address?.formatted_address || property.address?.full_line || 'Address not available'}

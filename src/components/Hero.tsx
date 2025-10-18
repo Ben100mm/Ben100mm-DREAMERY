@@ -527,7 +527,7 @@ const Hero: React.FC = () => {
     <HeroContainer>
       <Overlay />
       <Content>
-        <Title>It Starts with a Home.</Title>
+        <Title>It starts with a Home.</Title>
         <SearchContainer ref={searchContainerRef} data-testid="search-container">
           <StyledTextField
             ref={inputRef}

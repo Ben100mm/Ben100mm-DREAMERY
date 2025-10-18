@@ -3,7 +3,8 @@
  * Proprietary and confidential. Unauthorized copying, distribution, or use is prohibited.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import {
   Box,
@@ -33,6 +34,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Fade,
 } from "@mui/material";
 import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
@@ -43,6 +45,8 @@ import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AM
 import { useRealtorData } from "../hooks/useRealtorData";
 import { RealtorSearchParams, PropertyData } from "../types/realtor";
 import PropertyDetailModal from "../components/PropertyDetailModal";
+import { addressAutocompleteService, AddressSuggestion } from "../services/addressAutocompleteService";
+import { AddressValidator, AddressGeocoder, SearchRouter, AddressFormatter } from "../utils/addressUtils";
 
 // Lazy load icons to reduce initial bundle size
 const LazySearchIcon = React.lazy(() => import("@mui/icons-material/Search"));
@@ -52,6 +56,10 @@ const LazyArrowBackIcon = React.lazy(() => import("@mui/icons-material/ArrowBack
 const LazyKeyboardArrowDownIcon = React.lazy(() => import("@mui/icons-material/KeyboardArrowDown"));
 const LazyKeyboardArrowUpIcon = React.lazy(() => import("@mui/icons-material/KeyboardArrowUp"));
 const LazyClearIcon = React.lazy(() => import("@mui/icons-material/Clear"));
+const LazyHomeIcon = React.lazy(() => import("@mui/icons-material/Home"));
+const LazyLocationOnIcon = React.lazy(() => import("@mui/icons-material/LocationOn"));
+const LazyBusinessIcon = React.lazy(() => import("@mui/icons-material/Business"));
+const LazyPublicIcon = React.lazy(() => import("@mui/icons-material/Public"));
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -119,6 +127,98 @@ const MapOverlay = styled.div`
 const PropertiesContainer = styled.div`
   padding: 2rem;
   background: brandColors.backgrounds.primary;
+`;
+
+const SuggestionDropdown = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isOpen', 'top', 'left', 'width'].includes(prop),
+})<{ isOpen: boolean; top: number; left: number; width: number }>`
+  position: fixed;
+  top: ${props => props.top}px;
+  left: ${props => props.left}px;
+  width: ${props => props.width}px;
+  background: white;
+  border: 1px solid ${brandColors.borders.primary};
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999999;
+  max-height: 400px;
+  overflow-y: auto;
+  display: ${props => props.isOpen ? 'block' : 'none'};
+  min-height: 0;
+  transform: translateZ(0);
+  will-change: transform;
+`;
+
+const SuggestionItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isSelected'].includes(prop),
+})<{ isSelected: boolean }>`
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: ${props => props.isSelected ? brandColors.interactive.hover : 'transparent'};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 48px;
+  
+  &:hover {
+    background-color: ${brandColors.interactive.hover};
+  }
+  
+  &:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+  
+  &:last-child {
+    border-radius: 0 0 8px 8px;
+  }
+`;
+
+const SuggestionIcon = styled.div`
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  color: ${brandColors.primary};
+`;
+
+const SuggestionContent = styled.div`
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+`;
+
+const SuggestionTitle = styled.div`
+  font-weight: 600;
+  color: ${brandColors.text.primary};
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const SuggestionSubtitle = styled.div`
+  font-size: 0.875rem;
+  color: ${brandColors.text.secondary};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: ${brandColors.text.secondary};
+`;
+
+const ErrorContainer = styled.div`
+  padding: 12px 16px;
+  color: ${brandColors.text.error};
+  font-size: 0.875rem;
+  border-top: 1px solid ${brandColors.borders.secondary};
 `;
 
 const PropertyCard = styled(Card)`
@@ -213,6 +313,29 @@ const BuyPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [userLocation, setUserLocation] = useState<string>("");
   const [locationLoading, setLocationLoading] = useState(false);
+  
+  // Autocomplete state
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionError, setSuggestionError] = useState<string | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Calculate dropdown position
+  const updateDropdownPosition = useCallback(() => {
+    if (searchContainerRef.current) {
+      const rect = searchContainerRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width
+      });
+    }
+  }, []);
 
   const toggleFavorite = (id: string) => {
     const newFavorites = new Set(favorites);
@@ -230,9 +353,12 @@ const BuyPage: React.FC = () => {
   };
 
   const handleCloseModal = () => {
-    console.log('🔴 Modal close button clicked');
+    console.log('🔴 BuyPage: handleCloseModal called');
+    console.log('🔴 BuyPage: Current modalOpen state:', modalOpen);
+    console.log('🔴 BuyPage: Setting modalOpen to false...');
     setModalOpen(false);
     setSelectedProperty(null);
+    console.log('🔴 BuyPage: Modal state updated');
   };
 
   const handleFilterClick = (
@@ -354,7 +480,149 @@ const BuyPage: React.FC = () => {
 
   // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    const value = event.target.value;
+    setSearchQuery(value);
+    setSuggestionError(null);
+  };
+
+  // Debounced search effect for autocomplete
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const timeoutId = setTimeout(async () => {
+      console.log('🔍 BuyPage: Starting debounced search for:', searchQuery);
+      setIsLoadingSuggestions(true);
+      setSuggestionError(null);
+      
+      try {
+        const results = await addressAutocompleteService.getSuggestions(searchQuery);
+        console.log('✅ BuyPage: Received suggestions:', results);
+        setSuggestions(results);
+        setShowSuggestions(results.length > 0);
+        setSelectedIndex(-1);
+      } catch (err) {
+        console.error('❌ BuyPage: Error fetching suggestions:', err);
+        setSuggestionError('Failed to fetch suggestions');
+        setSuggestions([]);
+        setShowSuggestions(false);
+      } finally {
+        setIsLoadingSuggestions(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  // Handle suggestion selection
+  const handleSuggestionSelect = useCallback((suggestion: AddressSuggestion, event?: React.MouseEvent) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    console.log('Suggestion selected:', suggestion.fullAddress);
+    setSearchQuery(suggestion.fullAddress);
+    setShowSuggestions(false);
+    setSelectedIndex(-1);
+  }, []);
+
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (!showSuggestions || suggestions.length === 0) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearch();
+      }
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        setSelectedIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (selectedIndex >= 0) {
+          handleSuggestionSelect(suggestions[selectedIndex]);
+        } else {
+          handleSearch();
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        setSelectedIndex(-1);
+        break;
+    }
+  }, [showSuggestions, suggestions, selectedIndex, handleSuggestionSelect]);
+
+  // Handle click outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      
+      // Check if click is inside search container
+      const isInsideSearchContainer = searchContainerRef.current?.contains(target);
+      
+      // Check if click is inside suggestions dropdown (portal)
+      const isInsideDropdown = (target as Element)?.closest('[data-suggestions-dropdown]');
+      
+      if (!isInsideSearchContainer && !isInsideDropdown) {
+        setShowSuggestions(false);
+        setSelectedIndex(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
+
+  // Update position when suggestions change
+  useEffect(() => {
+    if (showSuggestions) {
+      updateDropdownPosition();
+    }
+  }, [showSuggestions, updateDropdownPosition]);
+
+  // Update position on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (showSuggestions) {
+        updateDropdownPosition();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [showSuggestions, updateDropdownPosition]);
+
+  // Get icon for suggestion type
+  const getSuggestionIcon = (type: AddressSuggestion['type']) => {
+    switch (type) {
+      case 'address':
+        return <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyHomeIcon fontSize="small" />
+        </React.Suspense>;
+      case 'street':
+        return <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyLocationOnIcon fontSize="small" />
+        </React.Suspense>;
+      case 'neighborhood':
+        return <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyBusinessIcon fontSize="small" />
+        </React.Suspense>;
+      default:
+        return <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
+          <LazyPublicIcon fontSize="small" />
+        </React.Suspense>;
+    }
   };
 
   // Handle search submission
@@ -1466,18 +1734,15 @@ const BuyPage: React.FC = () => {
             <MarketplaceModeToggle />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2, justifyContent: 'space-between' }}>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2, justifyContent: 'space-between' }} ref={searchContainerRef}>
             <TextField
+              ref={searchInputRef}
               placeholder="San Francisco, CA"
               size="small"
               sx={{ flexGrow: 1 }}
               value={searchQuery}
               onChange={handleSearchChange}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
+              onKeyDown={handleKeyDown}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -1492,6 +1757,7 @@ const BuyPage: React.FC = () => {
                       size="small"
                       onClick={() => {
                         setSearchQuery("");
+                        setShowSuggestions(false);
                         handleSearch();
                       }}
                     >
@@ -1533,6 +1799,65 @@ const BuyPage: React.FC = () => {
               </React.Suspense>
             </Box>
           </Box>
+
+          {/* Suggestions Dropdown - Rendered in Portal */}
+          {showSuggestions && !suggestionError && createPortal(
+            <SuggestionDropdown 
+              isOpen={showSuggestions && !suggestionError}
+              top={dropdownPosition.top}
+              left={dropdownPosition.left}
+              width={dropdownPosition.width}
+              data-suggestions-dropdown
+            >
+              {isLoadingSuggestions ? (
+                <LoadingContainer>
+                  <CircularProgress size={20} />
+                  <span style={{ marginLeft: 8 }}>Searching...</span>
+                </LoadingContainer>
+              ) : (
+                suggestions.map((suggestion, index) => (
+                  <SuggestionItem
+                    key={suggestion.id}
+                    isSelected={index === selectedIndex}
+                    onClick={(event) => handleSuggestionSelect(suggestion, event)}
+                  >
+                    <SuggestionIcon>
+                      {getSuggestionIcon(suggestion.type)}
+                    </SuggestionIcon>
+                    <SuggestionContent>
+                      <SuggestionTitle>{suggestion.displayName}</SuggestionTitle>
+                      {suggestion.metadata && (
+                        <SuggestionSubtitle>
+                          {[suggestion.metadata.city, suggestion.metadata.state, suggestion.metadata.zip]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </SuggestionSubtitle>
+                      )}
+                    </SuggestionContent>
+                  </SuggestionItem>
+                ))
+              )}
+            </SuggestionDropdown>,
+            document.body
+          )}
+          
+          {/* Error Display */}
+          <Fade in={!!suggestionError}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                mt: 1,
+                zIndex: 1001
+              }}
+            >
+              <Alert severity="error" sx={{ borderRadius: 2 }}>
+                {suggestionError}
+              </Alert>
+            </Box>
+          </Fade>
 
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             <FilterButton

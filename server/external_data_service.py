@@ -20,9 +20,16 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import pandas as pd
 
-# Import county assessor services
-from county_assessor_service import CountyAssessorService, CountyTaxData
-from tax_data_processor import TaxDataProcessor
+# Import county assessor services (optional)
+try:
+    from county_assessor_service import CountyAssessorService, CountyTaxData
+    from tax_data_processor import TaxDataProcessor
+    COUNTY_ASSESSOR_AVAILABLE = True
+except ImportError:
+    COUNTY_ASSESSOR_AVAILABLE = False
+    CountyAssessorService = None
+    CountyTaxData = None
+    TaxDataProcessor = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -135,6 +142,7 @@ class EnrichedPropertyData:
     census_data: Optional[CensusData] = None
     schools: List[SchoolData] = None
     rental_market_data: Optional[RentalMarketData] = None
+    county_tax_data: Optional[CountyTaxData] = None
     enrichment_date: Optional[datetime] = None
     
     def __post_init__(self):
@@ -151,6 +159,14 @@ class ExternalDataService:
         self.session = self._create_session()
         self.cache = {}
         self.rate_limits = {}
+        
+        # Initialize county assessor services (if available)
+        if COUNTY_ASSESSOR_AVAILABLE:
+            self.county_assessor_service = CountyAssessorService()
+            self.tax_data_processor = TaxDataProcessor()
+        else:
+            self.county_assessor_service = None
+            self.tax_data_processor = None
         
     def _load_api_keys(self) -> Dict[str, str]:
         """Load API keys from environment variables"""
@@ -541,6 +557,14 @@ class ExternalDataService:
                 state=state
             )
         
+        # Get county tax data (if available)
+        county_tax_data = None
+        if self.county_assessor_service:
+            try:
+                county_tax_data = self.county_assessor_service.get_tax_data(property_data)
+            except Exception as e:
+                logger.warning(f"Failed to get county tax data: {str(e)}")
+        
         return EnrichedPropertyData(
             property_id=property_id,
             address=address,
@@ -552,6 +576,7 @@ class ExternalDataService:
             census_data=census_data,
             schools=schools,
             rental_market_data=rental_market_data,
+            county_tax_data=county_tax_data,
             enrichment_date=datetime.now()
         )
     

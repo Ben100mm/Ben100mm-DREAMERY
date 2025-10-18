@@ -20,6 +20,10 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import pandas as pd
 
+# Import county assessor services
+from county_assessor_service import CountyAssessorService, CountyTaxData
+from tax_data_processor import TaxDataProcessor
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -72,6 +76,53 @@ class SchoolData:
     enrollment: Optional[int] = None
 
 @dataclass
+class RentalMarketData:
+    """Rental market data from various APIs"""
+    # Rent estimates
+    estimated_rent: Optional[float] = None
+    rent_range_low: Optional[float] = None
+    rent_range_high: Optional[float] = None
+    
+    # Market metrics
+    market_rent_per_sqft: Optional[float] = None
+    vacancy_rate: Optional[float] = None
+    rent_growth_rate: Optional[float] = None
+    
+    # Property details
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[float] = None
+    square_feet: Optional[int] = None
+    
+    # Location data
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    
+    # Data source and freshness
+    data_source: Optional[str] = None
+    last_updated: Optional[datetime] = None
+    confidence_score: Optional[float] = None
+
+@dataclass
+class RentCastData:
+    """RentCast API specific data"""
+    property_id: str
+    estimated_rent: Optional[float] = None
+    rent_range_low: Optional[float] = None
+    rent_range_high: Optional[float] = None
+    confidence: Optional[str] = None
+    last_updated: Optional[datetime] = None
+
+@dataclass
+class FreeWebApiData:
+    """FreeWebApi rental data"""
+    property_id: str
+    zestimate_rent: Optional[float] = None
+    rent_zestimate_range_low: Optional[float] = None
+    rent_zestimate_range_high: Optional[float] = None
+    last_updated: Optional[datetime] = None
+
+@dataclass
 class EnrichedPropertyData:
     """Combined enriched property data"""
     property_id: str
@@ -83,6 +134,7 @@ class EnrichedPropertyData:
     transit_data: Optional[TransitData] = None
     census_data: Optional[CensusData] = None
     schools: List[SchoolData] = None
+    rental_market_data: Optional[RentalMarketData] = None
     enrichment_date: Optional[datetime] = None
     
     def __post_init__(self):
@@ -107,7 +159,9 @@ class ExternalDataService:
             'google_places': os.getenv('GOOGLE_PLACES_API_KEY'),
             'census': os.getenv('CENSUS_API_KEY'),
             'transit': os.getenv('TRANSIT_API_KEY'),
-            'schools': os.getenv('SCHOOL_API_KEY')
+            'schools': os.getenv('SCHOOL_API_KEY'),
+            'rentcast': os.getenv('RENTCAST_API_KEY'),
+            'freewebapi': os.getenv('FREEWEBAPI_API_KEY')
         }
     
     def _create_session(self) -> requests.Session:
@@ -328,6 +382,119 @@ class ExternalDataService:
         else:
             return 'unknown'
     
+    def get_rentcast_rental_data(self, address: str, bedrooms: int = None, 
+                                bathrooms: float = None, square_feet: int = None) -> Optional[RentCastData]:
+        """Get rental data from RentCast API"""
+        if not self.api_keys['rentcast']:
+            logger.warning("RentCast API key not configured")
+            return None
+        
+        url = "https://api.rentcast.io/v1/rental-estimates"
+        params = {
+            'address': address,
+            'apiKey': self.api_keys['rentcast']
+        }
+        
+        if bedrooms:
+            params['bedrooms'] = bedrooms
+        if bathrooms:
+            params['bathrooms'] = bathrooms
+        if square_feet:
+            params['squareFootage'] = square_feet
+        
+        data = self._make_api_call(url, params, 'rentcast', 50)  # 50 calls per month for free tier
+        if not data:
+            return None
+        
+        return RentCastData(
+            property_id=data.get('id', ''),
+            estimated_rent=data.get('rent'),
+            rent_range_low=data.get('rentRange', {}).get('low'),
+            rent_range_high=data.get('rentRange', {}).get('high'),
+            confidence=data.get('confidence'),
+            last_updated=datetime.now()
+        )
+    
+    def get_freewebapi_rental_data(self, address: str) -> Optional[FreeWebApiData]:
+        """Get rental data from FreeWebApi"""
+        if not self.api_keys['freewebapi']:
+            logger.warning("FreeWebApi API key not configured")
+            return None
+        
+        url = "https://freewebapi.com/api/real-estate/rental-estimate"
+        params = {
+            'address': address,
+            'api_key': self.api_keys['freewebapi']
+        }
+        
+        data = self._make_api_call(url, params, 'freewebapi', 100)  # 100 calls per day for free tier
+        if not data:
+            return None
+        
+        return FreeWebApiData(
+            property_id=data.get('property_id', ''),
+            zestimate_rent=data.get('rent_zestimate'),
+            rent_zestimate_range_low=data.get('rent_zestimate_range', {}).get('low'),
+            rent_zestimate_range_high=data.get('rent_zestimate_range', {}).get('high'),
+            last_updated=datetime.now()
+        )
+    
+    def get_rental_market_data(self, address: str, bedrooms: int = None, 
+                              bathrooms: float = None, square_feet: int = None,
+                              zip_code: str = None, city: str = None, state: str = None) -> Optional[RentalMarketData]:
+        """Get comprehensive rental market data from available APIs"""
+        rental_data = RentalMarketData()
+        
+        # Try RentCast first (more reliable)
+        rentcast_data = self.get_rentcast_rental_data(address, bedrooms, bathrooms, square_feet)
+        if rentcast_data:
+            rental_data.estimated_rent = rentcast_data.estimated_rent
+            rental_data.rent_range_low = rentcast_data.rent_range_low
+            rental_data.rent_range_high = rentcast_data.rent_range_high
+            rental_data.data_source = "RentCast"
+            rental_data.last_updated = rentcast_data.last_updated
+            rental_data.confidence_score = self._parse_confidence_score(rentcast_data.confidence)
+        
+        # Try FreeWebApi as backup
+        if not rental_data.estimated_rent:
+            freewebapi_data = self.get_freewebapi_rental_data(address)
+            if freewebapi_data:
+                rental_data.estimated_rent = freewebapi_data.zestimate_rent
+                rental_data.rent_range_low = freewebapi_data.rent_zestimate_range_low
+                rental_data.rent_range_high = freewebapi_data.rent_zestimate_range_high
+                rental_data.data_source = "FreeWebApi"
+                rental_data.last_updated = freewebapi_data.last_updated
+                rental_data.confidence_score = 0.7  # Default confidence for FreeWebApi
+        
+        # Add property details
+        rental_data.bedrooms = bedrooms
+        rental_data.bathrooms = bathrooms
+        rental_data.square_feet = square_feet
+        rental_data.zip_code = zip_code
+        rental_data.city = city
+        rental_data.state = state
+        
+        # Calculate rent per sqft if we have both rent and square footage
+        if rental_data.estimated_rent and rental_data.square_feet and rental_data.square_feet > 0:
+            rental_data.market_rent_per_sqft = rental_data.estimated_rent / rental_data.square_feet
+        
+        return rental_data if rental_data.estimated_rent else None
+    
+    def _parse_confidence_score(self, confidence: str) -> Optional[float]:
+        """Parse confidence string to float score"""
+        if not confidence:
+            return None
+        
+        confidence_lower = confidence.lower()
+        if 'high' in confidence_lower:
+            return 0.9
+        elif 'medium' in confidence_lower:
+            return 0.7
+        elif 'low' in confidence_lower:
+            return 0.5
+        else:
+            return 0.6  # Default confidence
+    
     def enrich_property(self, property_data: Dict[str, Any]) -> EnrichedPropertyData:
         """Enrich a single property with external data"""
         property_id = property_data.get('property_id', '')
@@ -353,6 +520,27 @@ class ExternalDataService:
         census_data = self.get_census_data(latitude, longitude)
         schools = self.get_school_data(latitude, longitude)
         
+        # Get rental market data
+        rental_market_data = None
+        if address:
+            # Extract property details for rental estimation
+            bedrooms = property_data.get('bedrooms')
+            bathrooms = property_data.get('bathrooms')
+            square_feet = property_data.get('square_feet')
+            zip_code = property_data.get('zip_code')
+            city = property_data.get('city')
+            state = property_data.get('state')
+            
+            rental_market_data = self.get_rental_market_data(
+                address=address,
+                bedrooms=bedrooms,
+                bathrooms=bathrooms,
+                square_feet=square_feet,
+                zip_code=zip_code,
+                city=city,
+                state=state
+            )
+        
         return EnrichedPropertyData(
             property_id=property_id,
             address=address,
@@ -363,6 +551,7 @@ class ExternalDataService:
             transit_data=transit_data,
             census_data=census_data,
             schools=schools,
+            rental_market_data=rental_market_data,
             enrichment_date=datetime.now()
         )
     

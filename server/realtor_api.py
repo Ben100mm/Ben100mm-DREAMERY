@@ -16,6 +16,7 @@ from models import PropertyData, Property, ListingType, SearchPropertyType, Retu
 from parsers import parse_address, parse_description, parse_open_houses, parse_units, parse_tax_record, parse_estimates
 from enhanced_scraper import ScraperInput
 from scraper_api import scrape_property
+from external_data_service import ExternalDataService
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -24,8 +25,9 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend integration
 
-# Initialize the scraper
+# Initialize the scraper and external data service
 scraper = DreameryPropertyScraper()
+external_data_service = ExternalDataService()
 
 @app.route('/api/realtor/search', methods=['POST'])
 def search_properties():
@@ -644,6 +646,199 @@ def property_to_dict(property_obj: Property) -> Dict[str, Any]:
             }
 
     return result
+
+@app.route('/api/rental/estimate', methods=['POST'])
+def get_rental_estimate():
+    """Get rental market data for a property"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided',
+                'rental_data': None
+            }), 400
+        
+        address = data.get('address')
+        if not address:
+            return jsonify({
+                'success': False,
+                'error': 'Address is required',
+                'rental_data': None
+            }), 400
+        
+        # Extract optional property details
+        bedrooms = data.get('bedrooms')
+        bathrooms = data.get('bathrooms')
+        square_feet = data.get('square_feet')
+        zip_code = data.get('zip_code')
+        city = data.get('city')
+        state = data.get('state')
+        
+        # Get rental market data
+        rental_data = external_data_service.get_rental_market_data(
+            address=address,
+            bedrooms=bedrooms,
+            bathrooms=bathrooms,
+            square_feet=square_feet,
+            zip_code=zip_code,
+            city=city,
+            state=state
+        )
+        
+        if not rental_data:
+            return jsonify({
+                'success': False,
+                'error': 'Unable to retrieve rental data for this address',
+                'rental_data': None
+            }), 404
+        
+        # Convert to dictionary for JSON serialization
+        rental_dict = {
+            'estimated_rent': rental_data.estimated_rent,
+            'rent_range_low': rental_data.rent_range_low,
+            'rent_range_high': rental_data.rent_range_high,
+            'market_rent_per_sqft': rental_data.market_rent_per_sqft,
+            'vacancy_rate': rental_data.vacancy_rate,
+            'rent_growth_rate': rental_data.rent_growth_rate,
+            'bedrooms': rental_data.bedrooms,
+            'bathrooms': rental_data.bathrooms,
+            'square_feet': rental_data.square_feet,
+            'zip_code': rental_data.zip_code,
+            'city': rental_data.city,
+            'state': rental_data.state,
+            'data_source': rental_data.data_source,
+            'last_updated': rental_data.last_updated.isoformat() if rental_data.last_updated else None,
+            'confidence_score': rental_data.confidence_score
+        }
+        
+        return jsonify({
+            'success': True,
+            'rental_data': rental_dict
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting rental estimate: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'rental_data': None
+        }), 500
+
+@app.route('/api/rental/rentcast', methods=['POST'])
+def get_rentcast_data():
+    """Get rental data specifically from RentCast API"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided',
+                'rentcast_data': None
+            }), 400
+        
+        address = data.get('address')
+        if not address:
+            return jsonify({
+                'success': False,
+                'error': 'Address is required',
+                'rentcast_data': None
+            }), 400
+        
+        # Extract optional property details
+        bedrooms = data.get('bedrooms')
+        bathrooms = data.get('bathrooms')
+        square_feet = data.get('square_feet')
+        
+        # Get RentCast data
+        rentcast_data = external_data_service.get_rentcast_rental_data(
+            address=address,
+            bedrooms=bedrooms,
+            bathrooms=bathrooms,
+            square_feet=square_feet
+        )
+        
+        if not rentcast_data:
+            return jsonify({
+                'success': False,
+                'error': 'Unable to retrieve RentCast data for this address',
+                'rentcast_data': None
+            }), 404
+        
+        # Convert to dictionary for JSON serialization
+        rentcast_dict = {
+            'property_id': rentcast_data.property_id,
+            'estimated_rent': rentcast_data.estimated_rent,
+            'rent_range_low': rentcast_data.rent_range_low,
+            'rent_range_high': rentcast_data.rent_range_high,
+            'confidence': rentcast_data.confidence,
+            'last_updated': rentcast_data.last_updated.isoformat() if rentcast_data.last_updated else None
+        }
+        
+        return jsonify({
+            'success': True,
+            'rentcast_data': rentcast_dict
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting RentCast data: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'rentcast_data': None
+        }), 500
+
+@app.route('/api/rental/freewebapi', methods=['POST'])
+def get_freewebapi_data():
+    """Get rental data specifically from FreeWebApi"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided',
+                'freewebapi_data': None
+            }), 400
+        
+        address = data.get('address')
+        if not address:
+            return jsonify({
+                'success': False,
+                'error': 'Address is required',
+                'freewebapi_data': None
+            }), 400
+        
+        # Get FreeWebApi data
+        freewebapi_data = external_data_service.get_freewebapi_rental_data(address)
+        
+        if not freewebapi_data:
+            return jsonify({
+                'success': False,
+                'error': 'Unable to retrieve FreeWebApi data for this address',
+                'freewebapi_data': None
+            }), 404
+        
+        # Convert to dictionary for JSON serialization
+        freewebapi_dict = {
+            'property_id': freewebapi_data.property_id,
+            'zestimate_rent': freewebapi_data.zestimate_rent,
+            'rent_zestimate_range_low': freewebapi_data.rent_zestimate_range_low,
+            'rent_zestimate_range_high': freewebapi_data.rent_zestimate_range_high,
+            'last_updated': freewebapi_data.last_updated.isoformat() if freewebapi_data.last_updated else None
+        }
+        
+        return jsonify({
+            'success': True,
+            'freewebapi_data': freewebapi_dict
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting FreeWebApi data: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'freewebapi_data': None
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

@@ -325,6 +325,48 @@ class TaxRecord(BaseModel):
     tax_parcel_id: Union[str, None] = None
 
 
+class CountyTaxData(BaseModel):
+    """Enhanced county tax data from assessor APIs"""
+    # Basic identifiers
+    apn: Union[str, None] = None  # Assessor's Parcel Number
+    parcel_id: Union[str, None] = None
+    property_id: Union[str, None] = None
+    
+    # Assessment data
+    assessed_value: Union[float, None] = None
+    land_value: Union[float, None] = None
+    building_value: Union[float, None] = None
+    improvement_value: Union[float, None] = None
+    
+    # Tax information
+    annual_tax: Union[float, None] = None
+    tax_rate: Union[float, None] = None
+    tax_year: Union[int, None] = None
+    tax_status: Union[str, None] = None  # current, delinquent, exempt
+    
+    # Property details
+    property_type: Union[str, None] = None
+    land_use: Union[str, None] = None
+    zoning: Union[str, None] = None
+    lot_size: Union[float, None] = None
+    year_built: Union[int, None] = None
+    
+    # Ownership
+    owner_name: Union[str, None] = None
+    owner_address: Union[str, None] = None
+    mailing_address: Union[str, None] = None
+    
+    # Exemptions
+    exemptions: Union[List[str], None] = None
+    exemption_amount: Union[float, None] = None
+    
+    # Data source and metadata
+    data_source: Union[str, None] = None
+    last_updated: Union[datetime, None] = None
+    confidence_score: Union[float, None] = None
+    raw_data: Union[Dict[str, Any], None] = None
+
+
 class EstimateSource(BaseModel):
     type: Union[str, None] = Field(None, description="Type of the avm vendor, list of values: corelogic, collateral, quantarium")
     name: Union[str, None] = Field(None, description="Name of the avm vendor")

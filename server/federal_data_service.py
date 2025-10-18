@@ -113,9 +113,11 @@ class FederalDataService:
     def get_census_data(self, latitude: float, longitude: float, 
                        year: int = 2022) -> Optional[FederalCensusData]:
         """Get Census data for coordinates"""
-        # Census API can work without a key for basic data
-        # Note: The provided API key appears to be invalid, so we'll use public access
-        logger.info("Using Census API public access (no API key required)")
+        # Census API key is now activated and working
+        if self.api_keys.get('census'):
+            logger.info("Using Census API with activated key")
+        else:
+            logger.info("Using Census API public access (no API key required)")
         
         # First, get the census tract for the coordinates
         tract_data = self._get_census_tract(latitude, longitude)
@@ -205,20 +207,21 @@ class FederalDataService:
                 'in': f'state:{state_fips} county:{county_fips}'
             }
             
-            # Note: Not using API key as it appears to be invalid
-            # Census API works without a key for basic data
+        # Add API key if available and activated
+        if self.api_keys.get('census'):
+            params['key'] = self.api_keys['census']
+        
+        data = self._make_api_call(url, params, 'census', 1000)
+        if data and len(data) >= 2:
+            # Parse the response (first row is headers, second is data)
+            headers = data[0]
+            values = data[1]
             
-            data = self._make_api_call(url, params, 'census', 1000)
-            if data and len(data) >= 2:
-                # Parse the response (first row is headers, second is data)
-                headers = data[0]
-                values = data[1]
-                
-                result = dict(zip(headers, values))
-                logger.info(f"Successfully retrieved Census data for year {try_year}")
-                return result
-            else:
-                logger.warning(f"No data available for Census year {try_year}")
+            result = dict(zip(headers, values))
+            logger.info(f"Successfully retrieved Census data for year {try_year}")
+            return result
+        else:
+            logger.warning(f"No data available for Census year {try_year}")
         
         # If all years failed, try county-level data as fallback
         logger.info("Trying county-level data as fallback")
@@ -239,6 +242,10 @@ class FederalDataService:
                 'for': f'county:{county_fips}',
                 'in': f'state:{state_fips}'
             }
+            
+            # Add API key if available and activated
+            if self.api_keys.get('census'):
+                params['key'] = self.api_keys['census']
             
             data = self._make_api_call(url, params, 'census', 1000)
             if data and len(data) >= 2:

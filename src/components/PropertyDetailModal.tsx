@@ -236,11 +236,10 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
   const [activeTab, setActiveTab] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
-  // Handle escape key - moved to very top to avoid React Hook rules violation
+  // Handle escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && open) {
-        console.log('🔴 Escape key pressed, closing modal');
         onClose();
       }
     };
@@ -300,99 +299,29 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
 
   const isFavorited = favorites.has(property.property_id);
 
-  // Debug: Log property structure to see what agent data is available
-  console.log('🏠 PropertyDetailModal: Property data structure:', {
-    property_id: property.property_id,
-    agent: property.agent,
-    advertisers: property.advertisers,
-    office: property.office
-  });
-
-  // Force close function for debugging
-  const forceClose = () => {
-    console.log('🔴 Force close called');
-    console.log('🔴 onClose function:', onClose);
-    console.log('🔴 Modal open state:', open);
-    console.log('🔴 Calling onClose()...');
-    try {
-      onClose();
-      console.log('🔴 onClose() called successfully');
-    } catch (error) {
-      console.error('🔴 Error calling onClose():', error);
-    }
-  };
-
-  // Debug: Log when component renders
-  console.log('🔴 PropertyDetailModal rendering with open:', open, 'property:', !!property);
-  console.log('🔴 forceClose function available:', typeof forceClose);
-  console.log('🔴 onClose function available:', typeof onClose);
 
   return (
-    <>
-      {/* Test button outside modal */}
-      {open && (
-        <Button
-          onClick={() => {
-            console.log('🔴 OUTSIDE TEST BUTTON CLICKED!');
-            alert('OUTSIDE TEST BUTTON CLICKED!');
-            onClose();
-          }}
-          sx={{
-            position: 'fixed',
-            top: 10,
-            right: 10,
-            zIndex: 99999,
-            backgroundColor: 'red',
-            color: 'white',
-            fontWeight: 'bold'
-          }}
-        >
-          TEST CLOSE
-        </Button>
-      )}
-      
-      <StyledDialog 
-        open={open} 
-        onClose={(event, reason) => {
-          console.log('🔴 Dialog onClose called with reason:', reason);
-          onClose();
-        }}
-        maxWidth={false}
-        fullWidth
-        fullScreen={isMobile}
-        disableEscapeKeyDown={false}
-        disableBackdropClick={false}
-        sx={{
-          '& .MuiDialog-paper': {
-            margin: isMobile ? 0 : '80px 24px 24px 24px',
-            maxHeight: isMobile ? '100vh' : '85vh',
-            height: isMobile ? '100vh' : 'auto',
-          }
-        }}
-      >
+    <StyledDialog 
+      open={open} 
+      onClose={onClose}
+      maxWidth={false}
+      fullWidth
+      fullScreen={isMobile}
+      disableEscapeKeyDown={false}
+      disableBackdropClick={false}
+      sx={{
+        '& .MuiDialog-paper': {
+          margin: isMobile ? 0 : '80px 24px 24px 24px',
+          maxHeight: isMobile ? '100vh' : '85vh',
+          height: isMobile ? '100vh' : 'auto',
+        }
+      }}
+    >
       <ModalHeader>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary, mb: 1 }}>
             {formatPrice(property.list_price)}
           </Typography>
-          {/* Debug: Show modal state */}
-          <Typography variant="caption" sx={{ color: 'red', display: 'block' }}>
-            DEBUG: Modal open = {open.toString()}
-          </Typography>
-          
-          {/* Simple test button in header */}
-          <Button
-            onClick={() => {
-              console.log('🔴 CLOSE BUTTON CLICKED!');
-              onClose();
-            }}
-            size="small"
-            variant="contained"
-            color="error"
-            sx={{ mt: 1, mr: 2 }}
-          >
-            CLOSE MODAL
-          </Button>
           <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 1 }}>
             {property.address?.formatted_address || property.address?.full_line || 'Address not available'}
           </Typography>
@@ -440,13 +369,9 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             </IconButton>
           </Tooltip>
           <IconButton 
-            onClick={() => {
-              console.log('🔴 X BUTTON CLICKED!');
-              onClose();
-            }} 
+            onClick={onClose}
             sx={{ 
-              color: brandColors.neutral[600],
-              cursor: 'pointer'
+              color: brandColors.neutral[600]
             }}
           >
             <CloseIcon />
@@ -1229,7 +1154,6 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
         </Box>
       </DialogContent>
     </StyledDialog>
-    </>
   );
 };
 

@@ -394,19 +394,24 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
           >
             HEADER TEST
           </Button>
-          <Button 
+          <button 
             onClick={() => {
-              console.log('🔴 SIMPLE DEBUG BUTTON CLICKED!');
-              alert('SIMPLE DEBUG BUTTON CLICKED!');
+              console.log('🔴 NATIVE BUTTON CLICKED!');
+              alert('NATIVE BUTTON CLICKED!');
               onClose();
             }}
-            size="small"
-            variant="contained"
-            color="error"
-            sx={{ mt: 1 }}
+            style={{
+              marginTop: '8px',
+              padding: '8px 16px',
+              backgroundColor: '#f44336',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
           >
-            SIMPLE CLOSE
-          </Button>
+            NATIVE CLOSE
+          </button>
           <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 1 }}>
             {property.address?.formatted_address || property.address?.full_line || 'Address not available'}
           </Typography>

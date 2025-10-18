@@ -6,9 +6,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
-import { TextField, IconButton, Box, CircularProgress, Alert, Fade } from "@mui/material";
+import { TextField, IconButton, Box, CircularProgress, Alert, Fade, Snackbar } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import MapIcon from "@mui/icons-material/Map";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import HomeIcon from "@mui/icons-material/Home";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -17,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { brandColors } from "../theme";
 import { addressAutocompleteService, AddressSuggestion } from "../services/addressAutocompleteService";
 import { AddressValidator, AddressGeocoder, SearchRouter, AddressFormatter } from "../utils/addressUtils";
+import { realtorService } from "../services/realtorService";
 
 const HeroContainer = styled.div`
   height: 100vh;
@@ -103,22 +103,6 @@ const SparkleButton = styled(IconButton)`
   }
 `;
 
-const MapButton = styled(IconButton)`
-  color: brandColors.primary;
-  opacity: 1;
-  margin-right: 0.25rem;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  &:hover {
-    opacity: 1;
-    background-color: rgba(26, 54, 93, 1);
-    color: brandColors.backgrounds.primary;
-  }
-`;
 
 const SearchButton = styled.button`
   background: brandColors.primary;
@@ -316,6 +300,11 @@ const Hero: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'info' | 'warning' | 'error' }>({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
   
   const inputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -444,6 +433,96 @@ const Hero: React.FC = () => {
     }
   }, [searchQuery, navigate]);
 
+  // Handle SparkleIcon click - navigate to underwrite page
+  const handleSparkleClick = useCallback(async () => {
+    if (!searchQuery.trim()) {
+      setError('Please enter an address to analyze');
+      return;
+    }
+
+    console.log('🔍 Searching for property data with address:', searchQuery);
+    setIsSearching(true);
+    setError(null);
+
+    try {
+      // Search for properties using the address
+      const searchResult = await realtorService.searchProperties({
+        location: searchQuery.trim(),
+        listing_type: 'for_sale',
+        limit: 1 // We only need the first result
+      });
+
+      if (!searchResult.success || searchResult.properties.length === 0) {
+        console.log('No properties found, using address only');
+        
+        // Show notification to user about fallback
+        setSnackbar({
+          open: true,
+          message: 'No property data found for this address. Proceeding with address-only analysis - you can fill in property details manually.',
+          severity: 'info'
+        });
+        
+        // Fallback to address-only approach
+        const params = new URLSearchParams();
+        params.set('address', searchQuery.trim());
+        params.set('price', '');
+        params.set('beds', '');
+        params.set('baths', '');
+        params.set('sqft', '');
+        params.set('propertyType', '');
+        params.set('yearBuilt', '');
+        params.set('lotSize', '');
+        params.set('hoa', '');
+        
+        // Delay navigation slightly to allow user to see the notification
+        setTimeout(() => {
+          window.location.href = `/underwrite?${params.toString()}`;
+        }, 1500);
+        return;
+      }
+
+      const property = searchResult.properties[0];
+      console.log('Found property data:', property);
+
+      // Extract property details similar to BuyPage
+      const description = Array.isArray(property.description?.text) 
+        ? property.description.text.join(' ') 
+        : property.description?.text || '';
+      
+      const bedsMatch = description.match(/(\d+)\s*(?:bed|br|bedroom)/i);
+      const bathsMatch = description.match(/(\d+(?:\.\d+)?)\s*(?:bath|ba|bathroom)/i);
+      const sqftMatch = description.match(/(\d{1,3}(?:,\d{3})*)\s*(?:sq\.?\s*ft|sqft|square\s*feet)/i);
+      const yearMatch = description.match(/(\d{4})\s*(?:year|built)/i);
+      const lotMatch = description.match(/(\d+(?:\.\d+)?)\s*(?:acres?|sq\.?\s*ft|sqft)/i);
+
+      // Create URL parameters with comprehensive property data
+      const params = new URLSearchParams();
+      params.set('propertyId', property.property_id || '');
+      params.set('address', property.address?.full_line || property.address?.street || searchQuery.trim());
+      params.set('price', property.list_price?.toString() || '');
+      params.set('beds', bedsMatch ? bedsMatch[1] : (property.description?.beds?.toString() || ''));
+      params.set('baths', bathsMatch ? bathsMatch[1] : ((property.description?.baths_full || 0) + (property.description?.baths_half || 0) * 0.5).toString());
+      params.set('sqft', sqftMatch ? sqftMatch[1].replace(/,/g, '') : (property.description?.sqft?.toString() || ''));
+      params.set('propertyType', property.description?.type || '');
+      params.set('yearBuilt', yearMatch ? yearMatch[1] : '');
+      params.set('lotSize', lotMatch ? lotMatch[1] : '');
+      params.set('hoa', property.monthly_fees?.display_amount?.replace(/[^0-9]/g, '') || '');
+
+      console.log('Navigating to underwrite with comprehensive data:', params.toString());
+      window.location.href = `/underwrite?${params.toString()}`;
+    } catch (err) {
+      console.error('Error searching for property data:', err);
+      setError('Failed to fetch property data. Please try again.');
+    } finally {
+      setIsSearching(false);
+    }
+  }, [searchQuery]);
+
+  // Handle snackbar close
+  const handleSnackbarClose = useCallback(() => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  }, []);
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (!showSuggestions || suggestions.length === 0) {
@@ -539,12 +618,13 @@ const Hero: React.FC = () => {
             fullWidth
             disabled={isSearching}
           />
-          <SparkleButton>
-            <SparkleIcon />
+          <SparkleButton onClick={handleSparkleClick} disabled={isSearching}>
+            {isSearching ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <SparkleIcon />
+            )}
           </SparkleButton>
-          <MapButton>
-            <MapIcon />
-          </MapButton>
           <SearchButton 
             onClick={handleSearch}
             disabled={isSearching || !searchQuery.trim()}
@@ -616,6 +696,22 @@ const Hero: React.FC = () => {
           </Fade>
         </SearchContainer>
       </Content>
+      
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </HeroContainer>
   );
 };

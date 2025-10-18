@@ -2317,15 +2317,8 @@ function filterFinanceTypesByMode(options: OfferType[], calculatorMode?: Calcula
       option === "Seller Finance"  // Include Seller Finance as basic option for Land
     );
   } else if (calculatorMode === "standard") {
-    // Standard mode: Adds "DSCR" and more options for Land
-    return options.filter(option => 
-      option === "Conventional" || 
-      option === "FHA" ||
-      option === "DSCR" ||
-      option === "Cash" ||
-      option === "Seller Finance" ||
-      option === "Private"  // Add Private for Land in standard mode
-    );
+    // Standard mode: All financing options available
+    return options;
   }
   
   // Professional mode: All options available

@@ -220,7 +220,7 @@ class ComprehensiveDataService:
         # Generate estimates based on market indicators if no direct data
         if not estimates and market_indicators:
             # Use median income as a proxy for rent capacity
-            median_income = market_indicators.get('median_income', 50000)
+            median_income = market_indicators.get('median_household_income', 50000)
             
             # Rough estimates based on income (these would need refinement)
             estimates['office_rent_per_sqft'] = median_income / 10000  # $5/sqft per $50k income
@@ -251,7 +251,7 @@ class ComprehensiveDataService:
         # Market strength indicators
         if market_indicators:
             # Population growth proxy (would need historical data)
-            metrics['market_strength'] = min(1.0, (market_indicators.get('median_income', 0) / 50000))
+            metrics['market_strength'] = min(1.0, (market_indicators.get('median_household_income', 0) / 50000))
             
             # Employment stability
             unemployment_rate = market_indicators.get('unemployment_rate', 0.05)

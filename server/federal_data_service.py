@@ -73,26 +73,44 @@ class FederalDataService:
         return True
     
     def _make_api_call(self, url: str, params: Dict, api_name: str, 
-                      rate_limit: int = 500) -> Optional[Dict]:
+                      rate_limit: int = 500, method: str = 'GET') -> Optional[Dict]:
         """Make API call with rate limiting and error handling"""
         if not self._check_rate_limit(api_name, rate_limit):
             logger.warning(f"Rate limit exceeded for {api_name}")
             return None
         
         try:
-            response = self.session.get(url, params=params, timeout=30)
+            if method.upper() == 'POST':
+                response = self.session.post(url, json=params, timeout=30)
+            else:
+                response = self.session.get(url, params=params, timeout=30)
+            
+            # Handle 204 No Content responses
+            if response.status_code == 204:
+                logger.warning(f"No data available for {api_name}")
+                return None
+            
             response.raise_for_status()
+            
+            # Check if response has content
+            if not response.text.strip():
+                logger.warning(f"Empty response from {api_name}")
+                return None
+            
             return response.json()
         except requests.exceptions.RequestException as e:
             logger.error(f"API call failed for {api_name}: {e}")
+            return None
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON decode error for {api_name}: {e}")
             return None
     
     def get_census_data(self, latitude: float, longitude: float, 
                        year: int = 2022) -> Optional[FederalCensusData]:
         """Get Census data for coordinates"""
-        if not self.api_keys['census']:
-            logger.warning("Census API key not configured")
-            return None
+        # Census API can work without a key for basic data
+        if not self.api_keys.get('census'):
+            logger.info("Census API key not configured, using public access")
         
         # First, get the census tract for the coordinates
         tract_data = self._get_census_tract(latitude, longitude)
@@ -172,9 +190,12 @@ class FederalDataService:
         params = {
             'get': 'B01003_001E,B01002_001E,B19013_001E,B17001_002E,B25001_001E,B25003_001E,B25003_002E,B25003_003E',
             'for': f'tract:{tract_fips}',
-            'in': f'state:{state_fips} county:{county_fips}',
-            'key': self.api_keys['census']
+            'in': f'state:{state_fips} county:{county_fips}'
         }
+        
+        # Add API key if available
+        if self.api_keys.get('census'):
+            params['key'] = self.api_keys['census']
         
         data = self._make_api_call(url, params, 'census', 1000)
         if not data or len(data) < 2:
@@ -230,10 +251,10 @@ class FederalDataService:
     
     def _get_bls_employment_data(self, state_code: str, county_code: str = None) -> Optional[Dict]:
         """Get BLS employment data"""
-        # BLS API requires specific series IDs - this is a simplified version
+        # BLS API requires POST requests with specific series IDs
         url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
         
-        # Example series IDs (would need to be configured for specific data needs)
+        # Example series IDs for state-level data
         series_ids = [
             f"LAU{state_code}0000000000003",  # Unemployment rate
             f"LAU{state_code}0000000000004",  # Labor force
@@ -248,24 +269,55 @@ class FederalDataService:
         payload = {
             "seriesid": series_ids,
             "startyear": "2022",
-            "endyear": "2023",
-            "registrationkey": self.api_keys['bls']
+            "endyear": "2023"
         }
         
-        data = self._make_api_call(url, payload, 'bls', 500)
-        if not data or 'Results' not in data:
+        # Add API key if available
+        if self.api_keys.get('bls'):
+            payload["registrationkey"] = self.api_keys['bls']
+        
+        try:
+            # BLS API requires POST request
+            response = self.session.post(url, json=payload, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            
+            if not data or 'Results' not in data:
+                return None
+            
+            # Parse BLS response
+            results = data.get('Results', {})
+            series_data = results.get('series', [])
+            
+            employment_data = {
+                'total_employment': None,
+                'unemployment_rate': None,
+                'labor_force_participation': None,
+                'retail_trade': None,
+                'professional_services': None,
+                'manufacturing': None,
+                'construction': None
+            }
+            
+            # Parse series data
+            for series in series_data:
+                series_id = series.get('seriesID', '')
+                data_points = series.get('data', [])
+                
+                if data_points:
+                    latest_data = data_points[0]  # Most recent data point
+                    value = latest_data.get('value')
+                    
+                    if 'LAU' in series_id and '0003' in series_id:
+                        employment_data['unemployment_rate'] = float(value) if value else None
+                    elif 'LAU' in series_id and '0004' in series_id:
+                        employment_data['total_employment'] = int(value) if value else None
+            
+            return employment_data
+            
+        except Exception as e:
+            logger.error(f"BLS API call failed: {e}")
             return None
-        
-        # Parse BLS response (simplified)
-        return {
-            'total_employment': None,  # Would need specific series ID
-            'unemployment_rate': None,  # Would parse from series data
-            'labor_force_participation': None,
-            'retail_trade': None,
-            'professional_services': None,
-            'manufacturing': None,
-            'construction': None
-        }
     
     def _get_bls_wage_data(self, state_code: str, county_code: str = None) -> Dict:
         """Get BLS wage data"""

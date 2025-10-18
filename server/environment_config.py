@@ -27,7 +27,10 @@ class EnvironmentConfig:
             'bls': os.getenv('BLS_API_KEY'),
             'data_gov': os.getenv('DATA_GOV_API_KEY'),
             'rentcast': os.getenv('RENTCAST_API_KEY'),
-            'freewebapi': os.getenv('FREEWEBAPI_API_KEY')
+            'freewebapi': os.getenv('FREEWEBAPI_API_KEY'),
+            'attom': os.getenv('ATTOM_API_KEY'),
+            'fred': os.getenv('FRED_API_KEY'),
+            'airtable': os.getenv('AIRTABLE_API_KEY')
         }
     
     def _load_rate_limits(self) -> Dict[str, int]:
@@ -41,7 +44,10 @@ class EnvironmentConfig:
             'bls': int(os.getenv('BLS_RATE_LIMIT', '500')),
             'data_gov': int(os.getenv('DATA_GOV_RATE_LIMIT', '1000')),
             'rentcast': int(os.getenv('RENTCAST_RATE_LIMIT', '50')),
-            'freewebapi': int(os.getenv('FREEWEBAPI_RATE_LIMIT', '100'))
+            'freewebapi': int(os.getenv('FREEWEBAPI_RATE_LIMIT', '100')),
+            'attom': int(os.getenv('ATTOM_RATE_LIMIT', '1000')),
+            'fred': int(os.getenv('FRED_RATE_LIMIT', '1200')),
+            'airtable': int(os.getenv('AIRTABLE_RATE_LIMIT', '5'))
         }
     
     def _load_cache_config(self) -> Dict[str, any]:

@@ -2396,8 +2396,25 @@ function Kpi(props: { label: string; value: string }) {
     </Box>
   );
 }
+// Helper function to calculate monthly payment
+function calculateMonthlyPayment(loanAmount: number, annualRate: number, years: number): number {
+  if (loanAmount <= 0 || annualRate <= 0 || years <= 0) return 0;
+  
+  const monthlyRate = annualRate / 100 / 12;
+  const totalPayments = years * 12;
+  
+  if (monthlyRate === 0) {
+    return loanAmount / totalPayments;
+  }
+  
+  return (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / 
+         (Math.pow(1 + monthlyRate, totalPayments) - 1);
+}
+
 // Function to parse URL parameters and create property data
 function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState> | null {
+  console.log('URL Search Params:', searchParams.toString());
+  
   const propertyId = searchParams.get('propertyId');
   const address = searchParams.get('address');
   const price = searchParams.get('price');
@@ -2409,8 +2426,13 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
   const lotSize = searchParams.get('lotSize');
   const hoa = searchParams.get('hoa');
 
+  console.log('Parsed URL params:', {
+    propertyId, address, price, beds, baths, sqft, propertyType, yearBuilt, lotSize, hoa
+  });
+
   // If no property data in URL, return null
   if (!propertyId && !address && !price) {
+    console.log('No property data found in URL');
     return null;
   }
 
@@ -2441,34 +2463,112 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
     }
   }
 
+  // Calculate financial values
+  const downPayment = Math.round(parsedPrice * 0.2);
+  const loanAmount = Math.round(parsedPrice * 0.8);
+  const interestRate = 7; // Default interest rate
+  const loanTerm = 30; // Default loan term
+  const monthlyPayment = calculateMonthlyPayment(loanAmount, interestRate, loanTerm);
+  const annualPayment = monthlyPayment * 12;
+  const closingCosts = Math.round(parsedPrice * 0.03); // 3% default closing costs
+
+  // Calculate property age for smart defaults
+  const currentYear = new Date().getFullYear();
+  const propertyAge = parsedYearBuilt > 0 ? currentYear - parsedYearBuilt : 0;
+
+  // Smart defaults for operating expenses based on property value and type
+  const estimatedTaxes = Math.round(parsedPrice * 0.012 / 12); // 1.2% annually
+  const estimatedInsurance = Math.round(parsedPrice * 0.003 / 12); // 0.3% annually
+  const estimatedMaintenance = Math.round(parsedPrice * 0.01 / 12); // 1% annually
+  const estimatedVacancy = 5; // 5% default
+  const estimatedManagement = 8; // 8% default
+  const estimatedCapEx = 5; // 5% default
+
+  console.log('Calculated values:', {
+    downPayment, loanAmount, monthlyPayment, annualPayment, closingCosts,
+    estimatedTaxes, estimatedInsurance, estimatedMaintenance
+  });
+
   return {
+    // Basic Info
     propertyAddress: address || "",
     listedPrice: parsedPrice,
     purchasePrice: parsedPrice,
     percentageDifference: 0,
-    // Update loan amount based on purchase price (assuming 20% down)
+    analysisDate: new Date().toISOString().split('T')[0], // Today's date
+    propertyType: mappedPropertyType,
+    operationType: "Buy & Hold", // Default operation type
+    offerType: "Conventional", // Default finance type
+    
+    // Financial calculations
     loan: {
-      downPayment: Math.round(parsedPrice * 0.2),
-      loanAmount: Math.round(parsedPrice * 0.8),
-      annualInterestRate: 7,
-      monthlyPayment: 0, // Will be calculated
-      annualPayment: 0, // Will be calculated
+      downPayment: downPayment,
+      loanAmount: loanAmount,
+      annualInterestRate: interestRate,
+      monthlyPayment: monthlyPayment,
+      annualPayment: annualPayment,
       interestOnly: false,
       balloonDue: 0,
-      amortizationAmount: Math.round(parsedPrice * 0.8),
-      amortizationYears: 30,
-      closingCosts: 0,
+      amortizationAmount: loanAmount,
+      amortizationYears: loanTerm,
+      closingCosts: closingCosts,
       rehabCosts: 0,
-      totalInterest: 0,
-      totalPayment: 0,
+      totalInterest: 0, // Will be calculated by the system
+      totalPayment: 0, // Will be calculated by the system
       amortizationSchedule: [],
     },
-    // Update HOA in operating expenses
+    
+    // Property Details (Single Family)
+    sfr: {
+      monthlyRent: 0, // Will need external data
+      grossMonthlyIncome: 0,
+      grossYearlyIncome: 0,
+    },
+    
+    // Multi Family (if applicable)
+    multi: {
+      unitRents: [],
+      grossMonthlyIncome: 0,
+      grossYearlyIncome: 0,
+    },
+    
+    // Office/Retail (if applicable)
+    officeRetail: {
+      squareFootage: parsedSqft,
+      rentPerSFMonthly: 0, // Will need external data
+      occupancyRatePct: 85, // Default 85% occupancy
+      extraMonthlyIncome: 0,
+    },
+    
+    // Hotel (if applicable)
+    hotel: {
+      totalRooms: 1,
+      averageDailyRate: 0, // Will need external data
+      occupancyRatePct: 70, // Default 70% occupancy
+      extraMonthlyIncome: 0,
+    },
+    
+    // Land (if applicable)
+    land: {
+      acreage: 0, // Required field
+      extraMonthlyIncome: 0,
+    },
+    
+    // Property Details (separate from income)
+    propertyDetails: {
+      beds: parsedBeds,
+      baths: parsedBaths,
+      squareFootage: parsedSqft,
+      yearBuilt: parsedYearBuilt,
+      lotSize: parsedLotSize,
+    },
+    
+    // Operating Expenses with smart defaults
     ops: {
-      principalAndInterest: 0, // Will be calculated
+      principalAndInterest: monthlyPayment,
       totalSubtoLoans: 0,
-      taxes: 0,
-      insurance: 0,
+      taxes: estimatedTaxes,
+      insurance: estimatedInsurance,
       gasElectric: 0,
       internet: 0,
       hoa: parsedHoa,
@@ -2479,21 +2579,65 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
       lawnSnow: 0,
       phoneBill: 0,
       extra: 0,
-      maintenance: 0,
-      vacancy: 0,
-      management: 0,
-      capEx: 0,
+      maintenance: estimatedMaintenance,
+      vacancy: estimatedVacancy,
+      management: estimatedManagement,
+      capEx: estimatedCapEx,
       opEx: 0,
       utilitiesPct: 0,
-      expensesWithoutMortgage: 0,
-      monthlyExpenses: 0,
-      monthlyExpensesPercent: 0,
-      yearlyExpenses: 0,
-      expensesWithMortgage: 0,
-      monthlyExpensesWithMortgage: 0,
-      yearlyExpensesWithMortgage: 0,
+      expensesWithoutMortgage: 0, // Will be calculated
+      monthlyExpenses: 0, // Will be calculated
+      monthlyExpensesPercent: 0, // Will be calculated
+      yearlyExpenses: 0, // Will be calculated
+      expensesWithMortgage: 0, // Will be calculated
+      monthlyExpensesWithMortgage: 0, // Will be calculated
+      yearlyExpensesWithMortgage: 0, // Will be calculated
     },
-    propertyType: mappedPropertyType,
+    
+    // Appreciation defaults
+    appreciation: {
+      appreciationPercentPerYear: 3, // Default 3% annual appreciation
+      yearsOfAppreciation: 5, // Default 5 years
+      futurePropertyValue: 0, // Will be calculated
+      refinanceLtv: 75, // Default 75% LTV for refinance
+      refinancePotential: 0, // Will be calculated
+      remainingBalanceAfterRefi: 0, // Will be calculated
+    },
+    
+    // 1031 Exchange defaults (Professional Mode)
+    exchange1031: {
+      enabled: false,
+      relinquishedPropertyValue: 0,
+      relinquishedPropertyBasis: 0,
+      relinquishedPropertyDepreciation: 0,
+      relinquishedPropertyMortgage: 0,
+      replacementPropertyValue: 0,
+      replacementPropertyMortgage: 0,
+      qualifiedIntermediaryFee: 0,
+      otherExchangeCosts: 0,
+      identificationDeadline: "",
+      bootAmount: 0,
+      taxDeferredAmount: 0,
+    },
+    
+    // Capital Events defaults (Professional Mode)
+    capitalEvents: {
+      events: [],
+      totalExpectedCost: 0,
+      averageAnnualCost: 0,
+    },
+    
+    // Market Conditions defaults (Professional Mode)
+    marketConditions: {
+      type: "stable",
+      vacancyRateAdjustment: 0,
+      rentGrowthRate: 2, // Default 2% rent growth
+      appreciationRate: 3, // Default 3% appreciation
+      capRateAdjustment: 0,
+      inflationRate: 2, // Default 2% inflation
+      capRate: 0,
+      marketVolatility: 5,
+    },
   };
 }
 
@@ -2959,7 +3103,9 @@ const UnderwritePage: React.FC = () => {
   const [state, setState] = useState<DealState>(() => {
     // First, check for URL parameters
     const searchParams = new URLSearchParams(location.search);
+    console.log('Current URL:', location.search);
     const urlPropertyData = parsePropertyFromURL(searchParams);
+    console.log('URL Property Data:', urlPropertyData);
     
     try {
       const fromLocal = localStorage.getItem("underwrite:last");
@@ -2972,6 +3118,7 @@ const UnderwritePage: React.FC = () => {
         
         // Merge URL data with localStorage data (URL data takes precedence)
         const mergedData = urlPropertyData ? { ...parsed, ...urlPropertyData } : parsed;
+        console.log('Merged data:', mergedData);
         
         const normalized = validateAndNormalizeState({
           ...mergedData,
@@ -2991,20 +3138,27 @@ const UnderwritePage: React.FC = () => {
           proFormaAuto: parsed.proFormaAuto ?? true,
           validationMessages: [],
         });
+        console.log('Normalized state:', normalized.next);
         return normalized.next;
       }
-    } catch {}
+    } catch (error) {
+      console.log('Error loading from localStorage:', error);
+    }
     
     // If no localStorage data, use URL data merged with default state
     if (urlPropertyData) {
+      console.log('Using URL data with default state');
       const mergedData = { ...defaultState, ...urlPropertyData };
+      console.log('Merged with default:', mergedData);
       const normalized = validateAndNormalizeState({
         ...mergedData,
         validationMessages: [],
       });
+      console.log('Final normalized state:', normalized.next);
       return normalized.next;
     }
     
+    console.log('Using default state');
     return defaultState;
   });
 

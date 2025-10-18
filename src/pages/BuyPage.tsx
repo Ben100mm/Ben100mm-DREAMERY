@@ -1640,7 +1640,9 @@ const BuyPage: React.FC = () => {
                             params.set('beds', bedsMatch ? bedsMatch[1] : '');
                             params.set('baths', bathsMatch ? bathsMatch[1] : '');
                             params.set('sqft', sqftMatch ? sqftMatch[1].replace(/,/g, '') : '');
-                            params.set('propertyType', property.description?.text?.join(' ') || '');
+                            params.set('propertyType', Array.isArray(property.description?.text) 
+                              ? property.description.text.join(' ') 
+                              : property.description?.text || '');
                             params.set('yearBuilt', yearMatch ? yearMatch[1] : '');
                             params.set('lotSize', lotMatch ? lotMatch[1] : '');
                             params.set('hoa', property.monthly_fees?.display_amount?.replace(/[^0-9]/g, '') || '');

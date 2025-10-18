@@ -2694,7 +2694,7 @@ const defaultState: DealState = {
     balloonDue: 0,
     amortizationAmount: 128000,
     amortizationYears: 50,
-    closingCosts: 0,
+    closingCosts: 4800, // 3% of $160,000 purchase price
     rehabCosts: 0,
     totalInterest: 0,
     totalPayment: 0,
@@ -2767,11 +2767,11 @@ const defaultState: DealState = {
     lawnSnow: 0,
     phoneBill: 0,
     extra: 0,
-    maintenance: 0,
-    vacancy: 0,
-    management: 0,
-    capEx: 0,
-    opEx: 0,
+    maintenance: 5, // 5% default maintenance
+    vacancy: 5,     // 5% default vacancy
+    management: 8,  // 8% default management
+    capEx: 5,       // 5% default CapEx
+    opEx: 0,        // 0% default OpEx
     utilitiesPct: 0,
     expensesWithoutMortgage: 0,
     monthlyExpenses: 0,
@@ -3294,6 +3294,15 @@ const UnderwritePage: React.FC = () => {
       analysisDate: today,
     }));
   }, []);
+
+  // Initialize appreciation calculator on mount or when purchase price changes
+  useEffect(() => {
+    if (state.purchasePrice > 0 && state.appreciation) {
+      console.log("Initializing appreciation calculator with purchase price:", state.purchasePrice);
+      // Trigger appreciation calculation by updating the appreciation percentage
+      updateAppreciation('appreciationPercentPerYear', state.appreciation.appreciationPercentPerYear);
+    }
+  }, [state.purchasePrice]);
 
   function saveDeal() {
     localStorage.setItem("underwrite:last", JSON.stringify(state));

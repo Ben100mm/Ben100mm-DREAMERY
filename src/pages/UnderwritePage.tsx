@@ -2283,7 +2283,13 @@ function consolidateFieldUpdates(updates: string[]): string {
     if (financeTypeResets.length === 1) {
       consolidatedParts.push(financeTypeResets[0]);
     } else {
-      consolidatedParts.push("Finance Type updated for multiple property/operation combinations");
+      // Extract unique property/operation combinations for better messaging
+      const combinations = financeTypeResets.map(msg => {
+        const match = msg.match(/for (.+) \+ (.+)\./);
+        return match ? `${match[1]} + ${match[2]}` : 'property/operation combinations';
+      });
+      const uniqueCombinations = [...new Set(combinations)];
+      consolidatedParts.push(`Finance Type updated for: ${uniqueCombinations.join(', ')}`);
     }
   }
   
@@ -3146,7 +3152,7 @@ const UnderwritePage: React.FC = () => {
     if (!allowedOffers.includes(offerType)) {
       offerType = allowedOffers[0];
       messages.push(
-        `Finance Type reset to offerType for input.propertyType + operationType.`,
+        `Finance Type reset to ${offerType} for ${input.propertyType} + ${operationType}.`,
       );
     }
     const next: DealState = {
@@ -3383,7 +3389,7 @@ const UnderwritePage: React.FC = () => {
             candidate.operationType = allowedOps[0];
             candidate.validationMessages = [
               ...(candidate.validationMessages || []),
-              `Operation Type reset to candidate.operationType for currentProperty.`,
+              `Operation Type reset to ${candidate.operationType} for ${currentProperty}.`,
             ];
           }
         }
@@ -3398,7 +3404,7 @@ const UnderwritePage: React.FC = () => {
           candidate.offerType = offers[0];
           candidate.validationMessages = [
             ...(candidate.validationMessages || []),
-            `Finance Type reset to candidate.offerType for currentProperty + candidate.operationType.`,
+            `Finance Type reset to ${candidate.offerType} for ${currentProperty} + ${candidate.operationType}.`,
           ];
           candidate.snackbarOpen = true;
         }

@@ -2483,6 +2483,12 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
   const estimatedVacancy = 5; // 5% default
   const estimatedManagement = 8; // 8% default
   const estimatedCapEx = 5; // 5% default
+  
+  // Ensure variable expense percentages don't exceed 100%
+  const totalVariableExpenses = estimatedVacancy + estimatedManagement + estimatedCapEx;
+  const adjustedVacancy = totalVariableExpenses > 100 ? Math.round(estimatedVacancy * 100 / totalVariableExpenses) : estimatedVacancy;
+  const adjustedManagement = totalVariableExpenses > 100 ? Math.round(estimatedManagement * 100 / totalVariableExpenses) : estimatedManagement;
+  const adjustedCapEx = totalVariableExpenses > 100 ? Math.round(estimatedCapEx * 100 / totalVariableExpenses) : estimatedCapEx;
 
   console.log('Calculated values:', {
     downPayment, loanAmount, monthlyPayment, annualPayment, closingCosts,
@@ -2580,9 +2586,9 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
       phoneBill: 0,
       extra: 0,
       maintenance: estimatedMaintenance,
-      vacancy: estimatedVacancy,
-      management: estimatedManagement,
-      capEx: estimatedCapEx,
+      vacancy: adjustedVacancy,
+      management: adjustedManagement,
+      capEx: adjustedCapEx,
       opEx: 0,
       utilitiesPct: 0,
       expensesWithoutMortgage: 0, // Will be calculated

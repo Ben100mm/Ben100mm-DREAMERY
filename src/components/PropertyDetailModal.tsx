@@ -383,35 +383,16 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
           {/* Simple test button in header */}
           <Button
             onClick={() => {
-              console.log('🔴 HEADER TEST BUTTON CLICKED!');
-              alert('HEADER TEST BUTTON CLICKED!');
+              console.log('🔴 CLOSE BUTTON CLICKED!');
               onClose();
             }}
             size="small"
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="error"
             sx={{ mt: 1, mr: 2 }}
           >
-            HEADER TEST
+            CLOSE MODAL
           </Button>
-          <button 
-            onClick={() => {
-              console.log('🔴 NATIVE BUTTON CLICKED!');
-              alert('NATIVE BUTTON CLICKED!');
-              onClose();
-            }}
-            style={{
-              marginTop: '8px',
-              padding: '8px 16px',
-              backgroundColor: '#f44336',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            NATIVE CLOSE
-          </button>
           <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 1 }}>
             {property.address?.formatted_address || property.address?.full_line || 'Address not available'}
           </Typography>
@@ -459,22 +440,13 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             </IconButton>
           </Tooltip>
           <IconButton 
-            onClick={(event) => {
-              console.log('🔴 X BUTTON CLICKED!', event);
-              event.preventDefault();
-              event.stopPropagation();
-              console.log('🔴 PropertyDetailModal close button clicked');
-              alert('X BUTTON CLICKED!'); // Visual confirmation
+            onClick={() => {
+              console.log('🔴 X BUTTON CLICKED!');
               onClose();
             }} 
-            onMouseDown={(e) => {
-              console.log('🔴 X BUTTON MOUSE DOWN!', e);
-            }}
             sx={{ 
               color: brandColors.neutral[600],
-              pointerEvents: 'auto',
-              cursor: 'pointer',
-              zIndex: 10000
+              cursor: 'pointer'
             }}
           >
             <CloseIcon />

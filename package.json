@@ -52,7 +52,7 @@
     "zod": "^4.1.0"
   },
   "scripts": {
-    "start": "TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "start": "TSC_COMPILE_ON_ERROR=true PORT=3001 react-scripts start",
     "build": "TSC_COMPILE_ON_ERROR=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

@@ -106,91 +106,12 @@ class InsuranceAPIService:
             logger.error(f"API call failed for {api_name}: {e}")
             return None
     
-    def _get_mock_quotes(self, api_source: str, property_info: PropertyInfo) -> List[InsuranceQuote]:
-        """Generate mock quotes for testing purposes"""
-        import random
-        
-        # Mock data for different providers
-        mock_providers = {
-            'insurehero': [
-                {'name': 'State Farm', 'premium': 1200, 'deductible': 1000, 'rating': 4.8, 'reviews': 127},
-                {'name': 'Allstate', 'premium': 1350, 'deductible': 1500, 'rating': 4.6, 'reviews': 89},
-                {'name': 'Liberty Mutual', 'premium': 1100, 'deductible': 1000, 'rating': 4.4, 'reviews': 156}
-            ],
-            'gigeasy': [
-                {'name': 'Progressive', 'premium': 1250, 'deductible': 1200, 'rating': 4.5, 'reviews': 203},
-                {'name': 'Geico', 'premium': 1180, 'deductible': 1000, 'rating': 4.3, 'reviews': 178}
-            ],
-            'fize': [
-                {'name': 'Farmers', 'premium': 1300, 'deductible': 1500, 'rating': 4.7, 'reviews': 145},
-                {'name': 'USAA', 'premium': 1050, 'deductible': 1000, 'rating': 4.9, 'reviews': 234}
-            ],
-            'openkoda': [
-                {'name': 'Travelers', 'premium': 1280, 'deductible': 1200, 'rating': 4.6, 'reviews': 167}
-            ]
-        }
-        
-        quotes = []
-        providers = mock_providers.get(api_source, [])
-        
-        for i, provider in enumerate(providers):
-            # Add some variation to make it realistic
-            premium_variation = random.uniform(0.9, 1.1)
-            final_premium = int(provider['premium'] * premium_variation)
-            
-            quote = InsuranceQuote(
-                id=f"{api_source}_{i+1}",
-                provider=provider['name'],
-                policy_type=property_info.policy_type,
-                annual_premium=final_premium,
-                deductible=provider['deductible'],
-                coverage={
-                    'dwelling': property_info.coverage_amount,
-                    'personalProperty': int(property_info.coverage_amount * 0.5),
-                    'liability': 300000,
-                    'medicalPayments': 5000,
-                    'additionalLivingExpenses': int(property_info.coverage_amount * 0.1)
-                },
-                features=[
-                    '24/7 Claims Service',
-                    'Multi-Policy Discount',
-                    'Home Security Discount',
-                    'New Home Discount'
-                ],
-                rating=provider['rating'],
-                review_count=provider['reviews'],
-                status='quoted',
-                valid_until=(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d'),
-                logo=f'https://via.placeholder.com/60x60/1976d2/ffffff?text={provider["name"][:2]}',
-                api_source=api_source
-            )
-            quotes.append(quote)
-        
-        return quotes
-    
-    def _bind_mock_policy(self, quote_id: str) -> Dict[str, Union[bool, str]]:
-        """Bind mock policy for testing purposes"""
-        import random
-        import string
-        
-        # Generate a mock policy ID
-        policy_id = f"POL-{''.join(random.choices(string.ascii_uppercase + string.digits, k=8))}"
-        
-        return {
-            'success': True,
-            'policy_id': policy_id,
-            'message': 'Mock policy bound successfully'
-        }
     
     def get_insurehero_quotes(self, property_info: PropertyInfo) -> List[InsuranceQuote]:
         """Get quotes from InsureHero API"""
-        if not self.api_keys['insurehero']:
+        if not self.api_keys['insurehero'] or self.api_keys['insurehero'] == 'your_insurehero_api_key_here':
             logger.warning("InsureHero API key not configured")
             return []
-        
-        # Check if using mock key for testing
-        if self.api_keys['insurehero'].startswith('mock_'):
-            return self._get_mock_quotes('insurehero', property_info)
         
         url = "https://api.insurehero.io/v1/quotes"
         params = {
@@ -238,13 +159,9 @@ class InsuranceAPIService:
     
     def get_gigeasy_quotes(self, property_info: PropertyInfo) -> List[InsuranceQuote]:
         """Get quotes from GigEasy API"""
-        if not self.api_keys['gigeasy']:
+        if not self.api_keys['gigeasy'] or self.api_keys['gigeasy'] == 'your_gigeasy_api_key_here':
             logger.warning("GigEasy API key not configured")
             return []
-        
-        # Check if using mock key for testing
-        if self.api_keys['gigeasy'].startswith('mock_'):
-            return self._get_mock_quotes('gigeasy', property_info)
         
         url = "https://api.gigeasy.ai/v1/insurance/quotes"
         params = {
@@ -292,13 +209,9 @@ class InsuranceAPIService:
     
     def get_fize_quotes(self, property_info: PropertyInfo) -> List[InsuranceQuote]:
         """Get quotes from Fize API"""
-        if not self.api_keys['fize']:
+        if not self.api_keys['fize'] or self.api_keys['fize'] == 'your_fize_api_key_here':
             logger.warning("Fize API key not configured")
             return []
-        
-        # Check if using mock key for testing
-        if self.api_keys['fize'].startswith('mock_'):
-            return self._get_mock_quotes('fize', property_info)
         
         url = "https://api.getfize.com/v1/insurance/quotes"
         params = {
@@ -346,13 +259,9 @@ class InsuranceAPIService:
     
     def get_openkoda_quotes(self, property_info: PropertyInfo) -> List[InsuranceQuote]:
         """Get quotes from Openkoda API"""
-        if not self.api_keys['openkoda']:
+        if not self.api_keys['openkoda'] or self.api_keys['openkoda'] == 'your_openkoda_api_key_here':
             logger.warning("Openkoda API key not configured")
             return []
-        
-        # Check if using mock key for testing
-        if self.api_keys['openkoda'].startswith('mock_'):
-            return self._get_mock_quotes('openkoda', property_info)
         
         url = "https://api.openkoda.com/v1/insurance/quotes"
         params = {
@@ -428,13 +337,6 @@ class InsuranceAPIService:
         try:
             # Extract API source from quote ID
             api_source = quote_id.split('_')[0]
-            
-            # Check if using mock keys for testing
-            if (self.api_keys.get('insurehero', '').startswith('mock_') or 
-                self.api_keys.get('gigeasy', '').startswith('mock_') or
-                self.api_keys.get('fize', '').startswith('mock_') or
-                self.api_keys.get('openkoda', '').startswith('mock_')):
-                return self._bind_mock_policy(quote_id)
             
             if api_source == 'insurehero':
                 return self._bind_insurehero_policy(quote_id)

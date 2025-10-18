@@ -11,12 +11,16 @@ from flask_cors import CORS
 import json
 import logging
 from typing import Dict, Any, List
+from dotenv import load_dotenv
 from dreamery_property_scraper import DreameryPropertyScraper
 from models import PropertyData, Property, ListingType, SearchPropertyType, ReturnType, HomeFlags, PetPolicy, OpenHouse, Unit, HomeMonthlyFee, HomeOneTimeFee, HomeParkingDetails, PropertyDetails, Popularity, TaxRecord, PropertyEstimate, HomeEstimates
 from parsers import parse_address, parse_description, parse_open_houses, parse_units, parse_tax_record, parse_estimates
 from enhanced_scraper import ScraperInput
 from scraper_api import scrape_property
 from external_data_service import ExternalDataService
+
+# Load environment variables from absolute path
+load_dotenv('/Users/benjamin/dreamery-homepage/.env')
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -676,6 +680,7 @@ def get_rental_estimate():
         state = data.get('state')
         
         # Get rental market data
+        logger.info(f"Getting rental data for address: {address}")
         rental_data = external_data_service.get_rental_market_data(
             address=address,
             bedrooms=bedrooms,
@@ -686,7 +691,10 @@ def get_rental_estimate():
             state=state
         )
         
+        logger.info(f"Rental data result: {rental_data}")
+        
         if not rental_data:
+            logger.warning(f"No rental data returned for address: {address}")
             return jsonify({
                 'success': False,
                 'error': 'Unable to retrieve rental data for this address',

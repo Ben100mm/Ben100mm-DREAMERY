@@ -135,13 +135,13 @@ class StatePropertyData:
     """State-level property assessment and transaction data"""
     # Property identification
     property_id: str
+    address: str
+    city: str
+    state: str
     parcel_id: Optional[str] = None
     apn: Optional[str] = None  # Assessor's Parcel Number
     
     # Location data
-    address: str
-    city: str
-    state: str
     zip_code: Optional[str] = None
     county: Optional[str] = None
     

@@ -226,6 +226,21 @@ class ExternalDataService:
             logger.error(f"API call failed for {api_name}: {e}")
             return None
     
+    def _make_api_call_with_headers(self, url: str, params: Dict, headers: Dict, 
+                                   api_name: str, rate_limit: int = 60) -> Optional[Dict]:
+        """Make API call with custom headers (for RapidAPI)"""
+        if not self._check_rate_limit(api_name, rate_limit):
+            logger.warning(f"Rate limit exceeded for {api_name}")
+            return None
+        
+        try:
+            response = self.session.get(url, params=params, headers=headers, timeout=30)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API call failed for {api_name}: {e}")
+            return None
+    
     def get_walk_score(self, latitude: float, longitude: float, 
                       address: str) -> Optional[WalkScoreData]:
         """Get walkability scores from Walk Score API"""
@@ -400,36 +415,49 @@ class ExternalDataService:
     
     def get_rentcast_rental_data(self, address: str, bedrooms: int = None, 
                                 bathrooms: float = None, square_feet: int = None) -> Optional[RentCastData]:
-        """Get rental data from RentCast API"""
+        """Get rental data from Zillow API via RapidAPI"""
         if not self.api_keys['rentcast']:
-            logger.warning("RentCast API key not configured")
+            logger.warning("Zillow API key not configured")
             return None
         
-        url = "https://api.rentcast.io/v1/rental-estimates"
+        # Use Zillow API via RapidAPI
+        url = "https://zillow-com1.p.rapidapi.com/propertyExtendedSearch"
         params = {
-            'address': address,
-            'apiKey': self.api_keys['rentcast']
+            'location': address,
+            'status_type': 'ForRent',
+            'home_type': 'Houses'
         }
         
-        if bedrooms:
-            params['bedrooms'] = bedrooms
-        if bathrooms:
-            params['bathrooms'] = bathrooms
-        if square_feet:
-            params['squareFootage'] = square_feet
+        # Use RapidAPI headers for Zillow
+        headers = {
+            'X-RapidAPI-Key': self.api_keys['rentcast'],
+            'X-RapidAPI-Host': 'zillow-com1.p.rapidapi.com'
+        }
         
-        data = self._make_api_call(url, params, 'rentcast', 50)  # 50 calls per month for free tier
-        if not data:
-            return None
+        try:
+            data = self._make_api_call_with_headers(url, params, headers, 'rentcast', 50)
+            if data and data.get('props'):
+                # Extract rental data from Zillow response
+                props = data.get('props', [])
+                if props:
+                    prop = props[0]  # Use first property
+                    return RentCastData(
+                        property_id=str(prop.get('zpid', '')),
+                        estimated_rent=prop.get('price'),
+                        rent_range_low=prop.get('price') * 0.9 if prop.get('price') else None,
+                        rent_range_high=prop.get('price') * 1.1 if prop.get('price') else None,
+                        confidence="High",
+                        last_updated=datetime.now()
+                    )
+        except Exception as e:
+            logger.error(f"Zillow API error: {e}")
+            # Check if it's a subscription error
+            if "not subscribed" in str(e).lower() or "403" in str(e):
+                logger.error("Zillow API subscription required. Please subscribe to the Zillow API on RapidAPI.")
         
-        return RentCastData(
-            property_id=data.get('id', ''),
-            estimated_rent=data.get('rent'),
-            rent_range_low=data.get('rentRange', {}).get('low'),
-            rent_range_high=data.get('rentRange', {}).get('high'),
-            confidence=data.get('confidence'),
-            last_updated=datetime.now()
-        )
+        # Return None if API fails - no mock data
+        logger.warning("Zillow API unavailable - no rental data returned")
+        return None
     
     def get_freewebapi_rental_data(self, address: str) -> Optional[FreeWebApiData]:
         """Get rental data from FreeWebApi"""

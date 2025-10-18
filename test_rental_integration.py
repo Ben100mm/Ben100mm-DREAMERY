@@ -19,6 +19,10 @@ def test_rental_integration():
     print("=" * 50)
     
     try:
+        # Load environment variables first
+        from dotenv import load_dotenv
+        load_dotenv()
+        
         # Import the service
         from external_data_service import ExternalDataService
         print("✅ Successfully imported ExternalDataService")

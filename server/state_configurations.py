@@ -4,6 +4,7 @@ Configuration for state open data portals, APIs, and data sources
 """
 
 from state_data_models import StateCode, StateOpenDataConfig, DataSource
+from typing import Optional, Dict, List, Any
 
 # Comprehensive state configurations for all 50 states
 COMPREHENSIVE_STATE_CONFIGS = {

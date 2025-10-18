@@ -2265,6 +2265,39 @@ function getPropertyTypeOptions(calculatorMode?: CalculatorMode): PropertyType[]
   return allPropertyTypes;
 }
 
+// Helper function to consolidate multiple field updates into a single notification
+function consolidateFieldUpdates(updates: string[]): string {
+  if (updates.length === 0) return "";
+  if (updates.length === 1) return updates[0];
+  
+  // Group similar updates
+  const financeTypeResets = updates.filter(msg => msg.includes("Finance Type reset"));
+  const proFormaUpdates = updates.filter(msg => msg.includes("Pro Forma"));
+  const otherUpdates = updates.filter(msg => 
+    !msg.includes("Finance Type reset") && !msg.includes("Pro Forma")
+  );
+  
+  const consolidatedParts: string[] = [];
+  
+  if (financeTypeResets.length > 0) {
+    if (financeTypeResets.length === 1) {
+      consolidatedParts.push(financeTypeResets[0]);
+    } else {
+      consolidatedParts.push("Finance Type updated for multiple property/operation combinations");
+    }
+  }
+  
+  if (proFormaUpdates.length > 0) {
+    consolidatedParts.push(...proFormaUpdates);
+  }
+  
+  if (otherUpdates.length > 0) {
+    consolidatedParts.push(...otherUpdates);
+  }
+  
+  return consolidatedParts.join(" • ");
+}
+
 // Helper function to filter finance types based on calculator mode
 function filterFinanceTypesByMode(options: OfferType[], calculatorMode?: CalculatorMode): OfferType[] {
   if (!calculatorMode) return options;
@@ -3120,7 +3153,7 @@ const UnderwritePage: React.FC = () => {
       ...input,
       operationType,
       offerType,
-      validationMessages: messages,
+      validationMessages: messages.length > 0 ? [consolidateFieldUpdates(messages)] : [],
       snackbarOpen: messages.length > 0,
     };
     return { next, messages };
@@ -3416,6 +3449,11 @@ const UnderwritePage: React.FC = () => {
             };
           }
         }
+      }
+
+      // Consolidate validation messages if there are multiple
+      if (candidate.validationMessages && candidate.validationMessages.length > 1) {
+        candidate.validationMessages = [consolidateFieldUpdates(candidate.validationMessages)];
       }
 
       return candidate;

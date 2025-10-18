@@ -3437,7 +3437,7 @@ const UnderwritePage: React.FC = () => {
             // Warn user that manual edits will be overwritten
             candidate.validationMessages = [
               ...(candidate.validationMessages || []),
-              `Pro Forma Auto-Apply disabled: Changing key === "propertyType" ? "property type" : "operation type" would overwrite your manual Pro Forma edits. Auto-apply has been disabled to protect your custom values. You can re-enable it in the Pro Forma settings if desired.`,
+              `Pro Forma Auto-Apply disabled: Changing ${key === "propertyType" ? "property type" : "operation type"} would overwrite your manual Pro Forma edits. Auto-apply has been disabled to protect your custom values. You can re-enable it in the Pro Forma settings if desired.`,
             ];
             candidate.snackbarOpen = true;
 

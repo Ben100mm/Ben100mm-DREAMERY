@@ -2602,7 +2602,7 @@ function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState>
       lawnSnow: 0,
       phoneBill: 0,
       extra: 0,
-      maintenance: adjustedMaintenance, // Dollar amount
+      maintenance: estimatedMaintenance, // Dollar amount
       vacancy: adjustedVacancy, // Percentage
       management: adjustedManagement, // Percentage
       capEx: adjustedCapEx, // Percentage

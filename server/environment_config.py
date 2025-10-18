@@ -23,7 +23,11 @@ class EnvironmentConfig:
             'census': os.getenv('CENSUS_API_KEY'),
             'transit': os.getenv('TRANSIT_API_KEY'),
             'schools': os.getenv('SCHOOL_API_KEY'),
-            'mapbox': os.getenv('REACT_APP_MAPBOX_TOKEN')
+            'mapbox': os.getenv('REACT_APP_MAPBOX_TOKEN'),
+            'bls': os.getenv('BLS_API_KEY'),
+            'data_gov': os.getenv('DATA_GOV_API_KEY'),
+            'rentcast': os.getenv('RENTCAST_API_KEY'),
+            'freewebapi': os.getenv('FREEWEBAPI_API_KEY')
         }
     
     def _load_rate_limits(self) -> Dict[str, int]:
@@ -33,7 +37,11 @@ class EnvironmentConfig:
             'google_places': int(os.getenv('GOOGLE_PLACES_RATE_LIMIT', '1000')),
             'census': int(os.getenv('CENSUS_RATE_LIMIT', '500')),
             'transit': int(os.getenv('TRANSIT_RATE_LIMIT', '100')),
-            'schools': int(os.getenv('SCHOOL_RATE_LIMIT', '100'))
+            'schools': int(os.getenv('SCHOOL_RATE_LIMIT', '100')),
+            'bls': int(os.getenv('BLS_RATE_LIMIT', '500')),
+            'data_gov': int(os.getenv('DATA_GOV_RATE_LIMIT', '1000')),
+            'rentcast': int(os.getenv('RENTCAST_RATE_LIMIT', '50')),
+            'freewebapi': int(os.getenv('FREEWEBAPI_RATE_LIMIT', '100'))
         }
     
     def _load_cache_config(self) -> Dict[str, any]:

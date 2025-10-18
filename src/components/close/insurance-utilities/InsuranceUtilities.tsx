@@ -75,6 +75,7 @@ interface InsuranceQuote {
   status: 'quoted' | 'bound' | 'expired';
   validUntil: string;
   logo: string;
+  dataSource?: string;
 }
 
 interface UtilityProvider {
@@ -386,7 +387,7 @@ const InsuranceUtilities: React.FC = () => {
 
   const requestInsuranceQuotes = async () => {
     try {
-      const response = await fetch('/api/insurance/quotes', {
+      const response = await fetch('http://localhost:5003/api/insurance/quotes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -395,10 +396,14 @@ const InsuranceUtilities: React.FC = () => {
       });
 
       if (response.ok) {
-        const quotes = await response.json();
-        setInsuranceUtilitiesData(prev => ({ ...prev, insuranceQuotes: quotes }));
-        toast.success('Insurance quotes requested successfully!');
-        setQuoteDialogOpen(false);
+        const data = await response.json();
+        if (data.success) {
+          setInsuranceUtilitiesData(prev => ({ ...prev, insuranceQuotes: data.quotes }));
+          toast.success(`Insurance quotes requested successfully! Found ${data.total} quotes from ${data.data_source}`);
+          setQuoteDialogOpen(false);
+        } else {
+          throw new Error(data.error || 'Failed to request quotes');
+        }
       } else {
         throw new Error('Failed to request quotes');
       }
@@ -410,7 +415,7 @@ const InsuranceUtilities: React.FC = () => {
 
   const bindInsurancePolicy = async (quoteId: string) => {
     try {
-      const response = await fetch('/api/insurance/bind', {
+      const response = await fetch('http://localhost:5003/api/insurance/bind', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -419,15 +424,20 @@ const InsuranceUtilities: React.FC = () => {
       });
 
       if (response.ok) {
-        toast.success('Insurance policy bound successfully!');
-        setBindingDialogOpen(false);
-        // Update quote status
-        setInsuranceUtilitiesData(prev => ({
-          ...prev,
-          insuranceQuotes: prev.insuranceQuotes.map(quote =>
-            quote.id === quoteId ? { ...quote, status: 'bound' } : quote
-          ),
-        }));
+        const data = await response.json();
+        if (data.success) {
+          toast.success(`Insurance policy bound successfully! Policy ID: ${data.policyId}`);
+          setBindingDialogOpen(false);
+          // Update quote status
+          setInsuranceUtilitiesData(prev => ({
+            ...prev,
+            insuranceQuotes: prev.insuranceQuotes.map(quote =>
+              quote.id === quoteId ? { ...quote, status: 'bound' } : quote
+            ),
+          }));
+        } else {
+          throw new Error(data.error || 'Failed to bind policy');
+        }
       } else {
         throw new Error('Failed to bind policy');
       }
@@ -692,6 +702,14 @@ const InsuranceUtilities: React.FC = () => {
                           <Typography variant="body2" color="text.secondary">
                             ({quote.reviewCount} reviews)
                           </Typography>
+                          {quote.dataSource && (
+                            <Chip 
+                              label={quote.dataSource === 'free_public_data' ? 'Free Data' : quote.dataSource} 
+                              size="small" 
+                              color="success"
+                              sx={{ ml: 1 }}
+                            />
+                          )}
                         </Box>
 
                         <Box sx={{ display: 'flex', gap: 1 }}>

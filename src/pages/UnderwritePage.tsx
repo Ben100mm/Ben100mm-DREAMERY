@@ -2270,17 +2270,22 @@ function filterFinanceTypesByMode(options: OfferType[], calculatorMode?: Calcula
   if (!calculatorMode) return options;
   
   if (calculatorMode === "essential") {
-    // Essential mode: Only "Conventional" and "FHA"
-    return options.filter(option => 
-      option === "Conventional" || 
-      option === "FHA"
-    );
-  } else if (calculatorMode === "standard") {
-    // Standard mode: Adds "DSCR"
+    // Essential mode: Only "Conventional" and "FHA", but include basic options for Land
     return options.filter(option => 
       option === "Conventional" || 
       option === "FHA" ||
-      option === "DSCR"
+      option === "Cash" ||  // Always include Cash as basic option
+      option === "Seller Finance"  // Include Seller Finance as basic option for Land
+    );
+  } else if (calculatorMode === "standard") {
+    // Standard mode: Adds "DSCR" and more options for Land
+    return options.filter(option => 
+      option === "Conventional" || 
+      option === "FHA" ||
+      option === "DSCR" ||
+      option === "Cash" ||
+      option === "Seller Finance" ||
+      option === "Private"  // Add Private for Land in standard mode
     );
   }
   

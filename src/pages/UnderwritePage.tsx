@@ -2224,21 +2224,7 @@ function getOperationTypeOptions(propertyType: PropertyType, calculatorMode?: Ca
     ];
   }
 
-  // Apply calculator mode restrictions
-  if (calculatorMode === "essential") {
-    // Essential mode: Only "Buy & Hold"
-    return baseOptions.filter(op => 
-      op === "Buy & Hold"
-    );
-  } else if (calculatorMode === "standard") {
-    // Standard mode: Adds "Short Term Rental"
-    return baseOptions.filter(op => 
-      op === "Buy & Hold" || 
-      op === "Short Term Rental"
-    );
-  }
-  
-  // Professional mode: All options available
+  // All modes now show all operation types - upgrade prompts will be shown as popups
   return baseOptions;
 }
 
@@ -2250,18 +2236,12 @@ function getPropertyTypeOptions(calculatorMode?: CalculatorMode): PropertyType[]
     "Hotel",
     "Land",
     "Office",
-    "Retail"
+    "Retail",
+    "Condo",
+    "Townhouse"
   ];
 
-  if (calculatorMode === "essential") {
-    // Essential mode: Only "Single Family" and "Land"
-    return ["Single Family", "Land"];
-  } else if (calculatorMode === "standard") {
-    // Standard mode: Adds "Multi Family"
-    return ["Single Family", "Land", "Multi Family"];
-  }
-  
-  // Professional mode: All property types available
+  // All modes now show all property types - upgrade prompts will be shown as popups
   return allPropertyTypes;
 }
 
@@ -2288,7 +2268,7 @@ function consolidateFieldUpdates(updates: string[]): string {
         const match = msg.match(/for (.+) \+ (.+)\./);
         return match ? `${match[1]} + ${match[2]}` : 'property/operation combinations';
       });
-      const uniqueCombinations = [...new Set(combinations)];
+      const uniqueCombinations = Array.from(new Set(combinations));
       consolidatedParts.push(`Finance Type updated for: ${uniqueCombinations.join(', ')}`);
     }
   }
@@ -2306,22 +2286,7 @@ function consolidateFieldUpdates(updates: string[]): string {
 
 // Helper function to filter finance types based on calculator mode
 function filterFinanceTypesByMode(options: OfferType[], calculatorMode?: CalculatorMode): OfferType[] {
-  if (!calculatorMode) return options;
-  
-  if (calculatorMode === "essential") {
-    // Essential mode: Only "Conventional" and "FHA", but include basic options for Land
-    return options.filter(option => 
-      option === "Conventional" || 
-      option === "FHA" ||
-      option === "Cash" ||  // Always include Cash as basic option
-      option === "Seller Finance"  // Include Seller Finance as basic option for Land
-    );
-  } else if (calculatorMode === "standard") {
-    // Standard mode: All financing options available
-    return options;
-  }
-  
-  // Professional mode: All options available
+  // All modes now show all finance types - upgrade prompts will be shown as popups
   return options;
 }
 
@@ -5760,14 +5725,47 @@ const UnderwritePage: React.FC = () => {
         />
 
         {/* Upgrade Prompts */}
+        {isEssential && (state.propertyType === "Multi Family" || 
+                        state.propertyType === "Hotel" || 
+                        state.propertyType === "Office" || 
+                        state.propertyType === "Retail" || 
+                        state.propertyType === "Condo" || 
+                        state.propertyType === "Townhouse") && (
+          <UpgradePrompt
+            currentMode={calculatorMode}
+            targetMode="standard"
+            feature="Additional Property Types"
+            description="Multi Family, Hotel, Office, Retail, Condo, and Townhouse properties are available in Standard mode"
+            onUpgrade={() => setCalculatorMode('standard')}
+          />
+        )}
+
+        {isEssential && (state.operationType === "Fix & Flip" || 
+                        state.operationType === "Short Term Rental" || 
+                        state.operationType === "Rental Arbitrage" || 
+                        state.operationType === "BRRRR") && (
+          <UpgradePrompt
+            currentMode={calculatorMode}
+            targetMode="standard"
+            feature="Advanced Operation Types"
+            description="Fix & Flip, Short Term Rental, Rental Arbitrage, and BRRRR operations are available in Standard mode"
+            onUpgrade={() => setCalculatorMode('standard')}
+          />
+        )}
+
         {isEssential && (state.offerType === "Subject To Existing Mortgage" || 
                         state.offerType === "Seller Finance" || 
-                        state.offerType === "Hybrid") && (
+                        state.offerType === "Hybrid" ||
+                        state.offerType === "Hard Money" ||
+                        state.offerType === "Private" ||
+                        state.offerType === "Line of Credit" ||
+                        state.offerType === "SBA" ||
+                        state.offerType === "DSCR") && (
           <UpgradePrompt
             currentMode={calculatorMode}
             targetMode="standard"
             feature="Complex Financing Options"
-            description="Subject-To, Seller Finance, and Hybrid financing are available in Standard mode"
+            description="Subject-To, Seller Finance, Hybrid, Hard Money, Private, Line of Credit, SBA, and DSCR financing are available in Standard mode"
             onUpgrade={() => setCalculatorMode('standard')}
           />
         )}

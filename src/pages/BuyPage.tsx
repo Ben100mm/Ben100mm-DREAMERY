@@ -1622,7 +1622,30 @@ const BuyPage: React.FC = () => {
                         <Button
                           variant="outlined"
                           size="small"
-                          href="/underwrite"
+                          onClick={() => {
+                            const params = new URLSearchParams();
+                            params.set('propertyId', property.property_id);
+                            params.set('address', property.address?.full_line || property.address?.street || '');
+                            params.set('price', property.list_price?.toString() || '');
+                            // Extract property details from description or use defaults
+                            const description = Array.isArray(property.description?.text) 
+                              ? property.description.text.join(' ') 
+                              : property.description?.text || '';
+                            const bedsMatch = description.match(/(\d+)\s*(?:bed|br|bedroom)/i);
+                            const bathsMatch = description.match(/(\d+(?:\.\d+)?)\s*(?:bath|ba|bathroom)/i);
+                            const sqftMatch = description.match(/(\d{1,3}(?:,\d{3})*)\s*(?:sq\.?\s*ft|sqft|square\s*feet)/i);
+                            const yearMatch = description.match(/(\d{4})\s*(?:year|built)/i);
+                            const lotMatch = description.match(/(\d+(?:\.\d+)?)\s*(?:acres?|sq\.?\s*ft|sqft)/i);
+                            
+                            params.set('beds', bedsMatch ? bedsMatch[1] : '');
+                            params.set('baths', bathsMatch ? bathsMatch[1] : '');
+                            params.set('sqft', sqftMatch ? sqftMatch[1].replace(/,/g, '') : '');
+                            params.set('propertyType', property.description?.text?.join(' ') || '');
+                            params.set('yearBuilt', yearMatch ? yearMatch[1] : '');
+                            params.set('lotSize', lotMatch ? lotMatch[1] : '');
+                            params.set('hoa', property.monthly_fees?.display_amount?.replace(/[^0-9]/g, '') || '');
+                            window.location.href = `/underwrite?${params.toString()}`;
+                          }}
                           sx={{
                             borderColor: brandColors.primary,
                             color: brandColors.primary,

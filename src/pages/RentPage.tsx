@@ -1425,7 +1425,24 @@ const RentPage: React.FC = () => {
                         <Button
                           variant="outlined"
                           size="small"
-                          href="/underwrite"
+                          onClick={() => {
+                            const params = new URLSearchParams();
+                            params.set('propertyId', property.id.toString());
+                            params.set('address', property.address);
+                            // Extract price from rent format (e.g., "$3,710/month" -> "3710")
+                            const priceMatch = property.price.match(/\$([0-9,]+)/);
+                            const price = priceMatch ? priceMatch[1].replace(/,/g, '') : '';
+                            params.set('price', price);
+                            params.set('beds', property.beds.toString());
+                            params.set('baths', property.baths.toString());
+                            params.set('sqft', property.sqft.toString());
+                            params.set('propertyType', property.type);
+                            // For rental properties, we'll set a default year built if not available
+                            params.set('yearBuilt', '');
+                            params.set('lotSize', '');
+                            params.set('hoa', '');
+                            window.location.href = `/underwrite?${params.toString()}`;
+                          }}
                           sx={{
                             borderColor: brandColors.primary,
                             color: brandColors.primary,

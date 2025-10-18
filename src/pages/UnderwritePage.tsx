@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { brandColors } from "../theme";
 import { PageAppBar } from "../components/Header";
 import ProfessionalSupportMessages from "../components/professional-support/ProfessionalSupportMessages";
@@ -2396,6 +2396,107 @@ function Kpi(props: { label: string; value: string }) {
     </Box>
   );
 }
+// Function to parse URL parameters and create property data
+function parsePropertyFromURL(searchParams: URLSearchParams): Partial<DealState> | null {
+  const propertyId = searchParams.get('propertyId');
+  const address = searchParams.get('address');
+  const price = searchParams.get('price');
+  const beds = searchParams.get('beds');
+  const baths = searchParams.get('baths');
+  const sqft = searchParams.get('sqft');
+  const propertyType = searchParams.get('propertyType');
+  const yearBuilt = searchParams.get('yearBuilt');
+  const lotSize = searchParams.get('lotSize');
+  const hoa = searchParams.get('hoa');
+
+  // If no property data in URL, return null
+  if (!propertyId && !address && !price) {
+    return null;
+  }
+
+  const parsedPrice = price ? parseInt(price.replace(/[^0-9]/g, '')) : 0;
+  const parsedBeds = beds ? parseInt(beds) : 0;
+  const parsedBaths = baths ? parseInt(baths) : 0;
+  const parsedSqft = sqft ? parseInt(sqft) : 0;
+  const parsedYearBuilt = yearBuilt ? parseInt(yearBuilt) : 0;
+  const parsedLotSize = lotSize ? parseInt(lotSize) : 0;
+  const parsedHoa = hoa ? parseInt(hoa) : 0;
+
+  // Map property type from marketplace to underwrite format
+  let mappedPropertyType: PropertyType = "Single Family";
+  if (propertyType) {
+    const type = propertyType.toLowerCase();
+    if (type.includes('condo') || type.includes('apartment')) {
+      mappedPropertyType = "Condo";
+    } else if (type.includes('multi') || type.includes('duplex') || type.includes('triplex')) {
+      mappedPropertyType = "Multi Family";
+    } else if (type.includes('townhouse') || type.includes('townhome')) {
+      mappedPropertyType = "Townhouse";
+    } else if (type.includes('office')) {
+      mappedPropertyType = "Office";
+    } else if (type.includes('retail')) {
+      mappedPropertyType = "Retail";
+    } else if (type.includes('land') || type.includes('lot')) {
+      mappedPropertyType = "Land";
+    }
+  }
+
+  return {
+    propertyAddress: address || "",
+    listedPrice: parsedPrice,
+    purchasePrice: parsedPrice,
+    percentageDifference: 0,
+    // Update loan amount based on purchase price (assuming 20% down)
+    loan: {
+      downPayment: Math.round(parsedPrice * 0.2),
+      loanAmount: Math.round(parsedPrice * 0.8),
+      annualInterestRate: 7,
+      monthlyPayment: 0, // Will be calculated
+      annualPayment: 0, // Will be calculated
+      interestOnly: false,
+      balloonDue: 0,
+      amortizationAmount: Math.round(parsedPrice * 0.8),
+      amortizationYears: 30,
+      closingCosts: 0,
+      rehabCosts: 0,
+      totalInterest: 0,
+      totalPayment: 0,
+      amortizationSchedule: [],
+    },
+    // Update HOA in operating expenses
+    ops: {
+      principalAndInterest: 0, // Will be calculated
+      totalSubtoLoans: 0,
+      taxes: 0,
+      insurance: 0,
+      gasElectric: 0,
+      internet: 0,
+      hoa: parsedHoa,
+      cleaner: 0,
+      monthlyRentToLandlord: 0,
+      waterSewer: 0,
+      heat: 0,
+      lawnSnow: 0,
+      phoneBill: 0,
+      extra: 0,
+      maintenance: 0,
+      vacancy: 0,
+      management: 0,
+      capEx: 0,
+      opEx: 0,
+      utilitiesPct: 0,
+      expensesWithoutMortgage: 0,
+      monthlyExpenses: 0,
+      monthlyExpensesPercent: 0,
+      yearlyExpenses: 0,
+      expensesWithMortgage: 0,
+      monthlyExpensesWithMortgage: 0,
+      yearlyExpensesWithMortgage: 0,
+    },
+    propertyType: mappedPropertyType,
+  };
+}
+
 const defaultState: DealState = {
   propertyType: "Single Family",
   operationType: "Buy & Hold",
@@ -2785,6 +2886,7 @@ const defaultState: DealState = {
 
 const UnderwritePage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Calculator Mode Management
   const { mode: calculatorMode, setMode: setCalculatorMode, isEssential, isStandard, isProfessional } = useCalculatorMode();
@@ -2855,6 +2957,10 @@ const UnderwritePage: React.FC = () => {
   const [showMessages, setShowMessages] = useState(false);
 
   const [state, setState] = useState<DealState>(() => {
+    // First, check for URL parameters
+    const searchParams = new URLSearchParams(location.search);
+    const urlPropertyData = parsePropertyFromURL(searchParams);
+    
     try {
       const fromLocal = localStorage.getItem("underwrite:last");
       if (fromLocal) {
@@ -2863,8 +2969,12 @@ const UnderwritePage: React.FC = () => {
           "Loading from localStorage, original analysisDate:",
           parsed.analysisDate,
         );
+        
+        // Merge URL data with localStorage data (URL data takes precedence)
+        const mergedData = urlPropertyData ? { ...parsed, ...urlPropertyData } : parsed;
+        
         const normalized = validateAndNormalizeState({
-          ...parsed,
+          ...mergedData,
           analysisDate: (() => {
             // Get the current date directly from the user's system
             const now = new Date();
@@ -2884,6 +2994,17 @@ const UnderwritePage: React.FC = () => {
         return normalized.next;
       }
     } catch {}
+    
+    // If no localStorage data, use URL data merged with default state
+    if (urlPropertyData) {
+      const mergedData = { ...defaultState, ...urlPropertyData };
+      const normalized = validateAndNormalizeState({
+        ...mergedData,
+        validationMessages: [],
+      });
+      return normalized.next;
+    }
+    
     return defaultState;
   });
 

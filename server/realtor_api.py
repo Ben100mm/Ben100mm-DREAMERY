@@ -126,16 +126,12 @@ def get_property_suggestions():
                 'suggestions': []
             })
 
-        # Use the scraper's location handling for suggestions
-        location_info = scraper._handle_location(query)
-        
-        suggestions = []
-        if location_info:
-            suggestions.append(location_info.get('display_name', query))
+        # Get multiple suggestions from the external API
+        suggestions = scraper._get_location_suggestions(query, limit)
         
         return jsonify({
             'success': True,
-            'suggestions': suggestions[:limit]
+            'suggestions': suggestions
         })
 
     except Exception as e:

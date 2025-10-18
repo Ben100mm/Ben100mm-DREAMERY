@@ -10,7 +10,7 @@ const NavContainer = styled.nav`
   position: absolute;
   bottom: 5%;
   left: 0;
-  z-index: 9999;
+  z-index: 1000;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px brandColors.shadows.light;
   &:hover {

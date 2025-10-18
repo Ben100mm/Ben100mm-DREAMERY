@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { TextField, IconButton, Box, CircularProgress, Alert, Fade } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -36,6 +37,7 @@ const HeroContainer = styled.div`
   color: brandColors.backgrounds.primary;
   padding: 0 2rem;
   z-index: 1;
+  isolation: isolate;
 `;
 
 const Overlay = styled.div`
@@ -137,29 +139,39 @@ const SearchButton = styled.button`
   }
 `;
 
-const SuggestionDropdown = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+const SuggestionDropdown = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isOpen', 'top', 'left', 'width'].includes(prop),
+})<{ isOpen: boolean; top: number; left: number; width: number }>`
+  position: fixed;
+  top: ${props => props.top}px;
+  left: ${props => props.left}px;
+  width: ${props => props.width}px;
   background: white;
   border: 1px solid ${brandColors.borders.primary};
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 999999;
   max-height: 400px;
   overflow-y: auto;
   display: ${props => props.isOpen ? 'block' : 'none'};
-  margin-top: 4px;
+  min-height: 0;
+  transform: translateZ(0);
+  will-change: transform;
 `;
 
-const SuggestionItem = styled.div<{ isSelected: boolean }>`
+const SuggestionItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isSelected'].includes(prop),
+})<{ isSelected: boolean }>`
   display: flex;
   align-items: center;
   padding: 12px 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
   background-color: ${props => props.isSelected ? brandColors.interactive.hover : 'transparent'};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 48px;
   
   &:hover {
     background-color: ${brandColors.interactive.hover};
@@ -183,17 +195,25 @@ const SuggestionIcon = styled.div`
 
 const SuggestionContent = styled.div`
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 `;
 
 const SuggestionTitle = styled.div`
   font-weight: 600;
   color: ${brandColors.text.primary};
   margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const SuggestionSubtitle = styled.div`
   font-size: 0.875rem;
   color: ${brandColors.text.secondary};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const LoadingContainer = styled.div`
@@ -223,6 +243,7 @@ const SearchContainer = styled.div`
   margin: 0 auto;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px brandColors.shadows.light;
+  z-index: 1000;
   &:hover {
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 4px 8px brandColors.shadows.medium;
@@ -294,9 +315,41 @@ const Hero: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   
   const inputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Calculate dropdown position
+  const updateDropdownPosition = useCallback(() => {
+    if (searchContainerRef.current) {
+      const rect = searchContainerRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width
+      });
+    }
+  }, []);
+
+  // Update position when suggestions change
+  useEffect(() => {
+    if (showSuggestions) {
+      updateDropdownPosition();
+    }
+  }, [showSuggestions, updateDropdownPosition]);
+
+  // Update position on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (showSuggestions) {
+        updateDropdownPosition();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [showSuggestions, updateDropdownPosition]);
 
   // Debounced search effect
   useEffect(() => {
@@ -338,7 +391,10 @@ const Hero: React.FC = () => {
   }, []);
 
   // Handle suggestion selection
-  const handleSuggestionSelect = useCallback((suggestion: AddressSuggestion) => {
+  const handleSuggestionSelect = useCallback((suggestion: AddressSuggestion, event?: React.MouseEvent) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    console.log('Suggestion selected:', suggestion.fullAddress);
     setSearchQuery(suggestion.fullAddress);
     setShowSuggestions(false);
     setSelectedIndex(-1);
@@ -351,6 +407,7 @@ const Hero: React.FC = () => {
       return;
     }
 
+    console.log('🔍 Starting search for:', searchQuery);
     setIsSearching(true);
     setError(null);
 
@@ -358,6 +415,7 @@ const Hero: React.FC = () => {
       // Validate address
       const validation = AddressValidator.validate(searchQuery);
       if (!validation.isValid) {
+        console.log('❌ Address validation failed:', validation.errors);
         setError(validation.errors[0]);
         setIsSearching(false);
         return;
@@ -365,14 +423,18 @@ const Hero: React.FC = () => {
 
       // Format address for search
       const formattedQuery = AddressFormatter.formatForDisplay(searchQuery);
+      console.log('📝 Formatted query:', formattedQuery);
       
       // Geocode address
       const geocodedAddress = await AddressGeocoder.geocodeAddress(formattedQuery);
+      console.log('🌍 Geocoded address:', geocodedAddress);
       
       // Get search route
       const { route, state } = SearchRouter.getSearchRoute(geocodedAddress, formattedQuery);
+      console.log('🛣️ Navigation route:', route, 'State:', state);
       
       // Navigate to search results
+      console.log('🚀 Navigating to:', route);
       navigate(route, { state });
     } catch (err) {
       setError('Failed to process search. Please try again.');
@@ -421,7 +483,23 @@ const Hero: React.FC = () => {
   // Handle click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      // Check if click is inside search container
+      const isInsideSearchContainer = searchContainerRef.current?.contains(target);
+      
+      // Check if click is inside suggestions dropdown (portal)
+      const isInsideDropdown = (target as Element)?.closest('[data-suggestions-dropdown]');
+      
+      console.log('Click outside handler:', {
+        isInsideSearchContainer,
+        isInsideDropdown,
+        target: target,
+        showSuggestions
+      });
+      
+      if (!isInsideSearchContainer && !isInsideDropdown) {
+        console.log('Closing suggestions due to click outside');
         setShowSuggestions(false);
         setSelectedIndex(-1);
       }
@@ -429,7 +507,7 @@ const Hero: React.FC = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [showSuggestions]);
 
   // Get icon for suggestion type
   const getSuggestionIcon = (type: AddressSuggestion['type']) => {
@@ -478,37 +556,46 @@ const Hero: React.FC = () => {
             )}
           </SearchButton>
           
-          {/* Suggestions Dropdown */}
-          <SuggestionDropdown isOpen={showSuggestions && !error}>
-            {isLoading ? (
-              <LoadingContainer>
-                <CircularProgress size={20} />
-                <span style={{ marginLeft: 8 }}>Searching...</span>
-              </LoadingContainer>
-            ) : (
-              suggestions.map((suggestion, index) => (
-                <SuggestionItem
-                  key={suggestion.id}
-                  isSelected={index === selectedIndex}
-                  onClick={() => handleSuggestionSelect(suggestion)}
-                >
-                  <SuggestionIcon>
-                    {getSuggestionIcon(suggestion.type)}
-                  </SuggestionIcon>
-                  <SuggestionContent>
-                    <SuggestionTitle>{suggestion.displayName}</SuggestionTitle>
-                    {suggestion.metadata && (
-                      <SuggestionSubtitle>
-                        {[suggestion.metadata.city, suggestion.metadata.state, suggestion.metadata.zip]
-                          .filter(Boolean)
-                          .join(', ')}
-                      </SuggestionSubtitle>
-                    )}
-                  </SuggestionContent>
-                </SuggestionItem>
-              ))
-            )}
-          </SuggestionDropdown>
+          {/* Suggestions Dropdown - Rendered in Portal */}
+          {showSuggestions && !error && createPortal(
+            <SuggestionDropdown 
+              isOpen={showSuggestions && !error}
+              top={dropdownPosition.top}
+              left={dropdownPosition.left}
+              width={dropdownPosition.width}
+              data-suggestions-dropdown
+            >
+              {isLoading ? (
+                <LoadingContainer>
+                  <CircularProgress size={20} />
+                  <span style={{ marginLeft: 8 }}>Searching...</span>
+                </LoadingContainer>
+              ) : (
+                suggestions.map((suggestion, index) => (
+                  <SuggestionItem
+                    key={suggestion.id}
+                    isSelected={index === selectedIndex}
+                    onClick={(event) => handleSuggestionSelect(suggestion, event)}
+                  >
+                    <SuggestionIcon>
+                      {getSuggestionIcon(suggestion.type)}
+                    </SuggestionIcon>
+                    <SuggestionContent>
+                      <SuggestionTitle>{suggestion.displayName}</SuggestionTitle>
+                      {suggestion.metadata && (
+                        <SuggestionSubtitle>
+                          {[suggestion.metadata.city, suggestion.metadata.state, suggestion.metadata.zip]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </SuggestionSubtitle>
+                      )}
+                    </SuggestionContent>
+                  </SuggestionItem>
+                ))
+              )}
+            </SuggestionDropdown>,
+            document.body
+          )}
           
           {/* Error Display */}
           <Fade in={!!error}>

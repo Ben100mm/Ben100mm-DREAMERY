@@ -366,6 +366,35 @@ class DreameryPropertyScraper:
             logger.error(f"Comprehensive property search failed: {e}")
             return []
     
+    def _get_location_suggestions(self, location: str, limit: int = 10) -> List[str]:
+        """Get multiple location suggestions for autocomplete"""
+        params = {
+            "input": location,
+            "client_id": "rdc-search-new-communities",
+            "limit": str(limit),
+            "area_types": "city,state,county,postal_code,address,street,neighborhood,school,school_district,university,park",
+        }
+
+        try:
+            response = self.session.get(self.ADDRESS_AUTOCOMPLETE_URL, params=params)
+            response_json = response.json()
+            result = response_json["autocomplete"]
+            
+            suggestions = []
+            if result:
+                for item in result:
+                    # Use the first full address as the suggestion
+                    if item.get("full_address") and len(item["full_address"]) > 0:
+                        suggestions.append(item["full_address"][0])
+                    elif item.get("line"):
+                        # Fallback to line if no full_address
+                        suggestions.append(item["line"])
+            
+            return suggestions[:limit]
+        except Exception as e:
+            logger.error(f"Location suggestions lookup failed: {e}")
+            return []
+
     def _handle_location(self, location: str) -> Optional[Dict[str, Any]]:
         """Handle location lookup using Realtor.com API"""
         params = {
@@ -379,7 +408,21 @@ class DreameryPropertyScraper:
             response = self.session.get(self.ADDRESS_AUTOCOMPLETE_URL, params=params)
             response_json = response.json()
             result = response_json["autocomplete"]
-            return result[0] if result else None
+            if result and len(result) > 0:
+                # Extract the first full address as display name
+                first_result = result[0]
+                display_name = first_result.get("full_address", [location])[0] if first_result.get("full_address") else location
+                return {
+                    "display_name": display_name,
+                    "full_address": first_result.get("full_address", [location]),
+                    "area_type": first_result.get("area_type", "address"),
+                    "city": first_result.get("city", ""),
+                    "state_code": first_result.get("state_code", ""),
+                    "postal_code": first_result.get("postal_code", ""),
+                    "centroid": first_result.get("centroid", {}),
+                    "mpr_id": first_result.get("mpr_id", "")
+                }
+            return None
         except Exception as e:
             logger.error(f"Location lookup failed: {e}")
             return None

@@ -332,12 +332,15 @@ export class SearchRouter {
       };
     }
 
-    // Determine search type based on address components
+    // Determine search type based on address components and query
     const hasStreetNumber = !!addressData.components.streetNumber;
     const hasSpecificLocation = hasStreetNumber && !!addressData.components.route;
+    
+    // Also check if the search query itself contains a street number
+    const queryHasStreetNumber = /\d+\s/.test(searchQuery);
 
-    if (hasSpecificLocation) {
-      // Specific property address - could go to property details if property exists
+    if (hasSpecificLocation || queryHasStreetNumber) {
+      // Specific property address - will open property details modal
       return {
         route: defaultRoute,
         state: { 

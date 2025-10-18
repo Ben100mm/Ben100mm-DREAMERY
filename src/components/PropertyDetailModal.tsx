@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -59,12 +59,14 @@ import { PropertyData } from '../types/realtor';
 // Styled components
 const StyledDialog = styled(Dialog)`
   & .MuiDialog-paper {
-    max-width: 90vw;
-    max-height: 90vh;
-    width: 1200px;
-    margin: 24px;
+    max-width: 85vw;
+    max-height: 85vh;
+    width: 1000px;
+    margin: 80px 24px 24px 24px; /* Top margin accounts for app bar */
     border-radius: 16px;
     box-shadow: ${colorUtils.shadowColored(0.3, 24, 8)};
+    position: relative;
+    z-index: 1300; /* Ensure it's above app bar */
   }
 `;
 
@@ -82,7 +84,7 @@ const ModalHeader = styled.div`
 
 const PhotoGallery = styled.div`
   position: relative;
-  height: 400px;
+  height: 300px;
   background: ${brandColors.neutral[100]};
   border-radius: 12px;
   overflow: hidden;
@@ -234,6 +236,21 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
   const [activeTab, setActiveTab] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
+  // Handle escape key - moved to very top to avoid React Hook rules violation
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open) {
+        console.log('🔴 Escape key pressed, closing modal');
+        onClose();
+      }
+    };
+
+    if (open) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [open, onClose]);
+
   if (!property) {
     return (
       <StyledDialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -283,19 +300,110 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
 
   const isFavorited = favorites.has(property.property_id);
 
+  // Debug: Log property structure to see what agent data is available
+  console.log('🏠 PropertyDetailModal: Property data structure:', {
+    property_id: property.property_id,
+    agent: property.agent,
+    advertisers: property.advertisers,
+    office: property.office
+  });
+
+  // Force close function for debugging
+  const forceClose = () => {
+    console.log('🔴 Force close called');
+    console.log('🔴 onClose function:', onClose);
+    console.log('🔴 Modal open state:', open);
+    onClose();
+  };
+
+  // Debug: Log when component renders
+  console.log('🔴 PropertyDetailModal rendering with open:', open, 'property:', !!property);
+
   return (
-    <StyledDialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth={false}
-      fullWidth
-      fullScreen={isMobile}
-    >
+    <>
+      {/* Test button outside modal */}
+      {open && (
+        <Button
+          onClick={() => {
+            console.log('🔴 OUTSIDE TEST BUTTON CLICKED!');
+            alert('OUTSIDE TEST BUTTON CLICKED!');
+            onClose();
+          }}
+          sx={{
+            position: 'fixed',
+            top: 10,
+            right: 10,
+            zIndex: 99999,
+            backgroundColor: 'red',
+            color: 'white',
+            fontWeight: 'bold'
+          }}
+        >
+          TEST CLOSE
+        </Button>
+      )}
+      
+      <StyledDialog 
+        open={open} 
+        onClose={(event, reason) => {
+          console.log('🔴 Dialog onClose called with reason:', reason);
+          onClose();
+        }}
+        maxWidth={false}
+        fullWidth
+        fullScreen={isMobile}
+        disableEscapeKeyDown={false}
+        disableBackdropClick={false}
+        sx={{
+          '& .MuiDialog-paper': {
+            margin: isMobile ? 0 : '80px 24px 24px 24px',
+            maxHeight: isMobile ? '100vh' : '85vh',
+            height: isMobile ? '100vh' : 'auto',
+          }
+        }}
+      >
       <ModalHeader>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary, mb: 1 }}>
             {formatPrice(property.list_price)}
           </Typography>
+          {/* Debug: Show modal state */}
+          <Typography variant="caption" sx={{ color: 'red', display: 'block' }}>
+            DEBUG: Modal open = {open.toString()}
+          </Typography>
+          <Button 
+            onClick={(e) => {
+              console.log('🔴 DEBUG BUTTON CLICKED!', e);
+              console.log('🔴 Event target:', e.target);
+              console.log('🔴 Event currentTarget:', e.currentTarget);
+              e.preventDefault();
+              e.stopPropagation();
+              alert('DEBUG BUTTON CLICKED!'); // Visual confirmation
+              forceClose();
+            }}
+            onMouseDown={(e) => {
+              console.log('🔴 DEBUG BUTTON MOUSE DOWN!', e);
+            }}
+            onMouseUp={(e) => {
+              console.log('🔴 DEBUG BUTTON MOUSE UP!', e);
+            }}
+            size="large"
+            variant="contained"
+            color="error"
+            sx={{ 
+              mt: 2, 
+              mb: 2,
+              fontSize: '16px',
+              fontWeight: 'bold',
+              minHeight: '50px',
+              zIndex: 9999,
+              position: 'relative',
+              pointerEvents: 'auto',
+              cursor: 'pointer'
+            }}
+          >
+            🔴 FORCE CLOSE MODAL 🔴
+          </Button>
           <Typography variant="body1" sx={{ color: brandColors.text.secondary, mb: 1 }}>
             {property.address?.formatted_address || property.address?.full_line || 'Address not available'}
           </Typography>
@@ -342,13 +450,35 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
               <ShareIcon />
             </IconButton>
           </Tooltip>
-          <IconButton onClick={onClose} sx={{ color: brandColors.neutral[600] }}>
+          <IconButton 
+            onClick={(event) => {
+              console.log('🔴 X BUTTON CLICKED!', event);
+              event.preventDefault();
+              event.stopPropagation();
+              console.log('🔴 PropertyDetailModal close button clicked');
+              alert('X BUTTON CLICKED!'); // Visual confirmation
+              onClose();
+            }} 
+            onMouseDown={(e) => {
+              console.log('🔴 X BUTTON MOUSE DOWN!', e);
+            }}
+            sx={{ 
+              color: brandColors.neutral[600],
+              pointerEvents: 'auto',
+              cursor: 'pointer',
+              zIndex: 10000
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
       </ModalHeader>
 
-      <DialogContent sx={{ p: 0, height: 'calc(90vh - 120px)', overflow: 'hidden' }}>
+      <DialogContent sx={{ 
+        p: 0, 
+        height: isMobile ? 'calc(100vh - 120px)' : 'calc(85vh - 140px)', 
+        overflow: 'hidden' 
+      }}>
         <Box sx={{ display: 'flex', height: '100%' }}>
           {/* Photo Gallery Section */}
           <Box sx={{ width: '50%', p: 3, borderRight: `1px solid ${brandColors.borders.secondary}` }}>
@@ -1005,17 +1135,18 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                   Agent & Contact Information
                 </Typography>
                 
-                {property.advertisers?.agent ? (
+                {/* Check both property.agent and property.advertisers.agent */}
+                {(property.agent || property.advertisers?.agent) ? (
                   <AgentCard>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <Avatar sx={{ bgcolor: brandColors.primary, mr: 2 }}>
-                        {property.advertisers.agent.name?.charAt(0) || 'A'}
+                        {(property.agent?.name || property.advertisers?.agent?.name)?.charAt(0) || 'A'}
                       </Avatar>
                       <Box>
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {property.advertisers.agent.name || 'Agent Name'}
+                          {property.agent?.name || property.advertisers?.agent?.name || 'Agent Name'}
                         </Typography>
-                        {property.advertisers.agent.state_license && (
+                        {(property.advertisers?.agent?.state_license) && (
                           <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
                             License: {property.advertisers.agent.state_license}
                           </Typography>
@@ -1024,43 +1155,88 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                     </Box>
                     
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      {property.advertisers.agent.email && (
+                      {(property.agent?.email || property.advertisers?.agent?.email) && (
                         <Button
                           startIcon={<EmailIcon />}
                           variant="outlined"
-                          href={`mailto:${property.advertisers.agent.email}`}
+                          href={`mailto:${property.agent?.email || property.advertisers?.agent?.email}`}
                           sx={{ justifyContent: 'flex-start' }}
                         >
-                          {property.advertisers.agent.email}
+                          {property.agent?.email || property.advertisers?.agent?.email}
                         </Button>
                       )}
-                      {property.advertisers.agent.phones && property.advertisers.agent.phones.length > 0 && (
+                      {(property.agent?.phone || (property.advertisers?.agent?.phones && property.advertisers.agent.phones.length > 0)) && (
                         <Button
                           startIcon={<PhoneIcon />}
                           variant="outlined"
-                          href={`tel:${property.advertisers.agent.phones[0]}`}
+                          href={`tel:${property.agent?.phone || property.advertisers?.agent?.phones?.[0]}`}
                           sx={{ justifyContent: 'flex-start' }}
                         >
-                          {property.advertisers.agent.phones[0]}
+                          {property.agent?.phone || property.advertisers?.agent?.phones?.[0]}
                         </Button>
                       )}
                     </Box>
                   </AgentCard>
                 ) : (
-                  <Alert severity="info">
+                  <Alert severity="info" sx={{ mb: 2 }}>
                     No agent information available for this property.
                   </Alert>
                 )}
 
-                {property.advertisers?.office && (
+                {/* Show sample agent information if no real data is available */}
+                {!(property.agent || property.advertisers?.agent) && (
+                  <AgentCard sx={{ bgcolor: brandColors.backgrounds.secondary }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: brandColors.text.secondary }}>
+                      Sample Agent Information
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Avatar sx={{ bgcolor: brandColors.neutral[400], mr: 2 }}>
+                        J
+                      </Avatar>
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: brandColors.text.secondary }}>
+                          John Smith
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
+                          License: #123456
+                        </Typography>
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Button
+                        startIcon={<EmailIcon />}
+                        variant="outlined"
+                        disabled
+                        sx={{ justifyContent: 'flex-start', color: brandColors.text.secondary }}
+                      >
+                        john.smith@example.com
+                      </Button>
+                      <Button
+                        startIcon={<PhoneIcon />}
+                        variant="outlined"
+                        disabled
+                        sx={{ justifyContent: 'flex-start', color: brandColors.text.secondary }}
+                      >
+                        (555) 123-4567
+                      </Button>
+                    </Box>
+                    <Typography variant="caption" sx={{ color: brandColors.text.secondary, fontStyle: 'italic', mt: 1, display: 'block' }}>
+                      This is sample data. Real agent information will appear here when available.
+                    </Typography>
+                  </AgentCard>
+                )}
+
+                {/* Check both property.office and property.advertisers.office */}
+                {(property.office || property.advertisers?.office) && (
                   <AgentCard sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
                       Office Information
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      {property.advertisers.office.name || 'Office Name'}
+                      {property.office?.name || property.advertisers?.office?.name || 'Office Name'}
                     </Typography>
-                    {property.advertisers.office.email && (
+                    {(property.advertisers?.office?.email) && (
                       <Typography variant="body2" sx={{ color: brandColors.text.secondary }}>
                         Email: {property.advertisers.office.email}
                       </Typography>
@@ -1073,6 +1249,7 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
         </Box>
       </DialogContent>
     </StyledDialog>
+    </>
   );
 };
 

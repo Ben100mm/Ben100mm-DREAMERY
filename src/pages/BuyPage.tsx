@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Box,
   Container,
@@ -157,11 +158,17 @@ const PropertyImage = styled.div`
 `;
 
 const BuyPage: React.FC = () => {
+  const location = useLocation();
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  
+  // Debug modal state changes
+  useEffect(() => {
+    console.log('🔴 Modal state changed:', modalOpen);
+  }, [modalOpen]);
 
   // Filter states
   const [propertyStatus, setPropertyStatus] = useState("for-sale");
@@ -203,6 +210,9 @@ const BuyPage: React.FC = () => {
   const [waterfront, setWaterfront] = useState(false);
   const [daysOnZillow, setDaysOnZillow] = useState("any");
   const [keywords, setKeywords] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userLocation, setUserLocation] = useState<string>("");
+  const [locationLoading, setLocationLoading] = useState(false);
 
   const toggleFavorite = (id: string) => {
     const newFavorites = new Set(favorites);
@@ -220,6 +230,7 @@ const BuyPage: React.FC = () => {
   };
 
   const handleCloseModal = () => {
+    console.log('🔴 Modal close button clicked');
     setModalOpen(false);
     setSelectedProperty(null);
   };
@@ -274,7 +285,7 @@ const BuyPage: React.FC = () => {
   ];
 
   // Use realtor data hook
-  const { 
+  const {
     properties: realtorProperties, 
     loading, 
     error, 
@@ -282,15 +293,300 @@ const BuyPage: React.FC = () => {
     searchProperties 
   } = useRealtorData();
 
+  // Initialize search query from location state
+  useEffect(() => {
+    const searchState = location.state as any;
+    const initialQuery = searchState?.searchQuery || searchState?.addressData?.formattedAddress || "";
+    setSearchQuery(initialQuery);
+  }, [location.state]);
+
+  // Get user's current location
+  const getUserLocation = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation is not supported by this browser.'));
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            
+            // Use reverse geocoding to get address from coordinates
+            const response = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+            );
+            
+            if (!response.ok) {
+              throw new Error('Failed to get address from coordinates');
+            }
+            
+            const data = await response.json();
+            const city = data.city || data.locality || '';
+            const state = data.principalSubdivision || data.administrativeArea || '';
+            const country = data.countryName || '';
+            
+            if (city && state) {
+              resolve(`${city}, ${state}`);
+            } else if (city) {
+              resolve(city);
+            } else {
+              resolve(`${latitude}, ${longitude}`);
+            }
+          } catch (error) {
+            console.error('Error getting address from coordinates:', error);
+            resolve(`${position.coords.latitude}, ${position.coords.longitude}`);
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // 5 minutes
+        }
+      );
+    });
+  };
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Handle search submission
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+    
+    console.log('🏠 BuyPage: Searching for:', searchQuery);
+    
+    // Determine if this is a specific address search (has street number)
+    const isSpecificAddress = /\d+\s/.test(searchQuery);
+    
+    if (isSpecificAddress) {
+      // For specific addresses, search in the same ZIP code area
+      const zipMatch = searchQuery.match(/\d{5}(-\d{4})?/);
+      let searchLocation = searchQuery;
+      
+      if (zipMatch) {
+        // Extract city, state, ZIP from the address
+        const parts = searchQuery.split(',').map((part: string) => part.trim());
+        if (parts.length >= 2) {
+          const cityStateZip = parts[parts.length - 1].trim();
+          searchLocation = cityStateZip;
+        }
+      }
+      
+      const searchParams: RealtorSearchParams = {
+        location: searchLocation,
+        listing_type: "for_sale",
+        limit: 20
+      };
+      searchProperties(searchParams);
+    } else {
+      // For area searches, use the full query
+      const searchParams: RealtorSearchParams = {
+        location: searchQuery,
+        listing_type: "for_sale",
+        limit: 20
+      };
+      searchProperties(searchParams);
+    }
+  };
+
   // Load initial data
   useEffect(() => {
-    const searchParams: RealtorSearchParams = {
-      location: "San Francisco, CA",
-      listing_type: "for_sale",
-      limit: 20
+    const loadInitialData = async () => {
+      // Get search query from navigation state
+      const searchState = location.state as any;
+      const searchQuery = searchState?.searchQuery || searchState?.addressData?.formattedAddress || "";
+      const searchType = searchState?.searchType || 'area_search';
+      
+      console.log('🏠 BuyPage: Loading properties for search query:', searchQuery);
+      console.log('🏠 BuyPage: Search state:', searchState);
+      console.log('🏠 BuyPage: Search type:', searchType);
+      
+      // If there's a search query from navigation, use it
+      if (searchQuery) {
+        // Determine if this is a specific address search (has street number)
+        const isSpecificAddress = /\d+\s/.test(searchQuery);
+        
+        if (isSpecificAddress) {
+          // For specific addresses, search in the same ZIP code area
+          const zipMatch = searchQuery.match(/\d{5}(-\d{4})?/);
+          let searchLocation = searchQuery;
+          
+          if (zipMatch) {
+            // Extract city, state, ZIP from the address
+            const parts = searchQuery.split(',').map((part: string) => part.trim());
+            if (parts.length >= 2) {
+              const cityStateZip = parts[parts.length - 1].trim();
+              searchLocation = cityStateZip;
+            }
+          }
+          
+          console.log('🏠 BuyPage: Specific address detected, searching in ZIP area:', searchLocation);
+          
+          const searchParams: RealtorSearchParams = {
+            location: searchLocation,
+            listing_type: "for_sale",
+            limit: 20
+          };
+          searchProperties(searchParams);
+        } else {
+          // For area searches, use the full query
+          const searchParams: RealtorSearchParams = {
+            location: searchQuery,
+            listing_type: "for_sale",
+            limit: 20
+          };
+          searchProperties(searchParams);
+        }
+      } else {
+        // No search query from navigation, try to get user's location
+        try {
+          setLocationLoading(true);
+          const location = await getUserLocation();
+          setUserLocation(location);
+          setSearchQuery(location);
+          
+          console.log('🏠 BuyPage: Using user location:', location);
+          
+          const searchParams: RealtorSearchParams = {
+            location: location,
+            listing_type: "for_sale",
+            limit: 20
+          };
+          searchProperties(searchParams);
+        } catch (error) {
+          console.error('🏠 BuyPage: Failed to get user location:', error);
+          // If geolocation fails, don't load any properties
+        } finally {
+          setLocationLoading(false);
+        }
+      }
     };
-    searchProperties(searchParams);
-  }, [searchProperties]);
+
+    loadInitialData();
+  }, [searchProperties, location.state]);
+
+  // Handle opening property details modal for specific address searches
+  useEffect(() => {
+    const searchState = location.state as any;
+    const searchQuery = searchState?.searchQuery || searchState?.addressData?.formattedAddress || "";
+    
+    // Check if this is a specific address search (has street number)
+    const isSpecificAddress = /\d+\s/.test(searchQuery);
+    
+    if (isSpecificAddress && realtorProperties.length > 0 && !modalOpen) {
+      console.log('🏠 BuyPage: Specific address search detected, looking for exact match');
+      
+      // Find the property that best matches the search query
+      const matchingProperty = realtorProperties.find(property => {
+        if (!property.address) return false;
+        const propertyAddress = `${property.address.street || ''}, ${property.address.city || ''}, ${property.address.state || ''} ${property.address.zip || ''}`.toLowerCase();
+        const searchQueryLower = searchQuery.toLowerCase();
+        
+        // Check for exact address match
+        return propertyAddress.includes(searchQueryLower) || searchQueryLower.includes(propertyAddress);
+      });
+      
+      if (matchingProperty) {
+        console.log('🏠 BuyPage: Found exact matching property:', matchingProperty);
+        setSelectedProperty(matchingProperty);
+        setModalOpen(true);
+      } else {
+        console.log('🏠 BuyPage: No exact match found, showing first property in area');
+        // If no exact match, show the first property in the area
+        setSelectedProperty(realtorProperties[0]);
+        setModalOpen(true);
+      }
+    }
+  }, [realtorProperties, location.state, modalOpen]);
+
+  // Mock properties with agent data for testing
+  const mockProperties = [
+    {
+      property_id: "mock-1",
+      list_price: 1876000,
+      address: {
+        street: "123 Main St",
+        city: "San Francisco",
+        state: "CA",
+        zip: "94102",
+        formatted_address: "123 Main St, San Francisco, CA 94102",
+        full_line: "123 Main St, San Francisco, CA 94102"
+      },
+      description: {
+        beds: 3,
+        baths_full: 2,
+        baths_half: 1,
+        sqft: 2500,
+        year_built: 2010,
+        type: "Single Family",
+        text: "Beautiful single family home in the heart of San Francisco"
+      },
+      photos: [{ href: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800" }],
+      advertisers: {
+        agent: {
+          name: "Sarah Johnson",
+          email: "sarah.johnson@dreamery.com",
+          phones: ["(555) 123-4567"],
+          state_license: "DRE #01234567"
+        },
+        office: {
+          name: "Dreamery Real Estate",
+          email: "info@dreamery.com",
+          phones: ["(555) 987-6543"]
+        }
+      },
+      days_on_mls: 15,
+      status: "for_sale",
+      coordinates: { lat: 37.7749, lng: -122.4194 },
+      flags: { is_new_listing: true },
+      open_houses: [],
+      monthly_fees: null
+    },
+    {
+      property_id: "mock-2", 
+      list_price: 2450000,
+      address: {
+        street: "456 Oak Ave",
+        city: "San Francisco", 
+        state: "CA",
+        zip: "94103",
+        formatted_address: "456 Oak Ave, San Francisco, CA 94103",
+        full_line: "456 Oak Ave, San Francisco, CA 94103"
+      },
+      description: {
+        beds: 4,
+        baths_full: 3,
+        baths_half: 1,
+        sqft: 3200,
+        year_built: 2015,
+        type: "Single Family",
+        text: "Modern luxury home with stunning city views"
+      },
+      photos: [{ href: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800" }],
+      agent: {
+        name: "Michael Chen",
+        email: "michael.chen@dreamery.com", 
+        phone: "(555) 234-5678"
+      },
+      office: {
+        name: "Dreamery Real Estate"
+      },
+      days_on_mls: 8,
+      status: "for_sale",
+      coordinates: { lat: 37.7849, lng: -122.4094 },
+      flags: { is_new_listing: false },
+      open_houses: [],
+      monthly_fees: null
+    }
+  ];
 
   const properties = [
     {
@@ -1165,7 +1461,7 @@ const BuyPage: React.FC = () => {
         <Container maxWidth="xl">
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2, justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ fontWeight: 600, color: brandColors.primary }}>
-              San Francisco, CA Real Estate & Homes For Sale
+              {searchQuery ? `${searchQuery} Real Estate & Homes For Sale` : (userLocation ? `${userLocation} Real Estate & Homes For Sale` : "Real Estate & Homes For Sale")}
             </Typography>
             <MarketplaceModeToggle />
           </Box>
@@ -1175,6 +1471,13 @@ const BuyPage: React.FC = () => {
               placeholder="San Francisco, CA"
               size="small"
               sx={{ flexGrow: 1 }}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -1185,7 +1488,13 @@ const BuyPage: React.FC = () => {
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton size="small">
+                    <IconButton 
+                      size="small"
+                      onClick={() => {
+                        setSearchQuery("");
+                        handleSearch();
+                      }}
+                    >
                       <React.Suspense fallback={<Box sx={{ width: 24, height: 24 }} />}>
                         <LazyClearIcon />
                       </React.Suspense>
@@ -1367,8 +1676,8 @@ const BuyPage: React.FC = () => {
             p: 1
           }
         }}>
-          <AppleMapsComponent 
-            properties={realtorProperties.map(prop => ({
+            <AppleMapsComponent 
+              properties={realtorProperties.map((prop: any) => ({
               id: parseInt(prop.property_id) || Math.random(),
               price: prop.list_price ? `$${(prop.list_price / 1000000).toFixed(1)}M` : 'N/A',
               x: prop.coordinates?.lng ? (prop.coordinates.lng + 122.4) * 100 : Math.random() * 100,
@@ -1381,10 +1690,10 @@ const BuyPage: React.FC = () => {
             }))}
             onPropertyClick={(property) => {
               console.log('Property clicked:', property);
-              // Find the corresponding realtor property and open modal
-              const realtorProperty = realtorProperties.find(prop => 
-                prop.property_id === property.id.toString()
-              );
+                // Find the corresponding realtor property and open modal
+                const realtorProperty = realtorProperties.find((prop: any) => 
+                  prop.property_id === property.id.toString()
+                );
               if (realtorProperty) {
                 handlePropertyClick(realtorProperty);
               }
@@ -1454,9 +1763,14 @@ const BuyPage: React.FC = () => {
               gap: { xs: 1.5, md: 2 },
               pb: 2
             }}>
-              {loading && (
+              {(loading || locationLoading) && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
                   <CircularProgress />
+                  {locationLoading && (
+                    <Typography variant="body2" sx={{ ml: 2, alignSelf: 'center' }}>
+                      Getting your location...
+                    </Typography>
+                  )}
                 </Box>
               )}
               {error && (
@@ -1469,7 +1783,7 @@ const BuyPage: React.FC = () => {
                   No properties found. Try adjusting your search criteria.
                 </Alert>
               )}
-              {!loading && realtorProperties.map((property) => (
+               {!loading && realtorProperties.map((property: any) => (
                 <Box
                   key={property.property_id}
                   onClick={() => handlePropertyClick(property)}
@@ -1687,6 +2001,23 @@ const BuyPage: React.FC = () => {
         onFavorite={toggleFavorite}
         favorites={favorites}
       />
+      
+      {/* Debug: Test close button */}
+      {modalOpen && (
+        <Button 
+          onClick={handleCloseModal}
+          sx={{ 
+            position: 'fixed', 
+            top: 100, 
+            right: 20, 
+            zIndex: 9999,
+            bgcolor: 'red',
+            color: 'white'
+          }}
+        >
+          DEBUG: Close Modal
+        </Button>
+      )}
       
       
     </PageContainer>

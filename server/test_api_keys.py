@@ -62,7 +62,7 @@ def test_bls_api():
             logger.info("✅ BLS API working!")
             logger.info(f"  - State Code: {bls_data.state_code}")
             logger.info(f"  - Unemployment Rate: {bls_data.unemployment_rate}%")
-            logger.info(f"  - Total Employment: {bls_data.total_employment:,}")
+            logger.info(f"  - Total Employment: {bls_data.total_employment}")
             logger.info(f"  - Average Wage: ${bls_data.average_hourly_wage}/hour")
             return True
         else:

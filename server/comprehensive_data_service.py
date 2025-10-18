@@ -166,7 +166,7 @@ class ComprehensiveDataService:
         if census_data:
             indicators['population'] = census_data.total_population
             indicators['median_age'] = census_data.median_age
-            indicators['median_income'] = census_data.median_household_income
+            indicators['median_household_income'] = census_data.median_household_income
             indicators['poverty_rate'] = census_data.poverty_rate
         
         # Employment indicators
@@ -190,10 +190,10 @@ class ComprehensiveDataService:
             indicators['rent_growth_rate'] = state_rent_data.rent_growth_rate
         
         # Calculate derived indicators
-        if indicators.get('population') and indicators.get('total_employment'):
+        if indicators.get('population') and indicators.get('total_employment') and indicators['population'] > 0:
             indicators['employment_rate'] = indicators['total_employment'] / indicators['population']
         
-        if indicators.get('median_income') and indicators.get('office_rent_per_sqft'):
+        if indicators.get('median_income') and indicators.get('office_rent_per_sqft') and indicators['office_rent_per_sqft'] > 0:
             indicators['income_to_rent_ratio'] = indicators['median_income'] / (indicators['office_rent_per_sqft'] * 12)
         
         return indicators
@@ -221,6 +221,13 @@ class ComprehensiveDataService:
         if not estimates and market_indicators:
             # Use median income as a proxy for rent capacity
             median_income = market_indicators.get('median_household_income', 50000)
+            
+            # Convert to float if it's a string
+            if isinstance(median_income, str):
+                try:
+                    median_income = float(median_income)
+                except (ValueError, TypeError):
+                    median_income = 50000  # Default fallback
             
             # Rough estimates based on income (these would need refinement)
             estimates['office_rent_per_sqft'] = median_income / 10000  # $5/sqft per $50k income
@@ -251,10 +258,18 @@ class ComprehensiveDataService:
         # Market strength indicators
         if market_indicators:
             # Population growth proxy (would need historical data)
-            metrics['market_strength'] = min(1.0, (market_indicators.get('median_household_income', 0) / 50000))
+            median_income = market_indicators.get('median_household_income', 0)
+            if isinstance(median_income, str):
+                try:
+                    median_income = float(median_income)
+                except (ValueError, TypeError):
+                    median_income = 0
+            metrics['market_strength'] = min(1.0, (median_income / 50000))
             
             # Employment stability
             unemployment_rate = market_indicators.get('unemployment_rate', 0.05)
+            if unemployment_rate is None:
+                unemployment_rate = 0.05  # Default 5% unemployment
             metrics['employment_stability'] = max(0, 1 - unemployment_rate)
         
         return metrics

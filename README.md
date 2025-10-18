@@ -1,154 +1,203 @@
-# Dreamery Homepage
+# Standard Calculator - Real Estate Investment Analysis Tool
 
-**DREAMERY SOFTWARE LLC - PRIVATE REPOSITORY**
-
-## Overview
-
-The Dreamery Homepage is a comprehensive real estate platform built with React, TypeScript, and Material-UI. It provides property search, analysis, and related services for real estate professionals and consumers.
-
-## Quick Start
-
-### Development Setup
-```bash
-# Install dependencies
-npm install
-cd server && pip install -r requirements.txt
-
-# Start development servers
-npm start                    # Frontend (port 3000)
-cd server && python start_realtor_api.py  # Backend (port 5001)
-```
-
-### Documentation
-- **[Development Guide](docs/DEVELOPMENT.md)** - Setup and development
-- **[API Documentation](docs/API.md)** - API integration and endpoints
-- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
-
-## Technology Stack
-
-### Frontend
-- **React 18.2.0** - UI framework
-- **TypeScript 4.9.5** - Type safety
-- **Material-UI v5.15.10** - Component library
-- **Styled Components** - CSS-in-JS styling
-
-### Backend
-- **Python Flask** - API server
-- **Prisma ORM** - Database toolkit
-- **PostgreSQL/SQLite** - Database
+An exact copy of the Standard mode Calculator for comprehensive real estate investment analysis. This calculator provides detailed financial modeling capabilities for various property types and investment strategies.
 
 ## Features
 
 ### Core Functionality
-- Property search and filtering
-- Interactive maps with Apple Maps integration
-- Real estate data analysis
-- User authentication and role management
-- Responsive design for all devices
+- **Comprehensive Property Analysis**: Support for SFR, Multi Family, Commercial, Land, Hotel, Office, Retail, Condo, and Townhouse properties
+- **Multiple Investment Strategies**: Buy & Hold, Fix & Flip, Short Term Rental, Rental Arbitrage, and BRRRR
+- **Advanced Financing Options**: Cash, Conventional, FHA, VA, USDA, Subject-To, Seller Finance, Hybrid, Hard Money, Private, Line of Credit, SBA, and DSCR
+- **Detailed Expense Tracking**: Custom operating expense categories with preset and manual inputs
+- **Real-time Calculations**: Live updates of all financial metrics as inputs change
 
-### User Roles
-- **Buyer** - Individual homebuyers
-- **Buying Agent** - Agents representing buyers
-- **Listing Agent** - Agents representing sellers
-- **Broker** - Office-level oversight
-- **Brand Manager** - Multi-office management
-- **Enterprise** - Large brokerage operations
+### Financial Metrics
+- **Cash Flow Analysis**: Monthly and annual cash flow calculations
+- **Return Metrics**: Cash-on-Cash Return, Cap Rate, ROI, IRR, and MOIC
+- **Break-even Analysis**: Occupancy rates and rent requirements
+- **Appreciation Modeling**: Future value projections with customizable growth rates
+- **Amortization Schedules**: Complete loan payment breakdowns
 
-## Project Structure
+### User Interface
+- **Accordion-based Layout**: Organized sections that expand based on selections
+- **Mode Selector**: Toggle between Essential, Standard, and Professional modes
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Real-time Validation**: Input validation with helpful error messages
+- **Professional Styling**: Clean, modern interface with Material-UI components
 
-```
-dreamery-homepage/
-├── src/                    # React frontend
-│   ├── components/        # Reusable components
-│   ├── pages/            # Page components
-│   ├── services/         # API services
-│   └── theme/            # Design system
-├── server/               # Python backend
-├── public/               # Static assets
-└── docs/                 # Documentation
-```
+## Installation
 
-## Environment Variables
+### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn package manager
 
-### Frontend (.env)
-```
-REACT_APP_API_URL=http://localhost:5001
-REACT_APP_APPLE_MAPS_JWT_TOKEN=your_jwt_token
-```
-
-### Backend (server/.env)
-```
-FLASK_ENV=development
-DATABASE_URL=sqlite:///dev.db
-SECRET_KEY=your_secret_key
-```
-
-## Development
-
-### Available Scripts
+### Setup
+1. Clone the repository:
 ```bash
-npm start          # Start development server
-npm run build      # Build for production
-npm test           # Run tests
-npm run lint       # Run linting
-npm run type-check # TypeScript checking
+git clone https://github.com/yourusername/standard-calculator.git
+cd standard-calculator
 ```
 
-### Database Commands
+2. Install dependencies:
 ```bash
-npm run db:push    # Push schema changes
-npm run db:seed    # Seed database
-npm run db:studio  # Open Prisma Studio
+npm install
 ```
 
-## Access and Usage Restrictions
+3. Start the development server:
+```bash
+npm start
+```
 
-**AUTHORIZED PERSONNEL ONLY**
+4. Open your browser and navigate to `http://localhost:3000`
 
-This is a **PRIVATE, PROPRIETARY REPOSITORY** with restricted access. Unauthorized access is strictly prohibited and may result in legal action.
+## Usage
 
-### Authorized Access
-- Full-time employees of Dreamery Software LLC
-- Contractors with signed Non-Disclosure Agreements
-- Partners with explicit written authorization
-- Third-party developers with valid service agreements
+### Basic Workflow
+1. **Select Calculator Mode**: Choose between Essential, Standard, or Professional modes
+2. **Enter Property Details**: Fill in basic information including property type, operation type, and offer type
+3. **Input Financial Data**: Enter purchase price, financing details, and income projections
+4. **Configure Expenses**: Set up operating expenses, taxes, insurance, and other costs
+5. **Review Results**: Analyze the calculated metrics and financial projections
 
-### Prohibited Activities
-- Copying, reproducing, or distributing any code
-- Reverse engineering or decompiling software
-- Creating competing products or services
-- Sharing code with unauthorized parties
-- Using proprietary information for personal gain
+### Key Sections
 
-### For Authorized Developers
-- Follow all security protocols and coding standards
-- Maintain strict confidentiality of all proprietary information
-- Report any security concerns immediately
-- Use only for authorized business purposes
+#### Basic Info
+- Property address and contact information
+- Property type selection
+- Operation type (investment strategy)
+- Offer type (financing method)
+- Purchase price and listing details
 
-## Legal Information
+#### Income
+- Monthly and yearly rent inputs
+- Rent growth rate projections
+- Multi-family unit calculations
+- Short-term rental parameters
 
-- **License**: Proprietary - See LICENSE file
-- **Copyright**: © 2024 Dreamery Software LLC. All rights reserved.
-- **Privacy Policy**: See legal/PRIVACY_POLICY.md
-- **Terms of Service**: See legal/TERMS_OF_SERVICE.md
-- **Security Policy**: See legal/SECURITY_POLICY.md
+#### Operating Expenses
+- Property taxes and insurance
+- Utilities (gas, electric, water, sewer)
+- Maintenance and capital expenditures
+- Management and vacancy allowances
+- HOA fees and other miscellaneous costs
 
-## Legal Warning
+#### Financing
+- Down payment and loan amount
+- Interest rate and amortization period
+- Closing costs and rehab expenses
+- Points and other loan fees
 
-**UNAUTHORIZED USE IS ILLEGAL**
+#### Appreciation Calculator
+- Annual appreciation rate
+- Holding period projections
+- Future value calculations
 
-This software is proprietary and confidential. Any unauthorized use, copying, distribution, or reverse engineering is strictly prohibited and may result in civil and criminal penalties under applicable law.
+### Advanced Features
+
+#### Conditional Sections
+- **Subject-To Financing**: Additional inputs for existing mortgage details
+- **Hybrid Financing**: Combination of cash, loan, and seller financing
+- **Fix & Flip**: Renovation costs, holding period, and selling expenses
+- **BRRRR**: Refinance parameters and cash-out calculations
+
+#### Results Dashboard
+- **KPI Grid**: Key performance indicators in an easy-to-read format
+- **Summary Table**: Comprehensive deal breakdown
+- **Amortization Schedule**: Detailed loan payment schedule
+- **Cash Flow Projections**: Multi-year financial forecasts
+
+## File Structure
+
+```
+src/
+├── components/
+│   ├── StandardCalculator.tsx    # Main calculator component
+│   ├── ModeSelector.tsx         # Mode selection component
+│   └── UpgradePrompt.tsx        # Upgrade prompts
+├── utils/
+│   ├── financeUtils.ts          # Financial calculation functions
+│   └── theme.ts                 # Theme and styling configuration
+├── types/
+│   └── calculator.ts            # TypeScript type definitions
+└── index.tsx                    # Application entry point
+```
+
+## Key Components
+
+### StandardCalculator
+The main component that orchestrates the entire calculator interface. It manages state, handles user interactions, and displays results.
+
+### ModeSelector
+Allows users to switch between Essential, Standard, and Professional calculator modes with detailed feature descriptions.
+
+### UpgradePrompt
+Displays upgrade prompts when users try to access features not available in their current mode.
+
+### Finance Utils
+Comprehensive collection of financial calculation functions including:
+- Loan calculations (PMT, PV, FV, etc.)
+- Cash flow analysis
+- Return metrics (CoC, Cap Rate, ROI, IRR, MOIC)
+- Amortization schedules
+- Break-even calculations
+
+## Customization
+
+### Theme Configuration
+The calculator uses a comprehensive theme system defined in `theme.ts`:
+- Brand colors and gradients
+- Typography settings
+- Spacing and border radius
+- Component-specific styles
+- Animation configurations
+
+### Adding New Features
+1. Define new input types in the type definitions
+2. Add calculation functions to `financeUtils.ts`
+3. Update the main component to include new sections
+4. Add appropriate validation and error handling
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
-For technical support or questions:
-- Check documentation in `docs/` directory
-- Review existing GitHub issues
-- Contact authorized development team
+For support and questions:
+- Create an issue in the GitHub repository
+- Contact the development team
+- Check the documentation for common solutions
 
----
+## Changelog
 
-**Classification**: PROPRIETARY - CONFIDENTIAL  
-**Access Level**: AUTHORIZED PERSONNEL ONLY  
-**Copyright**: © 2024 Dreamery Software LLC. All rights reserved.
+### Version 1.0.0
+- Initial release with complete Standard mode functionality
+- All core features implemented
+- Responsive design and professional styling
+- Comprehensive financial calculations
+- Mode-based feature access
+
+## Roadmap
+
+- [ ] Add data persistence (localStorage/sessionStorage)
+- [ ] Implement export functionality (PDF, Excel)
+- [ ] Add more property types and strategies
+- [ ] Enhanced mobile experience
+- [ ] Integration with external APIs
+- [ ] Advanced reporting features
+- [ ] Multi-language support

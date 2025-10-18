@@ -40,7 +40,7 @@ import styled from "styled-components";
 import { brandColors, colorUtils } from "../theme";
 import { PageAppBar } from "../components/Header";
 import { MarketplaceModeToggle } from "../components/MarketplaceModeToggle";
-import AppleMapsComponent from "../components/AppleMapsComponent";
+import MapPlaceholder from "../components/MapPlaceholder";
 import { PROPERTY_FEATURES, PROPERTY_CONDITIONS, SCHOOL_RATINGS, NEIGHBORHOOD_AMENITIES, PROPERTY_STATUSES } from "../data";
 import { useRealtorData } from "../hooks/useRealtorData";
 import { RealtorSearchParams, PropertyData } from "../types/realtor";
@@ -140,7 +140,7 @@ const SuggestionDropdown = styled.div.withConfig({
   border: 1px solid ${brandColors.borders.primary};
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 999999;
+  z-index: 1200;
   max-height: 400px;
   overflow-y: auto;
   display: ${props => props.isOpen ? 'block' : 'none'};
@@ -264,11 +264,8 @@ const BuyPage: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [hasManuallyClosedModal, setHasManuallyClosedModal] = useState(false);
   
-  // Debug modal state changes
-  useEffect(() => {
-    console.log('🔴 Modal state changed:', modalOpen);
-  }, [modalOpen]);
 
   // Filter states
   const [propertyStatus, setPropertyStatus] = useState("for-sale");
@@ -350,6 +347,7 @@ const BuyPage: React.FC = () => {
   const handlePropertyClick = (property: PropertyData) => {
     setSelectedProperty(property);
     setModalOpen(true);
+    setHasManuallyClosedModal(false); // Reset flag when manually opening modal
   };
 
   const handleCloseModal = () => {
@@ -358,6 +356,7 @@ const BuyPage: React.FC = () => {
     console.log('🔴 BuyPage: Setting modalOpen to false...');
     setModalOpen(false);
     setSelectedProperty(null);
+    setHasManuallyClosedModal(true);
     console.log('🔴 BuyPage: Modal state updated');
   };
 
@@ -668,6 +667,9 @@ const BuyPage: React.FC = () => {
   // Load initial data
   useEffect(() => {
     const loadInitialData = async () => {
+      // Reset modal close flag for new searches
+      setHasManuallyClosedModal(false);
+      
       // Get search query from navigation state
       const searchState = location.state as any;
       const searchQuery = searchState?.searchQuery || searchState?.addressData?.formattedAddress || "";
@@ -749,7 +751,7 @@ const BuyPage: React.FC = () => {
     // Check if this is a specific address search (has street number)
     const isSpecificAddress = /\d+\s/.test(searchQuery);
     
-    if (isSpecificAddress && realtorProperties.length > 0 && !modalOpen) {
+    if (isSpecificAddress && realtorProperties.length > 0 && !modalOpen && !hasManuallyClosedModal) {
       console.log('🏠 BuyPage: Specific address search detected, looking for exact match');
       
       // Find the property that best matches the search query
@@ -773,7 +775,7 @@ const BuyPage: React.FC = () => {
         setModalOpen(true);
       }
     }
-  }, [realtorProperties, location.state, modalOpen]);
+  }, [realtorProperties, location.state, modalOpen, hasManuallyClosedModal]);
 
   // Mock properties with agent data for testing
   const mockProperties = [
@@ -2001,7 +2003,7 @@ const BuyPage: React.FC = () => {
             p: 1
           }
         }}>
-            <AppleMapsComponent 
+            <MapPlaceholder 
               properties={realtorProperties.map((prop: any) => ({
               id: parseInt(prop.property_id) || Math.random(),
               price: prop.list_price ? `$${(prop.list_price / 1000000).toFixed(1)}M` : 'N/A',
@@ -2327,22 +2329,6 @@ const BuyPage: React.FC = () => {
         favorites={favorites}
       />
       
-      {/* Debug: Test close button */}
-      {modalOpen && (
-        <Button 
-          onClick={handleCloseModal}
-          sx={{ 
-            position: 'fixed', 
-            top: 100, 
-            right: 20, 
-            zIndex: 9999,
-            bgcolor: 'red',
-            color: 'white'
-          }}
-        >
-          DEBUG: Close Modal
-        </Button>
-      )}
       
       
     </PageContainer>

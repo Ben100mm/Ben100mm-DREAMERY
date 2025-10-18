@@ -66,7 +66,7 @@ const StyledDialog = styled(Dialog)`
     border-radius: 16px;
     box-shadow: ${colorUtils.shadowColored(0.3, 24, 8)};
     position: relative;
-    z-index: 1300; /* Ensure it's above app bar */
+    z-index: 10000; /* Ensure it's above all other components including headers */
   }
 `;
 

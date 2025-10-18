@@ -134,7 +134,7 @@ const SuggestionDropdown = styled.div.withConfig({
   border: 1px solid ${brandColors.borders.primary};
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 999999;
+  z-index: 1200;
   max-height: 400px;
   overflow-y: auto;
   display: ${props => props.isOpen ? 'block' : 'none'};

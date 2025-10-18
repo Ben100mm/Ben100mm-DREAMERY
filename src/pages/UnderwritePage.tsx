@@ -11421,13 +11421,6 @@ const UnderwritePage: React.FC = () => {
                             and use the "Save Current" button to save your
                             custom Pro Forma settings.
                           </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: "#999", mt: 1, display: "block" }}
-                          >
-                            Debug: {state.customProFormaPresets.length} presets
-                            in state
-                          </Typography>
                         </Box>
                       )}
                     </Box>

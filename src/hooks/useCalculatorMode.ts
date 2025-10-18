@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { CalculatorMode } from '../types/calculatorMode';
 
 const STORAGE_KEY = 'dreamery-calculator-mode';
-const DEFAULT_MODE: CalculatorMode = 'standard';
+const DEFAULT_MODE: CalculatorMode = 'essential';
 
 interface UseCalculatorModeReturn {
   mode: CalculatorMode;
@@ -87,4 +87,3 @@ export function useCalculatorMode(): UseCalculatorModeReturn {
 }
 
 export default useCalculatorMode;
-

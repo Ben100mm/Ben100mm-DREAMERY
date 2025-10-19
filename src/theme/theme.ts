@@ -43,6 +43,12 @@ export const brandColors = {
     errorDark: '#3d0501',    // Dark red
   },
   
+  // Direct color access for backward compatibility
+  success: '#19401a',        // Success Green
+  warning: '#995c03',        // Warning Orange  
+  error: '#570701',          // Error Red
+  info: '#113c5e',           // Info Blue
+  
   // Neutral Colors - Dreamery Brand Palette (Enhanced Contrast)
   neutral: {
     0: '#ffffff',            // White - Primary backgrounds for cards and content areas

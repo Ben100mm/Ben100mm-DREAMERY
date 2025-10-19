@@ -237,7 +237,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
               Summary Dashboard
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={3} component="div">
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.primary }}>
                     {summary.passed}/{summary.totalTests}
@@ -247,7 +247,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={3} component="div">
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: brandColors.success }}>
                     {summary.passRate.toFixed(0)}%
@@ -257,7 +257,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={3} component="div">
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography 
                     variant="h3" 
@@ -273,7 +273,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={3} component="div">
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="body1" sx={{ fontWeight: 600, color: brandColors.primary }}>
                     {summary.worstScenario}
@@ -452,7 +452,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Paper sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                       Financial Metrics
@@ -486,7 +486,7 @@ export const StressTestingTab: React.FC<StressTestingTabProps> = ({
                   </Paper>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Paper sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                       Risk Assessment

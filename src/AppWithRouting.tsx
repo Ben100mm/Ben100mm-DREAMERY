@@ -6,6 +6,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { RoleProvider, RoleContext } from './context/RoleContext';
 import { WorkspaceProvider } from './context/WorkspaceContext';
 import { ProfessionalSupportProvider } from './context/ProfessionalSupportContext';
+import { FeatureFlagProvider } from './context/FeatureFlagContext';
+import { RouteProtection } from './components/RouteProtection';
 import { theme } from "./theme";
 import Header from './components/HeaderWithRouting';
 import Hero from './components/Hero';
@@ -47,6 +49,7 @@ const DataSourcesDashboard = lazy(() => import('./pages/DataSourcesDashboard'));
 const LearnPage = lazy(() => import('./pages/LearnPage'));
 const AdvertisePage = lazy(() => import('./pages/AdvertisePage'));
 const Advertise3DPage = lazy(() => import('./pages/Advertise3DPage'));
+const DeveloperPage = lazy(() => import('./pages/DeveloperPage'));
 
 const AppContainer = styled.div`
   width: 100%;
@@ -87,8 +90,16 @@ const AppContent = () => {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/professional-signup" element={<ProfessionalSignupPage />} />
       <Route path="/business-signup" element={<BusinessSignupPage />} />
-      <Route path="/lumina" element={<LuminaPage />} />
-      <Route path="/marketplace" element={<MarketplacePage />}>
+      <Route path="/lumina" element={
+        <RouteProtection>
+          <LuminaPage />
+        </RouteProtection>
+      } />
+      <Route path="/marketplace" element={
+        <RouteProtection>
+          <MarketplacePage />
+        </RouteProtection>
+      }>
         <Route index element={<Navigate to="buy" replace />} />
         <Route path="buy" element={<BuyPage />} />
         <Route path="rent" element={<RentPage />} />
@@ -96,7 +107,11 @@ const AppContent = () => {
       <Route path="/buy" element={<Navigate to="/marketplace/buy" replace />} />
       <Route path="/rent" element={<Navigate to="/marketplace/rent" replace />} />
 
-      <Route path="/mortgage" element={<MortgagePage />} />
+      <Route path="/mortgage" element={
+        <RouteProtection>
+          <MortgagePage />
+        </RouteProtection>
+      } />
       <Route path="/pre-approval" element={<PreApprovalPage />} />
       <Route path="/pre-approval-basic-info" element={<PreApprovalBasicInfoPage />} />
       <Route path="/pre-approval-questions" element={<PreApprovalQuestionsPage />} />
@@ -109,7 +124,11 @@ const AppContent = () => {
       <Route path="/underwrite" element={<UnderwritePage />} />
       
       {/* New Workspaces Routes */}
-      <Route path="/workspaces" element={<WorkspacesPage />} />
+      <Route path="/workspaces" element={
+        <RouteProtection>
+          <WorkspacesPage />
+        </RouteProtection>
+      } />
       <Route path="/workspaces/personal" element={<WorkspacesPersonalPage />} />
       <Route path="/workspaces/buyer" element={<Navigate to="/workspaces/personal" replace />} />
       <Route path="/workspaces/agent" element={<WorkspacesAgentPage />} />
@@ -132,15 +151,32 @@ const AppContent = () => {
       <Route path="/invest" element={<Navigate to="/workspaces/personal?workspace=invest" replace />} />
       <Route path="/fund" element={<Navigate to="/workspaces/personal?workspace=fund" replace />} />
       <Route path="/operate" element={<Navigate to="/workspaces/personal?workspace=operate" replace />} />
-      <Route path="/learn" element={<LearnPage />} />
-      <Route path="/advertise" element={<AdvertisePage />} />
+      <Route path="/learn" element={
+        <RouteProtection>
+          <LearnPage />
+        </RouteProtection>
+      } />
+      <Route path="/advertise" element={
+        <RouteProtection>
+          <AdvertisePage />
+        </RouteProtection>
+      } />
       <Route path="/advertise-3d" element={<Advertise3DPage />} />
-      <Route path="/partner" element={<PartnerPage />} />
+      <Route path="/partner" element={
+        <RouteProtection>
+          <PartnerPage />
+        </RouteProtection>
+      } />
       <Route path="/partner-profile" element={<PartnerProfileCompletionPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/ux-demo" element={<UXDemoPage />} />
       <Route path="/performance-dashboard" element={<PerformanceDashboardPage />} />
       <Route path="/data-sources" element={<DataSourcesDashboard />} />
+      <Route path="/developer" element={
+        <RouteProtection>
+          <DeveloperPage />
+        </RouteProtection>
+      } />
     </Routes>
     </Suspense>
   );
@@ -148,19 +184,21 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <RoleProvider>
-          <WorkspaceProvider>
-            <ProfessionalSupportProvider>
-              <Router>
-                <AppContent />
-              </Router>
-            </ProfessionalSupportProvider>
-          </WorkspaceProvider>
-        </RoleProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <FeatureFlagProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <RoleProvider>
+            <WorkspaceProvider>
+              <ProfessionalSupportProvider>
+                <Router>
+                  <AppContent />
+                </Router>
+              </ProfessionalSupportProvider>
+            </WorkspaceProvider>
+          </RoleProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </FeatureFlagProvider>
   );
 }
 

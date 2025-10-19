@@ -309,7 +309,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
           <Card sx={{ mb: 3, backgroundColor: brandColors.backgrounds.secondary }}>
             <CardContent>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
                     Overall Risk Score
                   </Typography>
@@ -349,7 +349,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                   </Box>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
                     Risk Category Breakdown
                   </Typography>
@@ -421,7 +421,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                 Proportional breakdown of risk factors contributing to overall investment risk
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <PieChart
                       series={[
@@ -467,7 +467,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center', height: '100%' }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                       Risk Factor Analysis
@@ -522,7 +522,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                   Metric-Based Risk Adjustments
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3} component="div">
                     <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                       <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                         DSCR
@@ -544,7 +544,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       </Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3} component="div">
                     <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                       <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                         LTV
@@ -566,7 +566,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       </Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3} component="div">
                     <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                       <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                         Cash on Cash
@@ -588,7 +588,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                       </Typography>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3} component="div">
                     <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                       <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                         Cap Rate
@@ -685,14 +685,14 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
 
               {/* Key Statistics Grid */}
               <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Card>
                     <CardContent>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                         IRR Distribution
                       </Typography>
                       <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Mean
                           </Typography>
@@ -700,7 +700,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {monteCarloResults.irrStats.mean.toFixed(2)}%
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Median
                           </Typography>
@@ -708,7 +708,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {monteCarloResults.irrStats.median.toFixed(2)}%
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Std Deviation
                           </Typography>
@@ -716,7 +716,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {monteCarloResults.irrStats.stdDev.toFixed(2)}%
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Range
                           </Typography>
@@ -729,14 +729,14 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                   </Card>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} component="div">
                   <Card>
                     <CardContent>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                         Total Return Distribution
                       </Typography>
                       <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Mean
                           </Typography>
@@ -744,7 +744,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {formatCurrency(monteCarloResults.totalReturnStats.mean)}
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Median
                           </Typography>
@@ -752,7 +752,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {formatCurrency(monteCarloResults.totalReturnStats.median)}
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Std Deviation
                           </Typography>
@@ -760,7 +760,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             {formatCurrency(monteCarloResults.totalReturnStats.stdDev)}
                           </Typography>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} component="div">
                           <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                             Range
                           </Typography>
@@ -781,7 +781,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     Percentile Analysis - IRR
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           10th Percentile
@@ -791,7 +791,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           25th Percentile
@@ -801,7 +801,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           50th (Median)
@@ -811,7 +811,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           75th Percentile
@@ -821,7 +821,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           90th Percentile
@@ -902,7 +902,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     Risk-Adjusted Metrics
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Sharpe Ratio
@@ -918,7 +918,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         />
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Sortino Ratio
@@ -934,7 +934,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         />
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           VaR (95%)
@@ -947,7 +947,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           CVaR (95%)
@@ -960,7 +960,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2.4}>
+                    <Grid item xs={12} sm={6} md={2.4} component="div">
                       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: brandColors.backgrounds.secondary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600] }}>
                           Probability of Loss
@@ -998,7 +998,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     Scenario Analysis (IRR)
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} component="div">
                       <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#ffebee', border: '2px solid ' + brandColors.error }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
                           WORST CASE (P10)
@@ -1015,7 +1015,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} component="div">
                       <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e3f2fd', border: '2px solid ' + brandColors.primary }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
                           BASE CASE (MEDIAN)
@@ -1032,7 +1032,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} component="div">
                       <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9', border: '2px solid ' + brandColors.success }}>
                         <Typography variant="caption" sx={{ color: brandColors.neutral[600], fontWeight: 600 }}>
                           BEST CASE (P90)
@@ -1366,11 +1366,11 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
-                            <Typography variant="body2">&lt; {formatCurrency(monteCarloResults.totalReturnStats.mean * 0.5)}</Typography>
+                            <Typography variant="body2">&lt; {formatCurrency((monteCarloResults.totalReturnStats.mean * 0.5).toString())}</Typography>
                           </TableCell>
                           <TableCell align="center">
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                              {formatCurrency(monteCarloResults.riskMetrics.maxDrawdown)}
+                              {formatCurrency(monteCarloResults.riskMetrics.maxDrawdown.toString())}
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
@@ -1475,7 +1475,7 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                     95% Confidence Intervals
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} component="div">
                       <Box sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                           IRR Range
@@ -1485,13 +1485,13 @@ export const RiskAnalysisTab: React.FC<RiskAnalysisTabProps> = ({
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} component="div">
                       <Box sx={{ p: 2, backgroundColor: brandColors.backgrounds.secondary, borderRadius: 1 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                           Total Return Range
                         </Typography>
                         <Typography variant="body2" sx={{ color: brandColors.neutral[800] }}>
-                          {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.lower)} - {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.upper)}
+                          {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.lower.toString())} - {formatCurrency(monteCarloResults.totalReturnStats.confidenceInterval95.upper.toString())}
                         </Typography>
                       </Box>
                     </Grid>

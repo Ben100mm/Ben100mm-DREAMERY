@@ -45,7 +45,7 @@ export const ComplianceSection3D: React.FC<{ visible: boolean }> = ({ visible })
               { icon: <VerifiedUserIcon sx={{ fontSize: 48, color: brandColors.primary }} />, title: 'SOC 2 Certified', items: ['Security audited', 'Industry standards', 'Verified practices'] },
               { icon: <GppGoodIcon sx={{ fontSize: 48, color: brandColors.primary }} />, title: 'Bank-Level Security', items: ['256-bit encryption', 'Secure infrastructure', 'Regular audits'] },
             ].map((item, index) => (
-              <Grid item xs={4} key={index}>
+              <Grid item xs={4} key={index} component="div">
                 <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px', height: '100%' }}>
                   <CardContent sx={{ textAlign: 'center' }}>
                     <Box sx={{ mb: 2 }}>{item.icon}</Box>

@@ -32,7 +32,7 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
       <Html position={[0, -2, 0]} center distanceFactor={8} style={{ pointerEvents: 'auto' }}>
         <Box sx={{ width: '900px' }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} component="div">
               <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px', height: '100%' }}>
                 <CardContent sx={{ p: 4 }}>
                   <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Send Us A Message</Typography>
@@ -45,14 +45,14 @@ export const ContactSection3D: React.FC<{ visible: boolean }> = ({ visible }) =>
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} component="div">
               <Grid container spacing={2}>
                 {[
                   { icon: <EmailIcon sx={{ fontSize: 40, color: brandColors.primary }} />, title: 'Email', value: 'advertise@dreamery.com' },
                   { icon: <PhoneIcon sx={{ fontSize: 40, color: brandColors.primary }} />, title: 'Phone', value: '1-800-DREAMERY' },
                   { icon: <ChatIcon sx={{ fontSize: 40, color: brandColors.primary }} />, title: 'Live Chat', value: 'Available 24/7' },
                 ].map((item, index) => (
-                  <Grid item xs={12} key={index}>
+                  <Grid item xs={12} key={index} component="div">
                     <Card sx={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', borderRadius: '16px' }}>
                       <CardContent sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
                         <Box sx={{ mr: 2 }}>{item.icon}</Box>

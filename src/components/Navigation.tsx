@@ -1,7 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFeatureFlags } from '../context/FeatureFlagContext';
 import styled from 'styled-components';
 import { brandColors } from "../theme";
+import { Tooltip } from '@mui/material';
+import { Lock as LockIcon } from '@mui/icons-material';
 
 const NavContainer = styled.nav`
   width: 100%;
@@ -78,37 +81,32 @@ const NavItem = styled.li`
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
+  const { isPageEnabled, currentPhase } = useFeatureFlags();
 
-  const navItems = [
-    { name: 'Lumina', path: '/lumina' },
-    { name: 'Marketplace', path: '/marketplace' },
-    { name: 'Mortgage', path: '/mortgage' },
-    { name: 'Underwrite', path: '/underwrite' },
-    { name: 'Workspaces', path: '/workspaces' },
-    { name: 'Partners', path: '/partner' },
-    { name: 'Learn', path: '/learn' },
-    { name: 'Advertise', path: '/advertise' }
+  const allNavItems = [
+    { name: 'Lumina', path: '/lumina', phase: 3 },
+    { name: 'Marketplace', path: '/marketplace', phase: 2 },
+    { name: 'Mortgage', path: '/mortgage', phase: 2 },
+    { name: 'Underwrite', path: '/underwrite', phase: 1 },
+    { name: 'Workspaces', path: '/workspaces', phase: 3 },
+    { name: 'Partners', path: '/partner', phase: 3 },
+    { name: 'Learn', path: '/learn', phase: 3 },
+    { name: 'Advertise', path: '/advertise', phase: 3 }
   ];
 
-  const handleNavClick = (path: string) => {
-    console.log('Navigation clicked:', path); // Debug log
-    // Navigate to any declared route; non-declared paths will log for now
-    switch (path) {
-      case '/lumina':
-      case '/marketplace':
-      case '/mortgage':
-      case '/underwrite':
-      case '/workspaces':
-      case '/learn':
-      case '/advertise':
-      case '/partner':
-        console.log('Navigating to:', path); // Debug log
-        navigate(path);
-        break;
-      default:
-        console.log('Route not implemented:', path); // Debug log
-        // Route not implemented yet
-        break;
+  // Filter and mark items based on current phase
+  const navItems = allNavItems.map(item => ({
+    ...item,
+    isEnabled: isPageEnabled(item.path),
+    isLocked: item.phase > currentPhase
+  }));
+
+  const handleNavClick = (path: string, isEnabled: boolean) => {
+    if (isEnabled) {
+      console.log('Navigating to:', path);
+      navigate(path);
+    } else {
+      console.log('Page not available in current phase:', path);
     }
   };
 
@@ -117,9 +115,28 @@ const Navigation: React.FC = () => {
       <NavList>
         {navItems.map((item, index) => (
           <NavItem key={index}>
-            <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick(item.path); }}>
-              {item.name}
-            </a>
+            <Tooltip 
+              title={item.isLocked ? `Available in Phase ${item.phase}` : ''}
+              placement="top"
+            >
+              <a 
+                href="#" 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  handleNavClick(item.path, item.isEnabled); 
+                }}
+                style={{
+                  opacity: item.isEnabled ? 1 : 0.5,
+                  cursor: item.isEnabled ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+              >
+                {item.name}
+                {item.isLocked && <LockIcon sx={{ fontSize: 12 }} />}
+              </a>
+            </Tooltip>
           </NavItem>
         ))}
       </NavList>

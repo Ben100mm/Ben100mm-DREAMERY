@@ -16,7 +16,7 @@ import {
 class RealtorService implements PropertySearchService {
   private baseUrl: string;
 
-  constructor(baseUrl: string = '/api/realtor') {
+  constructor(baseUrl: string = 'http://localhost:8001/api/realtor') {
     this.baseUrl = baseUrl;
   }
 

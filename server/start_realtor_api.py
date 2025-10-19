@@ -29,7 +29,7 @@ def start_server():
         import realtor_api
         app = realtor_api.app
         print("🚀 Starting Realtor.com API server...")
-        print("📍 Server will be available at: http://localhost:5001")
+        print("📍 Server will be available at: http://localhost:8001")
         print("🔍 API endpoints:")
         print("   - POST /api/realtor/search - Search properties")
         print("   - GET  /api/realtor/property/<id> - Get property details")
@@ -37,7 +37,7 @@ def start_server():
         print("   - GET  /api/realtor/health - Health check")
         print("\nPress Ctrl+C to stop the server")
         
-        app.run(debug=True, host='0.0.0.0', port=5001)
+        app.run(debug=True, host='0.0.0.0', port=8001)
     except ImportError as e:
         print(f"❌ Failed to import realtor_api: {e}")
         print("Make sure all dependencies are installed")

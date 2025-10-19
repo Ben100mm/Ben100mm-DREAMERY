@@ -235,3 +235,4 @@ export function shouldShowUpgradePrompt(
   
   return currentIndex < requiredIndex;
 }
+

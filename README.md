@@ -1,203 +1,156 @@
-# Standard Calculator - Real Estate Investment Analysis Tool
+# Essentials Calculator System
 
-An exact copy of the Standard mode Calculator for comprehensive real estate investment analysis. This calculator provides detailed financial modeling capabilities for various property types and investment strategies.
+This is an exact copy of the Essentials mode Calculator from the Dreamery platform. It provides a simplified real estate investment calculator with progressive disclosure modes.
 
 ## Features
 
-### Core Functionality
-- **Comprehensive Property Analysis**: Support for SFR, Multi Family, Commercial, Land, Hotel, Office, Retail, Condo, and Townhouse properties
-- **Multiple Investment Strategies**: Buy & Hold, Fix & Flip, Short Term Rental, Rental Arbitrage, and BRRRR
-- **Advanced Financing Options**: Cash, Conventional, FHA, VA, USDA, Subject-To, Seller Finance, Hybrid, Hard Money, Private, Line of Credit, SBA, and DSCR
-- **Detailed Expense Tracking**: Custom operating expense categories with preset and manual inputs
-- **Real-time Calculations**: Live updates of all financial metrics as inputs change
+### Essentials Mode
+- **Basic property inputs**: Property price, down payment, interest rate, loan term
+- **Simple financing options**: Cash, Conventional, FHA loans
+- **Preset operating expenses**: Pre-configured expense categories based on property type
+- **Buy & Hold strategy only**: Focused on rental property analysis
+- **Key metrics**: Cash flow, Cash on Cash return, Cap Rate, ROI
+- **Basic amortization schedule**: First 12 months summary
+- **Break-even analysis**: Minimum rent required
+- **Property type support**: Single Family Residential, Multi Family
+- **Simple rent input**: Monthly or annual rent entry
+- **Basic expense categories**: Property tax, insurance, maintenance, management, utilities, vacancy
 
-### Financial Metrics
-- **Cash Flow Analysis**: Monthly and annual cash flow calculations
-- **Return Metrics**: Cash-on-Cash Return, Cap Rate, ROI, IRR, and MOIC
-- **Break-even Analysis**: Occupancy rates and rent requirements
-- **Appreciation Modeling**: Future value projections with customizable growth rates
-- **Amortization Schedules**: Complete loan payment breakdowns
-
-### User Interface
-- **Accordion-based Layout**: Organized sections that expand based on selections
-- **Mode Selector**: Toggle between Essential, Standard, and Professional modes
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Real-time Validation**: Input validation with helpful error messages
-- **Professional Styling**: Clean, modern interface with Material-UI components
+### Calculator Modes
+- **Essential**: Quick analysis with simplified inputs
+- **Standard**: Comprehensive analysis (upgrade prompt shown)
+- **Professional**: Full featured toolkit (upgrade prompt shown)
 
 ## Installation
 
-### Prerequisites
-- Node.js (version 16 or higher)
-- npm or yarn package manager
-
-### Setup
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/standard-calculator.git
-cd standard-calculator
-```
-
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Start the development server:
+2. Start the development server:
 ```bash
 npm start
 ```
 
-4. Open your browser and navigate to `http://localhost:3000`
+3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Usage
 
-### Basic Workflow
+### Basic Calculator Flow
+
 1. **Select Calculator Mode**: Choose between Essential, Standard, or Professional modes
-2. **Enter Property Details**: Fill in basic information including property type, operation type, and offer type
-3. **Input Financial Data**: Enter purchase price, financing details, and income projections
-4. **Configure Expenses**: Set up operating expenses, taxes, insurance, and other costs
-5. **Review Results**: Analyze the calculated metrics and financial projections
+2. **Enter Property Information**: Property price, type, and operation type
+3. **Configure Financing**: Select financing type and enter loan details
+4. **Set Rental Income**: Enter monthly or annual rent
+5. **Review Operating Expenses**: Use preset values or customize (Essential mode uses presets)
+6. **View Results**: Analyze key metrics, cash flow, and amortization schedule
 
-### Key Sections
+### Key Metrics Calculated
 
-#### Basic Info
-- Property address and contact information
-- Property type selection
-- Operation type (investment strategy)
-- Offer type (financing method)
-- Purchase price and listing details
+- **Monthly Cash Flow**: Net income after all expenses and mortgage payment
+- **Cash on Cash Return**: Annual return on cash invested
+- **Cap Rate**: Net operating income divided by property price
+- **ROI**: Return on investment including appreciation
+- **Break-Even Rent**: Minimum rent required to cover all expenses
+- **Gross Rent Multiplier**: Property price divided by annual rent
+- **Debt Service Coverage Ratio**: NOI divided by mortgage payment
 
-#### Income
-- Monthly and yearly rent inputs
-- Rent growth rate projections
-- Multi-family unit calculations
-- Short-term rental parameters
+### Features by Mode
 
-#### Operating Expenses
-- Property taxes and insurance
-- Utilities (gas, electric, water, sewer)
-- Maintenance and capital expenditures
-- Management and vacancy allowances
-- HOA fees and other miscellaneous costs
+#### Essentials Mode
+- Basic property inputs only
+- Limited financing options (Cash, Conventional, FHA)
+- Preset operating expenses
+- Buy & Hold strategy only
+- SFR and Multi Family property types
+- Basic amortization schedule (first 12 months)
+- Key metrics display
 
-#### Financing
-- Down payment and loan amount
-- Interest rate and amortization period
-- Closing costs and rehab expenses
-- Points and other loan fees
+#### Standard Mode (Upgrade Prompt)
+- All financing types
+- Custom expense categories
+- All property strategies
+- All property types
+- Full amortization schedule
+- Advanced analysis features
 
-#### Appreciation Calculator
-- Annual appreciation rate
-- Holding period projections
-- Future value calculations
-
-### Advanced Features
-
-#### Conditional Sections
-- **Subject-To Financing**: Additional inputs for existing mortgage details
-- **Hybrid Financing**: Combination of cash, loan, and seller financing
-- **Fix & Flip**: Renovation costs, holding period, and selling expenses
-- **BRRRR**: Refinance parameters and cash-out calculations
-
-#### Results Dashboard
-- **KPI Grid**: Key performance indicators in an easy-to-read format
-- **Summary Table**: Comprehensive deal breakdown
-- **Amortization Schedule**: Detailed loan payment schedule
-- **Cash Flow Projections**: Multi-year financial forecasts
+#### Professional Mode (Upgrade Prompt)
+- All Standard features
+- Capital events planning
+- Tax-deferred exchanges
+- Advanced modeling
+- Monte Carlo simulations
+- Scenario analysis
 
 ## File Structure
 
 ```
 src/
 ├── components/
-│   ├── StandardCalculator.tsx    # Main calculator component
-│   ├── ModeSelector.tsx         # Mode selection component
-│   └── UpgradePrompt.tsx        # Upgrade prompts
-├── utils/
-│   ├── financeUtils.ts          # Financial calculation functions
-│   └── theme.ts                 # Theme and styling configuration
+│   ├── EssentialsCalculator.tsx          # Main calculator component
+│   ├── calculator/
+│   │   ├── ModeSelector.tsx              # Mode selection component
+│   │   └── UpgradePrompt.tsx             # Upgrade prompts
+│   └── index.ts                          # Component exports
+├── hooks/
+│   └── useCalculatorMode.ts              # Calculator mode state management
 ├── types/
-│   └── calculator.ts            # TypeScript type definitions
-└── index.tsx                    # Application entry point
+│   └── calculatorMode.ts                 # Type definitions and configurations
+├── pages/
+│   └── EssentialsCalculatorPage.tsx      # Demo page
+└── theme.ts                              # Brand colors and theme
 ```
 
-## Key Components
+## Component Architecture
 
-### StandardCalculator
-The main component that orchestrates the entire calculator interface. It manages state, handles user interactions, and displays results.
+### EssentialsCalculator
+The main calculator component that handles:
+- Input state management
+- Calculation logic
+- UI rendering
+- Mode-specific feature display
 
 ### ModeSelector
-Allows users to switch between Essential, Standard, and Professional calculator modes with detailed feature descriptions.
+Handles calculator mode switching with:
+- Mode selection UI
+- Feature descriptions
+- Tooltips with mode details
 
 ### UpgradePrompt
-Displays upgrade prompts when users try to access features not available in their current mode.
+Shows upgrade prompts for advanced features when in Essential mode
 
-### Finance Utils
-Comprehensive collection of financial calculation functions including:
-- Loan calculations (PMT, PV, FV, etc.)
-- Cash flow analysis
-- Return metrics (CoC, Cap Rate, ROI, IRR, MOIC)
-- Amortization schedules
-- Break-even calculations
+### useCalculatorMode Hook
+Manages calculator mode state with:
+- Local storage persistence
+- Mode validation
+- Upgrade logic
 
 ## Customization
 
-### Theme Configuration
-The calculator uses a comprehensive theme system defined in `theme.ts`:
-- Brand colors and gradients
-- Typography settings
-- Spacing and border radius
-- Component-specific styles
-- Animation configurations
+### Adding New Property Types
+1. Update the `propertyType` options in `EssentialsCalculator.tsx`
+2. Add preset expenses in `PRESET_EXPENSES` object
+3. Update the upgrade prompt logic if needed
 
-### Adding New Features
-1. Define new input types in the type definitions
-2. Add calculation functions to `financeUtils.ts`
-3. Update the main component to include new sections
-4. Add appropriate validation and error handling
+### Modifying Calculations
+All calculation logic is in the `EssentialsCalculator` component:
+- `monthlyPayment`: Mortgage payment calculation
+- `monthlyCashFlow`: Cash flow calculation
+- `cashOnCashReturn`: Return on cash invested
+- `capRate`: Capitalization rate
+- `roi`: Return on investment
 
-## Browser Support
+### Styling
+The theme is defined in `theme.ts` with brand colors and Material-UI theme overrides.
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+## Dependencies
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request
+- **React**: UI framework
+- **Material-UI**: Component library
+- **TypeScript**: Type safety
+- **React Router**: Navigation (for demo page)
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support and questions:
-- Create an issue in the GitHub repository
-- Contact the development team
-- Check the documentation for common solutions
-
-## Changelog
-
-### Version 1.0.0
-- Initial release with complete Standard mode functionality
-- All core features implemented
-- Responsive design and professional styling
-- Comprehensive financial calculations
-- Mode-based feature access
-
-## Roadmap
-
-- [ ] Add data persistence (localStorage/sessionStorage)
-- [ ] Implement export functionality (PDF, Excel)
-- [ ] Add more property types and strategies
-- [ ] Enhanced mobile experience
-- [ ] Integration with external APIs
-- [ ] Advanced reporting features
-- [ ] Multi-language support
+This is a copy of the Essentials mode Calculator from the Dreamery platform for educational and development purposes.

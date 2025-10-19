@@ -1,9 +1,60 @@
-/**
- * Components Index
- * 
- * Exports all calculator components
- */
-
-export { default as EssentialsCalculator } from './EssentialsCalculator';
-export { ModeSelector } from './calculator/ModeSelector';
-export { UpgradePrompt } from './calculator/UpgradePrompt';
+export {};
+export {
+  LoadingSpinner,
+  LoadingOverlayComponent,
+  LinearProgressWithLabel,
+  SuccessMessage,
+  ErrorMessage,
+  InfoMessage,
+  HelpTooltip,
+  RequiredFieldIndicator,
+  FieldHintText,
+  ValidationError,
+  SectionStatusIndicator,
+  CompletionProgress,
+  StatusChip,
+  formatCurrency,
+  formatPercentage,
+  formatPhoneNumber,
+  Breadcrumbs,
+  QuickJumpMenu,
+  SaveProgressIndicator,
+} from "./UXComponents";
+export {
+  EnhancedTextFieldWithValidation,
+  EnhancedSelectWithValidation,
+  EnhancedNumberInput,
+  FormSection,
+  useFormValidation,
+} from "./EnhancedFormComponents";
+export {
+  NavigationProgress,
+  SectionStatusList,
+  ProgressBar,
+} from "./NavigationProgress";
+export {
+  useSaveProgress,
+  SaveProgressComponent,
+  AutoSaveStatus,
+  SaveProgressBar,
+} from "./SaveProgress";
+export {
+  AdvancedAnalysisDashboard,
+  SeasonalAdjustmentsCalculator,
+  MarketConditionsCalculator,
+  ExitStrategiesCalculator,
+  RiskAnalysisCalculator,
+} from "./AdvancedCalculations";
+export {
+  TaxImplicationsCalculator,
+  RefinanceScenariosCalculator,
+  SensitivityAnalysisCalculator,
+  StressTestingCalculator,
+  InflationAdjustmentsCalculator,
+} from "./AdvancedCalculationsExtended";
+export { default as ComprehensiveRefinanceCalculator } from "./ComprehensiveRefinanceCalculator";
+export { default as MapPlaceholder } from "./MapPlaceholder";
+export { StressTestingTab } from "./StressTestingTab";
+export { RiskAnalysisTab } from "./RiskAnalysisTab";
+export { MonteCarloSimulationTab } from "./MonteCarloSimulationTab";
+export { default as ErrorBoundary } from "./ErrorBoundary";

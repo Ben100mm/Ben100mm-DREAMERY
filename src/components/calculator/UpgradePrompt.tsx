@@ -7,14 +7,12 @@
 import React from 'react';
 import {
   Alert,
-  AlertTitle,
   Button,
   Box,
   Typography,
 } from '@mui/material';
-import { 
+import {
   TrendingUp as TrendingUpIcon,
-  Lock as LockIcon,
 } from '@mui/icons-material';
 import { brandColors } from '../../theme';
 import { CalculatorMode } from '../../types/calculatorMode';
@@ -23,8 +21,9 @@ interface UpgradePromptProps {
   currentMode: CalculatorMode;
   targetMode: CalculatorMode;
   feature: string;
-  description: string;
+  description?: string;
   onUpgrade: () => void;
+  variant?: 'info' | 'warning';
 }
 
 const MODE_LABELS: Record<CalculatorMode, string> = {
@@ -39,49 +38,48 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   feature,
   description,
   onUpgrade,
+  variant = 'info',
 }) => {
   return (
     <Alert
-      severity="info"
+      severity={variant}
+      icon={<TrendingUpIcon />}
       sx={{
+        mt: 2,
         mb: 2,
-        backgroundColor: brandColors.backgrounds.hover,
-        border: `1px solid ${brandColors.primary}`,
+        bgcolor: variant === 'info' ? brandColors.backgrounds.info : brandColors.backgrounds.warning,
+        borderColor: variant === 'info' ? brandColors.borders.info : brandColors.borders.warning,
         '& .MuiAlert-icon': {
-          color: brandColors.primary,
+          color: variant === 'info' ? brandColors.text.info : brandColors.text.warning,
         },
       }}
-      icon={<LockIcon />}
       action={
         <Button
-          color="primary"
           size="small"
-          variant="contained"
           onClick={onUpgrade}
           sx={{
-            backgroundColor: brandColors.primary,
-            '&:hover': {
-              backgroundColor: brandColors.primaryDark,
-            },
+            textTransform: 'none',
+            fontWeight: 600,
+            color: variant === 'info' ? brandColors.text.info : brandColors.text.warning,
           }}
         >
           Upgrade to {MODE_LABELS[targetMode]}
         </Button>
       }
     >
-      <AlertTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <TrendingUpIcon fontSize="small" />
-          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-            {feature} Available in {MODE_LABELS[targetMode]} Mode
+      <Box>
+        <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+          {feature} is available in {MODE_LABELS[targetMode]} mode
+        </Typography>
+        {description && (
+          <Typography variant="caption" sx={{ display: 'block' }}>
+            {description}
           </Typography>
-        </Box>
-      </AlertTitle>
-      <Typography variant="body2">
-        {description}
-      </Typography>
+        )}
+      </Box>
     </Alert>
   );
 };
 
 export default UpgradePrompt;
+
